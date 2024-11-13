@@ -195,35 +195,11 @@
 !missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSBrowserDelegate::ValidateDrop(AppKit.NSBrowser,AppKit.INSDraggingInfo,System.IntPtr&,System.IntPtr&,AppKit.NSBrowserDropOperation&)' has a extraneous [NullAllowed] on parameter #4
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,System.IntPtr&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSDragOperation AppKit.NSCollectionViewDelegate::ValidateDrop(AppKit.NSCollectionView,AppKit.INSDraggingInfo,Foundation.NSIndexPath&,AppKit.NSCollectionViewDropOperation&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionView::GetDraggingImage(Foundation.NSSet`1<Foundation.NSIndexPath>,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'AppKit.NSImage AppKit.NSCollectionViewDelegate::GetDraggingImage(AppKit.NSCollectionView,Foundation.NSSet,AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'AppKit.NSImage AppKit.NSTableView::DragImageForRows(Foundation.NSIndexSet,AppKit.NSTableColumn[],AppKit.NSEvent,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'AppKit.NSTextField AppKit.NSTextField::CreateTextField(System.String)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'AppKit.NSView AppKit.NSSharingServiceDelegate::CreateAnchoringView(AppKit.NSSharingService,CoreGraphics.CGRect&,AppKit.NSRectEdge&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'AppKit.NSView AppKit.NSSharingServiceDelegate::CreateAnchoringView(AppKit.NSSharingService,CoreGraphics.CGRect&,AppKit.NSRectEdge&)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'AppKit.NSView AppKit.NSTableView::MakeView(System.String,Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'Foundation.NSString AppKit.NSTableViewDelegate::GetToolTip(AppKit.NSTableView,AppKit.NSCell,CoreGraphics.CGRect&,AppKit.NSTableColumn,System.IntPtr,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.Boolean AppKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(AppKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,AppKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Boolean AppKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(AppKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,AppKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.Boolean AppKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(AppKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,AppKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'System.Boolean AppKit.NSView::KnowsPageRange(Foundation.NSRange&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.UIntPtr AppKit.NSTypesetter::LayoutParagraphAtPoint(CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.String AppKit.NSOutlineViewDelegate::ToolTipForCell(AppKit.NSOutlineView,AppKit.NSCell,CoreGraphics.CGRect&,AppKit.NSTableColumn,Foundation.NSObject,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void AppKit.NSAlert::BeginSheet(AppKit.NSWindow,System.Action`1<AppKit.NSModalResponse>)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSButton::GetPeriodicDelay(System.Single&,System.Single&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSButton::GetPeriodicDelay(System.Single&,System.Single&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSCell::EndEditing(AppKit.NSText)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSCell::GetPeriodicDelay(System.Single&,System.Single&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSCell::GetPeriodicDelay(System.Single&,System.Single&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSControl::EndEditing(AppKit.NSText)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSDatePickerCellDelegate::ValidateProposedDateValue(AppKit.NSDatePickerCell,Foundation.NSDate&,System.Double)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSFilePromiseProviderDelegate::WritePromiseToUrl(AppKit.NSFilePromiseProvider,Foundation.NSUrl,System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void AppKit.NSFontManager::set_Action(ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSSegmentedControl::SetLabel(System.String,System.IntPtr)' has a extraneous [NullAllowed] on parameter #0
@@ -1067,14 +1043,11 @@
 !missing-null-allowed! 'System.Void AppKit.NSWorkspace::RecycleUrls(Foundation.NSArray,AppKit.NSWorkspaceUrlHandler)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void Foundation.NSFileWrapper::set_Icon(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 
-!extra-null-allowed! 'AppKit.NSMenu AppKit.NSTextCheckingController::GetMenu(System.UIntPtr,System.Boolean,Foundation.NSRange&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'Foundation.NSArray AppKit.NSTokenFieldCellDelegate::GetCompletionStrings(AppKit.NSTokenFieldCell,System.String,System.IntPtr,System.IntPtr&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::RepresentationUsingTypeProperties(AppKit.NSBitmapImageFileType,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDocFormat(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtf(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetRtfdFileWrapper(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.String[] AppKit.NSControlTextEditingDelegate::GetCompletions(AppKit.NSControl,AppKit.NSTextView,System.String[],Foundation.NSRange,System.IntPtr&)' has a extraneous [NullAllowed] on parameter #4
 !extra-null-allowed! 'System.Void AppKit.NSCell::EditWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSCell::EditWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void AppKit.NSCell::SelectWithFrame(CoreGraphics.CGRect,AppKit.NSView,AppKit.NSText,Foundation.NSObject,System.IntPtr,System.IntPtr)' has a extraneous [NullAllowed] on parameter #1
@@ -1082,8 +1055,6 @@
 !extra-null-allowed! 'System.Void AppKit.NSControl::EditWithFrame(CoreGraphics.CGRect,AppKit.NSText,Foundation.NSObject,AppKit.NSEvent)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSControl::SelectWithFrame(CoreGraphics.CGRect,AppKit.NSText,Foundation.NSObject,System.IntPtr,System.IntPtr)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void AppKit.NSDraggingSession::EnumerateDraggingItems(AppKit.NSDraggingItemEnumerationOptions,AppKit.NSView,System.IntPtr,Foundation.NSDictionary,AppKit.NSDraggingEnumerator)' has a extraneous [NullAllowed] on parameter #3
-!extra-null-allowed! 'System.Void AppKit.NSTypesetter::WillSetLineFragment(CoreGraphics.CGRect&,Foundation.NSRange,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.Void AppKit.NSTypesetter::WillSetLineFragment(CoreGraphics.CGRect&,Foundation.NSRange,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&)' has a extraneous [NullAllowed] on parameter #3
 !missing-null-allowed! 'AppKit.NSEvent AppKit.NSWindow::NextEventMatchingMask(System.UIntPtr,Foundation.NSDate,System.String,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'AppKit.NSPrintOperation AppKit.NSPrintOperation::EpsFromView(AppKit.NSView,CoreGraphics.CGRect,Foundation.NSMutableData)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSAccessibilityElement::CreateElement(Foundation.NSString,CoreGraphics.CGRect,Foundation.NSString,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
