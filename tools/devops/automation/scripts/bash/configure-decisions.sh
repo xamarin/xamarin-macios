@@ -26,9 +26,6 @@ elif [[ "${LABELS_SKIP_ALL_TESTS:-}" == "True" ]]; then
 elif [[ "${CONFIGURE_PLATFORMS_INCLUDE_DOTNET_MACOS:-}" != "" ]]; then
 	# Run mac tests if a .NET desktop platform is enabled
 	RUN_MAC_TESTS=true
-elif [[ "${CONFIGURE_PLATFORMS_INCLUDE_LEGACY_MAC:-}" != "" ]]; then
-	# Run mac tests if a legacy desktop platform is enabled
-	RUN_MAC_TESTS=true
 else
 	# Otherwise don't run mac tests
 	RUN_MAC_TESTS=false

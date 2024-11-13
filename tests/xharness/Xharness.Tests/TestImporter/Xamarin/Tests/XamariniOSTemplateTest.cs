@@ -42,10 +42,7 @@ namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 			template = null;
 		}
 		[TestCase ("iOSProject", Platform.iOS, "iOSProject.csproj")]
-		[TestCase ("WatchOSProject", Platform.WatchOS, "WatchOSProject-watchos.csproj")]
 		[TestCase ("TvOSProject", Platform.TvOS, "TvOSProject-tvos.csproj")]
-		[TestCase ("macOSProject", Platform.MacOSFull, "macOSProject-mac-full.csproj")]
-		[TestCase ("macOSProject", Platform.MacOSModern, "macOSProject-mac-modern.csproj")]
 		public void GetProjectPathTest (string projectName, Platform platform, string expectedName)
 		{
 			// ignore the fact that all params are the same, we do not care
@@ -53,31 +50,11 @@ namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, "generated", platform.ToString (), projectName, expectedName), path);
 		}
 
-		[TestCase ("WatchApp", WatchAppType.App, "WatchApp-watchos-app.csproj")]
-		[TestCase ("WatchExtension", WatchAppType.Extension, "WatchExtension-watchos-extension.csproj")]
-		public void GetProjectPathWatchOSTest (string projectName, WatchAppType appType, string expectedName)
-		{
-			// ignore the fact that all params are the same, we do not care
-			var path = template.GetProjectPath (projectName, appType);
-			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, "generated", Platform.WatchOS.ToString (), projectName, appType.ToString ().ToLowerInvariant (), expectedName), path);
-		}
-
 		[TestCase ("/usr/path", Platform.iOS, "Info.plist")]
 		[TestCase ("/usr/second/path", Platform.TvOS, "Info-tvos.plist")]
-		[TestCase ("/usr/other/path", Platform.WatchOS, "Info-watchos.plist")]
-		[TestCase ("/usr/other/path", Platform.MacOSFull, "Info-mac.plist")]
-		[TestCase ("/usr/other/path", Platform.MacOSModern, "Info-mac.plist")]
 		public void GetPListPathTest (string rootDir, Platform platform, string expectedName)
 		{
 			var path = XamariniOSTemplate.GetPListPath (rootDir, platform);
-			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
-		}
-
-		[TestCase ("/usr/bin", WatchAppType.App, "Info-watchos-app.plist")]
-		[TestCase ("/usr/local", WatchAppType.Extension, "Info-watchos-extension.plist")]
-		public void GetPListPathWatchOSTest (string rootDir, WatchAppType appType, string expectedName)
-		{
-			var path = XamariniOSTemplate.GetPListPath (rootDir, appType);
 			Assert.AreEqual (Path.Combine (rootDir, expectedName), path);
 		}
 

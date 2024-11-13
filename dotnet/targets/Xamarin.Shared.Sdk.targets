@@ -424,6 +424,9 @@
 			</_AssemblyPublishDirectories>
 			<_AssemblyPublishInputs Include="@(_AssemblyPublishDirectories -> '%(Identity)/**')" />
 		</ItemGroup>
+
+		<!-- We need to these files, so that they don't confuse incremental builds. They're only meant to convey information from an outer universal build to inner rid-specific builds, not between different outer builds. -->
+		<Delete Files="@(_ProcessedPaths)" Condition="Exists('%(Identity)')" />
 	</Target>
 
 	<Target Name="_CreateMergedAppBundle"
@@ -869,8 +872,7 @@
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="$(_DittoArchitectures)"
 			CopyFromWindows="true"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
 			Destination="%(_DirectoriesToPublish.TargetDirectory)"
 			TouchDestinationFiles="true"
@@ -1545,7 +1547,7 @@
 			     here, with an escape hatch if an app really needs it (which would be rather rare). Ref: https://github.com/xamarin/xamarin-macios/issues/21324 -->
 			<_NativeExecutableFrameworks Remove="BrowserEngineKit" Condition="'$(LinkWithBrowserEngineKit)' != 'true'" />
 
-			<!-- Mono requires zlib, iconv, and the "Compression framework" -->
+			<!-- Mono requires zlib, iconv, icucore, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />

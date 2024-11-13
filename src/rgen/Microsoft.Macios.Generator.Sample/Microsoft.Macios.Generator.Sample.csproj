@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Microsoft.Macios.Generator.Sample</RootNamespace>
+        <NoWarn>APL0003</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" OutputItemType="Analyzer" />
+        <ProjectReference Include="..\Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCBindings\BindingTypeAttribute.cs" >
+            <Link>external\BindingTypeAttribute.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\src\bgen\Attributes.cs" >
+            <Link>external\Attributes.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>

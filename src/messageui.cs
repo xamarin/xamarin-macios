@@ -71,14 +71,7 @@ namespace MessageUI {
 	///     </remarks>
 	interface IMFMailComposeViewControllerDelegate { }
 
-#if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
-#else
-	/// <summary>Used to receive notifications from the MFMailComposeViewController class.</summary>
-	///     
-	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/MessageUI/Reference/MFMailComposeViewControllerDelegate_protocol/index.html">Apple documentation for <c>MFMailComposeViewControllerDelegate</c></related>
-	[BaseType (typeof (UINavigationControllerDelegate))]
-#endif
 	[Model]
 	[Protocol]
 	interface MFMailComposeViewControllerDelegate {

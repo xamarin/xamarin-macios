@@ -26,25 +26,6 @@ namespace Foundation {
 	}
 #endif
 
-#if !XAMCORE_3_0
-	public partial class NSOperation {
-
-		[Obsolete ("Use 'WaitUntilFinished' method.")]
-		public virtual void WaitUntilFinishedNS ()
-		{
-			WaitUntilFinished ();
-		}
-	}
-
-	public partial class NSNetService {
-
-		[Obsolete ("This constructor does not create a valid instance of the type")]
-		public NSNetService ()
-		{
-		}
-	}
-#endif
-
 #if !WATCH
 	public partial class NSUserActivity {
 

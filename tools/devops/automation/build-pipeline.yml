@@ -35,11 +35,6 @@ parameters:
     type: boolean
     default: false
 
-  - name: skipESRP
-    displayName: Skip ESRP
-    type: boolean
-    default: false  # only to be used when testing the CI and we do not need a signed pkg
-
   - name: pushNugets
     type: boolean
     displayName: 'Push Nugets (dotnet)'
@@ -155,12 +150,6 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: release-scripts
-      type: github
-      name: xamarin/release-scripts
-      ref: refs/heads/only_codesign
-      endpoint: xamarin
-
     - repository: CustomPipelineTemplates
       type: git
       name: 1ESPipelineTemplates/MicroBuildTemplate
@@ -169,11 +158,11 @@ variables:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
       - template: templates/vsts-variables.yml
   - template: templates/common/vs-release-vars.yml@sdk-insertions
-  - template: templates/variables.yml
+  - template: templates/variables/common.yml
+  - template: templates/variables/api-scan.yml
+  - template: templates/variables/signing.yml
   - name: MicrobuildConnector
     value: 'MicroBuild Signing Task (DevDiv)'
-  - name: MaciosUploadPrefix
-    value: ''
   - name: DisablePipelineConfigDetector
     value: true
 
@@ -231,7 +220,6 @@ extends:
         exclude:
           - repository: yaml-templates
           - repository: sdk-insertions
-          - repository: release-scripts
     stages:
       - template: templates/main-stage.yml
         parameters:
@@ -242,14 +230,9 @@ extends:
           pool: ${{ parameters.pool }}
           runGovernanceTests: ${{ parameters.runGovernanceTests }}
           forceInsertion: ${{ parameters.forceInsertion }}
-          skipESRP: ${{ parameters.skipESRP }}
           pushNugets: ${{ parameters.pushNugets }}
           pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
           ${{ if ne(length(parameters.testConfigurations), 0)}}:
             testConfigurations: ${{ parameters.testConfigurations }}
           deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
           macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-          signingSetupSteps:
-            - template: ./templates/sign-and-notarized/setup.yml
-              parameters:
-                isPR: false

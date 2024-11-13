@@ -22,13 +22,6 @@ namespace UIKit {
 	public partial class UIAccessibilityCustomAction {
 		object action;
 
-#if !XAMCORE_3_0
-		[Obsolete ("iOS9 does not allow creating an empty instance")]
-		public UIAccessibilityCustomAction ()
-		{
-		}
-#endif
-
 		public UIAccessibilityCustomAction (string name, Func<UIAccessibilityCustomAction, bool> probe) : this (name, FuncBoolDispatcher.Selector, new FuncBoolDispatcher (probe))
 		{
 

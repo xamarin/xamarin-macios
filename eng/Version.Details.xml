@@ -68,19 +68,41 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>9bff9c5017d8444fdf76959c112dd9fed2da9317</Sha>
     </Dependency>
+    <!-- This is a subscription of the .NET 9/Xcode 16.0 versions of our packages -->
+    <Dependency Name="Microsoft.MacCatalyst.Sdk.net9.0_18.0" Version="18.0.9617">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>797d30720e5e629d23eb146935da94cb1b61047e</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.macOS.Sdk.net9.0_15.0" Version="15.0.9617">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>797d30720e5e629d23eb146935da94cb1b61047e</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.iOS.Sdk.net9.0_18.0" Version="18.0.9617">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>797d30720e5e629d23eb146935da94cb1b61047e</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.tvOS.Sdk.net9.0_18.0" Version="18.0.9617">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>797d30720e5e629d23eb146935da94cb1b61047e</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="9.0.0-beta.24408.2">
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="9.0.0-beta.24516.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>60ae233c3d77f11c5fdb53e570b64d503b13ba59</Sha>
+      <Sha>3c393bbd85ae16ddddba20d0b75035b0c6f1a52d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.TemplateEngine.Tasks" Version="7.0.100-alpha.1.21601.1">
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24379.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="10.0.0-prerelease.24529.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>edae8a9491f747ba2a36023075aa3ac57be4d32e</Sha>
+      <Sha>dad280573945a8a849b3b655d78706088320766f</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.24516.2">
+      <Uri>https://github.com/dotnet/arcade</Uri>
+      <Sha>3c393bbd85ae16ddddba20d0b75035b0c6f1a52d</Sha>
+      <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

@@ -23,12 +23,10 @@ namespace Xamarin {
 #if BUNDLER
 		public readonly static ProductConstants iOS = new ProductConstants ("@IOS_NUGET_VERSION@", "@IOS_NUGET_REVISION@");
 		public readonly static ProductConstants tvOS = new ProductConstants ("@TVOS_NUGET_VERSION@", "@TVOS_NUGET_REVISION@");
-		public readonly static ProductConstants watchOS = new ProductConstants ("@WATCHOS_NUGET_VERSION@", "@WATCHOS_NUGET_REVISION@");
 		public readonly static ProductConstants macOS = new ProductConstants ("@MACOS_NUGET_VERSION@", "@MACOS_NUGET_REVISION@");
 #else
 		public readonly static ProductConstants iOS = new ProductConstants ("@IOS_VERSION@", "@IOS_REVISION@");
 		public readonly static ProductConstants tvOS = new ProductConstants ("@TVOS_VERSION@", "@TVOS_REVISION@");
-		public readonly static ProductConstants watchOS = new ProductConstants ("@WATCHOS_VERSION@", "@WATCHOS_REVISION@");
 		public readonly static ProductConstants macOS = new ProductConstants ("@MACOS_VERSION@", "@MACOS_REVISION@");
 #endif
 	}

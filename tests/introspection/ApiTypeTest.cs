@@ -9,6 +9,9 @@ using Xamarin.Utils;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	[TestFixture]
@@ -19,7 +22,7 @@ namespace Introspection {
 		bool Skip (Type type)
 		{
 			switch (type.Namespace) {
-#if __IOS__ || __WATCHOS__
+#if __IOS__
 			// running the .cctor on the simulator works... but makes some other CoreNFC intro tests fail later
 			// we'll still get the results from device tests
 			case "CoreNFC":
