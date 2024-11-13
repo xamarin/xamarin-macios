@@ -306,7 +306,7 @@ public class Binding
 		[Category ("Multiplatform")]
 		public void BuildMultiTargeting ()
 		{
-			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
+			var enabledPlatforms = Configuration.GetIncludedPlatforms ();
 			var templatePlatform = enabledPlatforms.First ();
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");

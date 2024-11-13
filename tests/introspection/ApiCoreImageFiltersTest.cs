@@ -19,8 +19,6 @@
 // limitations under the License.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +33,9 @@ using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
@@ -192,24 +193,14 @@ namespace Introspection {
 				var key = k.ToString ();
 				if (key.StartsWith ("CIAttribute", StringComparison.Ordinal))
 					continue;
-#if !NET
-				// CIFilter defines it for all filters
-				if (key == "inputImage")
-					continue;
-#endif
 
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
 				writer.WriteLine ($"\t[CoreImageFilterProperty (\"{key}\")]");
 
-#if NET
 				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion, except for 'inputImage'
 				if (key.StartsWith ("input", StringComparison.Ordinal) && key != "inputImage")
-#else
-				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion
-				if (key.StartsWith ("input", StringComparison.Ordinal))
-#endif
 					key = Char.ToUpperInvariant (key [5]) + key.Substring (6);
 
 				writer.WriteLine ("\t/* REMOVE-ME");
@@ -590,5 +581,3 @@ namespace Introspection {
 		}
 	}
 }
-
-#endif // !__WATCHOS__
