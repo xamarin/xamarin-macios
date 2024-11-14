@@ -207,22 +207,82 @@ function Clear-AfterTests {
 
 <#
     .SYNOPSIS
-        Checks if there is enough space in the HD
+        Get the remaining space in the HD (in GB)
 #>
-function Test-HDFreeSpace {
+function Get-HDFreeSpace {
+    $drive = Get-PSDrive "/"
+    return $drive.Free / 1GB
+}
+
+<#
+    .SYNOPSIS
+        Asserts that the HD has he specified number of GB left, if will:
+
+        * Add a GitHub comment.
+        * File an AzureDevOps issue.
+        * Throw an exception
+
+        (all of these will be done)
+#>
+function Assert-HDFreeSpace {
     param
     (
         [Parameter(Mandatory)]
         [int]
         $Size
     )
-    $drive = Get-PSDrive "/"
-    return $drive.Free / 1GB -gt $Size
+
+    $space = Get-HDFreeSpace
+    if ($space -gt $Size) {
+        Write-Host "This machine has plenty of space, $Size GB are required, and there's $space GB free space left."
+        return
+    }
+
+    $space = Get-HDFreeSpace
+    $shortMessage = "Not enough free space in the host $Env:AGENT_MACHINENAME, need $Size GB, has $space GB."
+
+    Write-Host $shortMessage
+    try {
+        Write-Host "Adding GitHub comment..."
+        New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "$shortMessage"
+    } catch {
+        Write-Host "Failed to post GitHub comment: $_"
+    }
+
+    Write-Host ""
+
+    $stepUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_build/results?buildId=$Env:BUILD_BUILDID&view=logs&j=$Env:SYSTEM_JOBID&t=$Env:SYSTEM_TASKINSTANCEID"
+    $workItemTitle = "[CI] Bot '$Env:AGENT_MACHINENAME' out of disk space"
+    $workItemMessage = @"
+<div>The bot <b>$Env:AGENT_MACHINENAME</b> does not have enough hard disk space left.</div>
+<div><br /></div>
+<div>The bot has $space GB left (needs $Size GB).</div>
+<div><br /></div>
+<div>See: <a href='$stepUrl'>$stepUrl</a> for more logs.</div>
+"@
+
+    Write-Host "Creating new DevOps issue..."
+    try {
+        $workItemId = Find-AzureDevOpsWorkItemWithTitle -Title $workItemTitle
+        if ($workItemId -gt 0) {
+            # there's already an existing work item open for this bot
+            Write-Host "There's already an existing issue for this bot, so just adding a comment to the existing issue $workItemId instead..."
+            $issueUrl = New-AzureDevOpsWorkItemComment -WorkItemId $workItemId -Comment $workItemMessage
+        } else {
+            $issueUrl = New-AzureDevOpsWorkItem -Title $workItemTitle -Message $workItemMessage
+        }
+        Write-Host "Completed, DevOps issue: $issueUrl"
+    } catch {
+        Write-Host "Failed to create work item: $_"
+    }
+
+    throw [System.InvalidOperationException]::new("$shortMessage")
 }
 
 # module exports, any other functions are private and should not be used outside the module
 Export-ModuleMember -Function Get-SystemInfo
 Export-ModuleMember -Function Clear-XamarinProcesses 
-Export-ModuleMember -Function Test-HDFreeSpace
+Export-ModuleMember -Function Get-HDFreeSpace
+Export-ModuleMember -Function Assert-HDFreeSpace
 Export-ModuleMember -Function Clear-AfterTests
 Export-ModuleMember -Function Remove-InstalledSimulators 

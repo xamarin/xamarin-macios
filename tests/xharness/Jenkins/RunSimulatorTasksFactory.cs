@@ -29,13 +29,9 @@ namespace Xharness.Jenkins {
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, project.TestPlatform, ignored));
 				} else {
 					if (!project.SkipiOSVariation)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored));
-					if (project.MonoNativeInfo is not null)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored));
+						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS, ignored));
 					if (!project.SkiptvOSVariation)
 						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
-					if (!project.SkipwatchOSVariation)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored));
 				}
 
 				var configurations = project.Configurations;
@@ -46,15 +42,11 @@ namespace Xharness.Jenkins {
 						var configIgnored = pair.Item3;
 						var testPlatform = pair.Item2;
 						switch (testPlatform) {
-						case TestPlatform.iOS_Unified:
-						case TestPlatform.iOS_TodayExtension64:
+						case TestPlatform.iOS:
 							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS);
 							break;
 						case TestPlatform.tvOS:
 							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);
-							break;
-						case TestPlatform.watchOS:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.watchOS);
 							break;
 						default:
 							Console.WriteLine ("Unknown test platform for ignore check: {0}", testPlatform);
@@ -118,16 +110,8 @@ namespace Xharness.Jenkins {
 				platforms = new TestPlatform [] { TestPlatform.tvOS };
 				ignored = new [] { false };
 				break;
-			case TestPlatform.watchOS:
-				platforms = new TestPlatform [] { TestPlatform.watchOS_32 };
-				ignored = new [] { false };
-				break;
-			case TestPlatform.iOS_Unified:
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
-				ignored = new [] { false };
-				break;
-			case TestPlatform.iOS_TodayExtension64:
-				platforms = new TestPlatform [] { TestPlatform.iOS_TodayExtension64 };
+			case TestPlatform.iOS:
+				platforms = new TestPlatform [] { TestPlatform.iOS };
 				ignored = new [] { false };
 				break;
 			default:

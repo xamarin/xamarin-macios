@@ -1,0 +1,18 @@
+# pipeline to run after a PR build that will execute the apiscan and other governance tests
+trigger: none
+pr: none
+
+# we cannot use a template in a pipeline context
+resources:
+  pipelines:
+    - pipeline: macios
+      source: \Xamarin\Mac-iOS\pr pipelines\xamarin-macios-pr
+      trigger:
+        stages:
+          - build_packages
+
+extends:
+  template: templates/pipelines/run-api-scan.yml
+  parameters:
+    isPR: true
+

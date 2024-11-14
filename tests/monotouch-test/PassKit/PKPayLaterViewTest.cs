@@ -1,31 +1,55 @@
-// Can be uncommented when this issue is resolved: # https://github.com/xamarin/xamarin-macios/issues/19271
+#if __IOS__ && !__MACCATALYST__
 
-// #if __IOS__ && !__MACCATALYST__
+using System;
+using System.Threading;
 
-// using System;
-// using Foundation;
-// using UIKit;
-// using PassKit;
-// using NUnit.Framework;
+using Foundation;
+using UIKit;
 
-// namespace MonoTouchFixtures.PassKit {
+using PassKit;
 
-// 	[TestFixture]
-// 	[Preserve (AllMembers = true)]
-// 	public class PKPayLaterViewTest {
+using NUnit.Framework;
 
-// 		[Test]
-// 		public void ValidateAmountTest ()
-// 		{
-// 			TestRuntime.AssertXcodeVersion (15, 0);
+namespace MonoTouchFixtures.PassKit {
 
-// 			for (int i = 0; i < 1000; i++){
-// 				PKPayLaterView.ValidateAmount (new NSDecimalNumber (i), "USD", (eligible) => {
-// 					Assert.False (eligible);
-// 				});
-// 			}
-// 		}
-// 	}
-// }
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class PKPayLaterViewTest {
 
-// #endif
+		[Test]
+		public void ValidateAmountTest_NSDecimal ()
+		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
+			var counter = 100;
+			var cnt = 0;
+			for (int i = 0; i < counter; i++) {
+				PKPayLaterView.ValidateAmount (new NSDecimalNumber (i), "USD", (eligible) => {
+					Interlocked.Increment (ref cnt);
+				});
+			}
+			// The callback is rarely called, so just assert that we don't get more callbacks than
+			// actual validation requests.
+			Assert.That (cnt, Is.Not.LessThan (0).And.Not.GreaterThan (counter), $"NSDecimalNumber overload");
+		}
+
+		[Test]
+		public void ValidateAmountTest_Decimal ()
+		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
+			var counter = 100;
+			var cnt = 0;
+			for (int i = 0; i < counter; i++) {
+				PKPayLaterView.ValidateAmount (i, "USD", (eligible) => {
+					Interlocked.Increment (ref cnt);
+				});
+			}
+			// The callback is rarely called, so just assert that we don't get more callbacks than
+			// actual validation requests.
+			Assert.That (cnt, Is.Not.LessThan (0).And.Not.GreaterThan (counter), $"decimal overload");
+		}
+	}
+}
+
+#endif

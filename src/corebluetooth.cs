@@ -825,18 +825,6 @@ namespace CoreBluetooth {
 		[Export ("UUIDWithNSUUID:")]
 		CBUUID FromNSUuid (NSUuid theUUID);
 
-#if !XAMCORE_3_0 && !NET
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDGenericAccessProfileString")]
-		NSString GenericAccessProfileString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDGenericAttributeProfileString")]
-		NSString GenericAttributeProfileString { get; }
-#endif // !XAMCORE_3_0 && !NET
-
 		[Field ("CBUUIDCharacteristicExtendedPropertiesString")]
 		NSString CharacteristicExtendedPropertiesString { get; }
 
@@ -882,38 +870,6 @@ namespace CoreBluetooth {
 		[MacCatalyst (13, 1)]
 		[Field ("CBUUIDL2CAPPSMCharacteristicString")]
 		NSString L2CapPsmCharacteristicString { get; }
-
-#if !XAMCORE_3_0 && !NET
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDDeviceNameString")]
-		NSString DeviceNameString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDAppearanceString")]
-		NSString AppearanceString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDPeripheralPrivacyFlagString")]
-		NSString PeripheralPrivacyFlagString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDReconnectionAddressString")]
-		NSString ReconnectionAddressString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDPeripheralPreferredConnectionParametersString")]
-		NSString PeripheralPreferredConnectionParametersString { get; }
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Obsoleted (PlatformName.iOS, 9, 0)]
-		[Field ("CBUUIDServiceChangedString")]
-		NSString ServiceChangedString { get; }
-#endif // !XAMCORE_3_0 && !NET
 
 		[MacCatalyst (13, 1)]
 		[Export ("UUIDString")]

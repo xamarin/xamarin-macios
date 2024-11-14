@@ -20,10 +20,6 @@ parameters:
     type: boolean
     default: true
 
-  - name: skipESRP
-    type: boolean
-    default: false  # only to be used when testing the CI and we do not need a signed pkg
-
   - name: isPR
     type: boolean
 
@@ -50,22 +46,10 @@ steps:
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       buildSteps:
-        # build not signed .pkgs for the SDK
-        - bash: |
-            set -x
-            set -e
-            rm -Rf $(Build.SourcesDirectory)/package/*.pkg
-            rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
-            time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
-          name: packages
-          displayName: 'Build Packages'
-          condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
-          timeoutInMinutes: 180
-
         # build nugets
         - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
           displayName: 'Build Nugets'
-          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'], ''))
+          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
           timeoutInMinutes: 180
 
         - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
@@ -77,34 +61,6 @@ steps:
           inputs:
             path: $(Build.SourcesDirectory)/WorkloadRollback.json
             artifact: '${{ parameters.uploadPrefix }}WorkloadRollback'
-          continueOnError: true
-
-        - bash: |
-            var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_PACKAGE_VERSION)
-            IOS_PACKAGE_VERSION=${var#*=}
-            IOS_PACKAGE_VERSION=$(echo $IOS_PACKAGE_VERSION | cut -d "+" -f1)
-
-            var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MAC_PACKAGE_VERSION)
-            MAC_PACKAGE_VERSION=${var#*=}
-            MAC_PACKAGE_VERSION=$(echo $MAC_PACKAGE_VERSION | cut -d "+" -f1)
-
-            PKG_DST="$(Build.SourcesDirectory)/PkgsVersions.json"
-
-            echo "{" > $PKG_DST
-            echo "\"iOS\": \"$IOS_PACKAGE_VERSION\"," >>  $PKG_DST
-            echo "\"macOS\": \"$MAC_PACKAGE_VERSION\"" >> $PKG_DST
-            echo "}" >>  $PKG_DST
-
-            echo "PkgVersions.json file contents:"
-            echo "$(cat $PKG_DST)"
-          name: pkg_versions_file
-          displayName: 'Generate PkgsVersions.json'
-
-        - task: 1ES.PublishPipelineArtifact@1
-          displayName: 'Publish PkgsVersions.json'
-          inputs:
-            path: $(Build.SourcesDirectory)/PkgsVersions.json
-            artifact: '${{ parameters.uploadPrefix }}PkgsVersions'
           continueOnError: true
 
         # upload each of the pkgs into the pipeline artifacts

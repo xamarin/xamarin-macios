@@ -195,18 +195,8 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: release-scripts
-      type: github
-      name: xamarin/release-scripts
-      ref: refs/heads/only_codesign
-      endpoint: xamarin
-
 variables:
-  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-      - template: ../vsts-variables.yml
-  - template: ../variables.yml
-  - name: MaciosUploadPrefix
-    value: ''
+  - template: ../variables/common.yml
   - name: DisablePipelineConfigDetector
     value: true
 
@@ -248,7 +238,7 @@ stages:
               commit: ${{ parameters.commit }}
               testConfigurations: ${{ parameters.testConfigurations }}
               supportedPlatforms: ${{ parameters.supportedPlatforms }}
-              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
               statusContext: 'VSTS: simulator tests' 
               uploadArtifacts: true
 

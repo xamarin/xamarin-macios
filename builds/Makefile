@@ -12,68 +12,22 @@ else
 DOTNET_ARCH=x64
 endif
 
-##
-## Mono download vs. build
-##
-
-download: download-mono
-download-mono: \
-	downloads/$(basename $(MONO_IOS_FILENAME)) \
-
-downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
-
 include $(TOP)/mk/colors.mk
 
-DOWNLOADS = \
-	downloads/$(MONO_IOS_FILENAME) \
-
-# This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
-# If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
-# to avoid having to download it every time. The zip files have to be copied manually, otherwise
-# we'd end up filling up a lot of hard drives around the world.
-$(DOWNLOADS):
-	$(Q) mkdir -p downloads
-	$(Q) echo "Downloading $(MONO_URL)..."
-	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
-		echo "Found a cached version of $(MONO_URL) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
-		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
-	else \
-		EC=0; \
-		$(CURL_RETRY) $(MONO_URL) --output $@.tmp || EC=$$?; \
-		if [[ x$$EC == x22 ]]; then \
-			MSG="Could not download the archive %s because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again."; \
-			printf "$(COLOR_RED)*** $$MSG$(COLOR_CLEAR)\n" "$(notdir $@)"; \
-			if test -n "$$FAILURE_REASON_PATH"; then printf "$$MSG\n" "[$(notdir $@)]($(MONO_URL))" >> "$$FAILURE_REASON_PATH"; fi; \
-		fi; \
-		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
-		if [[ "x$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
-			mkdir -p ~/Library/Caches/xamarin-macios/; \
-			$(CP) $@.tmp ~/Library/Caches/xamarin-macios/"$(notdir $@)"; \
-			echo "Cached the download of $(notdir $@) in ~/Library/Caches/xamarin-macios"; \
-		fi; \
-	fi
-	$(Q) mv $@.tmp $@
-	$(Q) echo "Downloaded $(MONO_URL)"
-
-downloads/%: downloads/%.7z
-	$(Q) echo "Unzipping $*..."
-	$(Q) rm -Rf $@.tmp
-	$(Q) 7z x $< -o$@.tmp
-	$(Q) find $@.tmp -exec touch {} +
-	$(Q) mv $@.tmp $@
-	$(Q) echo "Unzipped $*."
-
-downloads/%: downloads/%.nupkg
-	$(Q) echo "Unzipping $*..."
-	$(Q) rm -Rf $@.tmp
-	$(Q) unzip -d $@.tmp $<
-	$(Q) find $@.tmp -exec touch {} +
-	$(Q) mv $@.tmp $@
-	$(Q) echo "Unzipped $*."
+DOTNET_FILENAME=$(DOTNET_VERSION).tar.gz
+DOTNET_CACHE_FILENAME=$(HOME)/Library/Caches/xamarin-macios/$(DOTNET_FILENAME)
 
 downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) ($(DOTNET_ARCH)) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
+	$(Q) if test -f $(DOTNET_CACHE_FILENAME); then \
+			echo "Found a cached version of .NET $(DOTNET_VERSION) in $(DOTNET_CACHE_FILENAME)."; \
+			mkdir -p "$@.tmp"; \
+			tar -xzf $(DOTNET_CACHE_FILENAME) -C "$@.tmp"; \
+		else \
+			./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path --keep-zip --zip-path "downloads/$(DOTNET_FILENAME)" $$DOTNET_INSTALL_EXTRA_ARGS; \
+			cp -c downloads/$(DOTNET_FILENAME) $(DOTNET_CACHE_FILENAME); \
+			echo "Cached the download of $(DOTNET_FILENAME) in ~/Library/Caches/xamarin-macios"; \
+		fi
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
@@ -107,10 +61,6 @@ dotnet-install.sh: Makefile
 	$(Q) $(CURL_RETRY) $(DOTNET_DOWNLOAD_URL) --output $@.tmp
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
-
-.stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
-	$(MAKE) download-mono
-	$(Q) touch $@
 
 ifdef CUSTOM_DOTNET
 DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
@@ -170,17 +120,7 @@ dotnet:: $(DOTNET_DOWNLOADS)
 all-local:: $(DOTNET_DOWNLOADS)
 
 clean-local::
-	$(Q) rm -Rf downloads .stamp-download-mono
-
-all-local:: .stamp-mono-ios-sdk-destdir
-
-.stamp-mono-ios-sdk-destdir: .stamp-$(MONO_BUILD_MODE)
-	ln -sf $(MONO_IOS_SDK_DESTDIR) mono-ios-sdk-destdir
-	$(Q) touch $@
-
-#
-# .NET
-#
+	$(Q) rm -Rf downloads
 
 DOTNET_COMMON_DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)) \
@@ -190,10 +130,12 @@ DOTNET_COMMON_TARGETS = \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/Versions.plist) \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/buildinfo) \
 
+include $(TOP)/scripts/versions-check/fragment.mk
+$(VERSIONS_CHECK): downloads/$(DOTNET_INSTALL_NAME)
 define VersionInfo
-$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/builds/Versions-$(1).plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
-	$$(Q) $(TOP)/versions-check.csharp $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
-	$$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/builds/Versions-$(1).plist.in Makefile $(TOP)/Make.config $(VERSIONS_CHECK) | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
+	$$(Q) $(VERSIONS_CHECK_EXEC) $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
+	$$(QF_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionInfo,$(platform))))
@@ -214,4 +156,3 @@ $(DOTNET_COMMON_DIRECTORIES):
 install-dotnet: $(DOTNET_COMMON_TARGETS)
 install-local:: install-dotnet
 all-local:: install-dotnet
-

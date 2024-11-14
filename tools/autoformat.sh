@@ -37,7 +37,6 @@ IFS=$'\n'
 cd ..
 
 # Start formatting!
-dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
 dotnet format whitespace "$SRC_DIR/tests/cecil-tests/cecil-tests.csproj"
 dotnet format whitespace "$SRC_DIR/tests/dotnet/UnitTests/DotNetUnitTests.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Messaging/Xamarin.Messaging.Build/Xamarin.Messaging.Build.csproj"
@@ -56,8 +55,6 @@ dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/iOS/introspection.
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/MacCatalyst/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/macOS/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/tvOS/introspection.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/iOS/introspection-ios.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/Mac/introspection-mac.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/iOS/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/MacCatalyst/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj"

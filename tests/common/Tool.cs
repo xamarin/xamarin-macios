@@ -127,22 +127,7 @@ namespace Xamarin.Tests {
 
 		public int Execute (string toolPath, IList<string> arguments, bool always_show_output)
 		{
-			output.Clear ();
-			output_lines = null;
-
-			var args = new List<string> ();
-			args.Add ("-t");
-			args.Add ("--");
-			args.Add (toolPath);
-			args.AddRange (arguments);
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, args, EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
-
-			if ((rv != 0 || always_show_output) && output.Length > 0)
-				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
-
-			ParseMessages ();
-
-			return rv;
+			throw new NotSupportedException ("Legacy projects not supported anymore");
 		}
 
 		static bool IndexOfAny (string line, out int start, out int end, params string [] values)

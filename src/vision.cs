@@ -38,6 +38,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Vision {
 
+	[Partial]
+	interface VNUtils {
+		[Field ("VNVisionVersionNumber")]
+		double VisionVersionNumber { get; }
+	}
+
 	/// <summary>Enumerates errors associated with Vision requests.</summary>
 	[ErrorDomain ("VNErrorDomain")]
 	[MacCatalyst (13, 1)]

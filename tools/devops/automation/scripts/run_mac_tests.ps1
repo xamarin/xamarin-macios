@@ -36,7 +36,7 @@ dir env:
 # Claim that the tests timed out before we start
 Set-Content -Path "$GithubFailureCommentFile" -Value "Tests timed out"
 
-$macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
+$macTest = @("dontlink", "introspection", "linksdk", "linkall", "monotouch-test")
 foreach ($t in $macTest) {
   $testName = "exec-$t"
   Write-Host "Execution test $testName"

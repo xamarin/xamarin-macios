@@ -496,7 +496,7 @@ namespace Xamarin.MacDev.Tasks {
 				Assert.AreEqual (3, Engine.Logger.WarningsEvents.Count, "Warning Count");
 				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata 'OnlyIn1=true' has been set for one item, but not the other.", Engine.Logger.WarningsEvents [0].Message, "Message #0");
 				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata 'InOneAndTwoWithDifferentValues' has different values for each item (once it's '1', another time it's '2').", Engine.Logger.WarningsEvents [1].Message, "Message #1");
-				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata for one are: 'RequireCodeSigning, OnlyIn1, InOneAndTwoWithDifferentValues, CodesignStampFile', while the metadata for the other are: 'RequireCodeSigning, CodesignStampFile'", Engine.Logger.WarningsEvents [2].Message, "Message #2");
+				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata for one are: 'CodesignStampFile, InOneAndTwoWithDifferentValues, OnlyIn1, RequireCodeSigning', while the metadata for the other are: 'CodesignStampFile, RequireCodeSigning'", Engine.Logger.WarningsEvents [2].Message, "Message #2");
 
 				VerifyCodesigningResults (infos, task.OutputCodesignItems, platform);
 			} finally {
@@ -532,7 +532,7 @@ namespace Xamarin.MacDev.Tasks {
 					var metadata = item.GetMetadata (kvp.Key);
 					if (metadata == string.Empty && kvp.Value != string.Empty) {
 						failures.Add ($"Item '{info.ItemSpec}': Expected metadata '{kvp.Key}' not found (with value '{kvp.Value}').");
-					} else if (!string.Equals (metadata, kvp.Value)) {
+					} else if (!string.Equals (metadata, kvp.Value, StringComparison.Ordinal)) {
 						failures.Add ($"Item '{info.ItemSpec}': Expected value '{kvp.Value}' for metadata '{kvp.Key}', but got '{metadata}' instead.\nExpected: {kvp.Value}\nActual:   {metadata}");
 					}
 				}
@@ -587,7 +587,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (file.EndsWith (".appex", StringComparison.OrdinalIgnoreCase) || file.EndsWith (".app", StringComparison.OrdinalIgnoreCase)) {
 					Directory.CreateDirectory (f);
 				} else {
-					Directory.CreateDirectory (Path.GetDirectoryName (file));
+					Directory.CreateDirectory (Path.GetDirectoryName (file)!);
 					File.WriteAllText (file, string.Empty);
 				}
 			}
@@ -637,7 +637,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var rv = new Dictionary<string, string> ();
 			foreach (DictionaryEntry de in self.CloneCustomMetadata ()) {
-				rv [(string) de.Key] = (string) de.Value;
+				rv [(string) de.Key!] = (string) de.Value!;
 			}
 			return rv;
 		}

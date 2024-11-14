@@ -11,23 +11,6 @@ using ObjCRuntime;
 
 namespace Photos {
 
-#if !XAMCORE_3_0 && !MONOMAC
-	public partial class PHContentEditingInputRequestOptions {
-
-		[Obsolete ("Use 'CanHandleAdjustmentData' property.")]
-		public virtual void SetCanHandleAdjustmentDataHandler (Func<PHAdjustmentData, bool> canHandleAdjustmentDataPredicate)
-		{
-			CanHandleAdjustmentData = canHandleAdjustmentDataPredicate;
-		}
-
-		[Obsolete ("Use 'ProgressHandler' property.")]
-		public virtual void SetProgressHandler (PHProgressHandler progressHandler)
-		{
-			ProgressHandler = progressHandler;
-		}
-	}
-#endif
-
 #if !NET
 	// incorrect signature, should have been `ref NSError`
 	[Obsolete ("Use 'PHLivePhotoFrameProcessingBlock2' instead.")]
