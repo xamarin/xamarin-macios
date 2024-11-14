@@ -16,7 +16,7 @@ parameters:
   default: false
 
 variables:
-- template: templates/variables.yml
+- template: templates/variables/common.yml
 - name: MaciosUploadPrefix
   value: ''
 
@@ -42,12 +42,6 @@ resources:
     type: github
     name: xamarin/maccore
     ref: refs/heads/main
-    endpoint: xamarin
-
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
     endpoint: xamarin
 
 trigger:

@@ -34,6 +34,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			switch (type.Namespace) {
 			// Xcode 15:
 			case "MetalFX":
@@ -49,12 +52,6 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
-#if !NET
-			case "MTLCounter":
-			case "MTLCounterSampleBuffer":
-			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for .NET.
-#endif
 			case "MPSImageLaplacianPyramid":
 			case "MPSImageLaplacianPyramidSubtract":
 			case "MPSImageLaplacianPyramidAdd":

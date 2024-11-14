@@ -1029,37 +1029,6 @@ public class B : A {}
 		}
 
 		[Test]
-		[TestCase (Profile.watchOS)]
-		[TestCase (Profile.tvOS)]
-		public void MT0076 (Profile profile)
-		{
-			if (!Configuration.include_watchos || !Configuration.include_tvos)
-				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
-
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = profile;
-				mtouch.Abi = MTouchTool.None;
-				mtouch.CreateTemporaryApp ();
-				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (76, $"No architecture specified (using the --abi argument). An architecture is required for {GetPlatformName (profile)} projects.");
-			}
-		}
-
-		[Test]
-		public void MT0077 ()
-		{
-			if (!Configuration.include_watchos)
-				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
-
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.watchOS;
-				mtouch.CreateTemporaryApp ();
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (77, "WatchOS projects must be extensions.");
-			}
-		}
-
-		[Test]
 		[TestCase (Profile.tvOS)]
 		[TestCase (Profile.watchOS)]
 		[TestCase (Profile.iOS)]
@@ -2758,14 +2727,6 @@ public class TestApp {
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
-		}
-
-		[Test]
-		public void ScriptedTests ()
-		{
-			AssertDeviceAvailable ();
-
-			ExecutionHelper.Execute ("make", new [] { "-C", Path.Combine (Configuration.SourceRoot, "tests", "scripted") }, timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]

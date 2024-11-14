@@ -4,12 +4,11 @@
 trigger: none
 pr: none
 
-
 # we cannot use a template in a pipeline context
 resources:
   pipelines:
     - pipeline: macios
-      source: xamarin-macios-ci
+      source: \Xamarin\Mac-iOS\ci pipelines\xamarin-macios-ci
       trigger:
         stages:
           - build_packages

@@ -180,20 +180,6 @@ namespace CoreGraphics {
 			return new CGSize ((nfloat) Math.Round (width), (nfloat) Math.Round (height));
 		}
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'ToRoundedCGSize' instead.")]
-		public CGSize ToSize ()
-		{
-			return ToRoundedCGSize ();
-		}
-
-		[Obsolete ("Use 'ToCGPoint' instead.")]
-		public CGPoint ToPointF ()
-		{
-			return (CGPoint) this;
-		}
-#endif
-
 		public CGPoint ToCGPoint ()
 		{
 			return (CGPoint) this;

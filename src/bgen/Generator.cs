@@ -50,6 +50,7 @@ using System.IO;
 using System.Text;
 using System.ComponentModel;
 using System.Reflection;
+using ObjCBindings;
 using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
@@ -1142,24 +1143,6 @@ public partial class Generator : IMemberGatherer {
 		} else {
 			preExpression = "(" + renderedEnumType + ") (" + TypeManager.RenderType (underlyingEnumType) + ") ";
 			postExpression = string.Empty;
-		}
-
-		// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue (if the enum
-		// in question actually has that value at least). Same goes for Int32.MinValue/Int64.MinValue.
-		// var isDefined = enumType.IsEnumDefined (maxValue);
-		var definedMaxField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMaxDefinedFunc);
-		if (definedMaxField is not null && postproc is not null) {
-			postproc.AppendLine ("#if ARCH_32");
-			postproc.AppendFormat ("if (({0}) ret == ({0}) {1}.MaxValue)\n", underlyingTypeName, itype);
-			postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MaxValue\n", renderedEnumType, definedMaxField.Name, underlyingTypeName);
-			if (underlyingEnumType == TypeCache.System_Int64) {
-				var definedMinField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMinDefinedFunc);
-				if (definedMinField is not null) {
-					postproc.AppendFormat ("else if (({0}) ret == ({0}) {1}.MinValue)\n", underlyingTypeName, itype);
-					postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MinValue\n", renderedEnumType, definedMinField.Name, underlyingTypeName);
-				}
-			}
-			postproc.AppendLine ("#endif");
 		}
 
 		return true;
@@ -2918,7 +2901,7 @@ public partial class Generator : IMemberGatherer {
 			// protocol support means we can return interfaces and, as far as .NET knows, they might not be NSObject
 			if (IsProtocolInterface (mi.ReturnType)) {
 				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo?.type ?? mi.DeclaringType, mi.ReturnType) + "> (";
-				cast_b = ", false)!";
+				cast_b = $", {(minfo?.is_return_release == true ? "true" : "false")})!";
 			} else if (minfo is not null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo.type, mi.ReturnType) + "> (";
 				cast_b = $", true, {minfo.is_forced_owns})!";
@@ -3251,22 +3234,6 @@ public partial class Generator : IMemberGatherer {
 	AvailabilityBaseAttribute GetIntroduced (MethodInfo mi, PropertyInfo pi)
 	{
 		return mi.GetAvailability (AvailabilityKind.Introduced, this) ?? pi.GetAvailability (AvailabilityKind.Introduced, this);
-	}
-
-	bool Is64BitiOSOnly (ICustomAttributeProvider provider)
-	{
-		if (BindThirdPartyLibrary)
-			return false;
-		if (BindingTouch.CurrentPlatform != PlatformName.iOS)
-			return false;
-		var attrib = provider.GetAvailability (AvailabilityKind.Introduced, this);
-		if (attrib is null) {
-			var minfo = provider as MemberInfo;
-			if (minfo is not null && minfo.DeclaringType is not null)
-				return Is64BitiOSOnly (minfo.DeclaringType);
-			return false;
-		}
-		return attrib.Version?.Major >= 11;
 	}
 
 	//
@@ -3686,7 +3653,7 @@ public partial class Generator : IMemberGatherer {
 		if (shouldMarshalNativeExceptions)
 			print ("Runtime.ThrowException (exception_gchandle);");
 
-		if (minfo.is_return_release) {
+		if (minfo.is_return_release && !IsProtocolInterface (mi.ReturnType)) {
 
 			// Make sure we generate the required signature in Messaging only if needed 
 			// bool_objc_msgSendSuper_IntPtr: for respondsToSelector:
@@ -4205,12 +4172,6 @@ public partial class Generator : IMemberGatherer {
 #endif
 			} else {
 				print ("get {");
-				var is32BitNotSupported = Is64BitiOSOnly (pi);
-				if (is32BitNotSupported) {
-					print ("#if ARCH_32");
-					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-					print ("#else");
-				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
@@ -4237,8 +4198,6 @@ public partial class Generator : IMemberGatherer {
 						indent--;
 					}
 				}
-				if (is32BitNotSupported)
-					print ("#endif");
 				print ("}\n");
 			}
 		}
@@ -4279,12 +4238,6 @@ public partial class Generator : IMemberGatherer {
 #endif
 			} else {
 				print ("set {");
-				var is32BitNotSupported = Is64BitiOSOnly (pi);
-				if (is32BitNotSupported) {
-					print ("#if ARCH_32");
-					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-					print ("#else");
-				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetSetMethod ());
 
@@ -4312,8 +4265,6 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 				}
-				if (is32BitNotSupported)
-					print ("#endif");
 				print ("}");
 			}
 		}
@@ -4655,12 +4606,6 @@ public partial class Generator : IMemberGatherer {
 
 			print ("{");
 
-			var is32BitNotSupported = Is64BitiOSOnly ((ICustomAttributeProvider) minfo.Method ?? minfo.Property);
-			if (is32BitNotSupported) {
-				print ("#if ARCH_32");
-				print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-				print ("#else");
-			}
 			if (debug)
 				print ("\tConsole.WriteLine (\"In {0}\");", mi);
 
@@ -4703,8 +4648,6 @@ public partial class Generator : IMemberGatherer {
 					indent--;
 				}
 			}
-			if (is32BitNotSupported)
-				print ("#endif");
 			print ("}\n");
 		}
 
@@ -5688,6 +5631,13 @@ public partial class Generator : IMemberGatherer {
 
 	public void Generate (Type type)
 	{
+
+		// check if the type has been marked as a type that will be generated by the new code generator, if that
+		// is the case, bgen will ignore it allowing the rgen code generator add the type to the final assembly
+		bool is_rgen_type = AttributeManager.HasAttribute<BindingTypeAttribute> (type);
+		if (is_rgen_type)
+			return;
+
 		if (ZeroCopyStrings) {
 			ErrorHelper.Warning (1027);
 			ZeroCopyStrings = false;
@@ -5957,18 +5907,7 @@ public partial class Generator : IMemberGatherer {
 
 				if (!is_model) {
 					print_generated_code ();
-					var is32BitNotSupported = Is64BitiOSOnly (type);
-					if (is32BitNotSupported) {
-						// potentially avoid a .cctor and extra, unusable code
-						print ("#if ARCH_32");
-						print ("#pragma warning disable {0}", is_static_class ? "169" : "649");
-						print ("static readonly {0} class_ptr;", NativeHandleType);
-						print ("#pragma warning restore {0}", is_static_class ? "169" : "649");
-						print ("#else");
-					}
 					print ("static readonly {1} class_ptr = Class.GetHandle (\"{0}\");", objc_type_name, NativeHandleType);
-					if (is32BitNotSupported)
-						print ("#endif");
 					print ("");
 				}
 			}
@@ -6016,7 +5955,6 @@ public partial class Generator : IMemberGatherer {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
 					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
-					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
 							if (BindingTouch.SupportsXmlDocumentation) {
@@ -6029,19 +5967,12 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
 							if (is_direct_binding_value is not null)
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
 							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging);
 							sw.WriteLine ("\t\t\t");
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 						}
 					} else {
@@ -6056,11 +5987,6 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
 							if (type_needs_thread_checks) {
 								sw.Write ("\t\t\t");
 								GenerateThreadCheck (sw);
@@ -6071,8 +5997,6 @@ public partial class Generator : IMemberGatherer {
 														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging));
 
 							WriteMarkDirtyIfDerived (sw, type);
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
@@ -6093,11 +6017,6 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
 							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
 							if (nscoding) {
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
@@ -6113,8 +6032,6 @@ public partial class Generator : IMemberGatherer {
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
 							}
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}

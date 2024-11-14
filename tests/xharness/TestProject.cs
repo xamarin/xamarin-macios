@@ -37,9 +37,6 @@ namespace Xharness {
 
 		public IEnumerable<TestProject>? ProjectReferences;
 
-		// Optional
-		public MonoNativeInfo? MonoNativeInfo { get; set; }
-
 		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
 			Label = label;
@@ -115,21 +112,10 @@ namespace Xharness {
 				if (test.ProjectPlatform == "iPhone") {
 					switch (test.Platform) {
 					case TestPlatform.iOS:
-					case TestPlatform.iOS_Unified:
-					case TestPlatform.iOS_Unified64:
-					case TestPlatform.iOS_TodayExtension64:
 						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm64");
-						break;
-					case TestPlatform.iOS_Unified32:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm");
 						break;
 					case TestPlatform.tvOS:
 						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "tvos-arm64");
-						break;
-					case TestPlatform.watchOS:
-					case TestPlatform.watchOS_32:
-					case TestPlatform.watchOS_64_32:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "watchos-arm");
 						break;
 					}
 				}

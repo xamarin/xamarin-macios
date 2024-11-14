@@ -37,8 +37,8 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Dump Environment'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
 
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
@@ -126,9 +126,6 @@ steps:
     icacls id_rsa /grant:r $grant
   displayName: "Write and verify id_rsa"
   continueOnError: true
-
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Show Environment'
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
@@ -231,32 +228,28 @@ steps:
     Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
   displayName: 'Create runsettings for .NET tests'
 
-- pwsh: |
-    $Env:PATH = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet;$env:PATH"
-    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
-    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
-        test `
-        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
-        --filter Category=Windows `
-        --verbosity quiet `
-        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
-        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
-        "--logger:console;verbosity=detailed" `
-        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `
-        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
-        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
-  displayName: 'Run .NET tests'
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-local-windows-tests.ps1
+  displayName: 'Run .NET tests locally'
   timeoutInMinutes: 30
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
 
 - pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
   displayName: 'Run .NET tests remotely'
   timeoutInMinutes: 120
+  continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
     XMA_PASSWORD: $(XMA.Password)
+
+- pwsh: |
+    Write-Host "There are test failures, so failing the build"
+    exit 1
+  displayName: 'Fail if test failures'
+  timeoutInMinutes: 1
+  condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
 
 - pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
   displayName: 'Fetch remote binlogs'
@@ -342,13 +335,13 @@ steps:
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE", "windows tests")
     } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
       $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message, "windows tests")
     } else {
       $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message, "windows tests")
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5

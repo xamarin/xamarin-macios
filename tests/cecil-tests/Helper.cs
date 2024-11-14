@@ -29,7 +29,6 @@ namespace Cecil.Tests {
 			if (!cache.TryGetValue (assembly, out var ad)) {
 				if (parameters is null) {
 					var resolver = new DefaultAssemblyResolver ();
-					resolver.AddSearchDirectory (GetBCLDirectory (assembly));
 					parameters = new ReaderParameters () {
 						AssemblyResolver = resolver,
 						ReadSymbols = readSymbols,
@@ -409,76 +408,6 @@ namespace Cecil.Tests {
 				yield return item;
 		}
 
-		public static string GetBCLDirectory (string assembly)
-		{
-			var rv = string.Empty;
-			var isDotNet = !assembly.Contains ("Library/Frameworks/Xamarin.iOS.framework") && !assembly.Contains ("Library/Frameworks/Xamarin.Mac.framework");
-
-			switch (Configuration.GetPlatform (assembly, isDotNet)) {
-			case ApplePlatform.iOS:
-				rv = Path.GetDirectoryName (Configuration.XamarinIOSDll);
-				break;
-			case ApplePlatform.WatchOS:
-				rv = Path.GetDirectoryName (Configuration.XamarinWatchOSDll);
-				break;
-			case ApplePlatform.TVOS:
-				rv = Path.GetDirectoryName (Configuration.XamarinTVOSDll);
-				break;
-			case ApplePlatform.MacOSX:
-				rv = Path.GetDirectoryName (assembly);
-				break;
-			case ApplePlatform.MacCatalyst:
-				rv = Path.GetDirectoryName (Configuration.XamarinCatalystDll);
-				break;
-			default:
-				throw new NotImplementedException (assembly);
-			}
-
-			return rv!;
-		}
-
-		static IEnumerable<string> PlatformAssemblies {
-			get {
-				if (!Configuration.include_legacy_xamarin)
-					yield break;
-
-				if (Configuration.include_ios) {
-					// we want to process 32/64 bits individually since their content can differ
-					if (Configuration.iOSSupports32BitArchitectures)
-						yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll");
-					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll");
-				}
-
-				if (Configuration.include_watchos) {
-					// XamarinWatchOSDll is stripped of its IL
-					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll");
-				}
-
-				if (Configuration.include_tvos) {
-					// XamarinTVOSDll is stripped of it's IL
-					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll");
-				}
-
-				if (Configuration.include_mac) {
-					yield return Configuration.XamarinMacMobileDll;
-					yield return Configuration.XamarinMacFullDll;
-				}
-			}
-		}
-
-		static IList<AssemblyInfo>? platform_assembly_definitions;
-		public static IEnumerable<AssemblyInfo> PlatformAssemblyDefinitions {
-			get {
-				if (platform_assembly_definitions is null) {
-					platform_assembly_definitions = PlatformAssemblies
-						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: true), false))
-						.ToArray ();
-				}
-				return platform_assembly_definitions;
-			}
-		}
-
-
 		static IEnumerable<string> NetPlatformAssemblies => Configuration.GetRefLibraries ();
 
 		static IList<AssemblyInfo>? net_platform_assembly_definitions;
@@ -486,7 +415,7 @@ namespace Cecil.Tests {
 			get {
 				if (net_platform_assembly_definitions is null) {
 					net_platform_assembly_definitions = NetPlatformAssemblies
-						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: false), true))
+						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: false)))
 						.ToArray ();
 				}
 				return net_platform_assembly_definitions;
@@ -500,7 +429,7 @@ namespace Cecil.Tests {
 			get {
 				if (net_platform_assembly_implemnetation_assembly_definitions is null) {
 					net_platform_assembly_implemnetation_assembly_definitions = NetPlatformImplementationAssemblies
-						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: true), true))
+						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: true)))
 						.ToArray ();
 				}
 				return net_platform_assembly_implemnetation_assembly_definitions;
@@ -532,22 +461,6 @@ namespace Cecil.Tests {
 				}
 				return mapped_net_api;
 			}
-		}
-
-		public static IEnumerable<TestFixtureData> TaskAssemblies {
-			get {
-				if (Configuration.include_ios)
-					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
-				if (Configuration.include_mac)
-					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild", "Xamarin.Mac.Tasks.dll"));
-			}
-		}
-
-		static TestFixtureData CreateTestFixtureDataFromPath (string path)
-		{
-			var rv = new TestFixtureData (path);
-			rv.SetArgDisplayNames (Path.GetFileName (path));
-			return rv;
 		}
 
 		// This method renders a string that sorts well - methods in the same
@@ -717,11 +630,11 @@ namespace Cecil.Tests {
 		public string Path;
 		public ApplePlatform Platform;
 
-		public AssemblyInfo (string path, AssemblyDefinition assembly, bool isDotNet)
+		public AssemblyInfo (string path, AssemblyDefinition assembly)
 		{
 			Assembly = assembly;
 			Path = path;
-			Platform = Configuration.GetPlatform (path, isDotNet);
+			Platform = Configuration.GetPlatform (path);
 		}
 
 		public override string ToString ()

@@ -21,6 +21,7 @@ steps:
     clean: true
     submodules: recursive
     path: s/xamarin-macios
+    fetchTags: false
 
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
   name: fix_commit
@@ -32,12 +33,11 @@ steps:
   clean: true
   fetchDepth: 0
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+  fetchTags: false
 
 - checkout: yaml-templates
   clean: true
-
-- checkout: release-scripts
-  clean: true
+  fetchTags: false
 
 - pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
   displayName: 'Clean git mess from VSTS'

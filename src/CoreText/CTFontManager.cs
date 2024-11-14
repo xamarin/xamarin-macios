@@ -115,21 +115,6 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return CTFontManagerIsSupportedFont (url.Handle) != 0;
 		}
-#elif !XAMCORE_3_0
-#if NET
-		[ObsoletedOSPlatform ("macos10.6")]
-		[UnsupportedOSPlatform ("ios")]
-#else
-		[Deprecated (PlatformName.MacOSX, 10, 6)]
-		[Unavailable (PlatformName.iOS)]
-#endif
-		[Obsolete ("API not available on iOS, it will always return false.")]
-		public static bool IsFontSupported (NSUrl url)
-		{
-			if (url is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-			return false;
-		}
 #endif
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -558,9 +543,6 @@ namespace CoreText {
 		static CTFontManager ()
 		{
 			var handle = Libraries.CoreText.Handle;
-#if !XAMCORE_3_0
-			ErrorDomain = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
-#endif
 #pragma warning disable CS0618 // Type or member is obsolete
 			ErrorFontUrlsKey = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -583,9 +565,6 @@ namespace CoreText {
 			}
 		}
 
-#if !XAMCORE_3_0
-		public readonly static NSString? ErrorDomain;
-#endif
 #if !NET
 		[Obsolete ("Use the 'CTFontManagerErrorKeys.FontUrlsKey' property instead.")]
 		public readonly static NSString? ErrorFontUrlsKey;

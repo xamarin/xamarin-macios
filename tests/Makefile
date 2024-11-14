@@ -1,25 +1,14 @@
 TOP = ..
-SUBDIRS=test-libraries
+SUBDIRS=test-libraries dotnet
 
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-ifdef ENABLE_DOTNET
-SUBDIRS += dotnet
-endif
-
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 
 XHARNESS_EXECUTABLE=xharness/bin/Debug/xharness.dll
-
-export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
-export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
-export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 ifneq ($(RELEASE),)
 CONFIG=Release
@@ -62,15 +51,12 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
-	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
-	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
-	@echo "INCLUDE_XAMARIN_LEGACY=$(INCLUDE_XAMARIN_LEGACY)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
@@ -80,7 +66,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
-	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
@@ -97,7 +82,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "MAC_DESTDIR=/" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
-	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -105,8 +89,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
 	@echo "DOTNET_TFM=$(DOTNET_TFM)" >> $@
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
-	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
-	@echo "INCLUDE_XAMARIN_LEGACY=$(INCLUDE_XAMARIN_LEGACY)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
@@ -115,7 +97,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
-	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_SDK_NAME=$($(platform)_NUGET_SDK_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME)\\n)" | sed 's/^ //' >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(rid)_NUGET_RUNTIME_NAME=$($(rid)_NUGET_RUNTIME_NAME)\\n))" | sed 's/^ //' >> $@
@@ -191,11 +172,9 @@ logdev:
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-.stamp-xharness-configure: $(XHARNESS_EXECUTABLE)
-	$(Q_GEN) $(DOTNET) $< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
-	$(Q) touch $@
+xharness: $(XHARNESS_EXECUTABLE)
 
-all-local:: .stamp-xharness-configure
+all-local:: xharness
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
@@ -207,8 +186,10 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 $(XHARNESS_EXECUTABLE): MSBUILD_EXE_PATH=
 $(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
-xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
+xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
+xharness/xharness.csproj.inc: export DOTNET:=$(DOTNET)
+xharness/xharness.csproj.inc: export MSBUILD_EXE_PATH=
 -include xharness/xharness.csproj.inc
 
 killall:
@@ -216,18 +197,22 @@ killall:
 	@killall "iOS Simulator" >/dev/null 2>&1 || true
 	@killall Touch.Server >/dev/null 2>&1 || true
 
-NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks: test-macdev-tests test-macdev-tasks
+test-msbuild run-tests-msbuild:
+	$(MAKE) test-macdev-tests test-macdev-tasks
 
+# Example TEST_FILTER:
+#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
+# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 test-macdev-tests: export MSBUILD_EXE_PATH=
 test-macdev-tests: verify-system-vsmac-xcode-match
-	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
-	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net472/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=After $(TEST_FIXTURE)
+	$(Q) $(DOTNET) test $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj $(TEST_FILTER)
 
+# Example TEST_FILTER:
+#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
+# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 test-macdev-tasks: export MSBUILD_EXE_PATH=
 test-macdev-tasks: verify-system-vsmac-xcode-match
-	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
-	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net472/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml)" -labels=After $(TEST_FIXTURE)
+	$(Q) $(DOTNET) test $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj $(TEST_FILTER)
 
 mac-test-package.zip:
 ifdef INCLUDE_MAC
@@ -235,14 +220,6 @@ ifdef INCLUDE_MAC
 else ifdef INCLUDE_MACCATALYST
 	./package-mac-tests.sh
 else
-	@echo Not enabled
-endif
-
-ifdef INCLUDE_DOTNET
-dotnet-test-package.7z:
-	./package-dotnet-tests.sh
-else
-dotnet-test-package.7z:
 	@echo Not enabled
 endif
 
@@ -341,7 +318,7 @@ runner: $(XHARNESS_EXECUTABLE)
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: $(XHARNESS_EXECUTABLE)
-	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
+	$(MAKE) -C $(TOP)/builds download -j
 	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 verify-system-vsmac-xcode-match:
@@ -354,15 +331,22 @@ package-test-libraries.zip:
 	$(Q) $(MAKE) all -C test-libraries/custom-type-assembly build-assembly
 	$(Q_GEN) rm -f "$@" "$@.tmp"
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/macOS/unified ./tests/mono-native/macOS/compat
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/iOS/unified ./tests/mono-native/iOS/compat
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
-ifdef INCLUDE_XAMARIN_LEGACY
-ifdef INCLUDE_IOS
-	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tools/mtouch/simlauncher*-sgen*
-endif
-endif
 	$(Q) mv "$@".tmp "$@"
+
+build-all:
+	$(MAKE) build -C bgen
+	$(MAKE) build -C cecil-tests
+	$(MAKE) build -C dotnet/UnitTests
+	$(MAKE) build -C rgen
+	$(MAKE) build -C xtro-sharpie
+	$(MAKE) build-all -C "linker/ios/dont link/dotnet"
+	$(MAKE) build-all -C "linker/ios/link all/dotnet"
+	$(MAKE) build-all -C "linker/ios/link sdk/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode copy/dotnet"
+	$(MAKE) build-all -C "linker/ios/trimmode link/dotnet"
+	$(MAKE) build-all -C fsharp/dotnet
+	$(MAKE) build-all -C interdependent-binding-projects/dotnet
+	$(MAKE) build-all -C introspection/dotnet
+	$(MAKE) build-all -C monotouch-test/dotnet
+	$(MAKE) build-all -C xcframework-test/dotnet

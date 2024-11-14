@@ -18,14 +18,14 @@ namespace Xharness.Jenkins.TestTasks {
 				if (log is null)
 					return base.ProgressMessage;
 
-				var percent_complete = log.CopyingApp ? log.AppPercentComplete : log.WatchAppPercentComplete;
-				var bytes = log.CopyingApp ? log.AppBytes : log.WatchAppBytes;
-				var total_bytes = log.CopyingApp ? log.AppTotalBytes : log.WatchAppTotalBytes;
-				var elapsed = log.CopyingApp ? log.AppCopyDuration : log.WatchAppCopyDuration;
+				var percent_complete = log.AppPercentComplete;
+				var bytes = log.AppBytes;
+				var total_bytes = log.AppTotalBytes;
+				var elapsed = log.AppCopyDuration;
 				var speed_bps = elapsed.Ticks == 0 ? -1 : bytes / elapsed.TotalSeconds;
 				var estimated_left = TimeSpan.FromSeconds ((total_bytes - bytes) / speed_bps);
 				var transfer_percent = 100 * (double) bytes / total_bytes;
-				var str = log.CopyingApp ? "App" : "Watch App";
+				var str = "App";
 				var rv = $"{str} installation: {percent_complete}% done.\n" +
 					$"\tApp size: {total_bytes:N0} bytes ({total_bytes / 1024.0 / 1024.0:N2} MB)\n" +
 					$"\tTransferred: {bytes:N0} bytes ({bytes / 1024.0 / 1024.0:N2} MB)\n" +

@@ -334,7 +334,7 @@ static class C {
 #define HAVE_COREMEDIA
 #endif
 
-#if __IOS__ || __WATCHOS__ || __TVOS__
+#if __IOS__ || __TVOS__
 #define HAVE_UIKIT
 #endif
 

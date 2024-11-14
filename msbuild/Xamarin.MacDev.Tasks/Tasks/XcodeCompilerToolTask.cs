@@ -232,6 +232,11 @@ namespace Xamarin.MacDev.Tasks {
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
 			var arguments = args.ToList ();
+
+			// don't bother executing the tool if we've already looged errors.
+			if (Log.HasLoggedErrors)
+				return 1;
+
 			var rv = ExecuteAsync (tool, arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
 			var exitCode = rv.ExitCode;
 			var messages = rv.StandardOutput!.ToString ();

@@ -10,7 +10,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>Container</AssemblyName>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_3_0;</DefineConstants>
+    <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">

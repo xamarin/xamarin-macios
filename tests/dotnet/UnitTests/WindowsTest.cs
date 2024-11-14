@@ -24,10 +24,9 @@ namespace Xamarin.Tests {
 			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;
 			Clean (project_path);
 
-			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var properties = GetDefaultProperties (runtimeIdentifiers, extraProperties: GetHotRestartProperties ());
 			if (!string.IsNullOrWhiteSpace (configuration))
 				properties ["Configuration"] = configuration;
-			AddHotRestartProperties (properties);
 
 			// Redirect hot restart output to a place we can control from here
 			var hotRestartOutputDir = Path.Combine (tmpdir, "out");
@@ -182,7 +181,6 @@ namespace Xamarin.Tests {
 			properties ["_IsAppSigned"] = signature != BundleStructureTest.CodeSignature.None ? "true" : "false";
 			if (!string.IsNullOrWhiteSpace (configuration))
 				properties ["Configuration"] = configuration;
-			AddRemoteProperties (properties);
 
 			// Copy the app bundle to Windows so that we can inspect the results.
 			properties ["CopyAppBundleToWindows"] = "true";
@@ -284,7 +282,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void PluralRuntimeIdentifiersWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			var properties = AddHotRestartProperties ();
+			var properties = GetHotRestartProperties ();
 			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, properties, isUsingHotRestart: true);
 		}
 
@@ -336,7 +334,6 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			AddRemoteProperties (properties);
 
 			// Copy the app bundle to Windows so that we can inspect the results.
 			properties ["CopyAppBundleToWindows"] = "true";
@@ -368,19 +365,9 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
-		protected void AddRemoteProperties (Dictionary<string, string> properties)
+		protected Dictionary<string, string> GetHotRestartProperties ()
 		{
-			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
-			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
-			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
-
-			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
-				properties ["EnsureRemoteConnection"] = "true";
-		}
-
-		protected Dictionary<string, string> AddHotRestartProperties (Dictionary<string, string>? properties = null)
-		{
-			properties ??= new Dictionary<string, string> ();
+			var properties = new Dictionary<string, string> ();
 			properties ["IsHotRestartBuild"] = "true";
 			properties ["IsHotRestartEnvironmentReady"] = "true";
 			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
