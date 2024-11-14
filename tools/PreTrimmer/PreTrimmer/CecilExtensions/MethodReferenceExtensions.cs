@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public static class MethodReferenceExtensions
-	{
+namespace Mono.Linker {
+	public static class MethodReferenceExtensions {
 		public static string GetDisplayName (this MethodReference method)
 		{
 			var sb = new System.Text.StringBuilder ();
@@ -17,7 +15,7 @@ namespace Mono.Linker
 #pragma warning disable RS0030 // Cecil's Resolve is banned -- this should be a very cold path and makes calling this method much simpler
 			var methodDefinition = method.Resolve ();
 #pragma warning restore RS0030
-			if (methodDefinition != null && (methodDefinition.IsSetter || methodDefinition.IsGetter)) {
+			if (methodDefinition is not null && (methodDefinition.IsSetter || methodDefinition.IsGetter)) {
 				// Append property name
 				string name = methodDefinition.IsSetter ? string.Concat (methodDefinition.Name.AsSpan (4), ".set") : string.Concat (methodDefinition.Name.AsSpan (4), ".get");
 				sb.Append (name);
@@ -26,7 +24,7 @@ namespace Mono.Linker
 				return sb.ToString ();
 			}
 
-			if (methodDefinition != null && methodDefinition.IsEventMethod ()) {
+			if (methodDefinition is not null && methodDefinition.IsEventMethod ()) {
 				// Append event name
 				string name = methodDefinition.SemanticsAttributes switch {
 					MethodSemanticsAttributes.AddOn => string.Concat (methodDefinition.Name.AsSpan (4), ".add"),
@@ -45,8 +43,8 @@ namespace Mono.Linker
 			if (method.HasMetadataParameters ()) {
 #pragma warning disable RS0030 // MethodReference.Parameters is banned -- it's best to leave this as is for now
 				for (int i = 0; i < method.Parameters.Count - 1; i++)
-					sb.Append (method.Parameters[i].ParameterType.GetDisplayNameWithoutNamespace ()).Append (", ");
-				sb.Append (method.Parameters[method.Parameters.Count - 1].ParameterType.GetDisplayNameWithoutNamespace ());
+					sb.Append (method.Parameters [i].ParameterType.GetDisplayNameWithoutNamespace ()).Append (", ");
+				sb.Append (method.Parameters [method.Parameters.Count - 1].ParameterType.GetDisplayNameWithoutNamespace ());
 #pragma warning restore RS0030 // Do not used banned APIs
 			}
 
@@ -64,7 +62,7 @@ namespace Mono.Linker
 				sb.Insert (0, method.Name);
 
 			// Insert declaring type name and namespace
-			if (method.DeclaringType != null)
+			if (method.DeclaringType is not null)
 				sb.Insert (0, '.').Insert (0, method.DeclaringType.GetDisplayName ());
 
 			return sb.ToString ();
@@ -88,8 +86,8 @@ namespace Mono.Linker
 #pragma warning disable RS0030 // MethodReference.Parameters is banned -- it's best to leave this as is for now
 			IGenericInstance? genericInstance = method as IGenericInstance ?? method.DeclaringType as IGenericInstance;
 			if (genericInstance is null)
-				return method.Parameters[parameterIndex].ParameterType;
-			return PreTrimmerTypeReferenceExtensions.InflateGenericType (genericInstance, method.Parameters[parameterIndex].ParameterType);
+				return method.Parameters [parameterIndex].ParameterType;
+			return PreTrimmerTypeReferenceExtensions.InflateGenericType (genericInstance, method.Parameters [parameterIndex].ParameterType);
 #pragma warning restore RS0030 // Do not used banned APIs
 		}
 

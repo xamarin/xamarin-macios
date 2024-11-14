@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 //
@@ -33,10 +33,8 @@ using System;
 using System.Collections.Generic;
 using Mono.Linker.Steps;
 
-namespace Mono.Linker
-{
-	public class Pipeline
-	{
+namespace Mono.Linker {
+	public class Pipeline {
 		readonly List<IStep> _steps;
 		public List<IMarkHandler> MarkHandlers { get; }
 
@@ -64,7 +62,7 @@ namespace Mono.Linker
 		public void AddStepBefore (Type target, IStep step)
 		{
 			for (int i = 0; i < _steps.Count; i++) {
-				if (target.IsInstanceOfType (_steps[i])) {
+				if (target.IsInstanceOfType (_steps [i])) {
 					_steps.Insert (i, step);
 					return;
 				}
@@ -75,7 +73,7 @@ namespace Mono.Linker
 		public void AddStepBefore (IStep target, IStep step)
 		{
 			for (int i = 0; i < _steps.Count; i++) {
-				if (_steps[i] == target) {
+				if (_steps [i] == target) {
 					_steps.Insert (i, step);
 					return;
 				}
@@ -86,7 +84,7 @@ namespace Mono.Linker
 		public void AddMarkHandlerBefore (IMarkHandler target, IMarkHandler step)
 		{
 			for (int i = 0; i < MarkHandlers.Count; i++) {
-				if (MarkHandlers[i] == target) {
+				if (MarkHandlers [i] == target) {
 					MarkHandlers.Insert (i, step);
 					return;
 				}
@@ -103,7 +101,7 @@ namespace Mono.Linker
 		public void AddStepAfter (Type target, IStep step)
 		{
 			for (int i = 0; i < _steps.Count; i++) {
-				if (target.IsInstanceOfType (_steps[i])) {
+				if (target.IsInstanceOfType (_steps [i])) {
 					if (i == _steps.Count - 1)
 						_steps.Add (step);
 					else
@@ -117,7 +115,7 @@ namespace Mono.Linker
 		public void AddStepAfter (IStep target, IStep step)
 		{
 			for (int i = 0; i < _steps.Count; i++) {
-				if (_steps[i] == target) {
+				if (_steps [i] == target) {
 					if (i == _steps.Count - 1)
 						_steps.Add (step);
 					else
@@ -131,7 +129,7 @@ namespace Mono.Linker
 		public void AddMarkHandlerAfter (IMarkHandler target, IMarkHandler step)
 		{
 			for (int i = 0; i < MarkHandlers.Count; i++) {
-				if (MarkHandlers[i] == target) {
+				if (MarkHandlers [i] == target) {
 					if (i == MarkHandlers.Count - 1)
 						MarkHandlers.Add (step);
 					else
@@ -145,7 +143,7 @@ namespace Mono.Linker
 		public void RemoveStep (Type target)
 		{
 			for (int i = 0; i < _steps.Count; i++) {
-				if (_steps[i].GetType () != target)
+				if (_steps [i].GetType () != target)
 					continue;
 
 				_steps.RemoveAt (i);
@@ -156,7 +154,7 @@ namespace Mono.Linker
 		public void Process (LinkContext context)
 		{
 			while (_steps.Count > 0) {
-				IStep step = _steps[0];
+				IStep step = _steps [0];
 				ProcessStep (context, step);
 				_steps.Remove (step);
 			}
@@ -167,7 +165,7 @@ namespace Mono.Linker
 			step.Process (context);
 		}
 
-		public IStep[] GetSteps ()
+		public IStep [] GetSteps ()
 		{
 			return _steps.ToArray ();
 		}

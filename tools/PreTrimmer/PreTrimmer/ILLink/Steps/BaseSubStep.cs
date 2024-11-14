@@ -4,16 +4,14 @@
 using System.Diagnostics;
 using Mono.Cecil;
 
-namespace Mono.Linker.Steps
-{
-	public abstract class BaseSubStep : ISubStep
-	{
+namespace Mono.Linker.Steps {
+	public abstract class BaseSubStep : ISubStep {
 		protected AnnotationStore Annotations => Context.Annotations;
 
 		LinkContext? _context { get; set; }
 		protected LinkContext Context {
 			get {
-				Debug.Assert (_context != null);
+				Debug.Assert (_context is not null);
 				return _context;
 			}
 		}

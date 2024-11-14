@@ -4,16 +4,15 @@ using Xamarin.Linker.Steps;
 
 namespace PreTrimmer.Tests.PreserveBlockCodeHandlerTests;
 
-public class BasicTests
-{
+public class BasicTests {
 	[Fact]
-	public void SDInnerBlockIsKept()
+	public void SDInnerBlockIsKept ()
 	{
 		// assembly with SDInnerBlock and the fields has them kept via the descriptors file
 		string currentAssemblyPath = Path.GetDirectoryName (typeof (BasicTests).Assembly.Location)!;
 		string basicAssemblyPath = Path.Combine (currentAssemblyPath, "SDInnerBlock.dll");
 		string outputFolder = Path.Combine (Path.GetTempPath (), nameof (SDInnerBlockIsKept));
-		Console.WriteLine(outputFolder);
+		Console.WriteLine (outputFolder);
 		CustomStepHostDriver driver = new (CustomStepHostDriver.ConsoleLogger.Instance, outputFolder);
 		driver.AddAssembly (basicAssemblyPath);
 		driver.AddStep (new PreserveBlockCodeHandler ());

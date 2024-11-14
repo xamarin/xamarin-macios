@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 //
@@ -36,11 +36,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
+namespace Mono.Linker {
 
-	internal class TypeMapInfo
-	{
+	internal class TypeMapInfo {
 		readonly HashSet<AssemblyDefinition> assemblies = new HashSet<AssemblyDefinition> ();
 		readonly LinkContext context;
 		protected readonly Dictionary<MethodDefinition, List<OverrideInformation>> base_methods = new Dictionary<MethodDefinition, List<OverrideInformation>> ();
@@ -68,7 +66,7 @@ namespace Mono.Linker
 		/// </summary>
 		public List<OverrideInformation>? GetOverrides (MethodDefinition method)
 		{
-			Debug.Assert(!method.DeclaringType.IsInterface);
+			Debug.Assert (!method.DeclaringType.IsInterface);
 			EnsureProcessed (method.Module.Assembly);
 			override_methods.TryGetValue (method, out List<OverrideInformation>? overrides);
 			return overrides;
@@ -112,10 +110,10 @@ namespace Mono.Linker
 		void MapVirtualMethod (MethodDefinition method)
 		{
 			MethodDefinition? @base = GetBaseMethodInTypeHierarchy (method);
-			if (@base == null)
+			if (@base is null)
 				return;
 
-			Debug.Assert(!@base.DeclaringType.IsInterface);
+			Debug.Assert (!@base.DeclaringType.IsInterface);
 
 			AddOverride (@base, method);
 		}
@@ -124,7 +122,7 @@ namespace Mono.Linker
 		{
 			foreach (MethodReference baseMethodRef in method.Overrides) {
 				MethodDefinition? baseMethod = context.TryResolve (baseMethodRef);
-				if (baseMethod == null)
+				if (baseMethod is null)
 					continue;
 				// Don't track interface methods
 				if (baseMethod.DeclaringType.IsInterface)
@@ -142,9 +140,9 @@ namespace Mono.Linker
 		MethodDefinition? GetBaseMethodInTypeHierarchy (TypeDefinition type, MethodReference method)
 		{
 			TypeReference? @base = GetInflatedBaseType (type);
-			while (@base != null) {
+			while (@base is not null) {
 				MethodDefinition? base_method = TryMatchMethod (@base, method);
-				if (base_method != null)
+				if (base_method is not null)
 					return base_method;
 
 				@base = GetInflatedBaseType (@base);
@@ -155,7 +153,7 @@ namespace Mono.Linker
 
 		TypeReference? GetInflatedBaseType (TypeReference type)
 		{
-			if (type == null)
+			if (type is null)
 				return null;
 
 			if (type.IsGenericParameter || type.IsByReference || type.IsPointer)
@@ -184,7 +182,7 @@ namespace Mono.Linker
 
 		MethodDefinition? TryMatchMethod (TypeReference type, MethodReference method)
 		{
-			foreach (var candidate in type.GetMethods(context)) {
+			foreach (var candidate in type.GetMethods (context)) {
 				var md = context.TryResolve (candidate);
 				if (md?.IsVirtual != true)
 					continue;
@@ -271,7 +269,7 @@ namespace Mono.Linker
 				return false;
 
 			for (int i = 0; i < gaa.Count; i++) {
-				if (!TypeMatch (gaa[i], gab[i]))
+				if (!TypeMatch (gaa [i], gab [i]))
 					return false;
 			}
 
@@ -313,8 +311,8 @@ namespace Mono.Linker
 				return false;
 
 			for (int i = 0; i < ap.Count; i++) {
-				if (a.Parameters[i].ParameterType is not TypeReference aParameterType ||
-					b.Parameters[i].ParameterType is not TypeReference bParameterType ||
+				if (a.Parameters [i].ParameterType is not TypeReference aParameterType ||
+					b.Parameters [i].ParameterType is not TypeReference bParameterType ||
 					!TypeMatch (aParameterType, bParameterType))
 					return false;
 			}

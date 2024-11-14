@@ -13,7 +13,7 @@ public class BasicStepTests {
 		string currentAssemblyPath = Path.GetDirectoryName (typeof (BasicStepTests).Assembly.Location)!;
 		string basicAssemblyPath = Path.Combine (currentAssemblyPath, "Basic.dll");
 		string outputFolder = Path.Combine (Path.GetTempPath (), nameof (MarksAllTypesAndMembers));
-		Console.WriteLine(outputFolder);
+		Console.WriteLine (outputFolder);
 		CustomStepHostDriver driver = new (CustomStepHostDriver.ConsoleLogger.Instance, outputFolder);
 		driver.AddAssembly (basicAssemblyPath);
 		driver.AddStep (new BasicStep ());

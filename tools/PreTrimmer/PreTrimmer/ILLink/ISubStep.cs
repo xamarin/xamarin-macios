@@ -3,10 +3,8 @@
 
 using Mono.Cecil;
 
-namespace Mono.Linker.Steps
-{
-	public interface ISubStep
-	{
+namespace Mono.Linker.Steps {
+	public interface ISubStep {
 		SubStepTargets Targets { get; }
 
 		void Initialize (LinkContext context);

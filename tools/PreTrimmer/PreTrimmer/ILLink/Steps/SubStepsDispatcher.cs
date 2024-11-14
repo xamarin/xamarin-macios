@@ -7,10 +7,8 @@ using System.Diagnostics;
 using Mono.Cecil;
 using Mono.Collections.Generic;
 
-namespace Mono.Linker.Steps
-{
-	struct CategorizedSubSteps
-	{
+namespace Mono.Linker.Steps {
+	struct CategorizedSubSteps {
 		public List<ISubStep> on_assemblies;
 		public List<ISubStep> on_types;
 		public List<ISubStep> on_fields;
@@ -24,8 +22,7 @@ namespace Mono.Linker.Steps
 	// consist of multiple steps. It simplifies their implementation as well as the
 	// way how to hook them into the pipeline of existing steps.
 	//
-	public abstract class SubStepsDispatcher : IStep
-	{
+	public abstract class SubStepsDispatcher : IStep {
 		readonly List<ISubStep> substeps;
 
 		CategorizedSubSteps? categorized;

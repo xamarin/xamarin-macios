@@ -7,10 +7,8 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Mono.Linker
-{
-	public sealed class CustomSymbolWriterProvider : ISymbolWriterProvider
-	{
+namespace Mono.Linker {
+	public sealed class CustomSymbolWriterProvider : ISymbolWriterProvider {
 		readonly DefaultSymbolWriterProvider _defaultProvider = new DefaultSymbolWriterProvider ();
 		readonly bool _preserveSymbolPaths;
 
@@ -23,8 +21,7 @@ namespace Mono.Linker
 			=> new CustomSymbolWriter (_defaultProvider.GetSymbolWriter (module, symbolStream), module, _preserveSymbolPaths);
 	}
 
-	internal sealed class CustomSymbolWriter : ISymbolWriter
-	{
+	internal sealed class CustomSymbolWriter : ISymbolWriter {
 		// ASCII "RSDS": https://github.com/dotnet/runtime/blob/main/docs/design/specs/PE-COFF.md#codeview-debug-directory-entry-type-2
 		const int CodeViewSignature = 0x53445352;
 
@@ -100,8 +97,8 @@ namespace Mono.Linker
 
 				var stream = reader.BaseStream;
 				stream.Seek (16 + 4, SeekOrigin.Current); // MVID and Age
-				// Pdb path is NUL-terminated path at offset 24.
-				// https://github.com/dotnet/runtime/blob/main/docs/design/specs/PE-COFF.md#codeview-debug-directory-entry-type-2
+														  // Pdb path is NUL-terminated path at offset 24.
+														  // https://github.com/dotnet/runtime/blob/main/docs/design/specs/PE-COFF.md#codeview-debug-directory-entry-type-2
 				return Encoding.UTF8.GetString (
 					reader.ReadBytes ((int) (stream.Length - stream.Position - 1))); // remaining length - ending \0
 			}

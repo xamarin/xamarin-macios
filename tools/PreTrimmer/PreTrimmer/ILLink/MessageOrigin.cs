@@ -8,10 +8,8 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Mono.Linker
-{
-	public readonly partial struct MessageOrigin : IComparable<MessageOrigin>, IEquatable<MessageOrigin>
-	{
+namespace Mono.Linker {
+	public readonly partial struct MessageOrigin : IComparable<MessageOrigin>, IEquatable<MessageOrigin> {
 		public string? FileName { get; }
 		public ICustomAttributeProvider? Provider { get; }
 
@@ -51,7 +49,7 @@ namespace Mono.Linker
 
 		public MessageOrigin (ICustomAttributeProvider? provider, int? ilOffset)
 		{
-			Debug.Assert (provider == null || provider is IMemberDefinition || provider is AssemblyDefinition);
+			Debug.Assert (provider is null || provider is IMemberDefinition || provider is AssemblyDefinition);
 			FileName = null;
 			Provider = provider;
 			SourceLine = 0;
@@ -85,7 +83,7 @@ namespace Mono.Linker
 			string? fileName = FileName;
 			if (Provider is MethodDefinition method &&
 				method.DebugInformation.HasSequencePoints) {
-				var offset = ILOffset == UnsetILOffset ? method.DebugInformation.SequencePoints[0].Offset : ILOffset;
+				var offset = ILOffset == UnsetILOffset ? method.DebugInformation.SequencePoints [0].Offset : ILOffset;
 				SequencePoint? correspondingSequencePoint = method.DebugInformation.SequencePoints
 					.Where (s => s.Offset <= offset)?.Last ();
 
@@ -96,14 +94,14 @@ namespace Mono.Linker
 						.Where (s => s.StartLine != HiddenLineNumber).FirstOrDefault ();
 				}
 
-				if (correspondingSequencePoint != null) {
+				if (correspondingSequencePoint is not null) {
 					fileName = correspondingSequencePoint.Document.Url;
 					sourceLine = correspondingSequencePoint.StartLine;
 					sourceColumn = correspondingSequencePoint.StartColumn;
 				}
 			}
 
-			if (fileName == null)
+			if (fileName is null)
 				return null;
 
 			StringBuilder sb = new StringBuilder (fileName);
@@ -128,7 +126,7 @@ namespace Mono.Linker
 
 		public int CompareTo (MessageOrigin other)
 		{
-			if (Provider != null && other.Provider != null) {
+			if (Provider is not null && other.Provider is not null) {
 				var thisMember = Provider as IMemberDefinition;
 				var otherMember = other.Provider as IMemberDefinition;
 				TypeDefinition? thisTypeDef = (Provider as TypeDefinition) ?? (Provider as IMemberDefinition)?.DeclaringType;
@@ -144,17 +142,17 @@ namespace Mono.Linker
 					return ILOffset.CompareTo (other.ILOffset);
 
 				return ILOffset == UnsetILOffset ? (other.ILOffset == UnsetILOffset ? 0 : 1) : -1;
-			} else if (Provider == null && other.Provider == null) {
-				if (FileName != null && other.FileName != null) {
+			} else if (Provider is null && other.Provider is null) {
+				if (FileName is not null && other.FileName is not null) {
 					return string.Compare (FileName, other.FileName);
-				} else if (FileName == null && other.FileName == null) {
+				} else if (FileName is null && other.FileName is null) {
 					return (SourceLine, SourceColumn).CompareTo ((other.SourceLine, other.SourceColumn));
 				}
 
-				return (FileName == null) ? 1 : -1;
+				return (FileName is null) ? 1 : -1;
 			}
 
-			return (Provider == null) ? 1 : -1;
+			return (Provider is null) ? 1 : -1;
 		}
 	}
 }

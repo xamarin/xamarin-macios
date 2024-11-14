@@ -150,7 +150,7 @@ namespace Mono.Linker {
 			if (pos == -1) {
 				foreach (AssemblyDefinition asm in GetReferencedAssemblies ()) {
 					var type = asm.MainModule.GetType (fullName);
-					if (type != null)
+					if (type is not null)
 						return type;
 				}
 
@@ -202,7 +202,7 @@ namespace Mono.Linker {
 			if (assembly.MainModule.HasSymbols)
 				return;
 
-			if (SymbolReaderProvider == null)
+			if (SymbolReaderProvider is null)
 				throw new InvalidOperationException ("Symbol provider is not set");
 
 			try {
@@ -210,7 +210,7 @@ namespace Mono.Linker {
 					assembly.MainModule,
 					GetAssemblyLocation (assembly));
 
-				if (symbolReader == null)
+				if (symbolReader is null)
 					return;
 
 				try {
@@ -228,12 +228,12 @@ namespace Mono.Linker {
 		ICollection<AssemblyDefinition> ResolveReferences (AssemblyDefinition assembly)
 		{
 			List<AssemblyDefinition> references = new List<AssemblyDefinition> ();
-			if (assembly == null)
+			if (assembly is null)
 				return references;
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				AssemblyDefinition? definition = Resolve (reference);
-				if (definition != null)
+				if (definition is not null)
 					references.Add (definition);
 			}
 
@@ -475,7 +475,7 @@ namespace Mono.Linker {
 				return null;
 
 			if (methodresolveCache.TryGetValue (methodReference, out MethodDefinition? md)) {
-				if (md == null && !IgnoreUnresolved)
+				if (md is null && !IgnoreUnresolved)
 					ReportUnresolved (methodReference);
 				return md;
 			}
@@ -483,7 +483,7 @@ namespace Mono.Linker {
 #pragma warning disable RS0030 // Cecil's resolve is banned -- this provides the wrapper
 			md = methodReference.Resolve ();
 #pragma warning restore RS0030
-			if (md == null && !IgnoreUnresolved)
+			if (md is null && !IgnoreUnresolved)
 				ReportUnresolved (methodReference);
 
 			methodresolveCache.Add (methodReference, md);
@@ -523,13 +523,13 @@ namespace Mono.Linker {
 				return null;
 
 			if (fieldresolveCache.TryGetValue (fieldReference, out FieldDefinition? fd)) {
-				if (fd == null && !IgnoreUnresolved)
+				if (fd is null && !IgnoreUnresolved)
 					ReportUnresolved (fieldReference);
 				return fd;
 			}
 
 			fd = fieldReference.Resolve ();
-			if (fd == null && !IgnoreUnresolved)
+			if (fd is null && !IgnoreUnresolved)
 				ReportUnresolved (fieldReference);
 
 			fieldresolveCache.Add (fieldReference, fd);
@@ -567,7 +567,7 @@ namespace Mono.Linker {
 				return null;
 
 			if (typeresolveCache.TryGetValue (typeReference, out TypeDefinition? td)) {
-				if (td == null && !IgnoreUnresolved)
+				if (td is null && !IgnoreUnresolved)
 					ReportUnresolved (typeReference);
 				return td;
 			}
@@ -581,7 +581,7 @@ namespace Mono.Linker {
 #pragma warning disable RS0030
 			td = typeReference.Resolve ();
 #pragma warning restore RS0030
-			if (td == null && !IgnoreUnresolved)
+			if (td is null && !IgnoreUnresolved)
 				ReportUnresolved (typeReference);
 
 			typeresolveCache.Add (typeReference, td);

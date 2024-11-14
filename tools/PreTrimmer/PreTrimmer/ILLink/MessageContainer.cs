@@ -8,10 +8,8 @@ using System.Reflection;
 using System.Text;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public readonly struct MessageContainer : IComparable<MessageContainer>, IEquatable<MessageContainer>
-	{
+namespace Mono.Linker {
+	public readonly struct MessageContainer : IComparable<MessageContainer>, IEquatable<MessageContainer> {
 		public static readonly MessageContainer Empty;
 
 		/// <summary>
@@ -217,7 +215,7 @@ namespace Mono.Linker
 				sb.Append (' ');
 			}
 
-			if (Origin?.Provider != null) {
+			if (Origin?.Provider is not null) {
 				if (Origin?.Provider is MethodDefinition method)
 					sb.Append (method.GetDisplayName ());
 				else if (Origin?.Provider is MemberReference memberRef)
@@ -245,13 +243,13 @@ namespace Mono.Linker
 
 		public int CompareTo (MessageContainer other)
 		{
-			if (Origin != null && other.Origin != null) {
+			if (Origin is not null && other.Origin is not null) {
 				return Origin.Value.CompareTo (other.Origin.Value);
-			} else if (Origin == null && other.Origin == null) {
+			} else if (Origin is null && other.Origin is null) {
 				return (Code < other.Code) ? -1 : 1;
 			}
 
-			return (Origin == null) ? 1 : -1;
+			return (Origin is null) ? 1 : -1;
 		}
 
 		public static bool operator == (MessageContainer lhs, MessageContainer rhs) => lhs.Equals (rhs);

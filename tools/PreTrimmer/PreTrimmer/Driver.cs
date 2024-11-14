@@ -8,34 +8,33 @@ namespace Mono.Linker;
 
 public class CustomStepHostDriver {
 	LinkContext _context;
-	public CustomStepHostDriver(ILogger logger, string outputDirectory)
+	public CustomStepHostDriver (ILogger logger, string outputDirectory)
 	{
-		_context = new LinkContext(new Pipeline(), logger, outputDirectory);
+		_context = new LinkContext (new Pipeline (), logger, outputDirectory);
 	}
 
-	public void AddAssembly(string pathToAssembly)
+	public void AddAssembly (string pathToAssembly)
 	{
-		var assembly =_context.Resolver.GetAssembly(pathToAssembly);
-		_context.Resolver.CacheAssembly(assembly);
+		var assembly = _context.Resolver.GetAssembly (pathToAssembly);
+		_context.Resolver.CacheAssembly (assembly);
 	}
 
-	public void AddStep(IStep step)
+	public void AddStep (IStep step)
 	{
-		_context.Pipeline.AppendStep(step);
+		_context.Pipeline.AppendStep (step);
 	}
 
-	public void Run()
+	public void Run ()
 	{
-		_context.Pipeline.Process(_context);
+		_context.Pipeline.Process (_context);
 	}
 
-	public static void Main (string[] args)
+	public static void Main (string [] args)
 	{
 		throw new NotImplementedException ();
 	}
 
-	public class ConsoleLogger : ILogger
-	{
+	public class ConsoleLogger : ILogger {
 		public static ConsoleLogger Instance = new ConsoleLogger ();
 		public void LogMessage (MessageContainer message)
 		{

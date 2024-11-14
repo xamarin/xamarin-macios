@@ -92,7 +92,7 @@ namespace Mono.Linker {
 
 		public void Mark (IMetadataTokenProvider provider)
 		{
-			marked.Add(provider);
+			marked.Add (provider);
 		}
 
 		public void Mark (CustomAttribute attribute)
@@ -161,12 +161,12 @@ namespace Mono.Linker {
 
 		public void AddPreservedField (TypeDefinition type, FieldDefinition field)
 		{
-			AddPreservedMember(type, field);
+			AddPreservedMember (type, field);
 		}
 
 		void AddPreservedMethod (MethodDefinition key, MethodDefinition method)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException ();
 			// AddPreservedMethod (key as IMemberDefinition, method);
 		}
 
@@ -180,7 +180,7 @@ namespace Mono.Linker {
 
 		void AddPreservedMember (TypeDefinition definition, IMemberDefinition method)
 		{
-			if (!preserved_members.TryGetValue (definition, out List<IMemberDefinition>? members)){
+			if (!preserved_members.TryGetValue (definition, out List<IMemberDefinition>? members)) {
 				members = new List<IMemberDefinition> ();
 				preserved_members [definition] = members;
 			}

@@ -6,10 +6,8 @@ using Mono.Cecil;
 
 #nullable enable
 
-namespace Mono.Linker
-{
-	internal static class ModuleDefinitionExtensions
-	{
+namespace Mono.Linker {
+	internal static class ModuleDefinitionExtensions {
 		public static bool IsCrossgened (this ModuleDefinition module)
 		{
 			return (module.Attributes & ModuleAttributes.ILOnly) == 0 &&
@@ -19,7 +17,7 @@ namespace Mono.Linker
 		public static TypeDefinition? ResolveType (this ModuleDefinition module, string typeFullName, ITryResolveMetadata resolver)
 		{
 			var type = module.GetType (typeFullName);
-			if (type != null)
+			if (type is not null)
 				return type;
 
 			if (!module.HasExportedTypes)

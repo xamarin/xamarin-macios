@@ -5,16 +5,13 @@ using Mono.Cecil;
 
 #nullable enable
 
-namespace Mono.Linker
-{
-	public interface ITryResolveMetadata
-	{
+namespace Mono.Linker {
+	public interface ITryResolveMetadata {
 		MethodDefinition? TryResolve (MethodReference methodReference);
 		TypeDefinition? TryResolve (TypeReference typeReference);
 	}
 
-	internal interface ITryResolveAssemblyName
-	{
+	internal interface ITryResolveAssemblyName {
 		AssemblyDefinition? TryResolve (string assemblyName);
 	}
 }

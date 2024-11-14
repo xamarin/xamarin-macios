@@ -23,12 +23,11 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-		void ProcessTypes(TypeDefinition type)
+		void ProcessTypes (TypeDefinition type)
 		{
-			ProcessType(type);
-			foreach(var nestedType in type.NestedTypes)
-			{
-				ProcessTypes(nestedType);
+			ProcessType (type);
+			foreach (var nestedType in type.NestedTypes) {
+				ProcessTypes (nestedType);
 			}
 		}
 

@@ -32,15 +32,13 @@
 using System.Diagnostics;
 using Mono.Cecil;
 
-namespace Mono.Linker.Steps
-{
-	public abstract class BaseStep : IStep
-	{
+namespace Mono.Linker.Steps {
+	public abstract class BaseStep : IStep {
 		private LinkContext? _context;
 
 		public LinkContext Context {
 			get {
-				Debug.Assert (_context != null);
+				Debug.Assert (_context is not null);
 				return _context;
 			}
 		}

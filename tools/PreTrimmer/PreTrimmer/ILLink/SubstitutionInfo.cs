@@ -4,10 +4,8 @@
 using System.Collections.Generic;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	internal class SubstitutionInfo
-	{
+namespace Mono.Linker {
+	internal class SubstitutionInfo {
 		internal Dictionary<MethodDefinition, MethodAction> MethodActions { get; }
 		internal Dictionary<MethodDefinition, object?> MethodStubValues { get; }
 		internal Dictionary<FieldDefinition, object?> FieldValues { get; }
@@ -23,17 +21,17 @@ namespace Mono.Linker
 
 		internal void SetMethodAction (MethodDefinition method, MethodAction action)
 		{
-			MethodActions[method] = action;
+			MethodActions [method] = action;
 		}
 
 		internal void SetMethodStubValue (MethodDefinition method, object? value)
 		{
-			MethodStubValues[method] = value;
+			MethodStubValues [method] = value;
 		}
 
 		internal void SetFieldValue (FieldDefinition field, object? value)
 		{
-			FieldValues[field] = value;
+			FieldValues [field] = value;
 		}
 
 		internal void SetFieldInit (FieldDefinition field)

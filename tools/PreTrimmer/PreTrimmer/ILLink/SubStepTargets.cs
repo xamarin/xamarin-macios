@@ -3,11 +3,9 @@
 
 using System;
 
-namespace Mono.Linker.Steps
-{
+namespace Mono.Linker.Steps {
 	[Flags]
-	public enum SubStepTargets
-	{
+	public enum SubStepTargets {
 		None = 0,
 
 		Assembly = 1,

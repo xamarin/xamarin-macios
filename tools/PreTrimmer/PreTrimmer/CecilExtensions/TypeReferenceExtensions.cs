@@ -8,10 +8,8 @@ using System.Linq;
 using System.Text;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	internal static class PreTrimmerTypeReferenceExtensions
-	{
+namespace Mono.Linker {
+	internal static class PreTrimmerTypeReferenceExtensions {
 		public static string GetDisplayName (this TypeReference type)
 		{
 			var builder = GetDisplayNameWithoutNamespace (type);
@@ -27,7 +25,7 @@ namespace Mono.Linker
 		public static StringBuilder GetDisplayNameWithoutNamespace (this TypeReference type)
 		{
 			var sb = new StringBuilder ();
-			if (type == null)
+			if (type is null)
 				return sb;
 
 			Stack<TypeReference>? genericArguments = null;
@@ -79,9 +77,9 @@ namespace Mono.Linker
 
 		internal static void PrependGenericParameters (IList<GenericParameter> genericParameters, StringBuilder sb)
 		{
-			sb.Insert (0, '>').Insert (0, genericParameters[genericParameters.Count - 1]);
+			sb.Insert (0, '>').Insert (0, genericParameters [genericParameters.Count - 1]);
 			for (int i = genericParameters.Count - 2; i >= 0; i--)
-				sb.Insert (0, ',').Insert (0, genericParameters[i]);
+				sb.Insert (0, ',').Insert (0, genericParameters [i]);
 
 			sb.Insert (0, '<');
 		}
@@ -109,7 +107,7 @@ namespace Mono.Linker
 			sb.Append (arrayType.Name.AsSpan (0, arrayType.Name.IndexOf ('[')));
 			parseArrayDimensions (arrayType);
 			var element = arrayType.ElementType as ArrayType;
-			while (element != null) {
+			while (element is not null) {
 				parseArrayDimensions (element);
 				element = element.ElementType as ArrayType;
 			}
@@ -135,7 +133,7 @@ namespace Mono.Linker
 				if (declaringType.HasGenericParameters) {
 					var result = new GenericInstanceType (declaringType);
 					for (var i = 0; i < declaringType.GenericParameters.Count; ++i)
-						result.GenericArguments.Add (genericInstance.GenericArguments[i]);
+						result.GenericArguments.Add (genericInstance.GenericArguments [i]);
 
 					return result;
 				}
@@ -186,7 +184,7 @@ namespace Mono.Linker
 				if (genericParameter.Owner is MethodReference) {
 					if (genericInstanceProvider is not GenericInstanceMethod)
 						return typeToInflate;
-					return genericInstanceProvider.GenericArguments[genericParameter.Position];
+					return genericInstanceProvider.GenericArguments [genericParameter.Position];
 				}
 
 				Debug.Assert (genericParameter.Owner is TypeReference);
@@ -195,7 +193,7 @@ namespace Mono.Linker
 						return typeToInflate;
 					genericInstanceProvider = genericInstanceType;
 				}
-				return genericInstanceProvider.GenericArguments[genericParameter.Position];
+				return genericInstanceProvider.GenericArguments [genericParameter.Position];
 			}
 
 			if (typeToInflate is FunctionPointerType functionPointerType) {
@@ -204,7 +202,7 @@ namespace Mono.Linker
 				};
 
 				for (int i = 0; i < functionPointerType.Parameters.Count; i++) {
-					var inflatedParameterType = InflateGenericType (genericInstanceProvider, functionPointerType.Parameters[i].ParameterType);
+					var inflatedParameterType = InflateGenericType (genericInstanceProvider, functionPointerType.Parameters [i].ParameterType);
 					result.Parameters.Add (new ParameterDefinition (inflatedParameterType));
 				}
 
@@ -266,7 +264,7 @@ namespace Mono.Linker
 			var result = new GenericInstanceType (type.ElementType);
 
 			for (var i = 0; i < type.GenericArguments.Count; ++i) {
-				result.GenericArguments.Add (InflateGenericType (genericInstanceProvider, type.GenericArguments[i]));
+				result.GenericArguments.Add (InflateGenericType (genericInstanceProvider, type.GenericArguments [i]));
 			}
 
 			return result;
@@ -315,7 +313,7 @@ namespace Mono.Linker
 			if (!name.Slice (name.Length - type.Name.Length).Equals (type.Name.AsSpan (), StringComparison.Ordinal))
 				return false;
 
-			if (name[name.Length - type.Name.Length - 1] != '.')
+			if (name [name.Length - type.Name.Length - 1] != '.')
 				return false;
 
 			return name.Slice (0, name.Length - type.Name.Length - 1).Equals (type.Namespace, StringComparison.Ordinal);
@@ -330,7 +328,7 @@ namespace Mono.Linker
 		public static bool IsSubclassOf (this TypeReference type, string ns, string name, ITryResolveMetadata resolver)
 		{
 			TypeDefinition? baseType = resolver.TryResolve (type);
-			while (baseType != null) {
+			while (baseType is not null) {
 				if (baseType.IsTypeOf (ns, name))
 					return true;
 				baseType = resolver.TryResolve (baseType.BaseType);
@@ -350,7 +348,8 @@ namespace Mono.Linker
 		// Check whether this type represents a "named type" (i.e. a type that has a name and can be resolved to a TypeDefinition),
 		// not an array, pointer, byref, or generic parameter. Conceptually this is supposed to represent the same idea as Roslyn's
 		// INamedTypeSymbol, or ILC's DefType/MetadataType.
-		public static bool IsNamedType (this TypeReference typeReference) {
+		public static bool IsNamedType (this TypeReference typeReference)
+		{
 			if (typeReference.IsDefinition || typeReference.IsGenericInstance)
 				return true;
 

@@ -6,10 +6,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	class MemberActionStore
-	{
+namespace Mono.Linker {
+	class MemberActionStore {
 		SubstitutionInfo PrimarySubstitutionInfo { get; }
 		private readonly Dictionary<AssemblyDefinition, SubstitutionInfo?> _embeddedXmlInfos;
 		private readonly Dictionary<MethodDefinition, bool> _featureCheckValues;

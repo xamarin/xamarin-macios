@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 //
@@ -35,10 +35,8 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using Mono.Cecil;
 
-namespace Mono.Linker
-{
-	public class AssemblyResolver : IAssemblyResolver
-	{
+namespace Mono.Linker {
+	public class AssemblyResolver : IAssemblyResolver {
 		readonly List<string> _references = new ();
 		readonly LinkContext _context;
 		readonly List<string> _directories = new ();
@@ -113,7 +111,7 @@ namespace Mono.Linker
 
 			asm ??= SearchDirectory (name);
 
-			if (asm == null) {
+			if (asm is null) {
 				if (!probing)
 					ReportUnresolvedAssembly (name);
 
@@ -132,7 +130,7 @@ namespace Mono.Linker
 			if (!_reportedUnresolvedAssemblies.Add (reference.Name))
 				return;
 
-			_context.LogMessage (MessageContainer.CreateCustomErrorMessage($"Could not resolve assembly '{reference.Name}'", 1234));
+			_context.LogMessage (MessageContainer.CreateCustomErrorMessage ($"Could not resolve assembly '{reference.Name}'", 1234));
 		}
 
 		public virtual void AddSearchDirectory (string directory)
@@ -183,7 +181,7 @@ namespace Mono.Linker
 			throw new NotSupportedException ();
 		}
 
-		static readonly string[] Extensions = new[] { ".dll", ".exe", ".winmd" };
+		static readonly string [] Extensions = new [] { ".dll", ".exe", ".winmd" };
 
 		AssemblyDefinition? SearchDirectory (AssemblyNameReference name)
 		{

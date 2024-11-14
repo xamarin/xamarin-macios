@@ -36,11 +36,9 @@ using System.Linq;
 using System.Runtime.Serialization.Json;
 using Mono.Cecil;
 
-namespace Mono.Linker.Steps
-{
+namespace Mono.Linker.Steps {
 
-	public class OutputStep : BaseStep
-	{
+	public class OutputStep : BaseStep {
 		readonly List<string> assembliesWritten;
 
 		public OutputStep ()
@@ -63,7 +61,7 @@ namespace Mono.Linker.Steps
 		private void OutputLinkXml ()
 		{
 			LinkXmlFormatter.WriteDescriptorsXml (
-				Path.Combine(Context.OutputDirectory, "ILLink.Descriptors.xml"),
+				Path.Combine (Context.OutputDirectory, "ILLink.Descriptors.xml"),
 				Context.Annotations.preserved_types,
 				Context.Annotations.preserved_members,
 				Context.Annotations.marked);
@@ -71,7 +69,7 @@ namespace Mono.Linker.Steps
 
 		protected override void EndProcess ()
 		{
-			if (Context.AssemblyListFile != null) {
+			if (Context.AssemblyListFile is not null) {
 				using (var w = File.CreateText (Context.AssemblyListFile)) {
 					w.WriteLine ("[" + string.Join (", ", assembliesWritten.Select (a => "\"" + a + "\"").ToArray ()) + "]");
 				}
@@ -146,7 +144,7 @@ namespace Mono.Linker.Steps
 
 		private void OutputPInvokes ()
 		{
-			if (Context.PInvokesListFile == null)
+			if (Context.PInvokesListFile is null)
 				return;
 
 			using (var fs = File.Open (Path.Combine (Context.OutputDirectory, Context.PInvokesListFile), FileMode.Create)) {

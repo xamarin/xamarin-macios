@@ -43,7 +43,7 @@ namespace Mono.Linker {
 							writer.WriteAttributeString ("fullname", type.FullName);
 
 							if (preservedTypes.TryGetValue (type, out var typePreserve))
-								writer.WriteAttributeString ("preserve", typePreserve.ToString ().ToLowerInvariant());
+								writer.WriteAttributeString ("preserve", typePreserve.ToString ().ToLowerInvariant ());
 							else
 								writer.WriteAttributeString ("preserve", "nothing");
 
@@ -93,23 +93,21 @@ namespace Mono.Linker {
 		}
 	}
 
-	file static class MemberDefinitionSignatureExtensions
-	{
+	file static class MemberDefinitionSignatureExtensions {
 		// Corresponds to illink's ProcessLinkerXmlBase.Get[Method|Field|Event|Property]()
-		public static string GetSignature(this IMemberDefinition member)
+		public static string GetSignature (this IMemberDefinition member)
 		{
-			switch (member)
-			{
-				case MethodDefinition method:
-					return GetMethodSignature(method, includeGenericParameters: true);
-				case FieldDefinition field:
-					return field.FieldType.FullName + ' ' + field.Name;
-				case EventDefinition @event:
-					return @event.EventType.FullName + ' ' + @event.Name;
-				case PropertyDefinition property:
-					return property.PropertyType.FullName + ' ' + property.Name;
-				default:
-					throw new NotImplementedException($"Not sure what to do with this member type: {member.GetType().FullName}");
+			switch (member) {
+			case MethodDefinition method:
+				return GetMethodSignature (method, includeGenericParameters: true);
+			case FieldDefinition field:
+				return field.FieldType.FullName + ' ' + field.Name;
+			case EventDefinition @event:
+				return @event.EventType.FullName + ' ' + @event.Name;
+			case PropertyDefinition property:
+				return property.PropertyType.FullName + ' ' + property.Name;
+			default:
+				throw new NotImplementedException ($"Not sure what to do with this member type: {member.GetType ().FullName}");
 			}
 		}
 
