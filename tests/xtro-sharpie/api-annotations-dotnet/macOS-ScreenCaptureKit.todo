@@ -1,0 +1,2 @@
+!missing-protocol-member! SCStreamDelegate::streamDidBecomeActive: not found
+!missing-protocol-member! SCStreamDelegate::streamDidBecomeInactive: not found
