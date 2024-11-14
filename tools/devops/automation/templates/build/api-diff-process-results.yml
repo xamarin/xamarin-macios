@@ -67,7 +67,7 @@ steps:
   # Process the github comment and publish it
   - pwsh: |
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
-      $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/$Env:$BUILD_REPOSITORY_TITLE/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
+      $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/$Env:BUILD_REPOSITORY_TITLE/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
 
       $rootDirectory = Join-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" "change-detection" "results"
 
