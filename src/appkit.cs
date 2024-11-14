@@ -16549,6 +16549,7 @@ namespace AppKit {
 		[Export ("backgroundFilters", ArgumentSemantic.Copy)]
 		CIFilter [] BackgroundFilters { get; set; }
 
+		[NullAllowed]
 		[Export ("compositingFilter", ArgumentSemantic.Retain)]
 		CIFilter CompositingFilter { get; set; }
 
