@@ -12,6 +12,7 @@ jobs:
       issues: write
       pull-requests: write
       contents: read
+    if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
     - uses: actions/setup-dotnet@v4
@@ -25,8 +26,6 @@ jobs:
         cd dotnet-tools/changelog
         dotnet build
         ./bin/Debug/net9.0/changelog https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
-        cat /tmp/changelog.txt
-        hexdump -C /tmp/changelog.txt
 
     - name: 'Add changelog'
       uses: actions/github-script@v7.0.1
