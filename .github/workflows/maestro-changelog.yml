@@ -14,16 +14,16 @@ jobs:
       contents: read
 
     steps:
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9'
+
     - name: 'Compute changelog'
       run: |
         set -exo pipefail
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
         dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
-
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9'
 
     - name: 'Add changelog'
       uses: actions/github-script@v7.0.1
