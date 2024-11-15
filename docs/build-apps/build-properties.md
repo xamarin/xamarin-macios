@@ -43,7 +43,7 @@ The default behavior is `true` when the `Debug` property is set to `true`.
 
 Any extra arguments to the `bgen` tool (the binding generator).
 
-## BGenToolPath
+## BGenToolExe
 
 The name of the `bgen` executable (a tool used by binding projects to generate bindings).
 
