@@ -12,7 +12,6 @@ jobs:
       issues: write
       pull-requests: write
       contents: read
-    if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
     - name: 'Compute changelog'
