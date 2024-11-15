@@ -38,7 +38,7 @@
     </ProjectReference>
     <!-- We need the net472 implementation, otherwise the Build agent needs to be a net5.0 app -->
     <Reference Include="ILLink.Tasks">
-      <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
+      <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\netframework\ILLink.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="ILStrip">
       <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
