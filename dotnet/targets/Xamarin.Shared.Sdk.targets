@@ -515,13 +515,16 @@
 			Registrar configuration:
 				- Set 'managed-static' for:
 					- NativeAOT supported platforms in all configurations
-					- ios/tvos device builds in all configurations
+					- ios/tvos device builds in all configurations, unless building an app extension (workaround for #21606)
 					- macOS/MacCatalyst builds in release configuration
+				- Set 'static' for:
+					- App extensions (workaround for #21606)
 				- Set 'partial-static' for:
 					- when no assemblies are trimmed and when _MarshalManagedExceptionMode is default (or not set)
 				- Otherwise set 'dynamic' 
 			-->
 			<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">managed-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(IsAppExtension)' == 'true'">static</Registrar>
 			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">managed-static</Registrar>
 			<Registrar Condition="'$(Registrar)' == '' And '$(_BundlerDebug)' != 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">managed-static</Registrar>
 			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(_MarshalManagedExceptionMode)' == '' Or '$(_MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
