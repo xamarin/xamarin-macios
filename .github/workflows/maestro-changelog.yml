@@ -24,7 +24,7 @@ jobs:
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
         dotnet build
-        /bin/Debug/net9.0/changelog https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
+        ./bin/Debug/net9.0/changelog https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
         cat /tmp/changelog.txt
         hexdump -C /tmp/changelog.txt
 
