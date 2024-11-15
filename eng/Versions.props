@@ -5,14 +5,15 @@
     <MicrosoftNETSdkPackageVersion>9.0.101-servicing.24561.8</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>9.0.0</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETILLinkPackageVersion>9.0.0-alpha.1.23556.4</MicrosoftNETILLinkPackageVersion>
-    <MicrosoftDotNetBuildTasksFeedPackageVersion>9.0.0-beta.24408.2</MicrosoftDotNetBuildTasksFeedPackageVersion>
+    <MicrosoftDotNetBuildTasksFeedPackageVersion>9.0.0-beta.24516.2</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftDotNetSharedFrameworkSdkVersion>8.0.0-beta.24413.2</MicrosoftDotNetSharedFrameworkSdkVersion>
     <MicrosoftNETCoreAppRefPackageVersion>9.0.0</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-rc.2.24462.10</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24480.1</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.24467.4</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.24529.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetArcadeSdkPackageVersion>9.0.0-beta.24516.2</MicrosoftDotNetArcadeSdkPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</EmscriptenWorkloadVersion>
@@ -27,5 +28,10 @@
     <MicrosoftmacOSSdknet80_140PackageVersion>14.0.8523</MicrosoftmacOSSdknet80_140PackageVersion>
     <MicrosoftiOSSdknet80_170PackageVersion>17.0.8523</MicrosoftiOSSdknet80_170PackageVersion>
     <MicrosofttvOSSdknet80_170PackageVersion>17.0.8523</MicrosofttvOSSdknet80_170PackageVersion>
+    <!-- This is a subscription to the .NET 9/Xcode 16.0 versions of our packages -->
+    <MicrosoftMacCatalystSdknet90_180PackageVersion>18.0.9617</MicrosoftMacCatalystSdknet90_180PackageVersion>
+    <MicrosoftmacOSSdknet90_150PackageVersion>15.0.9617</MicrosoftmacOSSdknet90_150PackageVersion>
+    <MicrosoftiOSSdknet90_180PackageVersion>18.0.9617</MicrosoftiOSSdknet90_180PackageVersion>
+    <MicrosofttvOSSdknet90_180PackageVersion>18.0.9617</MicrosofttvOSSdknet90_180PackageVersion>
   </PropertyGroup>
 </Project>

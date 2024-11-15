@@ -108,23 +108,6 @@ steps:
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
-- bash: |
-    set -x
-    set -e
-
-    make -C src build/ios.rsp
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Generate rsp files
-  timeoutInMinutes: 30
-
-- bash: |
-    set -x
-    set -e
-    make -C tools/xibuild
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Build test dependencies
-  timeoutInMinutes: 30
-
 # expand all the prebuilt test dependencies
 - bash: |
     ls -Rla@ $(Build.SourcesDirectory)/artifacts
@@ -147,8 +130,6 @@ steps:
     # show environment
     env -0 | sort -z | tr '\0' '\n' || true
 
-    make -C builds download -j
-    make -C builds .stamp-mono-ios-sdk-destdir -j
     make -C tests ${{ parameters.makeTarget }}
 
     # We reached the end! This means we succeeded!

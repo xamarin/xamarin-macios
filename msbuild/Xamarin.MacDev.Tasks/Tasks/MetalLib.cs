@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -10,78 +11,35 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
-	public class MetalLib : XamarinToolTask, ITaskCallback {
+	public class MetalLib : XamarinTask, ITaskCallback {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 
 		[Required]
-		public ITaskItem [] Items { get; set; }
+		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
+
+		public string MetalLibPath { get; set; } = string.Empty;
 
 		[Required]
-		public string OutputLibrary { get; set; }
+		public string OutputLibrary { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkRoot { get; set; }
+		public string SdkRoot { get; set; } = string.Empty;
 
 		#endregion
 
-		string DevicePlatformBinDir {
-			get {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-					return AppleSdkSettings.XcodeVersion.Major >= 11
-						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
-						: Path.Combine (SdkDevPath, "Platforms", "iPhoneOS.platform", "usr", "bin");
-				case ApplePlatform.MacOSX:
-				case ApplePlatform.MacCatalyst:
-					return AppleSdkSettings.XcodeVersion.Major >= 10
-						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
-						: Path.Combine (SdkDevPath, "Platforms", "MacOSX.platform", "usr", "bin");
-				default:
-					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-				}
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
+		{
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
 			}
-		}
-
-		protected override string ToolName {
-			get { return "metallib"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineArgumentBuilder ();
-
-			args.Add ("-o");
-			args.AddQuoted (OutputLibrary);
-
-			foreach (var item in Items)
-				args.AddQuoted (item.ItemSpec);
-
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			return toolPathOverride;
 		}
 
 		public override bool Execute ()
@@ -90,14 +48,24 @@ namespace Xamarin.MacDev.Tasks {
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			var dir = Path.GetDirectoryName (OutputLibrary);
+			Directory.CreateDirectory (dir);
 
-			if (!Directory.Exists (dir))
-				Directory.CreateDirectory (dir);
+			var env = new Dictionary<string, string?> {
+				{ "SDKROOT", SdkRoot },
+			};
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 11)
-				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
+			var args = new List<string> ();
+			args.Add ("-o");
+			args.Add (OutputLibrary);
+			foreach (var item in Items)
+				args.Add (item.ItemSpec);
 
-			return base.Execute ();
+			var executable = GetExecutable (args, "metallib", MetalLibPath);
+
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, environment: env, cancellationToken: cancellationTokenSource.Token).Wait ();
+
+			return !Log.HasLoggedErrors;
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
@@ -106,12 +74,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
-			base.Cancel ();
-
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }

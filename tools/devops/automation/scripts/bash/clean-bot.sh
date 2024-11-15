@@ -12,6 +12,31 @@ df -h
 # We don't care about errors in this section, we just want to clean as much as possible
 set +e
 
+# Clean workspace
+(
+	for repo in "$SYSTEM_DEFAULTWORKINGDIRECTORY"/.git "$SYSTEM_DEFAULTWORKINGDIRECTORY"/*/.git; do
+		if test -d "$repo"; then
+			cd "$repo"
+			cd ..
+			echo "Running 'git clean' (for all submodules too) in $(pwd)"
+			git clean -xffd | sed 's/^/    /' || true
+			git submodule foreach --recursive git clean -xffd | sed 's/^/    /' || true
+		else
+			echo "$repo is not a git repository"
+		fi
+	done
+
+	echo "Cleaning packages directory:"
+	rm -rv "$SYSTEM_DEFAULTWORKINGDIRECTORY/packages" | sed 's/^/    /' || true
+
+	echo "Contents of SYSTEM_DEFAULTWORKINGDIRECTORY ($SYSTEM_DEFAULTWORKINGDIRECTORY):"
+	# shellcheck disable=SC2012
+	ls -la "$SYSTEM_DEFAULTWORKINGDIRECTORY" | sed 's/^/    /' || true
+	echo "Contents of BUILD_SOURCESDIRECTORY ($BUILD_SOURCESDIRECTORY):"
+	# shellcheck disable=SC2012
+	ls -la "$BUILD_SOURCESDIRECTORY" | sed 's/^/    /' || true
+)
+
 # Delete all the simulator devices. These can take up a lot of space over time (I've seen 100+GB on the bots)
 /Applications/Xcode.app/Contents/Developer/usr/bin/simctl delete all
 
@@ -118,7 +143,9 @@ XCODE_SELECT=$(xcode-select -p)
 
 for oldXcode in "${oldXcodes[@]}"; do
 	if [ "$XCODE_SELECT" != "$oldXcode/Contents/Developer" ]; then
-		sudo rm -Rf "$oldXcode"
+		if test -d "$oldXcode"; then
+			sudo rm -Rf "$oldXcode"
+		fi
 	else
 		echo "Not removing $oldXcode because is the currently selected one."
 	fi
@@ -126,6 +153,13 @@ done
 
 DIR="$(dirname "${BASH_SOURCE[0]}")"
 "$DIR"/clean-simulator-runtime.sh
+"$DIR"/kill-deadlocked-processes.sh
+
+# Remove legacy Xamarin/MonoTouch stuff
+sudo rm -Rf /Developer/MonoTouch
+sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+ls -R /Library/Frameworks
 
 # Print disk status after cleaning
 df -h

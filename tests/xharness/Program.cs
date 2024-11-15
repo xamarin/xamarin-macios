@@ -12,22 +12,22 @@ namespace Xharness {
 				xcode: Xamarin.SdkVersions.Xcode,
 				osx: Xamarin.SdkVersions.OSX,
 				iOS: Xamarin.SdkVersions.iOS,
-				watchOS: Xamarin.SdkVersions.WatchOS,
+				watchOS: "99.99",
 				tVOS: Xamarin.SdkVersions.TVOS,
 				minOSX: Xamarin.SdkVersions.MinOSX,
 				miniOS: Xamarin.SdkVersions.MiniOS,
-				minWatchOS: Xamarin.SdkVersions.LegacyMinWatchOS,
+				minWatchOS: "99.99",
 				minTVOS: Xamarin.SdkVersions.MinTVOS,
 				miniOSSimulator: Xamarin.SdkVersions.MiniOSSimulator,
-				minWatchOSSimulator: Xamarin.SdkVersions.MinWatchOSSimulator,
-				minWatchOSCompanionSimulator: Xamarin.SdkVersions.MinWatchOSCompanionSimulator,
+				minWatchOSSimulator: "99.99",
+				minWatchOSCompanionSimulator: "99.99",
 				minTVOSSimulator: Xamarin.SdkVersions.MinTVOSSimulator,
 				maxiOSSimulator: Xamarin.SdkVersions.MaxiOSSimulator,
-				maxWatchOSSimulator: Xamarin.SdkVersions.MaxWatchOSSimulator,
-				maxWatchOSCompanionSimulator: Xamarin.SdkVersions.MaxWatchOSCompanionSimulator,
+				maxWatchOSSimulator: "99.99",
+				maxWatchOSCompanionSimulator: "99.99",
 				maxTVOSSimulator: Xamarin.SdkVersions.MaxTVOSSimulator,
 				maxiOSDeploymentTarget: Xamarin.SdkVersions.MaxiOSDeploymentTarget,
-				maxWatchDeploymentTarget: Xamarin.SdkVersions.MaxWatchDeploymentTarget,
+				maxWatchDeploymentTarget: "99.99",
 				maxTVOSDeploymentTarget: Xamarin.SdkVersions.MaxTVOSDeploymentTarget);
 
 			Action showHelp = null;
@@ -39,13 +39,9 @@ namespace Xharness {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
 				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
-				// Configure
-				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
 				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v)) },
-				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => configuration.WatchOSContainerTemplate = v },
-				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => configuration.WatchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
@@ -66,8 +62,7 @@ namespace Xharness {
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },
-				{ "sdkroot94=", "Where Xcode 9.4 is", (v) => Console.WriteLine ("--sdkroot94 is deprecated"), true },
-				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => configuration.Target = v.ParseAsAppRunnerTarget () },
+				{ "target=", "Where to run the project ([ios|tvos]-[device|simulator).", (v) => configuration.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => configuration.BuildConfiguration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => configuration.LogDirectory = v },
 				{ "logfile=", "Where to store the log.", (v) => Console.WriteLine("The logfile option is deprecated. Please use logdirectory."), true },

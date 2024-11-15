@@ -36,11 +36,6 @@ parameters:
   type: boolean
   default: false 
 
-- name: skipESRP
-  displayName: Skip ESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
-
 - name: testConfigurations
   displayName: Test configurations to run
   type: object
@@ -146,23 +141,14 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
-    endpoint: xamarin
-
   - repository: CustomPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/MicroBuildTemplate
 
 variables:
-- template: templates/variables.yml
+- template: templates/variables/common.yml
+- template: templates/variables/api-scan.yml
 - template: templates/common/vs-release-vars.yml@sdk-insertions
-- name: MicrobuildConnector
-  value: ''
-- name: MaciosUploadPrefix
-  value: ''
 - name: Packaging.EnableSBOMSigning
   value: false
 
@@ -219,7 +205,6 @@ extends:
         exclude:
         - repository: yaml-templates
         - repository: sdk-insertions
-        - repository: release-scripts
     stages:
     - template: templates/main-stage.yml
       parameters:
@@ -230,14 +215,9 @@ extends:
         pool: ${{ parameters.pool }}
         runGovernanceTests: ${{ parameters.runGovernanceTests }}
         forceInsertion: ${{ parameters.forceInsertion }}
-        skipESRP: ${{ parameters.skipESRP }}
         pushNugets: false
         pushNugetsToMaestro: false
         ${{ if ne(length(parameters.testConfigurations), 0)}}:
           testConfigurations: ${{ parameters.testConfigurations }}
         deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
         macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-        signingSetupSteps:
-        - template: ./templates/sign-and-notarized/setup.yml
-          parameters:
-            isPR: true

@@ -391,9 +391,7 @@ namespace JavaScriptCore {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSManagedValue">Apple documentation for <c>JSManagedValue</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_3_0
 	[DisableDefaultCtor]
-#endif
 	partial interface JSManagedValue {
 		[Static, Export ("managedValueWithValue:")]
 		JSManagedValue Get (JSValue value);

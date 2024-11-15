@@ -9288,10 +9288,13 @@ namespace AppKit {
 		[ForcedType] // different type used inside a sandbox
 		NSOpenPanel OpenPanel { get; }
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Advice ("You must use 'OpenPanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All open panels now run out-of-process, use 'OpenPanel' method instead")]
 		[Export ("init")]
 		NativeHandle Constructor ();
+#endif
 
 		[Export ("URLs")]
 		NSUrl [] Urls { get; }
@@ -13627,10 +13630,13 @@ namespace AppKit {
 		[ForcedType] // different type used inside a sandbox
 		NSSavePanel SavePanel { get; }
 
+#if !XAMCORE_5_0
 		[Advice ("You must use 'SavePanel' method if the application is sandboxed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All save panels now run out-of-process, use 'SavePanel' method instead")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Export ("init")]
 		NativeHandle Constructor ();
+#endif
 
 		[Export ("URL")]
 		NSUrl Url { get; }
@@ -20450,8 +20456,23 @@ namespace AppKit {
 		[Export ("maxSize")]
 		CGSize MaxSize { get; set; }
 
+#if XAMCORE_5_0
+		[Export ("visibilityPriority")]
+		NSToolbarItemVisibilityPriority VisibilityPriority { get; set; }
+#else
+		/// <summary>Indicate which toolbar items should be kept when the toolbar space is limited.</summary>
+		/// <remarks>
+		///   <para>The valid values come from the <see cref="NSToolbarItemVisibilityPriority" /> enum, and they can be referenced as follows:</para>
+		///   <example>
+		///     <code lang="csharp lang-csharp"><![CDATA[
+		/// NSToolbarItem item = GetItem ();
+		/// item.VisibilityPriority = (nint) (long) NSToolbarItemVisibilityPriority.High;
+		/// ]]></code>
+		///   </example>
+		/// </remarks>
 		[Export ("visibilityPriority")]
 		nint VisibilityPriority { get; set; }
+#endif
 
 		[Export ("autovalidates")]
 		bool Autovalidates { get; set; }
@@ -28736,7 +28757,15 @@ namespace AppKit {
 		string AlertRecoverySuggestionButtonTitle { get; }
 
 		[Export ("alertRecoverySuggestionButtonLaunchURL", ArgumentSemantic.Copy), NullAllowed]
-		NSUrl AlertRecoverySuggestionButtonLaunchUrl { get; set; }
+#if XAMCORE_5_0
+		NSUrl AlertRecoverySuggestionButtonLaunchUrl { get; }
+#else
+		NSUrl AlertRecoverySuggestionButtonLaunchUrl {
+			get;
+			[Obsolete ("Do not use, the native class doesn't have this setter.")]
+			set;
+		}
+#endif
 
 		[Export ("initWithDisabledMode:")]
 		NativeHandle Constructor (NSSharingCollaborationMode disabledMode);
@@ -28756,5 +28785,13 @@ namespace AppKit {
 	interface NSViewContentSelectionInfo {
 		[Export ("selectionAnchorRect")]
 		CGRect /* NSRect */ SelectionAnchorRect { get; }
+	}
+
+	[Native]
+	enum NSToolbarItemVisibilityPriority : long {
+		Standard = 0,
+		Low = -1000,
+		High = 1000,
+		User = 2000,
 	}
 }

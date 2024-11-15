@@ -5597,12 +5597,6 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
-
-#if !XAMCORE_3_0
-		// binding mistake - it should never been added
-		[CoreImageFilterProperty ("inputCropAmount")]
-		float CropAmount { get; set; }
-#endif
 	}
 
 	/// <summary>The CIFaceBalance CoreImage filter</summary>
@@ -10273,6 +10267,18 @@ namespace CoreImage {
 	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[Protocol (Name = "CIAreaBoundsRed")]
 	interface CIAreaBoundsRedProtocol : CIAreaReductionFilterProtocol {
+	}
+
+	[CoreImageFilter]
+	[TV (18, 1), Mac (15, 1), iOS (18, 1), MacCatalyst (18, 1)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDistanceGradientFromRedMask : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputMaximumDistance")]
+		int MaximumDistance { get; set; }
 	}
 	#endregion
 

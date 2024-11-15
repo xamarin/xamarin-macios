@@ -312,20 +312,6 @@ namespace UIKit {
 	// In the hopes that the parameter is self document: this array  can contain either UIDocuments or UIResponders
 	delegate void UIApplicationRestorationHandler (NSObject [] uidocumentOrResponderObjects);
 
-#if !XAMCORE_3_0
-	[NoWatch]
-	[MacCatalyst (13, 1)]
-#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
-	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
-#pragma warning restore
-	[BaseType (typeof (NSAttributedString))]
-	interface NSAttributedStringAttachmentConveniences {
-		[Internal]
-		[Static, Export ("attributedStringWithAttachment:")]
-		NSAttributedString FromTextAttachment (NSTextAttachment attachment);
-	}
-#endif
-
 	/// <summary>Abstract base class for classes that generate feedback hints, such as haptics.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
@@ -2294,10 +2280,6 @@ namespace UIKit {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate {
 			get; // readonly
-#if !XAMCORE_3_0
-			[NotImplemented]
-			set;
-#endif
 		}
 
 		[Wrap ("WeakDelegate")]
@@ -4687,15 +4669,8 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
-#if XAMCORE_3_0 && !NET
-	// bind like UITableViewDelegate to avoid generating duplicate code
-	// it's an API break (binary, source should be fine)
-	[BaseType (typeof (UIScrollViewDelegate))]
-	interface UICollectionViewDelegate {
-#else
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewDelegate : UIScrollViewDelegate {
-#endif
 		[Export ("collectionView:shouldHighlightItemAtIndexPath:")]
 		bool ShouldHighlightItem (UICollectionView collectionView, NSIndexPath indexPath);
 
@@ -7729,32 +7704,6 @@ namespace UIKit {
 		[Notification (typeof (UIKeyboardEventArgs))]
 		NSString DidChangeFrameNotification { get; }
 
-#if !XAMCORE_3_0
-		//
-		// Deprecated methods
-		//
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardCenterBeginUserInfoKey")]
-		NSString CenterBeginUserInfoKey { get; }
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardCenterEndUserInfoKey")]
-		NSString CenterEndUserInfoKey { get; }
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardBoundsUserInfoKey")]
-		NSString BoundsUserInfoKey { get; }
-#endif
 		//
 		// Keys
 		//
@@ -10199,23 +10148,6 @@ namespace UIKit {
 		[Export ("imageRectForContentRect:")]
 		CGRect ImageRectForContentRect (CGRect rect);
 
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("font", ArgumentSemantic.Retain)]
-		UIFont Font { get; set; }
-
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("lineBreakMode")]
-		UILineBreakMode LineBreakMode { get; set; }
-
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("titleShadowOffset")]
-		CGSize TitleShadowOffset { get; set; }
-#endif
-
 		//
 		// 6.0
 		//
@@ -10858,13 +10790,6 @@ namespace UIKit {
 		[Export ("mediaTypes", ArgumentSemantic.Copy)]
 		string [] MediaTypes { get; set; }
 
-#if !XAMCORE_3_0
-		[Export ("allowsImageEditing")]
-		[Deprecated (PlatformName.iOS, 3, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		bool AllowsImageEditing { get; set; }
-#endif
-
 		//
 		// 3.1 APIs
 		//
@@ -10974,12 +10899,6 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	interface UIImagePickerControllerDelegate {
-#if !XAMCORE_3_0
-		[Obsoleted (PlatformName.iOS, 3, 0)]
-		[Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
-		void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
-#endif
-
 		[Export ("imagePickerController:didFinishPickingMediaWithInfo:"), EventArgs ("UIImagePickerMediaPicked")]
 		void FinishedPickingMedia (UIImagePickerController picker, NSDictionary info);
 
@@ -15297,13 +15216,6 @@ namespace UIKit {
 		[Export ("tableView:viewForFooterInSection:")]
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
-		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
-#endif
-
 		[Export ("tableView:accessoryButtonTappedForRowWithIndexPath:")]
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
 
@@ -15785,13 +15697,6 @@ namespace UIKit {
 
 		[Export ("tableView:viewForFooterInSection:")]
 		UIView GetViewForFooter (UITableView tableView, nint section);
-
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
-		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
-#endif
 
 		[Export ("tableView:accessoryButtonTappedForRowWithIndexPath:")]
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
@@ -18635,6 +18540,8 @@ namespace UIKit {
 		void TraitCollectionDidChange ([NullAllowed] UITraitCollection previousTraitCollection);
 	}
 
+	delegate void UITraitMutations (IUIMutableTraits mutableTraits);
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -18664,6 +18571,9 @@ namespace UIKit {
 		[Export ("containsTraitsInCollection:")]
 		bool Contains (UITraitCollection trait);
 
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use 'GetTraitCollectionWithTraits(UITraitMutations)' and 'GetTraitCollectionByModifyingTraits(UITraitMutations)' instead.")]
 		[Static, Export ("traitCollectionWithTraitsFromCollections:")]
 		UITraitCollection FromTraitsFromCollections (UITraitCollection [] traitCollections);
 
@@ -18812,14 +18722,23 @@ namespace UIKit {
 		[Export ("toolbarItemPresentationSize")]
 		UINSToolbarItemPresentationSize ToolbarItemPresentationSize { get; }
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the overload that takes a 'UITraitMutations' parameter instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("traitCollectionWithTraits:")]
 		UITraitCollection GetTraitCollectionWithTraits (Func<IUIMutableTraits> mutations);
+#endif
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("traitCollectionWithTraits:")]
+		UITraitCollection GetTraitCollectionWithTraits (UITraitMutations mutations);
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("traitCollectionByModifyingTraits:")]
-		UITraitCollection GetTraitCollectionByModifyingTraits (Func<IUIMutableTraits> mutations);
+		UITraitCollection GetTraitCollectionByModifyingTraits (UITraitMutations mutations);
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
@@ -30985,6 +30904,29 @@ namespace UIKit {
 
 		[Export ("uiView", ArgumentSemantic.Strong)]
 		UIView UIView { get; [Bind ("setUIView:")] set; }
+	}
+
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	delegate IUITextInput UITextInputReturnHandler ();
+
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	[Category]
+	[BaseType (typeof (NSObject))]
+	interface NSObject_UIAccessibilityTextOperations {
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponder")]
+		IUITextInput GetAccessibilityTextInputResponder ();
+
+		[Export ("setAccessibilityTextInputResponder:")]
+		void SetAccessibilityTextInputResponder ([NullAllowed] IUITextInput textInput);
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponderBlock")]
+		UITextInputReturnHandler GetAccessibilityTextInputResponderHandler ();
+
+		[Export ("setAccessibilityTextInputResponderBlock:")]
+		void SetAccessibilityTextInputResponderHandler ([NullAllowed] UITextInputReturnHandler handler);
 	}
 
 }

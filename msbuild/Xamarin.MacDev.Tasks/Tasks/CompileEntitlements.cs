@@ -54,6 +54,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string BundleIdentifier { get; set; } = string.Empty;
 
 		[Required]
+		[Output] // this is required to create an output file on Windows. Note: this is a relative path.
 		public ITaskItem? CompiledEntitlements { get; set; }
 
 		public ITaskItem [] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
@@ -521,14 +522,19 @@ namespace Xamarin.MacDev.Tasks {
 
 			SaveArchivedExpandedEntitlements (archived);
 
+			/* The path to the entitlements must be resolved to the full path, because we might want to reference it from a containing project that just references this project,
+			  * and in that case it becomes a bit complicated to resolve to a full path on disk when building remotely from Windows. Instead just resolve to a full path here,
+			  * and use that from now on. This has to be done from a task, so that we get the full path on the mac when executed remotely from Windows. */
+			var compiledEntitlementsFullPath = new TaskItem (Path.GetFullPath (CompiledEntitlements!.ItemSpec));
+
 			if (Platform == Utils.ApplePlatform.MacCatalyst) {
-				EntitlementsInSignature = CompiledEntitlements;
+				EntitlementsInSignature = compiledEntitlementsFullPath;
 			} else if (SdkIsSimulator) {
 				if (compiled.Count > 0) {
-					EntitlementsInExecutable = CompiledEntitlements;
+					EntitlementsInExecutable = compiledEntitlementsFullPath;
 				}
 			} else {
-				EntitlementsInSignature = CompiledEntitlements;
+				EntitlementsInSignature = compiledEntitlementsFullPath;
 			}
 
 			return !Log.HasLoggedErrors;
@@ -564,7 +570,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 
-		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+		public bool ShouldCreateOutputFile (ITaskItem item)
+		{
+			// EntitlementsInExecutable and EntitlementsInSignature are full paths on macOS,
+			// which doesn't work correctly when trying to create such output files on Windows.
+			var isFullPath = item == EntitlementsInExecutable || item == EntitlementsInSignature;
+			return !isFullPath;
+		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{

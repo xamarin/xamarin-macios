@@ -21,6 +21,9 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public abstract class ApiPInvokeTest : ApiBaseTest {
@@ -158,13 +161,7 @@ namespace Introspection {
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
 				case "System.Net.Security.Native":
-					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
-						continue;
-#if __IOS__
-					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
-#else
 					libname = null;
-#endif
 					break;
 				}
 
@@ -216,7 +213,6 @@ namespace Introspection {
 						// load from executable
 						path = null;
 						break;
-#if NET
 					case "libSystem.Globalization.Native":
 						// load from executable (like __Internal above since it's part of the static library)
 						path = null;
@@ -240,7 +236,6 @@ namespace Introspection {
 							path += ".dylib";
 						}
 						break;
-#endif
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";
@@ -248,13 +243,7 @@ namespace Introspection {
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
 					case "System.Net.Security.Native":
-						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
-							continue;
-#if __IOS__
-						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
-#else
 						path = null;
-#endif
 						break;
 					}
 
@@ -404,15 +393,5 @@ namespace Introspection {
 			if (!SkipAssembly (a))
 				Check (a);
 		}
-
-#if !NET
-		[Test]
-		public void SystemData ()
-		{
-			var a = typeof (System.Data.SqlClient.SqlCredential).Assembly;
-			if (!SkipAssembly (a))
-				Check (a);
-		}
-#endif
 	}
 }

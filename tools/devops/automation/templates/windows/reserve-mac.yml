@@ -29,9 +29,21 @@ steps:
     commit: ${{ parameters.commit }}
     clean: true
     path: s/xamarin-macios
+    fetchTags: false
 
 - checkout: maccore
+  clean: true
+  fetchDepth: 0
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+  fetchTags: false
+
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
+
+- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/${BUILD_REPOSITORY_NAME/#*\//}/tools/devops/automation/scripts/bash/clean-bot.sh'
+  displayName: 'Clean bot'
+  continueOnError: true
+  timeoutInMinutes: 60
 
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
   displayName: 'Disable CodeQL on arm64'
@@ -85,7 +97,7 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
 
-- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provision-xcode.csx
+- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning
   displayName: 'Generate Xcode provisioning csx file'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2

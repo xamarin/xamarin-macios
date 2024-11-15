@@ -22,34 +22,6 @@ using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
-#if !XAMCORE_3_0
-	class DocumentPoker : UIDocument {
-
-		static FieldInfo bkFileUrl;
-
-		static DocumentPoker ()
-		{
-			var t = typeof (UIDocument);
-			bkFileUrl = t.GetField ("__mt_FileUrl_var", BindingFlags.Instance | BindingFlags.NonPublic);
-		}
-
-		public static bool NewRefcountEnabled ()
-		{
-			return NSObject.IsNewRefcountEnabled ();
-		}
-
-		public DocumentPoker (NSUrl url) : base (url)
-		{
-		}
-
-		public NSUrl FileUrlBackingField {
-			get {
-				return (NSUrl) bkFileUrl.GetValue (this);
-			}
-		}
-	}
-
-#endif // !XAMCORE_3_0
 	class MyUrl : NSUrl {
 
 		public MyUrl (string url, string annotation) : base (url)
@@ -124,48 +96,6 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Throws<ArgumentNullException> (() => doc.PerformAsynchronousFileAccess (null));
 			}
 		}
-
-#if !XAMCORE_3_0
-		[Test]
-		public void FileUrl_BackingField ()
-		{
-			if (DocumentPoker.NewRefcountEnabled ())
-				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-
-			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
-			if (File.Exists (file))
-				File.Delete (file);
-
-			using (NSUrl url = NSUrl.FromFilename (file))
-			using (var doc = new DocumentPoker (url)) {
-				Assert.NotNull (doc.FileUrlBackingField, "1a");
-				Assert.AreSame (doc.FileUrl, doc.FileUrlBackingField, "2a");
-				// not a big deal in this case since we can't subclass NSUrl
-			}
-		}
-
-		[Test]
-		[Ignore ("crash on the bots, run fines locally on sim")]
-		public void NSUrl_Subclass ()
-		{
-			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
-			if (File.Exists (file))
-				File.Delete (file);
-
-			// interesting limitation
-			using (MyUrl url2 = new MyUrl (file, "my document")) {
-				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: must pass a valid file URL to -[UIDocument initWithFileURL:]
-#if NET
-				Assert.Throws<ObjCException> (delegate { 
-#else
-				Assert.Throws<MonoTouchException> (delegate
-				{
-#endif
-					new DocumentPoker (url2);
-				});
-			}
-		}
-#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Fields ()

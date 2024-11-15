@@ -250,13 +250,6 @@ namespace CoreVideo {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CVPixelFormatDescriptionCreateWithPixelFormatType (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, int /* OSType = int32_t */ pixelFormat);
 
-#if !XAMCORE_3_0
-		public static NSDictionary? Create (int pixelFormat)
-		{
-			return Runtime.GetNSObject<NSDictionary> (CVPixelFormatDescriptionCreateWithPixelFormatType (IntPtr.Zero, pixelFormat));
-		}
-#endif
-
 		/// <summary>Create a description of the specified pixel format.</summary>
 		/// <param name="pixelFormat">The pixel format to create a description of.</param>
 		public static NSDictionary? Create (CVPixelFormatType pixelFormat)
@@ -277,16 +270,6 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (
 			/* CFDictionaryRef __nonnull */ IntPtr description, int /* OSType = int32_t */ pixelFormat);
-
-#if !XAMCORE_3_0
-		public static void Register (NSDictionary description, int pixelFormat)
-		{
-			if (description is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
-
-			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, pixelFormat);
-		}
-#endif
 
 		/// <summary>Register a new pixel format with CoreVideo.</summary>
 		/// <param name="description">The pixel format description for the pixel format to register.</param>

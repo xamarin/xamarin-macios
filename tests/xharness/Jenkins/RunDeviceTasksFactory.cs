@@ -29,27 +29,21 @@ namespace Xharness.Jenkins {
 				projectTasks.Clear ();
 
 				bool createiOS;
-				bool createTodayExtension;
 				bool createtvOS;
-				bool createwatchOS;
 
 				if (project.GenerateVariations) {
 					createiOS = !project.SkipiOSVariation;
-					createTodayExtension = !project.SkipTodayExtensionVariation;
 					createtvOS = !project.SkiptvOSVariation;
-					createwatchOS = !project.SkipwatchOSVariation;
 				} else {
-					createiOS = project.TestPlatform == TestPlatform.iOS_Unified;
-					createTodayExtension = project.TestPlatform == TestPlatform.iOS_TodayExtension64;
+					createiOS = project.TestPlatform == TestPlatform.iOS;
 					createtvOS = project.TestPlatform == TestPlatform.tvOS;
-					createwatchOS = project.TestPlatform == TestPlatform.watchOS;
 				}
 
 				if (createiOS) {
 					var build64 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified64,
+						Platform = TestPlatform.iOS,
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
@@ -62,26 +56,6 @@ namespace Xharness.Jenkins {
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
 						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS) });
-
-					if (createTodayExtension) {
-						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
-						var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
-							ProjectConfiguration = "Debug",
-							ProjectPlatform = "iPhone",
-							Platform = TestPlatform.iOS_TodayExtension64,
-							TestName = project.Name,
-						};
-						buildToday.CloneTestProject (jenkins.MainLog, processManager, todayProject, HarnessConfiguration.RootDirectory);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: jenkins,
-							devices: jenkins.Devices,
-							buildTask: buildToday,
-							processManager: processManager,
-							tunnelBore: jenkins.TunnelBore,
-							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSExtension), BuildOnly = jenkins.ForceExtensionBuildOnly });
-					}
 				}
 
 				if (createtvOS) {
@@ -104,27 +78,6 @@ namespace Xharness.Jenkins {
 						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS) });
 				}
 
-				if (createwatchOS) {
-					var watchOSProject = project.GenerateVariations ? project.AsWatchOSProject () : project;
-					if (!project.SkipwatchOSARM64_32Variation) {
-						var buildWatch64_32 = new MSBuildTask (jenkins: jenkins, testProject: watchOSProject, processManager: processManager) {
-							ProjectConfiguration = "Release", // We don't support Debug for ARM64_32 yet.
-							ProjectPlatform = "iPhone",
-							Platform = TestPlatform.watchOS_64_32,
-							TestName = project.Name,
-						};
-						buildWatch64_32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: jenkins,
-							devices: jenkins.Devices,
-							buildTask: buildWatch64_32,
-							processManager: processManager,
-							tunnelBore: jenkins.TunnelBore,
-							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.watchOS) });
-					}
-				}
 				foreach (var task in projectTasks) {
 					task.TimeoutMultiplier = project.TimeoutMultiplier;
 					task.BuildOnly |= project.BuildOnly;

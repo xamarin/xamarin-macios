@@ -1,11 +1,9 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src msbuild tools
+SUBDIRS=builds runtime src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
-ifdef ENABLE_DOTNET
 SUBDIRS += dotnet
-endif
 
 #
 # Common
@@ -42,19 +40,8 @@ endif
 
 show-versions:
 	@echo "Building:"
-ifdef INCLUDE_XAMARIN_LEGACY
-	@echo "    The legacy package(s):"
-ifdef INCLUDE_IOS
-	@echo "        Xamarin.iOS $(IOS_PACKAGE_VERSION)"
-endif
-ifdef INCLUDE_MAC
-	@echo "        Xamarin.Mac $(MAC_PACKAGE_VERSION)"
-endif
-endif
-ifdef ENABLE_DOTNET
 	@echo "    The .NET NuGet(s):"
 	@$(foreach platform,$(DOTNET_PLATFORMS),echo "        Microsoft.$(platform) $($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)";)
-endif
 
 check-permissions:
 ifdef INCLUDE_MAC
@@ -72,7 +59,9 @@ all-local:: global.json
 global.json: $(TOP)/dotnet.config Makefile $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  },\n" >> $@; \
+		printf "  \"tools\": {\n    \"dotnet\": \"$(DOTNET_VERSION)\"\n  },\n" >> $@; \
+		printf "  \"msbuild-sdks\": {\n    \"Microsoft.DotNet.Arcade.Sdk\": \"$(ARCADE_VERSION)\"\n  }\n" >> $@; \
 		printf "}\n" >> $@
 
 install-hook::
@@ -110,6 +99,7 @@ else
 	@echo
 endif
 endif
+	$(Q) $(MAKE) -C dotnet shutdown-build-server
 
 .PHONY: package release
 package release:
@@ -186,15 +176,11 @@ git-clean-all:
 	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
 
-	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)" ]; then \
+	@if [ -n "$(ENABLE_XAMARIN)" ]; then \
 		CONFIGURE_FLAGS=""; \
 		if [ -n "$(ENABLE_XAMARIN)" ]; then \
 			echo "Xamarin-specific build has been re-enabled"; \
 			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-xamarin"; \
-		fi; \
-		if [ -n "$(ENABLE_DOTNET)" ]; then \
-			echo "Dotnet-specific build has been re-enabled"; \
-			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-dotnet"; \
 		fi; \
 		./configure "$$CONFIGURE_FLAGS"; \
 		$(MAKE) reset; \

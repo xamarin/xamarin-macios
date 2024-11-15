@@ -425,6 +425,11 @@ namespace Xamarin.Linker {
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
+			if (Application.XamarinRuntime != XamarinRuntime.MonoVM && Application.UseInterpreter) {
+				Driver.Log (4, "The interpreter is enabled, but the current runtime isn't MonoVM. The interpreter settings will be ignored.");
+				Application.UnsetInterpreter ();
+			}
+
 			Driver.ValidateXcode (Application, false, false);
 
 			Application.InitializeCommon ();

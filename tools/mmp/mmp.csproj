@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AssemblyName>mmp</AssemblyName>
-    <RootNamespace>mmp</RootNamespace>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <DefineConstants>MONOMAC;MMP</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>True</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>MONOMAC;MMP;LEGACY_TOOLS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Mono.Security" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
-    <Reference Include="System.Xml.Linq" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
@@ -318,8 +292,8 @@
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs">
       <Link>tools\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\build\mac\Constants.cs">
-      <Link>src\build\mac\Constants.cs</Link>
+    <Compile Include="..\..\src\build\dotnet\macos\Constants.cs">
+      <Link>src\build\dotnet\macos\Constants.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
@@ -491,23 +465,7 @@
       <Link>tools\common\XamarinRuntime.cs</Link>
     </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="config">
-      <LogicalName>config</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="config_mobile">
-      <LogicalName>config_mobile</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="machine.4_5.config">
-      <LogicalName>machine.4_5.config</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Info-framework.plist.tmpl">
-      <LogicalName>Info-framework.plist.tmpl</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Info.plist.tmpl">
-      <LogicalName>Info.plist.tmpl</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\Errors.resx">
       <Link>tools\mtouch\Errors.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -567,12 +525,6 @@
       <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
       <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
-    <None Include="..\..\docs\website\mmp-errors.md">
-      <Link>docs\website\mmp-errors.md</Link>
-    </None>
   </ItemGroup>
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
     <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />

@@ -40,12 +40,7 @@ namespace Foundation {
 			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
-#if ARCH_32
-			fixed (int* ptr = indexes)
-#else
 			fixed (nint* ptr = Array.ConvertAll<int, nint> (indexes, (v) => v))
-#endif
-
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
 
@@ -54,12 +49,7 @@ namespace Foundation {
 			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
-#if ARCH_32
-			fixed (uint* ptr = indexes)
-#else
 			fixed (nuint* ptr = Array.ConvertAll<uint, nuint> (indexes, (v) => v))
-#endif
-
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
 
