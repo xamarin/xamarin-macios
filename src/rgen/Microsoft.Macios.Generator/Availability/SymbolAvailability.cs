@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
 
@@ -7,33 +8,23 @@ namespace Microsoft.Macios.Generator.Availability;
 /// Readonly structure that describes the availability of a symbol in the supported platforms of the SDK.
 /// </summary>
 readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
-	/// <summary>
-	/// iOS platform availability. If null, the default versions are used.
-	/// </summary>
-	public PlatformAvailability? iOS { get; }
+	static readonly HashSet<ApplePlatform> supportedPlatforms =
+		[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
 
-	/// <summary>
-	/// TvOS platform availability. If null, the default versions are used.
-	/// </summary>
-	public PlatformAvailability? TvOS { get; }
+	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities;
 
-	/// <summary>
-	/// MacCatalyst platform availability. If null, the default versions are used.
-	/// </summary>
-	public PlatformAvailability? MacCatalyst { get; }
-
-	/// <summary>
-	/// MacOS platform availability. If null, the default versions are used.
-	/// </summary>
-	public PlatformAvailability? MacOSX { get; }
-
-	SymbolAvailability (PlatformAvailability? iOsAvailability, PlatformAvailability? tvOsAvailability,
-		PlatformAvailability? macCatalystAvailability, PlatformAvailability? macOSXAvailability)
+	SymbolAvailability (Dictionary<ApplePlatform, PlatformAvailability?> platforms)
 	{
-		iOS = iOsAvailability;
-		TvOS = tvOsAvailability;
-		MacCatalyst = macCatalystAvailability;
-		MacOSX = macOSXAvailability;
+		// copy the dict, do not assign
+		availabilities = new SortedDictionary<ApplePlatform, PlatformAvailability?> (platforms);
+	}
+
+	SymbolAvailability (IEnumerable<KeyValuePair<ApplePlatform, PlatformAvailability?>> platforms)
+	{
+		availabilities = new SortedDictionary<ApplePlatform, PlatformAvailability?> ();
+		foreach (var (key, value) in platforms) {
+			availabilities.Add (key, value);
+		}
 	}
 
 	/// <summary>
@@ -42,10 +33,7 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	/// <param name="other">Symbol availability to copy,</param>
 	public SymbolAvailability (SymbolAvailability other)
 	{
-		iOS = other.iOS;
-		TvOS = other.TvOS;
-		MacCatalyst = other.MacCatalyst;
-		MacOSX = other.MacOSX;
+		availabilities = other.availabilities;
 	}
 
 	/// <summary>
@@ -54,12 +42,23 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	/// </summary>
 	public IEnumerable<PlatformAvailability> PlatformAvailabilities {
 		get {
-			foreach (var platform in new [] { iOS, TvOS, MacCatalyst, MacOSX }) {
+			foreach (var platform in availabilities.Values) {
 				if (platform is not null)
 					yield return platform.Value;
 			}
 		}
 	}
+
+	/// <summary>
+	/// Readonly indexer that allows to access the availability of a given platform.
+	/// </summary>
+	/// <param name="platform">The platform whose availability we want to retrieve.</param>
+	public PlatformAvailability? this [ApplePlatform platform] {
+		get {
+			return (availabilities.ContainsKey (platform)) ? availabilities [platform] : null;
+		}
+	}
+
 
 	/// <summary>
 	/// Merged the current platform symbol availabilities to those of a parent symbol. This allows to ensure that
@@ -102,18 +101,27 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 		if (parent is null)
 			return new SymbolAvailability (this);
 
-		return new (
-			Merge (iOS, parent.Value.iOS),
-			Merge (TvOS, parent.Value.TvOS),
-			Merge (MacCatalyst, parent.Value.MacCatalyst),
-			Merge (MacOSX, parent.Value.MacOSX)
-		);
+		// create the key value pairs for the supported platforms
+		var merged = new List<KeyValuePair<ApplePlatform, PlatformAvailability?>> ();
+		foreach (var platform in supportedPlatforms) {
+			merged.Add (new(platform, Merge (this [platform], parent.Value [platform])));
+		}
+
+		return new(merged);
 	}
 
 	/// <inheritdoc />
 	public bool Equals (SymbolAvailability other)
 	{
-		return iOS == other.iOS && TvOS == other.TvOS && MacCatalyst == other.MacCatalyst && MacOSX == other.MacOSX;
+		// loop over the supported platforms and ensure that the availabilities are the
+		// same 
+		foreach (var platform in supportedPlatforms) {
+			if (this [platform] != other [platform]) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/// <inheritdoc />
@@ -125,7 +133,12 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (iOS, TvOS, MacCatalyst, MacOSX);
+		var hashCode = new HashCode ();
+		foreach (var platform in supportedPlatforms) {
+			hashCode.Add (this [platform]);
+		}
+
+		return hashCode.ToHashCode ();
 	}
 
 	public static bool operator == (SymbolAvailability left, SymbolAvailability right)

@@ -25,10 +25,10 @@ public class SymbolAvailabilityMergeTests {
 		var child = childBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (null);
 		// validate data
-		Assert.NotNull (merged.iOS);
-		Assert.NotNull (merged.TvOS);
-		Assert.NotNull (merged.MacCatalyst);
-		Assert.Null (merged.MacOSX);
+		Assert.NotNull (merged [ApplePlatform.iOS]);
+		Assert.NotNull (merged [ApplePlatform.TVOS]);
+		Assert.NotNull (merged [ApplePlatform.MacCatalyst]);
+		Assert.Null (merged [ApplePlatform.MacOSX]);
 	}
 
 	[Fact]
@@ -37,10 +37,10 @@ public class SymbolAvailabilityMergeTests {
 		var child = childBuilder.ToImmutable ();
 		var parent = parentBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (parent);
-		Assert.Null (merged.iOS);
-		Assert.Null (merged.TvOS);
-		Assert.Null (merged.MacCatalyst);
-		Assert.Null (merged.MacOSX);
+		Assert.Null (merged [ApplePlatform.iOS]);
+		Assert.Null (merged [ApplePlatform.TVOS]);
+		Assert.Null (merged [ApplePlatform.MacCatalyst]);
+		Assert.Null (merged [ApplePlatform.MacOSX]);
 	}
 
 	[Fact]
@@ -59,10 +59,10 @@ public class SymbolAvailabilityMergeTests {
 		var parent = parentBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (parent);
 		// we should have the parent data.
-		Assert.NotNull (merged.iOS);
-		Assert.NotNull (merged.TvOS);
-		Assert.NotNull (merged.MacCatalyst);
-		Assert.Null (merged.MacOSX);
+		Assert.NotNull (merged [ApplePlatform.iOS]);
+		Assert.NotNull (merged [ApplePlatform.TVOS]);
+		Assert.NotNull (merged [ApplePlatform.MacCatalyst]);
+		Assert.Null (merged [ApplePlatform.MacOSX]);
 	}
 
 	[Fact]
@@ -81,10 +81,10 @@ public class SymbolAvailabilityMergeTests {
 		var parent = parentBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (parent);
 		// validate data
-		Assert.NotNull (merged.iOS);
-		Assert.NotNull (merged.TvOS);
-		Assert.NotNull (merged.MacCatalyst);
-		Assert.Null (merged.MacOSX);
+		Assert.NotNull (merged [ApplePlatform.iOS]);
+		Assert.NotNull (merged [ApplePlatform.TVOS]);
+		Assert.NotNull (merged [ApplePlatform.MacCatalyst]);
+		Assert.Null (merged [ApplePlatform.MacOSX]);
 	}
 
 	[Fact]
@@ -117,8 +117,8 @@ public class SymbolAvailabilityMergeTests {
 		var child = childBuilder.ToImmutable ();
 		var parent = parentBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (parent);
-		Assert.NotNull (merged.iOS);
-		Assert.Equal (expectedData, merged.iOS);
+		Assert.NotNull (merged [ApplePlatform.iOS]);
+		Assert.Equal (expectedData, merged [ApplePlatform.iOS]);
 	}
 
 	[Fact]
@@ -150,9 +150,9 @@ public class SymbolAvailabilityMergeTests {
 		var child = childBuilder.ToImmutable ();
 		var parent = parentBuilder.ToImmutable ();
 		var merged = child.MergeWithParent (parent);
-		Assert.NotNull (merged.iOS);
-		Assert.NotNull (merged.TvOS);
-		Assert.Equal (childAvailability, merged.iOS);
-		Assert.Equal (parentAvailability, merged.TvOS);
+		Assert.NotNull (merged [ApplePlatform.iOS]);
+		Assert.NotNull (merged [ApplePlatform.TVOS]);
+		Assert.Equal (childAvailability, merged [ApplePlatform.iOS]);
+		Assert.Equal (parentAvailability, merged [ApplePlatform.TVOS]);
 	}
 }

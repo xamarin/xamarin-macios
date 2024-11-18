@@ -269,14 +269,14 @@ Because we are using a raw string  we expected:
 			builder.Add (new SupportedOSPlatformData ("ios"));
 			builder.Add (new SupportedOSPlatformData ("tvos"));
 			builder.Add (new SupportedOSPlatformData ("macos"));
-			yield return [builder.ToImmutable (), "[SupportedOSPlatform (\"ios\")]\n[SupportedOSPlatform (\"tvos\")]\n[SupportedOSPlatform (\"macos\")]\n"];
+			yield return [builder.ToImmutable (), "[SupportedOSPlatform (\"macos\")]\n[SupportedOSPlatform (\"ios\")]\n[SupportedOSPlatform (\"tvos\")]\n"];
 			builder.Clear ();
 
 			// several platforms available with version 
 			builder.Add (new SupportedOSPlatformData ("ios12.0"));
 			builder.Add (new SupportedOSPlatformData ("tvos12.0"));
 			builder.Add (new SupportedOSPlatformData ("macos10.0"));
-			yield return [builder.ToImmutable (), "[SupportedOSPlatform (\"ios12.0\")]\n[SupportedOSPlatform (\"tvos12.0\")]\n[SupportedOSPlatform (\"macos10.0\")]\n"];
+			yield return [builder.ToImmutable (), "[SupportedOSPlatform (\"macos10.0\")]\n[SupportedOSPlatform (\"ios12.0\")]\n[SupportedOSPlatform (\"tvos12.0\")]\n"];
 			builder.Clear ();
 
 			// several platforms unsupported
@@ -284,7 +284,7 @@ Because we are using a raw string  we expected:
 			builder.Add (new UnsupportedOSPlatformData ("ios12.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos12.0"));
 			builder.Add (new UnsupportedOSPlatformData ("macos"));
-			yield return [builder.ToImmutable (), "[UnsupportedOSPlatform (\"ios12.0\")]\n[UnsupportedOSPlatform (\"tvos12.0\")]\n[UnsupportedOSPlatform (\"macos\")]\n"];
+			yield return [builder.ToImmutable (), "[UnsupportedOSPlatform (\"macos\")]\n[UnsupportedOSPlatform (\"ios12.0\")]\n[UnsupportedOSPlatform (\"tvos12.0\")]\n"];
 			builder.Clear ();
 		}
 	}

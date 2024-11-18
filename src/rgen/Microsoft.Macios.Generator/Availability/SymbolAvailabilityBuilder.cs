@@ -15,10 +15,7 @@ readonly partial struct SymbolAvailability {
 	/// A writable SymbolAvailability accessor.
 	/// </summary>
 	public sealed class Builder {
-		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new ();
-
-		readonly HashSet<ApplePlatform> supportedPlatforms =
-			[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
+		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new();
 
 		internal Builder () { }
 
@@ -88,17 +85,14 @@ readonly partial struct SymbolAvailability {
 		/// <returns>A new readonly structure that contains the symbol availability.</returns>
 		public SymbolAvailability ToImmutable ()
 		{
-			PlatformAvailability? iOS =
-				platforms.ContainsKey (ApplePlatform.iOS) ? platforms [ApplePlatform.iOS].ToImmutable () : null;
-			PlatformAvailability? tvOS =
-				platforms.ContainsKey (ApplePlatform.TVOS) ? platforms [ApplePlatform.TVOS].ToImmutable () : null;
-			PlatformAvailability? macCatalyst =
-				platforms.ContainsKey (ApplePlatform.MacCatalyst)
-					? platforms [ApplePlatform.MacCatalyst].ToImmutable ()
+			var dict = new Dictionary<ApplePlatform, PlatformAvailability?> ();
+			foreach (var platform in supportedPlatforms) {
+				dict [platform] = platforms.ContainsKey (platform)
+					? platforms [platform].ToImmutable ()
 					: null;
-			PlatformAvailability? macOS =
-				platforms.ContainsKey (ApplePlatform.MacOSX) ? platforms [ApplePlatform.MacOSX].ToImmutable () : null;
-			return new (iOS, tvOS, macCatalyst, macOS);
+			}
+
+			return new(dict);
 		}
 	}
 }

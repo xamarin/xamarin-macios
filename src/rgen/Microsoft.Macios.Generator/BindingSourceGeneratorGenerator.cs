@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -104,7 +105,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				if (emitter.TryEmit (out var diagnostics)) {
 					// only add file when we do generate code
 					var code = sb.ToString ();
-					context.AddSource ($"{emitter.SymbolNamespace}/{emitter.SymbolName}.g.cs",
+					context.AddSource ($"{Path.Combine(emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
 						SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
@@ -139,7 +140,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		if (emitter.TryEmit (out var diagnostics)) {
 			// only add file when we do generate code
 			var code = sb.ToString ();
-			context.AddSource ($"{emitter.SymbolNamespace}/{emitter.SymbolName}.g.cs",
+			context.AddSource ($"{Path.Combine(emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
 				SourceText.From (code, Encoding.UTF8));
 		} else {
 			// add to the diagnostics and continue to the next possible candidate
