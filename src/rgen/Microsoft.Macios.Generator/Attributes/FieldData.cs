@@ -42,7 +42,7 @@ readonly struct FieldData<T> where T : Enum {
 		switch (count) {
 		case 1:
 			if (!attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
-				error = new (ParsingError.NotIdentifier, attributeData.ConstructorArguments[0].Value);
+				error = new (ParsingError.NotIdentifier, attributeData.ConstructorArguments [0].Value);
 				return false;
 			}
 			break;
