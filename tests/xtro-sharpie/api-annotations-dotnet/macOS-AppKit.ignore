@@ -203,9 +203,6 @@
 !extra-null-allowed! 'System.Void AppKit.NSFilePromiseProviderDelegate::WritePromiseToUrl(AppKit.NSFilePromiseProvider,Foundation.NSUrl,System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void AppKit.NSFontManager::set_Action(ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSSegmentedControl::SetLabel(System.String,System.IntPtr)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSTypesetter::WillSetLineFragment(CoreGraphics.CGRect&,Foundation.NSRange,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::AdjustPageHeightNew(System.Runtime.InteropServices.NFloat&,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::AdjustPageWidthNew(System.Runtime.InteropServices.NFloat&,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&)' has a extraneous [NullAllowed] on parameter #1
 
 # Initial result from new rule missing-null-allowed
