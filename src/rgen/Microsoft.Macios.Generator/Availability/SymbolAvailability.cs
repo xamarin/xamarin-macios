@@ -104,10 +104,10 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 		// create the key value pairs for the supported platforms
 		var merged = new List<KeyValuePair<ApplePlatform, PlatformAvailability?>> ();
 		foreach (var platform in supportedPlatforms) {
-			merged.Add (new(platform, Merge (this [platform], parent.Value [platform])));
+			merged.Add (new (platform, Merge (this [platform], parent.Value [platform])));
 		}
 
-		return new(merged);
+		return new (merged);
 	}
 
 	/// <inheritdoc />

@@ -15,7 +15,7 @@ readonly partial struct SymbolAvailability {
 	/// A writable SymbolAvailability accessor.
 	/// </summary>
 	public sealed class Builder {
-		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new();
+		readonly Dictionary<ApplePlatform, PlatformAvailability.Builder> platforms = new ();
 
 		internal Builder () { }
 
@@ -92,7 +92,7 @@ readonly partial struct SymbolAvailability {
 					: null;
 			}
 
-			return new(dict);
+			return new (dict);
 		}
 	}
 }
