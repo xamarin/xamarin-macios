@@ -39,7 +39,7 @@ Describe 'New-GitHubComment' {
             # assert the call and compare the expected parameters to the received ones
             Assert-MockCalled -CommandName Invoke-RestMethod -Times 1 -Scope It -ParameterFilter {
                 # validate each of the params and the payload
-                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/commits/BUILD_SOURCEVERSION/comments") {
+                if ($Uri -ne "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/commits/BUILD_SOURCEVERSION/comments") {
                     return $False
                 }
                 if ($Headers.Authorization -ne ("token {0}" -f $envVariables["GITHUB_TOKEN"])) {
@@ -136,7 +136,7 @@ Describe 'Get-GitHubPRInfo' {
             # assert the call and compare the expected parameters to the received ones
             Assert-MockCalled -CommandName Invoke-RestMethod -Times 1 -Scope It -ParameterFilter {
                 # validate each of the params and the payload
-                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$changeId") {
+                if ($Uri -ne "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/pulls/$changeId") {
                     return $False
                 }
                 if ($Headers.Authorization -ne ("token {0}" -f $envVariables["GITHUB_TOKEN"])) {
