@@ -71,19 +71,19 @@ steps:
 
 # remove any old processes that might have been left behind.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
 
@@ -91,18 +91,18 @@ steps:
     make -C src build/generator-frameworks.g.cs
     make -C src build/ios/Constants.cs
     make -C msbuild Versions.g.cs
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
   displayName: Generate constants files 
   timeoutInMinutes: 15
 
 - pwsh: >-
     ./set_xtro_workloads.ps1
     -WorkloadPath "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   displayName: 'Set workload versions for xtro'
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
   displayName: 'Install dotnet workloads'
   timeoutInMinutes: 45
   env:
@@ -115,7 +115,7 @@ steps:
     unzip -o $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
     ls -Rla@ .
     xattr -s -c -r .
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
@@ -141,7 +141,7 @@ steps:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_TCP_TUNNEL: 'true'
     PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 840
@@ -178,14 +178,14 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
-    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    targetPath: '$(BUILD_REPOSITORY_TITLE)/tests/TestSummary.md'
     artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
 - pwsh: |
     $summaryName = "TestSummary-${{ parameters.testPrefix }}.md"
-    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$(BUILD_REPOSITORY_TITLE)/tests/TestSummary.md"
     if (Test-Path -Path $summaryPath -PathType Leaf) {
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
@@ -198,8 +198,8 @@ steps:
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.labelWithPlatform }}-$(System.JobAttempt)'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
-    sourcePath: 'xamarin-macios/jenkins-results'
+    buildNumber: '$(BUILD_REPOSITORY_TITLE)/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
+    sourcePath: '$(BUILD_REPOSITORY_TITLE)/jenkins-results'
     detailedLog: true
     usePat: true
   continueOnError: true
@@ -231,7 +231,7 @@ steps:
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
   inputs:
-    rootFolder: 'xamarin-macios/jenkins-results'
+    rootFolder: '$(BUILD_REPOSITORY_TITLE)/jenkins-results'
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
@@ -253,7 +253,7 @@ steps:
 - script: |
     set -x
     mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE) $(Build.ArtifactStagingDirectory)/all-binlogs
   displayName: Copy all binlogs
   continueOnError: true
   condition: succeededOrFailed()
@@ -267,7 +267,7 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
@@ -281,5 +281,5 @@ steps:
     Clear-AfterTests
   displayName: 'Cleanup'
   continueOnError: true
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   condition: always() # no matter what, includes cancellation
