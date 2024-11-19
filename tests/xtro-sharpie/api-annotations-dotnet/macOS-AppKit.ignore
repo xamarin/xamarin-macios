@@ -206,10 +206,6 @@
 !extra-null-allowed! 'System.Void AppKit.NSTypesetter::WillSetLineFragment(CoreGraphics.CGRect&,Foundation.NSRange,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSView::AdjustPageHeightNew(System.Runtime.InteropServices.NFloat&,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSView::AdjustPageWidthNew(System.Runtime.InteropServices.NFloat&,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::DidAddSubview(AppKit.NSView)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::set_BackgroundFilters(CoreImage.CIFilter[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::set_ContentFilters(CoreImage.CIFilter[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AppKit.NSView::WillRemoveSubview(AppKit.NSView)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&)' has a extraneous [NullAllowed] on parameter #1
 
 # Initial result from new rule missing-null-allowed
@@ -220,7 +216,6 @@
 !missing-null-allowed! 'AppKit.NSAppearance AppKit.NSAppearance::GetAppearance(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSBitmapImageRep AppKit.NSBitmapImageRep::ConvertingToColorSpace(AppKit.NSColorSpace,AppKit.NSColorRenderingIntent)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSBitmapImageRep AppKit.NSBitmapImageRep::RetaggedWithColorSpace(AppKit.NSColorSpace)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSBitmapImageRep AppKit.NSView::BitmapImageRepForCachingDisplayInRect(CoreGraphics.CGRect)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSButton AppKit.NSAlert::get_SuppressionButton()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSButton AppKit.NSWindow::StandardWindowButton(AppKit.NSWindowButton)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSButton AppKit.NSWindow::StandardWindowButton(AppKit.NSWindowButton,AppKit.NSWindowStyle)' is missing an [NullAllowed] on return type
@@ -323,8 +318,6 @@
 !missing-null-allowed! 'AppKit.NSMenu AppKit.NSTextViewDelegate::MenuForEvent(AppKit.NSTextView,AppKit.NSMenu,AppKit.NSEvent,System.UIntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSMenu AppKit.NSTokenFieldCellDelegate::GetMenu(AppKit.NSTokenFieldCell,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSMenu AppKit.NSTokenFieldDelegate::GetMenu(AppKit.NSTokenField,Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSMenu AppKit.NSView::DefaultMenu()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSMenu AppKit.NSView::MenuForEvent(AppKit.NSEvent)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSMenuItem AppKit.NSMenuItem::get_ParentItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSMenuItem AppKit.NSPopUpButton::get_LastItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSMenuItem AppKit.NSPopUpButton::get_SelectedItem()' is missing an [NullAllowed] on return type
@@ -355,7 +348,6 @@
 !missing-null-allowed! 'AppKit.NSScreen AppKit.NSScreen::get_MainScreen()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSScreen AppKit.NSWindow::get_DeepestScreen()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSScreen AppKit.NSWindow::get_Screen()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSScrollView AppKit.NSView::get_EnclosingScrollView()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSScrubberItemView AppKit.NSScrubber::GetItemViewForItem(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSScrubberItemView AppKit.NSScrubber::MakeItem(System.String,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSScrubberLayoutAttributes AppKit.NSScrubberLayout::LayoutAttributesForItem(System.IntPtr)' is missing an [NullAllowed] on return type
@@ -381,7 +373,6 @@
 !missing-null-allowed! 'AppKit.NSTextContainer AppKit.NSTypesetter::get_CurrentTextContainer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextContainer[] AppKit.NSTypesetter::get_TextContainers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextInputContext AppKit.NSTextInputContext::get_CurrentInputContext()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTextInputContext AppKit.NSView::get_InputContext()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextStorage AppKit.NSTextView::get_TextStorage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextTab AppKit.NSTypesetter::GetTextTab(System.Runtime.InteropServices.NFloat,Foundation.NSWritingDirection,System.Runtime.InteropServices.NFloat)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextView AppKit.NSCell::FieldEditorForView(AppKit.NSView)' is missing an [NullAllowed] on return type
@@ -400,13 +391,6 @@
 !missing-null-allowed! 'AppKit.NSView AppKit.NSTableViewDelegate::GetViewForItem(AppKit.NSTableView,AppKit.NSTableColumn,System.IntPtr)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'AppKit.NSView AppKit.NSTableViewDelegate::GetViewForItem(AppKit.NSTableView,AppKit.NSTableColumn,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSView AppKit.NSTextFinderBarContainer::get_ContentView()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::AncestorSharedWithView(AppKit.NSView)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::get_NextValidKeyView()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::get_OpaqueAncestor()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::get_PreviousKeyView()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::get_PreviousValidKeyView()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::get_Superview()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSView AppKit.NSView::HitTest(CoreGraphics.CGPoint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSViewController AppKit.NSBrowserDelegate::HeaderViewControllerForItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'AppKit.NSViewController AppKit.NSBrowserDelegate::HeaderViewControllerForItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSViewController AppKit.NSBrowserDelegate::PreviewViewControllerForLeafItem(AppKit.NSBrowser,Foundation.NSObject)' is missing an [NullAllowed] on return type
@@ -422,7 +406,6 @@
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSEvent::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSPopoverDelegate::GetDetachableWindowForPopover(AppKit.NSPopover)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSSharingServiceDelegate::SourceWindowForShareItems(AppKit.NSSharingService,Foundation.NSObject[],AppKit.NSSharingContentScope)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSWindow AppKit.NSView::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSWindow::get_AttachedSheet()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow AppKit.NSWindow::get_SheetParent()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSWindow[] AppKit.NSWindow::get_ChildWindows()' is missing an [NullAllowed] on return type
@@ -523,7 +506,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSTouch::get_Device()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSTrackingArea::get_Owner()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSTreeNode::get_RepresentedObject()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSView::ViewWithTag(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSWindow::get_ContentLayoutGuide()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSWindow::ValidRequestorForSendType(System.String,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSWindow::ValidRequestorForSendType(System.String,System.String)' is missing an [NullAllowed] on parameter #1
@@ -582,8 +564,6 @@
 !missing-null-allowed! 'System.Boolean AppKit.NSTextView::ShouldChangeText(Foundation.NSArray,System.String[])' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSTextViewDelegate::ShouldChangeTextInRanges(AppKit.NSTextView,Foundation.NSValue[],System.String[])' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean AppKit.NSTreeController::SetSelectionIndexPath(Foundation.NSIndexPath)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean AppKit.NSView::AcceptsFirstMouse(AppKit.NSEvent)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean AppKit.NSView::EnterFullscreenModeWithOptions(AppKit.NSScreen,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSWindow::TryToPerform(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSWorkspace::SelectFile(System.String,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSWorkspace::SetDesktopImageUrl(Foundation.NSUrl,AppKit.NSScreen,Foundation.NSDictionary,Foundation.NSError)' is missing an [NullAllowed] on parameter #3
@@ -1012,10 +992,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSUserDefaultsController::RevertToInitialValues(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSUserDefaultsController::Save(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSUserDefaultsController::set_InitialValues(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSView::ExitFullscreenModeWithOptions(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSView::Print(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSView::set_PressureConfiguration(AppKit.NSPressureConfiguration)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSView::set_Shadow(AppKit.NSShadow)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSViewController::DismissController(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSViewController::set_RepresentedObject(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSViewController::set_Title(System.String)' is missing an [NullAllowed] on parameter #0

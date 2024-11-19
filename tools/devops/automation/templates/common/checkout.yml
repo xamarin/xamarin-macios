@@ -20,13 +20,13 @@ steps:
     commit: ${{ parameters.commit }}
     clean: true
     submodules: recursive
-    path: s/xamarin-macios
+    path: s/$(BUILD_REPOSITORY_TITLE)
     fetchTags: false
 
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
   name: fix_commit
   displayName: "Undo Github merge"
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   timeoutInMinutes: 15
 
 - checkout: maccore
@@ -41,4 +41,4 @@ steps:
 
 - pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
   displayName: 'Clean git mess from VSTS'
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts

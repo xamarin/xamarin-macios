@@ -394,9 +394,6 @@
 !missing-null-allowed! 'UIKit.UIView UIKit.UITableViewDelegate::GetViewForFooter(UIKit.UITableView,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UITableViewDelegate::GetViewForHeader(UIKit.UITableView,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UITouch::get_View()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIView UIKit.UIView::get_Superview()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIView UIKit.UIView::SnapshotView(System.Boolean)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIView UIKit.UIView::ViewWithTag(System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIViewControllerContextTransitioning::GetViewFor(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController UIKit.UIActivity::get_ViewController()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController UIKit.UIAdaptivePresentationControllerDelegate::GetViewControllerForAdaptivePresentation(UIKit.UIPresentationController,UIKit.UIModalPresentationStyle)' is missing an [NullAllowed] on return type
@@ -420,7 +417,6 @@
 !missing-null-allowed! 'UIKit.UIViewController[] UIKit.UINavigationController::PopToViewController(UIKit.UIViewController,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController[] UIKit.UIPageViewController::get_ViewControllers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UITouch::get_Window()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIWindow UIKit.UIView::get_Window()' is missing an [NullAllowed] on return type
 
 ## These are inlined by protocol adoption so you can't really add such decoration
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute

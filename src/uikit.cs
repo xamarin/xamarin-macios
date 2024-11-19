@@ -16918,6 +16918,7 @@ namespace UIKit {
 		[Export ("sizeToFit")]
 		void SizeToFit ();
 
+		[NullAllowed]
 		[Export ("superview")]
 		UIView Superview { get; }
 
@@ -16926,6 +16927,7 @@ namespace UIKit {
 
 		[Export ("window")]
 		[Transient]
+		[NullAllowed]
 		UIWindow Window { get; }
 
 		[Export ("removeFromSuperview")]
@@ -16973,6 +16975,7 @@ namespace UIKit {
 		[Export ("isDescendantOfView:")]
 		bool IsDescendantOfView (UIView view);
 
+		[return: NullAllowed]
 		[Export ("viewWithTag:")]
 		UIView ViewWithTag (nint tag);
 
@@ -17314,6 +17317,7 @@ namespace UIKit {
 		[Export ("motionEffects", ArgumentSemantic.Copy)]
 		UIMotionEffect [] MotionEffects { get; set; }
 
+		[return: NullAllowed]
 		[Export ("snapshotViewAfterScreenUpdates:")]
 		UIView SnapshotView (bool afterScreenUpdates);
 
