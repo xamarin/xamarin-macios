@@ -250,7 +250,8 @@ namespace Xamarin.MacDev {
 			var actualArgs = new List<string> ();
 
 			actualArgs.Add ($"@{responseFile}");
-			actualArgs.AddRange (nonResponseArguments);
+			if (nonResponseArguments is not null)
+				actualArgs.AddRange (nonResponseArguments);
 
 			// Generate the command line
 			return actualArgs;

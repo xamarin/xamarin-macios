@@ -39,7 +39,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.ExtraArgs = "-invalid";
 			var args = task.GenerateCommandLineArguments ();
 			args.AddRange (File.ReadAllLines (task.ResponseFilePath));
-			Assert.That (args.Contains (" -invalid"), "incorrect ExtraArg not causing an exception");
+			Assert.That (args.Contains ("-invalid"), "incorrect ExtraArg not causing an exception");
 		}
 	}
 }

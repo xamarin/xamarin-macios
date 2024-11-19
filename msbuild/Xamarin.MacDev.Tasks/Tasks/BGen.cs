@@ -99,8 +99,13 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.Add ("/v");
 #endif
 
-			if (CompiledApiDefinitionAssembly is not null)
-				cmd.Add ($"/compiled-api-definition-assembly:{CompiledApiDefinitionAssembly.ItemSpec}");
+			var compiledApiDefinitionAssembly = CompiledApiDefinitionAssembly?.ItemSpec;
+#if NET
+			if (!string.IsNullOrEmpty (compiledApiDefinitionAssembly))
+#else
+			if (compiledApiDefinitionAssembly is not null && !string.IsNullOrEmpty (compiledApiDefinitionAssembly))
+#endif
+				cmd.Add ($"/compiled-api-definition-assembly:{compiledApiDefinitionAssembly}");
 
 			cmd.Add ("/nostdlib");
 			if (!string.IsNullOrEmpty (BaseLibDll))
@@ -124,7 +129,8 @@ namespace Xamarin.MacDev.Tasks {
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
 
-			cmd.Add ($"/ns:{Namespace}");
+			if (!string.IsNullOrEmpty (Namespace))
+				cmd.Add ($"/ns:{Namespace}");
 
 			if (NoNFloatUsing)
 				cmd.Add ("/no-nfloat-using:true");
@@ -179,10 +185,10 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			if (GeneratedSourcesDir is not null)
+			if (!string.IsNullOrEmpty (GeneratedSourcesDir))
 				cmd.Add ($"/tmpdir:{Path.GetFullPath (GeneratedSourcesDir)}");
 
-			if (GeneratedSourcesFileList is not null)
+			if (!string.IsNullOrEmpty (GeneratedSourcesFileList))
 				cmd.Add ($"/sourceonly:{Path.GetFullPath (GeneratedSourcesFileList)}");
 
 			cmd.Add ($"/target-framework={TargetFrameworkMoniker}");
@@ -208,7 +214,7 @@ namespace Xamarin.MacDev.Tasks {
 					// { "solutiondir",  proj.ParentSolution is not null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
 				};
 				// OutputAssembly is optional so it can be null
-				if (target is not null) {
+				if (!string.IsNullOrEmpty (target)) {
 					var d = Path.GetDirectoryName (target);
 					var n = Path.GetFileName (target);
 					customTags.Add ("targetpath", Path.Combine (d, n));
@@ -272,10 +278,12 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			var executablePath = PathUtils.ConvertToMacPath (BGenToolPath);
-			var executableExe = PathUtils.ConvertToMacPath (BGenToolExe);
-			var executable = Path.Combine (executablePath, executableExe);
+			var bgenPath = PathUtils.ConvertToMacPath (BGenToolPath);
+			var bgenExe = PathUtils.ConvertToMacPath (BGenToolExe);
+			var bgen = Path.Combine (bgenPath, bgenExe);
 			var args = GenerateCommandLineArguments ();
+			args.Insert (0, bgen);
+			var executable = this.GetDotNetPath ();
 			if (Log.HasLoggedErrors)
 				return false;
 
