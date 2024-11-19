@@ -37,7 +37,7 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
@@ -128,7 +128,7 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\$Env:BUILD_REPOSITORY_TITLE\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP pwd
     Invoke-SshDownload `
       -RemoteHost "$Env:MAC_AGENT_IP" `
@@ -175,43 +175,43 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+    & dotnet build "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/InstallDotNet.csproj" `
     --verbosity quiet `
-    "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install.binlog" `
+    "-bl:$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/install.binlog" `
     -p:DisableImplicitNuGetFallbackFolder=true
   displayName: 'Install custom .NET'
 
 - pwsh: |
-    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\\tests\dotnet\Windows\\bin\dotnet\dotnet.exe"
-    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+    $Env:DOTNET = "$(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\\tests\dotnet\Windows\\bin\dotnet\dotnet.exe"
+    & dotnet build "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/InstallDotNet.csproj" `
       --verbosity quiet `
-      "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install-workloads.binlog" `
+      "-bl:$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/install-workloads.binlog" `
       -p:DisableImplicitNuGetFallbackFolder=true `
       -t:Install
   displayName: 'Install workloads'
 
 - pwsh: |
     $path = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}Build.props/Build.props"
-    Write-Host "Move $path to xamarin-macios"
-    mv $path ./xamarin-macios
+    Write-Host "Move $path to $(BUILD_REPOSITORY_TITLE)"
+    mv $path ./$(BUILD_REPOSITORY_TITLE)
   displayName: Relocate Build.props
   workingDirectory: $(Build.SourcesDirectory)
 
 # this step replaces the test-libraries dir
 - pwsh: |
     $zip = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
-    $target = "$(Build.SourcesDirectory)/xamarin-macios"
+    $target = "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+  workingDirectory: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
 - pwsh: |
-    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+    & $(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         nuget push `
-        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
-        --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
+        "$(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        --source "$(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tests\.nuget\packages"
   displayName: 'Build dependencies for .NET tests'
   continueOnError: true
 
@@ -220,22 +220,22 @@ steps:
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <RunConfiguration>
-        <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
+        <DotNetHostPath>$(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
       </RunConfiguration>
     </RunSettings>
     "@
-    Set-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings -Value $runsettings
-    Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
+    Set-Content -Path $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/config.runsettings -Value $runsettings
+    Get-Content -Path $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/dotnet/Windows/config.runsettings | Write-Host
   displayName: 'Create runsettings for .NET tests'
 
-- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-local-windows-tests.ps1
+- pwsh: $(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tools\devops\automation\scripts\run-local-windows-tests.ps1
   displayName: 'Run .NET tests locally'
   timeoutInMinutes: 30
   continueOnError: true
   ${{ if not(parameters.isPR) }}:
     retryCountOnTaskFailure: ${{ parameters.retryCount }}
 
-- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
+- pwsh: $(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tools\devops\automation\scripts\run-remote-windows-tests.ps1
   displayName: 'Run .NET tests remotely'
   timeoutInMinutes: 120
   continueOnError: true
@@ -251,7 +251,7 @@ steps:
   timeoutInMinutes: 1
   condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
 
-- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
+- pwsh: $(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
   displayName: 'Fetch remote binlogs'
   timeoutInMinutes: 5
   condition: always()
@@ -260,7 +260,7 @@ steps:
     XMA_PASSWORD: $(XMA.Password)
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\$Env:BUILD_REPOSITORY_TITLE\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
@@ -269,14 +269,14 @@ steps:
   displayName: 'Parse build configuration'
   timeoutInMinutes: 1
 
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
+- pwsh: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
   displayName: 'Run generator tests'
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
   inputs:
-    rootFolder: '$(Build.SourcesDirectory)/xamarin-macios/jenkins-results'
+    rootFolder: '$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/jenkins-results'
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
@@ -306,7 +306,7 @@ steps:
 # Upload all the binlogs
 # Copy all the binlogs to a separate directory, keeping directory structure.
 - pwsh: |
-    $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
+    $sourceDir = '$(Build.SourcesDirectory)\$(BUILD_REPOSITORY_TITLE)'
     $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
     New-Item -Path "$targetDir" -ItemType "directory" -Force
 
@@ -331,7 +331,7 @@ steps:
 
 # Make sure to report any errors
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
