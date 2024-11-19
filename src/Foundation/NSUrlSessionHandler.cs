@@ -217,7 +217,7 @@ namespace Foundation {
 		}
 #endif
 
-		public long MaxInputInMemory { get; set; } = long.MaxValue;
+		public long MaxInputInMemory { get; set; } = (long) int.MaxValue; // use int.MaxValue since it is the same max value used by both HttpContent and MemoryStream.
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
