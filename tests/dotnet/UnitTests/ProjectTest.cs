@@ -862,9 +862,9 @@ namespace Xamarin.Tests {
 					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
 					break;
 				case ApplePlatform.TVOS:
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
 					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
-					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
 					break;
 				case ApplePlatform.MacCatalyst:
 					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
