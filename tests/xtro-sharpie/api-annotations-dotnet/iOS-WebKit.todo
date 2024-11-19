@@ -3,3 +3,5 @@
 !missing-selector! WKWebViewConfiguration::setWritingToolsBehavior: not bound
 !missing-selector! WKWebViewConfiguration::supportsAdaptiveImageGlyph not bound
 !missing-selector! WKWebViewConfiguration::writingToolsBehavior not bound
+!missing-selector! WKDownload::isUserInitiated not bound
+!missing-selector! WKDownload::originatingFrame not bound

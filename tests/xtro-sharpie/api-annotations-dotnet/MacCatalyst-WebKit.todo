@@ -1,0 +1,2 @@
+!missing-selector! WKDownload::isUserInitiated not bound
+!missing-selector! WKDownload::originatingFrame not bound

@@ -669,7 +669,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Symbols", "Symbols", 17, 0 },
 					{ "NetworkExtension", "NetworkExtension", 17, 0 },
 					{ "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
-					{ "BrowserEngineKit", "BrowserEngineKit", 17, 4},
+					{ "BrowserEngineKit", "BrowserEngineKit", new Version (17, 4), NotAvailableInSimulator },
 				};
 			}
 			return tvos_frameworks;

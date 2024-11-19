@@ -1379,3 +1379,5 @@
 !missing-type! AVCaptureSystemExposureBiasSlider not bound
 !missing-type! AVCaptureSystemZoomSlider not bound
 !missing-type! AVExposureBiasRange not bound
+!missing-enum! AVAudioApplicationMicrophoneInjectionPermission not bound
+!missing-enum! AVAudioSessionMicrophoneInjectionMode not bound
