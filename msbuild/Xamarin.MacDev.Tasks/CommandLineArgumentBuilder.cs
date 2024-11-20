@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 
@@ -239,7 +240,7 @@ namespace Xamarin.MacDev {
 				File.Delete (responseFile);
 
 			try {
-				File.WriteAllLines (responseFile, responseArguments);
+				File.WriteAllLines (responseFile, StringUtils.Quote (responseArguments.ToArray ()));
 			} catch (Exception ex) {
 				task.Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
