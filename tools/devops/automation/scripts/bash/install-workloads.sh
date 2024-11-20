@@ -7,7 +7,7 @@ env | sort
 
 # This script can be executed locally by downloading the 'WorkloadRollback'
 # and 'not-signed-package' artifacts from an Azure DevOps build, and then
-# extracting the files into the xamarin-macios/../artifacts directory.
+# extracting the files into the <repo>/../artifacts directory.
 
 # If BUILD_SOURCESDIRECTORY is not set, it's likely we're executing locally.
 # In which case we can figure out where we are from the current git checkout
@@ -18,7 +18,7 @@ if test -z "${BUILD_SOURCESDIRECTORY:-}"; then
 fi
 # Don't assume we're in the right directory (makes it easier to run the script
 # locally).
-cd "$BUILD_SOURCESDIRECTORY/xamarin-macios"
+cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
 
 # Validate a few things
 ARTIFACTS_PATH=$BUILD_SOURCESDIRECTORY/artifacts
@@ -42,15 +42,15 @@ make global.json
 
 make -C builds dotnet
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
 echo "Using dotnet found at $DOTNET"
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
 DOTNET_PLATFORMS=${var#*=}
 echo "Dotnet platforms are '$DOTNET_PLATFORMS'"
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR)
 DOTNET_NUPKG_DIR=${var#*=}
 echo "Using nuget dir $DOTNET_NUPKG_DIR"
 
@@ -80,9 +80,9 @@ done
 for platform in $DOTNET_PLATFORMS; do
   unzip -l "$DOTNET_NUPKG_DIR"/Microsoft."$platform".Bundle.*.zip
   unzip "$DOTNET_NUPKG_DIR"/Microsoft."$platform".Bundle.*.zip -d tmpdir
-  rsync -av tmpdir/dotnet/sdk-manifests/* "$BUILD_SOURCESDIRECTORY"/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
+  rsync -av tmpdir/dotnet/sdk-manifests/* "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"/builds/downloads/dotnet-*/sdk-manifests/
 done
-find "$BUILD_SOURCESDIRECTORY"/xamarin-macios/builds/downloads/dotnet-*
+find "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"/builds/downloads/dotnet-*
 
 # PLATFORMS may be empty/no values
 set +u
@@ -91,6 +91,6 @@ if [ ${#PLATFORMS[@]} -gt 0 ]; then
 fi
 set -u
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_DIR)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET_DIR)
 DOTNET_DIR=${var#*=}
 ls -lR "$DOTNET_DIR"

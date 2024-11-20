@@ -13,7 +13,7 @@ steps:
     set -x
     set -e
     make
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=$VAR_NAME)
+    var=$(make -C $(Build.SourcesDirectory)/$BUILD_REPOSITORY_TITLE/tools/devops print-variable VARIABLE=$VAR_NAME)
     var=${var#*=}
     echo "##vso[task.setvariable variable=nuget-feed;issecret=true]$var"
   displayName: 'Retrieve nuget feed'
