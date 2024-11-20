@@ -72,7 +72,6 @@ namespace Introspection {
 
 		HashSet<string> allowed = new HashSet<string> () {
 			"Aac",
-			"Accurracy",
 			"Achivements",
 			"Acos",
 			"Acosh",

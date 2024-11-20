@@ -204,7 +204,7 @@ locationManager.StartRangingBeacons(beaconRegion)
             <term>The <see cref="P:CoreLocation.CLLocationManager.Delegate" /> property must be assigned to an object whose class implements the <see cref="M:CoreLocation.CLLocationManagerDelegate.LocationsUpdated(CoreLocation.CLLocationManager,CoreLocation.CLLocation[])" /> method.</term>
           </item>
           <item>
-            <term>The <see cref="P:CoreLocation.CLLocationManager.DesiredAccuracy" /> property must be set to <see cref="P:CoreLocation.CLLocation.AccuracyBest" /> or <see cref="P:CoreLocation.CLLocation.AccurracyBestForNavigation" />.</term>
+            <term>The <see cref="P:CoreLocation.CLLocationManager.DesiredAccuracy" /> property must be set to <see cref="P:CoreLocation.CLLocation.AccuracyBest" /> or <see cref="P:CoreLocation.CLLocation.AccuracyBestForNavigation" />.</term>
           </item>
         </list>
         <para>If those conditions are satisfied, the application can request deferred delivery when backgrounded by calling the <see cref="M:CoreLocation.CLLocationManager.AllowDeferredLocationUpdatesUntil(System.Double,System.Double)" /> method.</para>

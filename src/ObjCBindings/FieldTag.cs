@@ -6,15 +6,26 @@ using System.Diagnostics.CodeAnalysis;
 namespace ObjCBindings {
 
 	/// <summary>
-	/// Base class use to flag a FieldAttribute usage. Each FieldAttribute must have a flag attached to it so that the 
-	/// binding generator analyzer can verify the binding definition.
+	/// The exported constant/field is a class/interface property field.
 	/// </summary>
+	[Flags]
 	[Experimental ("APL0003")]
-	public abstract class FieldTag { }
+	public enum Field {
+		/// <summary>
+		/// Use the default values.
+		/// </summary>
+		None = 0,
+	}
 
 	/// <summary>
 	/// Field flag that states that the field is used as a Enum value.
 	/// </summary>
+	[Flags]
 	[Experimental ("APL0003")]
-	public sealed class EnumValue : FieldTag { }
+	public enum EnumValue {
+		/// <summary>
+		/// Use the default values.
+		/// </summary>
+		None = 0,
+	}
 }

@@ -219,62 +219,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Condition = "'$(IsAppDistribution)' != 'true' And '$(UsingAppleNETSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
-
-		<MTouch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(MtouchExe)"
-			ToolPath="$(MtouchPath)"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures="$(TargetArchitectures)"
-			ExecutableName="$(_ExecutableName)"
-			CompiledEntitlements="$(_CompiledEntitlements)"
-			Debug="$(_BundlerDebug)"
-			ExtraArgs="$(AppBundleExtraOptions)"
-			FastDev="$(MtouchFastDev)"
-			HttpClientHandler="$(MtouchHttpClientHandler)"
-			I18n="$(MtouchI18n)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)mtouch-cache"
-			IsAppExtension="$(IsAppExtension)"
-			LinkDescriptions="@(LinkDescription)"
-			LinkerDumpDependencies="$(MtouchLinkerDumpDependencies)"
-			LinkMode="$(_LinkMode)"
-			MainAssembly="$(TargetPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			Profiling="$(MtouchProfiling)"
-			ProjectDir="$(MtouchProjectDirectory)"
-			References="@(ReferencePath);@(_BundlerReferencePath)"
-			Registrar="$(Registrar)"
-			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
-			SdkRoot="$(_SdkDevPath)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkVersion="$(_SdkVersion)"
-			SymbolsList="$(_MtouchSymbolsList)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			UseLlvm="$(MtouchUseLlvm)"
-			UseFloat32="$(MtouchFloat32)"
-			UseThumb="$(MtouchUseThumb)"
-			EnableBitcode="$(MtouchEnableBitcode)"
-			EnableSGenConc="$(EnableSGenConc)"
-			Interpreter="$(MtouchInterpreter)"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			ArchiveSymbols="$(MonoSymbolArchive)"
-			Verbosity="$(MtouchVerbosity)"
-			StandardOutputImportance="High"
-			XamarinSdkRoot="$(_XamarinSdkRoot)"
-			>
-		</MTouch>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="$(DeviceSpecificOutputPath)bundler.stamp"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
+		<Error Text="Support for Xamarin projects has ended. Please migrate your project to .NET" />
 	</Target>
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
