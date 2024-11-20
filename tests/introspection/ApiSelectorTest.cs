@@ -1290,10 +1290,6 @@ namespace Introspection {
 			case "initWithMinCenterCoordinateDistance:":
 			case "initExcludingCategories:":
 			case "initIncludingCategories:":
-			// Vision
-			case "initWithCenter:diameter:":
-			case "initWithCenter:radius:":
-			case "initWithR:theta:":
 			// PassKit
 			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
 			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
