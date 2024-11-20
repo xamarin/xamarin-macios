@@ -1,5 +1,6 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator", "Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj", "{8E9CF45D-E836-447E-9290-03A9CACE2704}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator.Sample", "Microsoft.Macios.Generator.Sample\Microsoft.Macios.Generator.Sample.csproj", "{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}"
@@ -13,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.Analyzer.Tests", "..\..\tests\rgen\Microsoft.Macios.Bindings.Analyzer.Tests\Microsoft.Macios.Bindings.Analyzer.Tests.csproj", "{1AC4A248-CC98-4392-8690-4E2CAF6E194B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Binding.Common", "Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj", "{536758BC-2A88-4B79-ABB1-6B39494A5FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Transformer", "Microsoft.Macios.Transformer\Microsoft.Macios.Transformer.csproj", "{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Transformer.Tests", "..\..\tests\rgen\Microsoft.Macios.Transformer.Tests\Microsoft.Macios.Transformer.Tests.csproj", "{BE23E467-7971-4439-BEE8-220B77F40027}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +53,13 @@ Global
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
