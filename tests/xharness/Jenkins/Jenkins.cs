@@ -218,26 +218,23 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetRoslynAnalyzer);
 
-			var buildDotNetRoslynTransformerProject = new TestProject(TestLabel.Generator, Path.GetFullPath(Path.Combine(HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Transformer.Tests", "Microsoft.Macios.Transformer.Tests.csproj")))
-			{
+			var buildDotNetRoslynTransformerProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Transformer.Tests", "Microsoft.Macios.Transformer.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
-			var buildDotNetRoslynTransformer = new MSBuildTask(jenkins: this, testProject: buildDotNetRoslynTransformerProject, processManager: processManager)
-			{
+			var buildDotNetRoslynTransformer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynTransformerProject, processManager: processManager) {
 				TestProject = buildDotNetRoslynTransformerProject,
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
-			var runDotNetRoslynTransformer = new DotNetTestTask(this, buildDotNetRoslynTransformer, processManager)
-			{
+			var runDotNetRoslynTransformer = new DotNetTestTask (this, buildDotNetRoslynTransformer, processManager) {
 				TestProject = buildDotNetRoslynTransformerProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Roslyn Transformer tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled(TestLabel.Generator),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
 			};
-			Tasks.Add(runDotNetRoslynTransformer);
+			Tasks.Add (runDotNetRoslynTransformer);
 
 			var buildDotNetTestsProject = new TestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
