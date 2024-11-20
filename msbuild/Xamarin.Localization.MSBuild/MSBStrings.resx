@@ -1624,7 +1624,7 @@
     </data>
 
     <data name="E7133" xml:space="preserve">
-        <value>The item '{0}'' does not have a '{1}' value set.</value>
+        <value>The item '{0}' does not have a '{1}' value set.</value>
         <comment>
             {0}: a path to a file
             {1}: the name of a MSBuild metadata
