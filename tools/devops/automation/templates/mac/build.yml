@@ -43,7 +43,7 @@ steps:
   parameters:
     CleanseProcesses: true
 
-- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/disable-codeql-arm64.sh
   displayName: 'Disable CodeQL on arm64'
   name: disableCodeQLOnArm64
 
@@ -57,7 +57,7 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
   env:
     OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
@@ -67,10 +67,10 @@ steps:
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
-- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/${BUILD_REPOSITORY_NAME/#*\//}/tools/devops/automation/scripts/bash/clean-bot.sh'
+- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
   displayName: 'Clean bot'
   continueOnError: true
   timeoutInMinutes: 60
@@ -99,7 +99,7 @@ steps:
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
     Assert-HDFreeSpace -Size 5
   env:
     CONTEXT: ${{ parameters.statusContext }}
@@ -111,7 +111,7 @@ steps:
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
+    provisioning_script: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
     github_token: $(Github.Token)
   timeoutInMinutes: 30
@@ -176,7 +176,7 @@ steps:
     version: 8.x
 
 - pwsh: >-
-    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run_mac_tests.ps1
+    $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/run_mac_tests.ps1
     -GithubToken $(GitHub.Token)
     -RepositoryUri "$(Build.Repository.Uri)"
     -SourcesDirectory "$(Build.SourcesDirectory)"
@@ -193,7 +193,7 @@ steps:
     MONO_DEBUG: no-gdb-backtrace
     TEST_BOT: $(Agent.Name)
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
@@ -202,7 +202,7 @@ steps:
 
 # Make sure to report any errors
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {

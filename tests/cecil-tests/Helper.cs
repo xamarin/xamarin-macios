@@ -693,4 +693,30 @@ namespace Cecil.Tests {
 			Platform = platform;
 		}
 	}
+
+	public record FailureWithMessageAndLocation : IComparable {
+		public string Message { get; }
+		public string Location { get; }
+
+		public FailureWithMessageAndLocation (string message, string location)
+		{
+			Message = message;
+			Location = location;
+		}
+
+		public override string ToString ()
+		{
+			if (string.IsNullOrEmpty (Location))
+				return Message;
+			return $"{Message} at {Location}";
+		}
+
+		public int CompareTo (object? obj)
+		{
+			if (obj is FailureWithMessageAndLocation other)
+				return ToString ().CompareTo (other.ToString ());
+			return -1;
+		}
+	}
+
 }
