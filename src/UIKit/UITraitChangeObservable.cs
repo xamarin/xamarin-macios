@@ -260,7 +260,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
@@ -270,7 +270,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
 		}
@@ -280,7 +280,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
 		}
@@ -292,7 +292,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
@@ -302,7 +302,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
 		}
@@ -312,7 +312,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
 		}
@@ -324,7 +324,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
@@ -334,7 +334,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
 		}
@@ -344,7 +344,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
 		}
@@ -356,7 +356,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		public unsafe virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
@@ -366,7 +366,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, NSObject target, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), target, action);
 		}
@@ -376,7 +376,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition[] traits, Selector action)
+		public virtual IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, IUITraitChangeObservable.ToClasses (traits), action);
 		}
@@ -388,7 +388,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public unsafe static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		public unsafe static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), handler);
 		}
@@ -398,7 +398,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, NSObject target, Selector action)
+		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition [] traits, NSObject target, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), target, action);
 		}
@@ -408,7 +408,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
-		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition[] traits, Selector action)
+		public static IUITraitChangeRegistration RegisterForTraitChanges (this IUITraitChangeObservable This, IUITraitDefinition [] traits, Selector action)
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (This, IUITraitChangeObservable.ToClasses (traits), action);
 		}

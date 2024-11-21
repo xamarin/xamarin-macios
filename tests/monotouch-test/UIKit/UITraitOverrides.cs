@@ -37,27 +37,27 @@ namespace MonoTouchFixtures.UIKit {
 			using var observable = new UIViewController ();
 
 			// RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
-			token = observable.RegisterForTraitChanges ((a, b) => {}, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
+			token = observable.RegisterForTraitChanges ((a, b) => { }, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.UIKit {
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, NSObject target, Selector action)
@@ -91,27 +91,27 @@ namespace MonoTouchFixtures.UIKit {
 			using var observable = new UIView ();
 
 			// RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
-			token = observable.RegisterForTraitChanges ((a, b) => {}, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
+			token = observable.RegisterForTraitChanges ((a, b) => { }, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
@@ -123,7 +123,7 @@ namespace MonoTouchFixtures.UIKit {
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, NSObject target, Selector action)
@@ -145,27 +145,27 @@ namespace MonoTouchFixtures.UIKit {
 			UIWindowScene observable = UIApplication.SharedApplication.Windows [0].WindowScene;
 
 			// RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
-			token = observable.RegisterForTraitChanges ((a, b) => {}, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
+			token = observable.RegisterForTraitChanges ((a, b) => { }, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.UIKit {
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, NSObject target, Selector action)
@@ -200,27 +200,27 @@ namespace MonoTouchFixtures.UIKit {
 			using var observable = new UIPresentationController (vc, null);
 
 			// RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { typeof (UITraitVerticalSizeClass) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
-			token = observable.RegisterForTraitChanges ((a, b) => {}, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
+			token = observable.RegisterForTraitChanges ((a, b) => { }, typeof (UITraitVerticalSizeClass), typeof (UITraitHorizontalSizeClass));
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => {} );
+			token = observable.RegisterForTraitChanges<UITraitVerticalSizeClass, UITraitHorizontalSizeClass, UITraitHorizontalSizeClass, UITraitVerticalSizeClass> ((a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
@@ -232,7 +232,7 @@ namespace MonoTouchFixtures.UIKit {
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
-			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => {} );
+			token = observable.RegisterForTraitChanges (new [] { new Class (typeof (UITraitVerticalSizeClass)) }, (a, b) => { });
 			observable.UnregisterForTraitChanges (token);
 
 			// RegisterForTraitChanges (Class [] traits, NSObject target, Selector action)

@@ -59,7 +59,7 @@ namespace UIKit {
 				yield return uiv;
 		}
 
-#region Inlined from the UITraitChangeObservable protocol
+		#region Inlined from the UITraitChangeObservable protocol
 		/// <summary>
 		/// Registers a callback handler that will be executed when one of the specified traits changes.
 		/// </summary>
@@ -165,6 +165,6 @@ namespace UIKit {
 		{
 			return IUITraitChangeObservable._RegisterForTraitChanges (this, traits, action);
 		}
-#endregion
+		#endregion
 	}
 }
