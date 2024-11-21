@@ -132,6 +132,6 @@ readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		return $"{{ Name: {Name}, Arguments: [{string.Join (", ", Arguments)}] }}";	
+		return $"{{ Name: {Name}, Arguments: [{string.Join (", ", Arguments)}] }}";
 	}
 }

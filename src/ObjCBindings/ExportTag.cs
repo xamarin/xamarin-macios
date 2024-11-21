@@ -25,7 +25,7 @@ namespace ObjCBindings {
 	/// Flgs to be used in general bound methods.
 	/// </summary>
 	[Flags]
-	public enum Method  : Int64 {
+	public enum Method : Int64 {
 		/// <summary>
 		/// Use the default values.
 		/// </summary>
@@ -53,7 +53,7 @@ namespace ObjCBindings {
 	/// Flags to be used on properties.
 	/// </summary>
 	[Flags]
-	public enum Property  : Int64 {
+	public enum Property : Int64 {
 		/// <summary>
 		/// Use the default values.
 		/// </summary>

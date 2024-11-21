@@ -70,7 +70,7 @@ public class ModifiersComparerTests {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword),
 		];
-		
+
 		Assert.True (comparer.Equals (x, y));
 	}
 }

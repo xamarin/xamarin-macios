@@ -44,7 +44,7 @@ enum AVMediaCharacteristics {
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, wrongAttributeInValue, true];
 			}
-			
+
 			const string presentAttributeInValue = @"
 using System;
 using Foundation;
@@ -66,11 +66,11 @@ enum AVMediaCharacteristics {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataSkipEnumValueDeclaration))]
+	[ClassData (typeof (TestDataSkipEnumValueDeclaration))]
 	public void SkipEnumValueDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof(SkipEnumValueDeclaration), platform, inputText);
+			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -115,8 +115,8 @@ public class TestClass {
 ";
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [platform, wrongAttributeInProperty, true];
-			}	
-			
+			}
+
 			const string fieldAttributeInProperty = @"
 using System;
 using Foundation;
@@ -130,9 +130,9 @@ public class TestClass {
 }
 ";
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, fieldAttributeInProperty, false];	
+				yield return [platform, fieldAttributeInProperty, false];
 			}
-			
+
 			const string propertyAttributeInProperty = @"
 using System;
 using Foundation;
@@ -146,20 +146,20 @@ public class TestClass {
 }
 ";
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, propertyAttributeInProperty, false];	
+				yield return [platform, propertyAttributeInProperty, false];
 			}
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataSkipPropertyDeclaration))]
+	[ClassData (typeof (TestDataSkipPropertyDeclaration))]
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof(SkipEnumValueDeclaration), platform, inputText);
+			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()

@@ -6,17 +6,17 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct PropertyAccessorCodeChange :  IEquatable<PropertyAccessorCodeChange> {
+readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChange> {
 	/// <summary>
 	/// The kind of accessor.
 	/// </summary>
 	public AccessorKind Kind { get; }
-	
+
 	/// <summary>
 	/// List of attribute code changes of the accesor.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; }
-	
+
 	/// <summary>
 	/// List of modifiers of the accessor.
 	/// </summary>
@@ -37,7 +37,7 @@ readonly struct PropertyAccessorCodeChange :  IEquatable<PropertyAccessorCodeCha
 	}
 
 	/// <inheritdoc />
-	public bool Equals(PropertyAccessorCodeChange other)
+	public bool Equals (PropertyAccessorCodeChange other)
 	{
 		if (Kind != other.Kind)
 			return false;
@@ -49,25 +49,25 @@ readonly struct PropertyAccessorCodeChange :  IEquatable<PropertyAccessorCodeCha
 	}
 
 	/// <inheritdoc />
-	public override bool Equals(object? obj)
+	public override bool Equals (object? obj)
 	{
-		return obj is PropertyAccessorCodeChange other && Equals(other);
+		return obj is PropertyAccessorCodeChange other && Equals (other);
 	}
 
 	/// <inheritdoc />
-	public override int GetHashCode()
+	public override int GetHashCode ()
 	{
-		return HashCode.Combine((int)Kind, Attributes, Modifiers);
+		return HashCode.Combine ((int) Kind, Attributes, Modifiers);
 	}
 
-	public static bool operator ==(PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
+	public static bool operator == (PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
 	{
-		return left.Equals(right);
+		return left.Equals (right);
 	}
 
-	public static bool operator !=(PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
+	public static bool operator != (PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
 	{
-		return !left.Equals(right);
+		return !left.Equals (right);
 	}
 
 	/// <inheritdoc />

@@ -5,7 +5,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class PropertyAccessorsComparerTests {
-	readonly PropertyAccessorsComparer comparer = new();
+	readonly PropertyAccessorsComparer comparer = new ();
 
 	[Fact]
 	public void CompareTwoEmptyAccessorsArray ()
@@ -19,13 +19,13 @@ public class PropertyAccessorsComparerTests {
 	public void CompareSameSizeDiffSizes ()
 	{
 		ImmutableArray<PropertyAccessorCodeChange> x = [
-			new (AccessorKind.Getter,  [], []),
-			new (AccessorKind.Setter,  [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		];
 		ImmutableArray<PropertyAccessorCodeChange> y = [
-			new (AccessorKind.Getter,  [], []),
+			new (AccessorKind.Getter, [], []),
 		];
-		
+
 		Assert.False (comparer.Equals (x, y));
 	}
 
@@ -33,14 +33,14 @@ public class PropertyAccessorsComparerTests {
 	public void CompareSameSizeDiffAccessors ()
 	{
 		ImmutableArray<PropertyAccessorCodeChange> x = [
-			new (AccessorKind.Getter,  [], []),
-			new (AccessorKind.Setter,  [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		];
 		ImmutableArray<PropertyAccessorCodeChange> y = [
-			new (AccessorKind.Add,  [], []),
-			new (AccessorKind.Remove,  [], []),
+			new (AccessorKind.Add, [], []),
+			new (AccessorKind.Remove, [], []),
 		];
-		
+
 		Assert.False (comparer.Equals (x, y));
 	}
 
@@ -48,14 +48,14 @@ public class PropertyAccessorsComparerTests {
 	public void CompareTwoAccessorsDiffOrder ()
 	{
 		ImmutableArray<PropertyAccessorCodeChange> x = [
-			new (AccessorKind.Getter,  [], []),
-			new (AccessorKind.Setter,  [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		];
 		ImmutableArray<PropertyAccessorCodeChange> y = [
-			new (AccessorKind.Setter,  [], []),
-			new (AccessorKind.Getter,  [], []),
+			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
 		];
-		
+
 		Assert.True (comparer.Equals (x, y));
 	}
 
@@ -63,15 +63,15 @@ public class PropertyAccessorsComparerTests {
 	public void CompareTwoAccessorsEqual ()
 	{
 		ImmutableArray<PropertyAccessorCodeChange> x = [
-			new (AccessorKind.Getter,  [], []),
-			new (AccessorKind.Setter,  [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		];
-		
+
 		ImmutableArray<PropertyAccessorCodeChange> y = [
-			new (AccessorKind.Getter,  [], []),
-			new (AccessorKind.Setter,  [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		];
-		
+
 		Assert.True (comparer.Equals (x, y));
 	}
 }

@@ -14,7 +14,7 @@ namespace ObjCBindings {
 
 		public string? Selector { get; set; } = null;
 
-		public T? Flags { get; set;} = default(T);
+		public T? Flags { get; set; } = default (T);
 
 		public ArgumentSemantic ArgumentSemantic { get; set; } = ArgumentSemantic.None;
 
@@ -29,7 +29,7 @@ namespace ObjCBindings {
 		{
 			Selector = selector;
 			ArgumentSemantic = semantic;
-			Flags = default(T);
+			Flags = default (T);
 		}
 
 		public ExportAttribute (string? selector, T? flags)

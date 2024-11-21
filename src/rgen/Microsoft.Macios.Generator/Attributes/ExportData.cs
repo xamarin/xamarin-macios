@@ -10,17 +10,17 @@ namespace Microsoft.Macios.Generator.Attributes;
 /// </summary>
 /// <typeparam name="T">The configuration flags used on the exported element.</typeparam>
 readonly struct ExportData<T> where T : Enum {
-	
+
 	/// <summary>
 	/// The exported native selector.
 	/// </summary>
 	public string? Selector { get; }
-	
+
 	/// <summary>
 	/// The configuration flags used on the exported member.
 	/// </summary>
 	public T? Flags { get; }
-	
+
 	/// <summary>
 	/// Argument semantics to use with the selector.
 	/// </summary>
@@ -62,7 +62,7 @@ readonly struct ExportData<T> where T : Enum {
 		T? flags = default;
 		switch (count) {
 		case 1:
-			data = new((string?) attributeData.ConstructorArguments [0].Value!);
+			data = new ((string?) attributeData.ConstructorArguments [0].Value!);
 			break;
 		case 2:
 			// there are two possible cases in this situation.
@@ -88,8 +88,8 @@ readonly struct ExportData<T> where T : Enum {
 		}
 
 		if (attributeData.NamedArguments.Length == 0) {
-			data = flags is not null ? 
-				new(selector, argumentSemantic, flags) : new(selector, argumentSemantic);
+			data = flags is not null ?
+				new (selector, argumentSemantic, flags) : new (selector, argumentSemantic);
 			return true;
 		}
 
@@ -110,8 +110,8 @@ readonly struct ExportData<T> where T : Enum {
 			}
 		}
 
-		data = flags is not null ? 
-			new(selector, argumentSemantic, flags) : new(selector, argumentSemantic);
+		data = flags is not null ?
+			new (selector, argumentSemantic, flags) : new (selector, argumentSemantic);
 		return true;
 	}
 }

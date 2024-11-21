@@ -39,11 +39,11 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffAttrs ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [], []);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr2"),
+			new ("Attr2"),
 		], [], []);
 
 		Assert.False (x.Equals (y));
@@ -56,14 +56,14 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffModifiers ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], []);
@@ -78,21 +78,21 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffAccessors ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
+			new (AccessorKind.Getter, [], []),
 		]);
 
 		Assert.False (x.Equals (y));
@@ -105,22 +105,22 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareEquals ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 
 		Assert.True (x.Equals (y));
@@ -144,7 +144,9 @@ public class TestClass {
 ";
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, automaticGetter, new PropertyCodeChange (
+					platform,
+					automaticGetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -152,7 +154,7 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], [])
+							new (AccessorKind.Getter, [], [])
 						])
 				];
 			}
@@ -170,7 +172,9 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, automaticGetterSetter, new PropertyCodeChange (
+					platform,
+					automaticGetterSetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -178,8 +182,8 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
-							new(AccessorKind.Setter, [], [])
+							new (AccessorKind.Getter, [], []),
+							new (AccessorKind.Setter, [], [])
 						])
 				];
 			}
@@ -195,7 +199,9 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, manualGetter, new PropertyCodeChange (
+					platform,
+					manualGetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -203,7 +209,7 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
+							new (AccessorKind.Getter, [], []),
 						])
 				];
 			}
@@ -219,7 +225,9 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, expressionGetter, new PropertyCodeChange (
+					platform,
+					expressionGetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -227,7 +235,7 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
+							new (AccessorKind.Getter, [], []),
 						])
 				];
 			}
@@ -245,7 +253,9 @@ public class TestClass {
 ";
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, expressionGetterSetter, new PropertyCodeChange (
+					platform,
+					expressionGetterSetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -253,8 +263,8 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
-							new(AccessorKind.Setter, [], []),
+							new (AccessorKind.Getter, [], []),
+							new (AccessorKind.Setter, [], []),
 						])
 				];
 			}
@@ -274,7 +284,9 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, manualGetterSetter, new PropertyCodeChange (
+					platform,
+					manualGetterSetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -282,8 +294,8 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
-							new(AccessorKind.Setter, [], []),
+							new (AccessorKind.Getter, [], []),
+							new (AccessorKind.Setter, [], []),
 						])
 				];
 			}
@@ -302,7 +314,9 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, internalSetter, new PropertyCodeChange (
+					platform,
+					internalSetter,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [],
@@ -310,8 +324,8 @@ public class TestClass {
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
-							new(AccessorKind.Setter, [], [
+							new (AccessorKind.Getter, [], []),
+							new (AccessorKind.Setter, [], [
 								SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 							]),
 						])
@@ -335,18 +349,20 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, propertyWithAttribute, new PropertyCodeChange (
+					platform,
+					propertyWithAttribute,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 						],
 						modifiers: [
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [], []),
-							new(AccessorKind.Setter, [], []),
+							new (AccessorKind.Getter, [], []),
+							new (AccessorKind.Setter, [], []),
 						])
 				];
 			}
@@ -369,20 +385,22 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, propertyGetterWithAttribute, new PropertyCodeChange (
+					platform,
+					propertyGetterWithAttribute,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 						],
 						modifiers: [
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [
-								new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							new (AccessorKind.Getter, [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 							], []),
-							new(AccessorKind.Setter, [], []),
+							new (AccessorKind.Setter, [], []),
 						])
 				];
 			}
@@ -406,21 +424,23 @@ public class TestClass {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, propertyWithGetterAndSetterWithAttribute, new PropertyCodeChange (
+					platform,
+					propertyWithGetterAndSetterWithAttribute,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "string",
 						attributes: [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 						],
 						modifiers: [
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [
-								new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							new (AccessorKind.Getter, [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 							], []),
-							new(AccessorKind.Setter, [
-								new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							new (AccessorKind.Setter, [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 							], []),
 						])
 				];
@@ -450,21 +470,23 @@ namespace Test {
 
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
 				yield return [
-					platform, propertyWithCustomType, new PropertyCodeChange (
+					platform,
+					propertyWithCustomType,
+					new PropertyCodeChange (
 						name: "Name",
 						type: "Utils.MyClass",
 						attributes: [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 						],
 						modifiers: [
 							SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						],
 						accessors: [
-							new(AccessorKind.Getter, [
-								new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							new (AccessorKind.Getter, [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 							], []),
-							new(AccessorKind.Setter, [
-								new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							new (AccessorKind.Setter, [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 							], []),
 						])
 				];
@@ -476,10 +498,10 @@ namespace Test {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataFromPropertyDeclaration))]
+	[ClassData (typeof (TestDataFromPropertyDeclaration))]
 	void FromPropertyDeclaration (ApplePlatform platform, string inputText, PropertyCodeChange expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromPropertyDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromPropertyDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
@@ -487,7 +509,7 @@ namespace Test {
 			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
 			.FirstOrDefault ();
 		Assert.NotNull (declaration);
-		Assert.True(PropertyCodeChange.TryCreate (declaration, semanticModel, out var changes));
+		Assert.True (PropertyCodeChange.TryCreate (declaration, semanticModel, out var changes));
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes);
 	}

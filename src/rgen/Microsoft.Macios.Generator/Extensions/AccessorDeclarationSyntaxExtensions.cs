@@ -6,8 +6,8 @@ using Microsoft.Macios.Generator.DataModel;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class AccessorDeclarationSyntaxExtensions {
-	
+
 	public static ImmutableArray<AttributeCodeChange> GetAttributeCodeChanges (this AccessorDeclarationSyntax self,
 		SemanticModel semanticModel) => AttributeCodeChange.From (self.AttributeLists, semanticModel);
-	
+
 }

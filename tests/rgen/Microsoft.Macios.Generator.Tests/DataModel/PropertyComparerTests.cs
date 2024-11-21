@@ -6,7 +6,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class PropertyComparerTests {
-	readonly PropertyComparer comparer = new();
+	readonly PropertyComparer comparer = new ();
 
 	[Fact]
 	public void CompareEmptyArrays ()
@@ -21,7 +21,7 @@ public class PropertyComparerTests {
 	public void CompareDifferentSize ()
 	{
 		ImmutableArray<PropertyCodeChange> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -29,9 +29,9 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
-			new(
+			new (
 				name: "SecondProperty",
 				type: "string",
 				attributes: [],
@@ -39,11 +39,11 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
 		ImmutableArray<PropertyCodeChange> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -51,7 +51,7 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
 
@@ -62,7 +62,7 @@ public class PropertyComparerTests {
 	public void CompareSameSizeDiffProperties ()
 	{
 		ImmutableArray<PropertyCodeChange> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -70,11 +70,11 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
 		ImmutableArray<PropertyCodeChange> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
 				attributes: [],
@@ -82,7 +82,7 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
 
@@ -93,7 +93,7 @@ public class PropertyComparerTests {
 	public void CompareSameSizeSameProperties ()
 	{
 		ImmutableArray<PropertyCodeChange> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -101,11 +101,11 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
 		ImmutableArray<PropertyCodeChange> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -113,10 +113,10 @@ public class PropertyComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new(AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		
+
 		Assert.True (comparer.Equals (x, y));
 	}
 }

@@ -42,7 +42,7 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 		var memberComparer = new EnumMemberComparer ();
 		if (!memberComparer.Equals (x.EnumMembers, y.EnumMembers))
 			return false;
-		
+
 		// compare properties
 		var propertyComparer = new PropertyComparer ();
 		return propertyComparer.Equals (x.Properties, y.Properties);

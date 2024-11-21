@@ -17,7 +17,7 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 	/// Name of the property.
 	/// </summary>
 	public string Name { get; }
-	
+
 	/// <summary>
 	/// String representation of the property type.
 	/// </summary>
@@ -49,49 +49,49 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 	}
 
 	/// <inheritdoc />
-	public bool Equals(PropertyCodeChange other)
+	public bool Equals (PropertyCodeChange other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
 			return false;
-		var attrsComparer = new AttributesComparer();
-		if (!attrsComparer.Equals(Attributes, other.Attributes))
+		var attrsComparer = new AttributesComparer ();
+		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
-		
-		var modifiersComparer = new ModifiersComparer();
-		if (!modifiersComparer.Equals(Modifiers, other.Modifiers))
+
+		var modifiersComparer = new ModifiersComparer ();
+		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
 		var accessorComparer = new PropertyAccessorsComparer ();
-		return accessorComparer.Equals(Accessors, other.Accessors);
+		return accessorComparer.Equals (Accessors, other.Accessors);
 	}
 
 	/// <inheritdoc />
-	public override bool Equals(object? obj)
+	public override bool Equals (object? obj)
 	{
-		return obj is PropertyCodeChange other && Equals(other);
+		return obj is PropertyCodeChange other && Equals (other);
 	}
 
 	/// <inheritdoc />
-	public override int GetHashCode()
+	public override int GetHashCode ()
 	{
-		return HashCode.Combine(Name, Type, Attributes, Modifiers, Accessors);
+		return HashCode.Combine (Name, Type, Attributes, Modifiers, Accessors);
 	}
 
-	public static bool operator ==(PropertyCodeChange left, PropertyCodeChange right)
+	public static bool operator == (PropertyCodeChange left, PropertyCodeChange right)
 	{
-		return left.Equals(right);
+		return left.Equals (right);
 	}
 
-	public static bool operator !=(PropertyCodeChange left, PropertyCodeChange right)
+	public static bool operator != (PropertyCodeChange left, PropertyCodeChange right)
 	{
-		return !left.Equals(right);
+		return !left.Equals (right);
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel, 
-		[NotNullWhen(true)] out PropertyCodeChange? change)
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out PropertyCodeChange? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration
@@ -100,7 +100,7 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 			return false;
 		}
 
-		var type = propertySymbol.Type.ToDisplayString ().Trim();
+		var type = propertySymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 		ImmutableArray<PropertyAccessorCodeChange> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
@@ -109,7 +109,7 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 			foreach (var accessor in declaration.AccessorList.Accessors) {
 				var kind = accessor.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessor.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new(kind, accessorAttributeChanges, [..accessor.Modifiers]));
+				accessorsBucket.Add (new (kind, accessorAttributeChanges, [.. accessor.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
@@ -118,11 +118,11 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 		if (declaration.ExpressionBody is not null) {
 			// an expression body == a getter with no attrs or modifiers
 			accessorCodeChanges = [
-				new(AccessorKind.Getter, [], [])
+				new (AccessorKind.Getter, [], [])
 			];
 		}
-		
-		change = new(memberName, type, attributes, [..declaration.Modifiers], accessorCodeChanges);
+
+		change = new (memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
 		return true;
 	}
 
