@@ -32,21 +32,14 @@ namespace Xamarin.MacDev.Tasks {
 			return toolPathOverride;
 		}
 
-		List<string> GenerateCommandLineCommands ()
-		{
-			var args = new List<string> ();
-
-			args.Add (Input);
-
-			return args;
-		}
-
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			var args = GenerateCommandLineCommands ();
+			var args = new List<string> () {
+				Input
+			};
 			var executable = GetExecutable (args, "mdimport", MdimportPath);
 			cancellationTokenSource = new CancellationTokenSource ();
 			ExecuteAsync (Log, executable, args, cancellationToken: cancellationTokenSource.Token).Wait ();
