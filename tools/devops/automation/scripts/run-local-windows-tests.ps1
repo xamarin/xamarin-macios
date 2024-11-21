@@ -1,3 +1,8 @@
+if ("$Env:BUILD_REPOSITORY_TITLE" -eq "") {
+    $remoteUrl = & git remote get-url --push origin
+    $repoTitle = [System.IO.Path]::GetFilename($remoteUrl)
+    $Env:BUILD_REPOSITORY_TITLE = $repoTitle
+}
 if ("$Env:DOTNET" -eq "") {
     $Env:DOTNET = "$Env:BUILD_SOURCESDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     $Env:PATH = "$Env:BUILD_SOURCESDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tests\dotnet\Windows\bin\dotnet;$Env:PATH"
