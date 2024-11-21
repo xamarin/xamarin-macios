@@ -459,6 +459,8 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		$(DOTNET_FLAGS) \
 		/analyzer:$(ROSLYN_GENERATOR_COMMON) \
 		/analyzer:$(ROSLYN_GENERATOR) \
+		/generatedfilesout:$($(2)_DOTNET_BUILD_DIR)/generated-sources \
+		/reportanalyzer:$(ROSLYN_GENERATOR) \
 		-unsafe \
 		-optimize \
 		$$(ARGS_$(1)) \

@@ -7,8 +7,6 @@
 // Copyright (c) Microsoft Corporation.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +34,15 @@ namespace MonoTouchFixtures.Vision {
 			Assert.AreEqual (vector.Theta, 0.5, "Theta");
 			Assert.That (vector.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
 		}
+
+		[Test]
+		public void VNVectorCtorTest ()
+		{
+			using var vector = new VNVector ((R: 10, Theta: 0.5));
+			Assert.NotNull (vector, "vector not null");
+			Assert.AreEqual (vector.R, 10, "R");
+			Assert.AreEqual (vector.Theta, 0.5, "Theta");
+			Assert.That (vector.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
+		}
 	}
 }
-#endif
