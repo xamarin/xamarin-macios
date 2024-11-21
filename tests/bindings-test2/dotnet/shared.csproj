@@ -48,7 +48,7 @@
       <Link>libframework.h</Link>
     </None>
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework\Info.plist" />
   </ItemGroup>
 
   <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">

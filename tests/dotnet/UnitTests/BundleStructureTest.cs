@@ -286,9 +286,7 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest4", isSigned);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest5", isSigned);
 
-			expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.dll"));
-			if (includeDebugFiles)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.pdb"));
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "bindings-framework-test", runtimeIdentifiers, forceSingleRid: !(platform == ApplePlatform.MacCatalyst && isReleaseBuild), includeDebugFiles: includeDebugFiles);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "XTest", isSigned);
 
 			// various directories

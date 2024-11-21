@@ -21,7 +21,7 @@ param
     $StatusContext
 )
 
-Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
 $statuses = New-GitHubStatusesObjectFromUrl -Url "$RepositoryUri" -Token $GitHubToken
 
 Write-Host "Found tests"
