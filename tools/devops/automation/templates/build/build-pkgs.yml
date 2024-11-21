@@ -47,12 +47,12 @@ steps:
       xqaCertPass: ${{ parameters.xqaCertPass }}
       buildSteps:
         # build nugets
-        - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+        - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-nugets.sh
           displayName: 'Build Nugets'
           condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
           timeoutInMinutes: 180
 
-        - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+        - bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
           name: workload_file
           displayName: 'Generate "WorkloadRollback.json"'
 
@@ -75,7 +75,7 @@ steps:
             set -x
             set -e
 
-            make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip
+            make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests package-test-libraries.zip
           name: introPkg
           displayName: 'Package test libraries dependencies'
           continueOnError: true  # not a terrible blocking issue
@@ -84,14 +84,14 @@ steps:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: 'Publish test libraries dependencies'
           inputs:
-            path: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip
+            path: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/package-test-libraries.zip
             artifact: '${{ parameters.uploadPrefix }}package-test-libraries'
           continueOnError: true
 
         - task: 1ES.PublishPipelineArtifact@1
           displayName: 'Publish Build.props'
           inputs:
-            path: $(Build.SourcesDirectory)/xamarin-macios/Build.props
+            path: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/Build.props
             artifact: '${{ parameters.uploadPrefix }}Build.props'
           continueOnError: true
 
@@ -100,7 +100,7 @@ steps:
             - script: |
                 set -x
                 mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-                rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+                rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE) $(Build.ArtifactStagingDirectory)/all-binlogs
               displayName: Copy all binlogs
               continueOnError: true
               condition: succeededOrFailed()

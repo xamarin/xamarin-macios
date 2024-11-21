@@ -25,10 +25,7 @@ public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CreateCodeChangeNoFieldsNoAttributes (ApplePlatform platform)
 	{
 		const string inputString = @"
@@ -53,10 +50,7 @@ public enum AVCaptureDeviceType {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CreateCodeChangeFields (ApplePlatform platform)
 	{
 		const string inputString = @"
@@ -102,10 +96,7 @@ public enum AVCaptureDeviceType {
 	}
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CreateCodeChangeNoFieldAttributes (ApplePlatform platform)
 	{
 		const string inputString = @"
@@ -138,10 +129,7 @@ public enum AVCaptureDeviceType {
 
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
+	[AllSupportedPlatforms]
 	public void CreateCodeChangeFieldsMissing (ApplePlatform platform)
 	{
 		const string inputString = @"

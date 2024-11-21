@@ -49,5 +49,10 @@
             <Link>external\Cache.cs</Link>
         </Compile>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="SmartEnum\Data\*.cs" />
+      <None Include="SmartEnum\Data\*.cs" />
+    </ItemGroup>
 
 </Project>

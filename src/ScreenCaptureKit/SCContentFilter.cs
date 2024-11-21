@@ -17,34 +17,32 @@ using Foundation;
 using ObjCRuntime;
 
 namespace ScreenCaptureKit {
-
-#if NET
+	/// <summary>This enum describes how to interpret some arguments when creating <see cref="SCContentFilter" /> instances.</summary>
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos12.3")]
 	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoiOS]
-	[NoTV]
-	[NoWatch]
-	[Mac (12, 3)]
-	[NoMacCatalyst]
-#endif
 	public enum SCContentFilterOption {
+		/// <summary>The specified windows or applications are included in the filter.</summary>
 		Include,
+		/// <summary>The specified windows or applications are excluded from the filter.</summary>
 		Exclude,
 	}
 
 	public partial class SCContentFilter {
 
+		/// <summary>Create a new <see cref="SCContentFilter" /> to capture the contents of the specified display, including or excluding specific windows.</summary>
+		/// <param name="display">The display to capture.</param>
+		/// <param name="windows">The windows to include or exclude.</param>
+		/// <param name="option">Whether windows specified in the <paramref name="windows" /> parameter are to be included or excluded.</param>
 		public SCContentFilter (SCDisplay display, SCWindow [] windows, SCContentFilterOption option) : base (NSObjectFlag.Empty)
 		{
 			switch (option) {
 			case SCContentFilterOption.Include:
-				Handle = InitWithDisplayIncludingWindows (display, windows);
+				Handle = _InitWithDisplayIncludingWindows (display, windows);
 				break;
 			case SCContentFilterOption.Exclude:
-				Handle = InitWithDisplayExcludingWindows (display, windows);
+				Handle = _InitWithDisplayExcludingWindows (display, windows);
 				break;
 			default:
 				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (option), $"Unknown option {option}");
@@ -52,14 +50,19 @@ namespace ScreenCaptureKit {
 			};
 		}
 
+		/// <summary>Create a new <see cref="SCContentFilter" /> to capture the contents of the specified display, including or excluding specific apps.</summary>
+		/// <param name="display">The display to capture.</param>
+		/// <param name="applications">The applications to include or exclude.</param>
+		/// <param name="exceptingWindows">Any windows that are an exception to the condition to include or include windows.</param>
+		/// <param name="option">Whether applications specified in the <paramref name="applications" /> parameter are to be included or excluded.</param>
 		public SCContentFilter (SCDisplay display, SCRunningApplication [] applications, SCWindow [] exceptingWindows, SCContentFilterOption option) : base (NSObjectFlag.Empty)
 		{
 			switch (option) {
 			case SCContentFilterOption.Include:
-				Handle = InitWithDisplayIncludingApplications (display, applications, exceptingWindows);
+				Handle = _InitWithDisplayIncludingApplications (display, applications, exceptingWindows);
 				break;
 			case SCContentFilterOption.Exclude:
-				Handle = InitWithDisplayExcludingApplications (display, applications, exceptingWindows);
+				Handle = _InitWithDisplayExcludingApplications (display, applications, exceptingWindows);
 				break;
 			default:
 				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (option), $"Unknown option {option}");
