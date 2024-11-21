@@ -2745,12 +2745,54 @@ namespace AVFoundation {
 		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
 		[Export ("renderingMode")]
 		AVAudioSessionRenderingMode RenderingMode { get; }
+
+		[Notification (typeof (MicrophoneInjectionCapabilitiesChangeEventArgs))]
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Field ("AVAudioSessionMicrophoneInjectionCapabilitiesChangeNotification")]
+		NSString MicrophoneInjectionCapabilitiesChangeNotification { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("setPrefersEchoCancelledInput:error:")]
+		bool SetPrefersEchoCancelledInput (bool value, [NullAllowed] out NSError error);
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("prefersEchoCancelledInput")]
+		bool PrefersEchoCancelledInput { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isEchoCancelledInputEnabled")]
+		bool IsEchoCancelledInputEnabled { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isEchoCancelledInputAvailable")]
+		bool IsEchoCancelledInputAvailable { get; }
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("setPreferredMicrophoneInjectionMode:error:")]
+		bool SetPreferredMicrophoneInjectionMode (AVAudioSessionMicrophoneInjectionMode inValue, [NullAllowed] out NSError outError);
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("preferredMicrophoneInjectionMode")]
+		AVAudioSessionMicrophoneInjectionMode PreferredMicrophoneInjectionMode { get; }
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isMicrophoneInjectionAvailable")]
+		bool IsMicrophoneInjectionAvailable { get; }
 	}
 
 	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
 	interface RenderingModeChangeNotificationEventArgs {
 		[Export ("AVAudioSessionRenderingModeNewRenderingModeKey")]
 		AVAudioSessionRenderingMode NewRenderingMode { get; }
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	interface MicrophoneInjectionCapabilitiesChangeEventArgs {
+		[Export ("AVAudioSessionMicrophoneInjectionIsAvailableKey")]
+		bool IsAvailable { get; }
 	}
 
 	[NoMac]
@@ -17045,6 +17087,73 @@ namespace AVFoundation {
 	interface AVCaptionConversionAdjustment {
 		[Export ("adjustmentType")]
 		string AdjustmentType { get; }
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	[Native]
+	enum AVAudioSessionMicrophoneInjectionMode : long
+	{
+		None = 0,
+		SpokenAudio = 1,
+	}
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum AVAudioApplicationRecordPermission : long
+	{
+		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
+		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
+		Granted = ('g' << 24) + ('r' << 16) + ('n' << 8) + 't', // 'grnt'
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	[Native]
+	public enum AVAudioApplicationMicrophoneInjectionPermission : long
+	{
+		ServiceDisabled = ('s' << 24) + ('r' << 16) + ('d' << 8) + 's', // 'srds'
+		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
+		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
+		Granted = ('g' << 24) + ('r' << 16) + ('n' << 8) + 't', // 'grnt'
+	}
+
+	delegate bool AVAudioApplicationSetInputMuteStateChangeHandler (bool inputShouldBeMuted);
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVAudioApplication
+	{
+		[Static]
+		[Export ("sharedInstance")]
+		AVAudioApplication SharedInstance { get; }
+
+		[Export ("setInputMuted:error:")]
+		bool SetInputMuted (bool muted, [NullAllowed] out NSError outError);
+
+		[Export ("inputMuted")]
+		bool InputMuted { [Bind ("isInputMuted")] get; }
+
+		[NoTV, NoMacCatalyst, NoiOS, Mac (14, 0)]
+		[Export ("setInputMuteStateChangeHandler:error:")]
+		bool SetInputMuteStateChangeHandler ([NullAllowed] AVAudioApplicationSetInputMuteStateChangeHandler inputMuteHandler, [NullAllowed] out NSError outError);
+
+		[Export ("recordPermission")]
+		AVAudioApplicationRecordPermission RecordPermission { get; }
+
+		[Static]
+		[Export ("requestRecordPermissionWithCompletionHandler:")]
+		[Async]
+		void RequestRecordPermission (Action<bool> response);
+
+		[NoTV, NoMac, NoMacCatalyst, iOS (18, 2)]
+		[Export ("microphoneInjectionPermission")]
+		AVAudioApplicationMicrophoneInjectionPermission MicrophoneInjectionPermission { get; }
+
+		[NoTV, NoMac, NoMacCatalyst, iOS (18, 2)]
+		[Static]
+		[Export ("requestMicrophoneInjectionPermissionWithCompletionHandler:")]
+		[Async]
+		void RequestMicrophoneInjectionPermission (Action<AVAudioApplicationMicrophoneInjectionPermission> response);
 	}
 
 }
