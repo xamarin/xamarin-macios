@@ -67,7 +67,7 @@ parameters:
       {
         stageName: 'mac_15_arm64',
         displayName: 'arm64 - Mac Sequoia (15)',
-        macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
+        macPool: 'VSEng-VSMac-Xamarin-Shared',
         useImage: false,
         statusContext: 'arm64 - Mac Sequoia (15)',
         demands: [
