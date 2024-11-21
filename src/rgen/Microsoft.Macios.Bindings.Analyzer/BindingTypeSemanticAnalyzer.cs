@@ -42,7 +42,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 		if (declarationNode.Modifiers.Any (x => x.IsKind (SyntaxKind.PartialKeyword)))
 			return [];
 
-		var diagnostic = Diagnostic.Create (RBI0001,
+		var diagnostic = Diagnostic.Create (RBI0001, // Binding types should be declared as partial classes.
 			declarationNode.Identifier.GetLocation (), // point to where the 'class' keyword is used
 			symbol.ToDisplayString ());
 		return [diagnostic];
