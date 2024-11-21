@@ -5,10 +5,10 @@ using System.Linq;
 namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
-/// Structure that represents a change that was made by the user on a members that has to be
+/// Structure that represents a change that was made by the user on enum members that has to be
 /// reflected in the generated code.
 /// </summary>
-readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
+readonly struct EnumMemberCodeChange : IEquatable<EnumMemberCodeChange> {
 
 	/// <summary>
 	/// Get the name of the member.
@@ -25,7 +25,7 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
 	/// <param name="attributes">The list of attribute changes in the member.</param>
-	public MemberCodeChange (string name, ImmutableArray<AttributeCodeChange> attributes)
+	public EnumMemberCodeChange (string name, ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
 		Attributes = attributes;
@@ -35,10 +35,10 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
-	public MemberCodeChange (string name) : this (name, []) { }
+	public EnumMemberCodeChange (string name) : this (name, []) { }
 
 	/// <inheritdoc />
-	public bool Equals (MemberCodeChange other)
+	public bool Equals (EnumMemberCodeChange other)
 	{
 		if (Name != other.Name)
 			return false;
@@ -49,7 +49,7 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is MemberCodeChange other && Equals (other);
+		return obj is EnumMemberCodeChange other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -58,12 +58,12 @@ readonly struct MemberCodeChange : IEquatable<MemberCodeChange> {
 		return HashCode.Combine (Name, Attributes);
 	}
 
-	public static bool operator == (MemberCodeChange x, MemberCodeChange y)
+	public static bool operator == (EnumMemberCodeChange x, EnumMemberCodeChange y)
 	{
 		return x.Equals (y);
 	}
 
-	public static bool operator != (MemberCodeChange x, MemberCodeChange y)
+	public static bool operator != (EnumMemberCodeChange x, EnumMemberCodeChange y)
 	{
 		return !(x == y);
 	}

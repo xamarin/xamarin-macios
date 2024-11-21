@@ -1,5 +1,4 @@
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
@@ -10,7 +9,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class CodeChangesComparerTests : BaseGeneratorTestClass {
-	readonly CodeChangesComparer comparer = new ();
+	readonly CodeChangesComparer comparer = new();
 
 	// returns a node that matches the given node type from an example syntax tree
 	T GetSyntaxNode<T> (ApplePlatform platform) where T : BaseTypeDeclarationSyntax
@@ -55,7 +54,7 @@ public interface IInterface {
 }
 ";
 		var (_, sourceTrees) =
-			CreateCompilation (nameof (CodeChangesComparerTests), platform, attrsText, inputText);
+			CreateCompilation (nameof(CodeChangesComparerTests), platform, attrsText, inputText);
 		Assert.Equal (2, sourceTrees.Length);
 		// get the declarations we want to work with and the semantic model
 		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();
@@ -71,8 +70,8 @@ public interface IInterface {
 	public void CompareDifferentFullyQualifiedSymbol (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", node, [], []);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", node, [], []);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", node);
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", node);
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -81,8 +80,8 @@ public interface IInterface {
 	public void CompareDifferentBindingType (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node, [], []);
-		var changes2 = new CodeChanges (BindingType.Unknown, "name", node, [], []);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
+		var changes2 = new CodeChanges (BindingType.Unknown, "name", node);
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -92,8 +91,8 @@ public interface IInterface {
 	{
 		var node1 = GetSyntaxNode<ClassDeclarationSyntax> (platform);
 		var node2 = GetSyntaxNode<EnumDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node1, [], []);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node2, [], []);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node1);
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node2);
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -102,10 +101,12 @@ public interface IInterface {
 	public void CompareDifferentAttributesLength (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node, [], []);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node, [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		], []);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			Attributes = [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -114,12 +115,16 @@ public interface IInterface {
 	public void CompareDifferentAttributes (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node, [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		], []);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node, [
-			new AttributeCodeChange ("name2", ["arg1", "arg2"])
-		], []);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			Attributes = [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			],
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			Attributes = [
+				new AttributeCodeChange ("name2", ["arg1", "arg2"])
+			],
+		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -128,10 +133,12 @@ public interface IInterface {
 	public void CompareDifferentMembersLength (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node, [], []);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node, [], [
-			new MemberCodeChange ("name", [])
-		]);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [
+				new EnumMemberCodeChange ("name", [])
+			],
+		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -140,12 +147,215 @@ public interface IInterface {
 	public void CompareDifferentMembers (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node, [], [
-			new MemberCodeChange ("name", [])
-		]);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node, [], [
-			new MemberCodeChange ("name2", [])
-		]);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [
+				new EnumMemberCodeChange ("name", [])
+			],
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [
+				new EnumMemberCodeChange ("name2", [])
+			],
+		};
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareDifferentPropertyLength (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = []
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new(
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					])
+			]
+		};
+
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareSamePropertiesDiffOrder (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new(
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [], []),
+					]),
+				new(
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new(
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new(
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [], []),
+					]),
+			]
+		};
+		Assert.True (comparer.Equals (changes1, changes2));
+	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareDifferentProperties (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new(
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [], []),
+					]),
+				new(
+					name: "Name",
+					type: "string",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new(
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new(
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new(AccessorKind.Getter, [
+							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new(AccessorKind.Setter, [], []),
+					]),
+			]
+		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 }

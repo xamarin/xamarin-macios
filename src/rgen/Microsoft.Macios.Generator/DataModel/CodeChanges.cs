@@ -29,12 +29,44 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Changes to the attributes of the symbol.
 	/// </summary>
-	public ImmutableArray<AttributeCodeChange> Attributes { get; }
+	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
 	/// <summary>
-	/// Changes to the members of the symbol.
+	/// Changes to the enum members of the symbol.
 	/// </summary>
-	public ImmutableArray<MemberCodeChange> Members { get; }
+	public ImmutableArray<EnumMemberCodeChange> EnumMembers { get; init; } = [];
+
+	/// <summary>
+	/// Changes to the properties of the symbol.
+	/// </summary>
+	public ImmutableArray<PropertyCodeChange> Properties { get; init; } = [];
+
+	/// <summary>
+	/// Decide if an enum value should be ignored as a change.
+	/// </summary>
+	/// <param name="enumMemberDeclarationSyntax">The enum declaration under test.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <returns>True if the enum value should be ignored. False otherwise.</returns>
+	internal static bool Skip (EnumMemberDeclarationSyntax enumMemberDeclarationSyntax, SemanticModel semanticModel)
+	{
+		// for smart enums, we are only interested in the field that has a Field<EnumValue> attribute
+		return !enumMemberDeclarationSyntax.HasAttribute (semanticModel, AttributesNames.EnumFieldAttribute);
+	}
+
+	/// <summary>
+	/// Decide if a property should be ignored as a change.
+	/// </summary>
+	/// <param name="propertyDeclarationSyntax">The property declaration under test.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <returns>True if the property should be ignored. False otherwise.</returns>
+	internal static bool Skip (PropertyDeclarationSyntax propertyDeclarationSyntax, SemanticModel semanticModel)
+	{
+		// there are two types of valid properties: 
+		// 1. Field properties
+		// 2. Exported properties
+		return !propertyDeclarationSyntax.HasAtLeastOneAttribute (semanticModel,
+			AttributesNames.ExportFieldAttribute, AttributesNames.ExportPropertyAttribute);
+	}
 
 	/// <summary>
 	/// Internal constructor added for testing purposes.
@@ -42,71 +74,74 @@ readonly struct CodeChanges {
 	/// <param name="bindingType">The type of binding for the given code changes.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
 	/// <param name="declaration">The symbol declaration syntax.</param>
-	/// <param name="attributes">The list of attributes changed.</param>
-	/// <param name="members">The list of members changed.</param>
-	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol, BaseTypeDeclarationSyntax declaration,
-		ImmutableArray<AttributeCodeChange> attributes,
-		ImmutableArray<MemberCodeChange> members)
+	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol, BaseTypeDeclarationSyntax declaration)
 	{
 		BindingType = bindingType;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
 		SymbolDeclaration = declaration;
-		Attributes = attributes;
-		Members = members;
 	}
 
 	/// <summary>
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given enum declaration.
 	/// </summary>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	/// <param name="enumDeclaration">The enum declaration that triggered the change.</param>
-	CodeChanges (SemanticModel semanticModel, EnumDeclarationSyntax enumDeclaration)
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
 	{
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		SymbolDeclaration = enumDeclaration;
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
-		var bucket = ImmutableArray.CreateBuilder<MemberCodeChange> ();
-		// get all the attributes of the enum, changes in them might trigger a re-generation
-		var enumAttributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
+		var bucket = ImmutableArray.CreateBuilder<EnumMemberCodeChange> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclaration = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
 		foreach (var val in enumValueDeclaration) {
-			if (!val.HasAttribute (semanticModel, AttributesNames.EnumFieldAttribute))
-				// for smart enums, we are only interested in the field that have a Field<EnumValue> attribute
+			if (Skip (val, semanticModel))
 				continue;
 			var memberName = val.Identifier.ToFullString ().Trim ();
 			var attributes = val.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new (memberName, attributes));
+			bucket.Add (new(memberName, attributes));
 		}
-		Members = bucket.ToImmutable ();
+
+		EnumMembers = bucket.ToImmutable ();
 	}
 
 	/// <summary>
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given class declaration.
 	/// </summary>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	/// <param name="classDeclaration">The class declaration that triggered the change.</param>
-	CodeChanges (SemanticModel semanticModel, ClassDeclarationSyntax classDeclaration)
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		SymbolDeclaration = classDeclaration;
-		// TODO: to be implemented once we add class support
-		Members = [];
+
+		var properties = ImmutableArray.CreateBuilder<PropertyCodeChange> ();
+		var propertyDeclarations = classDeclaration.Members.OfType<PropertyDeclarationSyntax> ();
+		foreach (var declaration in propertyDeclarations) {
+			if (Skip (declaration, semanticModel))
+				continue;
+			if (PropertyCodeChange.TryCreate (declaration, semanticModel, out var change))
+				properties.Add (change.Value);
+		}
+
+		Properties = properties.ToImmutable ();
+		// TODO: Add support for constructors, methods and events
+		EnumMembers = [];
 		Attributes = [];
 	}
 
 	/// <summary>
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given interface declaration.
 	/// </summary>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	/// <param name="interfaceDeclaration">The interface declaration that triggered the change.</param>
-	CodeChanges (SemanticModel semanticModel, InterfaceDeclarationSyntax interfaceDeclaration)
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		SymbolDeclaration = interfaceDeclaration;
 		// TODO: to be implemented once we add protocol support
-		Members = [];
+		EnumMembers = [];
 		Attributes = [];
 	}
 
@@ -114,16 +149,16 @@ readonly struct CodeChanges {
 	/// Create a CodeChange from the provide base type declaration syntax. If the syntax is not supported,
 	/// it will return null.
 	/// </summary>
-	/// <param name="semanticModel">The semantic model related to the syntax tree that contains the node.</param>
 	/// <param name="baseTypeDeclarationSyntax">The declaration syntax whose change we want to calculate.</param>
+	/// <param name="semanticModel">The semantic model related to the syntax tree that contains the node.</param>
 	/// <returns>A code change or null if it could not be calculated.</returns>
-	public static CodeChanges? FromDeclaration (SemanticModel semanticModel,
-		BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
+	public static CodeChanges? FromDeclaration (BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
+		SemanticModel semanticModel)
 		=> baseTypeDeclarationSyntax switch {
-			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (semanticModel, enumDeclarationSyntax),
-			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges (semanticModel,
-				interfaceDeclarationSyntax),
-			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (semanticModel, classDeclarationSyntax),
+			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (enumDeclarationSyntax, semanticModel),
+			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges (interfaceDeclarationSyntax,
+				semanticModel),
+			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (classDeclarationSyntax, semanticModel),
 			_ => null
 		};
 }

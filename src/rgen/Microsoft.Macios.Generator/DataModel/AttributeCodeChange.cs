@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -8,7 +10,6 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// reflected in the generated code.
 /// </summary>
 readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
-
 	/// <summary>
 	/// Get the name of the attribute that was added.
 	/// </summary>
@@ -82,5 +83,55 @@ readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
 	public static bool operator != (AttributeCodeChange x, AttributeCodeChange y)
 	{
 		return !(x == y);
+	}
+
+	public static ImmutableArray<AttributeCodeChange> From (SyntaxList<AttributeListSyntax> attributes,
+		SemanticModel semanticModel)
+	{
+		var bucket = ImmutableArray.CreateBuilder<AttributeCodeChange> ();
+		foreach (AttributeListSyntax attributeListSyntax in attributes) {
+			foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes) {
+				if (semanticModel.GetSymbolInfo (attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
+					continue; // if we can't get the symbol, ignore it
+				var name = attributeSymbol.ContainingType.ToDisplayString ();
+				var arguments = ImmutableArray.CreateBuilder<string> ();
+				var argumentList = attributeSyntax.ArgumentList?.Arguments;
+				if (argumentList is not null) {
+					foreach (var argSyntax in argumentList) {
+						// there are two types of argument nodes, those that are literal and those that
+						// are a literal expression
+						if (argSyntax.Expression is LiteralExpressionSyntax literalExpressionSyntax) {
+							arguments.Add (literalExpressionSyntax.ToFullString ().Trim ()
+								.Replace ("\"", string.Empty));
+						}
+						if (argSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax) {
+							var eumExpr = memberAccessExpressionSyntax.ToFullString ().Trim ();
+							if (semanticModel.GetSymbolInfo (memberAccessExpressionSyntax).Symbol is IFieldSymbol
+								enumSymbol) {
+								arguments.Add (enumSymbol.ToDisplayString ().Trim ());
+							} else {
+								// could not get the symbol, add the full expre
+								arguments.Add (eumExpr);
+							}
+						}
+						if (argSyntax.Expression is TypeOfExpressionSyntax typeOfExpressionSyntax) {
+							if (semanticModel.GetSymbolInfo (typeOfExpressionSyntax.Type).Symbol is INamedTypeSymbol typeSymbol) {
+								arguments.Add (typeSymbol.ToDisplayString ().Trim ());
+							}
+						}
+					}
+				}
+
+				bucket.Add (new (name, arguments.ToImmutable ()));
+			}
+		}
+
+		return bucket.ToImmutable ();
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		return $"{{ Name: {Name}, Arguments: [{string.Join (", ", Arguments)}] }}";	
 	}
 }
