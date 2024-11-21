@@ -284,19 +284,19 @@ namespace ScreenCaptureKit {
 
 		[Internal]
 		[Export ("initWithDisplay:excludingWindows:")]
-		NativeHandle InitWithDisplayExcludingWindows (SCDisplay display, SCWindow [] excludedWindows);
+		NativeHandle _InitWithDisplayExcludingWindows (SCDisplay display, SCWindow [] excludedWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:includingWindows:")]
-		NativeHandle InitWithDisplayIncludingWindows (SCDisplay display, SCWindow [] includedWindows);
+		NativeHandle _InitWithDisplayIncludingWindows (SCDisplay display, SCWindow [] includedWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:includingApplications:exceptingWindows:")]
-		NativeHandle InitWithDisplayIncludingApplications (SCDisplay display, SCRunningApplication [] includingApplications, SCWindow [] exceptingWindows);
+		NativeHandle _InitWithDisplayIncludingApplications (SCDisplay display, SCRunningApplication [] includingApplications, SCWindow [] exceptingWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:excludingApplications:exceptingWindows:")]
-		NativeHandle InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
+		NativeHandle _InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
 
 		// per docs, the following selectors are available for 12.3+
 		// but return types are SCStreamType and SCShareableContentStyle are 14.0+

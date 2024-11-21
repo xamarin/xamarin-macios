@@ -24,7 +24,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer {
 			typeof (Resources));
 	const string Category = "Usage";
 
-	static readonly DiagnosticDescriptor RBI0001 = new (DiagnosticId, Title, MessageFormat, Category,
+	internal static readonly DiagnosticDescriptor RBI0001 = new (DiagnosticId, Title, MessageFormat, Category,
 		DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =

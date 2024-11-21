@@ -194,8 +194,14 @@ namespace CoreLocation {
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'AccuracyBestForNavigation' instead.")]
 		[Field ("kCLLocationAccuracyBestForNavigation")]
 		double AccurracyBestForNavigation { get; }
+#endif
+
+		[Field ("kCLLocationAccuracyBestForNavigation")]
+		double AccuracyBestForNavigation { get; }
 
 		[Field ("kCLLocationAccuracyBest")]
 		double AccuracyBest { get; }
