@@ -129,6 +129,17 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
+			if (!string.IsNullOrEmpty (workingDirectory)) {
+				log.LogMessage (MessageImportance.Low, "    Working directory: {0}", workingDirectory);
+			} else {
+				log.LogMessage (MessageImportance.Low, "    Current directory: {0}", Environment.CurrentDirectory);
+			}
+			if (launchEnvironment?.Any () == true) {
+				log.LogMessage (MessageImportance.Low, "    With environment:");
+				foreach (var kvp in launchEnvironment) {
+					log.LogMessage (MessageImportance.Low, "        {0}={1}", kvp.Key, kvp.Value);
+				}
+			}
 			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory, cancellationToken: cancellationToken);
 			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
