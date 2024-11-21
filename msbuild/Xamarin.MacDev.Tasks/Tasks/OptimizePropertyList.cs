@@ -71,7 +71,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely) {
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 			} else {
 				cancellationTokenSource?.Cancel ();
