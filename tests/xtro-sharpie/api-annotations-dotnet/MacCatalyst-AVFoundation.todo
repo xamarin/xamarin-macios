@@ -933,3 +933,7 @@
 !missing-selector! AVAudioSession::isAVAudioSessionAvailable not bound
 !missing-selector! AVAudioSession::preferredAVAudioSessionMode not bound
 !missing-selector! AVAudioSession::setPreferredAVAudioSessionMode:error: not bound
+!missing-selector! AVAudioSession::isEchoCancelledInputAvailable not bound
+!missing-selector! AVAudioSession::isEchoCancelledInputEnabled not bound
+!missing-selector! AVAudioSession::prefersEchoCancelledInput not bound
+!missing-selector! AVAudioSession::setPrefersEchoCancelledInput:error: not bound
