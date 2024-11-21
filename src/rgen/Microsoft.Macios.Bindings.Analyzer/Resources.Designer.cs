@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 
 namespace Microsoft.Macios.Bindings.Analyzer {
-
     using System;
     
     

@@ -20,92 +20,78 @@
     </resheader>
     <data name="RBI0001Description" xml:space="preserve">
         <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0001MessageFormat" xml:space="preserve">
         <value>The binding type '{0}' must declared as a partial class</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <comment>'{0}' is the name of the class.</comment>
     </data>
     <data name="RBI0001Title" xml:space="preserve">
         <value>Binding type declaration must be partial</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0002Description" xml:space="preserve">
         <value>In order for the code to be generated a smart enum value has to have a backing field.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0002MessageFormat" xml:space="preserve">
         <value>The enum value '{0}' must be tagged with a Field&lt;EnumValue&gt; attribute</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
     <data name="RBI0002Title" xml:space="preserve">
         <value>Smart enum values must be tagged with an Field&lt;EnumValue&gt; attribute</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0003Description" xml:space="preserve">
         <value>Smart enum backing field cannot appear more than once.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0003MessageFormat" xml:space="preserve">
-        <value>The enum value '{0}' backing field '{1}' is already in use</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <value>The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'</value>
+        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field. '{2}' is the previous enum value</comment>
     </data>
     <data name="RBI0003Title" xml:space="preserve">
         <value>Smart enum backing field cannot appear more than once</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0004Description" xml:space="preserve">
         <value>Smart enum backing field must be a valid identifier.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0004MessageFormat" xml:space="preserve">
         <value>The enum value '{0}' backing field '{1}' is not a valid identifier</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field.</comment>
     </data>
     <data name="RBI0004Title" xml:space="preserve">
         <value>Smart enum backing field must represent a valid C# identifier to be used</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0005Description" xml:space="preserve">
         <value>Smart enum backing field for a non Apple framework must provide a library name.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0005MessageFormat" xml:space="preserve">
-        <value>The enum value '{0}' backing field must provide a library name</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <value>The field attribute for the enum value '{0}' must set the property 'LibraryName'</value>
+        <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
     <data name="RBI0005Title" xml:space="preserve">
         <value>Non Apple framework bindings must provide a library name</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0006Description" xml:space="preserve">
         <value>Fields of known Apple frameworks should not provide a LibraryName.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0006MessageFormat" xml:space="preserve">
-        <value>The backing Field of '{0}' should not provide a LibraryName</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <value>The Field attribute for the enum value '{0}' must not provide a value for 'LibraryName'</value>
+        <comment>'{0}' is the name of the native field.</comment>
     </data>
     <data name="RBI0006Title" xml:space="preserve">
         <value>Do not provide the LibraryName for known Apple frameworks</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 
     <data name="RBI0007Description" xml:space="preserve">
         <value>Wrong flags were used in the FieldAttribute when applying it on an enum value.</value>
-        <comment>An optional longer localizable description of the diagnostic.</comment>
     </data>
     <data name="RBI0007MessageFormat" xml:space="preserve">
         <value>Used attribute '{0}' on enum value '{1}' when 'ObjCBindings.FieldAttribute&lt;ObjCBindings.EnumValue&gt;' was expected</value>
-        <comment>The format-able message the diagnostic displays.</comment>
+        <comment>'{0}' is the name of an attribute. '{1}' is the name of the enumerator value.</comment>
     </data>
     <data name="RBI0007Title" xml:space="preserve">
         <value>Enum values must be tagged with Field&lt;EnumValue&gt;</value>
-        <comment>The title of the diagnostic.</comment>
     </data>
 </root>

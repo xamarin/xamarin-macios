@@ -8,7 +8,6 @@ using Xunit;
 namespace Microsoft.Macios.Bindings.Analyzer.Tests;
 
 public class SmartEnumsAnalyzerTests : BaseGeneratorWithAnalyzerTestClass {
-
 	[Theory]
 	[AllSupportedPlatforms]
 	public async Task SmartEnumMustHaveFieldAttribute (ApplePlatform platform)
@@ -39,14 +38,15 @@ public enum AVCaptureSystemPressureExampleLevel {
 }
 ";
 
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0002.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		// verify the diagnostic message
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0002.Id,
-			DiagnosticSeverity.Error, "The enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' must be tagged with a Field<EnumValue> attribute");
+			DiagnosticSeverity.Error,
+			"The enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' must be tagged with a Field<EnumValue> attribute");
 	}
 
 	const string emptyIdentifier = @"
@@ -75,6 +75,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[Field<EnumValue> (""Weird\""Name"")]
 	Shutdown,
 }";
+
 	const string notValidIdentifierKeyword = @"
 using Foundation;
 using ObjCRuntime;
@@ -88,6 +89,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[Field<EnumValue> (""class"")]
 	Shutdown,
 }";
+
 	const string notValidIdentifierStartNumber = @"
 using Foundation;
 using ObjCRuntime;
@@ -101,6 +103,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[Field<EnumValue> (""42Values"")]
 	Shutdown,
 }";
+
 	const string notValidIdentifierNewLines = @"
 using Foundation;
 using ObjCRuntime;
@@ -123,13 +126,14 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[AllSupportedPlatforms (notValidIdentifierNewLines, "The\nValues")]
 	public async Task SmartEnumSymbolMustBeValidIdentifier (ApplePlatform platform, string inputText, string fieldValue)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0004.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0004.Id,
-			DiagnosticSeverity.Error, $"The enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' backing field '{fieldValue}' is not a valid identifier");
+			DiagnosticSeverity.Error,
+			$"The enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' backing field '{fieldValue}' is not a valid identifier");
 	}
 
 	const string appleFrameworkLib = @"
@@ -189,14 +193,15 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[AllSupportedPlatforms (appleFrameworkLibNamedParameter)]
 	public async Task SmartEnumAppleFrameworkNotLibrary (ApplePlatform platform, string inputText)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0006.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0006.Id,
-			DiagnosticSeverity.Warning, "The backing Field of 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' should not provide a LibraryName");
+			DiagnosticSeverity.Warning,
+			"The Field attribute for the enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' must not provide a value for 'LibraryName'");
 	}
 
 	const string customLibraryMissingLibraryName = @"
@@ -219,6 +224,7 @@ public enum CustomLibraryEnum {
 	High,
 }
 ";
+
 	const string customLibraryEmptyLibraryName = @"
 using System;
 using System.Runtime.Versioning;
@@ -267,13 +273,14 @@ public enum CustomLibraryEnum {
 	[AllSupportedPlatforms (customLibraryEmptyLibraryNameParameter)]
 	public async Task SmartEnumThirdPartyLibrary (ApplePlatform platform, string inputText)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0005.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0005.Id,
-			DiagnosticSeverity.Error, "The enum value 'CustomLibrary.CustomLibraryEnum.High' backing field must provide a library name");
+			DiagnosticSeverity.Error,
+			"The field attribute for the enum value 'CustomLibrary.CustomLibraryEnum.High' must set the property 'LibraryName'");
 	}
 
 	[Theory]
@@ -296,7 +303,7 @@ public enum CustomLibraryEnum {
 	High,
 }
 ";
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0002.Id).ToArray ();
@@ -308,7 +315,6 @@ public enum CustomLibraryEnum {
 	[AllSupportedPlatforms]
 	public async Task SmartEnumFieldNotDuplicated (ApplePlatform platform)
 	{
-
 		const string inputText = @"
 using Foundation;
 using ObjCRuntime;
@@ -335,13 +341,14 @@ public enum AVCaptureSystemPressureExampleLevel {
 	Shutdown,
 }";
 
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0003.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0003.Id,
-			DiagnosticSeverity.Error, "The enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Fair' backing field 'AVCaptureSystemPressureLevelNominal' is already in use");
+			DiagnosticSeverity.Error,
+			"The backing field 'AVFoundation.AVCaptureSystemPressureExampleLevel.Fair' for the enum value 'AVCaptureSystemPressureLevelNominal' is already in use for the enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Fair'");
 	}
 
 	[Theory]
@@ -361,7 +368,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[Field<StringComparison> (""TheField"")]
 	Shutdown,
 }";
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (nameof(SmartEnumsAnalyzerTests), platform, inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0007.Id).ToArray ();
@@ -369,6 +376,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 		Assert.Single (analyzerDiagnotics);
 
 		VerifyDiagnosticMessage (analyzerDiagnotics [0], SmartEnumsAnalyzer.RBI0007.Id,
-			DiagnosticSeverity.Error, "Used attribute 'ObjCBindings.FieldAttribute<StringComparison>' on enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' when 'ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>' was expected");
+			DiagnosticSeverity.Error,
+			"Used attribute 'ObjCBindings.FieldAttribute<StringComparison>' on enum value 'AVFoundation.AVCaptureSystemPressureExampleLevel.Shutdown' when 'ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>' was expected");
 	}
 }
