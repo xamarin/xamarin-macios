@@ -15,7 +15,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class OptimizeImage : XamarinTask, ICancelableTask {
+	public class OptimizeImage : XamarinParallelTask, ICancelableTask {
 		CancellationTokenSource? cancellationTokenSource;
 
 		#region Inputs
@@ -98,7 +98,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			cancellationTokenSource = new CancellationTokenSource ();
-			Parallel.ForEach (listOfArguments, (arg) => {
+			ForEach (listOfArguments, (arg) => {
 				var args = arg.Arguments;
 				var executable = GetExecutable (args, "pngcrush", PngCrushPath);
 				ExecuteAsync (Log, executable, args, sdkDevPath: SdkDevPath, mergeOutput: true, showErrorIfFailure: false /* we show our own error below */, cancellationToken: cancellationTokenSource.Token)
