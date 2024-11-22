@@ -1,3 +1,9 @@
+if ("$Env:BUILD_REPOSITORY_TITLE" -eq "") {
+    $remoteUrl = & git remote get-url --push origin
+    $repoTitle = [System.IO.Path]::GetFilename($remoteUrl)
+    $Env:BUILD_REPOSITORY_TITLE = $repoTitle
+}
+
 # Dump the environment to see what we're working with.
 & "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\show_bot_info.ps1"
 
