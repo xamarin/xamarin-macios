@@ -38,7 +38,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.BGen" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectAssetPacks" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1712,8 +1712,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_WriteRemoteGeneratorProperties" DependsOnTargets="$(_WriteGeneratorPropertiesDependsOn)">
 		<ItemGroup>
 			<_ComputedRemoteGeneratorProperties Include="BaseLibDllPath=$(BaseLibDllPath)" />
-			<_ComputedRemoteGeneratorProperties Include="BTouchToolExe=$(BTouchToolExe)" />
-			<_ComputedRemoteGeneratorProperties Include="BTouchToolPath=$(BTouchToolPath)" />
+			<_ComputedRemoteGeneratorProperties Include="BGenToolExe=$(BGenToolExe)" />
+			<_ComputedRemoteGeneratorProperties Include="BGenToolPath=$(BGenToolPath)" />
 			<_ComputedRemoteGeneratorProperties Include="_DotNetCscCompiler=$(_DotNetCscCompiler)" />
 			<_ComputedRemoteGeneratorProperties Include="_GeneratorAttributeAssembly=$(_GeneratorAttributeAssembly)" />
 		</ItemGroup>
@@ -1729,7 +1729,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ComputeCompileApiDefinitionsInputs" DependsOnTargets="$(_ComputeCompileApiDefinitionsInputsDependsOn)">
 		<ItemGroup>
-			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+			<BGenReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
 
 		<PropertyGroup>
@@ -1750,7 +1750,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ItemGroup>
 			<_CompiledApiDefinitionReferences Include="$(_GeneratorAttributeAssembly)" />
 			<_CompiledApiDefinitionReferences Include="@(ReferencePath)" />
-			<_CompiledApiDefinitionReferences Include="@(BTouchReferencePath)" />
+			<_CompiledApiDefinitionReferences Include="@(BGenReferencePath)" />
 
 			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingApiDefinition)" />
 			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingCoreSource)" />
@@ -1813,9 +1813,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
 
 		<PropertyGroup>
-			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
-			<BTouchEmitDebugInformation Condition="'$(Debug)' != ''">true</BTouchEmitDebugInformation>
+			<BGenEmitDebugInformation Condition="'$(BGenEmitDebugInformation)' == ''">$(BTouchEmitDebugInformation)</BGenEmitDebugInformation>
+			<BGenEmitDebugInformation Condition="'$(BGenEmitDebugInformation)' == '' And '$(Debug)' != ''">true</BGenEmitDebugInformation>
+			<BGenEmitDebugInformation Condition="'$(BGenEmitDebugInformation)' == ''">false</BGenEmitDebugInformation>
+
+			<BGenExtraArgs Condition="'$(BGenExtraArgs)' == ''">$(BTouchExtraArgs)</BGenExtraArgs>
 		</PropertyGroup>
+
+		<ItemGroup>
+			<BGenReferencePath Include="@(BTouchReferencePath)" />
+		</ItemGroup>
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
 
@@ -1827,13 +1834,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="BaseLibDllPath" PropertyName="BaseLibDllPath" />
-			<Output TaskParameter="BTouchToolExe" PropertyName="BTouchToolExe" />
-			<Output TaskParameter="BTouchToolPath" PropertyName="BTouchToolPath" />
+			<Output TaskParameter="BGenToolExe" PropertyName="BGenToolExe" />
+			<Output TaskParameter="BGenToolPath" PropertyName="BGenToolPath" />
 			<Output TaskParameter="DotNetCscCompiler" PropertyName="_DotNetCscCompiler" />
 			<Output TaskParameter="GeneratorAttributeAssembly" PropertyName="_GeneratorAttributeAssembly" />
 		</ComputeRemoteGeneratorProperties>
 
-		<BTouch
+		<BGen
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			OutputPath="$(OutputPath)"
@@ -1846,8 +1853,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			CoreSources="@(ObjcBindingCoreSource)"
 			CompiledApiDefinitionAssembly="$(_CompiledApiDefinitionAssembly)"
 			DefineConstants="$(DefineConstants)"
-			EmitDebugInformation="$(BTouchEmitDebugInformation)"
-			ExtraArgs="$(BTouchExtraArgs)"
+			EmitDebugInformation="$(BGenEmitDebugInformation)"
+			ExtraArgs="$(BGenExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
@@ -1855,14 +1862,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
-			References="@(ReferencePath);@(BTouchReferencePath)"
+			References="@(ReferencePath);@(BGenReferencePath)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			BTouchToolPath="$(BTouchToolPath)"
-			BTouchToolExe="$(BTouchToolExe)"
-			StandardOutputImportance="High"
+			BGenToolPath="$(BGenToolPath)"
+			BGenToolExe="$(BGenToolExe)"
 			>
-		</BTouch>
+		</BGen>
 	</Target>
 
 	<Target Name="_GetCompileToNativeInputs"
