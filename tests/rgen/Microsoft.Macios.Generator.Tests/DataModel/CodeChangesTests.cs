@@ -25,9 +25,7 @@ enum AVMediaCharacteristics {
 }
 ";
 
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, notAttributeInValue, true];
-			}
+			yield return [notAttributeInValue, true];
 
 			const string wrongAttributeInValue = @"
 using System;
@@ -41,9 +39,7 @@ enum AVMediaCharacteristics {
 	Visual = 0,
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, wrongAttributeInValue, true];
-			}
+			yield return [wrongAttributeInValue, true];
 
 			const string presentAttributeInValue = @"
 using System;
@@ -57,16 +53,14 @@ enum AVMediaCharacteristics {
 	Visual = 0,
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, presentAttributeInValue, false];
-			}
+			yield return [presentAttributeInValue, false];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataSkipEnumValueDeclaration))]
+	[AllSupportedPlatformsClassData<TestDataSkipEnumValueDeclaration>]
 	public void SkipEnumValueDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
@@ -97,9 +91,7 @@ public class TestClass {
 	public string Name { get; set; }
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, missingAttributeInProperty, true];
-			}
+			yield return [missingAttributeInProperty, true];
 
 			const string wrongAttributeInProperty = @"
 using System;
@@ -113,9 +105,7 @@ public class TestClass {
 	public string Name { get;set; }
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, wrongAttributeInProperty, true];
-			}
+			yield return [wrongAttributeInProperty, true];
 
 			const string fieldAttributeInProperty = @"
 using System;
@@ -129,9 +119,7 @@ public class TestClass {
 	public string Name { get;set; }
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, fieldAttributeInProperty, false];
-			}
+			yield return [fieldAttributeInProperty, false];
 
 			const string propertyAttributeInProperty = @"
 using System;
@@ -145,9 +133,7 @@ public class TestClass {
 	public string Name { get;set; }
 }
 ";
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, propertyAttributeInProperty, false];
-			}
+			yield return [propertyAttributeInProperty, false];
 
 		}
 
@@ -155,7 +141,7 @@ public class TestClass {
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataSkipPropertyDeclaration))]
+	[AllSupportedPlatformsClassData<TestDataSkipPropertyDeclaration>]
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
