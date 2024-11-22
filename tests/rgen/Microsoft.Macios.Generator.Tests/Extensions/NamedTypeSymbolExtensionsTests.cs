@@ -11,7 +11,6 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Extensions;
 
 public class NamedTypeSymbolExtensionsTests : BaseGeneratorTestClass {
-
 	[Theory]
 	[AllSupportedPlatforms]
 	public void TryGetEnumFieldsNotEnum (ApplePlatform platform)
@@ -21,7 +20,7 @@ namespace Test;
 public class NotEnum {
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -39,17 +38,14 @@ public class NotEnum {
 	class TestDataTryGetEnumFieldsNoFields : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-
-				const string emptyEnum = @"
+			const string emptyEnum = @"
 namespace Test;
 public enum MyEnum {
 }
 ";
-				yield return [platform, emptyEnum];
+			yield return [emptyEnum];
 
-				const string missingFieldAttributes = @"
+			const string missingFieldAttributes = @"
 namespace Test;
 public enum MyEnum {
 	First,
@@ -57,46 +53,46 @@ public enum MyEnum {
 	Last,
 }
 ";
-				yield return [platform, missingFieldAttributes];
+			yield return [missingFieldAttributes];
 
 
-				const string fieldWithQuotes = @"
+			const string fieldWithQuotes = @"
 namespace Test;
 public enum MyEnum {
 	[Field<EnumValue> (""Field\""With\""Quotes"")]
 	First,
 }
 ";
-				yield return [platform, fieldWithQuotes];
+			yield return [fieldWithQuotes];
 
-				const string leadingWithNumber = @"
+			const string leadingWithNumber = @"
 namespace Test;
 public enum MyEnum {
 	[Field<EnumValue> (""42Tries"")]
 	First,
 }
 ";
-				yield return [platform, leadingWithNumber];
+			yield return [leadingWithNumber];
 
-				const string fieldWithNewLines = @"
+			const string fieldWithNewLines = @"
 namespace Test;
 public enum MyEnum {
 	[Field<EnumValue> (""With\nNew\nLine"")]
 	First,
 }
 ";
-				yield return [platform, fieldWithNewLines];
+			yield return [fieldWithNewLines];
 
-				const string fieldWithKeyword = @"
+			const string fieldWithKeyword = @"
 namespace Test;
 public enum MyEnum {
 	[Field<EnumValue> (""class"")]
 	First,
 }
 ";
-				yield return [platform, fieldWithKeyword];
+			yield return [fieldWithKeyword];
 
-				const string fieldWithTabs = @"
+			const string fieldWithTabs = @"
 namespace Test;
 public enum MyEnum {
 	[Field<EnumValue> ("" \tSecondBackendField\t \n"")]
@@ -104,8 +100,7 @@ public enum MyEnum {
 }
 ";
 
-				yield return [platform, fieldWithTabs];
-			}
+			yield return [fieldWithTabs];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -113,10 +108,10 @@ public enum MyEnum {
 
 
 	[Theory]
-	[ClassData (typeof (TestDataTryGetEnumFieldsNoFields))]
+	[AllSupportedPlatformsClassData<TestDataTryGetEnumFieldsNoFields>]
 	public void TryGetEnumFieldsNoFields (ApplePlatform platform, string inputString)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -150,7 +145,7 @@ public enum MyEnum {
 	Last,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
