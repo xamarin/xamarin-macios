@@ -7,6 +7,11 @@
 if test -z "${BUILD_SOURCESDIRECTORY:-}"; then
   BUILD_SOURCESDIRECTORY="$(git rev-parse --show-toplevel)/.."
 fi
+# If BUILD_REPOSITORY_TITLE is not set, it's likely we're executing locally.
+# In which case we can figure out where we are from the current git checkout
+if test -z "${BUILD_REPOSITORY_TITLE:-}"; then
+  BUILD_REPOSITORY_TITLE="$(basename "$(git remote get-url --push origin)")"
+fi
 # Don't assume we're in the right directory (makes it easier to run the script
 # locally).
 cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
