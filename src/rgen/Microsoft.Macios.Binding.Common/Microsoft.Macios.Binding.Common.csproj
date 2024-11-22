@@ -22,6 +22,9 @@
         <Compile Include="..\..\bgen\PlatformName.cs" >
             <Link>external\PlatformName.cs</Link>
         </Compile>
+        <Compile Include="..\..\ObjCBindings\FieldTag.cs">
+            <Link>external\FieldTag.cs</Link>
+        </Compile>
     </ItemGroup>
 
 </Project>

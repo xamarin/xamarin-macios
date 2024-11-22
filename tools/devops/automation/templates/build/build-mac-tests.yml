@@ -59,11 +59,11 @@ steps:
         set -x
         set -e
 
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
+        make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests package-tests
 
-        if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
+        if test -f "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/mac-test-package.7z"; then
           set +x
-          echo "##vso[artifact.upload containerfolder=mac-test-package;artifactname=${{ parameters.uploadPrefix }}mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
+          echo "##vso[artifact.upload containerfolder=mac-test-package;artifactname=${{ parameters.uploadPrefix }}mac-test-package]$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tests/mac-test-package.7z"
           set -x
         fi
 
@@ -77,7 +77,7 @@ steps:
       - script: |
           set -x
           mkdir -p $(Build.ArtifactStagingDirectory)/mactests-binlogs
-          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/mactests-binlogs
+          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE) $(Build.ArtifactStagingDirectory)/mactests-binlogs
         displayName: Copy all binlogs
         continueOnError: true
         condition: succeededOrFailed()
