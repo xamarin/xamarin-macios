@@ -17091,16 +17091,14 @@ namespace AVFoundation {
 
 	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
 	[Native]
-	enum AVAudioSessionMicrophoneInjectionMode : long
-	{
+	enum AVAudioSessionMicrophoneInjectionMode : long {
 		None = 0,
 		SpokenAudio = 1,
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum AVAudioApplicationRecordPermission : long
-	{
+	public enum AVAudioApplicationRecordPermission : long {
 		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
 		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
 		Granted = ('g' << 24) + ('r' << 16) + ('n' << 8) + 't', // 'grnt'
@@ -17108,8 +17106,7 @@ namespace AVFoundation {
 
 	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
 	[Native]
-	public enum AVAudioApplicationMicrophoneInjectionPermission : long
-	{
+	public enum AVAudioApplicationMicrophoneInjectionPermission : long {
 		ServiceDisabled = ('s' << 24) + ('r' << 16) + ('d' << 8) + 's', // 'srds'
 		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
 		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
@@ -17119,10 +17116,9 @@ namespace AVFoundation {
 	delegate bool AVAudioApplicationSetInputMuteStateChangeHandler (bool inputShouldBeMuted);
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AVAudioApplication
-	{
+	interface AVAudioApplication {
 		[Static]
 		[Export ("sharedInstance")]
 		AVAudioApplication SharedInstance { get; }
