@@ -101,3 +101,7 @@
 !missing-selector! SCStreamConfiguration::showMouseClicks not bound
 !missing-type! SCRecordingOutput not bound
 !missing-type! SCRecordingOutputConfiguration not bound
+!missing-selector! +SCScreenshotManager::captureImageInRect:completionHandler: not bound
+!missing-selector! SCContentFilter::includedApplications not bound
+!missing-selector! SCContentFilter::includedDisplays not bound
+!missing-selector! SCContentFilter::includedWindows not bound

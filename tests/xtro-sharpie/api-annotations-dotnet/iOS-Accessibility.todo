@@ -2,8 +2,6 @@
 !missing-enum-value! AXSettingsFeature native value AXSettingsFeatureAllowAppsToAddAudioToCalls = 2 not bound
 !missing-protocol! AXMathExpressionProvider not bound
 !missing-selector! +AXFeatureOverrideSessionManager::sharedInstance not bound
-!missing-selector! AXFeatureOverrideSessionManager::beginOverrideSessionEnablingOptions:disablingOptions: not bound
-!missing-selector! AXFeatureOverrideSessionManager::endOverrideSession: not bound
 !missing-selector! AXMathExpressionFenced::closeString not bound
 !missing-selector! AXMathExpressionFenced::expressions not bound
 !missing-selector! AXMathExpressionFenced::initWithExpressions:openString:closeString: not bound
@@ -59,3 +57,6 @@
 !missing-type! AXMathExpressionTableRow not bound
 !missing-type! AXMathExpressionText not bound
 !missing-type! AXMathExpressionUnderOver not bound
+!missing-enum! AXFeatureOverrideSessionError not bound
+!missing-selector! AXFeatureOverrideSessionManager::beginOverrideSessionEnablingOptions:disablingOptions:error: not bound
+!missing-selector! AXFeatureOverrideSessionManager::endOverrideSession:error: not bound
