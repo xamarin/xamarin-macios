@@ -2642,6 +2642,8 @@ If this is an API exposed by Xamarin, please file a new issue on
 [GitHub](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
 third-party binding, please contact the vendor.
 
+### MT4180: Cannot construct an instance of the type '*' from Objective-C because the type is abstract. [Runtime exception]
+
 ## MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
