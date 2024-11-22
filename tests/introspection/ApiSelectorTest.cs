@@ -1295,11 +1295,6 @@ namespace Introspection {
 			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-			// SCContentFilter
-			case "initWithDisplay:excludingApplications:exceptingWindows:":
-			case "initWithDisplay:excludingWindows:":
-			case "initWithDisplay:includingApplications:exceptingWindows:":
-			case "initWithDisplay:includingWindows:":
 				var mi = m as MethodInfo;
 				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
 			// NSAppleEventDescriptor
