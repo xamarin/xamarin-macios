@@ -1674,8 +1674,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<OptimizePropertyList
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PlUtilExe)"
-			ToolPath="$(PlUtilPath)"
+			PlutilPath="$(PlutilPath)"
 			Input="%(_PropertyList.Identity)"
 			Output="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PropertyList.LogicalName)">
 		</OptimizePropertyList>
@@ -1721,8 +1720,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<OptimizePropertyList
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(PlUtilExe)"
-			ToolPath="$(PlUtilPath)"
+			PlutilPath="$(PlutilPath)"
 			Input="%(_LocalizationFile.Identity)"
 			Output="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)">
 		</OptimizePropertyList>
