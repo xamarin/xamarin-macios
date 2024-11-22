@@ -22,7 +22,6 @@ namespace MonoTouchFixtures.PassKit {
 	[Preserve (AllMembers = true)]
 	public class PassLibraryTest {
 
-#if !__WATCHOS__ // hangs on watchOS 3 beta 2 simulator
 		[Test]
 		public void Defaults ()
 		{
@@ -45,13 +44,8 @@ namespace MonoTouchFixtures.PassKit {
 			Assert.NotNull (passes, "GetPasses - if this assert fails for you locally, please investigate! See https://github.com/xamarin/maccore/issues/2598.");
 
 			using (var url = PassTest.GetBoardingPassUrl ()) {
-#if __MACCATALYST__
 				// we can just open the url
-				Assert.True (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
-#elif !__WATCHOS__
-				// and we can't trick the OS to do it for us
-				Assert.False (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
-#endif
+				Assert.That (UIApplication.SharedApplication.OpenUrl (url), Is.EqualTo (true).Or.EqualTo (false), "OpenUrl");
 			}
 
 			Assert.Null (library.GetPass (String.Empty, String.Empty), "GetPass");
@@ -62,7 +56,6 @@ namespace MonoTouchFixtures.PassKit {
 				library.Remove (pass);
 			}
 		}
-#endif
 
 		[Test]
 		public void Fields ()

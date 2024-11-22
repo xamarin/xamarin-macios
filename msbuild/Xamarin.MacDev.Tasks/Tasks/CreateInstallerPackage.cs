@@ -142,8 +142,6 @@ namespace Xamarin.MacDev.Tasks {
 			string [] argv = CommandLineArgumentBuilder.Parse (extraArgs);
 			var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 				{ "projectdir",   Path.GetDirectoryName (this.ProjectPath) },
-			// Apparently msbuild doesn't propagate the solution path, so we can't get it. - MTouchTaskBase.cs
-			// 	{ "solutiondir",  proj.ParentSolution is not null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
 				{ "appbundledir", this.AppBundleDir },
 				{ "targetpath",   Path.Combine (Path.GetDirectoryName (target), Path.GetFileName (target)) },
 				{ "targetdir",    Path.GetDirectoryName (target) },

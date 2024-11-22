@@ -59,7 +59,7 @@ steps:
     -SourcesDirectory "$(Build.SourcesDirectory)"
     -Platform $Env:PLATFORM
   displayName: "Expand nugets"
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   env:
     PLATFORM: $(PLATFORM)
 
@@ -101,7 +101,7 @@ steps:
   displayName: Create bugs for compliance tools results
   condition: succeededOrFailed()
   env:
-    WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
+    WorkingDirectory: '$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)'
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
   displayName: Break on compliance issues

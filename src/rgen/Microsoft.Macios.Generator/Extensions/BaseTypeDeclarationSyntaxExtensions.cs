@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
-public static class BaseTypeDeclarationSyntaxExtensions {
+static class BaseTypeDeclarationSyntaxExtensions {
 	/// <summary>
 	/// Return the fully qualified identifier for a given <see cref="BaseTypeDeclarationSyntax"/> by
 	/// navigating the syntax tree and getting the namespace and class names.

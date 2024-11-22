@@ -1639,4 +1639,11 @@
         </comment>
     </data>
 
+    <data name="E7133" xml:space="preserve">
+        <value>Failed to optimize the image {0}, pngcrush exited with code {1}.</value>
+        <comment>
+            {0}: the path to an image
+            {1}: the exit code of a process
+        </comment>
+    </data>
 </root>

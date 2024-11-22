@@ -1,6 +1,6 @@
  <#
     .SYNOPSIS
-        Peform a dry run of the xamarin-macios pipelines that will
+        Peform a dry run of our pipelines that will
         download the expanded yaml.
     .DESCRIPTION
         This script helps tp debug issues that happen in the azure devops 
