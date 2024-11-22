@@ -39,11 +39,11 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffAttrs ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [], []);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr2"),
+			new ("Attr2"),
 		], [], []);
 
 		Assert.False (x.Equals (y));
@@ -56,14 +56,14 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffModifiers ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], []);
@@ -78,21 +78,21 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareDiffAccessors ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new PropertyCodeChange ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
+			new (AccessorKind.Getter, [], []),
 		]);
 
 		Assert.False (x.Equals (y));
@@ -105,22 +105,22 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	public void CompareEquals ()
 	{
 		var x = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new PropertyCodeChange ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new(AccessorKind.Getter, [], []),
-			new(AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, [], []),
 		]);
 
 		Assert.True (x.Equals (y));
@@ -152,7 +152,7 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], [])
+						new (AccessorKind.Getter, [], [])
 					])
 			];
 
@@ -177,8 +177,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
-						new(AccessorKind.Setter, [], [])
+						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Setter, [], [])
 					])
 			];
 
@@ -201,7 +201,7 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
+						new (AccessorKind.Getter, [], []),
 					])
 			];
 
@@ -224,7 +224,7 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
+						new (AccessorKind.Getter, [], []),
 					])
 			];
 
@@ -249,8 +249,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Setter, [], []),
 					])
 			];
 
@@ -276,8 +276,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Setter, [], []),
 					])
 			];
 
@@ -303,8 +303,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
-						new(AccessorKind.Setter, [], [
+						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Setter, [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						]),
 					])
@@ -331,14 +331,14 @@ public class TestClass {
 					name: "Name",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Setter, [], []),
 					])
 			];
 
@@ -364,16 +364,16 @@ public class TestClass {
 					name: "Name",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					])
 			];
 
@@ -400,17 +400,17 @@ public class TestClass {
 					name: "Name",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					])
 			];
@@ -443,17 +443,17 @@ namespace Test {
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					])
 			];
@@ -467,7 +467,7 @@ namespace Test {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromPropertyDeclaration (ApplePlatform platform, string inputText, PropertyCodeChange expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromPropertyDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromPropertyDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
