@@ -78,7 +78,7 @@ namespace Xamarin.Tests {
 		{
 			// we are going to get the instance of the IEnumerable, loop through it and yield the parameters
 			// per platform
-			var enumerable = Activator.CreateInstance (typeof (T)) as IEnumerable<object []>;
+			var enumerable = Activator.CreateInstance (dataAttributeType) as IEnumerable<object []>;
 			if (enumerable is null)
 				yield break;
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
