@@ -20,7 +20,7 @@ namespace Test;
 public class NotEnum {
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -111,7 +111,7 @@ public enum MyEnum {
 	[AllSupportedPlatformsClassData<TestDataTryGetEnumFieldsNoFields>]
 	public void TryGetEnumFieldsNoFields (ApplePlatform platform, string inputString)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -145,7 +145,7 @@ public enum MyEnum {
 	Last,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(TryGetEnumFieldsNotEnum), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()

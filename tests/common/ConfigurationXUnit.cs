@@ -66,8 +66,7 @@ namespace Xamarin.Tests {
 	}
 
 	[AttributeUsage (AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-	public sealed class AllSupportedPlatformsClassDataAttribute<T> : DataAttribute where T : IEnumerable<object []>
-	{
+	public sealed class AllSupportedPlatformsClassDataAttribute<T> : DataAttribute where T : IEnumerable<object []> {
 		readonly Type dataAttributeType;
 
 		public AllSupportedPlatformsClassDataAttribute ()
@@ -79,7 +78,7 @@ namespace Xamarin.Tests {
 		{
 			// we are going to get the instance of the IEnumerable, loop through it and yield the parameters
 			// per platform
-			var enumerable = Activator.CreateInstance(typeof(T)) as IEnumerable<object[]>;
+			var enumerable = Activator.CreateInstance (typeof (T)) as IEnumerable<object []>;
 			if (enumerable is null)
 				yield break;
 			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
