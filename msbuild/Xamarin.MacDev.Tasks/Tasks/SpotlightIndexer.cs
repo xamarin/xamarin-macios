@@ -1,47 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Messaging.Build.Client;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
-	public class SpotlightIndexer : XamarinToolTask {
+	public class SpotlightIndexer : XamarinTask, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
 		#region Inputs
 
 		[Required]
 		public string Input { get; set; } = string.Empty;
 
+		public string MdimportPath { get; set; } = string.Empty;
+
 		#endregion
 
-		protected override string ToolName {
-			get { return "mdimport"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine ("/usr/bin", ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineBuilder ();
-
-			args.AppendFileNameIfNotNull (Input);
-
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
 		}
 
 		public override bool Execute ()
@@ -49,15 +37,22 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			return base.Execute ();
+			var args = new List<string> () {
+				Input
+			};
+			var executable = GetExecutable (args, "mdimport", MdimportPath);
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, cancellationToken: cancellationTokenSource.Token).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-
-			base.Execute ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }

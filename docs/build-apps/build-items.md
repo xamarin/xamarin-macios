@@ -30,6 +30,13 @@ See also:
 * The [AppIcon](build-properties.md#AppIcon) property.
 * The [IncludeAllAppIcons](build-properties.md#IncludeAllAppIcons) property.
 
+## BGenReferencePath
+
+The list of assembly references to pass to the `bgen` tool (binding generator).
+
+Typically this is handled automatically by adding references as
+`ProjectReference` or `PackageReference` items instead.
+
 ## PartialAppManifest
 
 `PartialAppManifest` can be used to add additional partial app manifests that
