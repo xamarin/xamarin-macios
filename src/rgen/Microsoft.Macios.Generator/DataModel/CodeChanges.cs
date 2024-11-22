@@ -35,12 +35,17 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Changes to the enum members of the symbol.
 	/// </summary>
-	public ImmutableArray<EnumMemberCodeChange> EnumMembers { get; init; } = [];
+	public ImmutableArray<EnumMember> EnumMembers { get; init; } = [];
 
 	/// <summary>
 	/// Changes to the properties of the symbol.
 	/// </summary>
-	public ImmutableArray<PropertyCodeChange> Properties { get; init; } = [];
+	public ImmutableArray<Property> Properties { get; init; } = [];
+	
+	/// <summary>
+	/// Changes to the constructors of the symbol.
+	/// </summary>
+	public ImmutableArray<Constructor> Constructors { get; init; } = [];
 
 	/// <summary>
 	/// Decide if an enum value should be ignored as a change.
@@ -75,6 +80,12 @@ readonly struct CodeChanges {
 		return true;
 	}
 
+	internal static bool Skip (ConstructorDeclarationSyntax constructorDeclarationSyntax, SemanticModel semanticModel)
+	{
+		// TODO: we need to confirm this when we have support from the roslyn team.
+		return false;
+	}
+
 	/// <summary>
 	/// Internal constructor added for testing purposes.
 	/// </summary>
@@ -99,7 +110,7 @@ readonly struct CodeChanges {
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		SymbolDeclaration = enumDeclaration;
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
-		var bucket = ImmutableArray.CreateBuilder<EnumMemberCodeChange> ();
+		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclaration = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
 		foreach (var val in enumValueDeclaration) {
@@ -122,20 +133,28 @@ readonly struct CodeChanges {
 	{
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		SymbolDeclaration = classDeclaration;
+		EnumMembers = []; // always empty since classes dot not have enum values
+		Attributes = [];
 
-		var properties = ImmutableArray.CreateBuilder<PropertyCodeChange> ();
+		var properties = ImmutableArray.CreateBuilder<Property> ();
 		var propertyDeclarations = classDeclaration.Members.OfType<PropertyDeclarationSyntax> ();
 		foreach (var declaration in propertyDeclarations) {
 			if (Skip (declaration, semanticModel))
 				continue;
-			if (PropertyCodeChange.TryCreate (declaration, semanticModel, out var change))
+			if (Property.TryCreate (declaration, semanticModel, out var change))
 				properties.Add (change.Value);
 		}
-
 		Properties = properties.ToImmutable ();
-		// TODO: Add support for constructors, methods and events
-		EnumMembers = [];
-		Attributes = [];
+
+		var constructors = ImmutableArray.CreateBuilder<Constructor> ();
+		var constructorDeclarations = classDeclaration.Members.OfType<ConstructorDeclarationSyntax> ();
+		foreach (var declaration in constructorDeclarations) {
+			if (Skip (declaration, semanticModel))
+				continue;
+			if (Constructor.TryCreate (declaration, semanticModel, out var change))
+				constructors.Add (change.Value);
+		}
+		Constructors = constructors.ToImmutable ();
 	}
 
 	/// <summary>

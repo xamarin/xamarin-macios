@@ -12,7 +12,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly struct that represent the changes that a user has made in a property.
 /// </summary>
-readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
+readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Name of the property.
 	/// </summary>
@@ -36,10 +36,10 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 	/// <summary>
 	/// Get the list of accessor changes of the property.
 	/// </summary>
-	public ImmutableArray<PropertyAccessorCodeChange> Accessors { get; } = [];
+	public ImmutableArray<PropertyAccessor> Accessors { get; } = [];
 
-	internal PropertyCodeChange (string name, string type, ImmutableArray<AttributeCodeChange> attributes,
-		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<PropertyAccessorCodeChange> accessors)
+	internal Property (string name, string type, ImmutableArray<AttributeCodeChange> attributes,
+		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<PropertyAccessor> accessors)
 	{
 		Name = name;
 		Type = type;
@@ -49,29 +49,29 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 	}
 
 	/// <inheritdoc />
-	public bool Equals (PropertyCodeChange other)
+	public bool Equals(Property other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
 			return false;
-		var attrsComparer = new AttributesComparer ();
-		if (!attrsComparer.Equals (Attributes, other.Attributes))
+		var attrsComparer = new AttributesEqualityComparer();
+		if (!attrsComparer.Equals(Attributes, other.Attributes))
 			return false;
 
 		var modifiersComparer = new ModifiersComparer ();
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var accessorComparer = new PropertyAccessorsComparer ();
-		return accessorComparer.Equals (Accessors, other.Accessors);
+		var accessorComparer = new PropertyAccessorsEqualityComparer ();
+		return accessorComparer.Equals(Accessors, other.Accessors);
 	}
 
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is PropertyCodeChange other && Equals (other);
+		return obj is Property other && Equals(other);
 	}
 
 	/// <inheritdoc />
@@ -80,18 +80,18 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 		return HashCode.Combine (Name, Type, Attributes, Modifiers, Accessors);
 	}
 
-	public static bool operator == (PropertyCodeChange left, PropertyCodeChange right)
+	public static bool operator ==(Property left, Property right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (PropertyCodeChange left, PropertyCodeChange right)
+	public static bool operator !=(Property left, Property right)
 	{
 		return !left.Equals (right);
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
-		[NotNullWhen (true)] out PropertyCodeChange? change)
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel, 
+		[NotNullWhen(true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration
@@ -102,10 +102,10 @@ readonly struct PropertyCodeChange : IEquatable<PropertyCodeChange> {
 
 		var type = propertySymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
-		ImmutableArray<PropertyAccessorCodeChange> accessorCodeChanges = [];
+		ImmutableArray<PropertyAccessor> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
-			var accessorsBucket = ImmutableArray.CreateBuilder<PropertyAccessorCodeChange> ();
+			var accessorsBucket = ImmutableArray.CreateBuilder<PropertyAccessor> ();
 			foreach (var accessor in declaration.AccessorList.Accessors) {
 				var kind = accessor.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessor.GetAttributeCodeChanges (semanticModel);

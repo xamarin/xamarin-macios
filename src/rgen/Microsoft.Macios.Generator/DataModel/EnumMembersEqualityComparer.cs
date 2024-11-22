@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class EnumMemberComparer : IEqualityComparer<ImmutableArray<EnumMemberCodeChange>> {
+class EnumMembersEqualityComparer : IEqualityComparer<ImmutableArray<EnumMember>> {
 
-	public bool Equals (ImmutableArray<EnumMemberCodeChange> x, ImmutableArray<EnumMemberCodeChange> y)
+	public bool Equals (ImmutableArray<EnumMember> x, ImmutableArray<EnumMember> y)
 	{
 		if (x.Length != y.Length)
 			return false;
@@ -20,7 +20,7 @@ class EnumMemberComparer : IEqualityComparer<ImmutableArray<EnumMemberCodeChange
 		return true;
 	}
 
-	public int GetHashCode (ImmutableArray<EnumMemberCodeChange> obj)
+	public int GetHashCode (ImmutableArray<EnumMember> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var change in obj) {
