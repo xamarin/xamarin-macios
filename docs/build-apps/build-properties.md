@@ -105,6 +105,12 @@ Example:
 
 This property was introduced in .NET 9.
 
+## MdimportPath
+
+The full path to the `mdimport` tool.
+
+The default behavior is to use `xcrun mdimport`.
+
 ## MetalLibPath
 
 The full path to the `metallib` tool (the Metal Linker).
