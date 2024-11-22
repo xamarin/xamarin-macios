@@ -8,9 +8,9 @@ if ("$Env:DOTNET" -eq "") {
     $Env:PATH = "$Env:BUILD_SOURCESDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tests\dotnet\Windows\bin\dotnet;$Env:PATH"
 }
 
-$Env:ServerAddress = ""
-$Env:ServerUser = ""
-$Env:ServerPassword = ""
+$Env:MAC_AGENT_IP = ""
+$Env:MAC_AGENT_USER = ""
+$Env:XMA_PASSWORD = ""
 
 & $Env:DOTNET `
     test `

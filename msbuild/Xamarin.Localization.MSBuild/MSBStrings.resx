@@ -1623,6 +1623,14 @@
         </comment>
     </data>
 
+    <data name="E7133" xml:space="preserve">
+        <value>The item '{0}' does not have a '{1}' value set.</value>
+        <comment>
+            {0}: a path to a file
+            {1}: the name of a MSBuild metadata
+        </comment>
+    </data>
+
     <data name="XcodeBuild_CreateNativeRef" xml:space="preserve">
         <value>Adding reference to Xcode project output: '{0}'. The '%(CreateNativeReference)' metadata can be set to 'false' to opt out of this behavior.</value>
         <comment>

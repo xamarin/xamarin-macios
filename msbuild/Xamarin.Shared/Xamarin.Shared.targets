@@ -448,6 +448,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_CompileColladaAssets;
 			_CompileTextureAtlases;
 			_CompileCoreMLModels;
+			_SetResourceMetadata;
 		</CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
@@ -495,6 +496,59 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_SetResourceMetadata">
+		<!--
+			Set metadata to capture the local (i.e. windows-style paths on builds from Windows, even when building remotely)
+			values for %(DefiningProjectFullPath) + $(MSBuildProjectFullPath).
+		-->
+		<ItemGroup>
+			<AtlasTexture>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</AtlasTexture>
+			<BundleResource>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</BundleResource>
+			<Collada>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</Collada>
+			<Content>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</Content>
+			<CoreMLModel>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</CoreMLModel>
+			<ImageAsset>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</ImageAsset>
+			<InterfaceDefinition>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</InterfaceDefinition>
+			<Metal>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</Metal>
+			<None>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</None>
+			<PartialAppManifest>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</PartialAppManifest>
+			<SceneKitAsset>
+				<LocalDefiningProjectFullPath>%(DefiningProjectFullPath)</LocalDefiningProjectFullPath>
+				<LocalMSBuildProjectFullPath>$(MSBuildProjectFullPath)</LocalMSBuildProjectFullPath>
+			</SceneKitAsset>
+		</ItemGroup>
+	</Target>
+
 	<!--
 
 	The process to create the final app manifest (aka Info.plist) is a bit convoluted.
@@ -530,6 +584,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_GenerateBundleName;
 			_ComputeTargetFrameworkMoniker;
 			_ComputeTargetArchitectures;
+			_SetResourceMetadata;
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
@@ -768,6 +823,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ReadAppManifest;
 			_DetectSigningIdentity;
 			_ComputeTargetFrameworkMoniker;
+			_SetResourceMetadata;
 		</_CoreCompileInterfaceDefinitionsDependsOn>
 	</PropertyGroup>
 
@@ -893,6 +949,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_BeforeCoreCompileImageAssets;
 			_DetectSigningIdentity;
 			_ComputeTargetFrameworkMoniker;
+			_SetResourceMetadata;
 		</_CoreCompileImageAssetsDependsOn>
 	</PropertyGroup>
 
@@ -1014,7 +1071,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
 		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker">
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName;_ComputeTargetFrameworkMoniker;_SetResourceMetadata">
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
@@ -1066,7 +1123,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
+	<Target Name="_CompileColladaAssets" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -1102,7 +1159,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_BeforeCoreCompileColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
+		DependsOnTargets="_BeforeCoreCompileColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_SetResourceMetadata"
 		Inputs="@(Collada)"
 		Outputs="$(_ColladaCache)"
 		>
@@ -1315,7 +1372,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CoreCompileTextureAtlases"
 		Inputs="@(AtlasTexture)"
 		Outputs="$(_TextureAtlasCache)"
-		DependsOnTargets="_BeforeCompileTextureAtlases">
+		DependsOnTargets="_BeforeCompileTextureAtlases;_SetResourceMetadata">
 
 		<TextureAtlas
 			SessionId="$(BuildSessionId)"
@@ -1408,6 +1465,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ReadAppManifest;
 			_DetectSdkLocations;
 			_BeforeCompileCoreMLModels;
+			_SetResourceMetadata;
 		</_CoreCompileCoreMLModelsDependsOn>
 	</PropertyGroup>
 
@@ -1457,6 +1515,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_DetectSdkLocations;
 			_ComputeTargetFrameworkMoniker;
 			_ReadAppManifest;
+			_SetResourceMetadata;
 		</_SmeltMetalDependsOn>
 	</PropertyGroup>
 
@@ -1492,7 +1551,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</MetalLib>
 	</Target>
 
-	<Target Name="_DetectAppManifest" DependsOnTargets="_GenerateBundleName;_ComputeTargetFrameworkMoniker">
+	<Target Name="_DetectAppManifest" DependsOnTargets="_GenerateBundleName;_ComputeTargetFrameworkMoniker;_SetResourceMetadata">
 		<!--
 			This targets runs for Library projects as well, so that Library
 			projects can specify an Info.plist with MinimumOSVersion to pass
