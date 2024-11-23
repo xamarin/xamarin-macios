@@ -18,6 +18,10 @@ class PropertyComparer : IEqualityComparer<ImmutableArray<PropertyCodeChange>> {
 
 	public int GetHashCode (ImmutableArray<PropertyCodeChange> obj)
 	{
-		return HashCode.Combine (obj.IsDefault, obj.IsDefaultOrEmpty, obj.IsEmpty, obj.Length);
+		var hash = new HashCode ();
+		foreach (var property in obj) {
+			hash.Add (property);	
+		}
+		return hash.ToHashCode ();
 	}
 }
