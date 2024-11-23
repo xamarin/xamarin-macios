@@ -92,9 +92,9 @@ public class TestClass {
 	public string Name { get; set; }
 }
 ";
-			
+
 			yield return [notPartialProperty, true];
-			
+
 			const string missingAttributeInProperty = @"
 using System;
 using Foundation;
