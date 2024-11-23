@@ -80,7 +80,8 @@ enum AVMediaCharacteristics {
 	class TestDataSkipPropertyDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			const string missingAttributeInProperty = @"
+
+			const string notPartialProperty = @"
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -89,6 +90,20 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	public string Name { get; set; }
+}
+";
+			
+			yield return [notPartialProperty, true];
+			
+			const string missingAttributeInProperty = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	public partial string Name { get; set; }
 }
 ";
 			yield return [missingAttributeInProperty, true];
@@ -102,7 +117,7 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	[Field<EnumValue> (""name"")]
-	public string Name { get;set; }
+	public partial string Name { get;set; }
 }
 ";
 			yield return [wrongAttributeInProperty, true];
@@ -116,7 +131,7 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	[Export<Field> (""name"")]
-	public string Name { get;set; }
+	public partial string Name { get;set; }
 }
 ";
 			yield return [fieldAttributeInProperty, false];
@@ -130,7 +145,7 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	[Export<Property> (""name"")]
-	public string Name { get;set; }
+	public partial string Name { get;set; }
 }
 ";
 			yield return [propertyAttributeInProperty, false];

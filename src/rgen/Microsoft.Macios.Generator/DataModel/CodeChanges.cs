@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Extensions;
 
@@ -61,11 +62,17 @@ readonly struct CodeChanges {
 	/// <returns>True if the property should be ignored. False otherwise.</returns>
 	internal static bool Skip (PropertyDeclarationSyntax propertyDeclarationSyntax, SemanticModel semanticModel)
 	{
-		// there are two types of valid properties: 
-		// 1. Field properties
-		// 2. Exported properties
-		return !propertyDeclarationSyntax.HasAtLeastOneAttribute (semanticModel,
-			AttributesNames.ExportFieldAttribute, AttributesNames.ExportPropertyAttribute);
+		// valid properties are: 
+		// 1. Partial
+		// 2. One of the following:
+		//	  1. Field properties
+		//    2. Exported properties
+		if (propertyDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) {
+			return !propertyDeclarationSyntax.HasAtLeastOneAttribute (semanticModel,
+				AttributesNames.ExportFieldAttribute, AttributesNames.ExportPropertyAttribute);
+		}
+
+		return true;
 	}
 
 	/// <summary>
