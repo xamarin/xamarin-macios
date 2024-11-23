@@ -20,7 +20,7 @@ class PropertyComparer : IEqualityComparer<ImmutableArray<PropertyCodeChange>> {
 	{
 		var hash = new HashCode ();
 		foreach (var property in obj) {
-			hash.Add (property);	
+			hash.Add (property);
 		}
 		return hash.ToHashCode ();
 	}
