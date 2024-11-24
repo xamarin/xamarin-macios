@@ -1,6 +1,5 @@
 FabricBot readme
 ================
-
 FabricBot is an automated tool that responds to changes in issues, PRs, or
 runs on a schedule. It can modify issues and PRs by adding/removing labels,
 adding comments, or performing other operations.
