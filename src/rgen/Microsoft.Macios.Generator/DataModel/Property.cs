@@ -49,15 +49,15 @@ readonly struct Property : IEquatable<Property> {
 	}
 
 	/// <inheritdoc />
-	public bool Equals(Property other)
+	public bool Equals (Property other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
 			return false;
-		var attrsComparer = new AttributesEqualityComparer();
-		if (!attrsComparer.Equals(Attributes, other.Attributes))
+		var attrsComparer = new AttributesEqualityComparer ();
+		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
 
 		var modifiersComparer = new ModifiersComparer ();
@@ -65,13 +65,13 @@ readonly struct Property : IEquatable<Property> {
 			return false;
 
 		var accessorComparer = new PropertyAccessorsEqualityComparer ();
-		return accessorComparer.Equals(Accessors, other.Accessors);
+		return accessorComparer.Equals (Accessors, other.Accessors);
 	}
 
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is Property other && Equals(other);
+		return obj is Property other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -80,18 +80,18 @@ readonly struct Property : IEquatable<Property> {
 		return HashCode.Combine (Name, Type, Attributes, Modifiers, Accessors);
 	}
 
-	public static bool operator ==(Property left, Property right)
+	public static bool operator == (Property left, Property right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator !=(Property left, Property right)
+	public static bool operator != (Property left, Property right)
 	{
 		return !left.Equals (right);
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel, 
-		[NotNullWhen(true)] out Property? change)
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration

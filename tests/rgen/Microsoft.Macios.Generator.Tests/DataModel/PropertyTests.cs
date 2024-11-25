@@ -39,11 +39,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareDiffAttrs ()
 	{
 		var x = new Property ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [], []);
 		var y = new Property ("First", "int", [
-			new("Attr2"),
+			new ("Attr2"),
 		], [], []);
 
 		Assert.False (x.Equals (y));
@@ -56,14 +56,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareDiffModifiers ()
 	{
 		var x = new Property ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
 		var y = new Property ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], []);
@@ -78,8 +78,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareDiffAccessors ()
 	{
 		var x = new Property ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
@@ -87,8 +87,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new Property ("First", "int", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
@@ -105,8 +105,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareEquals ()
 	{
 		var x = new Property ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
@@ -114,8 +114,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 			new (AccessorKind.Setter, [], []),
 		]);
 		var y = new Property ("First", "string", [
-			new("Attr1"),
-			new("Attr2"),
+			new ("Attr1"),
+			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [

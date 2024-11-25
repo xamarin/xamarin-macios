@@ -86,7 +86,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 			return false;
 		if (ReferenceKind != other.ReferenceKind)
 			return false;
-		
+
 		var attributeComparer = new AttributesEqualityComparer ();
 		return attributeComparer.Equals (Attributes, other.Attributes);
 	}

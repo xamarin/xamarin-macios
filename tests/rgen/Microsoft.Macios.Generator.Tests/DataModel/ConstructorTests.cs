@@ -28,7 +28,8 @@ namespace NS {
 ";
 
 			yield return [
-				emptyConstructor, new Constructor (
+				emptyConstructor,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
@@ -51,14 +52,15 @@ namespace NS {
 }
 ";
 			yield return [
-				singleParameter, new Constructor (
+				singleParameter,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string", "inName"),
+						new (0, "string", "inName"),
 					]
 				)
 			];
@@ -79,15 +81,16 @@ namespace NS {
 ";
 
 			yield return [
-				multiParameter, new Constructor (
+				multiParameter,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string", "inName"),
-						new(1, "int", "inAge"),
+						new (0, "string", "inName"),
+						new (1, "int", "inAge"),
 					]
 				)
 			];
@@ -108,15 +111,16 @@ namespace NS {
 ";
 
 			yield return [
-				nullableParameter, new Constructor (
+				nullableParameter,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string?", "inName") { IsNullable = true, },
-						new(1, "int", "inAge"),
+						new (0, "string?", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
 					]
 				)
 			];
@@ -140,16 +144,17 @@ namespace NS {
 ";
 
 			yield return [
-				paramsCollectionParameter, new Constructor (
+				paramsCollectionParameter,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string?", "inName") { IsNullable = true, },
-						new(1, "int", "inAge"),
-						new(2, "string[]", "inSurnames") { IsParams = true, },
+						new (0, "string?", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string[]", "inSurnames") { IsParams = true, },
 					]
 				)
 			];
@@ -168,14 +173,15 @@ namespace NS {
 ";
 
 			yield return [
-				optionalParameter, new Constructor (
+				optionalParameter,
+				new Constructor (
 					type: "NS.TestClass",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
 					]
 				)
 			];
@@ -194,14 +200,15 @@ namespace NS {
 ";
 
 			yield return [
-				genericParameter, new Constructor (
+				genericParameter,
+				new Constructor (
 					type: "NS.TestClass<T>",
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "T?", "inName") { IsOptional = true, IsNullable = true, },
+						new (0, "T?", "inName") { IsOptional = true, IsNullable = true, },
 					]
 				)
 			];
@@ -217,7 +224,7 @@ namespace NS {
 	[AllSupportedPlatformsClassData<TestDataFromConstructorDeclaration>]
 	void FromConstructorDeclaration (ApplePlatform platform, string inputText, Constructor expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromConstructorDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromConstructorDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);

@@ -11,7 +11,7 @@ enum ReferenceKind {
 }
 
 static class RefKindExtensions {
-	
+
 	/// <summary>
 	/// Convert from the roslyn enum to our own enum to decouple the type and use t for sharpie.
 	/// </summary>

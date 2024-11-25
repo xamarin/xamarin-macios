@@ -6,7 +6,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class PropertiesEqualityComparerTests {
-	readonly PropertiesEqualityComparer equalityComparer = new();
+	readonly PropertiesEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareEmptyArrays ()
@@ -21,7 +21,7 @@ public class PropertiesEqualityComparerTests {
 	public void CompareDifferentSize ()
 	{
 		ImmutableArray<Property> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -43,7 +43,7 @@ public class PropertiesEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Property> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -62,7 +62,7 @@ public class PropertiesEqualityComparerTests {
 	public void CompareSameSizeDiffProperties ()
 	{
 		ImmutableArray<Property> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -74,7 +74,7 @@ public class PropertiesEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Property> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
 				attributes: [],
@@ -93,7 +93,7 @@ public class PropertiesEqualityComparerTests {
 	public void CompareSameSizeSameProperties ()
 	{
 		ImmutableArray<Property> x = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -105,7 +105,7 @@ public class PropertiesEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Property> y = [
-			new(
+			new (
 				name: "FirstProperty",
 				type: "string",
 				attributes: [],
@@ -116,7 +116,7 @@ public class PropertiesEqualityComparerTests {
 					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		
+
 		Assert.True (equalityComparer.Equals (x, y));
 	}
 }

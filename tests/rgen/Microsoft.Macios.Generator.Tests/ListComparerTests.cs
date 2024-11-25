@@ -10,7 +10,7 @@ public class ListComparerTests {
 			=> String.Compare (x, y, StringComparison.Ordinal);
 	}
 
-	readonly ListComparer<string> comparer = new(new MyComparer ());
+	readonly ListComparer<string> comparer = new (new MyComparer ());
 
 	[Fact]
 	public void CompareBothNull ()

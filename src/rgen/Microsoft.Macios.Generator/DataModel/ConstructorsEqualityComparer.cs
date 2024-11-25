@@ -23,7 +23,7 @@ class ConstructorsEqualityComparer : IEqualityComparer<ImmutableArray<Constructo
 	{
 		var hashCode = new HashCode ();
 		foreach (var ctr in obj) {
-			hashCode.Add (ctr);	
+			hashCode.Add (ctr);
 		}
 		return hashCode.ToHashCode ();
 	}

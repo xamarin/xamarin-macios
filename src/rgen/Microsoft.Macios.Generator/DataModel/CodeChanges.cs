@@ -41,7 +41,7 @@ readonly struct CodeChanges {
 	/// Changes to the properties of the symbol.
 	/// </summary>
 	public ImmutableArray<Property> Properties { get; init; } = [];
-	
+
 	/// <summary>
 	/// Changes to the constructors of the symbol.
 	/// </summary>

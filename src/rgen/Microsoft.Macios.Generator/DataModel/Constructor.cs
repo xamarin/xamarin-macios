@@ -40,7 +40,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in constructor.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			parametersBucket.Add (new(parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
+			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
 				parameter.Name) {
 				IsOptional = parameter.IsOptional,
 				IsParams = parameter.IsParams,
@@ -52,10 +52,10 @@ readonly struct Constructor : IEquatable<Constructor> {
 			});
 		}
 
-		change = new(
+		change = new (
 			type: constructor.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			attributes: attributes,
-			modifiers: [..declaration.Modifiers],
+			modifiers: [.. declaration.Modifiers],
 			parameters: parametersBucket.ToImmutable ());
 		return true;
 	}

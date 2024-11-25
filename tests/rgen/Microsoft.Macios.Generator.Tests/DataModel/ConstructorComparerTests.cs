@@ -6,7 +6,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class ConstructorComparerTests {
-	readonly ConstructorComparer comparer = new();
+	readonly ConstructorComparer comparer = new ();
 
 	[Fact]
 	public void CompareDiffType ()
@@ -59,8 +59,8 @@ public class ConstructorComparerTests {
 	{
 		var x = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
-				new("SecondAttr", ["first"]),
+				new ("FirstAttr"),
+				new ("SecondAttr", ["first"]),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -69,7 +69,7 @@ public class ConstructorComparerTests {
 			parameters: []);
 		var y = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -84,7 +84,7 @@ public class ConstructorComparerTests {
 	{
 		var x = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -93,7 +93,7 @@ public class ConstructorComparerTests {
 			parameters: []);
 		var y = new Constructor ("MyClass",
 			attributes: [
-				new("SecondAttr", ["first"]),
+				new ("SecondAttr", ["first"]),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -107,10 +107,10 @@ public class ConstructorComparerTests {
 	[Fact]
 	public void CompareParameterDiffLength ()
 	{
-		
+
 		var x = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -121,7 +121,7 @@ public class ConstructorComparerTests {
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -139,7 +139,7 @@ public class ConstructorComparerTests {
 	{
 		var x = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -150,7 +150,7 @@ public class ConstructorComparerTests {
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [
-				new("FirstAttr"),
+				new ("FirstAttr"),
 			],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),

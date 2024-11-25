@@ -4,7 +4,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class ConstructorsEqualityComparerTests {
-	readonly ConstructorsEqualityComparer compare = new();
+	readonly ConstructorsEqualityComparer compare = new ();
 
 	[Fact]
 	public void CompareEmpty ()
@@ -17,14 +17,14 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "name"),
-				new(0, "string", "surname"),
+				new (0, "string", "name"),
+				new (0, "string", "surname"),
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "name"),
+				new (0, "string", "name"),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -36,13 +36,13 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "surname"),
+				new (0, "string", "surname"),
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "name"),
+				new (0, "string", "name"),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -54,13 +54,13 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "surname"),
+				new (0, "string", "surname"),
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "name"),
+				new (0, "string", "name"),
 			]);
 		Assert.False (compare.Equals ([x, y], [y]));
 	}
@@ -72,13 +72,13 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "surname"),
+				new (0, "string", "surname"),
 			]);
 		var y = new Constructor ("MyClass",
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new(0, "string", "name"),
+				new (0, "string", "name"),
 			]);
 		Assert.True (compare.Equals ([x, y], [y, x]));
 	}

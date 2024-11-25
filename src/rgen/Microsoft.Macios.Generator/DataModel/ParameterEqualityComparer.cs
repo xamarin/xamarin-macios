@@ -6,7 +6,7 @@ using System.Linq;
 namespace Microsoft.Macios.Generator.DataModel;
 
 class ParameterEqualityComparer : IEqualityComparer<ImmutableArray<Parameter>> {
-	
+
 	/// <inheritdoc/>
 	public bool Equals (ImmutableArray<Parameter> x, ImmutableArray<Parameter> y)
 	{
