@@ -6,14 +6,14 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
+readonly struct Accessor :  IEquatable<Accessor> {
 	/// <summary>
 	/// The kind of accessor.
 	/// </summary>
 	public AccessorKind Kind { get; }
 
 	/// <summary>
-	/// List of attribute code changes of the accesor.
+	/// List of attribute code changes of the accessor.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; }
 
@@ -27,8 +27,8 @@ readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
 	/// </summary>
 	/// <param name="accessorKind">The kind of accessor.</param>
 	/// <param name="attributes">The list of attributes attached to the accessor.</param>
-	/// <param name="modifiers">The list of visibility modifiers of the accesor.</param>
-	public PropertyAccessor (AccessorKind accessorKind, ImmutableArray<AttributeCodeChange> attributes,
+	/// <param name="modifiers">The list of visibility modifiers of the accessor.</param>
+	public Accessor (AccessorKind accessorKind, ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers)
 	{
 		Kind = accessorKind;
@@ -37,7 +37,7 @@ readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
 	}
 
 	/// <inheritdoc />
-	public bool Equals (PropertyAccessor other)
+	public bool Equals(Accessor other)
 	{
 		if (Kind != other.Kind)
 			return false;
@@ -51,7 +51,7 @@ readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is PropertyAccessor other && Equals (other);
+		return obj is Accessor other && Equals(other);
 	}
 
 	/// <inheritdoc />
@@ -60,12 +60,12 @@ readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
 		return HashCode.Combine ((int) Kind, Attributes, Modifiers);
 	}
 
-	public static bool operator == (PropertyAccessor left, PropertyAccessor right)
+	public static bool operator ==(Accessor left, Accessor right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (PropertyAccessor left, PropertyAccessor right)
+	public static bool operator !=(Accessor left, Accessor right)
 	{
 		return !left.Equals (right);
 	}

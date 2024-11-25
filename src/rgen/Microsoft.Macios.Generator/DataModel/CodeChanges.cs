@@ -46,6 +46,11 @@ readonly struct CodeChanges {
 	/// Changes to the constructors of the symbol.
 	/// </summary>
 	public ImmutableArray<Constructor> Constructors { get; init; } = [];
+	
+	/// <summary>
+	/// Changes to the events of the symbol.
+	/// </summary>
+	public ImmutableArray<Event> Events { get; init; } = [];
 
 	/// <summary>
 	/// Decide if an enum value should be ignored as a change.
@@ -81,6 +86,12 @@ readonly struct CodeChanges {
 	}
 
 	internal static bool Skip (ConstructorDeclarationSyntax constructorDeclarationSyntax, SemanticModel semanticModel)
+	{
+		// TODO: we need to confirm this when we have support from the roslyn team.
+		return false;
+	}
+
+	internal static bool Skip (EventDeclarationSyntax eventDeclarationSyntax, SemanticModel semanticModel)
 	{
 		// TODO: we need to confirm this when we have support from the roslyn team.
 		return false;
@@ -155,6 +166,16 @@ readonly struct CodeChanges {
 				constructors.Add (change.Value);
 		}
 		Constructors = constructors.ToImmutable ();
+		
+		var events = ImmutableArray.CreateBuilder<Event> ();
+		var eventDeclarations = classDeclaration.Members.OfType<EventDeclarationSyntax> ();
+		foreach (var declaration in eventDeclarations) {
+			if (Skip (declaration, semanticModel))
+				continue;
+			if (Event.TryCreate (declaration, semanticModel, out var change))
+				events.Add (change.Value);
+		}
+		Events = events.ToImmutable ();
 	}
 
 	/// <summary>
