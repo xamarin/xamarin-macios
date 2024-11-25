@@ -28,7 +28,9 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
 			return false;
-		if (x.Members.Length != y.Members.Length)
+		if (x.EnumMembers.Length != y.EnumMembers.Length)
+			return false;
+		if (x.Properties.Length != y.Properties.Length)
 			return false;
 
 		// compare the attrs, we need to sort them since attribute order does not matter
@@ -36,14 +38,19 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 		if (!attrComparer.Equals (x.Attributes, y.Attributes))
 			return false;
 
-		// compare the members, we need to sort them since member order does not matter
-		var memberComparer = new MemberComparer ();
-		return memberComparer.Equals (x.Members, y.Members);
+		// compare the members
+		var memberComparer = new EnumMemberComparer ();
+		if (!memberComparer.Equals (x.EnumMembers, y.EnumMembers))
+			return false;
+
+		// compare properties
+		var propertyComparer = new PropertyComparer ();
+		return propertyComparer.Equals (x.Properties, y.Properties);
 	}
 
 	/// <inheritdoc />
 	public int GetHashCode (CodeChanges obj)
 	{
-		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.Members);
+		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.EnumMembers);
 	}
 }
