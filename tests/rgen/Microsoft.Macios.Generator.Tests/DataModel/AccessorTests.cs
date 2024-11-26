@@ -20,11 +20,11 @@ public class AccessorTests {
 	public void CompareSameKindDiffAttrCount ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], []);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("First"),
+			new ("First"),
 		], []);
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -36,12 +36,12 @@ public class AccessorTests {
 	public void CompareSameKindDiffAttr ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], []);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("Third"),
-			new("Fourth"),
+			new ("Third"),
+			new ("Fourth"),
 		], []);
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -53,12 +53,12 @@ public class AccessorTests {
 	public void CompareSameKindDiffAttrOrder ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], []);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("Second"),
-			new("First"),
+			new ("Second"),
+			new ("First"),
 		], []);
 		Assert.True (x.Equals (y));
 		Assert.True (y.Equals (x));
@@ -70,15 +70,15 @@ public class AccessorTests {
 	public void CompareSameKindSameAttrDiffModifiersCount ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("Second"),
-			new("First"),
+			new ("Second"),
+			new ("First"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
@@ -93,15 +93,15 @@ public class AccessorTests {
 	public void CompareSameKindSameAttrDiffModifiers ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("Second"),
-			new("First"),
+			new ("Second"),
+			new ("First"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword),
 			SyntaxFactory.Token (SyntaxKind.ProtectedKeyword)
@@ -117,15 +117,15 @@ public class AccessorTests {
 	public void CompareSameKindSameAttrDiffModifiersOrder ()
 	{
 		var x = new Accessor (AccessorKind.Getter, [
-			new("First"),
-			new("Second"),
+			new ("First"),
+			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
 		var y = new Accessor (AccessorKind.Getter, [
-			new("Second"),
-			new("First"),
+			new ("Second"),
+			new ("First"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword),
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),

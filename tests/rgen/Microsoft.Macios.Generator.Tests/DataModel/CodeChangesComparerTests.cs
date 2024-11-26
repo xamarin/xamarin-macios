@@ -364,84 +364,84 @@ public interface IInterface {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
 			],
 			Events = [
-				new(
+				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]),
 			]
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
 			]
 		};
@@ -456,112 +456,112 @@ public interface IInterface {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
 			],
 			Events = [
-				new(
+				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]),
-				new(
+				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
-						new(AccessorKind.Remove, [], []),
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
 					]),
 			]
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
 			],
 			Events = [
-				new(
+				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
-						new(AccessorKind.Remove, [], []),
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
 					]),
-				new(
+				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]),
 			]
 		};
@@ -577,88 +577,88 @@ public interface IInterface {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
 			],
 			Events = [
-				new(
+				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
 					modifiers: [],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]),
 			]
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [
-				new(
+				new (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					]),
-				new(
+				new (
 					name: "Surname",
 					type: "string",
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Getter, [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, [], []),
 					]),
 			],
 			Events = [
-				new(
+				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
@@ -666,7 +666,7 @@ public interface IInterface {
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]),
 			]
 		};

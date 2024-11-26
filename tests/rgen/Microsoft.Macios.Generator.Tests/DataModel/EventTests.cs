@@ -26,7 +26,8 @@ public class TestClass {
 ";
 
 			yield return [
-				automaticGetter, new Event (
+				automaticGetter,
+				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
@@ -34,8 +35,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, [], []),
-						new(AccessorKind.Remove, [], []),
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
 					]
 				)
 			];
@@ -52,7 +53,8 @@ public class TestClass {
 ";
 
 			yield return [
-				justAdder, new Event (
+				justAdder,
+				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
@@ -60,7 +62,7 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, [], []),
+						new (AccessorKind.Add, [], []),
 					]
 				)
 			];
@@ -75,9 +77,10 @@ public class TestClass {
 	public event EventHandler MyEvent { add; internal remove; }
 }
 ";
-			
+
 			yield return [
-				internalRemove, new Event (
+				internalRemove,
+				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
 					attributes: [],
@@ -85,8 +88,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, [], []),
-						new(AccessorKind.Remove, [], [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]
@@ -110,9 +113,10 @@ public class TestClass {
 	public event MyEventHandler MyEvent { add; internal remove; }
 }
 ";
-			
+
 			yield return [
-				customEventType, new Event (
+				customEventType,
+				new Event (
 					name: "MyEvent",
 					type: "Test.MyEventHandler",
 					attributes: [],
@@ -120,8 +124,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, [], []),
-						new(AccessorKind.Remove, [], [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]
@@ -138,7 +142,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromEventDeclaration (ApplePlatform platform, string inputText, Event expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromEventDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromEventDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);

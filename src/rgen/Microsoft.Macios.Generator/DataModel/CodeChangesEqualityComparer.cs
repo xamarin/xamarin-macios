@@ -51,7 +51,7 @@ class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 		var constructorComparer = new ConstructorsEqualityComparer ();
 		if (!constructorComparer.Equals (x.Constructors, y.Constructors))
 			return false;
-		
+
 		// compare events
 		var eventComparer = new EventEqualityComparer ();
 		return eventComparer.Equals (x.Events, y.Events);

@@ -35,7 +35,7 @@ readonly struct Event : IEquatable<Event> {
 	/// Get the list of accessor changes of the event.
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
-	
+
 	internal Event (string name, string type, ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
@@ -45,17 +45,17 @@ readonly struct Event : IEquatable<Event> {
 		Modifiers = modifiers;
 		Accessors = accessors;
 	}
-	
+
 	/// <inheritdoc />
-	public bool Equals(Event other)
+	public bool Equals (Event other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
 			return false;
-		var attrsComparer = new AttributesEqualityComparer();
-		if (!attrsComparer.Equals(Attributes, other.Attributes))
+		var attrsComparer = new AttributesEqualityComparer ();
+		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
 
 		var modifiersComparer = new ModifiersComparer ();
@@ -63,13 +63,13 @@ readonly struct Event : IEquatable<Event> {
 			return false;
 
 		var accessorComparer = new AccessorsEqualityComparer ();
-		return accessorComparer.Equals(Accessors, other.Accessors);
+		return accessorComparer.Equals (Accessors, other.Accessors);
 	}
 
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is Event other && Equals(other);
+		return obj is Event other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -78,12 +78,12 @@ readonly struct Event : IEquatable<Event> {
 		return HashCode.Combine (Name, Type, Attributes, Modifiers, Accessors);
 	}
 
-	public static bool operator ==(Event left, Event right)
+	public static bool operator == (Event left, Event right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator !=(Event left, Event right)
+	public static bool operator != (Event left, Event right)
 	{
 		return !left.Equals (right);
 	}
@@ -97,7 +97,7 @@ readonly struct Event : IEquatable<Event> {
 			change = null;
 			return false;
 		}
-		
+
 		var type = eventSymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 		ImmutableArray<Accessor> accessorCodeChanges = [];
@@ -112,11 +112,11 @@ readonly struct Event : IEquatable<Event> {
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
 		}
-		
+
 		change = new (memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
 		return true;
 	}
-	
+
 	/// <inheritdoc />
 	public override string ToString ()
 	{

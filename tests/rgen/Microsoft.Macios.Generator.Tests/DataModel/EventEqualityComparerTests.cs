@@ -6,7 +6,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class EventEqualityComparerTests {
-	readonly EventEqualityComparer equalityComparer = new();
+	readonly EventEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareEmptyArrays ()
@@ -21,7 +21,7 @@ public class EventEqualityComparerTests {
 	public void CompareDifferentSize ()
 	{
 		ImmutableArray<Event> x = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
 				attributes: [],
@@ -43,7 +43,7 @@ public class EventEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Event> y = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
 				attributes: [],
@@ -62,7 +62,7 @@ public class EventEqualityComparerTests {
 	public void CompareSameSizeDiffProperties ()
 	{
 		ImmutableArray<Event> x = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
 				attributes: [],
@@ -74,7 +74,7 @@ public class EventEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Event> y = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "AVFoundation.AVVideo",
 				attributes: [],
@@ -93,7 +93,7 @@ public class EventEqualityComparerTests {
 	public void CompareSameSizeSameProperties ()
 	{
 		ImmutableArray<Event> x = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
 				attributes: [],
@@ -105,7 +105,7 @@ public class EventEqualityComparerTests {
 				]),
 		];
 		ImmutableArray<Event> y = [
-			new(
+			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
 				attributes: [],
@@ -116,7 +116,7 @@ public class EventEqualityComparerTests {
 					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		
+
 		Assert.True (equalityComparer.Equals (x, y));
 	}
 }

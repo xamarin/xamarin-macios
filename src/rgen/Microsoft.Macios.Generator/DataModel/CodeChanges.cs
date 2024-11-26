@@ -46,7 +46,7 @@ readonly struct CodeChanges {
 	/// Changes to the constructors of the symbol.
 	/// </summary>
 	public ImmutableArray<Constructor> Constructors { get; init; } = [];
-	
+
 	/// <summary>
 	/// Changes to the events of the symbol.
 	/// </summary>
@@ -166,7 +166,7 @@ readonly struct CodeChanges {
 				constructors.Add (change.Value);
 		}
 		Constructors = constructors.ToImmutable ();
-		
+
 		var events = ImmutableArray.CreateBuilder<Event> ();
 		var eventDeclarations = classDeclaration.Members.OfType<EventDeclarationSyntax> ();
 		foreach (var declaration in eventDeclarations) {

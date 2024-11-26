@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct Accessor :  IEquatable<Accessor> {
+readonly struct Accessor : IEquatable<Accessor> {
 	/// <summary>
 	/// The kind of accessor.
 	/// </summary>
@@ -37,7 +37,7 @@ readonly struct Accessor :  IEquatable<Accessor> {
 	}
 
 	/// <inheritdoc />
-	public bool Equals(Accessor other)
+	public bool Equals (Accessor other)
 	{
 		if (Kind != other.Kind)
 			return false;
@@ -51,7 +51,7 @@ readonly struct Accessor :  IEquatable<Accessor> {
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is Accessor other && Equals(other);
+		return obj is Accessor other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -60,12 +60,12 @@ readonly struct Accessor :  IEquatable<Accessor> {
 		return HashCode.Combine ((int) Kind, Attributes, Modifiers);
 	}
 
-	public static bool operator ==(Accessor left, Accessor right)
+	public static bool operator == (Accessor left, Accessor right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator !=(Accessor left, Accessor right)
+	public static bool operator != (Accessor left, Accessor right)
 	{
 		return !left.Equals (right);
 	}
