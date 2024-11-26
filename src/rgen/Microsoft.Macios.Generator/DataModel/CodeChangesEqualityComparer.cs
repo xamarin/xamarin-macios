@@ -49,7 +49,12 @@ class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 
 		// compare constructors
 		var constructorComparer = new ConstructorsEqualityComparer ();
-		return constructorComparer.Equals (x.Constructors, y.Constructors);
+		if (!constructorComparer.Equals (x.Constructors, y.Constructors))
+			return false;
+
+		// compare events
+		var eventComparer = new EventEqualityComparer ();
+		return eventComparer.Equals (x.Events, y.Events);
 	}
 
 	/// <inheritdoc />

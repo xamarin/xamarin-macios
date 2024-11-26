@@ -4,25 +4,25 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class PropertyAccessorsEqualityComparerTests {
-	readonly PropertyAccessorsEqualityComparer equalityComparer = new ();
+public class AccessorsEqualityComparerTests {
+	readonly AccessorsEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareTwoEmptyAccessorsArray ()
 	{
-		var x = ImmutableArray<PropertyAccessor>.Empty;
-		var y = ImmutableArray<PropertyAccessor>.Empty;
+		var x = ImmutableArray<Accessor>.Empty;
+		var y = ImmutableArray<Accessor>.Empty;
 		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
 	public void CompareSameSizeDiffSizes ()
 	{
-		ImmutableArray<PropertyAccessor> x = [
+		ImmutableArray<Accessor> x = [
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		];
-		ImmutableArray<PropertyAccessor> y = [
+		ImmutableArray<Accessor> y = [
 			new (AccessorKind.Getter, [], []),
 		];
 
@@ -32,11 +32,11 @@ public class PropertyAccessorsEqualityComparerTests {
 	[Fact]
 	public void CompareSameSizeDiffAccessors ()
 	{
-		ImmutableArray<PropertyAccessor> x = [
+		ImmutableArray<Accessor> x = [
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		];
-		ImmutableArray<PropertyAccessor> y = [
+		ImmutableArray<Accessor> y = [
 			new (AccessorKind.Add, [], []),
 			new (AccessorKind.Remove, [], []),
 		];
@@ -47,11 +47,11 @@ public class PropertyAccessorsEqualityComparerTests {
 	[Fact]
 	public void CompareTwoAccessorsDiffOrder ()
 	{
-		ImmutableArray<PropertyAccessor> x = [
+		ImmutableArray<Accessor> x = [
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		];
-		ImmutableArray<PropertyAccessor> y = [
+		ImmutableArray<Accessor> y = [
 			new (AccessorKind.Setter, [], []),
 			new (AccessorKind.Getter, [], []),
 		];
@@ -62,12 +62,12 @@ public class PropertyAccessorsEqualityComparerTests {
 	[Fact]
 	public void CompareTwoAccessorsEqual ()
 	{
-		ImmutableArray<PropertyAccessor> x = [
+		ImmutableArray<Accessor> x = [
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		];
 
-		ImmutableArray<PropertyAccessor> y = [
+		ImmutableArray<Accessor> y = [
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		];

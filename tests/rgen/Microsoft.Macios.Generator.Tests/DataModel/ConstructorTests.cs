@@ -228,7 +228,6 @@ namespace NS {
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
-		var childs = syntaxTrees [0].GetRoot ().DescendantNodes ();
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ().OfType<ConstructorDeclarationSyntax> ()
 			.FirstOrDefault ();
