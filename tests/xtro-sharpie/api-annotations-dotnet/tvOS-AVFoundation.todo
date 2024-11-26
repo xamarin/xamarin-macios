@@ -282,7 +282,6 @@
 !extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1970168948 for AVAudioSessionRecordPermission.Undetermined is available for the current platform while the value in the native header is not
-!missing-enum! AVAudioApplicationRecordPermission not bound
 !missing-enum! AVAudioVoiceProcessingSpeechActivityEvent not bound
 !missing-enum! AVAuthorizationStatus not bound
 !missing-enum! AVCaptureAutoFocusRangeRestriction not bound
@@ -386,8 +385,6 @@
 !missing-selector! +AVAssetVariantQualifier::predicateForBinauralAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
-!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
-!missing-selector! +AVAudioApplication::sharedInstance not bound
 !missing-selector! +AVCaptureAutoExposureBracketedStillImageSettings::autoExposureSettingsWithExposureTargetBias: not bound
 !missing-selector! +AVCaptureConnection::connectionWithInputPort:videoPreviewLayer: not bound
 !missing-selector! +AVCaptureConnection::connectionWithInputPorts:output: not bound
@@ -437,9 +434,6 @@
 !missing-selector! AVAssetVariantVideoLayoutAttributes::stereoViewComponents not bound
 !missing-selector! AVAssetWriter::initialMovieFragmentInterval not bound
 !missing-selector! AVAssetWriter::setInitialMovieFragmentInterval: not bound
-!missing-selector! AVAudioApplication::isInputMuted not bound
-!missing-selector! AVAudioApplication::recordPermission not bound
-!missing-selector! AVAudioApplication::setInputMuted:error: not bound
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioRecorder::averagePowerForChannel: not bound
 !missing-selector! AVAudioRecorder::channelAssignments not bound
@@ -1031,7 +1025,6 @@
 !missing-selector! AVSpeechSynthesisMarker::setPhoneme: not bound
 !missing-selector! AVSpeechSynthesisVoice::voiceTraits not bound
 !missing-type! AVAssetVariantVideoLayoutAttributes not bound
-!missing-type! AVAudioApplication not bound
 !missing-type! AVAudioRecorder not bound
 !missing-type! AVCaptureAudioChannel not bound
 !missing-type! AVCaptureAudioDataOutput not bound
