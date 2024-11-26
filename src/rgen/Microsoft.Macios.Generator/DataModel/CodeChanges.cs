@@ -51,6 +51,11 @@ readonly struct CodeChanges {
 	/// Changes to the events of the symbol.
 	/// </summary>
 	public ImmutableArray<Event> Events { get; init; } = [];
+	
+	/// <summary>
+	/// Changes to the methods of a symbol.
+	/// </summary>
+	public ImmutableArray<Method> Methods { get; init; } = [];
 
 	/// <summary>
 	/// Decide if an enum value should be ignored as a change.
@@ -97,6 +102,17 @@ readonly struct CodeChanges {
 		return false;
 	}
 
+	internal static bool Skip (MethodDeclarationSyntax methodDeclarationSyntax, SemanticModel semanticModel)
+	{
+		// Valid methods are:
+		// 1. Partial
+		// 2. Contain the export attribute
+		if (methodDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) { 
+			return !methodDeclarationSyntax.HasAttribute (semanticModel, AttributesNames.ExportMethodAttribute);
+		}
+		return true;
+	}
+
 	/// <summary>
 	/// Internal constructor added for testing purposes.
 	/// </summary>
@@ -129,7 +145,7 @@ readonly struct CodeChanges {
 				continue;
 			var memberName = val.Identifier.ToFullString ().Trim ();
 			var attributes = val.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new (memberName, attributes));
+			bucket.Add (new(memberName, attributes));
 		}
 
 		EnumMembers = bucket.ToImmutable ();
@@ -155,6 +171,7 @@ readonly struct CodeChanges {
 			if (Property.TryCreate (declaration, semanticModel, out var change))
 				properties.Add (change.Value);
 		}
+
 		Properties = properties.ToImmutable ();
 
 		var constructors = ImmutableArray.CreateBuilder<Constructor> ();
@@ -165,6 +182,7 @@ readonly struct CodeChanges {
 			if (Constructor.TryCreate (declaration, semanticModel, out var change))
 				constructors.Add (change.Value);
 		}
+
 		Constructors = constructors.ToImmutable ();
 
 		var events = ImmutableArray.CreateBuilder<Event> ();
@@ -175,7 +193,18 @@ readonly struct CodeChanges {
 			if (Event.TryCreate (declaration, semanticModel, out var change))
 				events.Add (change.Value);
 		}
+
 		Events = events.ToImmutable ();
+
+		var methods = ImmutableArray.CreateBuilder<Method> ();
+		var methodDeclarations = classDeclaration.Members.OfType<MethodDeclarationSyntax> ();
+		foreach (MethodDeclarationSyntax declaration in methodDeclarations) {
+			if (Skip (declaration, semanticModel))
+				continue;
+			if (Method.TryCreate (declaration, semanticModel, out var change))
+				methods.Add (change.Value);
+		}
+		Methods = methods.ToImmutable ();
 	}
 
 	/// <summary>
