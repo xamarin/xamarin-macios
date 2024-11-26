@@ -104,7 +104,7 @@ namespace Test;
 public class MyEventArgs : EventArgs
 {
 	public string Name { get; set; }
-    public string Surname { get; set; }
+	public string Surname { get; set; }
 }
 
 public delegate void MyEventHandler(Object sender, MyEventArgs e);
