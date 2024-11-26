@@ -5,7 +5,7 @@ using System.Linq;
 namespace Microsoft.Macios.Generator.DataModel;
 
 class MethodComparer : IComparer<Method> {
-	
+
 	public int Compare (Method x, Method y)
 	{
 		var typeComparison = String.Compare (x.Type, y.Type, StringComparison.Ordinal);

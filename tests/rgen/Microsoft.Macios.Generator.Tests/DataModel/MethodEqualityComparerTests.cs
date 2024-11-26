@@ -5,7 +5,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class MethodEqualityComparerTests {
-	readonly MethodsEqualityComparer equalityComparer = new();
+	readonly MethodsEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareEmpty ()
@@ -15,7 +15,7 @@ public class MethodEqualityComparerTests {
 	public void CompareSingleElementDifferentMethodName ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
@@ -25,7 +25,7 @@ public class MethodEqualityComparerTests {
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "Test",
 				returnType: "void",
@@ -41,7 +41,7 @@ public class MethodEqualityComparerTests {
 	public void CompareSingleElementDifferentReturnType ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
@@ -51,7 +51,7 @@ public class MethodEqualityComparerTests {
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "int",
@@ -67,27 +67,27 @@ public class MethodEqualityComparerTests {
 	public void CompareSingleElementDifferentParameterCount ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
+					new (0, "string", "name"),
 				]
 			)
 		];
@@ -98,28 +98,28 @@ public class MethodEqualityComparerTests {
 	public void CompareSingleElementDifferentParameterType ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
@@ -130,39 +130,39 @@ public class MethodEqualityComparerTests {
 	public void CompareDifferentMethodCount ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			),
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
@@ -173,28 +173,28 @@ public class MethodEqualityComparerTests {
 	public void CompareSameMethodNamesDiffReturnTypes ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "string",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
@@ -205,50 +205,50 @@ public class MethodEqualityComparerTests {
 	public void CompareSameMethods ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			),
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			),
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
@@ -260,50 +260,50 @@ public class MethodEqualityComparerTests {
 	public void CompareSameMethodsDifferentOrder ()
 	{
 		ImmutableArray<Method> x = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			),
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			)
 		];
 		ImmutableArray<Method> y = [
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "int", "name"),
-					new(1, "int", "surname")
+					new (0, "int", "name"),
+					new (1, "int", "surname")
 				]
 			),
-			new(
+			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new(0, "string", "name"),
-					new(1, "string", "surname")
+					new (0, "string", "name"),
+					new (1, "string", "surname")
 				]
 			),
 		];

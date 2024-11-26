@@ -672,7 +672,7 @@ public interface IInterface {
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatforms]
 	public void CompareDifferentMethodsLength (ApplePlatform platform)
@@ -836,7 +836,7 @@ public interface IInterface {
 				),
 			]
 		};
-		
+
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
@@ -1015,7 +1015,7 @@ public interface IInterface {
 				),
 			]
 		};
-		
+
 		Assert.True (comparer.Equals (changes1, changes2));
 	}
 
@@ -1167,7 +1167,7 @@ public interface IInterface {
 				),
 			]
 		};
-		
+
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 }

@@ -10,11 +10,11 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly struct Method : IEquatable<Method> {
-	
+
 	public string Type { get; }
 	public string Name { get; }
 	public string ReturnType { get; }
-	
+
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
 	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
@@ -40,7 +40,7 @@ readonly struct Method : IEquatable<Method> {
 			change = null;
 			return false;
 		}
-		
+
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 		var parametersBucket = ImmutableArray.CreateBuilder<Parameter> ();
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
@@ -58,16 +58,16 @@ readonly struct Method : IEquatable<Method> {
 			});
 		}
 
-		change = new(
+		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: method.ReturnType.ToDisplayString ().Trim(),
+			returnType: method.ReturnType.ToDisplayString ().Trim (),
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			parameters: parametersBucket.ToImmutableArray ());
 		return true;
 	}
-	
+
 	/// <inheritdoc/>
 	public bool Equals (Method other)
 	{

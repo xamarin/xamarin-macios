@@ -173,7 +173,7 @@ public class TestClass {
 	}
 
 	class TestDataSkipMethodDeclaration : IEnumerable<object []> {
-		public IEnumerator<object[]> GetEnumerator ()
+		public IEnumerator<object []> GetEnumerator ()
 		{
 			const string notPartialMethod = @"
 using System;

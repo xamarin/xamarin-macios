@@ -335,11 +335,11 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new(0, "string?", "example") {
+						new (0, "string?", "example") {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 							Attributes = [
-								new("System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", ["true"])
+								new ("System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", ["true"])
 							],
 						},
 					]
@@ -355,7 +355,7 @@ namespace NS {
 	[AllSupportedPlatformsClassData<TestDataFromMethodDeclaration>]
 	void FromMethodDeclaration (ApplePlatform platform, string inputText, Method expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromMethodDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromMethodDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);

@@ -51,7 +51,7 @@ readonly struct CodeChanges {
 	/// Changes to the events of the symbol.
 	/// </summary>
 	public ImmutableArray<Event> Events { get; init; } = [];
-	
+
 	/// <summary>
 	/// Changes to the methods of a symbol.
 	/// </summary>
@@ -107,7 +107,7 @@ readonly struct CodeChanges {
 		// Valid methods are:
 		// 1. Partial
 		// 2. Contain the export attribute
-		if (methodDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) { 
+		if (methodDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) {
 			return !methodDeclarationSyntax.HasAttribute (semanticModel, AttributesNames.ExportMethodAttribute);
 		}
 		return true;
@@ -145,7 +145,7 @@ readonly struct CodeChanges {
 				continue;
 			var memberName = val.Identifier.ToFullString ().Trim ();
 			var attributes = val.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new(memberName, attributes));
+			bucket.Add (new (memberName, attributes));
 		}
 
 		EnumMembers = bucket.ToImmutable ();

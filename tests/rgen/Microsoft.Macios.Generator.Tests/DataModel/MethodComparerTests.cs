@@ -6,7 +6,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class MethodComparerTests {
-	readonly MethodComparer comparer = new();
+	readonly MethodComparer comparer = new ();
 
 	[Fact]
 	public void CompareDiffType ()
