@@ -7,8 +7,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
 /// </summary>
-class CodeChangesComparer : IEqualityComparer<CodeChanges> {
-
+class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 	/// <inheritdoc />
 	public bool Equals (CodeChanges x, CodeChanges y)
 	{
@@ -34,18 +33,23 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 			return false;
 
 		// compare the attrs, we need to sort them since attribute order does not matter
-		var attrComparer = new AttributesComparer ();
+		var attrComparer = new AttributesEqualityComparer ();
 		if (!attrComparer.Equals (x.Attributes, y.Attributes))
 			return false;
 
 		// compare the members
-		var memberComparer = new EnumMemberComparer ();
+		var memberComparer = new EnumMembersEqualityComparer ();
 		if (!memberComparer.Equals (x.EnumMembers, y.EnumMembers))
 			return false;
 
 		// compare properties
-		var propertyComparer = new PropertyComparer ();
-		return propertyComparer.Equals (x.Properties, y.Properties);
+		var propertyComparer = new PropertiesEqualityComparer ();
+		if (!propertyComparer.Equals (x.Properties, y.Properties))
+			return false;
+
+		// compare constructors
+		var constructorComparer = new ConstructorsEqualityComparer ();
+		return constructorComparer.Equals (x.Constructors, y.Constructors);
 	}
 
 	/// <inheritdoc />

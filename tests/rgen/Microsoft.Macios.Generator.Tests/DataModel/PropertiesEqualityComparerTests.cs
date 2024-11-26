@@ -5,22 +5,22 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class PropertyComparerTests {
-	readonly PropertyComparer comparer = new ();
+public class PropertiesEqualityComparerTests {
+	readonly PropertiesEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareEmptyArrays ()
 	{
-		ImmutableArray<PropertyCodeChange> x = [];
-		ImmutableArray<PropertyCodeChange> y = [];
+		ImmutableArray<Property> x = [];
+		ImmutableArray<Property> y = [];
 
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
 	public void CompareDifferentSize ()
 	{
-		ImmutableArray<PropertyCodeChange> x = [
+		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
 				type: "string",
@@ -42,7 +42,7 @@ public class PropertyComparerTests {
 					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		ImmutableArray<PropertyCodeChange> y = [
+		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "string",
@@ -55,13 +55,13 @@ public class PropertyComparerTests {
 				]),
 		];
 
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
 	public void CompareSameSizeDiffProperties ()
 	{
-		ImmutableArray<PropertyCodeChange> x = [
+		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
 				type: "string",
@@ -73,7 +73,7 @@ public class PropertyComparerTests {
 					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		ImmutableArray<PropertyCodeChange> y = [
+		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
@@ -86,13 +86,13 @@ public class PropertyComparerTests {
 				]),
 		];
 
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
 	public void CompareSameSizeSameProperties ()
 	{
-		ImmutableArray<PropertyCodeChange> x = [
+		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
 				type: "string",
@@ -104,7 +104,7 @@ public class PropertyComparerTests {
 					new (AccessorKind.Getter, [], [])
 				]),
 		];
-		ImmutableArray<PropertyCodeChange> y = [
+		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "string",
@@ -117,6 +117,6 @@ public class PropertyComparerTests {
 				]),
 		];
 
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 }

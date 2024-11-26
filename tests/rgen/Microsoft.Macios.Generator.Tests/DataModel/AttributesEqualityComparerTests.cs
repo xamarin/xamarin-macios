@@ -4,12 +4,12 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class AttributesComparerTests {
+public class AttributesEqualityComparerTests {
 
-	readonly AttributesComparer comparer;
-	public AttributesComparerTests ()
+	readonly AttributesEqualityComparer equalityComparer;
+	public AttributesEqualityComparerTests ()
 	{
-		comparer = new AttributesComparer ();
+		equalityComparer = new AttributesEqualityComparer ();
 	}
 
 	[Fact]
@@ -17,7 +17,7 @@ public class AttributesComparerTests {
 	{
 		ImmutableArray<AttributeCodeChange> x = [new ("name", []), new ("name1")];
 		ImmutableArray<AttributeCodeChange> y = [new ("name", [])];
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -25,7 +25,7 @@ public class AttributesComparerTests {
 	{
 		ImmutableArray<AttributeCodeChange> x = [new ("name", []), new ("name1")];
 		ImmutableArray<AttributeCodeChange> y = [new ("name1", []), new ("name1")];
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -33,7 +33,7 @@ public class AttributesComparerTests {
 	{
 		ImmutableArray<AttributeCodeChange> x = [new ("name", []), new ("name1")];
 		ImmutableArray<AttributeCodeChange> y = [new ("name", []), new ("name1")];
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -41,7 +41,7 @@ public class AttributesComparerTests {
 	{
 		ImmutableArray<AttributeCodeChange> x = [new ("name1", []), new ("name")];
 		ImmutableArray<AttributeCodeChange> y = [new ("name", []), new ("name1")];
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -49,6 +49,6 @@ public class AttributesComparerTests {
 	{
 		ImmutableArray<AttributeCodeChange> x = [new ("SupportedOSPlatform", ["ios15.0"]), new ("SupportedOSPlatform", ["maccatalyst15.0"])];
 		ImmutableArray<AttributeCodeChange> y = [new ("SupportedOSPlatform", ["maccatalyst15.0"]), new ("SupportedOSPlatform", ["ios15.0"])];
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 }

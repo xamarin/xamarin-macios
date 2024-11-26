@@ -4,12 +4,12 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class PropertyAccessorCodeChangeTests {
+public class PropertyAccessorTests {
 	[Fact]
 	public void CompareDiffKind ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [], []);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Setter, [], []);
+		var x = new PropertyAccessor (AccessorKind.Getter, [], []);
+		var y = new PropertyAccessor (AccessorKind.Setter, [], []);
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
 		Assert.False (x == y);
@@ -19,11 +19,11 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindDiffAttrCount ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], []);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 		], []);
 		Assert.False (x.Equals (y));
@@ -35,11 +35,11 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindDiffAttr ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], []);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("Third"),
 			new ("Fourth"),
 		], []);
@@ -52,11 +52,11 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindDiffAttrOrder ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], []);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("Second"),
 			new ("First"),
 		], []);
@@ -69,14 +69,14 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindSameAttrDiffModifiersCount ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("Second"),
 			new ("First"),
 		], [
@@ -92,14 +92,14 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindSameAttrDiffModifiers ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("Second"),
 			new ("First"),
 		], [
@@ -116,14 +116,14 @@ public class PropertyAccessorCodeChangeTests {
 	[Fact]
 	public void CompareSameKindSameAttrDiffModifiersOrder ()
 	{
-		var x = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var x = new PropertyAccessor (AccessorKind.Getter, [
 			new ("First"),
 			new ("Second"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 		]);
-		var y = new PropertyAccessorCodeChange (AccessorKind.Getter, [
+		var y = new PropertyAccessor (AccessorKind.Getter, [
 			new ("Second"),
 			new ("First"),
 		], [

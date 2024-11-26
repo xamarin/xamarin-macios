@@ -9,7 +9,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class CodeChangesComparerTests : BaseGeneratorTestClass {
-	readonly CodeChangesComparer comparer = new ();
+	readonly CodeChangesEqualityComparer comparer = new ();
 
 	// returns a node that matches the given node type from an example syntax tree
 	T GetSyntaxNode<T> (ApplePlatform platform) where T : BaseTypeDeclarationSyntax
@@ -136,7 +136,7 @@ public interface IInterface {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [
-				new EnumMemberCodeChange ("name", [])
+				new EnumMember ("name", [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -149,12 +149,12 @@ public interface IInterface {
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [
-				new EnumMemberCodeChange ("name", [])
+				new EnumMember ("name", [])
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [
-				new EnumMemberCodeChange ("name2", [])
+				new EnumMember ("name2", [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -165,10 +165,7 @@ public interface IInterface {
 	public void CompareDifferentPropertyLength (ApplePlatform platform)
 	{
 		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
-			EnumMembers = [],
-			Properties = []
-		};
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) { EnumMembers = [], Properties = [] };
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
 			EnumMembers = [],
 			Properties = [

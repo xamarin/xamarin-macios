@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChange> {
+readonly struct PropertyAccessor : IEquatable<PropertyAccessor> {
 	/// <summary>
 	/// The kind of accessor.
 	/// </summary>
@@ -28,7 +28,7 @@ readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChan
 	/// <param name="accessorKind">The kind of accessor.</param>
 	/// <param name="attributes">The list of attributes attached to the accessor.</param>
 	/// <param name="modifiers">The list of visibility modifiers of the accesor.</param>
-	public PropertyAccessorCodeChange (AccessorKind accessorKind, ImmutableArray<AttributeCodeChange> attributes,
+	public PropertyAccessor (AccessorKind accessorKind, ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers)
 	{
 		Kind = accessorKind;
@@ -37,11 +37,11 @@ readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChan
 	}
 
 	/// <inheritdoc />
-	public bool Equals (PropertyAccessorCodeChange other)
+	public bool Equals (PropertyAccessor other)
 	{
 		if (Kind != other.Kind)
 			return false;
-		var attrsComparer = new AttributesComparer ();
+		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
 		var modifiersComparer = new ModifiersComparer ();
@@ -51,7 +51,7 @@ readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChan
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is PropertyAccessorCodeChange other && Equals (other);
+		return obj is PropertyAccessor other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -60,12 +60,12 @@ readonly struct PropertyAccessorCodeChange : IEquatable<PropertyAccessorCodeChan
 		return HashCode.Combine ((int) Kind, Attributes, Modifiers);
 	}
 
-	public static bool operator == (PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
+	public static bool operator == (PropertyAccessor left, PropertyAccessor right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (PropertyAccessorCodeChange left, PropertyAccessorCodeChange right)
+	public static bool operator != (PropertyAccessor left, PropertyAccessor right)
 	{
 		return !left.Equals (right);
 	}

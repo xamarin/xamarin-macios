@@ -10,12 +10,12 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class PropertyCodeChangeTests : BaseGeneratorTestClass {
+public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffName ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [], [], []);
-		var y = new PropertyCodeChange ("Second", "string", [], [], []);
+		var x = new Property ("First", "string", [], [], []);
+		var y = new Property ("Second", "string", [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -26,8 +26,8 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [], [], []);
-		var y = new PropertyCodeChange ("First", "int", [], [], []);
+		var x = new Property ("First", "string", [], [], []);
+		var y = new Property ("First", "int", [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -38,11 +38,11 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [
+		var x = new Property ("First", "string", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new PropertyCodeChange ("First", "int", [
+		var y = new Property ("First", "int", [
 			new ("Attr2"),
 		], [], []);
 
@@ -55,13 +55,13 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [
+		var x = new Property ("First", "string", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new PropertyCodeChange ("First", "int", [
+		var y = new Property ("First", "int", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -77,7 +77,7 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [
+		var x = new Property ("First", "string", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -86,7 +86,7 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		]);
-		var y = new PropertyCodeChange ("First", "int", [
+		var y = new Property ("First", "int", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -104,7 +104,7 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new PropertyCodeChange ("First", "string", [
+		var x = new Property ("First", "string", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -113,7 +113,7 @@ public class PropertyCodeChangeTests : BaseGeneratorTestClass {
 			new (AccessorKind.Getter, [], []),
 			new (AccessorKind.Setter, [], []),
 		]);
-		var y = new PropertyCodeChange ("First", "string", [
+		var y = new Property ("First", "string", [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -144,7 +144,7 @@ public class TestClass {
 ";
 			yield return [
 				automaticGetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -169,7 +169,7 @@ public class TestClass {
 
 			yield return [
 				automaticGetterSetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -193,7 +193,7 @@ public class TestClass {
 
 			yield return [
 				manualGetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -216,7 +216,7 @@ public class TestClass {
 
 			yield return [
 				expressionGetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -241,7 +241,7 @@ public class TestClass {
 ";
 			yield return [
 				expressionGetterSetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -268,7 +268,7 @@ public class TestClass {
 
 			yield return [
 				manualGetterSetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -295,7 +295,7 @@ public class TestClass {
 
 			yield return [
 				internalSetter,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [],
@@ -327,7 +327,7 @@ public class TestClass {
 
 			yield return [
 				propertyWithAttribute,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [
@@ -360,7 +360,7 @@ public class TestClass {
 
 			yield return [
 				propertyGetterWithAttribute,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [
@@ -396,7 +396,7 @@ public class TestClass {
 
 			yield return [
 				propertyWithGetterAndSetterWithAttribute,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "string",
 					attributes: [
@@ -439,7 +439,7 @@ namespace Test {
 
 			yield return [
 				propertyWithCustomType,
-				new PropertyCodeChange (
+				new Property (
 					name: "Name",
 					type: "Utils.MyClass",
 					attributes: [
@@ -465,7 +465,7 @@ namespace Test {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
-	void FromPropertyDeclaration (ApplePlatform platform, string inputText, PropertyCodeChange expected)
+	void FromPropertyDeclaration (ApplePlatform platform, string inputText, Property expected)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromPropertyDeclaration),
 			platform, inputText);
@@ -475,7 +475,7 @@ namespace Test {
 			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
 			.FirstOrDefault ();
 		Assert.NotNull (declaration);
-		Assert.True (PropertyCodeChange.TryCreate (declaration, semanticModel, out var changes));
+		Assert.True (Property.TryCreate (declaration, semanticModel, out var changes));
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes);
 	}

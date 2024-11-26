@@ -30,7 +30,7 @@ class AttributeComparer : IComparer<AttributeCodeChange> {
 		return 0;
 	}
 }
-class AttributesComparer : IEqualityComparer<ImmutableArray<AttributeCodeChange>> {
+class AttributesEqualityComparer : IEqualityComparer<ImmutableArray<AttributeCodeChange>> {
 
 	public bool Equals (ImmutableArray<AttributeCodeChange> x, ImmutableArray<AttributeCodeChange> y)
 	{
