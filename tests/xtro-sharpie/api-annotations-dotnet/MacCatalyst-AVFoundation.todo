@@ -288,7 +288,6 @@
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::stopRequestingMediaData missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::timebase missing a [Deprecated] attribute
 !extra-designated-initializer! AVPlayerLooper::initWithPlayer:templateItem:timeRange: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-enum! AVAudioApplicationRecordPermission not bound
 !missing-enum! AVAudioSessionRenderingMode not bound
 !missing-enum! AVAudioVoiceProcessingOtherAudioDuckingLevel not bound
 !missing-enum! AVAudioVoiceProcessingSpeechActivityEvent not bound
@@ -348,8 +347,6 @@
 !missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetWriterInputTaggedPixelBufferGroupAdaptor::assetWriterInputTaggedPixelBufferGroupAdaptorWithAssetWriterInput:sourcePixelBufferAttributes: not bound
-!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
-!missing-selector! +AVAudioApplication::sharedInstance not bound
 !missing-selector! +AVCaptureDevice::reactionEffectGesturesEnabled not bound
 !missing-selector! +AVCaptureDevice::reactionEffectsEnabled not bound
 !missing-selector! +AVCaptureDevice::setUserPreferredCamera: not bound
@@ -373,9 +370,6 @@
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::initWithAssetWriterInput:sourcePixelBufferAttributes: not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::pixelBufferPool not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::sourcePixelBufferAttributes not bound
-!missing-selector! AVAudioApplication::isInputMuted not bound
-!missing-selector! AVAudioApplication::recordPermission not bound
-!missing-selector! AVAudioApplication::setInputMuted:error: not bound
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioInputNode::setVoiceProcessingOtherAudioDuckingConfiguration: not bound
 !missing-selector! AVAudioInputNode::voiceProcessingOtherAudioDuckingConfiguration not bound
@@ -491,7 +485,6 @@
 !missing-selector! AVZoomRange::minZoomFactor not bound
 !missing-type! AVAssetVariantVideoLayoutAttributes not bound
 !missing-type! AVAssetWriterInputTaggedPixelBufferGroupAdaptor not bound
-!missing-type! AVAudioApplication not bound
 !missing-type! AVCaptureDeskViewApplication not bound
 !missing-type! AVCaptureDeskViewApplicationLaunchConfiguration not bound
 !missing-type! AVCaptureDeviceRotationCoordinator not bound

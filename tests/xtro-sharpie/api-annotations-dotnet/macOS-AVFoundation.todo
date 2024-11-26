@@ -303,7 +303,6 @@
 !extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1970168948 for AVAudioSessionRecordPermission.Undetermined is available for the current platform while the value in the native header is not
-!missing-enum! AVAudioApplicationRecordPermission not bound
 !missing-enum! AVAudioVoiceProcessingOtherAudioDuckingLevel not bound
 !missing-enum! AVAudioVoiceProcessingSpeechActivityEvent not bound
 !missing-enum! AVCapturePhotoOutputCaptureReadiness not bound
@@ -339,8 +338,6 @@
 !missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetWriterInputTaggedPixelBufferGroupAdaptor::assetWriterInputTaggedPixelBufferGroupAdaptorWithAssetWriterInput:sourcePixelBufferAttributes: not bound
-!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
-!missing-selector! +AVAudioApplication::sharedInstance not bound
 !missing-selector! +AVCaptureDevice::reactionEffectGesturesEnabled not bound
 !missing-selector! +AVCaptureDevice::reactionEffectsEnabled not bound
 !missing-selector! +AVCaptureDevice::setUserPreferredCamera: not bound
@@ -362,10 +359,6 @@
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::initWithAssetWriterInput:sourcePixelBufferAttributes: not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::pixelBufferPool not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::sourcePixelBufferAttributes not bound
-!missing-selector! AVAudioApplication::isInputMuted not bound
-!missing-selector! AVAudioApplication::recordPermission not bound
-!missing-selector! AVAudioApplication::setInputMuted:error: not bound
-!missing-selector! AVAudioApplication::setInputMuteStateChangeHandler:error: not bound
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioInputNode::setVoiceProcessingOtherAudioDuckingConfiguration: not bound
 !missing-selector! AVAudioInputNode::voiceProcessingOtherAudioDuckingConfiguration not bound
@@ -425,7 +418,6 @@
 !missing-selector! AVVideoComposition::perFrameHDRDisplayMetadataPolicy not bound
 !missing-type! AVAssetVariantVideoLayoutAttributes not bound
 !missing-type! AVAssetWriterInputTaggedPixelBufferGroupAdaptor not bound
-!missing-type! AVAudioApplication not bound
 !missing-type! AVCaptureDeviceRotationCoordinator not bound
 !missing-type! AVCapturePhotoOutputReadinessCoordinator not bound
 !missing-type! AVCaptureReactionEffectState not bound
