@@ -222,9 +222,9 @@ namespace Xharness.Jenkins {
 			};
 			var buildDotNetRoslynTransformer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynTransformerProject, processManager: processManager) {
 				TestProject = buildDotNetRoslynTransformerProject,
-			var buildDotNetRoslynCodefixersProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
-				IsDotNetProject = true,
-			};
+				var buildDotNetRoslynCodefixersProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
+					IsDotNetProject = true,
+				};
 			var buildDotNetRoslynCodefixers = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynCodefixersProject, processManager: processManager) {
 				TestProject = buildDotNetRoslynCodefixersProject,
 				SpecifyPlatform = false,
