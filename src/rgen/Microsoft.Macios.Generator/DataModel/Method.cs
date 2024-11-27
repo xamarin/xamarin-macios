@@ -9,28 +9,34 @@ using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct Constructor : IEquatable<Constructor> {
+readonly struct Method : IEquatable<Method> {
+
 	public string Type { get; }
+	public string Name { get; }
+	public string ReturnType { get; }
+
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
 	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
 
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Constructor (string type, ImmutableArray<AttributeCodeChange> attributes,
+	public Method (string type, string name, string returnType, ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers,
 		ImmutableArray<Parameter> parameters)
 	{
 		Type = type;
+		Name = name;
+		ReturnType = returnType;
 		Attributes = attributes;
 		Modifiers = modifiers;
 		Parameters = parameters;
 	}
 
-	public static bool TryCreate (ConstructorDeclarationSyntax declaration, SemanticModel semanticModel,
-		[NotNullWhen (true)] out Constructor? change)
+	public static bool TryCreate (MethodDeclarationSyntax declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out Method? change)
 	{
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol constructor) {
+		if (semanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
 			change = null;
 			return false;
 		}
@@ -38,7 +44,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 		var parametersBucket = ImmutableArray.CreateBuilder<Parameter> ();
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
-		foreach (var parameter in constructor.Parameters) {
+		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
 			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
 				parameter.Name) {
@@ -53,17 +59,23 @@ readonly struct Constructor : IEquatable<Constructor> {
 		}
 
 		change = new (
-			type: constructor.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
+			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
+			name: method.Name,
+			returnType: method.ReturnType.ToDisplayString ().Trim (),
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			parameters: parametersBucket.ToImmutable ());
+			parameters: parametersBucket.ToImmutableArray ());
 		return true;
 	}
 
 	/// <inheritdoc/>
-	public bool Equals (Constructor other)
+	public bool Equals (Method other)
 	{
 		if (Type != other.Type)
+			return false;
+		if (Name != other.Name)
+			return false;
+		if (ReturnType != other.ReturnType)
 			return false;
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
@@ -79,7 +91,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 	/// <inheritdoc/>
 	public override bool Equals (object? obj)
 	{
-		return obj is Constructor other && Equals (other);
+		return obj is Method other && Equals (other);
 	}
 
 	/// <inheritdoc/>
@@ -87,6 +99,8 @@ readonly struct Constructor : IEquatable<Constructor> {
 	{
 		var hashCode = new HashCode ();
 		hashCode.Add (Type);
+		hashCode.Add (Name);
+		hashCode.Add (ReturnType);
 		foreach (var modifier in Modifiers) {
 			hashCode.Add (modifier);
 		}
@@ -102,12 +116,12 @@ readonly struct Constructor : IEquatable<Constructor> {
 		return hashCode.ToHashCode ();
 	}
 
-	public static bool operator == (Constructor left, Constructor right)
+	public static bool operator == (Method left, Method right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (Constructor left, Constructor right)
+	public static bool operator != (Method left, Method right)
 	{
 		return !left.Equals (right);
 	}
@@ -115,7 +129,9 @@ readonly struct Constructor : IEquatable<Constructor> {
 	/// <inheritdoc/>
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"{{ Ctr: Type: {Type}, ");
+		var sb = new StringBuilder ($"{{ Method: Type: {Type}, ");
+		sb.Append ($"Name: {Name}, ");
+		sb.Append ($"ReturnType: {ReturnType}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], Modifiers: [");

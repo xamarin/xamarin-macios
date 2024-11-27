@@ -129,7 +129,9 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"Position: {Position}, ");
 		sb.Append ($"Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
-		sb.Append ($"IsOptional: {IsOptional}, ");
+		sb.Append ("Attributes: ");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ($" IsOptional: {IsOptional}, ");
 		sb.Append ($"IsParams {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");

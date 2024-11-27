@@ -672,4 +672,502 @@ public interface IInterface {
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareDifferentMethodsLength (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				)
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareSameMethodsDiffOrder (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				)
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				),
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
+		Assert.True (comparer.Equals (changes1, changes2));
+	}
+
+	[Theory]
+	[AllSupportedPlatforms]
+	public void CompareDifferentMethods (ApplePlatform platform)
+	{
+		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				),
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
 }

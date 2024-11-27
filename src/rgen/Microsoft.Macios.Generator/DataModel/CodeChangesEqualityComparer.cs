@@ -54,7 +54,11 @@ class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 
 		// compare events
 		var eventComparer = new EventEqualityComparer ();
-		return eventComparer.Equals (x.Events, y.Events);
+		if (!eventComparer.Equals (x.Events, y.Events))
+			return false;
+
+		var methodComparer = new MethodsEqualityComparer ();
+		return methodComparer.Equals (x.Methods, y.Methods);
 	}
 
 	/// <inheritdoc />
