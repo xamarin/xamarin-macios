@@ -226,16 +226,15 @@ namespace Xharness.Jenkins {
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
-			var runDotNetRoslynTransformer = new DotNetTestTask(this, buildDotNetRoslynTransformer, processManager)
-			{
+			var runDotNetRoslynTransformer = new DotNetTestTask (this, buildDotNetRoslynTransformer, processManager) {
 				TestProject = buildDotNetRoslynTransformerProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Roslyn Transformer tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled(TestLabel.Generator),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
 			};
-			Tasks.Add(runDotNetRoslynTransformer);
-			var buildDotNetRoslynCodefixersProject = new TestProject(TestLabel.Generator, Path.GetFullPath(Path.Combine(HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
+			Tasks.Add (runDotNetRoslynTransformer);
+			var buildDotNetRoslynCodefixersProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetRoslynCodefixers = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynCodefixersProject, processManager: processManager) {
