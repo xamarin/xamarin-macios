@@ -13,7 +13,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CompileAppManifest : XamarinTask, ITaskCallback, ICancelableTask {
+	public class CompileAppManifest : XamarinTask, IHasProjectDir, IHasResourcePrefix, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
@@ -212,10 +212,9 @@ namespace Xamarin.MacDev.Tasks {
 			// https://developer.apple.com/documentation/swiftui/applying-custom-fonts-to-text
 
 			// Compute the relative location in the app bundle for each font file
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			const string logicalNameKey = "_ComputedLogicalName_";
 			foreach (var item in FontFilesToRegister) {
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, item);
 				item.SetMetadata (logicalNameKey, logicalName);
 			}
 

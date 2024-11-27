@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,48 +14,7 @@ static class MemberDeclarationSyntaxExtensions {
 	/// <param name="semanticModel">The current semantic model.</param>
 	/// <returns>All attributes that got changed.</returns>
 	public static ImmutableArray<AttributeCodeChange> GetAttributeCodeChanges (this MemberDeclarationSyntax self,
-		SemanticModel semanticModel)
-	{
-		var bucket = ImmutableArray.CreateBuilder<AttributeCodeChange> ();
-		foreach (AttributeListSyntax attributeListSyntax in self.AttributeLists) {
-			foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes) {
-				if (semanticModel.GetSymbolInfo (attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
-					continue; // if we can't get the symbol, ignore it
-				var name = attributeSymbol.ContainingType.ToDisplayString ();
-				var arguments = ImmutableArray.CreateBuilder<string> ();
-				var argumentList = attributeSyntax.ArgumentList?.Arguments;
-				if (argumentList is not null) {
-					foreach (var argSyntax in argumentList) {
-						// there are two types of argument nodes, those that are literal and those that
-						// are a literal expression
-						if (argSyntax.Expression is LiteralExpressionSyntax literalExpressionSyntax) {
-							arguments.Add (literalExpressionSyntax.ToFullString ().Trim ()
-								.Replace ("\"", string.Empty));
-						}
-						if (argSyntax.Expression is MemberAccessExpressionSyntax memberAccessExpressionSyntax) {
-							var eumExpr = memberAccessExpressionSyntax.ToFullString ().Trim ();
-							if (semanticModel.GetSymbolInfo (memberAccessExpressionSyntax).Symbol is IFieldSymbol
-								enumSymbol) {
-								arguments.Add (enumSymbol.ToDisplayString ().Trim ());
-							} else {
-								// could not get the symbol, add the full expre
-								arguments.Add (eumExpr);
-							}
-						}
-						if (argSyntax.Expression is TypeOfExpressionSyntax typeOfExpressionSyntax) {
-							if (semanticModel.GetSymbolInfo (typeOfExpressionSyntax.Type).Symbol is INamedTypeSymbol typeSymbol) {
-								arguments.Add (typeSymbol.ToDisplayString ().Trim ());
-							}
-						}
-					}
-				}
-
-				bucket.Add (new (name, arguments.ToImmutable ()));
-			}
-		}
-
-		return bucket.ToImmutable ();
-	}
+		SemanticModel semanticModel) => AttributeCodeChange.From (self.AttributeLists, semanticModel);
 
 	/// <summary>
 	/// Return if the member has a specific attribute.
@@ -75,6 +35,32 @@ static class MemberDeclarationSyntaxExtensions {
 
 				// Check the full name of the [Binding] attribute.
 				if (currentName == attribute)
+					return true;
+			}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Return if the symgbol has at least one of the provided attributes.
+	/// </summary>
+	/// <param name="self">The member declaration whose attributes we want to check.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <param name="attributeNames">List with the attributes we are testing against.</param>
+	/// <returns>True if the member has been tagged with at least one of the given attributes. False otherwise.</returns>
+	public static bool HasAtLeastOneAttribute (this MemberDeclarationSyntax self, SemanticModel semanticModel,
+		params string [] attributeNames)
+	{
+		// create a hash set for faster look up
+		var attributeList = new HashSet<string> (attributeNames);
+		foreach (AttributeListSyntax attributeListSyntax in self.AttributeLists)
+			foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes) {
+				if (semanticModel.GetSymbolInfo (attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
+					continue; // if we can't get the symbol, ignore it
+
+				var currentName = attributeSymbol.ContainingType.ToDisplayString ();
+
+				if (attributeList.Contains (currentName))
 					return true;
 			}
 
