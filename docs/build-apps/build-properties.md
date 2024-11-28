@@ -135,6 +135,12 @@ The full path to the `pngcrush` command-line tool.
 
 The default behavior is to use `xcrun pngcrush`.
 
+## ProductBuildPath
+
+The full path to the `productbuild` tool.
+
+The default behavior is to use `xcrun productbuild`.
+
 ## StripPath
 
 The full path to the `strip` command-line tool.
