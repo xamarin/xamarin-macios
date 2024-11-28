@@ -19,7 +19,7 @@ public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 			.FirstOrDefault ();
 		Assert.NotNull (enumDeclaration);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var codeChange = CodeChanges.FromDeclaration (semanticModel, enumDeclaration);
+		var codeChange = CodeChanges.FromDeclaration (enumDeclaration, semanticModel);
 		Assert.NotNull (codeChange);
 		return codeChange.Value;
 	}
@@ -45,7 +45,7 @@ public enum AVCaptureDeviceType {
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
-		Assert.Empty (codeChanges.Members);
+		Assert.Empty (codeChanges.EnumMembers);
 		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
 	}
 
@@ -82,16 +82,16 @@ public enum AVCaptureDeviceType {
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
 		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
 		// validate that we have the 3 members and their attrs
-		Assert.Equal (3, codeChanges.Members.Length);
-		Assert.Equal ("BuiltInMicrophone", codeChanges.Members [0].Name);
+		Assert.Equal (3, codeChanges.EnumMembers.Length);
+		Assert.Equal ("BuiltInMicrophone", codeChanges.EnumMembers [0].Name);
 		var expectedFields = new [] {
 			"AVCaptureDeviceTypeBuiltInMicrophone",
 			"AVCaptureDeviceTypeBuiltInWideAngleCamera",
 			"AVCaptureDeviceTypeBuiltInTelephotoCamera"
 		};
 		for (var index = 0; index < expectedFields.Length; index++) {
-			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.Members [index].Attributes [0].Name);
-			Assert.Equal (expectedFields [index], codeChanges.Members [index].Attributes [0].Arguments [0]);
+			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.EnumMembers [index].Attributes [0].Name);
+			Assert.Equal (expectedFields [index], codeChanges.EnumMembers [index].Attributes [0].Arguments [0]);
 		}
 	}
 
@@ -123,7 +123,7 @@ public enum AVCaptureDeviceType {
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
-		Assert.Empty (codeChanges.Members);
+		Assert.Empty (codeChanges.EnumMembers);
 		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
 	}
 
@@ -161,15 +161,15 @@ public enum AVCaptureDeviceType {
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
 		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
 		// validate that we have the 3 members and their attrs
-		Assert.Equal (2, codeChanges.Members.Length);
-		Assert.Equal ("BuiltInMicrophone", codeChanges.Members [0].Name);
+		Assert.Equal (2, codeChanges.EnumMembers.Length);
+		Assert.Equal ("BuiltInMicrophone", codeChanges.EnumMembers [0].Name);
 		var expectedFields = new [] {
 			"AVCaptureDeviceTypeBuiltInMicrophone",
 			"AVCaptureDeviceTypeBuiltInWideAngleCamera",
 		};
 		for (var index = 0; index < expectedFields.Length; index++) {
-			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.Members [index].Attributes [0].Name);
-			Assert.Equal (expectedFields [index], codeChanges.Members [index].Attributes [0].Arguments [0]);
+			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.EnumMembers [index].Attributes [0].Name);
+			Assert.Equal (expectedFields [index], codeChanges.EnumMembers [index].Attributes [0].Arguments [0]);
 		}
 	}
 }

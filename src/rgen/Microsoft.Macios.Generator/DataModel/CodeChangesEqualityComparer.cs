@@ -7,8 +7,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
 /// </summary>
-class CodeChangesComparer : IEqualityComparer<CodeChanges> {
-
+class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 	/// <inheritdoc />
 	public bool Equals (CodeChanges x, CodeChanges y)
 	{
@@ -28,22 +27,43 @@ class CodeChangesComparer : IEqualityComparer<CodeChanges> {
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
 			return false;
-		if (x.Members.Length != y.Members.Length)
+		if (x.EnumMembers.Length != y.EnumMembers.Length)
+			return false;
+		if (x.Properties.Length != y.Properties.Length)
 			return false;
 
 		// compare the attrs, we need to sort them since attribute order does not matter
-		var attrComparer = new AttributesComparer ();
+		var attrComparer = new AttributesEqualityComparer ();
 		if (!attrComparer.Equals (x.Attributes, y.Attributes))
 			return false;
 
-		// compare the members, we need to sort them since member order does not matter
-		var memberComparer = new MemberComparer ();
-		return memberComparer.Equals (x.Members, y.Members);
+		// compare the members
+		var memberComparer = new EnumMembersEqualityComparer ();
+		if (!memberComparer.Equals (x.EnumMembers, y.EnumMembers))
+			return false;
+
+		// compare properties
+		var propertyComparer = new PropertiesEqualityComparer ();
+		if (!propertyComparer.Equals (x.Properties, y.Properties))
+			return false;
+
+		// compare constructors
+		var constructorComparer = new ConstructorsEqualityComparer ();
+		if (!constructorComparer.Equals (x.Constructors, y.Constructors))
+			return false;
+
+		// compare events
+		var eventComparer = new EventEqualityComparer ();
+		if (!eventComparer.Equals (x.Events, y.Events))
+			return false;
+
+		var methodComparer = new MethodsEqualityComparer ();
+		return methodComparer.Equals (x.Methods, y.Methods);
 	}
 
 	/// <inheritdoc />
 	public int GetHashCode (CodeChanges obj)
 	{
-		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.Members);
+		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.EnumMembers);
 	}
 }
