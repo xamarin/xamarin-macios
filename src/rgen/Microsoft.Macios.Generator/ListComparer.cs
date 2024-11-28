@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Macios.Generator;
 
-public class ListComparer<T> : IEqualityComparer<List<T>> {
+public class ListComparer<T> : EqualityComparer<List<T>> {
 	readonly IComparer<T> comparer;
 	readonly IEqualityComparer<T> valueComparer;
 
@@ -13,7 +13,8 @@ public class ListComparer<T> : IEqualityComparer<List<T>> {
 		valueComparer = equalityComparer ?? EqualityComparer<T>.Default;
 	}
 
-	public bool Equals (List<T>? x, List<T>? y)
+	/// <inheritdoc/>
+	public override bool Equals (List<T>? x, List<T>? y)
 	{
 		// bases cases for null or diff size
 		if (x is null && y is null)
@@ -37,7 +38,8 @@ public class ListComparer<T> : IEqualityComparer<List<T>> {
 		return true;
 	}
 
-	public int GetHashCode (List<T> obj)
+	/// <inheritdoc/>
+	public override int GetHashCode (List<T> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var element in obj) {
