@@ -12,7 +12,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CoreMLCompiler : XamarinTask, ICancelableTask {
+	public class CoreMLCompiler : XamarinTask, ICancelableTask, IHasProjectDir, IHasResourcePrefix {
 		string toolExe;
 
 		public string ToolName { get { return "coremlc"; } }
@@ -162,7 +162,6 @@ namespace Xamarin.MacDev.Tasks {
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			var coremlcOutputDir = Path.Combine (IntermediateOutputPath, "coremlc");
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var mapping = new Dictionary<string, IDictionary> ();
 			var bundleResources = new List<ITaskItem> ();
 			var partialPlists = new List<ITaskItem> ();
@@ -171,7 +170,7 @@ namespace Xamarin.MacDev.Tasks {
 				Directory.CreateDirectory (coremlcOutputDir);
 
 				foreach (var model in Models) {
-					var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, model, !string.IsNullOrEmpty (SessionId));
+					var logicalName = BundleResource.GetLogicalName (this, model);
 					var bundleName = GetPathWithoutExtension (logicalName) + ".mlmodelc";
 					var outputPath = Path.Combine (coremlcOutputDir, bundleName);
 					var outputDir = Path.GetDirectoryName (outputPath);
