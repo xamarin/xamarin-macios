@@ -451,11 +451,13 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface AXMathExpression {
 	}
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionNumber {
 		[Export ("initWithContent:")]
 		NativeHandle Constructor (string content);
@@ -466,6 +468,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionIdentifier {
 		[Export ("initWithContent:")]
 		NativeHandle Constructor (string content);
@@ -476,6 +479,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionOperator {
 		[Export ("initWithContent:")]
 		NativeHandle Constructor (string content);
@@ -486,6 +490,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionText {
 		[Export ("initWithContent:")]
 		NativeHandle Constructor (string content);
@@ -496,6 +501,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionFenced {
 		[Export ("initWithExpressions:openString:closeString:")]
 		NativeHandle Constructor (AXMathExpression [] expressions, string openString, string closeString);
@@ -512,6 +518,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionRow {
 		[Export ("initWithExpressions:")]
 		NativeHandle Constructor (AXMathExpression [] expressions);
@@ -522,6 +529,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionTable {
 		[Export ("initWithExpressions:")]
 		NativeHandle Constructor (AXMathExpression [] expressions);
@@ -532,6 +540,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionTableRow {
 		[Export ("initWithExpressions:")]
 		NativeHandle Constructor (AXMathExpression [] expressions);
@@ -542,6 +551,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionTableCell {
 		[Export ("initWithExpressions:")]
 		NativeHandle Constructor (AXMathExpression [] expressions);
@@ -552,6 +562,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionUnderOver {
 		[Export ("initWithBaseExpression:underExpression:overExpression:")]
 		NativeHandle Constructor (AXMathExpression baseExpression, AXMathExpression underExpression, AXMathExpression overExpression);
@@ -568,6 +579,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionSubSuperscript {
 		[Export ("initWithBaseExpression:subscriptExpressions:superscriptExpressions:")]
 		NativeHandle Constructor (AXMathExpression [] baseExpression, AXMathExpression [] subscriptExpressions, AXMathExpression [] superscriptExpressions);
@@ -584,6 +596,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionFraction {
 		[Export ("initWithNumeratorExpression:denimonatorExpression:")]
 		NativeHandle Constructor (AXMathExpression numeratorExpression, AXMathExpression denimonatorExpression);
@@ -597,6 +610,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionMultiscript {
 		[Export ("initWithBaseExpression:prescriptExpressions:postscriptExpressions:")]
 		NativeHandle Constructor (AXMathExpression baseExpression, AXMathExpressionSubSuperscript [] prescriptExpressions, AXMathExpressionSubSuperscript [] postscriptExpressions);
@@ -613,6 +627,7 @@ namespace Accessibility {
 
 	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
 	interface AXMathExpressionRoot {
 		[Export ("initWithRadicandExpressions:rootIndexExpression:")]
 		NativeHandle Constructor (AXMathExpression [] radicandExpressions, AXMathExpression rootIndexExpression);
