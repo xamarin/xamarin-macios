@@ -11,7 +11,7 @@ public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 	CodeChanges CreateCodeChanges (ApplePlatform platform, string name, string inputText)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (CreateCodeChangeNoFieldsNoAttributes), platform, inputText);
+			CreateCompilation (nameof(CreateCodeChangeNoFieldsNoAttributes), platform, inputText);
 		Assert.Single (sourceTrees);
 		var enumDeclaration = sourceTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -40,13 +40,13 @@ public enum AVCaptureDeviceType {
 }
 ";
 		var codeChanges =
-			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
 		Assert.Empty (codeChanges.EnumMembers);
-		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
+		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 	}
 
 	[Theory]
@@ -75,22 +75,22 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
-		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
+		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		// validate that we have the 3 members and their attrs
 		Assert.Equal (3, codeChanges.EnumMembers.Length);
 		Assert.Equal ("BuiltInMicrophone", codeChanges.EnumMembers [0].Name);
 		var expectedFields = new [] {
-			"AVCaptureDeviceTypeBuiltInMicrophone",
-			"AVCaptureDeviceTypeBuiltInWideAngleCamera",
+			"AVCaptureDeviceTypeBuiltInMicrophone", "AVCaptureDeviceTypeBuiltInWideAngleCamera",
 			"AVCaptureDeviceTypeBuiltInTelephotoCamera"
 		};
 		for (var index = 0; index < expectedFields.Length; index++) {
-			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.EnumMembers [index].Attributes [0].Name);
+			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>",
+				codeChanges.EnumMembers [index].Attributes [0].Name);
 			Assert.Equal (expectedFields [index], codeChanges.EnumMembers [index].Attributes [0].Arguments [0]);
 		}
 	}
@@ -118,13 +118,13 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
 		Assert.Empty (codeChanges.EnumMembers);
-		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
+		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 	}
 
 
@@ -154,21 +154,21 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
 		Assert.Equal (AttributesNames.BindingAttribute, codeChanges.Attributes [0].Name);
-		Assert.True (codeChanges.SymbolDeclaration is EnumDeclarationSyntax);
+		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		// validate that we have the 3 members and their attrs
 		Assert.Equal (2, codeChanges.EnumMembers.Length);
 		Assert.Equal ("BuiltInMicrophone", codeChanges.EnumMembers [0].Name);
 		var expectedFields = new [] {
-			"AVCaptureDeviceTypeBuiltInMicrophone",
-			"AVCaptureDeviceTypeBuiltInWideAngleCamera",
+			"AVCaptureDeviceTypeBuiltInMicrophone", "AVCaptureDeviceTypeBuiltInWideAngleCamera",
 		};
 		for (var index = 0; index < expectedFields.Length; index++) {
-			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>", codeChanges.EnumMembers [index].Attributes [0].Name);
+			Assert.Equal ("ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>",
+				codeChanges.EnumMembers [index].Attributes [0].Name);
 			Assert.Equal (expectedFields [index], codeChanges.EnumMembers [index].Attributes [0].Arguments [0]);
 		}
 	}

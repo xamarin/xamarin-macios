@@ -1,8 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.DataModel;
+
+class DeclarationCodeChangesEqualityComparer : IEqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
+	Changes)> {
+	readonly CodeChangesEqualityComparer comparer = new();
+
+	public bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
+		(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) y)
+	{
+		return comparer.Equals (x.Changes, y.Changes);
+	}
+
+	public int GetHashCode ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) obj)
+		=> comparer.GetHashCode (obj.Changes);
+}
 
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
@@ -22,8 +36,6 @@ class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
 			return false;
 		if (x.BindingType != y.BindingType)
-			return false;
-		if (x.SymbolDeclaration.GetType () != y.SymbolDeclaration.GetType ())
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
 			return false;

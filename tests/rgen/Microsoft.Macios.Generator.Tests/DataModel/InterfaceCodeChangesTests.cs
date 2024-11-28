@@ -1,0 +1,433 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.DataModel;
+using Xamarin.Tests;
+using Xamarin.Utils;
+using Xunit;
+
+namespace Microsoft.Macios.Generator.Tests.DataModel;
+
+public class InterfaceCodeChangesTests : BaseGeneratorTestClass {
+	readonly CodeChangesEqualityComparer comparer = new();
+	
+	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string emptyInterface = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+}
+";
+
+			yield return [
+				emptyInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					]
+				}
+			];
+
+			const string singlePropertyInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Property> (""name"")]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				singlePropertyInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Properties = [
+						new(
+							name: "Name",
+							type: "string",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Getter, [], []),
+								new(AccessorKind.Setter, [], []),
+							]
+						)
+					]
+				}
+			];
+
+			const string multiPropertyInterfaceMissingExport = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Property> (""name"")]
+	public partial string Name { get; set; } = string.Empty;
+
+	public partial string Surname { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				multiPropertyInterfaceMissingExport, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Properties = [
+						new(
+							name: "Name",
+							type: "string",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Getter, [], []),
+								new(AccessorKind.Setter, [], []),
+							]
+						)
+					]
+				}
+			];
+
+			const string multiPropertyInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Property> (""name"")]
+	public partial string Name { get; set; } = string.Empty;
+
+	[Export<Property> (""surname"")]
+	public partial string Surname { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				multiPropertyInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Properties = [
+						new(
+							name: "Name",
+							type: "string",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Getter, [], []),
+								new(AccessorKind.Setter, [], []),
+							]
+						),
+						new(
+							name: "Surname",
+							type: "string",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Getter, [], []),
+								new(AccessorKind.Setter, [], []),
+							]
+						),
+					]
+				}
+			];
+
+			const string singleMethodInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Method> (""withName:"")]
+	public partial void SetName (string inName);
+}
+";
+
+			yield return [
+				singleMethodInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Methods = [
+						new(
+							type: "NS.IProtocol",
+							name: "SetName",
+							returnType: "void",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							parameters: [
+								new(0, "string", "inName")
+							]
+						),
+					]
+				}
+			];
+
+			const string multiMethodInterfaceMissingExport = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Method> (""withName:"")]
+	public partial void SetName (string inName);
+
+	public void SetSurname (string inSurname) {}
+}
+";
+
+			yield return [
+				multiMethodInterfaceMissingExport, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Methods = [
+						new(
+							type: "NS.IProtocol",
+							name: "SetName",
+							returnType: "void",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							parameters: [
+								new(0, "string", "inName")
+							]
+						),
+					]
+				}
+			];
+
+
+			const string multiMethodInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Method> (""withName:"")]
+	public partial void SetName (string inName);
+
+	[Export<Method> (""withSurname:"")]
+	public partial void SetSurname (string inSurname);
+}
+";
+			yield return [
+				multiMethodInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Methods = [
+						new(
+							type: "NS.IProtocol",
+							name: "SetName",
+							returnType: "void",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							parameters: [
+								new(0, "string", "inName")
+							]
+						),
+						new(
+							type: "NS.IProtocol",
+							name: "SetSurname",
+							returnType: "void",
+							attributes: [
+								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							parameters: [
+								new(0, "string", "inSurname")
+							]
+						),
+					]
+				}
+			];
+
+			const string singleEventInterface = @"
+using System;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+
+	public event EventHandler Changed { add; remove; }
+}
+";
+
+			yield return [
+				singleEventInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Events = [
+						new(
+							name: "Changed",
+							type: "System.EventHandler",
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Add, [], []),
+								new(AccessorKind.Remove, [], [])
+							])
+					],
+				}
+			];
+
+			const string multiEventInterface = @"
+using System;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+
+	public event EventHandler Changed { add; remove; }
+
+	public event EventHandler Removed { add; remove; }
+}
+";
+
+			yield return [
+				multiEventInterface, new CodeChanges (
+					bindingType: BindingType.Protocol,
+					fullyQualifiedSymbol: "NS.IProtocol"
+				) {
+					Attributes = [
+						new("ObjCBindings.BindingTypeAttribute")
+					],
+					Events = [
+						new(
+							name: "Changed",
+							type: "System.EventHandler",
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Add, [], []),
+								new(AccessorKind.Remove, [], [])
+							]
+						),
+						new(
+							name: "Removed",
+							type: "System.EventHandler",
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+							],
+							accessors: [
+								new(AccessorKind.Add, [], []),
+								new(AccessorKind.Remove, [], [])
+							]
+						),
+					],
+				}
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataCodeChangesFromClassDeclaration>]
+	void CodeChangesFromInterfaceDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
+	{
+		var (compilation, sourceTrees) =
+			CreateCompilation (nameof(CodeChangesFromInterfaceDeclaration), platform, inputText);
+		Assert.Single (sourceTrees);
+		// get the declarations we want to work with and the semantic model
+		var node = sourceTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<InterfaceDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (node);
+		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
+		var changes = CodeChanges.FromDeclaration (node, semanticModel);
+		Assert.NotNull (changes);
+		Assert.Equal (expected, changes.Value, comparer);
+	}
+}
