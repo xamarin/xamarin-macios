@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -9,7 +10,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class CollectBundleResources : XamarinTask, ICancelableTask {
+	public class CollectBundleResources : XamarinTask, ICancelableTask, IHasProjectDir, IHasResourcePrefix {
 		#region Inputs
 
 		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
@@ -64,7 +65,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		bool ExecuteImpl ()
 		{
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var bundleResources = new List<ITaskItem> ();
 
 			foreach (var item in BundleResources) {
@@ -73,7 +73,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (!string.IsNullOrEmpty (publishFolderType))
 					continue;
 
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, item);
 				// We need a physical path here, ignore the Link element
 				var path = item.GetMetadata ("FullPath");
 

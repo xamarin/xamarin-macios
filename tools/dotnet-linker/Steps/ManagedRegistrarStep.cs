@@ -463,6 +463,14 @@ namespace Xamarin.Linker {
 					il.Emit (OpCodes.Throw);
 					// We're throwing an exception, so there's no need for any more code.
 					skipEverythingAfter = il.Body.Instructions.Last ();
+				} else if (method.DeclaringType.IsAbstract) {
+					il.Emit (OpCodes.Ldc_I4, 4180);
+					postLeaveBranch.Operand = il.Body.Instructions.Last ();
+					il.Emit (OpCodes.Ldstr, $"Cannot construct an instance of the type '{method.DeclaringType.FullName}' from Objective-C because the type is abstract.");
+					il.Emit (OpCodes.Call, abr.Runtime_CreateRuntimeException);
+					il.Emit (OpCodes.Throw);
+					// We're throwing an exception, so there's no need for any more code.
+					skipEverythingAfter = il.Body.Instructions.Last ();
 				} else {
 					// Whenever there's an NSObject constructor that we call from a registrar callback, we need to create
 					// a separate constructor that will first set the `handle` and `flags` values of the NSObject before

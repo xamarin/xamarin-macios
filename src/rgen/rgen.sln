@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Binding.Common", "Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj", "{536758BC-2A88-4B79-ABB1-6B39494A5FE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.CodeFixers", "Microsoft.Macios.Bindings.CodeFixers\Microsoft.Macios.Bindings.CodeFixers.csproj", "{4986D2E4-89B0-43A3-9879-93ED236C265D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.CodeFixers.Tests", "..\..\tests\rgen\Microsoft.Macios.Bindings.CodeFixers.Tests\Microsoft.Macios.Bindings.CodeFixers.Tests.csproj", "{E7928D64-8E45-40BF-B393-732FF20D35E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

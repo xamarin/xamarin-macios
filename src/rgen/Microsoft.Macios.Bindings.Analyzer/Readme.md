@@ -13,14 +13,3 @@ A project that references the sample analyzers. Note the parameters of `ProjectR
 
 ### Microsoft.Macios.Bindings.Analyzer.Tests
 Unit tests for the sample analyzers and code fix provider. The easiest way to develop language-related features is to start with unit tests.
-
-## How To?
-### How to debug?
-- Use the [launchSettings.json](Properties/launchSettings.json) profile.
-- Debug tests (in VSCode).
-
-### How can I determine which syntax nodes I should expect?
-Consider installing the Roslyn syntax tree viewer plugin [Rossynt](https://plugins.jetbrains.com/plugin/16902-rossynt/).
-
-### Learn more about wiring analyzers
-The complete set of information is available at [roslyn github repo wiki](https://github.com/dotnet/roslyn/blob/main/docs/wiki/README.md).
