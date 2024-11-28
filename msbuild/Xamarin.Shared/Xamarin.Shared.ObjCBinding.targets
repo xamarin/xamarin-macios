@@ -117,8 +117,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<Zip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
+			ZipPath="$(ZipPath)"
 			Recursive="true"
 			Symlinks="true"
 			Sources="%(_NativeFrameworkResource.FrameworkPath)"

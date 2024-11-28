@@ -13,7 +13,7 @@ using Xamarin.MacDev;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class XcodeToolTaskBase : XamarinTask {
+	public abstract class XcodeToolTaskBase : XamarinTask, IHasProjectDir, IHasResourcePrefix {
 		string? toolExe;
 
 		#region Inputs
@@ -74,9 +74,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineBuilder args, ITaskItem input, ITaskItem output);
 
-		protected virtual string GetBundleRelativeOutputPath (IList<string> prefixes, ITaskItem input)
+		protected virtual string GetBundleRelativeOutputPath (ITaskItem input)
 		{
-			return BundleResource.GetLogicalName (ProjectDir, prefixes, input, !string.IsNullOrEmpty (SessionId));
+			return BundleResource.GetLogicalName (this, input);
 		}
 
 		protected virtual IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem input, ITaskItem output)
@@ -151,12 +151,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
 			var bundleResources = new List<ITaskItem> ();
 
 			foreach (var input in EnumerateInputs ()) {
-				var relative = GetBundleRelativeOutputPath (prefixes, input);
+				var relative = GetBundleRelativeOutputPath (input);
 				ITaskItem output;
 
 				if (!string.IsNullOrEmpty (relative)) {
