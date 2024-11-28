@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class ClassCodeChangesTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer comparer = new();
+	readonly CodeChangesEqualityComparer comparer = new ();
 
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -29,12 +29,13 @@ public partial class MyClass {
 ";
 
 			yield return [
-				emptyClass, new CodeChanges (
+				emptyClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					]
 				}
 			];
@@ -53,15 +54,16 @@ public partial class MyClass {
 ";
 
 			yield return [
-				singleConstructorClass, new CodeChanges (
+				singleConstructorClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Constructors = [
-						new(
+						new (
 							type: "NS.MyClass",
 							attributes: [],
 							modifiers: [
@@ -91,15 +93,16 @@ public partial class MyClass {
 ";
 
 			yield return [
-				multiConstructorClass, new CodeChanges (
+				multiConstructorClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Constructors = [
-						new(
+						new (
 							type: "NS.MyClass",
 							attributes: [],
 							modifiers: [
@@ -107,14 +110,14 @@ public partial class MyClass {
 							],
 							parameters: []
 						),
-						new(
+						new (
 							type: "NS.MyClass",
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 							],
 							parameters: [
-								new(
+								new (
 									position: 0,
 									type: "string",
 									name: "inName"
@@ -138,27 +141,28 @@ public partial class MyClass {
 ";
 
 			yield return [
-				singlePropertyClass, new CodeChanges (
+				singlePropertyClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Properties = [
-						new(
+						new (
 							name: "Name",
 							type: "string",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Getter, [], []),
-								new(AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, [], []),
+								new (AccessorKind.Setter, [], []),
 							]
 						)
 					]
@@ -180,27 +184,28 @@ public partial class MyClass {
 ";
 
 			yield return [
-				multiPropertyClassMissingExport, new CodeChanges (
+				multiPropertyClassMissingExport,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Properties = [
-						new(
+						new (
 							name: "Name",
 							type: "string",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Getter, [], []),
-								new(AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, [], []),
+								new (AccessorKind.Setter, [], []),
 							]
 						)
 					]
@@ -223,42 +228,43 @@ public partial class MyClass {
 ";
 
 			yield return [
-				multiPropertyClass, new CodeChanges (
+				multiPropertyClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Properties = [
-						new(
+						new (
 							name: "Name",
 							type: "string",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Getter, [], []),
-								new(AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, [], []),
+								new (AccessorKind.Setter, [], []),
 							]
 						),
-						new(
+						new (
 							name: "Surname",
 							type: "string",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Getter, [], []),
-								new(AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, [], []),
+								new (AccessorKind.Setter, [], []),
 							]
 						),
 					]
@@ -278,27 +284,28 @@ public partial class MyClass {
 ";
 
 			yield return [
-				singleMethodClass, new CodeChanges (
+				singleMethodClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Methods = [
-						new(
+						new (
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new(0, "string", "inName")
+								new (0, "string", "inName")
 							]
 						),
 					]
@@ -320,27 +327,28 @@ public partial class MyClass {
 ";
 
 			yield return [
-				multiMethodClassMissingExport, new CodeChanges (
+				multiMethodClassMissingExport,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Methods = [
-						new(
+						new (
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new(0, "string", "inName")
+								new (0, "string", "inName")
 							]
 						),
 					]
@@ -363,42 +371,43 @@ public partial class MyClass {
 }
 ";
 			yield return [
-				multiMethodClass, new CodeChanges (
+				multiMethodClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Methods = [
-						new(
+						new (
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new(0, "string", "inName")
+								new (0, "string", "inName")
 							]
 						),
-						new(
+						new (
 							type: "NS.MyClass",
 							name: "SetSurname",
 							returnType: "void",
 							attributes: [
-								new("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new(0, "string", "inSurname")
+								new (0, "string", "inSurname")
 							]
 						),
 					]
@@ -419,15 +428,16 @@ public partial class MyClass {
 ";
 
 			yield return [
-				singleEventClass, new CodeChanges (
+				singleEventClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Events = [
-						new(
+						new (
 							name: "Changed",
 							type: "System.EventHandler",
 							attributes: [],
@@ -435,8 +445,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Add, [], []),
-								new(AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, [], []),
+								new (AccessorKind.Remove, [], [])
 							])
 					],
 				}
@@ -458,15 +468,16 @@ public partial class MyClass {
 ";
 
 			yield return [
-				multiEventClass, new CodeChanges (
+				multiEventClass,
+				new CodeChanges (
 					bindingType: BindingType.Class,
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
-						new("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					Events = [
-						new(
+						new (
 							name: "Changed",
 							type: "System.EventHandler",
 							attributes: [],
@@ -474,11 +485,11 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Add, [], []),
-								new(AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, [], []),
+								new (AccessorKind.Remove, [], [])
 							]
 						),
-						new(
+						new (
 							name: "Removed",
 							type: "System.EventHandler",
 							attributes: [],
@@ -486,8 +497,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new(AccessorKind.Add, [], []),
-								new(AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, [], []),
+								new (AccessorKind.Remove, [], [])
 							]
 						),
 					],
@@ -503,7 +514,7 @@ public partial class MyClass {
 	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof(CodeChangesFromClassDeclaration), platform, inputText);
+			CreateCompilation (nameof (CodeChangesFromClassDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()

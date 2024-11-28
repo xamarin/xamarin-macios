@@ -6,7 +6,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 class DeclarationCodeChangesEqualityComparer : IEqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
 	Changes)> {
-	readonly CodeChangesEqualityComparer comparer = new();
+	readonly CodeChangesEqualityComparer comparer = new ();
 
 	public bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
 		(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) y)

@@ -189,7 +189,7 @@ readonly struct CodeChanges {
 				continue;
 			var memberName = val.Identifier.ToFullString ().Trim ();
 			var attributes = val.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new(memberName, attributes));
+			bucket.Add (new (memberName, attributes));
 		}
 
 		EnumMembers = bucket.ToImmutable ();

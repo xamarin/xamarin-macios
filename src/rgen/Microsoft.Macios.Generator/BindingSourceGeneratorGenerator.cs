@@ -22,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly DeclarationCodeChangesEqualityComparer equalityComparer = new();
+	static readonly DeclarationCodeChangesEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -99,7 +99,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				continue;
 
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new());
+			var sb = new TabbedStringBuilder (new ());
 			sb.WriteHeader ();
 			if (EmitterFactory.TryCreate (change, rootContext, semanticModel, namedTypeSymbol, sb, out var emitter)) {
 				// write the using statements
@@ -137,7 +137,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// <param name="rootContext">The root context of the current generation.</param>
 	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext)
 	{
-		var sb = new TabbedStringBuilder (new());
+		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
 		// no need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootContext, sb);

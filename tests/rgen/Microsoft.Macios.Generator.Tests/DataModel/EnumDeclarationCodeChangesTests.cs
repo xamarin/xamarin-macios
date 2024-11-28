@@ -11,7 +11,7 @@ public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 	CodeChanges CreateCodeChanges (ApplePlatform platform, string name, string inputText)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof(CreateCodeChangeNoFieldsNoAttributes), platform, inputText);
+			CreateCompilation (nameof (CreateCodeChangeNoFieldsNoAttributes), platform, inputText);
 		Assert.Single (sourceTrees);
 		var enumDeclaration = sourceTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -40,7 +40,7 @@ public enum AVCaptureDeviceType {
 }
 ";
 		var codeChanges =
-			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
@@ -75,7 +75,7 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
@@ -118,7 +118,7 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
@@ -154,7 +154,7 @@ public enum AVCaptureDeviceType {
 ";
 
 		var codeChanges =
-			CreateCodeChanges (platform, nameof(CreateCodeChangeNoFieldsNoAttributes), inputString);
+			CreateCodeChanges (platform, nameof (CreateCodeChangeNoFieldsNoAttributes), inputString);
 		Assert.Equal ("AVFoundation.AVCaptureDeviceType", codeChanges.FullyQualifiedSymbol);
 		Assert.Equal (BindingType.SmartEnum, codeChanges.BindingType);
 		Assert.Single (codeChanges.Attributes);
