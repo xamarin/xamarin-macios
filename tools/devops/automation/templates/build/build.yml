@@ -182,11 +182,11 @@ steps:
       $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
       $commentMessage = [System.Text.StringBuilder]::new()
       if (("$Env:AGENT_JOBSTATUS" -eq "Succeeded") -or ("$Env:AGENT_JOBSTATUS" -eq "SucceededWithIssues")) {
-        $commentTitle = "Build passed"
+        $commentTitle = "Build passed ($(System.JobDisplayName))"
         $commentIcon = ":white_check_mark:"
         $commentMessage.AppendLine("")
       } else {
-        $commentTitle = "Build failed"
+        $commentTitle = "Build failed ($(System.JobDisplayName))"
         $commentIcon = ":fire:"
         $commentMessage.AppendLine("Build failed for the job '$(System.JobDisplayName)' (with job status '$Env:AGENT_JOBSTATUS')")
       }
