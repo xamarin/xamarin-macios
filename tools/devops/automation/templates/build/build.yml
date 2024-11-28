@@ -187,7 +187,7 @@ steps:
         $commentMessage.AppendLine("")
       } else {
         $commentTitle = "Build failed"
-        $commentIcon = ":fire:""
+        $commentIcon = ":fire:"
         $commentMessage.AppendLine("Build failed for the job '$(System.JobDisplayName)' (with job status '$Env:AGENT_JOBSTATUS')")
       }
       $githubComments.NewCommentFromMessage($commentTitle, $commentIcon, $commentMessage.ToString(), "build $(System.JobDisplayName)")
