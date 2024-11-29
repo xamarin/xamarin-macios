@@ -41,6 +41,58 @@ using UIKit;
 namespace Foundation {
 	public partial class NSAttributedString {
 
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="url">A url to the document to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error)
+		{
+			var rv = new NSAttributedString (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithUrl (url, options, out resultDocumentAttributes, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="url">A url to the document to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error)
+		{
+			return Create (url, options.Dictionary, out resultDocumentAttributes, out error);
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="data">The data to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error)
+		{
+			var rv = new NSAttributedString (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithData (data, options, out resultDocumentAttributes, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="data">The data to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error)
+		{
+			return Create (data, options.Dictionary, out resultDocumentAttributes, out error);
+		}
+
 #if __MACOS__ || XAMCORE_5_0
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
 		: this (url, documentAttributes, out var _, out error) {}
