@@ -834,7 +834,7 @@ namespace HomeKit {
 
 		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2)]
 		[Export ("matterStartupParametersXPCConnectBlock", ArgumentSemantic.Strong)]
-		Func<NSXpcConnection> MatterStartupParametersXPCConnectBlock { get; }
+		Func<NSXpcConnection> MatterStartupParametersXPCConnectHandler { get; }
 
 		// constants
 
