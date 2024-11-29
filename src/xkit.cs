@@ -84,6 +84,50 @@ using View = UIKit.UIView;
 #endif
 #endif
 
+#if MONOMAC
+	using IXWritingToolsCoordinatorDelegate = AppKit.INSWritingToolsCoordinatorDelegate;
+	using XWritingToolsBehavior = AppKit.NSWritingToolsBehavior;
+	using XWritingToolsCoordinator = AppKit.NSWritingToolsCoordinator;
+	using XWritingToolsCoordinatorAnimationParameters = AppKit.NSWritingToolsCoordinatorAnimationParameters;
+	using XWritingToolsCoordinatorContext = AppKit.NSWritingToolsCoordinatorContext;
+	using XWritingToolsCoordinatorContextScope = AppKit.NSWritingToolsCoordinatorContextScope;
+	using XWritingToolsCoordinatorDelegate = AppKit.NSWritingToolsCoordinatorDelegate;
+	using XWritingToolsCoordinatorDelegateReplaceRangeCallback = AppKit.NSWritingToolsCoordinatorDelegateReplaceRangeCallback;
+	using XWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback;
+	using XWritingToolsCoordinatorDelegateRequestsContextsCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsContextsCallback;
+	using XWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback;
+	using XWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback;
+	using XWritingToolsCoordinatorDelegateRequestsRangeCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsRangeCallback;
+	using XWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback;
+	using XWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback = AppKit.NSWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback;
+	using XWritingToolsCoordinatorState = AppKit.NSWritingToolsCoordinatorState;
+	using XWritingToolsCoordinatorTextAnimation = AppKit.NSWritingToolsCoordinatorTextAnimation;
+	using XWritingToolsCoordinatorTextReplacementReason = AppKit.NSWritingToolsCoordinatorTextReplacementReason;
+	using XWritingToolsCoordinatorTextUpdateReason = AppKit.NSWritingToolsCoordinatorTextUpdateReason;
+	using XWritingToolsResultOptions = AppKit.NSWritingToolsResultOptions;
+#else
+	using IXWritingToolsCoordinatorDelegate = UIKit.IUIWritingToolsCoordinatorDelegate;
+	using XWritingToolsBehavior = UIKit.UIWritingToolsBehavior;
+	using XWritingToolsCoordinator = UIKit.UIWritingToolsCoordinator;
+	using XWritingToolsCoordinatorAnimationParameters = UIKit.UIWritingToolsCoordinatorAnimationParameters;
+	using XWritingToolsCoordinatorContext = UIKit.UIWritingToolsCoordinatorContext;
+	using XWritingToolsCoordinatorContextScope = UIKit.UIWritingToolsCoordinatorContextScope;
+	using XWritingToolsCoordinatorDelegate = UIKit.UIWritingToolsCoordinatorDelegate;
+	using XWritingToolsCoordinatorDelegateReplaceRangeCallback = UIKit.UIWritingToolsCoordinatorDelegateReplaceRangeCallback;
+	using XWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback;
+	using XWritingToolsCoordinatorDelegateRequestsContextsCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsContextsCallback;
+	using XWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback;
+	using XWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback;
+	using XWritingToolsCoordinatorDelegateRequestsRangeCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsRangeCallback;
+	using XWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback;
+	using XWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback = UIKit.UIWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback;
+	using XWritingToolsCoordinatorState = UIKit.UIWritingToolsCoordinatorState;
+	using XWritingToolsCoordinatorTextAnimation = UIKit.UIWritingToolsCoordinatorTextAnimation;
+	using XWritingToolsCoordinatorTextReplacementReason = UIKit.UIWritingToolsCoordinatorTextReplacementReason;
+	using XWritingToolsCoordinatorTextUpdateReason = UIKit.UIWritingToolsCoordinatorTextUpdateReason;
+	using XWritingToolsResultOptions = UIKit.UIWritingToolsResultOptions;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -4615,4 +4659,267 @@ namespace UIKit {
 		Blue,
 
 	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Native]
+#if MONOMAC
+	public enum NSWritingToolsCoordinatorTextUpdateReason : long
+#else
+	public enum UIWritingToolsCoordinatorTextUpdateReason : long
+#endif
+	{
+		Typing,
+		UndoRedo,
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Native]
+#if MONOMAC
+	public enum NSWritingToolsCoordinatorState : long
+#else
+	public enum UIWritingToolsCoordinatorState : long
+#endif
+	{
+		Inactive,
+		Noninteractive,
+		InteractiveResting,
+		InteractiveStreaming,
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Native]
+#if MONOMAC
+	public enum NSWritingToolsCoordinatorTextReplacementReason : long
+#else
+	public enum UIWritingToolsCoordinatorTextReplacementReason : long
+#endif
+	{
+		Interactive,
+		Noninteractive,
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Native]
+#if MONOMAC
+	public enum NSWritingToolsCoordinatorContextScope : long
+#else
+	public enum UIWritingToolsCoordinatorContextScope : long
+#endif
+	{
+		UserSelection,
+		FullDocument,
+		VisibleArea,
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Native]
+#if MONOMAC
+	public enum NSWritingToolsCoordinatorTextAnimation : long
+#else
+	public enum UIWritingToolsCoordinatorTextAnimation : long
+#endif
+	{
+		Anticipate,
+		Remove,
+		Insert,
+		[NoiOS, NoMacCatalyst]
+		AnticipateInactive = 8,
+		[NoiOS, NoMacCatalyst]
+		Translate = 9,
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[BaseType (typeof (NSObject))]
+#if MONOMAC
+	interface NSWritingToolsCoordinator
+#else
+	interface UIWritingToolsCoordinator : UIInteraction
+#endif
+	{
+		[Static]
+		[Export ("isWritingToolsAvailable")]
+		bool IsWritingToolsAvailable { get; }
+
+		[Export ("initWithDelegate:")]
+		NativeHandle Constructor ([NullAllowed] IXWritingToolsCoordinatorDelegate @delegate);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IXWritingToolsCoordinatorDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; }
+
+#if MONOMAC
+		[NullAllowed, Export ("view", ArgumentSemantic.Weak)]
+		View View { get; }
+#endif
+
+		[NullAllowed, Export ("effectContainerView", ArgumentSemantic.Weak)]
+		View EffectContainerView { get; set; }
+
+		[NullAllowed, Export ("decorationContainerView", ArgumentSemantic.Weak)]
+		View DecorationContainerView { get; set; }
+
+		[Export ("state")]
+		XWritingToolsCoordinatorState State { get; }
+
+		[Export ("stopWritingTools")]
+		void StopWritingTools ();
+
+		[Export ("preferredBehavior", ArgumentSemantic.Assign)]
+		XWritingToolsBehavior PreferredBehavior { get; set; }
+
+		[Export ("behavior")]
+		XWritingToolsBehavior Behavior { get; }
+
+		[Export ("preferredResultOptions", ArgumentSemantic.Assign)]
+		XWritingToolsResultOptions PreferredResultOptions { get; set; }
+
+		[Export ("resultOptions")]
+		XWritingToolsResultOptions ResultOptions { get; }
+
+		[Export ("updateRange:withText:reason:forContextWithIdentifier:")]
+		void UpdateRange (NSRange range, NSAttributedString replacementText, XWritingToolsCoordinatorTextUpdateReason reason, NSUuid contextId);
+
+		[Export ("updateForReflowedTextInContextWithIdentifier:")]
+		void UpdateForReflowedTextInContext (NSUuid contextId);
+	}
+
+#if MONOMAC
+	interface INSWritingToolsCoordinatorDelegate {}
+#else
+	interface IUIWritingToolsCoordinatorDelegate {}
+#endif
+
+#if MONOMAC
+	delegate void NSWritingToolsCoordinatorDelegateRequestsContextsCallback (XWritingToolsCoordinatorContext[] contexts);
+	delegate void NSWritingToolsCoordinatorDelegateReplaceRangeCallback ([NullAllowed] NSAttributedString replacementText);
+	delegate void NSWritingToolsCoordinatorDelegateRequestsRangeCallback (NSRange range, NSUuid contextId);
+	delegate void NSWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback (BezierPath[] paths);
+	delegate void NSWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback (BezierPath[] paths);
+	delegate void NSWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback ([NullAllowed] NSTextPreview [] view); // different signature vs other platforms
+	delegate void NSWritingToolsCoordinatorDelegateRequestsPreviewCallback ([NullAllowed] NSTextPreview textPreview); // doesn't exist on other platforms
+	delegate void NSWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback (/* [BindAs (typeof (NSRange[]))] */ NSValue[] ranges); // BindAs doesn't work here
+	delegate void NSWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback (View view);
+#else
+	delegate void UIWritingToolsCoordinatorDelegateRequestsContextsCallback (XWritingToolsCoordinatorContext[] contexts);
+	delegate void UIWritingToolsCoordinatorDelegateReplaceRangeCallback ([NullAllowed] NSAttributedString replacementText);
+	delegate void UIWritingToolsCoordinatorDelegateRequestsRangeCallback (NSRange range, NSUuid contextId);
+	delegate void UIWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback (BezierPath[] paths);
+	delegate void UIWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback (BezierPath[] paths);
+	delegate void UIWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback ([NullAllowed] View view); // different signature vs macOS
+	delegate void UIWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback (/* [BindAs (typeof (NSRange[]))] */ NSValue[] ranges); // BindAs doesn't work here
+	delegate void UIWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback (View view);
+#endif
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+#if MONOMAC
+	interface NSWritingToolsCoordinatorDelegate
+#else
+	interface UIWritingToolsCoordinatorDelegate
+#endif
+	{
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsContextsForScope:completion:")]
+		void RequestsContexts (XWritingToolsCoordinator writingToolsCoordinator, XWritingToolsCoordinatorContextScope scope, XWritingToolsCoordinatorDelegateRequestsContextsCallback completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:replaceRange:inContext:proposedText:reason:animationParameters:completion:")]
+		void ReplaceRange (XWritingToolsCoordinator writingToolsCoordinator, NSRange range, XWritingToolsCoordinatorContext context, NSAttributedString replacementText, XWritingToolsCoordinatorTextReplacementReason reason, [NullAllowed] XWritingToolsCoordinatorAnimationParameters animationParameters, XWritingToolsCoordinatorDelegateReplaceRangeCallback completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:selectRanges:inContext:completion:")]
+		void SelectRanges (XWritingToolsCoordinator writingToolsCoordinator, NSValue[] ranges, XWritingToolsCoordinatorContext context, Action completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsRangeInContextWithIdentifierForPoint:completion:")]
+		void RequestsRange (XWritingToolsCoordinator writingToolsCoordinator, CGPoint point, XWritingToolsCoordinatorDelegateRequestsRangeCallback completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsBoundingBezierPathsForRange:inContext:completion:")]
+		void RequestsBoundingBezierPaths (XWritingToolsCoordinator writingToolsCoordinator, NSRange range, XWritingToolsCoordinatorContext context, XWritingToolsCoordinatorDelegateRequestsBoundingBezierPathsCallback completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsUnderlinePathsForRange:inContext:completion:")]
+		void RequestsUnderlinePaths (XWritingToolsCoordinator writingToolsCoordinator, NSRange range, XWritingToolsCoordinatorContext context, XWritingToolsCoordinatorDelegateRequestsUnderlinePathsCallback completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:prepareForTextAnimation:forRange:inContext:completion:")]
+		void PrepareForTextAnimation (XWritingToolsCoordinator writingToolsCoordinator, XWritingToolsCoordinatorTextAnimation textAnimation, NSRange range, XWritingToolsCoordinatorContext context, Action completion);
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsPreviewForTextAnimation:ofRange:inContext:completion:")]
+		void RequestsPreviewForTextAnimation (XWritingToolsCoordinator writingToolsCoordinator, XWritingToolsCoordinatorTextAnimation textAnimation, NSRange range, XWritingToolsCoordinatorContext context, XWritingToolsCoordinatorDelegateRequestsPreviewForTextAnimationCallback completion);
+
+#if MONOMAC
+		[Abstract]
+		[Export ("writingToolsCoordinator:requestsPreviewForRect:inContext:completion:")]
+		void RequestsPreview (XWritingToolsCoordinator writingToolsCoordinator, CGRect rect, XWritingToolsCoordinatorContext context, NSWritingToolsCoordinatorDelegateRequestsPreviewCallback completion);
+#endif
+
+		[Abstract]
+		[Export ("writingToolsCoordinator:finishTextAnimation:forRange:inContext:completion:")]
+		void FinishTextAnimation (XWritingToolsCoordinator writingToolsCoordinator, XWritingToolsCoordinatorTextAnimation textAnimation, NSRange range, XWritingToolsCoordinatorContext context, Action completion);
+
+		[Export ("writingToolsCoordinator:requestsSingleContainerSubrangesOfRange:inContext:completion:")]
+		void RequestsSingleContainerSubranges (XWritingToolsCoordinator writingToolsCoordinator, NSRange range, XWritingToolsCoordinatorContext context, XWritingToolsCoordinatorDelegateRequestsSingleContainerSubrangesCallback completion);
+
+		[Export ("writingToolsCoordinator:requestsDecorationContainerViewForRange:inContext:completion:")]
+		void RequestsDecorationContainerView (XWritingToolsCoordinator writingToolsCoordinator, NSRange range, XWritingToolsCoordinatorContext context, XWritingToolsCoordinatorDelegateRequestsDecorationContainerViewCallback completion);
+
+		[Export ("writingToolsCoordinator:willChangeToState:completion:")]
+		void WillChangeToState (XWritingToolsCoordinator writingToolsCoordinator, XWritingToolsCoordinatorState newState, Action completion);
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+#if MONOMAC
+	interface NSWritingToolsCoordinatorAnimationParameters
+#else
+	interface UIWritingToolsCoordinatorAnimationParameters
+#endif
+	{
+		[Export ("duration")]
+		nfloat Duration { get; }
+
+		[Export ("delay")]
+		nfloat Delay { get; }
+
+		[NullAllowed, Export ("progressHandler", ArgumentSemantic.Copy)]
+		Action<float> ProgressHandler { get; set; }
+
+		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
+		Action CompletionHandler { get; set; }
+	}
+
+	[NoTV, MacCatalyst (18, 2), iOS (18, 2), Mac (15, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+#if MONOMAC
+	interface NSWritingToolsCoordinatorContext
+#else
+	interface UIWritingToolsCoordinatorContext
+#endif
+	{
+		[Export ("initWithAttributedString:range:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSAttributedString attributedString, NSRange range);
+
+		[Export ("attributedString", ArgumentSemantic.Copy)]
+		NSAttributedString AttributedString { get; }
+
+		[Export ("range")]
+		NSRange Range { get; }
+
+		[Export ("identifier", ArgumentSemantic.Strong)]
+		NSUuid Identifier { get; }
+
+		[Export ("resolvedRange")]
+		NSRange ResolvedRange { get; }
+	}
+
 }

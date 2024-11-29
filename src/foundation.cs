@@ -4706,6 +4706,16 @@ namespace Foundation {
 		[Field ("NSURLErrorBackgroundTaskCancelledReasonKey")]
 		NSString NSUrlErrorBackgroundTaskCancelledReasonKey { get; }
 #endif
+
+#if IOS && !MACCATALYST
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey { get; }
+
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey { get; }
+#endif
 	}
 
 	delegate NSObject NSErrorUserInfoValueProvider (NSError error, NSString userInfoKey);
