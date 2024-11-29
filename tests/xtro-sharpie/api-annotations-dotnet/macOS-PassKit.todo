@@ -1,4 +1,0 @@
-!missing-selector! +PKPaymentAuthorizationController::supportsDisbursements not bound
-!missing-selector! +PKPaymentAuthorizationController::supportsDisbursementsUsingNetworks: not bound
-!missing-selector! +PKPaymentAuthorizationController::supportsDisbursementsUsingNetworks:capabilities: not bound
-!missing-selector! PKPassLibrary::passesWithReaderIdentifier: not bound
