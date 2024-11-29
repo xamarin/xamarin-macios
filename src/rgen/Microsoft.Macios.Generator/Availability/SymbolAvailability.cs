@@ -11,8 +11,10 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	static readonly HashSet<ApplePlatform> supportedPlatforms =
 		[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
 
-	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities;
+	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities = new ();
 
+	public SymbolAvailability () { }
+	
 	SymbolAvailability (Dictionary<ApplePlatform, PlatformAvailability?> platforms)
 	{
 		// copy the dict, do not assign
