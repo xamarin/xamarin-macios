@@ -94,6 +94,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ALToolValidate
 			SessionId="$(BuildSessionId)"
+			AltoolPath="$(AltoolPath)"
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
@@ -105,6 +106,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ALToolUpload
 			SessionId="$(BuildSessionId)"
+			AltoolPath="$(AltoolPath)"
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
@@ -532,8 +534,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Zip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
+			ZipPath="$(ZipPath)"
 			Recursive="true"
 			Symlinks="true"
 			Sources="@(_IpaPackageSource)"

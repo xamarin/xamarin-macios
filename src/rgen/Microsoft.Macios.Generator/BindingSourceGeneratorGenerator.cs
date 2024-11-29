@@ -22,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly CodeChangesComparer comparer = new ();
+	static readonly CodeChangesEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -43,7 +43,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				static (ctx, _) => GetChangesForSourceGen (ctx))
 			.Where (tuple => tuple.BindingAttributeFound)
 			.Select (static (tuple, _) => tuple.Changes)
-			.WithComparer (comparer);
+			.WithComparer (equalityComparer);
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (provider.Collect ()),
 			((ctx, t) => GenerateCode (ctx, t.Left, t.Right)));
@@ -72,7 +72,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			return (default, false);
 		}
 
-		var codeChanges = CodeChanges.FromDeclaration (context.SemanticModel, declarationSyntax);
+		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, context.SemanticModel);
 		// if code changes are null, return the default value and a false to later ignore the change
 		return codeChanges is not null ? (codeChanges.Value, isBindingType) : (default, false);
 	}

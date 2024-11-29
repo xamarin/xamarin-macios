@@ -26,10 +26,10 @@ namespace Xamarin.MacDev.Tasks {
 		public string BaseLibDllPath { get; set; } = string.Empty;
 
 		[Output]
-		public string BTouchToolExe { get; set; } = string.Empty;
+		public string BGenToolExe { get; set; } = string.Empty;
 
 		[Output]
-		public string BTouchToolPath { get; set; } = string.Empty;
+		public string BGenToolPath { get; set; } = string.Empty;
 
 		[Output]
 		public string DotNetCscCompiler { get; set; } = string.Empty;
@@ -139,11 +139,11 @@ namespace Xamarin.MacDev.Tasks {
 				case "BaseLibDllPath":
 					BaseLibDllPath = value;
 					break;
-				case "BTouchToolExe":
-					BTouchToolExe = value;
+				case "BGenToolExe":
+					BGenToolExe = value;
 					break;
-				case "BTouchToolPath":
-					BTouchToolPath = value;
+				case "BGenToolPath":
+					BGenToolPath = value;
 					break;
 				case "_DotNetCscCompiler":
 					DotNetCscCompiler = value;

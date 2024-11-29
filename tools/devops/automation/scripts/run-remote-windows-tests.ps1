@@ -1,7 +1,11 @@
+if ("$Env:BUILD_REPOSITORY_TITLE" -eq "") {
+    $remoteUrl = & git remote get-url --push origin
+    $repoTitle = [System.IO.Path]::GetFilename($remoteUrl)
+    $Env:BUILD_REPOSITORY_TITLE = $repoTitle
+}
 if ("$Env:DOTNET" -eq "") {
     $Env:DOTNET = "$Env:BUILD_SOURCESDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
 }
-
 $Env:ServerAddress = $Env:MAC_AGENT_IP
 $Env:ServerUser = $Env:MAC_AGENT_USER
 $Env:ServerPassword = $Env:XMA_PASSWORD
