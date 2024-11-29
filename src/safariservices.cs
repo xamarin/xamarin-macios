@@ -622,8 +622,7 @@ namespace SafariServices {
 	[iOS (18, 2), NoMacCatalyst, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface SFAddToHomeScreenInfo : NSCopying
-	{
+	interface SFAddToHomeScreenInfo : NSCopying {
 		[NoMacCatalyst] // The BrowserEngineKit framework (the BEWebAppManifest type) isn't available on Mac Catalyst.
 		[Export ("initWithManifest:")]
 		[DesignatedInitializer]
@@ -633,6 +632,6 @@ namespace SafariServices {
 		BEWebAppManifest Manifest { get; }
 
 		[Export ("websiteCookies", ArgumentSemantic.Copy)]
-		NSHttpCookie[] WebsiteCookies { get; set; }
+		NSHttpCookie [] WebsiteCookies { get; set; }
 	}
 }
