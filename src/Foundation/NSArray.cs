@@ -390,6 +390,18 @@ namespace Foundation {
 			return ret;
 		}
 
+		/// <summary>Create a managed array from a pointer to a native NSArray instance.</summary>
+		/// <param name="handle">The pointer to the native NSArray instance.</param>
+		/// <param name="createObject">A callback that returns an instance of the type T for a given pointer (for an element in the NSArray).</param>
+		/// <param name="releaseHandle">Whether the native NSArray instance should be released before returning or not.</param>
+		public static T [] ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle, T> createObject, bool releaseHandle)
+		{
+			var rv = ArrayFromHandleFunc<T> (handle, createObject);
+			if (releaseHandle && handle != NativeHandle.Zero)
+				NSObject.DangerousRelease (handle);
+			return rv;
+		}
+
 		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator)
 		{
 			if (handle == NativeHandle.Zero)
