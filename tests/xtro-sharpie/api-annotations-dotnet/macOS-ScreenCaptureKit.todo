@@ -1,6 +1,0 @@
-!missing-protocol-member! SCStreamDelegate::streamDidBecomeActive: not found
-!missing-protocol-member! SCStreamDelegate::streamDidBecomeInactive: not found
-!missing-selector! +SCScreenshotManager::captureImageInRect:completionHandler: not bound
-!missing-selector! SCContentFilter::includedApplications not bound
-!missing-selector! SCContentFilter::includedDisplays not bound
-!missing-selector! SCContentFilter::includedWindows not bound
