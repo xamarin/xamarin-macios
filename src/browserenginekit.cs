@@ -1225,13 +1225,13 @@ namespace BrowserEngineKit {
 
 	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (NSObject))]
-	interface BEAccessibilityTextMarker : INSCopying, INSSecureCoding
+	interface BEAccessibilityTextMarker : NSCopying, NSSecureCoding
 	{
 	}
 
 	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
 	[BaseType (typeof (NSObject))]
-	interface BEAccessibilityTextMarkerRange : INSCopying, INSSecureCoding
+	interface BEAccessibilityTextMarkerRange : NSCopying, NSSecureCoding
 	{
 		[Export ("startMarker", ArgumentSemantic.Strong)]
 		BEAccessibilityTextMarker StartMarker { get; set; }
@@ -1241,7 +1241,7 @@ namespace BrowserEngineKit {
 	}
 
 	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
-	[Protocol]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface BEAccessibilityTextMarkerSupport
 	{
 		[Abstract]
@@ -1324,7 +1324,7 @@ namespace BrowserEngineKit {
 	interface BEDownloadMonitor
 	{
 		[Export ("initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:")]
-		NativeHandle Constructor (NSUrl sourceUrk, NSUrl destinationUrl, NSProgress observedProgress, NSData liveActivityAccessToken);
+		NativeHandle Constructor (NSUrl sourceUrl, NSUrl destinationUrl, NSProgress observedProgress, NSData liveActivityAccessToken);
 
 		[Export ("useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:")]
 		void UseDownloadsFolder ([NullAllowed] UTType placehodlerType, BEDownloadMonitorUseDownloadsFolderCallback finalFileCreatedHandler);
