@@ -745,9 +745,7 @@ namespace AuthenticationServices {
 		Failed = 1004,
 		NotInteractive = 1005,
 		MatchedExcludedCredential = 1006,
-		[NoTV]
 		CredentialImport = 1007,
-		[NoTV]
 		CredentialExport = 1008,
 	}
 
