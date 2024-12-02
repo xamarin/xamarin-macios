@@ -5563,7 +5563,7 @@ namespace WebKit {
 		[Export ("stopLoading:")]
 		void StopLoading ([NullAllowed] NSObject sender);
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("writingToolsActive")]
 		bool WritingToolsActive { [Bind ("isWritingToolsActive")] get; }
 	}
@@ -5690,11 +5690,11 @@ namespace WebKit {
 		[Export ("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
 		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("supportsAdaptiveImageGlyph")]
 		bool SupportsAdaptiveImageGlyph { get; set; }
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("writingToolsBehavior")]
 #if MONOMAC
 		NSWritingToolsBehavior WritingToolsBehavior { get; set; }
@@ -5830,6 +5830,10 @@ namespace WebKit {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 		[Export ("lockdownModeEnabled")]
 		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("preferredHTTPSNavigationPolicy", ArgumentSemantic.Assign)]
+		WKWebpagePreferencesUpgradeToHttpsPolicy PreferredHttpsNavigationPolicy { get; set; }
 	}
 
 	[NoMac]
@@ -5934,6 +5938,8 @@ namespace WebKit {
 
 	interface IWKDownloadDelegate { }
 
+	delegate void WKDownloadDelegateDecidePlaceholderPolicyCallback (WKDownloadPlaceholderPolicy policy, [NullAllowed] NSUrl url);
+
 	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]
 #if NET
@@ -5959,6 +5965,18 @@ namespace WebKit {
 
 		[Export ("download:didFailWithError:resumeData:")]
 		void DidFail (WKDownload download, NSError error, [NullAllowed] NSData resumeData);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:decidePlaceholderPolicy:")]
+		void DecidePlaceholderPolicy (WKDownload download, WKDownloadDelegateDecidePlaceholderPolicyCallback completionHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:didReceivePlaceholderURL:completionHandler:")]
+		void DidReceivePlaceholderUrl (WKDownload download, NSUrl url, Action completionHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:didReceiveFinalURL:")]
+		void DidReceiveFinalUrl (WKDownload download, NSUrl url);
 	}
 
 	[iOS (14, 5)]
@@ -5983,5 +6001,32 @@ namespace WebKit {
 		[Async]
 		[Export ("cancel:")]
 		void Cancel ([NullAllowed] Action<NSData> completionHandler);
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("userInitiated")]
+		bool UserInitiated { [Bind ("isUserInitiated")] get; }
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("originatingFrame")]
+		WKFrameInfo OriginatingFrame { get; }
+
+	}
+
+	[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+	[Native]
+	public enum WKDownloadPlaceholderPolicy : long
+	{
+		Disable,
+		Enable,
+	}
+
+	[Mac (15, 2), iOS (18,2), MacCatalyst (18, 2)]
+	[Native ("WKWebpagePreferencesUpgradeToHTTPSPolicy")]
+	public enum WKWebpagePreferencesUpgradeToHttpsPolicy : long
+	{
+		KeepAsRequested,
+		AutomaticFallbackToHttp,
+		UserMediatedFallbackToHttp,
+		ErrorOnFailure,
 	}
 }
