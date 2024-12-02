@@ -19,8 +19,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup Condition="'$(_TaskAssemblyName)' == ''">
-		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Tasks.dll</_TaskAssemblyName>
-		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildThisFileDirectory)Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
+		<_TaskAssemblyFileName>Xamarin.MacDev.Tasks.dll</_TaskAssemblyFileName>
+		<_TaskAssemblyFileNameWindows>Xamarin.MacDev.Tasks.dll</_TaskAssemblyFileNameWindows>
+		<_TaskAssemblyName>$(MSBuildThisFileDirectory)\$(_TaskAssemblyFileName)</_TaskAssemblyName>
 	</PropertyGroup>
 
 	<!-- Tasks that override built-in tasks to support remoting from VS/Windows -->
@@ -93,7 +94,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveNativeWatchApp" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SpotlightIndexer" AssemblyFile="$(_TaskAssemblyName)" />
@@ -184,8 +185,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			The default is 'false' for legacy Xamarin projects (for compatibility) and 'auto' for .NET projects (NuGet doesn't handle symlinks properly, so this way it's not necessary to set this property to create NuGets that work)
 		-->
 		<PropertyGroup Condition="'$(CompressBindingResourcePackage)' == ''">
-			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' == 'true'">auto</CompressBindingResourcePackage>
-			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' != 'true'">false</CompressBindingResourcePackage>
+			<CompressBindingResourcePackage>auto</CompressBindingResourcePackage>
 		</PropertyGroup>
 
 		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
@@ -249,14 +249,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_HasOldStyleBindingItems Condition="@(ObjcBindingNativeLibrary->Count()) > 0">true</_HasOldStyleBindingItems>
 		</PropertyGroup>
 		<Error Condition="'$(_HasOldStyleBindingItems)' == 'true'" Text="Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead." />
-
-		<!-- The 'GetNuGetShortFolderName' task only exists for .NET, so hardcode values for _NuGetShortFolderName for legacy builds -->
-		<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">xamarinios10</_NuGetShortFolderName>
-			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">xamarintvos10</_NuGetShortFolderName>
-			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">xamarinwatch10</_NuGetShortFolderName>
-			<_NuGetShortFolderName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">xamarinmac10</_NuGetShortFolderName>
-		</PropertyGroup>
 
 		<!-- Figure out where to place the binding resources (see references above for more info) -->
 		<GetNuGetShortFolderName
@@ -414,13 +406,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign-bundle.items" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)native-frameworks.items" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
-	</Target>
-
-	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true' And '$(UsingAppleNETSdk)' != 'true'">
-		<ItemGroup>
-			<!-- https://github.com/mono/mono/issues/13483 -->
-			<Reference Include="System.Drawing.Common.dll" />
-		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -728,7 +713,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		DependsOnTargets="$(_CompileEntitlementsDependsOn)"
 		Outputs="$(_CompiledEntitlementsPath)">
 		<!-- Automatically add the 'allow-jit' entitlement for desktop release builds in .NET -->
-		<ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(UsingAppleNETSdk)' == 'true'">
+		<ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">
 			<!-- We need to compare the result of AnyHaveMetadataValue to 'true', because if it's empty, the return value is not a boolean, it's an empty string -->
 			<CustomEntitlements Condition="'@(CustomEntitlements->AnyHaveMetadataValue('Identity','com.apple.security.cs.allow-jit'))' != 'true'" Include="com.apple.security.cs.allow-jit" Type="Boolean" Value="true" />
 		</ItemGroup>
@@ -1264,7 +1249,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_ProcessedTextureAtlasesPath Condition="'$(_ProcessedTextureAtlasesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)atlas\_ProcessedTextureAtlasesPath.items</_ProcessedTextureAtlasesPath>
 			<_ProcessedCoreMLModelsPath Condition="'$(_ProcessedCoreMLModelsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)coremlc\_ProcessedCoreMLModelsPath.items</_ProcessedCoreMLModelsPath>
 			<_CompiledEntitlementsPath Condition="'$(_CompiledEntitlementsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent</_CompiledEntitlementsPath>
-			<_SaveProcessedItems Condition="'$(RuntimeIdentifiers)' != '' And '$(UsingAppleNETSdk)' == 'true'">true</_SaveProcessedItems>
+			<_SaveProcessedItems Condition="'$(RuntimeIdentifiers)' != ''">true</_SaveProcessedItems>
 		</PropertyGroup>
 
 		<!-- Create an item group of all the paths that convey information from an outer (universal) build to its inner (rid-specific) builds (but not between (incremental) builds) -->
@@ -1589,7 +1574,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 			<Output TaskParameter="Item" PropertyName="AppBundleManifest" />
 		</FindItemWithLogicalName>
-		<Error Condition="'$(AppBundleManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
 			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifestPath>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
@@ -1754,12 +1738,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
 
-		<_GenerateBindingsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_GenerateBindingsDependsOn>
 			_CompileApiDefinitions;
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
 
-		<_WriteGeneratorPropertiesDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_WriteGeneratorPropertiesDependsOn>
 			$(_WriteGeneratorPropertiesDependsOn);
 			_ComputeBindingVariables;
 		</_WriteGeneratorPropertiesDependsOn>
@@ -1778,7 +1762,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
-		<_ComputeCompileApiDefinitionsInputsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_ComputeCompileApiDefinitionsInputsDependsOn>
 			$(_ComputeCompileApiDefinitionsInputsDependsOn);
 			_ComputeBindingVariables;
 		</_ComputeCompileApiDefinitionsInputsDependsOn>
@@ -1796,11 +1780,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CompiledApiDefinitionDocumentationFile>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.xml</_CompiledApiDefinitionDocumentationFile>
 			<_CompiledApiDefinitionNoWarn>$(_CompiledApiDefinitionNoWarn);1591</_CompiledApiDefinitionNoWarn> <!-- Don't expect every public API to have documentation -->
 			<_CompiledApiDefinitionDefines>$(DefineConstants)</_CompiledApiDefinitionDefines>
-			<_CompiledApiDefinitionDefines Condition="'$(UsingAppleNETSdk)' == 'true'">$(_CompiledApiDefinitionDefines);NET</_CompiledApiDefinitionDefines>
+			<_CompiledApiDefinitionDefines>$(_CompiledApiDefinitionDefines);NET</_CompiledApiDefinitionDefines>
 
 			<_CompiledApiDefinitionLibPaths>$(AdditionalLibPaths);$([System.IO.Path]::GetDirectoryName('$(BaseLibDllPath)'))</_CompiledApiDefinitionLibPaths>
 
-			<_CompiledApiDefinitionGlobalUsingsFile Condition="'$(UsingAppleNETSdk)' == 'true' And '$(NoNFloatUsing)' != 'true'">$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions-usings.cs</_CompiledApiDefinitionGlobalUsingsFile>
+			<_CompiledApiDefinitionGlobalUsingsFile Condition="'$(NoNFloatUsing)' != 'true'">$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions-usings.cs</_CompiledApiDefinitionGlobalUsingsFile>
 		</PropertyGroup>
 
 
@@ -2475,14 +2459,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 	<Target Name="_ComputeLinkMode" DependsOnTargets="$(_ComputeLinkModeDependsOn)">
-		<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'"> <!-- this is already done outside of a target for .NET -->
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
-			<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode> <!-- Let the .NET targets chime in -->
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
-		</PropertyGroup>
-
 		<PropertyGroup>
 			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
 			<!-- We're in a "Don't link" scenario if both of the following are true:
@@ -2880,7 +2856,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_GetNativeExecutableName;
 			_ParseBundlerArguments;
 		</GenerateDebugSymbolsDependsOn>
-		<GenerateDebugSymbolsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<GenerateDebugSymbolsDependsOn>
 			$(GenerateDebugSymbolsDependsOn);
 			_CollectRidSpecificSymbolLists;
 			_CollectRidSpecificUserFrameworksWithoutDebugSymbols;
@@ -3201,9 +3177,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
-
-	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.ImplicitFacade.targets" Condition="!('$(_PlatformName)' == 'macOS' And '$(TargetFrameworkName)' == 'System') And '$(UsingAppleNETSdk)' != 'true'"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.Stubs.targets" />
 
