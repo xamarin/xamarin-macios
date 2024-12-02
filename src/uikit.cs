@@ -30967,7 +30967,7 @@ namespace UIKit {
 	[ErrorDomain ("UIApplicationCategoryDefaultErrorDomain")]
 	[Native]
 	public enum UIApplicationCategoryDefaultErrorCode : long {
-		UIApplicationCategoryDefaultErrorRateLimited = 1,
+		RateLimited = 1,
 	}
 
 	[NoTV, NoMacCatalyst, iOS (18, 2)]
