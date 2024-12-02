@@ -4979,7 +4979,7 @@ namespace WebKit {
 
 		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("proxyConfigurations", ArgumentSemantic.Copy), NullAllowed]
-		NWProxyConfig[] ProxyConfigurations { get; set; }
+		NWProxyConfig [] ProxyConfigurations { get; set; }
 	}
 
 	[NoiOS, NoWatch, NoTV]
