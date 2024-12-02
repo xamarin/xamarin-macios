@@ -788,17 +788,44 @@ namespace Foundation {
 		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
 		NativeHandle Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
 
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
+		NativeHandle _InitWithContentsOfMarkdownFile (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithMarkdown:options:baseURL:error:")]
 		NativeHandle Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
 
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithMarkdown:options:baseURL:error:")]
+		NativeHandle _InitWithMarkdown (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithMarkdownString:options:baseURL:error:")]
 		NativeHandle Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
+
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithMarkdownString:options:baseURL:error:")]
+		NativeHandle _InitWithMarkdownString (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
 
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("attributedStringByInflectingString")]
