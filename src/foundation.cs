@@ -354,37 +354,57 @@ namespace Foundation {
 		[Export ("enumerateAttribute:inRange:options:usingBlock:")]
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithURL:options:documentAttributes:error:")]
-#if !(__MACOS__ || XAMCORE_5_0)
+#if !__MACOS__
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #else
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
+		[Internal]
+		[Sealed]
+		[Export ("initWithURL:options:documentAttributes:error:")]
+		NativeHandle _InitWithUrl (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithData:options:documentAttributes:error:")]
-#if XAMCORE_5_0
-		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-#elif __MACOS__
+#if __MACOS__
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
 #else
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Internal]
+		[Sealed]
+		[Export ("initWithData:options:documentAttributes:error:")]
+		NativeHandle _InitWithData (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if __MACOS__
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if !XAMCORE_5_0
+#if __MACOS__
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
 		[NoiOS]
 		[NoMacCatalyst]
