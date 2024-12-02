@@ -1,7 +1,0 @@
-!missing-protocol-member! SFAddToHomeScreenActivityItem::getWebAppManifestWithCompletionHandler: not found
-!missing-protocol-member! SFAddToHomeScreenActivityItem::getHomeScreenWebAppInfoWithCompletionHandler: not found
-!missing-selector! SFAddToHomeScreenInfo::initWithManifest: not bound
-!missing-selector! SFAddToHomeScreenInfo::manifest not bound
-!missing-selector! SFAddToHomeScreenInfo::setWebsiteCookies: not bound
-!missing-selector! SFAddToHomeScreenInfo::websiteCookies not bound
-!missing-type! SFAddToHomeScreenInfo not bound
