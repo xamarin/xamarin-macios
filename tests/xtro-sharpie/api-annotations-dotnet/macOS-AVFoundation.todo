@@ -362,9 +362,7 @@
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioInputNode::setVoiceProcessingOtherAudioDuckingConfiguration: not bound
 !missing-selector! AVAudioInputNode::voiceProcessingOtherAudioDuckingConfiguration not bound
-!missing-selector! AVCaptureConnection::isVideoRotationAngleSupported: not bound
 !missing-selector! AVCaptureConnection::setVideoRotationAngle: not bound
-!missing-selector! AVCaptureConnection::videoRotationAngle not bound
 !missing-selector! AVCaptureDevice::availableReactionTypes not bound
 !missing-selector! AVCaptureDevice::canPerformReactionEffects not bound
 !missing-selector! AVCaptureDevice::performEffectForReaction: not bound
@@ -488,8 +486,6 @@
 !deprecated-attribute-missing! AVAudioEngine::connectMIDI:to:format:block: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAudioEngine::connectMIDI:toNodes:format:block: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVCaptureConnection::isVideoOrientationSupported missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::setVideoOrientation: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::videoOrientation missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferGenerator::createSampleBufferForRequest: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAggregateAssetDownloadTask missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection: missing a [Deprecated] attribute
@@ -772,4 +768,3 @@
 !missing-type! AVExposureBiasRange not bound
 !missing-enum! AVAudioApplicationMicrophoneInjectionPermission not bound
 !missing-enum! AVAudioSessionMicrophoneInjectionMode not bound
-!missing-protocol-member! AVCaptureFileOutputRecordingDelegate::captureOutput:didStartRecordingToOutputFileAtURL:startPTS:fromConnections: not found
