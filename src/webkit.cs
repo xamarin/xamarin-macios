@@ -6014,16 +6014,14 @@ namespace WebKit {
 
 	[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
 	[Native]
-	public enum WKDownloadPlaceholderPolicy : long
-	{
+	public enum WKDownloadPlaceholderPolicy : long {
 		Disable,
 		Enable,
 	}
 
-	[Mac (15, 2), iOS (18,2), MacCatalyst (18, 2)]
+	[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
 	[Native ("WKWebpagePreferencesUpgradeToHTTPSPolicy")]
-	public enum WKWebpagePreferencesUpgradeToHttpsPolicy : long
-	{
+	public enum WKWebpagePreferencesUpgradeToHttpsPolicy : long {
 		KeepAsRequested,
 		AutomaticFallbackToHttp,
 		UserMediatedFallbackToHttp,
