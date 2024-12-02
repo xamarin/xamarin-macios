@@ -30951,15 +30951,13 @@ namespace UIKit {
 
 	[NoTV, NoMacCatalyst, iOS (18, 2)]
 	[Native]
-	public enum UIApplicationCategory : long
-	{
+	public enum UIApplicationCategory : long {
 		UIApplicationCategoryWebBrowser = 1,
 	}
 
 	[NoTV, NoMacCatalyst, iOS (18, 2)]
 	[Native]
-	public enum UIApplicationCategoryDefaultStatus : long
-	{
+	public enum UIApplicationCategoryDefaultStatus : long {
 		Unavailable,
 		IsDefault,
 		NotDefault,
@@ -30968,16 +30966,14 @@ namespace UIKit {
 	[NoTV, NoMacCatalyst, iOS (18, 2)]
 	[ErrorDomain ("UIApplicationCategoryDefaultErrorDomain")]
 	[Native]
-	public enum UIApplicationCategoryDefaultErrorCode : long
-	{
+	public enum UIApplicationCategoryDefaultErrorCode : long {
 		UIApplicationCategoryDefaultErrorRateLimited = 1,
 	}
 
 	[NoTV, NoMacCatalyst, iOS (18, 2)]
 	[Category]
 	[BaseType (typeof (UIApplication))]
-	interface UIApplication_DefaultApplication
-	{
+	interface UIApplication_DefaultApplication {
 		[Export ("defaultStatusForCategory:error:")]
 		UIApplicationCategoryDefaultStatus GetDefaultStatus (UIApplicationCategory category, [NullAllowed] out NSError error);
 	}

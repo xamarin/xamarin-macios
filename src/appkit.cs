@@ -8812,7 +8812,7 @@ namespace AppKit {
 		[Static]
 		[Mac (15, 2)]
 		[Export ("writingToolsItems", ArgumentSemantic.Copy)]
-		NSMenuItem[] WritingToolsItems { get; }
+		NSMenuItem [] WritingToolsItems { get; }
 	}
 
 	[NoMacCatalyst]
@@ -28843,8 +28843,7 @@ namespace AppKit {
 	[Category]
 	[BaseType (typeof (NSResponder))]
 	[Mac (15, 2), NoMacCatalyst]
-	interface NSResponder_NSWritingToolsSupport
-	{
+	interface NSResponder_NSWritingToolsSupport {
 		[Export ("showWritingTools:")]
 		void ShowWritingTools ([NullAllowed] NSObject sender);
 	}
@@ -28852,8 +28851,7 @@ namespace AppKit {
 	[NoMacCatalyst, Mac (15, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSTextPreview
-	{
+	interface NSTextPreview {
 		[Export ("initWithSnapshotImage:presentationFrame:candidateRects:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (CGImage snapshotImage, CGRect presentationFrame, [BindAs (typeof (CGRect []))] NSValue [] candidateRects);
@@ -28869,6 +28867,6 @@ namespace AppKit {
 
 		[Export ("candidateRects")]
 		[BindAs (typeof (CGRect []))]
-		NSValue[] CandidateRects { get; }
+		NSValue [] CandidateRects { get; }
 	}
 }
