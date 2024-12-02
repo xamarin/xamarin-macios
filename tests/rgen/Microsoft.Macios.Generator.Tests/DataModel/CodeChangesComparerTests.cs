@@ -11,98 +11,27 @@ namespace Microsoft.Macios.Generator.Tests.DataModel;
 public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	readonly CodeChangesEqualityComparer comparer = new ();
 
-	// returns a node that matches the given node type from an example syntax tree
-	T GetSyntaxNode<T> (ApplePlatform platform) where T : BaseTypeDeclarationSyntax
+	[Fact]
+	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var attrsText = @"
-using System;
-
-namespace ObjCBindings;
-public class SimpleAttribute : Attribute {
-}
-
-public class AttributeWithParams : Attribute {
-	public AttributeWithParams (string name, int value) {
-	}
-}
-";
-		var inputText = @"
-using System;
-using Foundation;
-using ObjCBindings;
-
-namespace AVFoundation;
-
-[SimpleAttribute, AttributeWithParams (""first"", 2)]
-public class TestClass {
-
-	[SimpleAttribute, AttributeWithParams (""first"", 2)]
-	public void SayHello () {
-	}
-} 
-
-[SimpleAttribute, AttributeWithParams (""first"", 2)]
-public enum TestEnum {
-	[SimpleAttribute, AttributeWithParams (""first"", 2)]
-	First,	
-}
-
-[SimpleAttribute, AttributeWithParams (""first"", 2)]
-public interface IInterface {
-	[SimpleAttribute, AttributeWithParams (""first"", 2)]
-	public void SayHello ();
-}
-";
-		var (_, sourceTrees) =
-			CreateCompilation (nameof (CodeChangesComparerTests), platform, attrsText, inputText);
-		Assert.Equal (2, sourceTrees.Length);
-		// get the declarations we want to work with and the semantic model
-		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();
-		var declarationNode = nodes
-			.OfType<T> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declarationNode);
-		return declarationNode;
-	}
-
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentFullyQualifiedSymbol (ApplePlatform platform)
-	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", node);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", node);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1");
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2");
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentBindingType (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentBindingType ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
-		var changes2 = new CodeChanges (BindingType.Unknown, "name", node);
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name");
+		var changes2 = new CodeChanges (BindingType.Unknown, "name");
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentSymbolDeclaration (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentAttributesLength ()
 	{
-		var node1 = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var node2 = GetSyntaxNode<EnumDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node1);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node2);
-		Assert.False (comparer.Equals (changes1, changes2));
-	}
-
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentAttributesLength (ApplePlatform platform)
-	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name");
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			Attributes = [
 				new AttributeCodeChange ("name", ["arg1", "arg2"])
 			]
@@ -110,17 +39,15 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentAttributes (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentAttributes ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			Attributes = [
 				new AttributeCodeChange ("name", ["arg1", "arg2"])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			Attributes = [
 				new AttributeCodeChange ("name2", ["arg1", "arg2"])
 			],
@@ -128,13 +55,11 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentMembersLength (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentMembersLength ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node);
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name");
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
 				new EnumMember ("name", [])
 			],
@@ -142,17 +67,15 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentMembers (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentMembers ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
 				new EnumMember ("name", [])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
 				new EnumMember ("name2", [])
 			],
@@ -160,13 +83,14 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentPropertyLength (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentPropertyLength ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) { EnumMembers = [], Properties = [] };
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = []
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -192,12 +116,10 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareSamePropertiesDiffOrder (ApplePlatform platform)
+	[Fact]
+	public void CompareSamePropertiesDiffOrder ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -234,7 +156,7 @@ public interface IInterface {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -274,12 +196,10 @@ public interface IInterface {
 		Assert.True (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentProperties (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentProperties ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -316,7 +236,7 @@ public interface IInterface {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -356,12 +276,10 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentEventsLength (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentEventsLength ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -408,7 +326,7 @@ public interface IInterface {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -448,12 +366,10 @@ public interface IInterface {
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareSameEventsDiffOrder (ApplePlatform platform)
+	[Fact]
+	public void CompareSameEventsDiffOrder ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -509,7 +425,7 @@ public interface IInterface {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -569,12 +485,10 @@ public interface IInterface {
 		Assert.True (comparer.Equals (changes1, changes2));
 	}
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void CompareDifferentEvents (ApplePlatform platform)
+	[Fact]
+	public void CompareDifferentEvents ()
 	{
-		var node = GetSyntaxNode<ClassDeclarationSyntax> (platform);
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -621,7 +535,7 @@ public interface IInterface {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", node) {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -670,6 +584,498 @@ public interface IInterface {
 					]),
 			]
 		};
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Fact]
+	public void CompareDifferentMethodsLength ()
+	{
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				)
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Fact]
+	public void CompareSameMethodsDiffOrder ()
+	{
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				)
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				),
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
+		Assert.True (comparer.Equals (changes1, changes2));
+	}
+
+	[Fact]
+	public void CompareDifferentMethods ()
+	{
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+			],
+			Methods = [
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "NS.CustomType", "input")
+					]
+				),
+			]
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, [], []),
+					]),
+			],
+			Events = [
+				new (
+					name: "MyEvent2",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Remove, [], []),
+					]),
+				new (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					attributes: [],
+					modifiers: [],
+					accessors: [
+						new (AccessorKind.Add, [], []),
+					]),
+			],
+			Methods = [
+				new (
+					type: "NS.MyClass",
+					name: "TryGetString",
+					returnType: "bool",
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "example") {
+							IsNullable = true,
+							ReferenceKind = ReferenceKind.Out,
+						},
+					]
+				),
+			]
+		};
+
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 }

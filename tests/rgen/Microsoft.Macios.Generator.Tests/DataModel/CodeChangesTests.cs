@@ -160,12 +160,78 @@ public class TestClass {
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
+			CreateCompilation (nameof (SkipPropertyDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
 			.DescendantNodes ()
 			.OfType<PropertyDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (node);
+		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
+		Assert.Equal (expected, CodeChanges.Skip (node, semanticModel));
+	}
+
+	class TestDataSkipMethodDeclaration : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string notPartialMethod = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	[Export<Method> (""name"")]
+	public void GetName() {}
+}
+";
+			yield return [notPartialMethod, true];
+
+			const string wrongAttributeFlag = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	[Export<Property> (""name"")]
+	public partial void GetName();
+}
+";
+			yield return [wrongAttributeFlag, true];
+
+			const string correctMethod = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	[Export<Method> (""name"")]
+	public partial void GetName();
+}
+";
+			yield return [correctMethod, false];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataSkipMethodDeclaration>]
+	public void SkipMethodDeclaration (ApplePlatform platform, string inputText, bool expected)
+	{
+		var (compilation, sourceTrees) =
+			CreateCompilation (nameof (SkipMethodDeclaration), platform, inputText);
+		Assert.Single (sourceTrees);
+		// get the declarations we want to work with and the semantic model
+		var node = sourceTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<MethodDeclarationSyntax> ()
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);

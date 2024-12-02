@@ -156,9 +156,6 @@
 !extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
 !extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
 
-## it's a `ref` on a struct, which xtro assumes nullable
-!extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
-
 ## added in xcode 14 and is between a #if XAMCORE_5_0
 !incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
 !incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
