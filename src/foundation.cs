@@ -1047,7 +1047,6 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL - `init` now marked as NS_UNAVAILABLE
 	[DisableDefaultCtor]
 	interface NSCalendar : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -5201,8 +5200,6 @@ namespace Foundation {
 #endif
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL so it's not usable evenif it does not throw an ObjC exception
-	// funnily it was "added" in iOS 7 and header files says "do not invoke; not a valid initializer for this class"
 	[DisableDefaultCtor]
 	interface NSLocale : NSSecureCoding, NSCopying {
 		[Static]
@@ -8752,6 +8749,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8961,6 +8962,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; set; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; set; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLResponse")]
@@ -10661,6 +10666,10 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sameSitePolicy")]
 		NSString SameSitePolicy { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Field ("NSHTTPCookieSetByJavaScript")]
+		NSString KeySetByJavaScript { get; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSHTTPCookieStorage")]
@@ -10745,9 +10754,7 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-#if MONOMAC
-	[DisableDefaultCtor] // An uncaught exception was raised: -[__NSCFDictionary removeObjectForKey:]: attempt to remove nil key
-#endif
+	[DisableDefaultCtor]
 	partial interface NSBundle {
 		[Export ("mainBundle")]
 		[Static]
@@ -14965,7 +14972,7 @@ namespace Foundation {
 		bool ContainsDate (NSDate date);
 	}
 
-	[DisableDefaultCtor] // -init should never be called on NSUnit!
+	[DisableDefaultCtor]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSUnit : NSCopying, NSSecureCoding {

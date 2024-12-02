@@ -11,6 +11,11 @@
 
 using System;
 
+#if HAS_BROWSERENGINEKIT
+using BrowserEngineKit;
+#else
+using BEWebAppManifest = Foundation.NSObject;
+#endif
 using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
@@ -542,7 +547,7 @@ namespace SafariServices {
 		[Field ("SFExtensionMessageKey")]
 		NSString MessageKey { get; }
 
-		[iOS (17, 0), Mac (14, 0), NoMacCatalyst]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 1)]
 		[Field ("SFExtensionProfileKey")]
 		NSString ProfileKey { get; }
 	}
@@ -584,6 +589,9 @@ namespace SafariServices {
 		void ClearWebsiteData ([NullAllowed] Action completion);
 	}
 
+	delegate void SFAddToHomeScreenActivityItemGetWebAppManifestCallback ([NullAllowed] BEWebAppManifest appManifest);
+	delegate void SFAddToHomeScreenActivityItemGetHomeScreenWebAppInfoCallback ([NullAllowed] SFAddToHomeScreenInfo appManifest);
+
 	[iOS (17, 4), MacCatalyst (17, 4), NoMac, NoTV, NoWatch]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface SFAddToHomeScreenActivityItem {
@@ -598,6 +606,32 @@ namespace SafariServices {
 
 		[NullAllowed, Export ("iconItemProvider")]
 		NSItemProvider IconItemProvider { get; }
+
+		[NoMacCatalyst] // The BrowserEngineKit framework (the BEWebAppManifest type) isn't available on Mac Catalyst.
+		[Deprecated (PlatformName.iOS, 18, 2, "Use 'GetHomeScreenWebAppInfo' instead.")]
+		[Async]
+		[Export ("getWebAppManifestWithCompletionHandler:")]
+		void GetWebAppManifest (SFAddToHomeScreenActivityItemGetWebAppManifestCallback completionHandler);
+
+		[iOS (18, 2), NoMacCatalyst]
+		[Async]
+		[Export ("getHomeScreenWebAppInfoWithCompletionHandler:")]
+		void GetHomeScreenWebAppInfo (SFAddToHomeScreenActivityItemGetHomeScreenWebAppInfoCallback completionHandler);
 	}
 
+	[iOS (18, 2), NoMacCatalyst, NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFAddToHomeScreenInfo : NSCopying {
+		[NoMacCatalyst] // The BrowserEngineKit framework (the BEWebAppManifest type) isn't available on Mac Catalyst.
+		[Export ("initWithManifest:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (BEWebAppManifest manifest);
+
+		[Export ("manifest", ArgumentSemantic.Copy)]
+		BEWebAppManifest Manifest { get; }
+
+		[Export ("websiteCookies", ArgumentSemantic.Copy)]
+		NSHttpCookie [] WebsiteCookies { get; set; }
+	}
 }
