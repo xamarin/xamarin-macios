@@ -67,6 +67,7 @@ using NativeHandle = System.IntPtr;
 namespace PdfKit {
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationKey {
 
 		[Field ("PDFAnnotationKeyAppearanceDictionary", "+PDFKit")]
@@ -197,6 +198,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationSubtype {
 
 		[Field ("PDFAnnotationSubtypeText", "+PDFKit")]
@@ -240,6 +242,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationWidgetSubtype {
 
 		[Field ("PDFAnnotationWidgetSubtypeButton", "+PDFKit")]
@@ -256,6 +259,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationLineEndingStyle {
 
 		[Field ("PDFAnnotationLineEndingStyleNone", "+PDFKit")]
@@ -278,6 +282,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationTextIconType {
 
 		[Field ("PDFAnnotationTextIconTypeComment", "+PDFKit")]
@@ -303,6 +308,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	enum PdfAnnotationHighlightingMode {
 
 		[Field ("PDFAnnotationHighlightingModeNone", "+PDFKit")]
@@ -320,6 +326,7 @@ namespace PdfKit {
 
 	[Native]
 	[iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (18, 2)]
 	public enum PdfAccessPermissions : ulong {
 		LowQualityPrinting = (1uL << 0),
 		HighQualityPrinting = (1uL << 1),
@@ -333,6 +340,7 @@ namespace PdfKit {
 
 	[Native]
 	[iOS (18, 0), Mac (15, 0), MacCatalyst (18, 0)]
+	[TV (18, 2)]
 	enum PdfSelectionGranularity : ulong {
 		Character,
 		Word,
@@ -340,6 +348,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[Static]
 	interface PdfAppearanceCharacteristicsKeys {
 
@@ -363,6 +372,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[Static]
 	interface PdfBorderKeys {
 
@@ -377,6 +387,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[Internal]
 	[Static]
 	interface PdfDocumentAttributeKeys {
@@ -407,6 +418,7 @@ namespace PdfKit {
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[TV (18, 2)]
 	[StrongDictionary ("PdfPageImageInitializationOptionKeys")]
 	interface PdfPageImageInitializationOption {
 		CGRect MediaBox { get; set; }
@@ -416,6 +428,7 @@ namespace PdfKit {
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[TV (18, 2)]
 	[Static]
 	interface PdfPageImageInitializationOptionKeys {
 		[Field ("PDFPageImageInitializationOptionMediaBox")]
@@ -432,6 +445,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[StrongDictionary ("PdfDocumentAttributeKeys")]
 	interface PdfDocumentAttributes {
 
@@ -446,6 +460,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[Internal]
 	[Static]
 	interface PdfDocumentWriteOptionKeys {
@@ -478,6 +493,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[StrongDictionary ("PdfDocumentWriteOptionKeys")]
 	interface PdfDocumentWriteOptions {
 
@@ -501,6 +517,7 @@ namespace PdfKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFAppearanceCharacteristics")]
 	interface PdfAppearanceCharacteristics : NSCopying {
 
@@ -531,6 +548,7 @@ namespace PdfKit {
 
 	/// <summary>Base class for actions that can be performed on a PDF.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFAction")]
 	[Abstract]
 	interface PdfAction : NSCopying {
@@ -544,6 +562,7 @@ namespace PdfKit {
 
 	/// <summary>An action that contains data for going to a location within a PDF.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionGoTo")]
 	interface PdfActionGoTo {
 
@@ -557,6 +576,7 @@ namespace PdfKit {
 
 	/// <summary>An named PDF action.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionNamed")]
 	interface PdfActionNamed {
 
@@ -570,6 +590,7 @@ namespace PdfKit {
 
 	/// <summary>An action that contains data for going to a location in another document.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionRemoteGoTo")]
 	interface PdfActionRemoteGoTo {
 
@@ -589,6 +610,7 @@ namespace PdfKit {
 
 	/// <summary>An action that resets a form in a PDF.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (PdfAction), Name = "PDFActionResetForm")]
 	interface PdfActionResetForm {
@@ -607,6 +629,7 @@ namespace PdfKit {
 
 	/// <summary>A PDF action for visiting a URL.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionURL")]
 	interface PdfActionUrl {
 
@@ -620,6 +643,7 @@ namespace PdfKit {
 
 	/// <summary>Notes, highlights, or other additions to a PDF file.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFAnnotation")]
 	interface PdfAnnotation : NSCoding, NSCopying {
 
@@ -635,6 +659,7 @@ namespace PdfKit {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[NoMacCatalyst]
+		[NoTV]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Export ("initWithBounds:")]
 		NativeHandle Constructor (CGRect bounds);
@@ -690,6 +715,7 @@ namespace PdfKit {
 		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("mouseUpAction")]
 		PdfAction MouseUpAction { get; set; }
 
@@ -700,6 +726,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("toolTip")]
 		[NullAllowed]
 		string ToolTip { get; }
@@ -710,12 +737,14 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("removeAllAppearanceStreams")]
 		void RemoveAllAppearanceStreams ();
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
@@ -940,6 +969,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationButtonWidget")]
@@ -976,6 +1006,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationChoiceWidget")]
@@ -1004,6 +1035,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationCircle")]
@@ -1013,6 +1045,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationFreeText")]
@@ -1028,6 +1061,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationInk")]
@@ -1051,6 +1085,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationLine")]
@@ -1072,6 +1107,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationLink")]
@@ -1087,6 +1123,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationMarkup")]
@@ -1099,6 +1136,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationPopup")]
@@ -1108,6 +1146,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationSquare")]
@@ -1117,6 +1156,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationStamp")]
@@ -1126,6 +1166,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationText")]
@@ -1135,6 +1176,7 @@ namespace PdfKit {
 	}
 
 	[NoiOS]
+	[NoTV]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[NoMacCatalyst]
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationTextWidget")]
@@ -1172,6 +1214,7 @@ namespace PdfKit {
 
 	/// <summary>A border that may be drawn within the rectangle of an annotation.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFBorder")]
 	interface PdfBorder : NSCoding, NSCopying {
 		[Export ("style")]
@@ -1193,6 +1236,7 @@ namespace PdfKit {
 
 	/// <summary>A destination for a go-to PDF action.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
@@ -1222,6 +1266,7 @@ namespace PdfKit {
 	//Add attributes for delegates/events
 	/// <summary>Class for working with PDF documents.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFDocument", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfDocumentDelegate) })]
 	interface PdfDocument : NSCopying {
@@ -1497,6 +1542,7 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
 #pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
@@ -1519,6 +1565,7 @@ namespace PdfKit {
 
 	/// <summary>Delegate object for the <see cref="T:PdfKit.PdfDocument" /> class, presenting methods relating to search process and results.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
 #if IOS
 	[Protocol]
@@ -1547,6 +1594,7 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GetClassForAnnotationType' instead.")]
+		[NoTV]
 		[NoMacCatalyst]
 		[Export ("classForAnnotationClass:"), DelegateName ("ClassForAnnotationClassDelegate"), DefaultValue (null)]
 #if NET
@@ -1570,6 +1618,7 @@ namespace PdfKit {
 
 	/// <summary>A node in a logical outline of a PDF document.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFOutline")]
 	interface PdfOutline {
@@ -1619,6 +1668,7 @@ namespace PdfKit {
 
 	/// <summary>Class for working with and rendering PDF pages.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFPage")]
 	interface PdfPage : NSCopying {
@@ -1685,6 +1735,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
@@ -1703,6 +1754,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("transformContextForBox:")]
 		void TransformContext (PdfDisplayBox box);
 
@@ -1749,6 +1801,7 @@ namespace PdfKit {
 
 	/// <summary>A text selection in a PDF document.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFSelection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: init: not a valid initializer for PDFSelection
 	interface PdfSelection : NSCopying {
@@ -1806,6 +1859,7 @@ namespace PdfKit {
 
 	/// <summary>A list of thumbnail images for each page of a document.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSView), Name = "PDFThumbnailView")]
 	interface PdfThumbnailView : NSCoding {
 
@@ -1835,11 +1889,13 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("maximumNumberOfColumns")]
 		nint MaximumNumberOfColumns { get; set; }
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("labelFont")]
 		[NullAllowed]
 		NSFont LabelFont { get; set; }
@@ -1850,11 +1906,13 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("allowsDragging")]
 		bool AllowsDragging { get; set; }
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get; set; }
 
@@ -1864,10 +1922,16 @@ namespace PdfKit {
 
 	/// <summary>A viewer for PDF files.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSView), Name = "PDFView", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfViewDelegate) })]
+#if TVOS
+	[DisableDefaultCtor]
+#endif
 	interface PdfView :
 #if IOS
 	UIGestureRecognizerDelegate, UIFindInteractionDelegate
+#elif TVOS
+	UIFindInteractionDelegate
 #else
 	NSMenuDelegate, NSAnimationDelegate
 #endif
@@ -1962,18 +2026,21 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("shouldAntiAlias")]
 		bool ShouldAntiAlias { get; set; }
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("takeBackgroundColorFrom:")]
 		void TakeBackgroundColor (NSObject sender);
 
@@ -2042,6 +2109,7 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("setCursorForAreaOfInterest:")]
 		void SetCursor (PdfAreaOfInterest area);
 
@@ -2071,12 +2139,14 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("takePasswordFrom:")]
 		void TakePasswordFrom (NSObject sender);
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("drawPage:")]
 		void DrawPage (PdfPage page);
 
@@ -2091,6 +2161,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("drawPagePost:")]
 		void DrawPagePost (PdfPage page);
 
@@ -2099,11 +2170,13 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("printWithInfo:autoRotate:")]
 		void Print (NSPrintInfo printInfo, bool doRotate);
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("printWithInfo:autoRotate:pageScaling:")]
 #pragma warning disable // 0618: 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
@@ -2141,6 +2214,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("allowsDragging")]
 		bool AllowsDragging { get; set; }
 
@@ -2150,6 +2224,7 @@ namespace PdfKit {
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		[Deprecated (PlatformName.iOS, 18, 0)]
+		[Deprecated (PlatformName.TvOS, 18, 2)]
 		[Export ("enableDataDetectors")]
 		bool EnableDataDetectors { get; set; }
 
@@ -2203,6 +2278,7 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("acceptsDraggedFiles")]
 		bool AcceptsDraggedFiles { get; set; }
 
@@ -2214,7 +2290,7 @@ namespace PdfKit {
 		[Export ("inMarkupMode")]
 		bool InMarkupMode { [Bind ("isInMarkupMode")] get; set; }
 
-		[iOS (16, 0), NoMac, MacCatalyst (16, 0)]
+		[iOS (16, 0), NoMac, MacCatalyst (16, 0), NoTV]
 		[Export ("findInteraction")]
 		UIFindInteraction FindInteraction { get; }
 
@@ -2225,7 +2301,9 @@ namespace PdfKit {
 
 	/// <summary>Provides data for the  event.</summary>
 	[NoiOS]
+	[NoTV]
 	[NoMacCatalyst]
+	[NoTV]
 	interface PdfViewAnnotationHitEventArgs {
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }
@@ -2243,8 +2321,9 @@ namespace PdfKit {
 	//if the delegate does not implement the method.
 	/// <summary>Delegate object for <see cref="T:PdfKit.PdfView" /> objects, allowing the developer to respond to navigation, printing, and linking events.</summary>
 	[MacCatalyst (13, 1)]
+	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFViewDelegate")]
-#if IOS
+#if IOS || TV
 	[Protocol]
 #else
 	[Protocol (FormalSince = "10.12", Name = "PDFViewDelegate")]
@@ -2254,6 +2333,7 @@ namespace PdfKit {
 		//from docs: 'By default, the scale factor is restricted to a range between 0.1 and 10.0 inclusive.'
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("PDFViewWillChangeScaleFactor:toScale:"), DelegateName ("PdfViewScale"), DefaultValueFromArgument ("scale")]
 		nfloat WillChangeScaleFactor (PdfView sender, nfloat scale);
 
@@ -2265,6 +2345,7 @@ namespace PdfKit {
 		// this method uses the last path component if the document is URL-based.
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("PDFViewPrintJobTitle:"), DelegateName ("PdfViewTitle"), DefaultValue ("String.Empty")]
 		string TitleOfPrintJob (PdfView sender);
 
@@ -2276,6 +2357,7 @@ namespace PdfKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
+		[NoTV]
 		[Export ("PDFViewPerformPrint:"), EventArgs ("PdfView")]
 		void PerformPrint (PdfView sender);
 
@@ -2290,9 +2372,11 @@ namespace PdfKit {
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[TV (18, 2)]
 	interface IPdfPageOverlayViewProvider { }
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[TV (18, 2)]
 	[Protocol (Name = "PDFPageOverlayViewProvider")]
 	interface PdfPageOverlayViewProvider {
 		[Abstract]
