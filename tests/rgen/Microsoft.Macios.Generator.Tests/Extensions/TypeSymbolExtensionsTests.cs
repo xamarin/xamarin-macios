@@ -44,9 +44,7 @@ public class TestClass {
 ";
 			var classAttrs = new HashSet<string> { "Test.SimpleAttribute", "Test.AttributeWithParamsAttribute" };
 
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, classText, attributesText, classAttrs];
-			}
+			yield return [classText, attributesText, classAttrs];
 
 			var interfaceText = @"
 using System;
@@ -58,9 +56,7 @@ public interface ITestInterface {
 }
 ";
 			var interfaceAttrs = new HashSet<string> { "Test.SimpleAttribute" };
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, interfaceText, attributesText, interfaceAttrs];
-			}
+			yield return [interfaceText, attributesText, interfaceAttrs];
 
 			var enumText = @"
 namespace Test;
@@ -71,16 +67,14 @@ public enum TestEnum {
 }
 ";
 			HashSet<string> enumAttrs = new ();
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, enumText, attributesText, enumAttrs];
-			}
+			yield return [enumText, attributesText, enumAttrs];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataGetAttributeDataPresent))]
+	[AllSupportedPlatformsClassData<TestDataGetAttributeDataPresent>]
 	public void GetAttributeDataPresent (ApplePlatform platform, string inputText, string attributesText,
 		HashSet<string> expectedAttributes)
 	{
@@ -122,9 +116,7 @@ public class ParentClass{
 			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
 			var nestedMethodNestedClassParents = new [] { "ChildClass", "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
-			}
+			yield return [nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
 
 			const string methodInClass = @"
 using System;
@@ -136,9 +128,7 @@ public class ParentClass{
 }
 ";
 			var methodParents = new [] { "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, methodInClass, getNestedMethod, methodParents];
-			}
+			yield return [methodInClass, getNestedMethod, methodParents];
 
 			const string nestedNamespacesNestedClass = @"
 using System;
@@ -155,9 +145,7 @@ namespace Test {
 ";
 
 			var nestedNamespacesParents = new [] { "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
-			}
+			yield return [nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
 
 
 			Func<SyntaxNode, MemberDeclarationSyntax?> getEnumValue =
@@ -176,16 +164,14 @@ public class ParentClass {
 }
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, enumValueNested, getEnumValue, enumParensts];
-			}
+			yield return [enumValueNested, getEnumValue, enumParensts];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataGetParents))]
+	[AllSupportedPlatformsClassData<TestDataGetParents>]
 	public void GetParentTests (ApplePlatform platform, string inputText,
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
 	{
@@ -222,9 +208,7 @@ public class ParentClass{
 }
 ";
 			builder.Add (new SupportedOSPlatformData ("ios12.0"));
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, decoratedParent, getNestedMethod, builder.ToImmutable ()];
-			}
+			yield return [decoratedParent, getNestedMethod, builder.ToImmutable ()];
 			builder.Clear ();
 
 			// base member decorated, child decorated
@@ -243,9 +227,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios12.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, decoratedParentAndChild, getNestedMethod, builder.ToImmutable ()];
-			}
+			yield return [decoratedParentAndChild, getNestedMethod, builder.ToImmutable ()];
 			builder.Clear ();
 
 			// base member, child, granchild not decorated
@@ -265,9 +247,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, grandChild, getNestedMethod, builder.ToImmutable ()];
-			}
+			yield return [grandChild, getNestedMethod, builder.ToImmutable ()];
 			builder.Clear ();
 
 			// all decorated
@@ -288,9 +268,7 @@ public class ParentClass{
 ";
 			builder.Add (new SupportedOSPlatformData ("ios13.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, allDecorated, getNestedMethod, builder.ToImmutable ()];
-			}
+			yield return [allDecorated, getNestedMethod, builder.ToImmutable ()];
 			builder.Clear ();
 
 			// enum decorated
@@ -314,9 +292,7 @@ public class ParentClass{
 
 			builder.Add (new SupportedOSPlatformData ("ios13.0"));
 			builder.Add (new UnsupportedOSPlatformData ("tvos"));
-			foreach (var platform in Configuration.GetIncludedPlatforms ()) {
-				yield return [platform, enumDecorated, getEnumValue, builder.ToImmutable ()];
-			}
+			yield return [enumDecorated, getEnumValue, builder.ToImmutable ()];
 			builder.Clear ();
 
 		}
@@ -325,7 +301,7 @@ public class ParentClass{
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataGetSupportedPlatforms))]
+	[AllSupportedPlatformsClassData<TestDataGetSupportedPlatforms>]
 	void GetSupportedPlatforms (ApplePlatform platform, string inputText,
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode,
 		SymbolAvailability expectedAvailability)

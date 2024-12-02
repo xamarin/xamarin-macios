@@ -25,7 +25,7 @@ namespace Cecil.Tests {
 			reason = null;
 
 			foreach (var instr in instructions) {
-				if (instr.OpCode != OpCodes.Call)
+				if (instr.OpCode != OpCodes.Call && instr.OpCode != OpCodes.Callvirt)
 					continue;
 
 				var target = instr.Operand as MethodReference;

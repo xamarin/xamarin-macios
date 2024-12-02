@@ -14,19 +14,19 @@ static class EmitterFactory {
 		INamedTypeSymbol symbol, TabbedStringBuilder builder,
 		[NotNullWhen (true)] out ICodeEmitter? emitter)
 	{
-		switch (changes.SymbolDeclaration) {
-		case ClassDeclarationSyntax classDeclarationSyntax: {
-			var ctx = new ClassBindingContext (context, semanticModel, symbol, classDeclarationSyntax);
+		switch (changes.BindingType) {
+		case BindingType.Class: {
+			var ctx = new ClassBindingContext (context, semanticModel, symbol);
 			emitter = new ClassEmitter (ctx, builder);
 			break;
 		}
-		case EnumDeclarationSyntax enumDeclarationSyntax: {
-			var ctx = new SymbolBindingContext (context, semanticModel, symbol, enumDeclarationSyntax);
+		case BindingType.SmartEnum: {
+			var ctx = new SymbolBindingContext (context, semanticModel, symbol);
 			emitter = new EnumEmitter (ctx, builder);
 			break;
 		}
-		case InterfaceDeclarationSyntax interfaceDeclarationSyntax: {
-			var ctx = new SymbolBindingContext (context, semanticModel, symbol, interfaceDeclarationSyntax);
+		case BindingType.Protocol: {
+			var ctx = new SymbolBindingContext (context, semanticModel, symbol);
 			emitter = new InterfaceEmitter (ctx, builder);
 			break;
 		}

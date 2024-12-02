@@ -12,7 +12,6 @@ class SymbolBindingContext {
 	public SemanticModel SemanticModel { get; }
 	public INamedTypeSymbol Symbol { get; }
 
-	public BaseTypeDeclarationSyntax DeclarationSyntax { get; }
 	public string Namespace => Symbol.ContainingNamespace.ToDisplayString ();
 	public string SymbolName => Symbol.Name;
 
@@ -20,12 +19,11 @@ class SymbolBindingContext {
 	public SymbolAvailability SymbolAvailability { get; }
 
 	public SymbolBindingContext (RootBindingContext rootBindingContext,
-		SemanticModel semanticModel, INamedTypeSymbol symbol, BaseTypeDeclarationSyntax declarationSyntax)
+		SemanticModel semanticModel, INamedTypeSymbol symbol)
 	{
 		RootBindingContext = rootBindingContext;
 		SemanticModel = semanticModel;
 		Symbol = symbol;
-		DeclarationSyntax = declarationSyntax;
 		SymbolAvailability = symbol.GetSupportedPlatforms ();
 	}
 }
