@@ -518,5 +518,42 @@ namespace Cecil.Tests {
 				nameof (knownFailuresNonDefaultCtorDoesNotCallBaseDefaultCtor),
 				"Non-default ctors that call the base class' default ctor.", (v) => $"{v.Location}: {v.Message}");
 		}
+
+		[Test]
+		public void NoConstructorsWithOutErrorArguments ()
+		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
+			var failures = new Dictionary<string, FailureWithMessageAndLocation> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				foreach (var type in info.Assembly.MainModule.Types) {
+					if (!type.IsClass || !type.HasMethods)
+						continue;
+
+					if (!SubclassesNSObject (type))
+						continue;
+
+					foreach (var ctor in type.Methods.Where (v => !v.IsStatic && v.IsConstructor && v.HasParameters && v.Parameters.Count > 0)) {
+						// Presumably obsolete members have been obsoleted for a reason, so assume there's a correctly bound version.
+						if (ctor.IsObsolete ())
+							continue;
+
+						foreach (var param in ctor.Parameters) {
+							if (param.ParameterType is not ByReferenceType)
+								continue;
+							if (!param.ParameterType.GetElementType ().Is ("Foundation", "NSError"))
+								continue;
+							var msg = $"{ctor.RenderMethod ()}: This constructor has an 'out NSError' parameter. Such constructors should be bound as factory methods instead.";
+							failures [ctor.RenderMethod ()] = new FailureWithMessageAndLocation (msg, GetLocation (ctor));
+							continue;
+						}
+					}
+				}
+			}
+			Helper.AssertFailures (failures,
+				knownFailuresCtorsWithOutNSErrorParameter,
+				nameof (knownFailuresCtorsWithOutNSErrorParameter),
+				"Constructors with 'out NSError' parameters", (v) => $"{v.Location}: {v.Message}");
+		}
 	}
 }
