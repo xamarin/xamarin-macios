@@ -2422,6 +2422,7 @@ TVOS_FRAMEWORKS =           \
 	MultipeerConnectivity   \
 	NetworkExtension        \
 	OpenGLES                \
+	PdfKit                  \
 	Phase                   \
 	Photos                  \
 	PhotosUI                \
