@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ***********************************************************************************************
 Xamarin.iOS.ObjcBinding.CSharp.targets
 
@@ -24,7 +24,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.ObjCBinding.CSharp.targets"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

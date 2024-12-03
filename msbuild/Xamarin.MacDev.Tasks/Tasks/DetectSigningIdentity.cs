@@ -189,14 +189,9 @@ namespace Xamarin.MacDev.Tasks {
 						// If no CodesignEntitlements was specified, we don't have any entitlements
 						hasEntitlements = false;
 					} else {
-						if (IsDotNet) {
-							// .NET: Check the file to see if there are any entitlements inside
-							var entitlements = PDictionary.FromFile (CodesignEntitlements.ItemSpec);
-							hasEntitlements = entitlements.Count > 0;
-						} else {
-							// Legacy Xamarin: to preserve backwards compat, consider the presence of a file enough to say we have entitlements.
-							hasEntitlements = true;
-						}
+						// Check the file to see if there are any entitlements inside
+						var entitlements = PDictionary.FromFile (CodesignEntitlements.ItemSpec);
+						hasEntitlements = entitlements.Count > 0;
 					}
 				}
 				return hasEntitlements.Value;
