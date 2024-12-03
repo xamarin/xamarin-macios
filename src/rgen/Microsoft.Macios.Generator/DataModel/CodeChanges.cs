@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,39 +25,59 @@ readonly struct CodeChanges {
 	public string FullyQualifiedSymbol { get; }
 
 	/// <summary>
-	/// Base symbol declaration that triggered the code changes.
-	/// </summary>
-	public BaseTypeDeclarationSyntax SymbolDeclaration { get; }
-
-	/// <summary>
 	/// Changes to the attributes of the symbol.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
+	readonly ImmutableArray<EnumMember> enumMembers = [];
+
 	/// <summary>
 	/// Changes to the enum members of the symbol.
 	/// </summary>
-	public ImmutableArray<EnumMember> EnumMembers { get; init; } = [];
+	public ImmutableArray<EnumMember> EnumMembers {
+		get => enumMembers;
+		init => enumMembers = value;
+	}
+
+	readonly ImmutableArray<Property> properties = [];
 
 	/// <summary>
 	/// Changes to the properties of the symbol.
 	/// </summary>
-	public ImmutableArray<Property> Properties { get; init; } = [];
+	public ImmutableArray<Property> Properties {
+		get => properties;
+		init => properties = value;
+	}
+
+	readonly ImmutableArray<Constructor> constructors = [];
 
 	/// <summary>
 	/// Changes to the constructors of the symbol.
 	/// </summary>
-	public ImmutableArray<Constructor> Constructors { get; init; } = [];
+	public ImmutableArray<Constructor> Constructors {
+		get => constructors;
+		init => constructors = value;
+	}
+
+	readonly ImmutableArray<Event> events = [];
 
 	/// <summary>
 	/// Changes to the events of the symbol.
 	/// </summary>
-	public ImmutableArray<Event> Events { get; init; } = [];
+	public ImmutableArray<Event> Events {
+		get => events;
+		init => events = value;
+	}
+
+	readonly ImmutableArray<Method> methods = [];
 
 	/// <summary>
 	/// Changes to the methods of a symbol.
 	/// </summary>
-	public ImmutableArray<Method> Methods { get; init; } = [];
+	public ImmutableArray<Method> Methods {
+		get => methods;
+		init => methods = value;
+	}
 
 	/// <summary>
 	/// Decide if an enum value should be ignored as a change.
@@ -110,7 +132,32 @@ readonly struct CodeChanges {
 		if (methodDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) {
 			return !methodDeclarationSyntax.HasAttribute (semanticModel, AttributesNames.ExportMethodAttribute);
 		}
+
 		return true;
+	}
+
+	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
+
+	delegate bool TryCreateDelegate<in T, TR> (T declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out TR? change)
+		where T : MemberDeclarationSyntax
+		where TR : struct;
+
+	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, SemanticModel semanticModel,
+		SkipDelegate<T> skip, TryCreateDelegate<T, TR> tryCreate, out ImmutableArray<TR> members)
+		where T : MemberDeclarationSyntax
+		where TR : struct
+	{
+		var bucket = ImmutableArray.CreateBuilder<TR> ();
+		var declarations = baseDeclarationSyntax.Members.OfType<T> ();
+		foreach (var declaration in declarations) {
+			if (skip (declaration, semanticModel))
+				continue;
+			if (tryCreate (declaration, semanticModel, out var change))
+				bucket.Add (change.Value);
+		}
+
+		members = bucket.ToImmutable ();
 	}
 
 	/// <summary>
@@ -118,12 +165,10 @@ readonly struct CodeChanges {
 	/// </summary>
 	/// <param name="bindingType">The type of binding for the given code changes.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
-	/// <param name="declaration">The symbol declaration syntax.</param>
-	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol, BaseTypeDeclarationSyntax declaration)
+	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol)
 	{
 		BindingType = bindingType;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
-		SymbolDeclaration = declaration;
 	}
 
 	/// <summary>
@@ -135,7 +180,6 @@ readonly struct CodeChanges {
 	{
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
-		SymbolDeclaration = enumDeclaration;
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
@@ -158,53 +202,19 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
+		BindingType = BindingType.Class;
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
-		SymbolDeclaration = classDeclaration;
-		EnumMembers = []; // always empty since classes dot not have enum values
-		Attributes = [];
+		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
 
-		var properties = ImmutableArray.CreateBuilder<Property> ();
-		var propertyDeclarations = classDeclaration.Members.OfType<PropertyDeclarationSyntax> ();
-		foreach (var declaration in propertyDeclarations) {
-			if (Skip (declaration, semanticModel))
-				continue;
-			if (Property.TryCreate (declaration, semanticModel, out var change))
-				properties.Add (change.Value);
-		}
-
-		Properties = properties.ToImmutable ();
-
-		var constructors = ImmutableArray.CreateBuilder<Constructor> ();
-		var constructorDeclarations = classDeclaration.Members.OfType<ConstructorDeclarationSyntax> ();
-		foreach (var declaration in constructorDeclarations) {
-			if (Skip (declaration, semanticModel))
-				continue;
-			if (Constructor.TryCreate (declaration, semanticModel, out var change))
-				constructors.Add (change.Value);
-		}
-
-		Constructors = constructors.ToImmutable ();
-
-		var events = ImmutableArray.CreateBuilder<Event> ();
-		var eventDeclarations = classDeclaration.Members.OfType<EventDeclarationSyntax> ();
-		foreach (var declaration in eventDeclarations) {
-			if (Skip (declaration, semanticModel))
-				continue;
-			if (Event.TryCreate (declaration, semanticModel, out var change))
-				events.Add (change.Value);
-		}
-
-		Events = events.ToImmutable ();
-
-		var methods = ImmutableArray.CreateBuilder<Method> ();
-		var methodDeclarations = classDeclaration.Members.OfType<MethodDeclarationSyntax> ();
-		foreach (MethodDeclarationSyntax declaration in methodDeclarations) {
-			if (Skip (declaration, semanticModel))
-				continue;
-			if (Method.TryCreate (declaration, semanticModel, out var change))
-				methods.Add (change.Value);
-		}
-		Methods = methods.ToImmutable ();
+		// use the generic method to get the members, we are using an out param to try an minimize the number of times
+		// the value types are copied
+		GetMembers<ConstructorDeclarationSyntax, Constructor> (classDeclaration, semanticModel, Skip,
+			Constructor.TryCreate, out constructors);
+		GetMembers<PropertyDeclarationSyntax, Property> (classDeclaration, semanticModel, Skip, Property.TryCreate,
+			out properties);
+		GetMembers<EventDeclarationSyntax, Event> (classDeclaration, semanticModel, Skip, Event.TryCreate, out events);
+		GetMembers<MethodDeclarationSyntax, Method> (classDeclaration, semanticModel, Skip, Method.TryCreate,
+			out methods);
 	}
 
 	/// <summary>
@@ -214,11 +224,17 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
+		BindingType = BindingType.Protocol;
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
-		SymbolDeclaration = interfaceDeclaration;
-		// TODO: to be implemented once we add protocol support
-		EnumMembers = [];
-		Attributes = [];
+		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
+		// we do not init the constructors, we use the default empty array
+
+		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, semanticModel, Skip, Property.TryCreate,
+			out properties);
+		GetMembers<EventDeclarationSyntax, Event> (interfaceDeclaration, semanticModel, Skip, Event.TryCreate,
+			out events);
+		GetMembers<MethodDeclarationSyntax, Method> (interfaceDeclaration, semanticModel, Skip, Method.TryCreate,
+			out methods);
 	}
 
 	/// <summary>
@@ -237,4 +253,26 @@ readonly struct CodeChanges {
 			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (classDeclarationSyntax, semanticModel),
 			_ => null
 		};
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("Changes: {");
+		sb.Append ($"BindingType: {BindingType}, ");
+		sb.Append ($"FullyQualifiedSymbol: {FullyQualifiedSymbol}, ");
+		sb.Append ("Attributes: [");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ("], EnumMembers: [");
+		sb.AppendJoin (", ", EnumMembers);
+		sb.Append ("], Constructors: [");
+		sb.AppendJoin (", ", Constructors);
+		sb.Append ("], Properties: [");
+		sb.AppendJoin (", ", Properties);
+		sb.Append ("], Methods: [");
+		sb.AppendJoin (", ", Methods);
+		sb.Append ("], Events: [");
+		sb.AppendJoin (", ", Events);
+		sb.Append ('}');
+		return sb.ToString ();
+	}
 }

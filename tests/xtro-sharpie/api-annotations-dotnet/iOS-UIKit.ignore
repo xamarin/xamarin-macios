@@ -120,16 +120,8 @@
 !missing-selector! UIBarButtonItemAppearance::copy not bound
 !missing-selector! UITabBarItemAppearance::copy not bound
 
-## Xcode 11.4 Beta 2
-## Duplicated entry field UIKeyInputF1 FB66299477
-## https://github.com/xamarin/xamarin-macios/wiki/UIKit-iOS-xcode11.4-beta2
-!missing-field! UIKeyInputF1 not bound
-
 # Initial result from new rule extra-null-allowed
 !extra-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewDataSource::GetIndexPath(UIKit.UICollectionView,System.String,System.IntPtr)' has a extraneous [NullAllowed] on return type
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'System.Boolean UIKit.UIApplication::CanOpenUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(Foundation.NSAttributedString,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
@@ -143,14 +135,9 @@
 !extra-null-allowed! 'System.Void UIKit.UIMarkupTextPrintFormatter::.ctor(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::set_ViewControllers(UIKit.UIViewController[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::SetViewControllers(UIKit.UIViewController[],System.Boolean)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UIPopoverPresentationControllerDelegate::WillRepositionPopover(UIKit.UIPopoverPresentationController,CoreGraphics.CGRect&,UIKit.UIView&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void UIKit.UIPopoverPresentationControllerDelegate::WillRepositionPopover(UIKit.UIPopoverPresentationController,CoreGraphics.CGRect&,UIKit.UIView&)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void UIKit.UISimpleTextPrintFormatter::.ctor(Foundation.NSAttributedString)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UISimpleTextPrintFormatter::.ctor(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITabBar::BeginCustomizingItems(UIKit.UITabBarItem[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Void UIKit.UITextField::set_WeakDefaultTextAttributes(Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITextInputAssistantItem::set_LeadingBarButtonGroups(UIKit.UIBarButtonItemGroup[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITextInputAssistantItem::set_TrailingBarButtonGroups(UIKit.UIBarButtonItemGroup[])' has a extraneous [NullAllowed] on parameter #0
@@ -473,3 +460,6 @@
 
 # Bound on the NSObjectProtocol protocol
 !missing-selector! UIActivityCollaborationModeRestriction::description not bound
+
+## This is basically ToString for an enum, which managed code has built-in support for
+!missing-pinvoke! UIWritingToolsCoordinatorTextAnimationDebugDescription is not bound

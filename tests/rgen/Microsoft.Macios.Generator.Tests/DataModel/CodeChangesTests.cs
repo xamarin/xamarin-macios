@@ -160,7 +160,7 @@ public class TestClass {
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
+			CreateCompilation (nameof (SkipPropertyDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -226,7 +226,7 @@ public class TestClass {
 	public void SkipMethodDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
+			CreateCompilation (nameof (SkipMethodDeclaration), platform, inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
