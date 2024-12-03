@@ -135,6 +135,7 @@ public class TypeCache {
 	public Type NWEndpoint { get; }
 	public Type NWInterface { get; }
 	public Type NWParameters { get; }
+	public Type NWProxyConfig { get; }
 
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
@@ -297,6 +298,7 @@ public class TypeCache {
 		NWEndpoint = Lookup (platformAssembly, "Network", "NWEndpoint");
 		NWInterface = Lookup (platformAssembly, "Network", "NWInterface");
 		NWParameters = Lookup (platformAssembly, "Network", "NWParameters");
+		NWProxyConfig = Lookup (platformAssembly, "Network", "NWProxyConfig");
 
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
