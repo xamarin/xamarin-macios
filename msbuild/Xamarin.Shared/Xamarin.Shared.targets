@@ -20,7 +20,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup Condition="'$(_TaskAssemblyName)' == ''">
 		<_TaskAssemblyFileName>Xamarin.MacDev.Tasks.dll</_TaskAssemblyFileName>
-		<_TaskAssemblyFileNameWindows>Xamarin.MacDev.Tasks.dll</_TaskAssemblyFileNameWindows>
+		<_TaskAssemblyFileNameWindows>Xamarin.iOS.Tasks.Windows.dll</_TaskAssemblyFileNameWindows>
 		<_TaskAssemblyName>$(MSBuildThisFileDirectory)\$(_TaskAssemblyFileName)</_TaskAssemblyName>
 	</PropertyGroup>
 
