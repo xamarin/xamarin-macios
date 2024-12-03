@@ -665,19 +665,25 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void InitializeHandle (NativeHandle handle)
 		{
-			InitializeHandle (handle, "init*");
+			InitializeHandle (handle, "init*", Class.ThrowOnInitFailure);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void InitializeHandle (NativeHandle handle, string initSelector)
 		{
-			if (this.handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+			InitializeHandle (handle, initSelector, Class.ThrowOnInitFailure);
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		internal void InitializeHandle (NativeHandle handle, string initSelector, bool throwOnInitFailure)
+		{
+			if (this.handle == NativeHandle.Zero && throwOnInitFailure) {
 				if (ClassHandle == NativeHandle.Zero)
 					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
 				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
-			if (handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+			if (handle == NativeHandle.Zero && throwOnInitFailure) {
 				Handle = NativeHandle.Zero; // We'll crash if we don't do this.
 				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': the native '{initSelector}' method returned nil.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
