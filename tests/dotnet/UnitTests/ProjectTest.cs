@@ -2627,6 +2627,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension",
 			"/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
 			"/System/Library/Frameworks/OSLog.framework/OSLog",
+			"/System/Library/Frameworks/PDFKit.framework/PDFKit",
 			"/System/Library/Frameworks/PHASE.framework/PHASE",
 			"/System/Library/Frameworks/Photos.framework/Photos",
 			"/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
