@@ -469,3 +469,6 @@
 
 # Bound on the NSObjectProtocol protocol
 !missing-selector! UIActivityCollaborationModeRestriction::description not bound
+
+## This is basically ToString for an enum, which managed code has built-in support for
+!missing-pinvoke! UIWritingToolsCoordinatorTextAnimationDebugDescription is not bound
