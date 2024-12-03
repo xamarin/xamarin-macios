@@ -3,59 +3,74 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using Microsoft.Build.Framework;
-
-using Microsoft.Build.Utilities;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CreateInstallerPackage : XamarinToolTask {
+	public class CreateInstallerPackage : XamarinTask, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 		[Required]
-		public string OutputDirectory { get; set; }
+		public string OutputDirectory { get; set; } = string.Empty;
 
 		[Required]
-		public string Name { get; set; }
+		public string Name { get; set; } = string.Empty;
 
 		[Required] // Used to get version
-		public string AppManifest { get; set; }
+		public string AppManifest { get; set; } = string.Empty;
 
 		[Required] // Used for variable substitution in AppendExtraArgs
-		public string ProjectPath { get; set; }
+		public string ProjectPath { get; set; } = string.Empty;
 
 		[Required]  // Used for variable substitution in AppendExtraArgs
-		public string AppBundleDir { get; set; }
+		public string AppBundleDir { get; set; } = string.Empty;
 
 		[Required]   // Used for variable substitution in AppendExtraArgs
-		public ITaskItem MainAssembly { get; set; }
+		public ITaskItem? MainAssembly { get; set; }
 
 		[Required] // Should we even look at the PackageSigningKey?
 				   // It has a default value when this is false, so we can't just switch off it being null
 		public bool EnablePackageSigning { get; set; }
 
-		public string ProductDefinition { get; set; }
+		public string ProductDefinition { get; set; } = string.Empty;
 
-		public string PackageSigningKey { get; set; }
+		public string PackageSigningKey { get; set; } = string.Empty;
 
-		public string PackagingExtraArgs { get; set; }
+		public string PackagingExtraArgs { get; set; } = string.Empty;
 
 		// both input and output
 		[Output]
-		public string PkgPackagePath { get; set; }
+		public string PkgPackagePath { get; set; } = string.Empty;
+
+		public string ProductBuildPath { get; set; } = string.Empty;
 		#endregion
 
-		string GetProjectVersion ()
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
+		{
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
+		}
+
+		string? GetProjectVersion ()
 		{
 			PDictionary plist;
 
 			try {
-				plist = PDictionary.FromFile (AppManifest);
+				plist = PDictionary.FromFile (AppManifest)!;
 			} catch (Exception ex) {
 				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
 				return null;
@@ -69,38 +84,33 @@ namespace Xamarin.MacDev.Tasks {
 			return plist.GetCFBundleShortVersionString ();
 		}
 
-		protected override string ToolName {
-			get { return "productbuild"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
+		public override bool Execute ()
 		{
-			return @"/usr/bin/productbuild";
+			var args = GenerateCommandLineCommands ();
+			var executable = GetExecutable (args, "productbuild", ProductBuildPath);
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, workingDirectory: OutputDirectory, cancellationToken: cancellationTokenSource.Token).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
-		protected override string GetWorkingDirectory ()
-		{
-			return OutputDirectory;
-		}
-
-		protected override string GenerateCommandLineCommands ()
+		List<string> GenerateCommandLineCommands ()
 		{
 			Log.LogMessage ("Creating installer package");
 
-			var args = new CommandLineArgumentBuilder ();
+			var args = new List<string> ();
 
 			if (!string.IsNullOrEmpty (ProductDefinition)) {
 				args.Add ("--product");
-				args.AddQuoted (Path.GetFullPath (ProductDefinition));
+				args.Add (Path.GetFullPath (ProductDefinition));
 			}
 
 			args.Add ("--component");
-			args.AddQuoted (Path.GetFullPath (AppBundleDir));
+			args.Add (Path.GetFullPath (AppBundleDir));
 			args.Add ("/Applications");
 
 			if (EnablePackageSigning) {
 				args.Add ("--sign");
-				args.AddQuoted (GetPackageSigningCertificateCommonName ());
+				args.Add (GetPackageSigningCertificateCommonName ());
 			}
 
 			if (!string.IsNullOrEmpty (PackagingExtraArgs)) {
@@ -108,26 +118,26 @@ namespace Xamarin.MacDev.Tasks {
 					AppendExtraArgs (args, PackagingExtraArgs);
 				} catch (FormatException) {
 					Log.LogError (MSBStrings.E0123);
-					return string.Empty;
+					return args;
 				}
 			}
 
 			if (string.IsNullOrEmpty (PkgPackagePath)) {
-				string projectVersion = GetProjectVersion ();
+				var projectVersion = GetProjectVersion ();
 				string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
 				PkgPackagePath = Path.Combine (OutputDirectory, target);
 			}
 			PkgPackagePath = Path.GetFullPath (PkgPackagePath);
-			args.AddQuoted (PkgPackagePath);
+			args.Add (PkgPackagePath);
 
 			Directory.CreateDirectory (Path.GetDirectoryName (PkgPackagePath));
 
-			return args.ToString ();
+			return args;
 		}
 
-		void AppendExtraArgs (CommandLineArgumentBuilder args, string extraArgs)
+		void AppendExtraArgs (List<string> args, string extraArgs)
 		{
-			var target = this.MainAssembly.ItemSpec;
+			var target = this.MainAssembly!.ItemSpec;
 
 			string [] argv = CommandLineArgumentBuilder.Parse (extraArgs);
 			var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
@@ -140,7 +150,7 @@ namespace Xamarin.MacDev.Tasks {
 			};
 
 			for (int i = 0; i < argv.Length; i++)
-				args.AddQuoted (StringParserService.Parse (argv [i], customTags));
+				args.Add (StringParserService.Parse (argv [i], customTags));
 		}
 
 		string GetPackageSigningCertificateCommonName ()
@@ -154,7 +164,7 @@ namespace Xamarin.MacDev.Tasks {
 			else
 				key = PackageSigningKey;
 
-			X509Certificate2 best = null;
+			X509Certificate2? best = null;
 			foreach (var cert in certificates) {
 				if (now < cert.NotBefore || now >= cert.NotAfter)
 					continue;
@@ -179,6 +189,15 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return Keychain.GetCertificateCommonName (best);
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ()) {
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }

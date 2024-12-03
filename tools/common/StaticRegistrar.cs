@@ -331,6 +331,12 @@ namespace Registrar {
 			if (candidate.Parameters.Count != method.Parameters.Count)
 				return false;
 
+			if (candidate.HasGenericParameters != method.HasGenericParameters)
+				return false;
+
+			if (candidate.HasGenericParameters && candidate.GenericParameters.Count != method.GenericParameters.Count)
+				return false;
+
 			for (int i = 0; i < candidate.Parameters.Count; i++)
 				if (!TypeMatch (candidate.Parameters [i].ParameterType, method.Parameters [i].ParameterType))
 					return false;

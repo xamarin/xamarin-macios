@@ -22,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly CodeChangesComparer comparer = new ();
+	static readonly DeclarationCodeChangesEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -42,8 +42,8 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			.CreateSyntaxProvider (static (node, _) => IsValidNode (node),
 				static (ctx, _) => GetChangesForSourceGen (ctx))
 			.Where (tuple => tuple.BindingAttributeFound)
-			.Select (static (tuple, _) => tuple.Changes)
-			.WithComparer (comparer);
+			.Select (static (tuple, _) => (tuple.Declaration, tuple.Changes))
+			.WithComparer (equalityComparer);
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (provider.Collect ()),
 			((ctx, t) => GenerateCode (ctx, t.Left, t.Right)));
@@ -59,7 +59,8 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		_ => false,
 	};
 
-	static (CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
+	static (BaseTypeDeclarationSyntax Declaration, CodeChanges Changes, bool BindingAttributeFound)
+		GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
 		// we do know that the context node has to be one of the base type declarations
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
@@ -68,30 +69,32 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		bool isBindingType = declarationSyntax.HasAttribute (context.SemanticModel, AttributesNames.BindingAttribute);
 
 		if (!isBindingType) {
-			// return an empty data + false
-			return (default, false);
+			// return empty data + false
+			return (declarationSyntax, default, false);
 		}
 
-		var codeChanges = CodeChanges.FromDeclaration (context.SemanticModel, declarationSyntax);
+		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, context.SemanticModel);
 		// if code changes are null, return the default value and a false to later ignore the change
-		return codeChanges is not null ? (codeChanges.Value, isBindingType) : (default, false);
+		return codeChanges is not null
+			? (declarationSyntax, codeChanges.Value, isBindingType)
+			: (declarationSyntax, default, false);
 	}
 
 	static void GenerateCode (SourceProductionContext context, Compilation compilation,
-		ImmutableArray<CodeChanges> changesList)
+		ImmutableArray<(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes)> changesList)
 	{
-		// the process is as follows, get all the changes we have received from the incremental generator,
-		// loop over them and based on the CodeChange.BindingType we are going to build the symbol context
+		// The process is as follows, get all the changes we have received from the incremental generator,
+		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
 		// and emitter. Those are later used to generate the code.
 		//
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var rootContext = new RootBindingContext (compilation);
-		foreach (var change in changesList) {
-			var semanticModel = compilation.GetSemanticModel (change.SymbolDeclaration.SyntaxTree);
+		foreach (var (declaration, change) in changesList) {
+			var semanticModel = compilation.GetSemanticModel (declaration.SyntaxTree);
 			// This is a bug in the roslyn analyzer for roslyn generator https://github.com/dotnet/roslyn-analyzers/issues/7436
 #pragma warning disable RS1039
-			if (semanticModel.GetDeclaredSymbol (change.SymbolDeclaration) is not INamedTypeSymbol namedTypeSymbol)
+			if (semanticModel.GetDeclaredSymbol (declaration) is not INamedTypeSymbol namedTypeSymbol)
 #pragma warning restore RS1039
 				continue;
 
@@ -100,10 +103,10 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			sb.WriteHeader ();
 			if (EmitterFactory.TryCreate (change, rootContext, semanticModel, namedTypeSymbol, sb, out var emitter)) {
 				// write the using statements
-				CollectUsingStatements (change.SymbolDeclaration.SyntaxTree, sb, emitter);
+				CollectUsingStatements (declaration.SyntaxTree, sb, emitter);
 
 				if (emitter.TryEmit (out var diagnostics)) {
-					// only add file when we do generate code
+					// only add a file when we do generate code
 					var code = sb.ToString ();
 					context.AddSource ($"{Path.Combine (emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
 						SourceText.From (code, Encoding.UTF8));
@@ -112,10 +115,12 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 					context.ReportDiagnostics (diagnostics);
 				}
 			} else {
-				// we don't have a emitter for this type, so we can't generate the code, add a diagnostic letting the
+				// we don't have an emitter for this type, so we can't generate the code, add a diagnostic letting the
 				// user we do not support what they are trying to do
-				context.ReportDiagnostic (Diagnostic.Create (Diagnostics.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
-					change.SymbolDeclaration.GetLocation (),
+				context.ReportDiagnostic (Diagnostic.Create (
+					Diagnostics
+						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+					declaration.GetLocation (),
 					namedTypeSymbol.ToDisplayString ().Trim ()));
 			}
 		}
@@ -138,7 +143,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		var emitter = new LibraryEmitter (rootContext, sb);
 
 		if (emitter.TryEmit (out var diagnostics)) {
-			// only add file when we do generate code
+			// only add a file when we do generate code
 			var code = sb.ToString ();
 			context.AddSource ($"{Path.Combine (emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
 				SourceText.From (code, Encoding.UTF8));

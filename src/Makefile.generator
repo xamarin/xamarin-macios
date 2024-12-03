@@ -6,6 +6,7 @@ bgen.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET) build
 bgen.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 
 # bgen.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
+$(DOTNET_BUILD_DIR)/bgen.csproj.inc: export DOTNET:=$(DOTNET)
 $(DOTNET_BUILD_DIR)/bgen.csproj.inc: bgen/bgen.csproj.inc
 	$(Q) $(CP) $< $@
 

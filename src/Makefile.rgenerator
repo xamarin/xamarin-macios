@@ -1,12 +1,27 @@
 # Roslyn code generator
-ROSLYN_GENERATOR=$(DOTNET_BUILD_DIR)/common/rgen/Microsoft.Macios.Generator.dll
-ROSLYN_GENERATOR_COMMON=$(DOTNET_BUILD_DIR)/common/rgen/Microsoft.Macios.Binding.Common.dll
+ROSLYN_GENERATOR=$(DOTNET_BUILD_DIR)/common/rgen/generator/Microsoft.Macios.Generator.dll
+ROSLYN_GENERATOR_COMMON=$(DOTNET_BUILD_DIR)/common/rgen/generator/Microsoft.Macios.Binding.Common.dll
 ROSLYN_GENERATOR_FILES := $(wildcard rgen/Microsoft.Macios.Generator/*.cs)
 ROSLYN_GENERATOR_FILES += $(wildcard rgen/Microsoft.Macios.Generator/*/*.cs)
 ROSLYN_GENERATOR_FILES += $(wildcard rgen/Microsoft.Macios.Binding.Common/*.cs)
 ROSLYN_GENERATOR_FILES += $(wildcard rgen/Microsoft.Macios.Binding.Common/*/*.cs)
 
+# Roslyn analyzer
+ROSLYN_ANALYZER=$(DOTNET_BUILD_DIR)/common/rgen/analyzer/Microsoft.Macios.Bindings.Analyzer.dll
+ROSLYN_ANALYZER_FILES := $(wildcard rgen/Microsoft.Macios.Bindings.Analyzer/*.cs)
+ROSLYN_ANALYZER_FILES += $(wildcard rgen/Microsoft.Macios.Bindings.Analyzer/*/*.cs)
+ROSLYN_ANALYZER_FILES += $(wildcard rgen/Microsoft.Macios.Binding.Common/*.cs)
+ROSLYN_ANALYZER_FILES += $(wildcard rgen/Microsoft.Macios.Binding.Common/*/*.cs)
+
+build-rgen: Makefile.rgenerator $(ROSLYN_GENERATOR_FILES) $(ROSLYN_ANALYZER_FILES)
+
 $(ROSLYN_GENERATOR): Makefile.rgenerator $(ROSLYN_GENERATOR_FILES)
-	$(Q_DOTNET_BUILD) $(DOTNET) publish rgen/Microsoft.Macios.Generator/Microsoft.Macios.Generator.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/rgen)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/)/
+	$(Q_DOTNET_BUILD) $(DOTNET) publish rgen/Microsoft.Macios.Generator/Microsoft.Macios.Generator.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/rgen/generator)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/generator/)/
 	@mkdir -p $(dir $@)
-	$(Q) $(CP) -r $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/publish/* $(dir $@)
+	$(Q) $(CP) -Rf $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/generator/publish/* $(dir $@)
+
+
+$(ROSLYN_ANALYZER): Makefile.rgenerator $(ROSLYN_ANALYZER_FILES)
+	$(Q_DOTNET_BUILD) $(DOTNET) publish rgen/Microsoft.Macios.Bindings.Analyzer/Microsoft.Macios.Bindings.Analyzer.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/rgen/analyzer)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/analyzer/)/
+	@mkdir -p $(dir $@)
+	$(Q) $(CP) -Rf $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/analyzer/publish/* $(dir $@)

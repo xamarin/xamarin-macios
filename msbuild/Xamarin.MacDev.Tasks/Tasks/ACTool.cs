@@ -74,7 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string?> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
 		{
-			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
+			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (this, x)));
 
 			if (!string.IsNullOrEmpty (XSAppIconAssets) && !string.IsNullOrEmpty (AppIcon)) {
 				Log.LogError (MSBStrings.E7129 /* Can't specify both 'XSAppIconAssets' in the Info.plist and 'AppIcon' in the project file. Please select one or the other. */);
@@ -257,7 +257,7 @@ namespace Xamarin.MacDev.Tasks {
 			var specs = new PArray ();
 
 			for (int i = 0; i < ImageAssets.Length; i++) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets [i], !string.IsNullOrEmpty (SessionId));
+				var vpath = BundleResource.GetVirtualProjectPath (this, ImageAssets [i]);
 
 				// Ignore MacOS .DS_Store files...
 				if (Path.GetFileName (vpath).Equals (".DS_Store", StringComparison.OrdinalIgnoreCase))
@@ -298,7 +298,7 @@ namespace Xamarin.MacDev.Tasks {
 				items.Clear ();
 
 				for (int i = 0; i < ImageAssets.Length; i++) {
-					var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets [i], !string.IsNullOrEmpty (SessionId));
+					var vpath = BundleResource.GetVirtualProjectPath (this, ImageAssets [i]);
 					var clone = false;
 					ITaskItem item;
 
@@ -349,7 +349,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			// Note: `items` contains only the Contents.json files at this point
 			for (int i = 0; i < items.Count; i++) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, items [i], !string.IsNullOrEmpty (SessionId));
+				var vpath = BundleResource.GetVirtualProjectPath (this, items [i]);
 				var path = items [i].GetMetadata ("FullPath");
 
 				// get the parent (which will typically be .appiconset, .launchimage, .imageset, .iconset, etc)
