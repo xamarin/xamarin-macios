@@ -1,6 +1,8 @@
 > [!NOTE]
 > This page lists Xamarin.iOS and Xamarin.Mac downloads, which are both discontinued.
-> If you're looking for how to install a specific version of the iOS, tvOS, Mac Catalyst or macOS workload (for .NET), they're shipped as .NET workloads, which aren't installable from packages.
+> 
+> If you're looking for how to install a specific version of the iOS, tvOS, Mac Catalyst or macOS workloads (for .NET),
+> please file an issue with details (they're shipped as .NET workloads, and not installable from packages).
 
 # Xamarin.iOS
 
