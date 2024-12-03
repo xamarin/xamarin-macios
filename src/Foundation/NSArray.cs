@@ -407,7 +407,7 @@ namespace Foundation {
 		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator, bool releaseHandle)
 		{
 			var rv = ArrayFromHandle<T> (handle, creator);
-			if (releaseHandle && handle == NativeHandle.Zero)
+			if (releaseHandle && handle != NativeHandle.Zero)
 				NSObject.DangerousRelease (handle);
 			return rv;
 		}
