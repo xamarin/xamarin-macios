@@ -1,2 +1,0 @@
-!missing-enum-value! ASAuthorizationError native value ASAuthorizationErrorCredentialExport = 1008 not bound
-!missing-enum-value! ASAuthorizationError native value ASAuthorizationErrorCredentialImport = 1007 not bound

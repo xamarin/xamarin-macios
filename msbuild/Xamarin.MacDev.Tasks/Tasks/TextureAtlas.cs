@@ -8,8 +8,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
 	public class TextureAtlas : XcodeToolTaskBase, ICancelableTask {
@@ -17,7 +16,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		#region Inputs
 
-		public ITaskItem [] AtlasTextures { get; set; }
+		public ITaskItem [] AtlasTextures { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -103,7 +102,6 @@ namespace Xamarin.MacDev.Tasks {
 					atlas = new (atlasItem, new List<ITaskItem> ());
 					atlases.Add (atlasName, atlas);
 				}
-
 				atlas.Items.Add (item);
 			}
 

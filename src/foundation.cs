@@ -354,37 +354,57 @@ namespace Foundation {
 		[Export ("enumerateAttribute:inRange:options:usingBlock:")]
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithURL:options:documentAttributes:error:")]
-#if !(__MACOS__ || XAMCORE_5_0)
+#if !__MACOS__
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #else
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
+		[Internal]
+		[Sealed]
+		[Export ("initWithURL:options:documentAttributes:error:")]
+		NativeHandle _InitWithUrl (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithData:options:documentAttributes:error:")]
-#if XAMCORE_5_0
-		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-#elif __MACOS__
+#if __MACOS__
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
 #else
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Internal]
+		[Sealed]
+		[Export ("initWithData:options:documentAttributes:error:")]
+		NativeHandle _InitWithData (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if __MACOS__
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if !XAMCORE_5_0
+#if __MACOS__
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
 		[NoiOS]
 		[NoMacCatalyst]
@@ -1047,7 +1067,6 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL - `init` now marked as NS_UNAVAILABLE
 	[DisableDefaultCtor]
 	interface NSCalendar : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -4706,6 +4725,16 @@ namespace Foundation {
 		[Field ("NSURLErrorBackgroundTaskCancelledReasonKey")]
 		NSString NSUrlErrorBackgroundTaskCancelledReasonKey { get; }
 #endif
+
+#if IOS && !MACCATALYST
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey { get; }
+
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey { get; }
+#endif
 	}
 
 	delegate NSObject NSErrorUserInfoValueProvider (NSError error, NSString userInfoKey);
@@ -5201,8 +5230,6 @@ namespace Foundation {
 #endif
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL so it's not usable evenif it does not throw an ObjC exception
-	// funnily it was "added" in iOS 7 and header files says "do not invoke; not a valid initializer for this class"
 	[DisableDefaultCtor]
 	interface NSLocale : NSSecureCoding, NSCopying {
 		[Static]
@@ -8752,6 +8779,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8961,6 +8992,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; set; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; set; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLResponse")]
@@ -10661,6 +10696,10 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sameSitePolicy")]
 		NSString SameSitePolicy { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Field ("NSHTTPCookieSetByJavaScript")]
+		NSString KeySetByJavaScript { get; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSHTTPCookieStorage")]
@@ -10745,9 +10784,7 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-#if MONOMAC
-	[DisableDefaultCtor] // An uncaught exception was raised: -[__NSCFDictionary removeObjectForKey:]: attempt to remove nil key
-#endif
+	[DisableDefaultCtor]
 	partial interface NSBundle {
 		[Export ("mainBundle")]
 		[Static]
@@ -14965,7 +15002,7 @@ namespace Foundation {
 		bool ContainsDate (NSDate date);
 	}
 
-	[DisableDefaultCtor] // -init should never be called on NSUnit!
+	[DisableDefaultCtor]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSUnit : NSCopying, NSSecureCoding {
