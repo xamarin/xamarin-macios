@@ -12,12 +12,11 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
-using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class UnpackLibraryResources : XamarinTask, ICancelableTask {
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
@@ -84,22 +83,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ()) {
-				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
-
-				if (result && BundleResourcesWithLogicalNames is not null) {
-					// Fix LogicalName path for Windows
-					foreach (var resource in BundleResourcesWithLogicalNames) {
-						var logicalName = resource.GetMetadata ("LogicalName");
-
-						if (!string.IsNullOrEmpty (logicalName)) {
-							resource.SetMetadata ("LogicalName", logicalName.Replace ("/", "\\"));
-						}
-					}
-				}
-				return result;
-			}
-
 			var bundleResources = new List<ITaskItem> ();
 			var atlasTextures = new List<ITaskItem> ();
 			var colladaAssets = new List<ITaskItem> ();
@@ -428,26 +411,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item)
-		{
-			if (item.IsFrameworkItem ())
-				return false;
-
-			return true;
-		}
-
-		public bool ShouldCreateOutputFile (ITaskItem item)
-		{
-			// Incremental builds are handled with stamp files in the .targets file, so there's no need to
-			// create any output files on Windows.
-			return false;
-		}
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => ItemsFiles;
 
 	}
 }
