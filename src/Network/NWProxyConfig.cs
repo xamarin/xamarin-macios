@@ -34,6 +34,7 @@ namespace Network {
 		public NWProxyConfig (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
+#if !COREBUILD
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_proxy_config nw_proxy_config_create_relay (OS_nw_relay_hop first_hop, /* [NullAllowed] */ OS_nw_relay_hop second_hop);
 
@@ -232,6 +233,7 @@ namespace Network {
 				nw_proxy_config_enumerate_excluded_domains (GetCheckedHandle (), &block);
 			}
 		}
+#endif // COREBUILD
 
 	}
 }

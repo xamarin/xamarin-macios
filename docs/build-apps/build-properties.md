@@ -148,11 +148,23 @@ The full path to the Metal compiler.
 
 The default behavior is to use `xcrun metal`.
 
+## PlutilPath
+
+The full path to the `plutil` command-line tool.
+
+The default behavior is to use `xcrun plutil`.
+
 ## PngCrushPath
 
 The full path to the `pngcrush` command-line tool.
 
 The default behavior is to use `xcrun pngcrush`.
+
+## ProductBuildPath
+
+The full path to the `productbuild` tool.
+
+The default behavior is to use `xcrun productbuild`.
 
 ## StripPath
 

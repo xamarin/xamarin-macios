@@ -513,10 +513,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CreateAssetPack
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
 			Source="%(_AssetPack.Identity)"
 			OutputFile="$(IpaPackageDir)OnDemandResources\%(_AssetPack.DirectoryName)"
+			ZipPath="$(ZipPath)"
 			/>
 
 		<Copy

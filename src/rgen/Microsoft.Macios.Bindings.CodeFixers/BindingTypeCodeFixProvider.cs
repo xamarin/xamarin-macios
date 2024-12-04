@@ -7,11 +7,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 using SyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using SyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
-namespace Microsoft.Macios.Bindings.Analyzer;
+namespace Microsoft.Macios.Bindings.CodeFixers;
 
 /// <summary>
 /// Code fix provider that adds the 'partial' modifier to the class decorated with BindingTypeAttribute.
@@ -19,8 +18,7 @@ namespace Microsoft.Macios.Bindings.Analyzer;
 [ExportCodeFixProvider (LanguageNames.CSharp, Name = nameof (BindingTypeCodeFixProvider)), Shared]
 public class BindingTypeCodeFixProvider : CodeFixProvider {
 	// Specify the diagnostic IDs of analyzers that are expected to be linked.
-	public sealed override ImmutableArray<string> FixableDiagnosticIds { get; } =
-		ImmutableArray.Create (BindingTypeSemanticAnalyzer.DiagnosticId);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds { get; } = ["RBI0001"];
 
 	// If you don't need the 'fix all' behaviour, return null.
 	public override FixAllProvider? GetFixAllProvider () => null;

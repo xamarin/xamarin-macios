@@ -29,7 +29,7 @@ public class EmitterFactoryTests : BaseGeneratorTestClass {
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
-		var changes = CodeChanges.FromDeclaration (semanticModel, declaration);
+		var changes = CodeChanges.FromDeclaration (declaration, semanticModel);
 		Assert.NotNull (changes);
 		return (changes.Value, rootContext, semanticModel, symbol);
 	}
