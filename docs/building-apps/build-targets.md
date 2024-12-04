@@ -4,7 +4,7 @@ description: .NET for iOS, Mac Catalyst, macOS, and tvOS build targets
 ms.date: 09/19/2024
 ---
 
-# Build targets
+# Build targets for iOS, Mac Catalyst, macOS and tvOS
 
 The following build targets are defined in .NET for iOS, Mac Catalyst, macOS, and tvOS projects.
 

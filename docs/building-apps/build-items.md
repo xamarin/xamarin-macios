@@ -4,7 +4,7 @@ description: .NET for iOS, Mac Catalyst, macOS, and tvOS build items
 ms.date: 09/19/2024
 ---
 
-# Build items
+# Build items for iOS, Mac Catalyst, macOS and tvOS
 
 Build items control how .NET for iOS, Mac Catalyst, macOS, and tvOS
 application or library projects are built.
