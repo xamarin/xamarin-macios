@@ -113,7 +113,7 @@ The default behavior is to use the `bgen` tool shipped with our workload.
 
 ## BGenToolPath
 
-The directory to where the `bgen` ([BGenToolExe](#BGenToolExe)) is located.
+The directory to where the `bgen` ([BGenToolExe](#bgentoolexe)) is located.
 
 The default behavior is to use the `bgen` tool shipped with our workload.
 
