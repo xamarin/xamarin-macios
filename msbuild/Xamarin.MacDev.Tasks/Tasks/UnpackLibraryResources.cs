@@ -147,7 +147,7 @@ namespace Xamarin.MacDev.Tasks {
 							sceneKitAssets.Add (item);
 							break;
 						default:
-							Log.LogError (MSBStrings.E7134 /* Unknown resource type: {1}. */, resourceType);
+							Log.LogError (MSBStrings.E7135 /* Unknown resource type: {1}. */, resourceType);
 							break;
 						}
 					}
