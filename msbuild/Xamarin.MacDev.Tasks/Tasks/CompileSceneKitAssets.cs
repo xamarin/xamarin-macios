@@ -163,7 +163,7 @@ namespace Xamarin.MacDev.Tasks {
 
 					// .. and set LogicalName, the original one is for @asset
 					if (!TryGetScnAssetsPath (bundleName, out var logicalScnAssetsPath)) {
-						Log.LogError (null, null, null, asset.ItemSpec, $"Unable to compute the path of the *.scnassets path from the item's LogicalName '{bundleName}'");
+						Log.LogError (null, null, null, asset.ItemSpec, MSBStrings.E7136 /* Unable to compute the path of the *.scnassets path from the item's LogicalName '{0}'. */ , bundleName);
 						continue;
 					}
 					scnassetsItem.SetMetadata ("LogicalName", logicalScnAssetsPath);
