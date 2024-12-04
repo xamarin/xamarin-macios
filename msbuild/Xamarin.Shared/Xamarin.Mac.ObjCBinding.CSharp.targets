@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ***********************************************************************************************
 Xamarin.Mac.ObjcBinding.CSharp.targets
 
@@ -32,24 +32,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	Microsoft.CSharp.targets gives TargetFrameworkVersion / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
 	import Microsoft.CSharp.targets. However, we can't do most of Xamarin.Mac.ObjCBinding.CSharp.props before it. -->
 
-	<Choose>
-		<When Condition=" '$(UseXamMacFullFramework)' == '' And ( '$(TargetFrameworkVersion)' == 'v2.0' Or '$(TargetFrameworkVersion)' == '' ) And '$(UsingAppleNETSdk)' != 'true'">
-			<PropertyGroup>
-				<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-				<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
-			</PropertyGroup>
-		</When>
-		<When Condition="'$(UsingAppleNETSdk)' != 'true'">
-			<PropertyGroup>
-				<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-				<UseXamMacFullFramework>true</UseXamMacFullFramework>
-				<TargetFrameworkIdentifier></TargetFrameworkIdentifier>
-			</PropertyGroup>
-		</When>
-	</Choose>
-
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(UsingAppleNETSdk)' != 'true'" />
-	
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.Common.targets" />

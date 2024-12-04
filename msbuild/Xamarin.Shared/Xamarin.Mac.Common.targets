@@ -29,38 +29,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_PreparedResourceRules></_PreparedResourceRules>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<BuildDependsOn>
-			BuildOnlySettings;
-			_CollectBundleResources;
-			_PackLibraryResources;
-			_UnpackLibraryResources;
-			$(BuildDependsOn);
-			_GenerateBundleName;
-			_CreateAppBundle;
-			Codesign;
-			_CreateInstaller;
-			Archive;
-		</BuildDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<CreateAppBundleDependsOn Condition="'$(UsingAppleNETSdk)' != 'true'">
-			$(CreateAppBundleDependsOn);
-			_DetectSigningIdentity;
-			_CopyResourcesToBundle;
-			_SmeltMetal;
-			_TemperMetal;
-			_CompileEntitlements;
-			_WriteAppManifest;
-			_ParseBundlerArguments;
-			_CompileToNative;
-			_CreatePkgInfo;
-			_CopyAppExtensionsToBundle;
-			_PostProcessAppBundle;
-		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
