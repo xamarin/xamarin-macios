@@ -192,9 +192,9 @@ report-short:
 
 define DotNetClassify
 .stamp-dotnet-classify-$(1): $(XTRO_SHARPIE) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	$(Q) rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
-	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	$(Q) touch $$@
+	$$(Q) rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
+	$$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$$(Q) touch $$@
 
 dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
 DOTNET_CLASSIFY += .stamp-dotnet-classify-$(1)

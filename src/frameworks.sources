@@ -1372,6 +1372,7 @@ NETWORK_CORE_SOURCES = \
 	Network/NWEndpoint.cs			\
 	Network/NWInterface.cs			\
 	Network/NWParameters.cs			\
+	Network/NWProxyConfig.cs	    \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
@@ -1394,7 +1395,6 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
-	Network/NWProxyConfig.cs	\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\
@@ -1837,6 +1837,7 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
+	UIKit/UIPresentationController.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
@@ -1860,6 +1861,7 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+	UIKit/UIWindowScene.cs \
 
 # UserNotifications
 
@@ -1986,6 +1988,8 @@ SHARED_CORE_SOURCES = \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	ObjCBindings/BindingTypeAttribute.cs \
+	ObjCBindings/ExportAttribute.cs \
+	ObjCBindings/ExportTag.cs \
 	ObjCBindings/FieldAttribute.cs \
 	ObjCBindings/FieldTag.cs \
 	ObjCRuntime/ArgumentSemantic.cs \

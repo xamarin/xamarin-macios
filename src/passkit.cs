@@ -1940,12 +1940,12 @@ namespace PassKit {
 		[Internal]
 		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:")]
-		NativeHandle InitWithCardTemplate (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
+		NativeHandle _InitWithCardTemplate (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
 		[Internal]
 		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:")]
-		NativeHandle InitWithCardConfiguration (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
+		NativeHandle _InitWithCardConfiguration (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
 		[Export ("credentialIdentifier", ArgumentSemantic.Strong)]
 		string CredentialIdentifier { get; }

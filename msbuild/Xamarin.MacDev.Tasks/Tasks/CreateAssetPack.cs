@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
@@ -9,7 +13,9 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CreateAssetPack : XamarinToolTask {
+	public class CreateAssetPack : XamarinTask, ICancelableTask {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 
 		[Required]
@@ -18,34 +24,32 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem? Source { get; set; }
 
+		public string ZipPath { get; set; } = string.Empty;
+
 		#endregion
 
-		protected override string ToolName {
-			get { return "zip"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine ("/usr/bin", ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
 		}
 
-		protected override string GetWorkingDirectory ()
+		protected string GetWorkingDirectory ()
 		{
 			return Source!.GetMetadata ("FullPath");
 		}
 
-		protected override string GenerateCommandLineCommands ()
+		List<string> GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new List<string> ();
 
-			args.Add ("-r", "-y");
-			args.AddQuoted (OutputFile!.GetMetadata ("FullPath"));
-			args.AddQuoted ("META-INF");
+			args.Add ("-r");
+			args.Add ("-y");
+			args.Add (OutputFile!.GetMetadata ("FullPath"));
+			args.Add ("META-INF");
 
 			long size = 0;
 			int count = 0;
@@ -64,18 +68,13 @@ namespace Xamarin.MacDev.Tasks {
 					size += info.Length;
 				}
 
-				args.AddQuoted (Path.GetFileName (path));
+				args.Add (Path.GetFileName (path));
 				count++;
 			}
 
 			SaveMetaFile (count, size);
 
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			return args;
 		}
 
 		public override bool Execute ()
@@ -87,7 +86,11 @@ namespace Xamarin.MacDev.Tasks {
 			if (File.Exists (OutputFile!.ItemSpec))
 				File.Delete (OutputFile.ItemSpec);
 
-			return base.Execute ();
+			var args = GenerateCommandLineCommands ();
+			var executable = GetExecutable (args, "zip", ZipPath);
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, workingDirectory: GetWorkingDirectory (), cancellationToken: cancellationTokenSource.Token).Wait ();
+			return !Log.HasLoggedErrors;
 		}
 
 		void SaveMetaFile (int count, long size)
@@ -104,12 +107,13 @@ namespace Xamarin.MacDev.Tasks {
 			meta.Save (Path.Combine (Source.ItemSpec, "META-INF", "com.apple.ZipMetadata.plist"), true, true);
 		}
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-
-			base.Cancel ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }

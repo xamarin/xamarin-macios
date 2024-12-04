@@ -46,12 +46,12 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+- bash: ./$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
     Write-Host "##vso[task.setvariable variable=CONFIG_PATH]$jsonPath"
     New-BuildConfiguration -ConfigFile $jsonPath
@@ -61,15 +61,15 @@ steps:
   name: labels
   displayName: 'Configure build'
 
-- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+- bash: ./$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/configure-decisions.sh
   name: decisions
   displayName: 'Make decisions'
 
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$($Env:BUILD_REPOSITORY_NAME.Split(''/'')[1])/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     gci env: | sort | format-table -autosize -wrap
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
     $testMatrix = Get-TestConfiguration `
@@ -91,7 +91,7 @@ steps:
     SUPPORTED_PLATFORMS: ${{ convertToJson(parameters.supportedPlatforms) }}
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
     gci env: | sort | format-table -autosize -wrap
     $apiScanMatrix = Get-APIScanConfiguration -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
     # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines

@@ -28,12 +28,6 @@
 
 !missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
-
 # Swift Docs and Obj-C are out of sync
 # https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
 # https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc

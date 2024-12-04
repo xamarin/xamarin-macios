@@ -11,6 +11,12 @@ MSBuild properties control the behavior of the
 They're specified within the project file, for example **MyApp.csproj**, within
 an MSBuild PropertyGroup.
 
+## AltoolPath
+
+The full path to the `altool` tool.
+
+The default behavior is to use `xcrun altool`.
+
 ## AppBundleDir
 
 The location of the built app bundle.
@@ -89,13 +95,27 @@ Only applicable to iOS projects (since only iOS projects can be built remotely f
 
 If an Xcode archive should be created at the end of the build.
 
-## BTouchEmitDebugInformation
+## BGenEmitDebugInformation
 
-Specifies whether the binding generator should enable debug information when compiling generated binding code.
+Whether the `bgen` tool (the binding generator) should emit debug information or not.
 
-## BTouchExtraArgs
+The default behavior is `true` when the `Debug` property is set to `true`.
 
-Any extra arguments that should be passed to the binding generator.
+## BGenExtraArgs
+
+Any extra arguments to the `bgen` tool (the binding generator).
+
+## BGenToolExe
+
+The name of the `bgen` executable (a tool used by binding projects to generate bindings).
+
+The default behavior is to use the `bgen` tool shipped with our workload.
+
+## BGenToolPath
+
+The directory to where the `bgen` ([BGenToolExe](#BGenToolExe)) is located.
+
+The default behavior is to use the `bgen` tool shipped with our workload.
 
 ## BuildIpa
 
@@ -422,6 +442,12 @@ Default: automatically detected according to the default version shipped with th
 
 See also [MtouchSdkVersion](#mtouchsdkversion).
 
+## MdimportPath
+
+The full path to the `mdimport` tool.
+
+The default behavior is to use `xcrun mdimport`.
+
 ## MetalLibPath
 
 The full path to the `metallib` tool (the Metal Linker).
@@ -642,9 +668,27 @@ Specifies the path to the resulting .pkg file when creating a package (see [Crea
 
 Only applicable to macOS and Mac Catalyst apps.
 
+## PlutilPath
+
+The full path to the `plutil` command-line tool.
+
+The default behavior is to use `xcrun plutil`.
+
+## PngCrushPath
+
+The full path to the `pngcrush` command-line tool.
+
+The default behavior is to use `xcrun pngcrush`.
+
 ## ProcessEnums
 
 A boolean property that specifies whether enums should be processed as an api definition in binding projects.
+
+## ProductBuildPath
+
+The full path to the `productbuild` tool.
+
+The default behavior is to use `xcrun productbuild`.
 
 ## ProductDefinition
 
@@ -820,3 +864,8 @@ Applicable to macOS projects.
 
 See also [IPhoneResourcePrefix](#iphoneresourceprefix) and [MonoMacResourcePrefix](#monomacresourceprefix).
 
+## ZipPath
+
+The full path to the `zip` command-line tool.
+
+The default behavior is to use `xcrun zip`.

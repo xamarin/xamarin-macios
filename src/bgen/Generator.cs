@@ -1115,7 +1115,6 @@ public partial class Generator : IMemberGatherer {
 		var renderedEnumType = TypeManager.RenderType (enumType);
 		var underlyingEnumType = enumType.GetEnumUnderlyingType ();
 		var underlyingTypeName = TypeManager.RenderType (underlyingEnumType);
-		string itype;
 		string intermediateType;
 		object maxValue;
 		Func<FieldInfo, bool> isMaxDefinedFunc;
@@ -1123,14 +1122,12 @@ public partial class Generator : IMemberGatherer {
 		if (TypeCache.System_Int64 == underlyingEnumType) {
 			nativeType = "IntPtr";
 			intermediateType = "nint";
-			itype = "int";
 			maxValue = long.MaxValue;
 			isMaxDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MaxValue;
 			isMinDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MinValue;
 		} else if (TypeCache.System_UInt64 == underlyingEnumType) {
 			nativeType = "UIntPtr";
 			intermediateType = "nuint";
-			itype = "uint";
 			maxValue = ulong.MaxValue;
 			isMaxDefinedFunc = (v) => (ulong) v.GetRawConstantValue () == ulong.MaxValue;
 		} else {
@@ -4176,7 +4173,7 @@ public partial class Generator : IMemberGatherer {
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
 					print ("\tthrow new ModelNotImplementedException ();");
-				else if (minfo.is_abstract && !minfo.is_protocol_member)
+				else if (minfo.is_abstract && !minfo.is_protocol_member && !minfo.is_protocol_implementation_method)
 					print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 				else {
 					if (minfo.is_autorelease) {
@@ -4254,7 +4251,7 @@ public partial class Generator : IMemberGatherer {
 					print ("\tthrow new NotImplementedException ({0});", not_implemented_attr.Message is null ? "" : "\"" + not_implemented_attr.Message + "\"");
 				} else if (is_model)
 					print ("\tthrow new ModelNotImplementedException ();");
-				else if (minfo.is_abstract && !minfo.is_protocol_member)
+				else if (minfo.is_abstract && !minfo.is_protocol_member && !minfo.is_protocol_implementation_method)
 					print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 				else {
 					GenerateMethodBody (minfo, setter, sel, null_allowed, null, BodyOption.None, pi);
@@ -4579,6 +4576,8 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_ctor && minfo.is_protocol_member) {
 			do_not_call_base = false;
 		} else if (minfo.is_static && minfo.is_protocol_member) {
+			do_not_call_base = false;
+		} else if (minfo.is_protocol_implementation_method) {
 			do_not_call_base = false;
 		} else if (minfo.is_abstract || minfo.is_model) {
 			do_not_call_base = true;

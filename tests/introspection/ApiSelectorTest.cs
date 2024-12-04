@@ -1051,6 +1051,14 @@ namespace Introspection {
 				}
 				break;
 #endif // __MACCATALYST__
+#if !XAMCORE_5_0
+			case "NSSharingCollaborationModeRestriction":
+				switch (selectorName) {
+				case "setAlertRecoverySuggestionButtonLaunchURL:":// binding mistake
+					return true;
+				}
+				break;
+#endif
 			}
 
 			// old binding mistake
@@ -1213,8 +1221,13 @@ namespace Introspection {
 				if (!init)
 					ReportError ("Selector {0} used on a constructor (not a method) on {1}", name, t.FullName);
 			} else {
-				if (init)
-					ReportError ("Selector {0} used on a method (not a constructor) on {1}", name, t.FullName);
+				if (init) {
+					var isPubliclyVisible = m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
+					if (isPubliclyVisible || !m.Name.StartsWith ("_Init", StringComparison.Ordinal)) {
+						// ignore methods that start '_Init' and aren't publicly exposed, they're probably used by manually bound ctors.
+						ReportError ($"Selector {name} used on the method '{m.Name}' (not a constructor) on {t.FullName}");
+					}
+				}
 			}
 		}
 
@@ -1277,20 +1290,8 @@ namespace Introspection {
 			case "initWithMinCenterCoordinateDistance:":
 			case "initExcludingCategories:":
 			case "initIncludingCategories:":
-			// Vision
-			case "initWithCenter:diameter:":
-			case "initWithCenter:radius:":
-			case "initWithR:theta:":
-			// PassKit
-			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
-			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-			// SCContentFilter
-			case "initWithDisplay:excludingApplications:exceptingWindows:":
-			case "initWithDisplay:excludingWindows:":
-			case "initWithDisplay:includingApplications:exceptingWindows:":
-			case "initWithDisplay:includingWindows:":
 				var mi = m as MethodInfo;
 				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
 			// NSAppleEventDescriptor

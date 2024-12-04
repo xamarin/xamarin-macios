@@ -38,6 +38,13 @@ See also:
 
 An item group that contains atlas textures.
 
+## BGenReferencePath
+
+The list of assembly references to pass to the `bgen` tool (binding generator).
+
+Typically this is handled automatically by adding references as
+`ProjectReference` or `PackageReference` items instead.
+
 ## BundleResource
 
 Files to be copied to the app bundle.

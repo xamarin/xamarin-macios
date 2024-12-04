@@ -3745,7 +3745,7 @@ namespace Vision {
 
 		[Internal]
 		[Export ("initWithR:theta:")]
-		IntPtr InitWithRTheta (double r, double theta);
+		IntPtr _InitWithRTheta (double r, double theta);
 
 		[Export ("initWithVectorHead:tail:")]
 		NativeHandle Constructor (VNPoint head, VNPoint tail);
@@ -3781,11 +3781,11 @@ namespace Vision {
 
 		[Internal]
 		[Export ("initWithCenter:radius:")]
-		IntPtr InitWithCenterRadius (VNPoint center, double radius);
+		IntPtr _InitWithCenterRadius (VNPoint center, double radius);
 
 		[Internal]
 		[Export ("initWithCenter:diameter:")]
-		IntPtr InitWithCenterDiameter (VNPoint center, double diameter);
+		IntPtr _InitWithCenterDiameter (VNPoint center, double diameter);
 
 		[Export ("containsPoint:")]
 		bool Contains (VNPoint point);
