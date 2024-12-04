@@ -541,6 +541,7 @@ partial class Frameworks {
 		"ReplayKit",
 		"SafariServices",
 		"SceneKit",
+		"ScreenCaptureKit",
 		"ScreenTime",
 		"Security",
 		"SensitiveContentAnalysis",

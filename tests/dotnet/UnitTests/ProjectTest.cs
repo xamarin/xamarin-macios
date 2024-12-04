@@ -2898,6 +2898,7 @@ namespace Xamarin.Tests {
 			"/System/iOSSupport/System/Library/Frameworks/ReplayKit.framework/Versions/A/ReplayKit",
 			"/System/iOSSupport/System/Library/Frameworks/SafariServices.framework/Versions/A/SafariServices",
 			"/System/iOSSupport/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit",
+			"/System/iOSSupport/System/Library/Frameworks/ScreenCaptureKit.framework/Versions/A/ScreenCaptureKit",
 			"/System/iOSSupport/System/Library/Frameworks/ScreenTime.framework/Versions/A/ScreenTime",
 			"/System/iOSSupport/System/Library/Frameworks/SharedWithYou.framework/Versions/A/SharedWithYou",
 			"/System/iOSSupport/System/Library/Frameworks/Social.framework/Versions/A/Social",

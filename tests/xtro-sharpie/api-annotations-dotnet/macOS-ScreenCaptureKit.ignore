@@ -1,3 +1,2 @@
-!missing-null-allowed! 'CoreMedia.CMClock ScreenCaptureKit.SCStream::get_SynchronizationClock()' is missing an [NullAllowed] on return type
 # removed in XAMCORE_5_0
 !extra-protocol-member! unexpected selector SCStreamDelegate::userDidStopStream: found
