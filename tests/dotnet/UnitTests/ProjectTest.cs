@@ -3210,6 +3210,8 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["SupportedOSPlatformVersion"] = version;
+			properties ["ExcludeTouchUnitReference"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
