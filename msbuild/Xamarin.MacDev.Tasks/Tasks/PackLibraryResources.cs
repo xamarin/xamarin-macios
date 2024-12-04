@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
-using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
-	public class PackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class PackLibraryResources : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -93,14 +92,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void Cancel ()
 		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => false;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
