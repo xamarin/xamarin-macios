@@ -538,7 +538,7 @@ public partial class Generator : IMemberGatherer {
 		return append;
 	}
 
-	public bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
+	public bool HasForcedAttribute (ICustomAttributeProvider cu, out bool owns)
 	{
 		var att = AttributeManager.GetCustomAttribute<ForcedTypeAttribute> (cu);
 
@@ -549,11 +549,11 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (att is null) {
-			owns = "false";
+			owns = false;
 			return false;
 		}
 
-		owns = att.Owns ? "true" : "false";
+		owns = att.Owns;
 		return true;
 	}
 
@@ -608,8 +608,7 @@ public partial class Generator : IMemberGatherer {
 		pars.Add (new TrampolineParameterInfo ("IntPtr", "block"));
 		var parameters = mi.GetParameters ();
 		foreach (var pi in parameters) {
-			string isForcedOwns;
-			var isForced = HasForcedAttribute (pi, out isForcedOwns);
+			var isForced = HasForcedAttribute (pi, out var isForcedOwns);
 
 			if (pi != parameters [0])
 				invoke.Append (", ");
@@ -621,7 +620,7 @@ public partial class Generator : IMemberGatherer {
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, pi.ParameterType);
 				} else if (isForced) {
-					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})!", safe_name, TypeManager.RenderType (pi.ParameterType), isForcedOwns);
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})!", safe_name, TypeManager.RenderType (pi.ParameterType), isForcedOwns ? "true" : "false");
 				} else if (IsNSObject (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})!", safe_name, TypeManager.RenderType (pi.ParameterType));
 				} else {
@@ -2888,7 +2887,7 @@ public partial class Generator : IMemberGatherer {
 		MarshalInfo mai = new MarshalInfo (this, mi);
 		MarshalType mt;
 
-		var owns = (minfo?.is_return_release == true) || (minfo?.is_forced == true) ? "true" : "false";
+		var owns = (minfo?.is_return_release == true) || (minfo?.is_forced_owns == true) ? "true" : "false";
 		if (GetNativeEnumToManagedExpression (mi.ReturnType, out cast_a, out cast_b, out var _, postproc)) {
 			// we're done here
 		} else if (mi.ReturnType.IsEnum) {
@@ -3421,7 +3420,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (isINativeObjectSubclass) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0} is null ? NativeHandle.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3})!;\n", pi.Name.GetSafeParamName (), TypeManager.RenderType (elementType), isForcedType ? "true" : "false", isForcedType ? isForcedOwns : "false");
+					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3})!;\n", pi.Name.GetSafeParamName (), TypeManager.RenderType (elementType), isForcedType ? "true" : "false", (isForcedType && isForcedOwns) ? "true" : "false");
 				} else {
 					throw ErrorHelper.CreateError (88, mai.Type, mi);
 				}
