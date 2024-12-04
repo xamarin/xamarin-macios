@@ -35,7 +35,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 	
-	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName">
+	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName" Condition="'$(_BundleOriginalResources)' != 'true'">
 		<ItemGroup>
 			<!-- We need this metadata to fix the source in VS -->
 			<_BundleResourceWithLogicalName>
