@@ -2459,7 +2459,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'F#' ">FSharp</_ProjectLanguage>
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'VB' ">VisualBasic</_ProjectLanguage>
 
-		<_TargetsDirectory>$(_XamarinSdkRootDirectory)\tools\msbuild\$(_PlatformName)\</_TargetsDirectory>
+		<_TargetsDirectory>$(_XamarinSdkRootDirectory)\tools\msbuild\</_TargetsDirectory>
 	</PropertyGroup>
 
 	<Import Project="$(_TargetsDirectory)Xamarin.iOS.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
