@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ***********************************************************************************************
 Xamarin.WatchOS.AppExtension.Common.targets
 
@@ -30,7 +30,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.AppExtension.Common.props" />
 
