@@ -16,8 +16,7 @@
     <Skip Include="tools\msbuild\ws2_32.dll" />
     <!-- Broker.zip -->
     <Skip Include="Broker\Newtonsoft.Json.dll" />
-    <Skip Include="Broker\System.Net.Mqtt.dll" />
-    <Skip Include="Broker\System.Net.Mqtt.Server.dll" />
+    <Skip Include="Broker\MQTTnet.dll" />
     <Skip Include="Broker\System.Reactive.dll" />
     <Skip Include="Broker\System.Runtime.CompilerServices.Unsafe.dll" />
     <Skip Include="Broker\System.Security.Cryptography.ProtectedData.dll" />
