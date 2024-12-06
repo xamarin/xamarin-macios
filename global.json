@@ -1,9 +1,9 @@
 {
   "sdk": {
-    "version": "9.0.102-servicing.24605.3"
+    "version": "9.0.102-servicing.24605.31"
   },
   "tools": {
-    "dotnet": "9.0.102-servicing.24605.3"
+    "dotnet": "9.0.102-servicing.24605.31"
   },
   "msbuild-sdks": {
     "Microsoft.DotNet.Arcade.Sdk": "9.0.0-beta.24572.2"
