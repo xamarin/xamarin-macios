@@ -249,7 +249,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-#region Xamarin.MacDev.ICustomLogger
+		#region Xamarin.MacDev.ICustomLogger
 		void ICustomLogger.LogError (string message, Exception ex)
 		{
 			Log.LogError (message);
@@ -270,6 +270,6 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			Log.LogMessage (MessageImportance.Low, messageFormat, args);
 		}
-#endregion
+		#endregion
 	}
 }
