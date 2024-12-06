@@ -13,10 +13,8 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<!-- $(CoreiOSSdkDirectory) is defined in Microsoft.iOS.Sdk.targets, from Microsoft.iOS.Sdk package -->
-		<CoreiOSSdkDirectory Condition=" '$(CoreiOSSdkDirectory)' == '' and '$(UsingAppleNETSdk)' != 'true' ">$(MSBuildThisFileDirectory)</CoreiOSSdkDirectory>
 		<!-- Property originally defined in Xamarin.Messaging.Build.targets, from Xamarin.Messaging.Build.Client package -->
-		<MessagingBuildClientAssemblyFile>$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll</MessagingBuildClientAssemblyFile>
+		<MessagingBuildClientAssemblyFile>$(CoreiOSSdkDirectory)Xamarin.MacDev.Tasks.dll</MessagingBuildClientAssemblyFile>
 		<MessagingAgentsDirectory>$(MSBuildThisFileDirectory)</MessagingAgentsDirectory>
 	</PropertyGroup>
 </Project>

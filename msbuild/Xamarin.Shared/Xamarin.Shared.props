@@ -92,15 +92,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' == 'true'">
+	<PropertyGroup>
 		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_PlatformAssemblyName).dll</_XamarinPlatformAssemblyPath>
 	</PropertyGroup>
 
@@ -134,7 +126,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 			Then we'll automatically set the CodesignEntitlements property to "Entitlements.plist"
 		-->
-		<CodesignEntitlements Condition="'$(UsingAppleNETSdk)' == 'true' And '$(CodesignEntitlements)' == '' And Exists('Entitlements.plist') And '$(EnableDefaultCodesignEntitlements)' != 'false'">Entitlements.plist</CodesignEntitlements>
+		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == '' And Exists('Entitlements.plist') And '$(EnableDefaultCodesignEntitlements)' != 'false'">Entitlements.plist</CodesignEntitlements>
 
 		<!-- If we should automatically try to detect the app manifest (Info.plist) from any None, BundleResource or Content items -->
 		<!-- It might be desirable to turn off the automatic detection if the current logic detects Info.plist that aren't the app manifest -->
@@ -178,24 +170,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodeSigningKey)</_SpecifiedCodesignKey>
 		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodesignKey)</_SpecifiedCodesignKey>
 
-		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
-		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
-		<CreatePackage Condition="'$(CreatePackage)' == '' And '$(UsingAppleNETSdk)' != 'true'">false</CreatePackage>
-
 		<!-- If the .pkg should be signed or not. Applicable to macOS and Mac Catalyst. Defaults to false. -->
 		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<!-- TargetArchitectures -->
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">$(XamMacArch)</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchArch)</TargetArchitectures>
-		<!-- The default architecture for Xamarin.Mac is x86_64 -->
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">x86_64</TargetArchitectures>
-		<!-- There should always be an MtouchArch value in newer projects, but for older projects default to old values -->
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhoneSimulator'">x86_64</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARM64</TargetArchitectures>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -334,7 +310,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<LangVersion>latest</LangVersion>
 
 		<!-- Default NoBindingEmbedding to 'true' for .NET projects, it's the new way -->
-		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</NoBindingEmbedding>
+		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == ''">true</NoBindingEmbedding>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">
