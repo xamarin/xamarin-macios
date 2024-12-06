@@ -5,8 +5,7 @@ using UIKit;
 using CoreGraphics;
 using Foundation;
 
-namespace MonoTouch.Dialog
-{
+namespace MonoTouch.Dialog {
 	public class ActivityElement : Element {
 		public ActivityElement () : base ("")
 		{
@@ -37,7 +36,7 @@ namespace MonoTouch.Dialog
 		public override UITableViewCell GetCell (UITableView tv)
 		{
 			var cell = tv.DequeueReusableCell (CellKey);
-			if (cell == null){
+			if (cell is null) {
 				cell = new UITableViewCell (UITableViewCellStyle.Default, CellKey);
 			}
 
@@ -45,7 +44,7 @@ namespace MonoTouch.Dialog
 			var sbounds = tv.Frame;
 			var vbounds = indicator.Bounds;
 
-			indicator.Frame = new CGRect((sbounds.Width-vbounds.Width)/2, 12, vbounds.Width, vbounds.Height);
+			indicator.Frame = new CGRect ((sbounds.Width - vbounds.Width) / 2, 12, vbounds.Width, vbounds.Height);
 			indicator.StartAnimating ();
 
 			cell.Add (indicator);
@@ -55,8 +54,8 @@ namespace MonoTouch.Dialog
 
 		protected override void Dispose (bool disposing)
 		{
-			if (disposing){
-				if (indicator != null){
+			if (disposing) {
+				if (indicator is not null) {
 					indicator.Dispose ();
 					indicator = null;
 				}

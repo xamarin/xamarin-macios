@@ -21,14 +21,14 @@ namespace MonoTouch.NUnit.UI {
 		public override bool Match (ITest test)
 		{
 			var categories = test.Properties ["Category"];
-			if (categories != null) {
+			if (categories is not null) {
 				foreach (string cat in categories) {
 					if (ExcludedCategories.Contains (cat))
 						return false;
 				}
 			}
-			
-			if (test.Parent != null)
+
+			if (test.Parent is not null)
 				return Match (test.Parent);
 
 			return true;

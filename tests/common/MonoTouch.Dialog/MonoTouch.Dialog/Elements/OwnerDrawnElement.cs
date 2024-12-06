@@ -7,123 +7,109 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-namespace MonoTouch.Dialog
-{
-	public abstract partial class OwnerDrawnElement : Element, IElementSizing
-	{		
-		public string CellReuseIdentifier
-		{
-			get;set;	
+namespace MonoTouch.Dialog {
+	public abstract partial class OwnerDrawnElement : Element, IElementSizing {
+		public string CellReuseIdentifier {
+			get; set;
 		}
-		
-		public UITableViewCellStyle Style
-		{
-			get;set;	
+
+		public UITableViewCellStyle Style {
+			get; set;
 		}
-		
-		public OwnerDrawnElement (UITableViewCellStyle style, string cellIdentifier) : base(null)
+
+		public OwnerDrawnElement (UITableViewCellStyle style, string cellIdentifier) : base (null)
 		{
 			this.CellReuseIdentifier = cellIdentifier;
 			this.Style = style;
 		}
-		
+
 		public nfloat GetHeight (UITableView tableView, NSIndexPath indexPath)
 		{
-			return Height(tableView.Bounds);
+			return Height (tableView.Bounds);
 		}
-		
+
 		public override UITableViewCell GetCell (UITableView tv)
 		{
-			OwnerDrawnCell cell = tv.DequeueReusableCell(this.CellReuseIdentifier) as OwnerDrawnCell;
-			
-			if (cell == null)
-			{
-				cell = new OwnerDrawnCell(this, this.Style, this.CellReuseIdentifier);
-			}
-			else
-			{
+			OwnerDrawnCell cell = tv.DequeueReusableCell (this.CellReuseIdentifier) as OwnerDrawnCell;
+
+			if (cell is null) {
+				cell = new OwnerDrawnCell (this, this.Style, this.CellReuseIdentifier);
+			} else {
 				cell.Element = this;
 			}
-			
-			cell.Update();
+
+			cell.Update ();
 			return cell;
-		}	
-		
-		public abstract void Draw(CGRect bounds, CGContext context, UIView view);
-		
-		public abstract nfloat Height(CGRect bounds);
-		
-		class OwnerDrawnCell : UITableViewCell
-		{
+		}
+
+		public abstract void Draw (CGRect bounds, CGContext context, UIView view);
+
+		public abstract nfloat Height (CGRect bounds);
+
+		class OwnerDrawnCell : UITableViewCell {
 			OwnerDrawnCellView view;
-			
-			public OwnerDrawnCell(OwnerDrawnElement element, UITableViewCellStyle style, string cellReuseIdentifier) : base(style, cellReuseIdentifier)
+
+			public OwnerDrawnCell (OwnerDrawnElement element, UITableViewCellStyle style, string cellReuseIdentifier) : base (style, cellReuseIdentifier)
 			{
 				Element = element;
 			}
-			
-			public OwnerDrawnElement Element
-			{
+
+			public OwnerDrawnElement Element {
 				get {
 					return view.Element;
 				}
 				set {
-					if (view == null)
-					{
+					if (view is null) {
 						view = new OwnerDrawnCellView (value);
 						ContentView.Add (view);
-					}
-					else
-					{
+					} else {
 						view.Element = value;
 					}
 				}
 			}
-				
-			
 
-			public void Update()
+
+
+			public void Update ()
 			{
-				SetNeedsDisplay();
-				view.SetNeedsDisplay();
-			}		
-	
-			public override void LayoutSubviews()
+				SetNeedsDisplay ();
+				view.SetNeedsDisplay ();
+			}
+
+			public override void LayoutSubviews ()
 			{
-				base.LayoutSubviews();
-				
+				base.LayoutSubviews ();
+
 				view.Frame = ContentView.Bounds;
 			}
 		}
-		
-		class OwnerDrawnCellView : UIView
-		{				
+
+		class OwnerDrawnCellView : UIView {
 			OwnerDrawnElement element;
-			
-			public OwnerDrawnCellView(OwnerDrawnElement element)
+
+			public OwnerDrawnCellView (OwnerDrawnElement element)
 			{
 				this.element = element;
 			}
-			
-			
-			public OwnerDrawnElement Element
-			{
+
+
+			public OwnerDrawnElement Element {
 				get { return element; }
 				set {
-					element = value; 
+					element = value;
 				}
 			}
-			
-			public void Update()
+
+			public void Update ()
 			{
-				SetNeedsDisplay();
-			
+				SetNeedsDisplay ();
+
 			}
-			
+
 			public override void Draw (CGRect rect)
 			{
-				CGContext context = UIGraphics.GetCurrentContext();
-				element.Draw(rect, context, this);
+				CGContext context = UIGraphics.GetCurrentContext ();
+				element.Draw (rect, context, this);
 			}
 		}
 	}

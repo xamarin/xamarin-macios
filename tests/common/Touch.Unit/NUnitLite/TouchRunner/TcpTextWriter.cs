@@ -14,14 +14,14 @@ using UIKit;
 namespace MonoTouch.NUnit {
 
 	public class TcpTextWriter : TextWriter {
-		
+
 		private TcpClient client;
 		TcpListener server;
 		private StreamWriter writer;
 
 		public TcpTextWriter (string hostName, int port, bool isTunnel = false)
 		{
-			if (hostName == null)
+			if (hostName is null)
 				throw new ArgumentNullException ("hostName");
 			if ((port < 0) || (port > UInt16.MaxValue))
 				throw new ArgumentException ("port");
@@ -53,21 +53,20 @@ namespace MonoTouch.NUnit {
 					client = new TcpClient (HostName, port);
 				}
 				writer = new StreamWriter (client.GetStream ());
-			}
-			catch {
+			} catch {
 #if __IOS__
 				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 #endif
 				throw;
 			}
 		}
-		
+
 		public string HostName { get; private set; }
-		
+
 		public int Port { get; private set; }
 
 		// we override everything that StreamWriter overrides from TextWriter
-		
+
 		public override System.Text.Encoding Encoding {
 			// hardcoded to UTF8 so make it easier on the server side
 			get { return System.Text.Encoding.UTF8; }
@@ -80,10 +79,10 @@ namespace MonoTouch.NUnit {
 #endif
 			writer.Close ();
 		}
-		
+
 		protected override void Dispose (bool disposing)
 		{
-			 writer.Dispose ();
+			writer.Dispose ();
 		}
 
 		public override void Flush ()
@@ -96,13 +95,13 @@ namespace MonoTouch.NUnit {
 		{
 			writer.Write (value);
 		}
-		
-		public override void Write (char[] buffer)
+
+		public override void Write (char [] buffer)
 		{
-			 writer.Write (buffer);
+			writer.Write (buffer);
 		}
-		
-		public override void Write (char[] buffer, int index, int count)
+
+		public override void Write (char [] buffer, int index, int count)
 		{
 			writer.Write (buffer, index, count);
 		}
@@ -111,7 +110,7 @@ namespace MonoTouch.NUnit {
 		{
 			writer.Write (value);
 		}
-		
+
 		// special extra override to ensure we flush data regularly
 
 		public override void WriteLine ()

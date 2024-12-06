@@ -19,8 +19,7 @@ using UIKit;
 using MonoTouch.Dialog;
 using System.Collections.Generic;
 
-namespace Sample
-{
+namespace Sample {
 	class IndexedViewController : DialogViewController {
 		public IndexedViewController (RootElement root, bool pushing) : base (root, pushing)
 		{
@@ -30,67 +29,66 @@ namespace Sample
 			SearchPlaceholder = "Find item";
 			AutoHideSearch = true;
 		}
-		
+
 		string [] GetSectionTitles ()
 		{
 			return (
 				from section in Root
-				where !String.IsNullOrEmpty(section.Caption)
-				select section.Caption.Substring(0,1)
+				where !String.IsNullOrEmpty (section.Caption)
+				select section.Caption.Substring (0, 1)
 			).ToArray ();
 		}
-		
-		class IndexedSource : Source {
-        	IndexedViewController parent;
 
-	        public IndexedSource (IndexedViewController parent) : base (parent)
-	        {
-	            this.parent = parent;
-	        }
-	
+		class IndexedSource : Source {
+			IndexedViewController parent;
+
+			public IndexedSource (IndexedViewController parent) : base (parent)
+			{
+				this.parent = parent;
+			}
+
 #if !__TVOS__
-	        public override string[] SectionIndexTitles (UITableView tableView)
-	        {
+			public override string [] SectionIndexTitles (UITableView tableView)
+			{
 				var j = parent.GetSectionTitles ();
 				return j;
-	        }
+			}
 #endif
-	    }
+		}
 
 		class SizingIndexedSource : Source {
-        	IndexedViewController parent;
+			IndexedViewController parent;
 
-	        public SizingIndexedSource (IndexedViewController parent) : base (parent)
-	        {
-	            this.parent = parent;
-	        }
-	
+			public SizingIndexedSource (IndexedViewController parent) : base (parent)
+			{
+				this.parent = parent;
+			}
+
 #if !__TVOS__
-	        public override string[] SectionIndexTitles (UITableView tableView)
-	        {
+			public override string [] SectionIndexTitles (UITableView tableView)
+			{
 				var j = parent.GetSectionTitles ();
 				return j;
-	        }
+			}
 #endif // !__TVOS__
-	    }
+		}
 
 		public override Source CreateSizingSource (bool unevenRows)
-	    {
+		{
 			if (unevenRows)
 				return new SizingIndexedSource (this);
 			else
-	        	return new IndexedSource (this);
-	    }
+				return new IndexedSource (this);
+		}
 	}
-	
-	public partial class AppDelegate
-	{
-		public void DemoIndex () 
+
+	public partial class AppDelegate {
+		public void DemoIndex ()
 		{
 			var root = new RootElement ("Container Style") {
-				from sh in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" 
-				    select new Section (sh + " - Section") {
-					   from filler in "12345" 
+				from sh in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+					select new Section (sh + " - Section") {
+					   from filler in "12345"
 						select (Element) new StringElement (sh + " - " + filler)
 				}
 			};

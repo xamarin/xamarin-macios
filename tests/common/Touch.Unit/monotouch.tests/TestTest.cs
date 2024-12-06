@@ -21,7 +21,7 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Test {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class Test {
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Test {
 		{
 			Assert.True (fixture_setup);
 		}
-		
+
 		[Test]
 		public void Ok ()
 		{
@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.Test {
 			string s = null;
 			Assert.That (s.Length, Is.EqualTo (0), "Length");
 		}
-		
+
 		[Test]
 		[Ignore ("don't even execute this one")]
 		public void IgnoredByAttribute ()
@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.Test {
 			Assert.Inconclusive ("it did not mean anything");
 			throw new NotImplementedException ();
 		}
-		
+
 		[Test]
 		public void FailInCode ()
 		{

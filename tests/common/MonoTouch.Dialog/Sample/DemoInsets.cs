@@ -3,16 +3,14 @@ using MonoTouch.Dialog;
 using UIKit;
 using System.Drawing;
 
-namespace Sample
-{
-	public partial class AppDelegate 
-	{		
+namespace Sample {
+	public partial class AppDelegate {
 		public void DemoInsets ()
 		{
-			var uiView = new UIViewElement ("", new UIView (new RectangleF (0, 0, 20, 20)){
+			var uiView = new UIViewElement ("", new UIView (new RectangleF (0, 0, 20, 20)) {
 				BackgroundColor = UIColor.Red
 			}, false);
-			
+
 			var root = new RootElement ("UIViewElement Inset"){
 				new Section ("Simple Rectangle"){
 					uiView,
@@ -21,9 +19,9 @@ namespace Sample
 					new StringElement ("Pad Bottom", delegate { var i = uiView.Insets; i.Bottom += 10; uiView.Insets = i; })
 				}
 			};
-						
+
 			var dv = new DialogViewController (root, true);
-			navigation.PushViewController (dv, true);				
+			navigation.PushViewController (dv, true);
 		}
 	}
 }

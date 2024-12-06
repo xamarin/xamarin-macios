@@ -35,8 +35,7 @@ using CoreGraphics;
 
 using MonoTouch.Dialog.Utilities;
 
-namespace MonoTouch.Dialog.Utilities 
-{
+namespace MonoTouch.Dialog.Utilities {
 	/// <summary>
 	///    This interface needs to be implemented to be notified when an image
 	///    has been downloaded.   The notification will happen on the UI thread.
@@ -46,7 +45,7 @@ namespace MonoTouch.Dialog.Utilities
 	public interface IImageUpdated {
 		void UpdatedImage (Uri uri);
 	}
-	
+
 	/// <summary>
 	///   Network image loader, with local file system cache and in-memory cache
 	/// </summary>
@@ -67,28 +66,27 @@ namespace MonoTouch.Dialog.Utilities
 	///   low memory conditions, or when the application is sent to the background.
 	/// </remarks>
 
-	public class ImageLoader
-	{
-        public readonly static string BaseDir = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "..");
+	public class ImageLoader {
+		public readonly static string BaseDir = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "..");
 		const int MaxRequests = 6;
-		static string PicDir; 
-		
+		static string PicDir;
+
 		// Cache of recently used images
-		LRUCache<Uri,UIImage> cache;
-		
+		LRUCache<Uri, UIImage> cache;
+
 		// A list of requests that have been issues, with a list of objects to notify.
 		static Dictionary<Uri, List<IImageUpdated>> pendingRequests;
-		
+
 		// A list of updates that have completed, we must notify the main thread about them.
 		static HashSet<Uri> queuedUpdates;
-		
+
 		// A queue used to avoid flooding the network stack with HTTP requests
 		static Stack<Uri> requestQueue;
-		
+
 		static NSString nsDispatcher = new NSString ("x");
-		
+
 		static MD5 checksum = MD5.Create ();
-		
+
 		/// <summary>
 		///    This contains the default loader which is configured to be 50 images
 		///    up to 4 megs of memory.   Assigning to this property a new value will
@@ -96,19 +94,19 @@ namespace MonoTouch.Dialog.Utilities
 		///    an image is requested.
 		/// </summary>
 		public static ImageLoader DefaultLoader;
-		
+
 		static ImageLoader ()
 		{
 			PicDir = Path.Combine (BaseDir, "Library/Caches/Pictures.MonoTouch.Dialog/");
-			
+
 			if (!Directory.Exists (PicDir))
 				Directory.CreateDirectory (PicDir);
-			
-			pendingRequests = new Dictionary<Uri,List<IImageUpdated>> ();
-			queuedUpdates = new HashSet<Uri>();
+
+			pendingRequests = new Dictionary<Uri, List<IImageUpdated>> ();
+			queuedUpdates = new HashSet<Uri> ();
 			requestQueue = new Stack<Uri> ();
 		}
-		
+
 		/// <summary>
 		///   Creates a new instance of the image loader
 		/// </summary>
@@ -122,22 +120,22 @@ namespace MonoTouch.Dialog.Utilities
 		{
 			cache = new LRUCache<Uri, UIImage> (cacheSize, memoryLimit, sizer);
 		}
-		
+
 		static int sizer (UIImage img)
 		{
 			var cg = img.CGImage;
-			return (int)(cg.BytesPerRow * cg.Height);
+			return (int) (cg.BytesPerRow * cg.Height);
 		}
-		
+
 		/// <summary>
 		///    Purges the contents of the DefaultLoader
 		/// </summary>
 		public static void Purge ()
 		{
-			if (DefaultLoader != null)
+			if (DefaultLoader is not null)
 				DefaultLoader.PurgeCache ();
 		}
-		
+
 		/// <summary>
 		///    Purges the cache of this instance of the ImageLoader, releasing 
 		///    all the memory used by the images in the caches.
@@ -147,25 +145,25 @@ namespace MonoTouch.Dialog.Utilities
 			lock (cache)
 				cache.Purge ();
 		}
-		
+
 		static int hex (int v)
 		{
 			if (v < 10)
 				return '0' + v;
-			return 'a' + v-10;
+			return 'a' + v - 10;
 		}
 
 		static string md5 (string input)
 		{
 			var bytes = checksum.ComputeHash (Encoding.UTF8.GetBytes (input));
 			var ret = new char [32];
-			for (int i = 0; i < 16; i++){
-				ret [i*2] = (char)hex (bytes [i] >> 4);
-				ret [i*2+1] = (char)hex (bytes [i] & 0xf);
+			for (int i = 0; i < 16; i++) {
+				ret [i * 2] = (char) hex (bytes [i] >> 4);
+				ret [i * 2 + 1] = (char) hex (bytes [i] & 0xf);
 			}
 			return new string (ret);
 		}
-		
+
 		/// <summary>
 		///   Requests an image to be loaded using the default image loader
 		/// </summary>
@@ -180,11 +178,11 @@ namespace MonoTouch.Dialog.Utilities
 		/// </returns>
 		public static UIImage DefaultRequestImage (Uri uri, IImageUpdated notify)
 		{
-			if (DefaultLoader == null)
-				DefaultLoader = new ImageLoader (50, 4*1024*1024);
+			if (DefaultLoader is null)
+				DefaultLoader = new ImageLoader (50, 4 * 1024 * 1024);
 			return DefaultLoader.RequestImage (uri, notify);
 		}
-		
+
 		/// <summary>
 		///   Requests an image to be loaded from the network
 		/// </summary>
@@ -200,43 +198,43 @@ namespace MonoTouch.Dialog.Utilities
 		public UIImage RequestImage (Uri uri, IImageUpdated notify)
 		{
 			UIImage ret;
-			
-			lock (cache){
+
+			lock (cache) {
 				ret = cache [uri];
-				if (ret != null)
+				if (ret is not null)
 					return ret;
 			}
 
-			lock (requestQueue){
+			lock (requestQueue) {
 				if (pendingRequests.ContainsKey (uri)) {
-					if (!pendingRequests [uri].Contains(notify))
+					if (!pendingRequests [uri].Contains (notify))
 						pendingRequests [uri].Add (notify);
 					return null;
-				}				
+				}
 			}
 
 			string picfile = uri.IsFile ? uri.LocalPath : PicDir + md5 (uri.AbsoluteUri);
-			if (File.Exists (picfile)){
+			if (File.Exists (picfile)) {
 				ret = UIImage.FromFile (picfile);
-				if (ret != null){
+				if (ret is not null) {
 					lock (cache)
 						cache [uri] = ret;
 					return ret;
 				}
-			} 
+			}
 			if (uri.IsFile)
 				return null;
 			QueueRequest (uri, notify);
 			return null;
 		}
-		
+
 		static void QueueRequest (Uri uri, IImageUpdated notify)
 		{
-			if (notify == null)
+			if (notify is null)
 				throw new ArgumentNullException ("notify");
-			
-			lock (requestQueue){
-				if (pendingRequests.ContainsKey (uri)){
+
+			lock (requestQueue) {
+				if (pendingRequests.ContainsKey (uri)) {
 					//Util.Log ("pendingRequest: added new listener for {0}", id);
 					pendingRequests [uri].Add (notify);
 					return;
@@ -244,28 +242,29 @@ namespace MonoTouch.Dialog.Utilities
 				var slot = new List<IImageUpdated> (4);
 				slot.Add (notify);
 				pendingRequests [uri] = slot;
-				
+
 				if (picDownloaders >= MaxRequests)
 					requestQueue.Push (uri);
 				else {
-					ThreadPool.QueueUserWorkItem (delegate { 
-							try {
-								StartPicDownload (uri); 
-							} catch (Exception e){
-								Console.WriteLine (e);
-							}
-						});
+					ThreadPool.QueueUserWorkItem (delegate
+					{
+						try {
+							StartPicDownload (uri);
+						} catch (Exception e) {
+							Console.WriteLine (e);
+						}
+					});
 				}
 			}
 		}
-		
+
 		static bool Download (Uri uri)
 		{
 			try {
 				NSUrlResponse response;
 				NSError error;
-				
-				var target =  PicDir + md5 (uri.AbsoluteUri);
+
+				var target = PicDir + md5 (uri.AbsoluteUri);
 				var req = new NSUrlRequest (new NSUrl (uri.AbsoluteUri.ToString ()), NSUrlRequestCachePolicy.UseProtocolCachePolicy, 120);
 				var data = NSUrlConnection.SendSynchronousRequest (req, out response, out error);
 				return data.Save (target, true, out error);
@@ -274,38 +273,38 @@ namespace MonoTouch.Dialog.Utilities
 				return false;
 			}
 		}
-		
+
 		static long picDownloaders;
-		
+
 		static void StartPicDownload (Uri uri)
 		{
 			Interlocked.Increment (ref picDownloaders);
 			try {
 				_StartPicDownload (uri);
-			} catch (Exception e){
+			} catch (Exception e) {
 				Console.Error.WriteLine ("CRITICAL: should have never happened {0}", e);
 			}
 			//Util.Log ("Leaving StartPicDownload {0}", picDownloaders);
 			Interlocked.Decrement (ref picDownloaders);
 		}
-		
+
 		static void _StartPicDownload (Uri uri)
 		{
 			do {
 				bool downloaded = false;
-				
+
 				//System.Threading.Thread.Sleep (5000);
 				downloaded = Download (uri);
 				//if (!downloaded)
 				//	Console.WriteLine ("Error fetching picture for {0} to {1}", uri, target);
-				
+
 				// Cluster all updates together
 				bool doInvoke = false;
-				
-				lock (requestQueue){
-					if (downloaded){
+
+				lock (requestQueue) {
+					if (downloaded) {
 						queuedUpdates.Add (uri);
-					
+
 						// If this is the first queued update, must notify
 						if (queuedUpdates.Count == 1)
 							doInvoke = true;
@@ -313,9 +312,9 @@ namespace MonoTouch.Dialog.Utilities
 						pendingRequests.Remove (uri);
 
 					// Try to get more jobs.
-					if (requestQueue.Count > 0){
+					if (requestQueue.Count > 0) {
 						uri = requestQueue.Pop ();
-						if (uri == null){
+						if (uri is null) {
 							Console.Error.WriteLine ("Dropping request {0} because url is null", uri);
 							pendingRequests.Remove (uri);
 							uri = null;
@@ -324,24 +323,24 @@ namespace MonoTouch.Dialog.Utilities
 						//Util.Log ("Leaving because requestQueue.Count = {0} NOTE: {1}", requestQueue.Count, pendingRequests.Count);
 						uri = null;
 					}
-				}	
+				}
 				if (doInvoke)
 					nsDispatcher.BeginInvokeOnMainThread (NotifyImageListeners);
-				
-			} while (uri != null);
+
+			} while (uri is not null);
 		}
-		
+
 		// Runs on the main thread
 		static void NotifyImageListeners ()
 		{
-			lock (requestQueue){
-				foreach (var quri in queuedUpdates){
+			lock (requestQueue) {
+				foreach (var quri in queuedUpdates) {
 					var list = pendingRequests [quri];
 					pendingRequests.Remove (quri);
-					foreach (var pr in list){
+					foreach (var pr in list) {
 						try {
 							pr.UpdatedImage (quri);
-						} catch (Exception e){
+						} catch (Exception e) {
 							Console.WriteLine (e);
 						}
 					}

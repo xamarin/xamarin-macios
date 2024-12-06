@@ -16,29 +16,27 @@ using Foundation;
 
 using MonoTouch.Dialog;
 
-namespace Sample
-{
-	public partial class AppDelegate 
-	{
+namespace Sample {
+	public partial class AppDelegate {
 		DialogViewController dynamic;
 		BindingContext context;
 		AccountInfo account;
-		
+
 		class AccountInfo {
 			[Section ("Twitter credentials", "This sample loads various information\nsources dynamically from your twitter\naccount.")]
-			
+
 			[Entry ("Enter your login name")]
 			public string Username;
-			
+
 			[Password ("Enter your password")]
 			public string Password;
-			
+
 			[Section ("Tap to fetch the timeline")]
 			[OnTap ("FetchTweets")]
 			[Preserve]
 			public string Login;
 		}
-		
+
 		bool Busy {
 			get {
 #if __TVOS__
@@ -53,34 +51,34 @@ namespace Sample
 #endif // !__TVOS__
 			}
 		}
-		
+
 		public void FetchTweets ()
 		{
 			if (Busy)
 				return;
-			
+
 			Busy = true;
 
 			// Fetch the edited values.
 			context.Fetch ();
-			
-			var request = (HttpWebRequest)WebRequest.Create ("http://twitter.com/statuses/friends_timeline.xml");
+
+			var request = (HttpWebRequest) WebRequest.Create ("http://twitter.com/statuses/friends_timeline.xml");
 			request.Credentials = new NetworkCredential (account.Username, account.Password);
 			request.BeginGetResponse (TimeLineLoaded, request);
 		}
-		
+
 		// Creates the dynamic content from the twitter results
 		RootElement CreateDynamicContent (XDocument doc)
 		{
 			var users = doc.XPathSelectElements ("./statuses/status/user").ToArray ();
-			var texts = doc.XPathSelectElements ("./statuses/status/text").Select (x=>x.Value).ToArray ();
-			var people = doc.XPathSelectElements ("./statuses/status/user/name").Select (x=>x.Value).ToArray ();
-			
+			var texts = doc.XPathSelectElements ("./statuses/status/text").Select (x => x.Value).ToArray ();
+			var people = doc.XPathSelectElements ("./statuses/status/user/name").Select (x => x.Value).ToArray ();
+
 			var section = new Section ();
 			var root = new RootElement ("Tweets") { section };
-			
-			for (int i = 0; i < people.Length; i++){
-				var line = new RootElement (people [i]) { 
+
+			for (int i = 0; i < people.Length; i++) {
+				var line = new RootElement (people [i]) {
 					new Section ("Profile"){
 						new StringElement ("Screen name", users [i].XPathSelectElement ("./screen_name").Value),
 						new StringElement ("Name", people [i]),
@@ -92,46 +90,48 @@ namespace Sample
 				};
 				section.Add (line);
 			}
-			
+
 			return root;
 		}
-		
+
 		void TimeLineLoaded (IAsyncResult result)
 		{
 			var request = result.AsyncState as HttpWebRequest;
 			Busy = false;
-				
+
 			try {
 				var response = request.EndGetResponse (result);
 				var stream = response.GetResponseStream ();
 
-				
+
 				var root = CreateDynamicContent (XDocument.Load (new XmlTextReader (stream)));
-				InvokeOnMainThread (delegate {
+				InvokeOnMainThread (delegate
+				{
 					var tweetVC = new DialogViewController (root, true);
 					navigation.PushViewController (tweetVC, true);
 				});
-			} catch (WebException e){
-				
-				InvokeOnMainThread (delegate {
+			} catch (WebException e) {
+
+				InvokeOnMainThread (delegate
+				{
 					var alertController = UIAlertController.Create ("Error", "Code: " + e.Status, UIAlertControllerStyle.Alert);
 					alertController.AddAction (UIAlertAction.Create ("Ok", UIAlertActionStyle.Default, (obj) => { }));
 					window.RootViewController.PresentViewController (alertController, true, null);
 				});
 			}
 		}
-		
+
 		public void DemoDynamic ()
 		{
 			account = new AccountInfo ();
-			
+
 			context = new BindingContext (this, account, "Settings");
 
-			if (dynamic != null)
+			if (dynamic is not null)
 				dynamic.Dispose ();
-			
+
 			dynamic = new DialogViewController (context.Root, true);
-			navigation.PushViewController (dynamic, true);				
+			navigation.PushViewController (dynamic, true);
 		}
 	}
 }

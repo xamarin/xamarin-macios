@@ -22,10 +22,8 @@ using System;
 
 using Foundation;
 
-namespace MonoTouch.Dialog
-{
-	internal static class LocalizationExtensions
-	{
+namespace MonoTouch.Dialog {
+	internal static class LocalizationExtensions {
 		/// <summary>
 		/// Gets the localized text for the specified string.
 		/// </summary>

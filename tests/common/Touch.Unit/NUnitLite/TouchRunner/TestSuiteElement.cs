@@ -40,7 +40,8 @@ namespace MonoTouch.NUnit.UI {
 				Accessory = UITableViewCellAccessory.DisclosureIndicator;
 				DetailColor = DarkGreen;
 				Value = String.Format ("{0} test case{1}, {2}", count, count == 1 ? String.Empty : "s", Suite.RunState);
-				Tapped += delegate {
+				Tapped += delegate
+				{
 					runner.Show (Suite);
 				};
 			} else {
@@ -52,16 +53,16 @@ namespace MonoTouch.NUnit.UI {
 					Value = "No test was found inside this suite";
 			}
 		}
-		
+
 		public TestSuite Suite {
 			get { return Test as TestSuite; }
 		}
-		
+
 		public void Run ()
 		{
 			Runner.Run (Suite);
 		}
-		
+
 		public override void TestFinished ()
 		{
 			int positive = Result.PassCount + Result.InconclusiveCount;
@@ -88,7 +89,7 @@ namespace MonoTouch.NUnit.UI {
 			}
 			Value = sb.ToString ();
 
-			if (GetContainerTableView () != null) {
+			if (GetContainerTableView () is not null) {
 				var root = GetImmediateRootElement ();
 				root.Reload (this, UITableViewRowAnimation.Fade);
 			}

@@ -4,19 +4,17 @@ using System.Linq;
 using UIKit;
 using MonoTouch.Dialog;
 
-namespace Sample
-{
-	public partial class AppDelegate
-	{
-		public void DemoHeadersFooters () 
+namespace Sample {
+	public partial class AppDelegate {
+		public void DemoHeadersFooters ()
 		{
-			var section = new Section () { 
+			var section = new Section () {
 				HeaderView = new UIImageView (UIImage.FromFile ("caltemplate.png")),
 #if !__TVOS__
 				FooterView = new UISwitch (new RectangleF (0, 0, 80, 30)),
 #endif // !__TVOS__
 			};
-			
+
 			// Fill in some data 
 			var linqRoot = new RootElement ("LINQ source"){
 				from x in new string [] { "one", "two", "three" }
@@ -33,7 +31,7 @@ namespace Sample
 					new RadioElement ("Chocolate Cake", "desert")
 				},
 			});
-			
+
 			var root = new RootElement ("Headers and Footers") {
 				section,
 				new Section () { linqRoot }

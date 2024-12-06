@@ -11,7 +11,7 @@ using CoreGraphics;
 namespace MonoTouch.NUnit.UI {
 	public class MacRunner : BaseTouchRunner {
 		// The exitProcess callback must not return. The boolean parameter specifies whether the test run succeeded or not.
-		public static async Task<int> MainAsync (IList<string> arguments, bool requiresNSApplicationRun, Action<int> exitProcess, params Assembly[] assemblies)
+		public static async Task<int> MainAsync (IList<string> arguments, bool requiresNSApplicationRun, Action<int> exitProcess, params Assembly [] assemblies)
 		{
 			var success = false;
 
@@ -56,10 +56,10 @@ namespace MonoTouch.NUnit.UI {
 			return success ? 0 : 1;
 		}
 
-		static async Task<bool> RunTestsAsync (TouchOptions options, Assembly[] assemblies)
+		static async Task<bool> RunTestsAsync (TouchOptions options, Assembly [] assemblies)
 		{
 			var runner = new MacRunner ();
-			if (assemblies == null || assemblies.Length == 0)
+			if (assemblies is null || assemblies.Length == 0)
 				assemblies = AppDomain.CurrentDomain.GetAssemblies ();
 
 			foreach (var asm in assemblies)

@@ -34,16 +34,17 @@ using NUnit.Framework.Api;
 #endif
 
 namespace MonoTouch.NUnit.UI {
-	
+
 	class TestCaseElement : TestElement {
 		bool tapped;
-		
+
 		public TestCaseElement (TestMethod testCase, TouchRunner runner)
 			: base (testCase, runner)
 		{
 			Caption = testCase.Name;
 			Value = "NotExecuted";
-			this.Tapped += delegate {
+			this.Tapped += delegate
+			{
 				if (!Runner.OpenWriter (Test.FullName))
 					return;
 
@@ -63,16 +64,16 @@ namespace MonoTouch.NUnit.UI {
 				tapped = true;
 			};
 		}
-		
+
 		public TestMethod TestCase {
 			get { return Test as TestMethod; }
 		}
-		
+
 		public void Run ()
 		{
 			Runner.Run (TestCase);
 		}
-		
+
 		public override void TestFinished ()
 		{
 			if (Result.IsIgnored ()) {
@@ -105,7 +106,7 @@ namespace MonoTouch.NUnit.UI {
 					Runner.NavigationController.PushViewController (dvc, true);
 				}
 				// we still need to update our current element
-				if (GetContainerTableView () != null) {
+				if (GetContainerTableView () is not null) {
 					var root = GetImmediateRootElement ();
 					root.Reload (this, UITableViewRowAnimation.Fade);
 				}

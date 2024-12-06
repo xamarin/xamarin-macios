@@ -12,10 +12,8 @@ using UIKit;
 using CoreGraphics;
 using ObjCRuntime;
 
-namespace MonoTouch.Dialog
-{
-	public partial class LoadMoreElement : Element, IElementSizing
-	{
+namespace MonoTouch.Dialog {
+	public partial class LoadMoreElement : Element, IElementSizing {
 		static NSString key = new NSString ("LoadMoreElement");
 		public string NormalCaption { get; set; }
 		public string LoadingCaption { get; set; }
@@ -26,15 +24,15 @@ namespace MonoTouch.Dialog
 		public float? Height;
 		UITextAlignment alignment = UITextAlignment.Center;
 		bool animating;
-		
+
 		public LoadMoreElement () : base ("")
 		{
 		}
-		
+
 		public LoadMoreElement (string normalCaption, string loadingCaption, Action<LoadMoreElement> tapped) : this (normalCaption, loadingCaption, tapped, UIFont.BoldSystemFontOfSize (16), UIColor.Black)
 		{
 		}
-		
+
 		public LoadMoreElement (string normalCaption, string loadingCaption, Action<LoadMoreElement> tapped, UIFont font, UIColor textColor) : base ("")
 		{
 			NormalCaption = normalCaption;
@@ -43,16 +41,16 @@ namespace MonoTouch.Dialog
 			Font = font;
 			TextColor = textColor;
 		}
-		
+
 		public override UITableViewCell GetCell (UITableView tv)
 		{
 			var cell = tv.DequeueReusableCell (key);
 			UIActivityIndicatorView activityIndicator;
 			UILabel caption;
-			
-			if (cell == null){
+
+			if (cell is null) {
 				cell = new UITableViewCell (UITableViewCellStyle.Default, key);
-			
+
 				activityIndicator = new UIActivityIndicatorView () {
 					ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray,
 					Tag = 1
@@ -68,7 +66,7 @@ namespace MonoTouch.Dialog
 				activityIndicator = cell.ContentView.ViewWithTag (1) as UIActivityIndicatorView;
 				caption = cell.ContentView.ViewWithTag (2) as UILabel;
 			}
-			if (Animating){
+			if (Animating) {
 				caption.Text = LoadingCaption;
 				activityIndicator.Hidden = false;
 				activityIndicator.StartAnimating ();
@@ -77,7 +75,7 @@ namespace MonoTouch.Dialog
 				activityIndicator.Hidden = true;
 				activityIndicator.StopAnimating ();
 			}
-			if (BackgroundColor != null){
+			if (BackgroundColor is not null) {
 				cell.ContentView.BackgroundColor = BackgroundColor ?? UIColor.Clear;
 			} else {
 				cell.ContentView.BackgroundColor = null;
@@ -89,7 +87,7 @@ namespace MonoTouch.Dialog
 			Layout (cell, activityIndicator, caption);
 			return cell;
 		}
-		
+
 		public bool Animating {
 			get {
 				return animating;
@@ -99,11 +97,11 @@ namespace MonoTouch.Dialog
 					return;
 				animating = value;
 				var cell = GetActiveCell ();
-				if (cell == null)
+				if (cell is null)
 					return;
 				var activityIndicator = cell.ContentView.ViewWithTag (1) as UIActivityIndicatorView;
 				var caption = cell.ContentView.ViewWithTag (2) as UILabel;
-				if (value){
+				if (value) {
 					caption.Text = LoadingCaption;
 					activityIndicator.Hidden = false;
 					activityIndicator.StartAnimating ();
@@ -115,47 +113,47 @@ namespace MonoTouch.Dialog
 				Layout (cell, activityIndicator, caption);
 			}
 		}
-				
+
 		public override void Selected (DialogViewController dvc, UITableView tableView, NSIndexPath path)
 		{
 			tableView.DeselectRow (path, true);
-			
+
 			if (Animating)
 				return;
-			
-			if (Tapped != null){
+
+			if (Tapped is not null) {
 				Animating = true;
 				Tapped (this);
 			}
 		}
-		
+
 		CGSize GetTextSize (string text)
 		{
-			return new NSString (text).StringSize (Font, (float)UIScreen.MainScreen.Bounds.Width, UILineBreakMode.TailTruncation);
+			return new NSString (text).StringSize (Font, (float) UIScreen.MainScreen.Bounds.Width, UILineBreakMode.TailTruncation);
 		}
-		
+
 		const int pad = 10;
 		const int isize = 20;
-		
+
 		public nfloat GetHeight (UITableView tableView, NSIndexPath indexPath)
 		{
-			return Height ?? GetTextSize (Animating ? LoadingCaption : NormalCaption).Height + 2*pad;
+			return Height ?? GetTextSize (Animating ? LoadingCaption : NormalCaption).Height + 2 * pad;
 		}
-		
+
 		void Layout (UITableViewCell cell, UIActivityIndicatorView activityIndicator, UILabel caption)
 		{
 			var sbounds = cell.ContentView.Bounds;
 
 			var size = GetTextSize (Animating ? LoadingCaption : NormalCaption);
-			
-			if (!activityIndicator.Hidden)
-				activityIndicator.Frame = new CGRect ((sbounds.Width-size.Width)/2-isize*2, pad, isize, isize);
 
-			caption.Frame = new CGRect (10, pad, sbounds.Width-20, size.Height);
+			if (!activityIndicator.Hidden)
+				activityIndicator.Frame = new CGRect ((sbounds.Width - size.Width) / 2 - isize * 2, pad, isize, isize);
+
+			caption.Frame = new CGRect (10, pad, sbounds.Width - 20, size.Height);
 		}
-		
-		public UITextAlignment Alignment { 
-			get { return alignment; } 
+
+		public UITextAlignment Alignment {
+			get { return alignment; }
 			set { alignment = value; }
 		}
 		public UITableViewCellAccessory Accessory { get; set; }

@@ -108,7 +108,7 @@ namespace MonoTouch.NUnit.UI {
 
 		public void Add (Assembly assembly)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				throw new ArgumentNullException ("assembly");
 
 			assemblies.Add (assembly);
@@ -117,8 +117,8 @@ namespace MonoTouch.NUnit.UI {
 		public void Add (Assembly assembly, IList<string> fixtures)
 		{
 			Add (assembly);
-			if (fixtures != null) {
-				if (this.fixtures == null) {
+			if (fixtures is not null) {
+				if (this.fixtures is null) {
 					this.fixtures = new List<string> (fixtures);
 				} else {
 					this.fixtures.AddRange (fixtures);
@@ -156,8 +156,7 @@ namespace MonoTouch.NUnit.UI {
 		protected virtual void ExecuteOnMainThread (Action action)
 		{
 			var obj = new NSObject ();
-			obj.BeginInvokeOnMainThread (() =>
-			{
+			obj.BeginInvokeOnMainThread (() => {
 				action ();
 				obj.Dispose ();
 			});
@@ -201,7 +200,7 @@ namespace MonoTouch.NUnit.UI {
 
 			foreach (var test in parent.Tests) {
 				var rv = Find (test, fullname, hierarchy);
-				if (rv != null) {
+				if (rv is not null) {
 					hierarchy.Add (parent);
 					return test;
 				}
@@ -236,7 +235,7 @@ namespace MonoTouch.NUnit.UI {
 				// optionally end the process, e.g. click "Touch.Unit" -> log tests results, return to springboard...
 				// http://stackoverflow.com/questions/1978695/uiapplication-sharedapplication-terminatewithsuccess-is-not-there
 				if (TerminateAfterExecution) {
-					if (WriterFinishedTask != null) {
+					if (WriterFinishedTask is not null) {
 						Task.Run (async () => {
 							await WriterFinishedTask;
 							TerminateWithExitCode (status);
@@ -276,7 +275,7 @@ namespace MonoTouch.NUnit.UI {
 			}
 		}
 
-#region writer
+		#region writer
 
 		public TestResult Result { get; set; }
 
@@ -284,7 +283,7 @@ namespace MonoTouch.NUnit.UI {
 
 		Task WriterFinishedTask { get; set; }
 
-		static string SelectHostName (string[] names, int port)
+		static string SelectHostName (string [] names, int port)
 		{
 			if (names.Length == 0)
 				return null;
@@ -299,27 +298,26 @@ namespace MonoTouch.NUnit.UI {
 			using (var evt = new ManualResetEvent (false)) {
 				for (int i = names.Length - 1; i >= 0; i--) {
 					var name = names [i];
-					ThreadPool.QueueUserWorkItem ((v) =>
-						{
-							try {
-								var client = new TcpClient (name, port);
-								using (var writer = new StreamWriter (client.GetStream ())) {
-									writer.WriteLine ("ping");
-								}
-								lock (lock_obj) {
-									if (result == null)
-										result = name;
-								}
-								evt.Set ();
-							} catch (Exception e) {
-								lock (lock_obj) {
-									Console.WriteLine ("TCP connection failed when selecting 'hostname': {0} and 'port': {1}. {2}", name, port, e);
-									failures++;
-									if (failures == names.Length)
-										evt.Set ();
-								}
+					ThreadPool.QueueUserWorkItem ((v) => {
+						try {
+							var client = new TcpClient (name, port);
+							using (var writer = new StreamWriter (client.GetStream ())) {
+								writer.WriteLine ("ping");
 							}
-						});
+							lock (lock_obj) {
+								if (result is null)
+									result = name;
+							}
+							evt.Set ();
+						} catch (Exception e) {
+							lock (lock_obj) {
+								Console.WriteLine ("TCP connection failed when selecting 'hostname': {0} and 'port': {1}. {2}", name, port, e);
+								failures++;
+								if (failures == names.Length)
+									evt.Set ();
+							}
+						}
+					});
 				}
 
 				// Wait for 1 success or all failures
@@ -334,7 +332,7 @@ namespace MonoTouch.NUnit.UI {
 			TouchOptions options = TouchOptions.Current;
 			DateTime now = DateTime.Now;
 			// let the application provide it's own TextWriter to ease automation with AutoStart property
-			if (Writer == null) {
+			if (Writer is null) {
 				var writers = new List<TextWriter> ();
 				if (options.ShowUseNetworkLogger) {
 					try {
@@ -344,8 +342,7 @@ namespace MonoTouch.NUnit.UI {
 						switch (options.Transport) {
 						case "FILE":
 							Console.WriteLine ("[{0}] Sending '{1}' results to the file {2}", now, message, options.LogFile);
-							defaultWriter = new StreamWriter (options.LogFile, true, System.Text.Encoding.UTF8)
-							{
+							defaultWriter = new StreamWriter (options.LogFile, true, System.Text.Encoding.UTF8) {
 								AutoFlush = true,
 							};
 							break;
@@ -355,8 +352,7 @@ namespace MonoTouch.NUnit.UI {
 							if (hostnames.Length > 1)
 								Console.WriteLine ("[{0}] Found multiple host names ({1}); will only try sending to the first ({2})", now, options.HostName, hostname);
 							Console.WriteLine ("[{0}] Sending '{1}' results to {2}:{3}", now, message, hostname, options.HostPort);
-							var w = new HttpTextWriter ()
-							{
+							var w = new HttpTextWriter () {
 								HostName = hostname,
 								Port = options.HostPort,
 							};
@@ -403,7 +399,7 @@ namespace MonoTouch.NUnit.UI {
 							}
 							writers.Add (new NUnitOutputTextWriter (
 								this, defaultWriter, formatter, options.XmlMode));
-						} else if (defaultWriter != null) {
+						} else if (defaultWriter is not null) {
 							writers.Add (defaultWriter);
 						}
 					} catch (Exception ex) {
@@ -418,13 +414,13 @@ namespace MonoTouch.NUnit.UI {
 				Writer = new MultiplexedTextWriter (writers);
 			}
 
-			if (Writer == null)
+			if (Writer is null)
 				Writer = Console.Out;
 
 			Writer.WriteLine ("[Runner executing:\t{0}]", message);
 			Writer.WriteLine ("[MonoTouch Version:\t{0}]", Constants.Version);
 			Writer.WriteLine ("[Assembly:\t{0}.dll ({1} bits)]", typeof (NSObject).Assembly.GetName ().Name, IntPtr.Size * 8);
-			Writer.WriteLine ("[GC:\t{0}]", GC.MaxGeneration == 0 ? "Boehm": "sgen");
+			Writer.WriteLine ("[GC:\t{0}]", GC.MaxGeneration == 0 ? "Boehm" : "sgen");
 			WriteDeviceInformation (Writer);
 			Writer.WriteLine ("[Device Locale:\t{0}]", NSLocale.CurrentLocale.Identifier);
 			Writer.WriteLine ("[Device Date/Time:\t{0}]", now); // to match earlier C.WL output
@@ -451,7 +447,7 @@ namespace MonoTouch.NUnit.UI {
 			// UIAlert is not available for extensions.
 			if (NSBundle.MainBundle.BundlePath.EndsWith (".appex", StringComparison.Ordinal))
 				return true;
-			
+
 			Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}.", hostname, port, ex);
 			UIAlertView alert = new UIAlertView ("Network Error",
 				String.Format ("Cannot connect to {0}:{1}: {2}. Continue on console ?", hostname, port, ex.Message),
@@ -490,7 +486,7 @@ namespace MonoTouch.NUnit.UI {
 			}
 		}
 
-#endregion
+		#endregion
 
 		public void TestStarted (ITest test)
 		{
@@ -558,7 +554,7 @@ namespace MonoTouch.NUnit.UI {
 
 				string stacktrace = result.StackTrace;
 				if (!String.IsNullOrEmpty (result.StackTrace)) {
-					string[] lines = stacktrace.Split (new char [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					string [] lines = stacktrace.Split (new char [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 					foreach (string line in lines)
 						Writer.WriteLine ("\t\t{0}", line);
 				}
@@ -573,19 +569,19 @@ namespace MonoTouch.NUnit.UI {
 
 		SettingsDictionary CreateSettings (SettingsDictionary settings)
 		{
-			if (fixtures == null && (settings == null || settings.Count == 0))
+			if (fixtures is null && (settings is null || settings.Count == 0))
 				return default_settings;
 
 			var dict = new Dictionary<string, object> (default_settings);
 
-			if (settings != null) {
+			if (settings is not null) {
 				foreach (var key in settings.Keys)
 					dict [key?.ToString ()] = settings [key];
 			}
 
-			if (fixtures != null)
+			if (fixtures is not null)
 				dict ["LOAD"] = fixtures;
-			
+
 			return dict;
 		}
 
@@ -621,7 +617,7 @@ namespace MonoTouch.NUnit.UI {
 
 		bool AddSuite (TestSuite ts)
 		{
-			if (ts == null)
+			if (ts is null)
 				return false;
 			suite.Add (ts);
 			return true;
@@ -638,9 +634,9 @@ namespace MonoTouch.NUnit.UI {
 
 #if NUNITLITE_NUGET
 			var filter = new MatchTestFilter { MatchTest = test };
-			if (this.filter != null)
+			if (this.filter is not null)
 				filter.AndFilters.Add ((TestFilter) this.filter);
-			if (ExcludedCategories != null)
+			if (ExcludedCategories is not null)
 				filter.AndFilters.Add (new ExcludeCategoryFilter (ExcludedCategories));
 			if (!string.IsNullOrEmpty (TouchOptions.Current.TestName))
 				filter.AndFilters.Add (TestFilter.FromXml ($"<filter><test>{TouchOptions.Current.TestName.Replace ("&", "&amp").Replace ("<", "&lt;")}</test></filter>"));
@@ -656,7 +652,7 @@ namespace MonoTouch.NUnit.UI {
 					return tr;
 				foreach (var child in tr.Children) {
 					var r = find_result (child);
-					if (r != null)
+					if (r is not null)
 						return r;
 				}
 				return null;
@@ -665,7 +661,7 @@ namespace MonoTouch.NUnit.UI {
 			var tsr = new TestSuiteResult (suite);
 			foreach (var runner in runners) {
 				var rv = (TestResult) (find_result (runner.Result) ?? runner.Result);
-				if (rv != null)
+				if (rv is not null)
 					tsr.AddResult (rv);
 			}
 			Result = tsr;
@@ -712,7 +708,7 @@ namespace MonoTouch.NUnit.UI {
 		}
 	}
 #endif
-	
+
 #if !__WATCHOS__ && !__MACOS__
 	public class ConsoleRunner : BaseTouchRunner {
 		protected override void WriteDeviceInformation (TextWriter writer)
@@ -727,17 +723,17 @@ namespace MonoTouch.NUnit.UI {
 	[CLSCompliant (false)]
 #endif
 	public class TouchRunner : BaseTouchRunner {
-		
+
 		UIWindow window;
 
 		public TouchRunner (UIWindow window)
 		{
-			if (window == null)
+			if (window is null)
 				throw new ArgumentNullException ("window");
-			
+
 			this.window = window;
 		}
-				
+
 		public UINavigationController NavigationController {
 			get { return (UINavigationController) window.RootViewController; }
 		}
@@ -747,16 +743,16 @@ namespace MonoTouch.NUnit.UI {
 			Console.WriteLine ($"Exiting test run with success");
 			FlushConsole ();
 			Selector selector = new Selector ("terminateWithSuccess");
-			UIApplication.SharedApplication.PerformSelector (selector, UIApplication.SharedApplication, 0);						
+			UIApplication.SharedApplication.PerformSelector (selector, UIApplication.SharedApplication, 0);
 		}
 
 		public UIViewController GetViewController ()
 		{
 			var menu = new RootElement ("Test Runner");
-			
+
 			Section main = new Section ("Loading test suites...");
 			menu.Add (main);
-			
+
 			Section options = new Section () {
 				new StyledStringElement ("Options", Options) { Accessory = UITableViewCellAccessory.DisclosureIndicator },
 				new StyledStringElement ("Credits", Credits) { Accessory = UITableViewCellAccessory.DisclosureIndicator }
@@ -777,8 +773,7 @@ namespace MonoTouch.NUnit.UI {
 				LoadSync ();
 				TraceLine ("Loaded tests on background thread, queuing UI update on main thead");
 
-				ExecuteOnMainThread (() =>
-				{
+				ExecuteOnMainThread (() => {
 					TraceLine ("Updating UI on main thead");
 					foreach (TestSuite ts in Suite.Tests) {
 						main.Add (Setup (ts));
@@ -799,14 +794,14 @@ namespace MonoTouch.NUnit.UI {
 
 		void Options ()
 		{
-			NavigationController.PushViewController (TouchOptions.Current.GetViewController (), true);				
+			NavigationController.PushViewController (TouchOptions.Current.GetViewController (), true);
 		}
-		
+
 		void Credits ()
 		{
 			var title = new MultilineElement ("Touch.Unit Runner\nCopyright 2011-2012 Xamarin Inc.\nAll rights reserved.");
 			title.Alignment = UITextAlignment.Center;
-			
+
 			var root = new RootElement ("Credits") {
 				new Section () { title },
 				new Section () {
@@ -825,44 +820,44 @@ namespace MonoTouch.NUnit.UI {
 #endif
 				}
 			};
-				
+
 			var dv = new DialogViewController (root, true) { Autorotate = true };
-			NavigationController.PushViewController (dv, true);				
+			NavigationController.PushViewController (dv, true);
 		}
 
 		Dictionary<TestSuite, TouchViewController> suites_dvc = new Dictionary<TestSuite, TouchViewController> ();
 		Dictionary<TestSuite, TestSuiteElement> suite_elements = new Dictionary<TestSuite, TestSuiteElement> ();
 		Dictionary<TestMethod, TestCaseElement> case_elements = new Dictionary<TestMethod, TestCaseElement> ();
-		
+
 		public override void Show (TestSuite suite)
 		{
 			NavigationController.PushViewController (suites_dvc [suite], true);
 		}
-	
+
 		TestSuiteElement Setup (TestSuite suite)
 		{
 			TestSuiteElement tse = new TestSuiteElement (suite, this);
 			suite_elements.Add (suite, tse);
-			
+
 			var root = new RootElement ("Tests");
-		
+
 			Section section = new Section (suite.Name);
 			foreach (ITest test in suite.Tests) {
 				TestSuite ts = (test as TestSuite);
-				if (ts != null) {
+				if (ts is not null) {
 					section.Add (Setup (ts));
 				} else {
 					TestMethod tc = (test as TestMethod);
-					if (tc != null) {
+					if (tc is not null) {
 						section.Add (Setup (tc));
 					} else {
 						throw new NotImplementedException (test.GetType ().ToString ());
 					}
 				}
 			}
-		
+
 			root.Add (section);
-			
+
 			Section options = new Section () {
 				new StringElement ("Run all", delegate () {
 					if (OpenWriter (suite.Name)) {
@@ -881,7 +876,7 @@ namespace MonoTouch.NUnit.UI {
 			suites_dvc.Add (suite, tvc);
 			return tse;
 		}
-		
+
 		TestCaseElement Setup (TestMethod test)
 		{
 			TestCaseElement tce = new TestCaseElement (test, this);
@@ -896,13 +891,13 @@ namespace MonoTouch.NUnit.UI {
 			ExecuteOnMainThread (() => {
 				TestResult result = r as TestResult;
 				TestSuite ts = result.Test as TestSuite;
-				if (ts != null) {
+				if (ts is not null) {
 					TestSuiteElement tse;
 					if (suite_elements.TryGetValue (ts, out tse))
 						tse.TestFinished (result);
 				} else {
 					TestMethod tc = result.Test as TestMethod;
-					if (tc != null)
+					if (tc is not null)
 						case_elements [tc].TestFinished (result);
 				}
 			});
@@ -925,7 +920,7 @@ namespace MonoTouch.NUnit.UI {
 			get {
 				IntPtr handle = UIDevice.CurrentDevice.Handle;
 				if (UIDevice.CurrentDevice.RespondsToSelector (new Selector ("uniqueIdentifier")))
-					return CFString.FromHandle (objc_msgSend (handle, Selector.GetHandle("uniqueIdentifier")));
+					return CFString.FromHandle (objc_msgSend (handle, Selector.GetHandle ("uniqueIdentifier")));
 				return "unknown";
 			}
 		}
@@ -951,7 +946,7 @@ namespace MonoTouch.NUnit.UI {
 
 		public override bool Match (ITest test)
 		{
-			if (AndFilters != null) {
+			if (AndFilters is not null) {
 				// If any of the And filters returns false, then return false too.
 				if (AndFilters.Any ((v) => !v.Match (test)))
 					return false;

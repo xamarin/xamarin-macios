@@ -33,7 +33,7 @@ using MonoTouch.Dialog;
 using Mono.Options;
 
 namespace MonoTouch.NUnit.UI {
-	
+
 	public enum XmlMode {
 		Default = 0,
 		Wrapped = 1,
@@ -52,7 +52,7 @@ namespace MonoTouch.NUnit.UI {
 		static TouchOptions current;
 		static public TouchOptions Current {
 			get {
-				if (current == null)
+				if (current is null)
 					current = new TouchOptions ();
 				return current;
 			}
@@ -60,7 +60,7 @@ namespace MonoTouch.NUnit.UI {
 				current = value;
 			}
 		}
-		
+
 		public TouchOptions (IList<string> arguments)
 		{
 			var defaults = NSUserDefaults.StandardUserDefaults;
@@ -69,13 +69,13 @@ namespace MonoTouch.NUnit.UI {
 			EnableNetwork = defaults.BoolForKey ("network.enabled");
 			EnableXml = defaults.BoolForKey ("xml.enabled");
 			HostName = defaults.StringForKey ("network.host.name");
-			HostPort = (int)defaults.IntForKey ("network.host.port");
+			HostPort = (int) defaults.IntForKey ("network.host.port");
 			UseTcpTunnel = defaults.BoolForKey ("execution.usetcptunnel");
 			Transport = defaults.StringForKey ("network.transport");
 			SortNames = defaults.BoolForKey ("display.sort");
 			LogFile = defaults.StringForKey ("log.file");
 			TestName = defaults.StringForKey ("test.name");
-			
+
 			bool b;
 			if (bool.TryParse (Environment.GetEnvironmentVariable ("NUNIT_AUTOEXIT"), out b))
 				TerminateAfterExecution = b;
@@ -101,7 +101,7 @@ namespace MonoTouch.NUnit.UI {
 				XmlMode = (XmlMode) Enum.Parse (typeof (XmlMode), xml_mode, true);
 			var xml_version = Environment.GetEnvironmentVariable ("NUNIT_XML_VERSION");
 			if (!string.IsNullOrEmpty (xml_version))
-				XmlVersion = (XmlVersion)Enum.Parse (typeof (XmlVersion), xml_version, true);
+				XmlVersion = (XmlVersion) Enum.Parse (typeof (XmlVersion), xml_version, true);
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE")))
 				LogFile = Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE");
 			TestName = Environment.GetEnvironmentVariable ("NUNIT_TEST_NAME");
@@ -120,7 +120,7 @@ namespace MonoTouch.NUnit.UI {
 				{ "logfile=", "A path where output will be saved.", v => LogFile = v },
 				{ "test=", "A test to run. Only applicable if autostart is true.", v => TestName = v },
 			};
-			
+
 			try {
 				os.Parse (arguments);
 			} catch (OptionException oe) {
@@ -132,7 +132,7 @@ namespace MonoTouch.NUnit.UI {
 			: this (Environment.GetCommandLineArgs ())
 		{
 		}
-		
+
 		private bool EnableNetwork { get; set; }
 
 		public XmlMode XmlMode { get; set; }
@@ -140,17 +140,17 @@ namespace MonoTouch.NUnit.UI {
 		public XmlVersion XmlVersion { get; set; } = XmlVersion.NUnitV2;
 
 		public bool EnableXml { get; set; }
-		
+
 		public string HostName { get; private set; }
-		
+
 		public int HostPort { get; private set; }
 
 		public bool UseTcpTunnel { get; set; } = true;
-		
+
 		public bool AutoStart { get; set; }
-		
+
 		public bool TerminateAfterExecution { get; set; }
-		
+
 		public string Transport { get; set; } = "TCP";
 
 		public string LogFile { get; set; }
@@ -160,7 +160,7 @@ namespace MonoTouch.NUnit.UI {
 		}
 
 		public bool SortNames { get; set; }
-		
+
 		public string TestName { get; set; }
 
 #if !__WATCHOS__ && !__MACOS__
@@ -173,12 +173,12 @@ namespace MonoTouch.NUnit.UI {
 #endif
 			var host = new EntryElement ("Host Name", "name", HostName);
 			host.KeyboardType = UIKeyboardType.ASCIICapable;
-			
+
 			var port = new EntryElement ("Port", "name", HostPort.ToString ());
 			port.KeyboardType = UIKeyboardType.NumberPad;
 
 			var useTunnel = new BooleanElement ("Use TCP Tunnel", UseTcpTunnel);
-			
+
 #if TVOS
 			var sort = new StringElement (string.Format ("Sort Names: ", SortNames));
 #else
@@ -189,9 +189,10 @@ namespace MonoTouch.NUnit.UI {
 				new Section ("Remote Server") { network, host, port, useTunnel },
 				new Section ("Display") { sort }
 			};
-				
+
 			var dv = new DialogViewController (root, true) { Autorotate = true };
-			dv.ViewDisappearing += delegate {
+			dv.ViewDisappearing += delegate
+			{
 #if !TVOS
 				EnableNetwork = network.Value;
 #endif
@@ -205,7 +206,7 @@ namespace MonoTouch.NUnit.UI {
 #if !TVOS
 				SortNames = sort.Value;
 #endif
-				
+
 				var defaults = NSUserDefaults.StandardUserDefaults;
 				defaults.SetBool (EnableNetwork, "network.enabled");
 				defaults.SetString (HostName ?? String.Empty, "network.host.name");
@@ -213,7 +214,7 @@ namespace MonoTouch.NUnit.UI {
 				defaults.SetBool (SortNames, "display.sort");
 				defaults.SetBool (UseTcpTunnel, "execution.usetcptunnel");
 			};
-			
+
 			return dv;
 		}
 #endif // !__WATCHOS__

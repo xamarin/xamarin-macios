@@ -7,11 +7,9 @@ using MonoTouch.Dialog;
 using System.IO;
 using System.Drawing;
 
-namespace Sample
-{
-	public class Application
-	{
-		static void Main (string[] args)
+namespace Sample {
+	public class Application {
+		static void Main (string [] args)
 		{
 			UIApplication.Main (args, null, "AppDelegate");
 		}
@@ -19,21 +17,20 @@ namespace Sample
 
 	// The name AppDelegate is referenced in the MainWindow.xib file.
 	[Register ("AppDelegate")]
-	public partial class AppDelegate : UIApplicationDelegate
-	{
+	public partial class AppDelegate : UIApplicationDelegate {
 		UINavigationController navigation;
 		UIWindow window;
-		const string footer = 
+		const string footer =
 			"These show the two sets of APIs\n" +
 			"available in MonoTouch.Dialogs";
-		
+
 		// This method is invoked when the application has loaded its UI and its ready to run
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			JsonElement sampleJson;
 			var Last = new DateTime (2010, 10, 7);
 			Console.WriteLine (Last);
-			
+
 			var p = Path.GetFullPath ("background.png");
 
 			var menu = new RootElement ("Demos"){
@@ -64,7 +61,7 @@ namespace Sample
 					new StringElement ("Reflection API", DemoReflectionApi)
 				},
 			};
-			
+
 			//
 			// Lookup elements by ID:
 			//
@@ -72,7 +69,7 @@ namespace Sample
 			Console.WriteLine ("The section has {0} elements", jsonSection.Count);
 			var booleanElement = sampleJson ["first-boolean"] as BooleanElement;
 			Console.WriteLine ("The state of the first-boolean value is {0}", booleanElement.Value);
-			
+
 			//
 			// Create our UI and add it to the current toplevel navigation controller
 			// this will allow us to have nice navigation animations.
@@ -81,16 +78,16 @@ namespace Sample
 				Autorotate = true
 			};
 			navigation = new UINavigationController ();
-			navigation.PushViewController (dv, true);				
-			
+			navigation.PushViewController (dv, true);
+
 			// On iOS5 we use the new window.RootViewController, on older versions, we add the subview
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			window.MakeKeyAndVisible ();
-            if (UIDevice.CurrentDevice.CheckSystemVersion (5, 0))
-				window.RootViewController = navigation;	
+			if (UIDevice.CurrentDevice.CheckSystemVersion (5, 0))
+				window.RootViewController = navigation;
 			else
 				window.AddSubview (navigation.View);
-			
+
 			return true;
 		}
 
@@ -98,7 +95,7 @@ namespace Sample
 		{
 			Console.WriteLine ("Invoked");
 		}
-		
+
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated (UIApplication application)
 		{

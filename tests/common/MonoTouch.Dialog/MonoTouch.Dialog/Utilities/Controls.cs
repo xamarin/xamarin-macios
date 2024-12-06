@@ -11,8 +11,7 @@ using CoreAnimation;
 
 using MonoTouch.Dialog.Utilities;
 
-namespace MonoTouch.Dialog
-{
+namespace MonoTouch.Dialog {
 	public enum RefreshViewStatus {
 		ReleaseToReload,
 		PullToReload,
@@ -24,11 +23,11 @@ namespace MonoTouch.Dialog
 	internal static class Util {
 		public static UIImage FromResource (Assembly assembly, string name)
 		{
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
 			assembly = Assembly.GetCallingAssembly ();
 			var stream = assembly.GetManifestResourceStream (name);
-			if (stream == null)
+			if (stream is null)
 				return null;
 
 			try {
@@ -38,11 +37,11 @@ namespace MonoTouch.Dialog
 				stream.Dispose ();
 			}
 		}
-	
+
 	}
-	
+
 	public class SearchChangedEventArgs : EventArgs {
-		public SearchChangedEventArgs (string text) 
+		public SearchChangedEventArgs (string text)
 		{
 			Text = text;
 		}

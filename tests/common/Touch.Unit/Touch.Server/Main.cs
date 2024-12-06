@@ -33,12 +33,12 @@ using Mono.Options;
 // a simple, blocking (i.e. one device/app at the time), listener
 class SimpleListener {
 
-	static byte[] buffer = new byte [16 * 1024];
+	static byte [] buffer = new byte [16 * 1024];
 
 	TcpListener server;
 	ManualResetEvent stopped = new ManualResetEvent (false);
 	ManualResetEvent connected = new ManualResetEvent (false);
-	
+
 	IPAddress Address { get; set; }
 	int Port { get; set; }
 	string LogPath { get; set; }
@@ -54,7 +54,7 @@ class SimpleListener {
 	{
 		try {
 			// wait a second just in case more data arrives.
-			if (!stopped.WaitOne (TimeSpan.FromSeconds (1))) 
+			if (!stopped.WaitOne (TimeSpan.FromSeconds (1)))
 				server.Stop ();
 		} catch {
 			// We might have stopped already, so just swallow any exceptions.
@@ -71,31 +71,29 @@ class SimpleListener {
 
 		Console.WriteLine ("Touch.Unit Simple Server listening on: {0}:{1}", Address, Port);
 	}
-	
+
 	public int Start (bool skipheader = false)
 	{
 		bool processed;
 
 		try {
-			
+
 			do {
 				using (TcpClient client = server.AcceptTcpClient ()) {
 					processed = Processing (client, skipheader);
 				}
 			} while (!AutoExit || !processed);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Console.WriteLine ("[{0}] : {1}", DateTime.Now, e);
 			return 1;
-		}
-		finally {
+		} finally {
 			try {
 				server.Stop ();
 			} finally {
 				stopped.Set ();
 			}
 		}
-		
+
 		return 0;
 	}
 
@@ -109,9 +107,9 @@ class SimpleListener {
 		using (FileStream fs = File.OpenWrite (logfile)) {
 			if (!skipHeader) {
 				// a few extra bits of data only available from this side
-				string header = String.Format("[Local Date/Time:\t{1}]{0}[Remote Address:\t{2}]{0}",
+				string header = String.Format ("[Local Date/Time:\t{1}]{0}[Remote Address:\t{2}]{0}",
 					Environment.NewLine, DateTime.Now, remote);
-				byte[] array = Encoding.UTF8.GetBytes(header);
+				byte [] array = Encoding.UTF8.GetBytes (header);
 				fs.Write (array, 0, array.Length);
 				fs.Flush ();
 			}
@@ -124,14 +122,14 @@ class SimpleListener {
 				fs.Flush ();
 				total += i;
 			}
-			
+
 			if (total < 16) {
 				// This wasn't a test run, but a connection from the app (on device) to find
 				// the ip address we're reachable on.
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -141,11 +139,11 @@ class SimpleListener {
 		os.WriteOptionDescriptions (Console.Out);
 	}
 
-	public static int Main (string[] args)
-	{ 
+	public static int Main (string [] args)
+	{
 		Console.WriteLine ("Touch.Unit Simple Server");
 		Console.WriteLine ("Copyright 2011, Xamarin Inc. All rights reserved.");
-		
+
 		bool help = false;
 		bool verbose = false;
 		IPAddress ipAddress = IPAddress.Any;
@@ -179,21 +177,21 @@ class SimpleListener {
 			{ "startup-timeout=", "Specifies a timeout (in seconds) for the simulator app to connect to Touch.Server (ignored for device runs)", v => startup_timeout = TimeSpan.FromSeconds (double.Parse (v)) },
 			{ "mtouch-argument=", "Specifies an extra mtouch argument when launching the application", v => mtouch_arguments.Add (v) },
 		};
-		
+
 		try {
 			os.Parse (args);
 			if (help)
 				ShowHelp (os);
-			
+
 			var listener = new SimpleListener ();
-			
+
 			listener.Address = ipAddress;
 			listener.Port = port;
 			listener.LogPath = log_path ?? ".";
 			listener.LogFile = log_file;
 			listener.AutoExit = autoexit;
 			listener.Initialize ();
-			
+
 			string mt_root = Environment.GetEnvironmentVariable ("MONOTOUCH_ROOT");
 			if (String.IsNullOrEmpty (mt_root))
 				mt_root = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
@@ -203,7 +201,7 @@ class SimpleListener {
 				mtouch = Path.Combine (mt_root, "usr", "bin", "mlaunch");
 
 			Process proc = null;
-			if (launchdev != null) {
+			if (launchdev is not null) {
 				ThreadPool.QueueUserWorkItem ((v) => {
 					{
 						proc = new Process ();
@@ -235,13 +233,15 @@ class SimpleListener {
 						proc.StartInfo.UseShellExecute = false;
 						proc.StartInfo.RedirectStandardOutput = true;
 						proc.StartInfo.RedirectStandardError = true;
-						proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) {
+						proc.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+						{
 							lock (output) {
 								output.Append ("[mtouch stderr] ");
 								output.AppendLine (e.Data);
 							}
 						};
-						proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) {
+						proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
+						{
 							lock (output) {
 								output.Append ("[mtouch stdout] ");
 								output.AppendLine (e.Data);
@@ -260,7 +260,7 @@ class SimpleListener {
 
 			var lastErrorDataReceived = new AutoResetEvent (true);
 			var lastOutDataReceived = new AutoResetEvent (true);
-			if (launchsim != null) {
+			if (launchsim is not null) {
 				lastErrorDataReceived.Reset ();
 				lastOutDataReceived.Reset ();
 
@@ -292,16 +292,18 @@ class SimpleListener {
 						proc.StartInfo.RedirectStandardOutput = true;
 						proc.StartInfo.RedirectStandardInput = true;
 
-						proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) {
-							if (e.Data == null) {
+						proc.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+						{
+							if (e.Data is null) {
 								Console.WriteLine ("[mtouch stderr EOS]");
 								lastErrorDataReceived.Set ();
 								return;
 							}
 							Console.WriteLine ("[mtouch stderr {0}] {1}", DateTime.Now.ToLongTimeString (), e.Data);
 						};
-						proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) {
-							if (e.Data == null){
+						proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
+						{
+							if (e.Data is null) {
 								Console.WriteLine ("[mtouch stdout EOS]");
 								lastOutDataReceived.Set ();
 								return;
@@ -313,11 +315,10 @@ class SimpleListener {
 								if (!int.TryParse (pidstr, out pid)) {
 									Console.WriteLine ("Could not parse pid: {0}", pidstr);
 								} else if (startup_timeout.HasValue) {
-									ThreadPool.QueueUserWorkItem ((v2) =>
-										{
-											if (!listener.WaitForConnection (startup_timeout.Value))
-												KillPid (proc, pid, 1000, startup_timeout.Value, "Startup");
-										});
+									ThreadPool.QueueUserWorkItem ((v2) => {
+										if (!listener.WaitForConnection (startup_timeout.Value))
+											KillPid (proc, pid, 1000, startup_timeout.Value, "Startup");
+									});
 								}
 							}
 						};
@@ -343,9 +344,9 @@ class SimpleListener {
 					}
 				});
 			}
-			
+
 			var result = listener.Start (skipheader);
-			if (proc != null && !proc.WaitForExit (30000 /* wait another 30 seconds for mtouch to finish as well */))
+			if (proc is not null && !proc.WaitForExit (30000 /* wait another 30 seconds for mtouch to finish as well */))
 				Console.WriteLine ("mtouch didn't complete within 30s of the simulator app exiting. Touch.Server will exit anyway.");
 			// Wait up to 2 seconds to receive the last of the error/output data. This will only be received *after*
 			// mtouch has exited.
@@ -359,7 +360,7 @@ class SimpleListener {
 			Console.WriteLine (ex);
 			return 1;
 		}
-	}   
+	}
 
 	static void KillPid (Process proc, int pid, int kill_separation, TimeSpan timeout, string type)
 	{
@@ -383,7 +384,7 @@ class SimpleListener {
 		var s = new StringBuilder ();
 
 		s.Append ('"');
-		foreach (var c in f){
+		foreach (var c in f) {
 			if (c == '"' || c == '\\')
 				s.Append ('\\');
 
@@ -394,6 +395,6 @@ class SimpleListener {
 		return s.ToString ();
 	}
 
-   [DllImport ("libc")]
-   private static extern void kill (int pid, int sig);
+	[DllImport ("libc")]
+	private static extern void kill (int pid, int sig);
 }

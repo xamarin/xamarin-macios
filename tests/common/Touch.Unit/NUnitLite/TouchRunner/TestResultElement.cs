@@ -28,10 +28,10 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 namespace MonoTouch.NUnit.UI {
-	
+
 	class TestResultElement : StyledMultilineElement {
-		
-		public TestResultElement (TestResult result) : 
+
+		public TestResultElement (TestResult result) :
 			base (result.Message ?? "Unknown error", result.StackTrace, UITableViewCellStyle.Subtitle)
 		{
 		}

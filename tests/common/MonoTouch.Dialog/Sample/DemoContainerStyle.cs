@@ -5,11 +5,9 @@ using UIKit;
 using MonoTouch.Dialog;
 using System.Collections.Generic;
 
-namespace Sample
-{
-	public partial class AppDelegate
-	{
-		public void DemoContainerStyle () 
+namespace Sample {
+	public partial class AppDelegate {
+		public void DemoContainerStyle ()
 		{
 			var root = new RootElement ("Container Style") {
 				new Section ("A") {

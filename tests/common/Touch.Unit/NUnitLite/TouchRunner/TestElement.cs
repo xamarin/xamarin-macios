@@ -34,7 +34,7 @@ using NUnit.Framework.Api;
 namespace MonoTouch.NUnit.UI {
 
 	abstract class TestElement : StyledMultilineElement {
-		
+
 #if NET
 		static internal UIColor DarkGreen = UIDevice.CurrentDevice.CheckSystemVersion (13, 0) ? UIColor.SystemGreen : UIColor.FromRGB (0x00, 0x77, 0x00);
 		static internal UIColor Orange = UIDevice.CurrentDevice.CheckSystemVersion (13, 0) ? UIColor.SystemOrange : UIColor.Orange;
@@ -46,15 +46,15 @@ namespace MonoTouch.NUnit.UI {
 		static internal UIColor Red = UIDevice.CurrentDevice.CheckSystemVersion (13, 0) ? UIColor.SystemRedColor : UIColor.Red;
 #pragma warning restore CS0618
 #endif
-	
+
 		private TestResult result;
-		
+
 		public TestElement (ITest test, TouchRunner runner)
 			: base ("?", "?", UITableViewCellStyle.Subtitle)
 		{
-			if (test == null)
+			if (test is null)
 				throw new ArgumentNullException ("test");
-			if (runner == null)
+			if (runner is null)
 				throw new ArgumentNullException ("runner");
 
 			if (UIDevice.CurrentDevice.CheckSystemVersion (13, 0)) {
@@ -71,21 +71,21 @@ namespace MonoTouch.NUnit.UI {
 		}
 
 		protected TouchRunner Runner { get; private set; }
-		
+
 		public TestResult Result {
 			get { return result ?? new TestCaseResult (Test as TestMethod); }
 			set { result = value; }
 		}
-		
+
 		protected ITest Test { get; private set; }
-		
+
 		public void TestFinished (TestResult result)
 		{
 			Result = result;
-			
+
 			TestFinished ();
 		}
-		
+
 		abstract public void TestFinished ();
 	}
 }

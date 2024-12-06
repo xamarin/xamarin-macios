@@ -6,16 +6,14 @@ using System.Linq;
 using MonoTouch.Dialog;
 using UIKit;
 
-namespace Sample
-{
-	public partial class AppDelegate 
-	{		
+namespace Sample {
+	public partial class AppDelegate {
 		public void DemoElementApi ()
 		{
 			var root = CreateRoot ();
-				
+
 			var dv = new DialogViewController (root, true);
-			navigation.PushViewController (dv, true);				
+			navigation.PushViewController (dv, true);
 		}
 
 		RootElement CreateRoot ()
@@ -25,7 +23,7 @@ namespace Sample
 					new BooleanElement ("Airplane Mode", false),
 					new RootElement ("Notifications", 0, 0) {
 						new Section (null, "Turn off Notifications to disable Sounds\n" +
-							     "Alerts and Home Screen Badges for the\napplications below."){
+								 "Alerts and Home Screen Badges for the\napplications below."){
 							new BooleanElement ("Notifications", false)
 						}
 					}},
@@ -79,9 +77,9 @@ namespace Sample
 					new HtmlElement ("About", "http://monotouch.net"),
 					new MultilineElement ("Remember to eat\nfruits and vegetables\nevery day")
 				}
-			};		
+			};
 		}
-		
+
 		RootElement CreateSoundSection ()
 		{
 			return new RootElement ("Sounds"){
@@ -116,7 +114,7 @@ namespace Sample
 				}
 			};
 		}
-		
+
 		public RootElement CreateGeneralSection ()
 		{
 			return new RootElement ("General") {
@@ -261,6 +259,6 @@ namespace Sample
 				}
 			};
 		}
-	
+
 	}
 }

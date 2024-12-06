@@ -25,10 +25,10 @@ using CoreGraphics;
 using NSAction = global::System.Action;
 
 namespace MonoTouch.Dialog {
-	
+
 	public class JsonElement : RootElement {
 		JsonElement jsonParent;
-		Dictionary<string,Element> map;
+		Dictionary<string, Element> map;
 		const int CSIZE = 16;
 		const int SPINNER_TAG = 1000;
 		public string Url;
@@ -40,14 +40,14 @@ namespace MonoTouch.Dialog {
 		{
 			var cvb = cell.ContentView.Bounds;
 
-			var spinner = new UIActivityIndicatorView (new CGRect (cvb.Width-CSIZE/2, (cvb.Height-CSIZE)/2, CSIZE, CSIZE)) {
+			var spinner = new UIActivityIndicatorView (new CGRect (cvb.Width - CSIZE / 2, (cvb.Height - CSIZE) / 2, CSIZE, CSIZE)) {
 				Tag = SPINNER_TAG,
 				ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray,
 			};
 			cell.ContentView.AddSubview (spinner);
 			spinner.StartAnimating ();
 			cell.Accessory = UITableViewCellAccessory.None;
-			
+
 			return spinner;
 		}
 
@@ -61,16 +61,16 @@ namespace MonoTouch.Dialog {
 		public override UITableViewCell GetCell (UITableView tv)
 		{
 			var cell = base.GetCell (tv);
-			if (Url == null)
+			if (Url is null)
 				return cell;
-			
+
 			var spinner = cell.ViewWithTag (SPINNER_TAG) as UIActivityIndicatorView;
-			if (loading){
-				if (spinner == null)
+			if (loading) {
+				if (spinner is null)
 					StartSpinner (cell);
-				else 
-					if (spinner != null)
-						RemoveSpinner (cell, spinner);
+				else
+					if (spinner is not null)
+					RemoveSpinner (cell, spinner);
 			}
 			return cell;
 		}
@@ -80,31 +80,31 @@ namespace MonoTouch.Dialog {
 #else
 		class ConnectionDelegate : NSUrlConnectionDelegate {
 #endif
-			Action<Stream,NSError> callback;
+			Action<Stream, NSError> callback;
 			NSMutableData buffer;
 
-			public ConnectionDelegate (Action<Stream,NSError> callback) 
+			public ConnectionDelegate (Action<Stream, NSError> callback)
 			{
 				this.callback = callback;
 				buffer = new NSMutableData ();
 			}
 
-			public override void ReceivedResponse(NSUrlConnection connection, NSUrlResponse response)
+			public override void ReceivedResponse (NSUrlConnection connection, NSUrlResponse response)
 			{
 				buffer.Length = 0;
 			}
 
-			public override void FailedWithError(NSUrlConnection connection, NSError error)
+			public override void FailedWithError (NSUrlConnection connection, NSError error)
 			{
 				callback (null, error);
 			}
 
-			public override void ReceivedData(NSUrlConnection connection, NSData data)
+			public override void ReceivedData (NSUrlConnection connection, NSData data)
 			{
 				buffer.AppendData (data);
 			}
 
-			public override void FinishedLoading(NSUrlConnection connection)
+			public override void FinishedLoading (NSUrlConnection connection)
 			{
 				callback (buffer.AsStream (), null);
 			}
@@ -112,11 +112,11 @@ namespace MonoTouch.Dialog {
 
 		public override void Selected (DialogViewController dvc, UITableView tableView, NSIndexPath path)
 		{
-			if (Url == null){
+			if (Url is null) {
 				base.Selected (dvc, tableView, path);
 				return;
 			}
-			
+
 			tableView.DeselectRow (path, false);
 			if (loading)
 				return;
@@ -125,14 +125,15 @@ namespace MonoTouch.Dialog {
 			loading = true;
 
 			var request = new NSUrlRequest (new NSUrl (Url), NSUrlRequestCachePolicy.UseProtocolCachePolicy, 60);
-			/*var connection = */new NSUrlConnection (request, new ConnectionDelegate ((data,error) => {
+			/*var connection = */
+			new NSUrlConnection (request, new ConnectionDelegate ((data, error) => {
 				loading = false;
 				spinner.StopAnimating ();
 				spinner.RemoveFromSuperview ();
-				if (error == null){
+				if (error is null) {
 					try {
 						var obj = JsonValue.Load (new StreamReader (data)) as JsonObject;
-						if (obj != null){
+						if (obj is not null) {
 							var root = JsonElement.FromJson (obj);
 							var newDvc = new DialogViewController (root, true) {
 								Autorotate = true
@@ -141,7 +142,7 @@ namespace MonoTouch.Dialog {
 							dvc.ActivateController (newDvc);
 							return;
 						}
-					} catch (Exception ee){
+					} catch (Exception ee) {
 						Console.WriteLine (ee);
 					}
 				}
@@ -160,56 +161,56 @@ namespace MonoTouch.Dialog {
 		{
 			Url = url;
 		}
-		
+
 		public JsonElement (string caption, Group group, string url) : base (caption, group)
 		{
 			Url = url;
 		}
-				
+
 		public static JsonElement FromFile (string file, object arg)
 		{
 			using (var reader = File.OpenRead (file))
 				return FromJson (JsonObject.Load (reader) as JsonObject, arg);
 		}
-		
+
 		public static JsonElement FromFile (string file)
 		{
 			return FromFile (file, null);
 		}
-		
+
 		public static JsonElement FromJson (JsonObject json)
 		{
 			return FromJson (null, json, null);
 		}
-				
+
 		public static JsonElement FromJson (JsonObject json, object data)
 		{
 			return FromJson (null, json, data);
 		}
-		
+
 		public static JsonElement FromJson (JsonElement parent, JsonObject json, object data)
 		{
-			if (json == null)
+			if (json is null)
 				return null;
-			
+
 			var title = GetString (json, "title") ?? "";
-			
+
 			var group = GetString (json, "group");
 			var url = GetString (json, "url");
 			var radioSelected = GetString (json, "radioselected");
 			JsonElement root;
-			if (group == null){
-				if (radioSelected == null)
+			if (group is null) {
+				if (radioSelected is null)
 					root = new JsonElement (title, url);
-				else 
+				else
 					root = new JsonElement (title, new RadioGroup (int.Parse (radioSelected)), url);
 			} else {
-				if (radioSelected == null)
+				if (radioSelected is null)
 					root = new JsonElement (title, new Group (group), url);
 				else {
 					// It does not seem that we group elements together, notice when I add
 					// the return, and then change my mind, I have to undo *twice* instead of once.
-					
+
 					root = new JsonElement (title, new RadioGroup (group, int.Parse (radioSelected)), url);
 				}
 			}
@@ -217,26 +218,26 @@ namespace MonoTouch.Dialog {
 			root.LoadSections (GetArray (json, "sections"), data);
 			return root;
 		}
-		
+
 		void AddMapping (string id, Element element)
 		{
-			if (jsonParent != null){
+			if (jsonParent is not null) {
 				jsonParent.AddMapping (id, element);
 				return;
 			}
-			if (map == null)
+			if (map is null)
 				map = new Dictionary<string, Element> ();
 			map.Add (id, element);
 		}
-		
+
 		//
 		// Retrieves the element name "key"
 		//
 		public Element this [string key] {
 			get {
-				if (jsonParent != null)
+				if (jsonParent is not null)
 					return jsonParent [key];
-				if (map == null)
+				if (map is null)
 					return null;
 				Element res;
 				if (map.TryGetValue (key, out res))
@@ -244,17 +245,17 @@ namespace MonoTouch.Dialog {
 				return null;
 			}
 		}
-		
+
 		static void Error (string msg)
 		{
 			Console.WriteLine (msg);
 		}
-		
+
 		static void Error (string fmt, params object [] args)
 		{
 			Error (String.Format (fmt, args));
 		}
-		
+
 		static string GetString (JsonValue obj, string key)
 		{
 			if (obj.ContainsKey (key))
@@ -270,7 +271,7 @@ namespace MonoTouch.Dialog {
 					return (JsonArray) obj [key];
 			return null;
 		}
-		
+
 		static bool GetBoolean (JsonObject obj, string key)
 		{
 			try {
@@ -279,40 +280,40 @@ namespace MonoTouch.Dialog {
 				return false;
 			}
 		}
-		
+
 		void LoadSections (JsonArray array, object data)
 		{
-			if (array == null)
+			if (array is null)
 				return;
 			int n = array.Count;
-			for (int i = 0; i < n; i++){
+			for (int i = 0; i < n; i++) {
 				var jsonSection = array [i];
 				var header = GetString (jsonSection, "header");
 				var footer = GetString (jsonSection, "footer");
 				var id = GetString (jsonSection, "id");
-				
+
 				var section = new Section (header, footer);
 				if (jsonSection.ContainsKey ("elements"))
 					LoadSectionElements (section, jsonSection ["elements"] as JsonArray, data);
 				Add (section);
-				if (id != null)
+				if (id is not null)
 					AddMapping (id, section);
 			}
 		}
-		
+
 		static string bundlePath;
-		
+
 		static string ExpandPath (string path)
 		{
-			if (path != null && path.Length > 1 && path [0] == '~' && path [1] == '/'){
-				if (bundlePath == null)
+			if (path is not null && path.Length > 1 && path [0] == '~' && path [1] == '/') {
+				if (bundlePath is null)
 					bundlePath = NSBundle.MainBundle.BundlePath;
-					
+
 				return Path.Combine (bundlePath, path.Substring (2));
 			}
 			return path;
 		}
-		
+
 		static Element LoadBoolean (JsonObject json)
 		{
 			var caption = GetString (json, "caption");
@@ -321,18 +322,18 @@ namespace MonoTouch.Dialog {
 			var onImagePath = ExpandPath (GetString (json, "on"));
 			var offImagePath = ExpandPath (GetString (json, "off"));
 
-			if (onImagePath != null && offImagePath != null){
+			if (onImagePath is not null && offImagePath is not null) {
 				var onImage = UIImage.FromFile (onImagePath);
 				var offImage = UIImage.FromFile (offImagePath);
-				
+
 				return new BooleanImageElement (caption, bvalue, onImage, offImage);
-			} else 
+			} else
 				return new BooleanElement (caption, bvalue, group);
 		}
-		
+
 		static UIKeyboardType ToKeyboardType (string kbdType)
 		{
-			switch (kbdType){
+			switch (kbdType) {
 			case "numbers": return UIKeyboardType.NumberPad;
 			case "default": return UIKeyboardType.Default;
 			case "ascii": return UIKeyboardType.ASCIICapable;
@@ -348,10 +349,10 @@ namespace MonoTouch.Dialog {
 			}
 			return UIKeyboardType.Default;
 		}
-		
+
 		static UIReturnKeyType ToReturnKeyType (string returnKeyType)
 		{
-			switch (returnKeyType){
+			switch (returnKeyType) {
 			case "default": return UIReturnKeyType.Default;
 			case "done": return UIReturnKeyType.Done;
 			case "emergencycall": return UIReturnKeyType.EmergencyCall;
@@ -369,10 +370,10 @@ namespace MonoTouch.Dialog {
 			}
 			return UIReturnKeyType.Default;
 		}
-		
+
 		static UITextAutocapitalizationType ToAutocapitalization (string auto)
 		{
-			switch (auto){
+			switch (auto) {
 			case "sentences": return UITextAutocapitalizationType.Sentences;
 			case "none": return UITextAutocapitalizationType.None;
 			case "words": return UITextAutocapitalizationType.Words;
@@ -383,28 +384,28 @@ namespace MonoTouch.Dialog {
 			}
 			return UITextAutocapitalizationType.Sentences;
 		}
-		
+
 		static UITextAutocorrectionType ToAutocorrect (JsonValue value)
 		{
 			if (value.JsonType == JsonType.Boolean)
 				return ((bool) value) ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No;
-			if (value.JsonType == JsonType.String){
+			if (value.JsonType == JsonType.String) {
 				var s = ((string) value);
-				if (s == "yes") 
+				if (s == "yes")
 					return UITextAutocorrectionType.Yes;
 				return UITextAutocorrectionType.No;
 			}
 			return UITextAutocorrectionType.Default;
 		}
-		
+
 		static Element LoadEntry (JsonObject json, bool isPassword)
 		{
 			var caption = GetString (json, "caption");
 			var value = GetString (json, "value");
 			var placeholder = GetString (json, "placeholder");
-			
+
 			var element = new EntryElement (caption, placeholder, value, isPassword);
-			
+
 			if (json.ContainsKey ("keyboard"))
 				element.KeyboardType = ToKeyboardType (GetString (json, "keyboard"));
 			if (json.ContainsKey ("return-key"))
@@ -413,55 +414,55 @@ namespace MonoTouch.Dialog {
 				element.AutocapitalizationType = ToAutocapitalization (GetString (json, "capitalization"));
 			if (json.ContainsKey ("autocorrect"))
 				element.AutocorrectionType = ToAutocorrect (json ["autocorrect"]);
-			
+
 			return element;
 		}
-		
+
 		static UITableViewCellAccessory ToAccessory (string accesory)
 		{
-			switch (accesory){
+			switch (accesory) {
 			case "checkmark": return UITableViewCellAccessory.Checkmark;
 			case "detail-disclosure": return UITableViewCellAccessory.DetailDisclosureButton;
 			case "disclosure-indicator": return UITableViewCellAccessory.DisclosureIndicator;
 			}
 			return UITableViewCellAccessory.None;
 		}
-		
+
 		static int FromHex (char c)
 		{
 			if (c >= '0' && c <= '9')
-				return c-'0';
+				return c - '0';
 			if (c >= 'a' && c <= 'f')
-				return c-'a'+10;
+				return c - 'a' + 10;
 			if (c >= 'A' && c <= 'F')
-				return c-'A'+10;
+				return c - 'A' + 10;
 			Console.WriteLine ("Unexpected `{0}' in hex value for color", c);
 			return 0;
 		}
-		
+
 		static void ColorError (string text)
 		{
 			Console.WriteLine ("Unknown color specification {0}, expecting #rgb, #rgba, #rrggbb or #rrggbbaa formats", text);
 		}
-		
+
 		static UIColor ParseColor (string text)
 		{
 			int tl = text.Length;
-			
-			if (tl > 1 && text [0] == '#'){
+
+			if (tl > 1 && text [0] == '#') {
 				int r, g, b, a;
-				
-				if (tl == 4 || tl == 5){
+
+				if (tl == 4 || tl == 5) {
 					r = FromHex (text [1]);
 					g = FromHex (text [2]);
 					b = FromHex (text [3]);
 					a = tl == 5 ? FromHex (text [4]) : 15;
-					
+
 					r = r << 4 | r;
 					g = g << 4 | g;
 					b = b << 4 | b;
 					a = a << 4 | a;
-				} else if (tl == 7 || tl == 9){
+				} else if (tl == 7 || tl == 9) {
 					r = FromHex (text [1]) << 4 | FromHex (text [2]);
 					g = FromHex (text [3]) << 4 | FromHex (text [4]);
 					b = FromHex (text [5]) << 4 | FromHex (text [6]);
@@ -475,10 +476,10 @@ namespace MonoTouch.Dialog {
 			ColorError (text);
 			return UIColor.Black;
 		}
-		
+
 		static UILineBreakMode ToLinebreakMode (string mode)
 		{
-			switch (mode){
+			switch (mode) {
 			case "character-wrap": return UILineBreakMode.CharacterWrap;
 			case "clip": return UILineBreakMode.Clip;
 			case "head-truncation": return UILineBreakMode.HeadTruncation;
@@ -490,7 +491,7 @@ namespace MonoTouch.Dialog {
 				return UILineBreakMode.Clip;
 			}
 		}
-		
+
 		// Parses a font in the format:
 		// Name[-SIZE]
 		// if -SIZE is omitted, then the value is SystemFontSize
@@ -500,9 +501,9 @@ namespace MonoTouch.Dialog {
 			int q = kvalue.LastIndexOf ("-");
 			string fname = kvalue;
 			nfloat fsize = 0;
-			
+
 			if (q != -1) {
-				nfloat.TryParse (kvalue.Substring (q+1), out fsize);
+				nfloat.TryParse (kvalue.Substring (q + 1), out fsize);
 				fname = kvalue.Substring (0, q);
 			}
 			if (fsize <= 0) {
@@ -514,14 +515,14 @@ namespace MonoTouch.Dialog {
 			}
 
 			var f = UIFont.FromName (fname, fsize);
-			if (f == null)
+			if (f is null)
 				return UIFont.SystemFontOfSize (12);
 			return f;
 		}
-		
+
 		static UITableViewCellStyle ToCellStyle (string style)
 		{
-			switch (style){
+			switch (style) {
 			case "default": return UITableViewCellStyle.Default;
 			case "subtitle": return UITableViewCellStyle.Subtitle;
 			case "value1": return UITableViewCellStyle.Value1;
@@ -532,10 +533,10 @@ namespace MonoTouch.Dialog {
 			}
 			return UITableViewCellStyle.Default;
 		}
-		
+
 		static UITextAlignment ToAlignment (string align)
 		{
-			switch (align){
+			switch (align) {
 			case "center": return UITextAlignment.Center;
 			case "left": return UITextAlignment.Left;
 			case "right": return UITextAlignment.Right;
@@ -544,7 +545,7 @@ namespace MonoTouch.Dialog {
 				return UITextAlignment.Left;
 			}
 		}
-		
+
 		//
 		// Creates one of the various StringElement classes, based on the
 		// properties set.   It tries to load the most memory efficient one
@@ -567,35 +568,37 @@ namespace MonoTouch.Dialog {
 			UIFont detailfont = null;
 			UITableViewCellStyle style = UITableViewCellStyle.Value1;
 
-			foreach (var kv in json){
+			foreach (var kv in json) {
 				string kvalue = (string) kv.Value;
-				switch (kv.Key){
+				switch (kv.Key) {
 				case "caption":
 					caption = kvalue;
 					break;
 				case "value":
 					value = kvalue;
 					break;
-				case "background":	
+				case "background":
 					background = kvalue;
 					break;
 				case "style":
 					style = ToCellStyle (kvalue);
 					break;
-				case "ontap": case "onaccessorytap":
+				case "ontap":
+				case "onaccessorytap":
 					string sontap = kvalue;
 					int p = sontap.LastIndexOf ('.');
 					if (p == -1)
 						break;
-					NSAction d = delegate {
+					NSAction d = delegate
+					{
 						string cname = sontap.Substring (0, p);
-						string mname = sontap.Substring (p+1);
-						foreach (var a in AppDomain.CurrentDomain.GetAssemblies ()){
+						string mname = sontap.Substring (p + 1);
+						foreach (var a in AppDomain.CurrentDomain.GetAssemblies ()) {
 							Type type = a.GetType (cname);
-						
-							if (type != null){
+
+							if (type is not null) {
 								var mi = type.GetMethod (mname, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-								if (mi != null)
+								if (mi is not null)
 									mi.Invoke (null, new object [] { data });
 								break;
 							}
@@ -643,34 +646,34 @@ namespace MonoTouch.Dialog {
 					break;
 				}
 			}
-			if (caption == null)
+			if (caption is null)
 				caption = "";
-			if (font != null || style != UITableViewCellStyle.Value1 || detailfont != null || linebreakmode.HasValue || textcolor != null || accessory.HasValue || onaccessorytap != null || background != null || detailcolor != null){
+			if (font is not null || style != UITableViewCellStyle.Value1 || detailfont is not null || linebreakmode.HasValue || textcolor is not null || accessory.HasValue || onaccessorytap is not null || background is not null || detailcolor is not null) {
 				StyledStringElement styled;
-				
-				if (lines.HasValue){
+
+				if (lines.HasValue) {
 					styled = new StyledMultilineElement (caption, value, style);
 					styled.Lines = lines.Value;
 				} else {
 					styled = new StyledStringElement (caption, value, style);
 				}
-				if (ontap != null)
+				if (ontap is not null)
 					styled.Tapped += ontap;
-				if (onaccessorytap != null)
+				if (onaccessorytap is not null)
 					styled.AccessoryTapped += onaccessorytap;
-				if (font != null)
+				if (font is not null)
 					styled.Font = font;
-				if (detailfont != null)
+				if (detailfont is not null)
 					styled.SubtitleFont = detailfont;
-				if (detailcolor != null)
+				if (detailcolor is not null)
 					styled.DetailColor = detailcolor;
-				if (textcolor != null)
+				if (textcolor is not null)
 					styled.TextColor = textcolor;
 				if (accessory.HasValue)
 					styled.Accessory = accessory.Value;
 				if (linebreakmode.HasValue)
 					styled.LineBreakMode = linebreakmode.Value;
-				if (background != null){
+				if (background is not null) {
 					if (background.Length > 1 && background [0] == '#')
 						styled.BackgroundColor = ParseColor (background);
 					else
@@ -687,29 +690,29 @@ namespace MonoTouch.Dialog {
 					se = new StringElement (caption, value);
 				if (alignment.HasValue)
 					se.Alignment = alignment.Value;
-				if (ontap != null)
+				if (ontap is not null)
 					se.Tapped += ontap;
 				return se;
 			}
 		}
-		
+
 		static Element LoadRadio (JsonObject json, object data)
 		{
 			var caption = GetString (json, "caption");
 			var group = GetString (json, "group");
-			
-			if (group != null)
+
+			if (group is not null)
 				return new RadioElement (caption, group);
 			else
 				return new RadioElement (caption);
 		}
-		
+
 		static Element LoadCheckbox (JsonObject json, object data)
 		{
 			var caption = GetString (json, "caption");
 			var group = GetString (json, "group");
 			var value = GetBoolean (json, "value");
-			
+
 			return new CheckboxElement (caption, value, group);
 		}
 
@@ -743,7 +746,7 @@ namespace MonoTouch.Dialog {
 			if (!DateTime.TryParse (date, out datetime))
 				return null;
 
-			if (kind != null) {
+			if (kind is not null) {
 				switch (kind.ToLowerInvariant ()) {
 				case "local":
 					dateKind = DateTimeKind.Local;
@@ -760,7 +763,7 @@ namespace MonoTouch.Dialog {
 
 			datetime = GetDateWithKind (datetime, dateKind);
 
-			switch (type){
+			switch (type) {
 			case "date":
 				return new DateElement (caption, datetime);
 			case "time":
@@ -771,78 +774,80 @@ namespace MonoTouch.Dialog {
 				return null;
 			}
 		}
-		
+
 		static Element LoadHtmlElement (JsonObject json)
 		{
 			var caption = GetString (json, "caption");
 			var url = GetString (json, "url");
-			
+
 			return new HtmlElement (caption, url);
 		}
-		
+
 		void LoadSectionElements (Section section, JsonArray array, object data)
 		{
-			if (array == null)
+			if (array is null)
 				return;
-			
-			for (int i = 0; i < array.Count; i++){
+
+			for (int i = 0; i < array.Count; i++) {
 				Element element = null;
-				
+
 				try {
 					var json = array [i] as JsonObject;
-					if (json == null)
+					if (json is null)
 						continue;
-					
+
 					var type = GetString (json, "type");
-					switch (type){
-					case "bool": case "boolean":
+					switch (type) {
+					case "bool":
+					case "boolean":
 						element = LoadBoolean (json);
 						break;
-						
-					case "entry": case "password":
+
+					case "entry":
+					case "password":
 						element = LoadEntry (json, type == "password");
 						break;
-						
+
 					case "string":
 						element = LoadString (json, data);
 						break;
-						
+
 					case "root":
 						element = FromJson (this, json, data);
 						break;
-						
+
 					case "radio":
 						element = LoadRadio (json, data);
 						break;
-						
+
 					case "checkbox":
 						element = LoadCheckbox (json, data);
 						break;
-						
+
 					case "datetime":
 					case "date":
 					case "time":
 						element = LoadDateTime (json, type);
 						break;
-						
+
 					case "html":
 						element = LoadHtmlElement (json);
 						break;
-						
+
 					default:
 						Error ("json element at {0} contain an unknown type `{1}', json {2}", i, type, json);
 						break;
 					}
-					
-					if (element != null){
+
+					if (element is not null) {
 						var id = GetString (json, "id");
-						if (id != null)
+						if (id is not null)
 							AddMapping (id, element);
 					}
 				} catch (Exception e) {
 					Console.WriteLine ("Error processing Json {0}, exception {1}", array, e);
 				}
-				if (element != null)
+				if (element is not null)
 					section.Add (element);
 			}
 		}

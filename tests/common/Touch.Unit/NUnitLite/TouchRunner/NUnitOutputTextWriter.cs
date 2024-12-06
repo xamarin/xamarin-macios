@@ -48,7 +48,7 @@ namespace MonoTouch.NUnit {
 			BaseWriter = baseWriter ?? Console.Out;
 			XmlOutputWriter = xmlWriter;
 			// do not send real-time test results on the writer sif XML reports are enabled
-			real_time_reporting = (xmlWriter == null);
+			real_time_reporting = (xmlWriter is null);
 			mode = xmlMode;
 		}
 
@@ -80,7 +80,7 @@ namespace MonoTouch.NUnit {
 
 		public override void Close ()
 		{
-			if (XmlOutputWriter != null) {
+			if (XmlOutputWriter is not null) {
 				// now we want the XML report to write
 				real_time_reporting = true;
 				// write to a temporary string, because NUnit2XmlOutputWriter.WriteResultFile closes the stream,

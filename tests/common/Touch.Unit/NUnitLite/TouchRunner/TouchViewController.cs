@@ -174,7 +174,7 @@ namespace MonoTouch.NUnit.UI {
 			ReloadData ();
 		}
 
-		class ElementComparer : IComparer <Element> {
+		class ElementComparer : IComparer<Element> {
 			int order;
 
 			public ElementComparer (SortOrder sortOrder)
@@ -199,7 +199,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage ArrowUp {
 			get {
-				if (arrow_up == null)
+				if (arrow_up is null)
 					arrow_up = GetAwesomeIcon (icon_arrow_up);
 				return arrow_up;
 			}
@@ -207,7 +207,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage ArrowDown {
 			get {
-				if (arrow_down == null)
+				if (arrow_down is null)
 					arrow_down = GetAwesomeIcon (icon_arrow_down);
 				return arrow_down;
 			}
@@ -215,7 +215,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage OkSign {
 			get {
-				if (ok_sign == null)
+				if (ok_sign is null)
 					ok_sign = GetAwesomeIcon (icon_ok_sign);
 				return ok_sign;
 			}
@@ -223,7 +223,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage RemoveSign {
 			get {
-				if (remove_sign == null)
+				if (remove_sign is null)
 					remove_sign = GetAwesomeIcon (icon_remove_sign);
 				return remove_sign;
 			}
@@ -231,7 +231,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage QuestionSign {
 			get {
-				if (question_sign == null)
+				if (question_sign is null)
 					question_sign = GetAwesomeIcon (icon_question_sign);
 				return question_sign;
 			}
@@ -240,7 +240,7 @@ namespace MonoTouch.NUnit.UI {
 
 		static UIImage Asterisk {
 			get {
-				if (asterisk == null)
+				if (asterisk is null)
 					asterisk = GetAwesomeIcon (icon_asterisk);
 				return asterisk;
 			}
@@ -298,7 +298,7 @@ namespace MonoTouch.NUnit.UI {
 			c.FillPath ();
 			c.StrokePath ();
 		}
-		
+
 		static void icon_arrow_down (CGContext c)
 		{
 			c.MoveTo (0f, 374f);
@@ -381,7 +381,7 @@ namespace MonoTouch.NUnit.UI {
 			c.FillPath ();
 			c.StrokePath ();
 		}
-		
+
 		static void icon_ok_sign (CGContext c)
 		{
 			c.MoveTo (0f, 375f);
@@ -430,7 +430,7 @@ namespace MonoTouch.NUnit.UI {
 			c.FillPath ();
 			c.StrokePath ();
 		}
-		
+
 		static void icon_question_sign (CGContext c)
 		{
 			c.MoveTo (0f, 375f);

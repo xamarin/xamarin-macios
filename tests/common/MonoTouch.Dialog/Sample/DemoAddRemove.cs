@@ -6,15 +6,13 @@ using System;
 using UIKit;
 using MonoTouch.Dialog;
 
-namespace Sample
-{
-	public partial class AppDelegate
-	{
+namespace Sample {
+	public partial class AppDelegate {
 		RootElement demoRoot;
 		Section region;
 		Random rnd;
-		int count;		
-		
+		int count;
+
 		public void DemoAddRemove ()
 		{
 			rnd = new Random ();
@@ -26,46 +24,46 @@ namespace Sample
 				new StringElement ("Remove Section", RemoveSection)
 			};
 			region = new Section ();
-			
+
 			demoRoot = new RootElement ("Add/Remove Demo") { section, region };
 			var dvc = new DialogViewController (demoRoot, true);
 			navigation.PushViewController (dvc, true);
 		}
-		
+
 		void AddElements ()
 		{
 			region.Insert (rnd.Next (0, region.Elements.Count),
-			               UITableViewRowAnimation.Fade,
-			               new StringElement ("Ding " + count++),
-			               new StringElement ("Dong " + count++));	               
+						   UITableViewRowAnimation.Fade,
+						   new StringElement ("Ding " + count++),
+						   new StringElement ("Dong " + count++));
 		}
-		
+
 		void AddNoAnimation ()
 		{
 			region.Add (new StringElement ("Insertion not animated"));
 		}
-		
+
 		void RemoveElements ()
 		{
 			region.RemoveRange (0, 1);
-		}	
-		
+		}
+
 		void AddSection ()
 		{
 			var section = new Section () {
 				new StringElement ("Demo Section Added")
 			};
-			
+
 			demoRoot.Insert (demoRoot.Count, section);
 		}
-		
+
 		void RemoveSection ()
 		{
 			// Do not delete the top (our buttons) or the second (where the buttons add stuff)
 			if (demoRoot.Count == 2)
 				return;
-		
-			demoRoot.RemoveAt (demoRoot.Count-1);
+
+			demoRoot.RemoveAt (demoRoot.Count - 1);
 		}
 	}
 }
