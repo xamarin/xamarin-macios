@@ -7,8 +7,6 @@
 // Copyright (c) Microsoft Corporation.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,6 +46,36 @@ namespace MonoTouchFixtures.Vision {
 			Assert.AreEqual (circle.Center.X, 5, "X");
 			Assert.That (circle.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
 		}
+
+		[Test]
+		public void CreateUsingRadiusCtorTest ()
+		{
+			using var circle = new VNCircle (new VNPoint (10, 10), radiusOrDiameter: 10, option: VNCircleInitializationOption.Radius);
+			Assert.NotNull (circle, "Circle not null");
+			Assert.AreEqual (circle.Radius, 10, "Radius");
+			Assert.AreEqual (circle.Center.X, 10, "X");
+			Assert.AreEqual (circle.Center.Y, 10, "Y");
+			Assert.That (circle.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
+		}
+
+		[Test]
+		public void CreateUsingDiameterCtorTest ()
+		{
+			using var circle = new VNCircle (new VNPoint (5, 6), radiusOrDiameter: 7, option: VNCircleInitializationOption.Diameter);
+			Assert.NotNull (circle, "Circle not null");
+			Assert.AreEqual (circle.Diameter, 7, "Diameter");
+			Assert.AreEqual (circle.Center.Y, 6, "Y");
+			Assert.AreEqual (circle.Center.X, 5, "X");
+			Assert.That (circle.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
+		}
+
+		[Test]
+		public void CreateUsingInvalidOptionCtorTest ()
+		{
+			Assert.Throws<ArgumentOutOfRangeException> (() => {
+				using (var circle = new VNCircle (new VNPoint (5, 6), radiusOrDiameter: 7, option: (VNCircleInitializationOption) (-1))) {
+				}
+			});
+		}
 	}
 }
-#endif

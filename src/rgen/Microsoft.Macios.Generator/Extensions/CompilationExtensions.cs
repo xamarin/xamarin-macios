@@ -25,6 +25,19 @@ static class CompilationExtensions {
 			}
 		}
 
+		// possible special case when we are compiling the Microsoft.* assembly
+		switch (self.AssemblyName) {
+		case "Microsoft.iOS":
+			return PlatformName.iOS;
+		case "Microsoft.MacCatalyst":
+			return PlatformName.MacCatalyst;
+		case "Microsoft.macOS":
+			return PlatformName.MacOSX;
+		case "Microsoft.tvOS":
+			return PlatformName.TvOS;
+		}
+
+		// we cannot identify the platform we are working on
 		return PlatformName.None;
 	}
 }

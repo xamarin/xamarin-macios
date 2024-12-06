@@ -1416,8 +1416,8 @@
 
 	<Target Name="_ComputeBindingVariables" DependsOnTargets="_ComputeFrameworkVariables" Condition="'$(IsBindingProject)' == 'true'">
 		<PropertyGroup>
-			<BTouchToolExe>bgen.dll</BTouchToolExe>
-			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
+			<BGenToolExe>bgen.dll</BGenToolExe>
+			<BGenToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BGenToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
 			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
@@ -2458,7 +2458,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'F#' ">FSharp</_ProjectLanguage>
 		<_ProjectLanguage Condition="'$(_ProjectLanguage)' == 'VB' ">VisualBasic</_ProjectLanguage>
 
-		<_TargetsDirectory>$(_XamarinSdkRootDirectory)\tools\msbuild\$(_PlatformName)\</_TargetsDirectory>
+		<_TargetsDirectory>$(_XamarinSdkRootDirectory)\tools\msbuild\</_TargetsDirectory>
 	</PropertyGroup>
 
 	<Import Project="$(_TargetsDirectory)Xamarin.iOS.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'iOSExecutableProject' Or '$(_ProjectType)' == 'iOSClassLibrary' " />
