@@ -1,0 +1,262 @@
+{
+  "title": "Json Sample",
+  "sections": [ 
+  	  { 
+  	  	"header": "Nested Elements",
+  	  	"id": "section-1",
+  	  	"elements": [
+  	  	  {
+  	  	    "type": "root",
+  	  	    "title": "home",
+  	  	  	"sections": [
+  	  	       {
+  	  	     	 "header": "Nested view!",
+  	  	     	 "elements": [
+  	  	     	   {
+  	  	     	     "type": "boolean",
+  	  	     	     "caption": "Just a boolean",
+  	  	     	     "id": "first-boolean",
+  	  	     	     "value": false
+  	  	     	   },
+  	  	     	   {
+  	  	     	     "type": "string",
+  	  	     	     "caption": "Welcome to the nested controller"
+  	  	     	   }
+  	  	     	 ]
+  	  	       }
+  	  	     ]
+  	  	  }, {
+  	  	  	"type": "root",
+  	  	  	"title": "Favorite Fruit",
+  	  	  	"radioselected": "2",
+  	  	  	"sections": [
+  	  	  	   {
+  	  	  	     "header": "Select your favorite",
+  	  	  	     "elements": [
+  	  	  	        {
+  	  	  	          "type": "radio",
+  	  	  	          "caption": "Apple"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "radio",
+  	  	  	          "caption": "Banana"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "radio",
+  	  	  	          "caption": "Coconut"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "radio",
+  	  	  	          "caption": "Watermelon"
+  	  	  	        }
+  	  	  	     ]
+  	  	  	   }, {
+  	  	  	      "header": "Multiple radios"
+  	  	  	      
+  	  	  	   }
+  	  	  	]
+  	  	  }, {
+  	  	  	"type": "root",
+  	  	  	"title": "Summary counts",
+  	  	  	"group": "counter",
+  	  	  	"sections": [
+  	  	  	   {
+  	  	  	      "header": "Using checkboxes",
+  	  	  	      "elements": [
+  	  	  	        {
+  	  	  	          "type": "checkbox",
+  	  	  	          "caption": "English",
+  	  	  	          "value": true,
+  	  	  	          "group": "counter"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "checkbox",
+  	  	  	          "caption": "French",
+  	  	  	          "value": false,
+  	  	  	          "group": "counter"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "checkbox",
+  	  	  	          "caption": "Spanish",
+  	  	  	          "value": true,
+  	  	  	          "group": "counter"
+  	  	  	        }
+  	  	  	      ]
+  	  	  	   },
+  	  	  	   {
+  	  	  	      "header": "Using booleans",
+  	  	  	      "elements": [
+  	  	  	        {
+  	  	  	          "type": "bool",
+  	  	  	          "caption": "Portuguese",
+  	  	  	          "value": true,
+  	  	  	          "group": "counter"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "bool",
+  	  	  	          "caption": "German",
+  	  	  	          "value": false,
+  	  	  	          "group": "counter"
+  	  	  	        }
+  	  	  	      ]
+  	  	  	   },
+  	  	  	   {
+  	  	  	      "header": "Mixing them",
+  	  	  	      "elements": [
+  	  	  	        {
+  	  	  	          "type": "checkbox",
+  	  	  	          "caption": "Italian",
+  	  	  	          "value": false,
+  	  	  	          "group": "counter"
+  	  	  	        },
+  	  	  	        {
+  	  	  	          "type": "bool",
+  	  	  	          "caption": "Dutch",
+  	  	  	          "value": false,
+  	  	  	          "group": "counter"
+  	  	  	        }
+  	  	  	      ]
+  	  	  	   }
+  	  	  	]
+  	  	  }
+  	  	]
+  	  },
+      {
+          "header": "Booleans",
+          "footer": "Slider or image-based",
+          "elements": [
+              { 
+                  "type" : "boolean",
+                  "caption" : "Demo of a Boolean",
+                  "value"   : true
+              }, {
+                  "type": "boolean",
+                  "caption" : "Boolean using images",
+                  "value"   : false,
+                  "on"      : "favorite.png",
+                  "off"     : "~/favorited.png"
+              }
+          ]
+      }, {
+      	"header": "Entries",
+  		"elements" : [
+			{
+				"type": "entry",
+				"caption": "Username",
+				"value": "",
+				"placeholder": "Your account username"
+			}, {
+				"type": "password",
+				"caption": "Password",
+				"value": "",
+				"placeholder": "You password"
+			}, {
+				"type": "entry",
+				"caption": "Zip Code",
+				"value": "01010",
+				"placeholder": "your zip code",
+				"keyboard": "numbers"
+			}, {
+				"type": "entry",
+				"return-key": "route",
+				"caption": "Entry with 'route'",
+				"placeholder": "captialization all + no corrections",
+				"capitalization": "all",
+				"autocorrect": "no"
+			}
+  		]
+      }, {
+      	"header": "Strings",
+      	"elements": [
+      		{
+      			"type": "string",
+      			"caption": "Plain label"
+      		}, {
+      			"type": "string",
+      			"caption": "Plain label with value: ",
+      			"value": "Value"
+      		}, {
+      			"type": "string",
+      			"caption": "Styled label with subtitles",
+      			"style": "subtitle",
+      			"value": "This is a subtitle"
+      		}, {
+      			"type": "string",
+      			"caption": "Styled label",
+      			"style": "value2",
+      			"value": "Like the addressbook"
+      		}, {
+      			"type": "string",
+      			"caption": "Tapping on this cell invokes a C# method",
+      			"ontap": "Sample.AppDelegate.JsonCallback"
+      		}, {
+      			"type": "string",
+      			"caption": "the background color is set",
+      			"background": "#f0f"
+      		}, {
+      			"type": "string",
+      			"caption": "Background color set from a URI",
+      			"background": "http://www.google.com/images/logos/ps_logo2.png"
+      		}, {
+      			"type": "string",
+      			"caption": "To render multi-line strings, set both the 'lines' value to a positive value and the 'line-break' mode to 'word-wrap' for example",
+      			"lines": "5",
+      			"linebreak": "word-wrap"
+      		}, { 
+      			"type": "string",
+      			"caption": "Show a checkmark",
+      			"accessory": "checkmark"
+      		}, { 
+      			"type": "string",
+      			"caption": "Show a detail disclosure",
+      			"accessory": "detail-disclosure"
+      		}, { 
+      			"type": "string",
+      			"caption": "Show a disclosure indicator",
+      			"accessory": "disclosure-indicator"
+      		}, {
+      			"type": "string",
+      			"caption": "Using a custom font: Chalkduster 20",
+      			"font": "Chalkduster-20",
+      			"linebreak": "word-wrap",
+      			"lines": "0"
+      		}, {
+      			"type": "string",
+      			"style": "subtitle",
+      			"caption": "Styled main and subtitle font",
+      			"font": "Chalkduster-12",
+      			"textcolor": "#d88",
+      			"value": "Subtitle with font Gurmunkhi MN",
+      			"detailfont": "Gurmukhi MN-12",
+      			"detailcolor": "#8d8"
+      		}
+      	 ]
+      }, {
+      	"header": "Dates and Times",
+      	"elements": [
+       		{
+       			"type": "datetime",
+       			"caption": "Date and Time",
+       			"value": "Sat, 01 Nov 2008 19:35:00 GMT"
+       		}, {
+       			"type": "date",
+       			"caption": "Date",
+       			"value": "10/10"
+       		}, {
+       			"type": "time",
+       			"caption": "Time",
+       			"value": "11:23"
+			}       		
+      	]
+      }, {
+      	"header": "Web View",
+      	"elements": [
+      		{
+      			"type": "html",
+      			"caption": "Miguel's blog",
+      			"url": "http://tirania.org/blog" 
+      		}
+      	]
+      }
+  ]
+}

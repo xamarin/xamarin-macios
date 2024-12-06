@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>MonoTouch.Dialog</id>
+        <version>2.0</version>
+        <title>MonoTouch.Dialog</title>
+        <authors>Miguel de Icaza</authors>
+        <owners>Miguel de Icaza</owners>
+        <projectUrl>https://github.com/migueldeicaza/MonoTouch.Dialog</projectUrl>
+        <licenseUrl>https://github.com/migueldeicaza/MonoTouch.Dialog/tree/master/LICENSE</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>.</description>
+        <summary>Create simple user interfaces on iOS and tvOS with MonoTouch.Dialog</summary>
+        <releaseNotes></releaseNotes>
+        <copyright>2009-2018 Miguel de Icaza</copyright>
+        <tags>xamarin,ios,mac,xamarin.ios,xamarin.tvos,dialog</tags>
+    </metadata>
+    <files>
+        <file src="MonoTouch.Dialog/bin/iPhoneSimulator/Release/MonoTouch.Dialog.dll" target="lib/XamariniOS10" />
+        <file src="MonoTouch.Dialog/bin/iPhoneSimulator/Release/MonoTouch.Dialog.xml" target="lib/XamariniOS10" />
+        <file src="./MonoTouch.Dialog/bin/tvSimulator/Release/MonoTouch.Dialog.dll" target="lib/XamarintvOS10" />
+        <file src="./MonoTouch.Dialog/bin/tvSimulator/Release/MonoTouch.Dialog.xml" target="lib/XamarintvOS10" />
+    </files>
+</package>

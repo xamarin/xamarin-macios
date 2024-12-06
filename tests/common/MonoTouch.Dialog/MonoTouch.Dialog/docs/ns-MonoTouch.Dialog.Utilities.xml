@@ -1,0 +1,6 @@
+<Namespace Name="MonoTouch.Dialog.Utilities">
+  <Docs>
+    <summary>General purpose utility functions that are used by MonoTouch.Dialog UIs, but can also be used by other applications.</summary>
+    <remarks></remarks>
+  </Docs>
+</Namespace>

@@ -1,0 +1,58 @@
+<Type Name="NoneOperator" FullName="NUnit.Framework.Constraints.NoneOperator">
+  <TypeSignature Language="C#" Value="public class NoneOperator : NUnit.Framework.Constraints.CollectionOperator" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit NoneOperator extends NUnit.Framework.Constraints.CollectionOperator" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.CollectionOperator</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            Represents a constraint that succeeds if none of the
+            members of a collection match a base constraint.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public NoneOperator ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ApplyPrefix">
+      <MemberSignature Language="C#" Value="public override NUnit.Framework.Constraints.Constraint ApplyPrefix (NUnit.Framework.Constraints.Constraint constraint);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance class NUnit.Framework.Constraints.Constraint ApplyPrefix(class NUnit.Framework.Constraints.Constraint constraint) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="constraint" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="constraint">To be added.</param>
+        <summary>
+            Returns a constraint that will apply the argument
+            to the members of a collection, succeeding if
+            none of them succeed.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

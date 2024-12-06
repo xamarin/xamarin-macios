@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{E63B2E4B-68CF-4108-80AC-2C00533B12EE}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MonoTouch.Dialog</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Elements.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DialogViewController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reflect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Graphics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OldElements\LoadMoreElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ImageLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\LRUCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\MessageElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\OwnerDrawnElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\ActivityElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\ElementBadge.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Controls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\GlassButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\LocalizationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\Json.cs" />
+  </ItemGroup>
+</Project>

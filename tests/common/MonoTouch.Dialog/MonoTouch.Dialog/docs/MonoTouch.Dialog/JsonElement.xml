@@ -1,0 +1,349 @@
+<Type Name="JsonElement" FullName="MonoTouch.Dialog.JsonElement">
+  <TypeSignature Language="C#" Value="public class JsonElement : MonoTouch.Dialog.RootElement" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit JsonElement extends MonoTouch.Dialog.RootElement" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.Dialog-1</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>MonoTouch.Dialog.RootElement</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>RootElement that is instantiated from a Json source.</summary>
+    <remarks>
+      <para>
+The JsonElement is a sublcass of RootElement that extends a RootElement
+to be able to load the contents of nested child from a local or remote
+url.
+</para>
+      <para>
+The JsonElement is a RootElement that can be instantiated in two
+forms.  One version creates a RootElement that will load the contents
+on demand, these are created by using the JsonElement constructors,
+which take an extra argument at the end, the url to load the contents
+from:
+</para>
+      <example>
+        <code lang="c#">
+    var je = new JsonElement ("Dynamic Data", "http://tirania.org/tmp/demo.json");
+</code>
+      </example>
+      <para>
+The other form creates the data from a local file or an existing
+System.Json.JsonObject that you have already parsed:
+</para>
+      <example>
+        <code lang="c#">
+
+    var je = JsonElement.FromFile ("json.sample");
+
+    using (var reader = File.OpenRead ("json.sample"))
+        return JsonElement.FromJson (JsonObject.Load (reader) as JsonObject, arg);
+</code>
+      </example>
+      <para>
+See the README.markdown included with MonoTouch.Dialog for details on the markup.
+</para>
+    </remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public JsonElement (string caption, string url);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string caption, string url) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="caption" Type="System.String" />
+        <Parameter Name="url" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="caption">The caption for the element.</param>
+        <param name="url">Url to load the Json data from.</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json file at the specified url.</summary>
+        <remarks>
+          <para>
+	    When you create Json elements using a constructor that takes an url, the data for the nested contents will be loaded on demand when the Json element is selected.
+	  </para>
+          <para>
+	    Once the data is loaded, the UI will transition to the loaded data.
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public JsonElement (string caption, MonoTouch.Dialog.Group group, string url);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string caption, class MonoTouch.Dialog.Group group, string url) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="caption" Type="System.String" />
+        <Parameter Name="group" Type="MonoTouch.Dialog.Group" />
+        <Parameter Name="url" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="caption">The caption for the element.</param>
+        <param name="group">
+            The group that contains the checkbox or radio information.  This is used to display
+            the summary information when a RootElement is rendered inside a section.
+            </param>
+        <param name="url">Url to load the Json data from.</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json file at the specified url.</summary>
+        <remarks>
+          <para>
+	    When you create Json elements using a constructor that takes an url, the data for the nested contents will be loaded on demand when the Json element is selected.
+	  </para>
+          <para>
+	    Once the data is loaded, the UI will transition to the loaded data.
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public JsonElement (string caption, int section, int element, string url);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string caption, int32 section, int32 element, string url) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="caption" Type="System.String" />
+        <Parameter Name="section" Type="System.Int32" />
+        <Parameter Name="element" Type="System.Int32" />
+        <Parameter Name="url" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="caption">The caption for the element.</param>
+        <param name="section">To be added.</param>
+        <param name="element">
+            The element index inside the section that contains the summary for this RootSection.
+            </param>
+        <param name="url">Url to load the Json data from.</param>
+        <param name="group">
+            The group that contains the checkbox or radio information.  This is used to display
+            the summary information when a RootElement is rendered inside a section.
+            </param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json file at the specified url.</summary>
+        <remarks>
+          <para>
+	    When you create Json elements using a constructor that takes an url, the data for the nested contents will be loaded on demand when the Json element is selected.
+	  </para>
+          <para>
+	    Once the data is loaded, the UI will transition to the loaded data.
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FromFile">
+      <MemberSignature Language="C#" Value="public static MonoTouch.Dialog.JsonElement FromFile (string file);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class MonoTouch.Dialog.JsonElement FromFile(string file) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.JsonElement</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="file" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="file">Path to the file containing the Json Data.</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json file at the specified path.</summary>
+        <returns>An instance of the JsonElement or null if the file does not exist, or the contents of the Json file can not be parsed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FromFile">
+      <MemberSignature Language="C#" Value="public static MonoTouch.Dialog.JsonElement FromFile (string file, object arg);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class MonoTouch.Dialog.JsonElement FromFile(string file, object arg) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.JsonElement</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="file" Type="System.String" />
+        <Parameter Name="arg" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="file">Path to the file containing the Json Data.</param>
+        <param name="arg">Parameter data passed to callbacks for the "ontap" and "onaccessorytap" calls.</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json file at the specified path.</summary>
+        <returns>An instance of the JsonElement or null if the file does not exist, or the contents of the Json file can not be parsed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FromJson">
+      <MemberSignature Language="C#" Value="public static MonoTouch.Dialog.JsonElement FromJson (System.Json.JsonObject json);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class MonoTouch.Dialog.JsonElement FromJson(class System.Json.JsonObject json) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.JsonElement</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="json" Type="System.Json.JsonObject" />
+      </Parameters>
+      <Docs>
+        <param name="json">Parsed Json object.</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json object..</summary>
+        <returns>An instance of the JsonElement or null if the file does not exist, or the contents of the Json file can not be parsed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FromJson">
+      <MemberSignature Language="C#" Value="public static MonoTouch.Dialog.JsonElement FromJson (System.Json.JsonObject json, object data);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class MonoTouch.Dialog.JsonElement FromJson(class System.Json.JsonObject json, object data) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.JsonElement</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="json" Type="System.Json.JsonObject" />
+        <Parameter Name="data" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="json">Parsed Json object.</param>
+        <param name="data">Parameter data passed to callbacks for the "ontap" and "onaccessorytap" calls..</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json object..</summary>
+        <returns>An instance of the JsonElement or null if the file does not exist, or the contents of the Json file can not be parsed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FromJson">
+      <MemberSignature Language="C#" Value="public static MonoTouch.Dialog.JsonElement FromJson (MonoTouch.Dialog.JsonElement parent, System.Json.JsonObject json, object data);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class MonoTouch.Dialog.JsonElement FromJson(class MonoTouch.Dialog.JsonElement parent, class System.Json.JsonObject json, object data) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.JsonElement</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="parent" Type="MonoTouch.Dialog.JsonElement" />
+        <Parameter Name="json" Type="System.Json.JsonObject" />
+        <Parameter Name="data" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="parent">Parent JsonElement, if there is one</param>
+        <param name="json">Parsed Json object.</param>
+        <param name="data">Parameter data passed to callbacks for the "ontap" and "onaccessorytap" calls..</param>
+        <summary>Creates a RootElement with its nested content from the contents of the Json object..</summary>
+        <returns>An instance of the JsonElement or null if the file does not exist, or the contents of the Json file can not be parsed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetCell">
+      <MemberSignature Language="C#" Value="public override MonoTouch.UIKit.UITableViewCell GetCell (MonoTouch.UIKit.UITableView tv);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance class MonoTouch.UIKit.UITableViewCell GetCell(class MonoTouch.UIKit.UITableView tv) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.UIKit.UITableViewCell</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tv" Type="MonoTouch.UIKit.UITableView" />
+      </Parameters>
+      <Docs>
+        <param name="tv">The containing table view.</param>
+        <summary>
+            Gets a UITableViewCell for this element.   Can be overridden, but if you
+            customize the style or contents of the cell you must also override the CellKey
+            property in your derived class.
+            </summary>
+        <returns>
+        </returns>
+        <remarks>This is part of the machinery required by UITableView.   This method is only ever used by developers creating new MonoTouch.Dialog Elements and is not intended to be used by consumers of the API.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public MonoTouch.Dialog.Element this[string key] { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class MonoTouch.Dialog.Element Item(string)" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>MonoTouch.Dialog.Element</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="key" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="key">Identifier name.</param>
+        <summary>Looks up a specific Element from the Json dictionary which had its "id" property set to the same value as the key </summary>
+        <value>
+        </value>
+        <remarks>Use this method to locate elements that you have tagged with an "id" at runtime.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Selected">
+      <MemberSignature Language="C#" Value="public override void Selected (MonoTouch.Dialog.DialogViewController dvc, MonoTouch.UIKit.UITableView tableView, MonoTouch.Foundation.NSIndexPath path);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance void Selected(class MonoTouch.Dialog.DialogViewController dvc, class MonoTouch.UIKit.UITableView tableView, class MonoTouch.Foundation.NSIndexPath path) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="dvc" Type="MonoTouch.Dialog.DialogViewController" />
+        <Parameter Name="tableView" Type="MonoTouch.UIKit.UITableView" />
+        <Parameter Name="path" Type="MonoTouch.Foundation.NSIndexPath" />
+      </Parameters>
+      <Docs>
+        <param name="dvc">
+            The <see cref="T:MonoTouch.Dialog.DialogViewController" /> where the selection took place
+            </param>
+        <param name="tableView">
+            The <see cref="T:MonoTouch.UIKit.UITableView" /> that contains the element.
+            </param>
+        <param name="path">
+            The <see cref="T:MonoTouch.Foundation.NSIndexPath" /> that contains the Section and Row for the element.
+            </param>
+        <summary>
+            Invoked when the given element has been selected by the user.
+            </summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Url">
+      <MemberSignature Language="C#" Value="public string Url;" />
+      <MemberSignature Language="ILAsm" Value=".field public string Url" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The url to load if the element is selected.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

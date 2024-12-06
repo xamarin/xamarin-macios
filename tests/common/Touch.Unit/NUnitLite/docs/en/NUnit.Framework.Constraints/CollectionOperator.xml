@@ -1,0 +1,36 @@
+<Type Name="CollectionOperator" FullName="NUnit.Framework.Constraints.CollectionOperator">
+  <TypeSignature Language="C#" Value="public abstract class CollectionOperator : NUnit.Framework.Constraints.PrefixOperator" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract beforefieldinit CollectionOperator extends NUnit.Framework.Constraints.PrefixOperator" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.PrefixOperator</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            Abstract base for operators that indicate how to
+            apply a constraint to items in a collection.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public CollectionOperator ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>
+            Constructs a CollectionOperator
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

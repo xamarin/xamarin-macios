@@ -1,0 +1,30 @@
+Sliders:
+	Render the left/right image
+
+Sections:
+	Support for rendering icons
+
+More Widgets:
+	Image Chooser - Add video support?
+	Multiline text editing
+		Should support dingus-clicking on urls.
+	Limited number entry: for small ranges of numbers, use a digit picker.
+	NumericEntryElement: uses the digits keypad
+	MultiLineEntryElement: multi-line text entry
+	DataValidationEntry
+
+StringElement
+	Optional accessory
+	
+BooleanElement
+	Support rendering yes/no, true/false in addition to on/off
+
+Visible flag:
+	Some sort of state that determines whether an element is 
+	hidden or shown.
+
+
+
+Ponder:
+	When to support pickers?
+

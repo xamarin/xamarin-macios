@@ -1,0 +1,64 @@
+<Type Name="RequiredAddinAttribute" FullName="NUnit.Framework.RequiredAddinAttribute">
+  <TypeSignature Language="C#" Value="public class RequiredAddinAttribute : Attribute" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit RequiredAddinAttribute extends System.Attribute" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Attribute</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple=true)</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Docs>
+    <summary>
+            RequiredAddinAttribute may be used to indicate the names of any addins
+            that must be present in order to run some or all of the tests in an
+            assembly. If the addin is not loaded, the entire assembly is marked
+            as NotRunnable.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RequiredAddinAttribute (string requiredAddin);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string requiredAddin) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="requiredAddin" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="requiredAddin">The required addin.</param>
+        <summary>
+            Initializes a new instance of the <see cref="T:RequiredAddinAttribute" /> class.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RequiredAddin">
+      <MemberSignature Language="C#" Value="public string RequiredAddin { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance string RequiredAddin" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets the name of required addin.
+            </summary>
+        <value>The required addin name.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

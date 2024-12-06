@@ -1,0 +1,232 @@
+<Type Name="Throws" FullName="NUnit.Framework.Throws">
+  <TypeSignature Language="C#" Value="public class Throws" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit Throws extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            Helper class with properties and methods that supply
+            constraints that operate on exceptions.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Throws ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ArgumentException">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ExactTypeConstraint ArgumentException { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ExactTypeConstraint ArgumentException" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying an expected TargetInvocationException
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Exception">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ResolvableConstraintExpression Exception { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ResolvableConstraintExpression Exception" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying an expected exception
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InnerException">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ResolvableConstraintExpression InnerException { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ResolvableConstraintExpression InnerException" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying an exception with a given InnerException
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOf">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Creates a constraint specifying the type of exception expected
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOf&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Creates a constraint specifying the type of exception expected
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InvalidOperationException">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ExactTypeConstraint InvalidOperationException { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ExactTypeConstraint InvalidOperationException" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying an expected TargetInvocationException
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Nothing">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ThrowsNothingConstraint Nothing { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ThrowsNothingConstraint Nothing" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ThrowsNothingConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying that no exception is thrown
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TargetInvocationException">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ExactTypeConstraint TargetInvocationException { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.ExactTypeConstraint TargetInvocationException" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Creates a constraint specifying an expected TargetInvocationException
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TypeOf">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ExactTypeConstraint TypeOf (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class NUnit.Framework.Constraints.ExactTypeConstraint TypeOf(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Creates a constraint specifying the exact type of exception expected
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TypeOf&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.ExactTypeConstraint TypeOf&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class NUnit.Framework.Constraints.ExactTypeConstraint TypeOf&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Creates a constraint specifying the exact type of exception expected
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

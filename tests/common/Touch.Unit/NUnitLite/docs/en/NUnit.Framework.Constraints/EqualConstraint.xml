@@ -1,0 +1,488 @@
+<Type Name="EqualConstraint" FullName="NUnit.Framework.Constraints.EqualConstraint">
+  <TypeSignature Language="C#" Value="public class EqualConstraint : NUnit.Framework.Constraints.Constraint" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit EqualConstraint extends NUnit.Framework.Constraints.Constraint" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.Constraint</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            EqualConstraint is able to compare an actual value with the
+            expected value provided in its constructor. Two objects are
+            considered equal if both are null, or if both have the same
+            value. NUnit has special semantics for some object types.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public EqualConstraint (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(object expected) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">The expected value.</param>
+        <summary>
+            Initializes a new instance of the <see cref="T:NUnit.Framework.Constraints.EqualConstraint" /> class.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AsCollection">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint AsCollection { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint AsCollection" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Flag the constraint to compare arrays as collections
+            and return self.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Comparer">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Comparer (System.Collections.IComparer comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Comparer(class System.Collections.IComparer comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Obsolete("Replace with 'Using'")</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Collections.IComparer" />
+      </Parameters>
+      <Docs>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied IComparer object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Days">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Days { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Days" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in days.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Hours">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Hours { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Hours" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in hours.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IgnoreCase">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint IgnoreCase { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint IgnoreCase" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Flag the constraint to ignore case and return self.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Matches">
+      <MemberSignature Language="C#" Value="public override bool Matches (object actual);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance bool Matches(object actual) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="actual">The value to be tested</param>
+        <summary>
+            Test whether the constraint is satisfied by a given value
+            </summary>
+        <returns>True for success, false for failure</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Milliseconds">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Milliseconds { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Milliseconds" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in milliseconds.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Minutes">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Minutes { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Minutes" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in minutes.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NoClip">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint NoClip { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint NoClip" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Flag the constraint to suppress string clipping
+            and return self.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Percent">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Percent { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Percent" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Switches the .Within() modifier to interpret its tolerance as
+            a percentage that the actual values is allowed to deviate from
+            the expected value.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Seconds">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Seconds { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Seconds" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in seconds.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ticks">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Ticks { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Ticks" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Causes the tolerance to be interpreted as a TimeSpan in clock ticks.
+            </summary>
+        <value>Self</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ulps">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Ulps { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualConstraint Ulps" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Switches the .Within() modifier to interpret its tolerance as
+            a distance in representable values (see remarks).
+            </summary>
+        <value>Self.</value>
+        <remarks>
+            Ulp stands for "unit in the last place" and describes the minimum
+            amount a given value can change. For any integers, an ulp is 1 whole
+            digit. For floating point values, the accuracy of which is better
+            for smaller numbers and worse for larger numbers, an ulp depends
+            on the size of the number. Using ulps for comparison of floating
+            point results instead of fixed tolerances is safer because it will
+            automatically compensate for the added inaccuracy of larger numbers.
+            </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Using">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Using (System.Collections.IComparer comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Using(class System.Collections.IComparer comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Collections.IComparer" />
+      </Parameters>
+      <Docs>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied IComparer object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Using">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Using (System.Collections.IEqualityComparer comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Using(class System.Collections.IEqualityComparer comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Collections.IEqualityComparer" />
+      </Parameters>
+      <Docs>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied IEqualityComparer object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Using&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt; (System.Collections.Generic.IComparer&lt;T&gt; comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt;(class System.Collections.Generic.IComparer`1&lt;!!T&gt; comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Collections.Generic.IComparer&lt;T&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied IComparer object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Using&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt; (System.Collections.Generic.IEqualityComparer&lt;T&gt; comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt;(class System.Collections.Generic.IEqualityComparer`1&lt;!!T&gt; comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Collections.Generic.IEqualityComparer&lt;T&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied IEqualityComparer object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Using&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt; (Comparison&lt;T&gt; comparer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Using&lt;T&gt;(class System.Comparison`1&lt;!!T&gt; comparer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="comparer" Type="System.Comparison&lt;T&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="comparer">The IComparer object to use.</param>
+        <summary>
+            Flag the constraint to use the supplied Comparison object.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Within">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint Within (object amount);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint Within(object amount) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="amount" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="amount">Tolerance value to be used</param>
+        <summary>
+            Flag the constraint to use a tolerance when determining equality.
+            </summary>
+        <returns>Self.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteDescriptionTo">
+      <MemberSignature Language="C#" Value="public override void WriteDescriptionTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance void WriteDescriptionTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">The MessageWriter to write to</param>
+        <summary>
+            Write description of this constraint
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteMessageTo">
+      <MemberSignature Language="C#" Value="public override void WriteMessageTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance void WriteMessageTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">The MessageWriter to write to</param>
+        <summary>
+            Write a failure message. Overridden to provide custom
+            failure messages for EqualConstraint.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

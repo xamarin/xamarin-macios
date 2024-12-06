@@ -1,0 +1,216 @@
+<Type Name="MsgUtils" FullName="NUnit.Framework.Constraints.MsgUtils">
+  <TypeSignature Language="C#" Value="public class MsgUtils" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit MsgUtils extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            Static methods used in creating messages
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MsgUtils ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ClipExpectedAndActual">
+      <MemberSignature Language="C#" Value="public static void ClipExpectedAndActual (ref string expected, ref string actual, int maxDisplayLength, int mismatch);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void ClipExpectedAndActual(string expected, string actual, int32 maxDisplayLength, int32 mismatch) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String&amp;" RefType="ref" />
+        <Parameter Name="actual" Type="System.String&amp;" RefType="ref" />
+        <Parameter Name="maxDisplayLength" Type="System.Int32" />
+        <Parameter Name="mismatch" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="expected">
+        </param>
+        <param name="actual">
+        </param>
+        <param name="maxDisplayLength">
+        </param>
+        <param name="mismatch">
+        </param>
+        <summary>
+            Clip the expected and actual strings in a coordinated fashion,
+            so that they may be displayed together.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ClipString">
+      <MemberSignature Language="C#" Value="public static string ClipString (string s, int maxStringLength, int clipStart);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig string ClipString(string s, int32 maxStringLength, int32 clipStart) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="s" Type="System.String" />
+        <Parameter Name="maxStringLength" Type="System.Int32" />
+        <Parameter Name="clipStart" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="s">The string to be clipped</param>
+        <param name="maxStringLength">The maximum permitted length of the result string</param>
+        <param name="clipStart">The point at which to start clipping</param>
+        <summary>
+            Clip a string to a given length, starting at a particular offset, returning the clipped
+            string with ellipses representing the removed parts
+            </summary>
+        <returns>The clipped string</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EscapeControlChars">
+      <MemberSignature Language="C#" Value="public static string EscapeControlChars (string s);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig string EscapeControlChars(string s) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="s" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="s">The string to be converted</param>
+        <summary>
+            Converts any control characters in a string
+            to their escaped representation.
+            </summary>
+        <returns>The converted string</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FindMismatchPosition">
+      <MemberSignature Language="C#" Value="public static int FindMismatchPosition (string expected, string actual, int istart, bool ignoreCase);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig int32 FindMismatchPosition(string expected, string actual, int32 istart, bool ignoreCase) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+        <Parameter Name="actual" Type="System.String" />
+        <Parameter Name="istart" Type="System.Int32" />
+        <Parameter Name="ignoreCase" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="expected">The expected string</param>
+        <param name="actual">The actual string</param>
+        <param name="istart">The index in the strings at which comparison should start</param>
+        <param name="ignoreCase">Boolean indicating whether case should be ignored</param>
+        <summary>
+            Shows the position two strings start to differ.  Comparison
+            starts at the start index.
+            </summary>
+        <returns>-1 if no mismatch found, or the index where mismatch found</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetArrayIndicesAsString">
+      <MemberSignature Language="C#" Value="public static string GetArrayIndicesAsString (int[] indices);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig string GetArrayIndicesAsString(int32[] indices) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="indices" Type="System.Int32[]" />
+      </Parameters>
+      <Docs>
+        <param name="indices">Array of indices for which a string is needed</param>
+        <summary>
+            Return the a string representation for a set of indices into an array
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetArrayIndicesFromCollectionIndex">
+      <MemberSignature Language="C#" Value="public static int[] GetArrayIndicesFromCollectionIndex (System.Collections.ICollection collection, int index);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig int32[] GetArrayIndicesFromCollectionIndex(class System.Collections.ICollection collection, int32 index) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="collection" Type="System.Collections.ICollection" />
+        <Parameter Name="index" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="collection">The collection to which the indices apply</param>
+        <param name="index">Index in the collection</param>
+        <summary>
+            Get an array of indices representing the point in a collection or
+            array corresponding to a single int index into the collection.
+            </summary>
+        <returns>Array of indices</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetTypeRepresentation">
+      <MemberSignature Language="C#" Value="public static string GetTypeRepresentation (object obj);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig string GetTypeRepresentation(object obj) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="obj" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="obj">
+        </param>
+        <summary>
+            Returns the representation of a type as used in NUnitLite.
+            This is the same as Type.ToString() except for arrays,
+            which are displayed with their declared sizes.
+            </summary>
+        <returns />
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

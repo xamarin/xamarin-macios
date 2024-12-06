@@ -1,0 +1,395 @@
+<Type Name="Constraint" FullName="NUnit.Framework.Constraints.Constraint">
+  <TypeSignature Language="C#" Value="public abstract class Constraint : NUnit.Framework.Constraints.IResolveConstraint" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract beforefieldinit Constraint extends System.Object implements class NUnit.Framework.Constraints.IResolveConstraint" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>NUnit.Framework.Constraints.IResolveConstraint</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Docs>
+    <summary>
+            The Constraint class is the base of all built-in constraints
+            within NUnit. It provides the operator overloads used to combine
+            constraints.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Constraint ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>
+            Construct a constraint with no arguments
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Constraint (object arg);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(object arg) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="arg" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="arg">To be added.</param>
+        <summary>
+            Construct a constraint with one argument
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Constraint (object arg1, object arg2);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(object arg1, object arg2) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="arg1" Type="System.Object" />
+        <Parameter Name="arg2" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="arg1">To be added.</param>
+        <param name="arg2">To be added.</param>
+        <summary>
+            Construct a constraint with two arguments
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="actual">
+      <MemberSignature Language="C#" Value="protected object actual;" />
+      <MemberSignature Language="ILAsm" Value=".field family object actual" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            The actual value being tested against a constraint
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="And">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression And { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression And" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression by appending And
+            to the current constraint.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DisplayName">
+      <MemberSignature Language="C#" Value="public string DisplayName { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance string DisplayName" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            The display name of this Constraint for use by ToString().
+            The default value is the name of the constraint with
+            trailing "Constraint" removed. Derived classes may set
+            this to another name in their constructors.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Matches">
+      <MemberSignature Language="C#" Value="public abstract bool Matches (object actual);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig newslot virtual instance bool Matches(object actual) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="actual">The value to be tested</param>
+        <summary>
+            Test whether the constraint is satisfied by a given value
+            </summary>
+        <returns>True for success, false for failure</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NUnit.Framework.Constraints.IResolveConstraint.Resolve">
+      <MemberSignature Language="C#" Value="NUnit.Framework.Constraints.Constraint IResolveConstraint.Resolve ();" />
+      <MemberSignature Language="ILAsm" Value=".method hidebysig newslot virtual instance class NUnit.Framework.Constraints.Constraint NUnit.Framework.Constraints.IResolveConstraint.Resolve() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="op_BitwiseAnd">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.Constraint op_BitwiseAnd (NUnit.Framework.Constraints.Constraint left, NUnit.Framework.Constraints.Constraint right);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig specialname class NUnit.Framework.Constraints.Constraint op_BitwiseAnd(class NUnit.Framework.Constraints.Constraint left, class NUnit.Framework.Constraints.Constraint right) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="left" Type="NUnit.Framework.Constraints.Constraint" />
+        <Parameter Name="right" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="left">To be added.</param>
+        <param name="right">To be added.</param>
+        <summary>
+            This operator creates a constraint that is satisfied only if both
+            argument constraints are satisfied.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="op_BitwiseOr">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.Constraint op_BitwiseOr (NUnit.Framework.Constraints.Constraint left, NUnit.Framework.Constraints.Constraint right);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig specialname class NUnit.Framework.Constraints.Constraint op_BitwiseOr(class NUnit.Framework.Constraints.Constraint left, class NUnit.Framework.Constraints.Constraint right) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="left" Type="NUnit.Framework.Constraints.Constraint" />
+        <Parameter Name="right" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="left">To be added.</param>
+        <param name="right">To be added.</param>
+        <summary>
+            This operator creates a constraint that is satisfied if either
+            of the argument constraints is satisfied.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="op_LogicalNot">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.Constraint op_LogicalNot (NUnit.Framework.Constraints.Constraint constraint);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig specialname class NUnit.Framework.Constraints.Constraint op_LogicalNot(class NUnit.Framework.Constraints.Constraint constraint) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="constraint" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="constraint">To be added.</param>
+        <summary>
+            This operator creates a constraint that is satisfied if the
+            argument constraint is not satisfied.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Or">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression Or { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression Or" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression by appending Or
+            to the current constraint.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ToString">
+      <MemberSignature Language="C#" Value="public override string ToString ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance string ToString() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+            Default override of ToString returns the constraint DisplayName
+            followed by any arguments within angle brackets.
+            </summary>
+        <returns />
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UNSET">
+      <MemberSignature Language="C#" Value="protected static object UNSET;" />
+      <MemberSignature Language="ILAsm" Value=".field family static object UNSET" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Static UnsetObject used to detect derived constraints
+            failing to set the actual value.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="With">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression With { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression With" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression by appending And
+            to the current constraint.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteActualValueTo">
+      <MemberSignature Language="C#" Value="public virtual void WriteActualValueTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig newslot virtual instance void WriteActualValueTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">The writer on which the actual value is displayed</param>
+        <summary>
+            Write the actual value for a failing constraint test to a
+            MessageWriter. The default implementation simply writes
+            the raw value of actual, leaving it to the writer to
+            perform any formatting.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteDescriptionTo">
+      <MemberSignature Language="C#" Value="public abstract void WriteDescriptionTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig newslot virtual instance void WriteDescriptionTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">The writer on which the description is displayed</param>
+        <summary>
+            Write the constraint description to a MessageWriter
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteMessageTo">
+      <MemberSignature Language="C#" Value="public virtual void WriteMessageTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig newslot virtual instance void WriteMessageTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">The MessageWriter on which to display the message</param>
+        <summary>
+            Write the failure message to the MessageWriter provided
+            as an argument. The default implementation simply passes
+            the constraint and the actual value to the writer, which
+            then displays the constraint description and the value.
+            Constraints that need to provide additional details,
+            such as where the error occured can override this.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

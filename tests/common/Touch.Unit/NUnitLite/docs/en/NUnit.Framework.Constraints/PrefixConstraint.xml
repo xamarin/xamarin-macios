@@ -1,0 +1,56 @@
+<Type Name="PrefixConstraint" FullName="NUnit.Framework.Constraints.PrefixConstraint">
+  <TypeSignature Language="C#" Value="public abstract class PrefixConstraint : NUnit.Framework.Constraints.Constraint" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract beforefieldinit PrefixConstraint extends NUnit.Framework.Constraints.Constraint" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.Constraint</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            Abstract base class used for prefixes
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected PrefixConstraint (NUnit.Framework.Constraints.IResolveConstraint resolvable);" />
+      <MemberSignature Language="ILAsm" Value=".method familyhidebysig specialname rtspecialname instance void .ctor(class NUnit.Framework.Constraints.IResolveConstraint resolvable) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="resolvable" Type="NUnit.Framework.Constraints.IResolveConstraint" />
+      </Parameters>
+      <Docs>
+        <param name="resolvable">
+        </param>
+        <summary>
+            Construct given a base constraint
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="baseConstraint">
+      <MemberSignature Language="C#" Value="protected NUnit.Framework.Constraints.Constraint baseConstraint;" />
+      <MemberSignature Language="ILAsm" Value=".field family class NUnit.Framework.Constraints.Constraint baseConstraint" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            The base constraint
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

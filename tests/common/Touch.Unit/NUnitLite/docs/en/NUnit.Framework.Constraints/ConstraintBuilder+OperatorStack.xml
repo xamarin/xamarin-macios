@@ -1,0 +1,115 @@
+<Type Name="ConstraintBuilder+OperatorStack" FullName="NUnit.Framework.Constraints.ConstraintBuilder+OperatorStack">
+  <TypeSignature Language="C#" Value="public class ConstraintBuilder.OperatorStack" />
+  <TypeSignature Language="ILAsm" Value=".class nested public auto ansi beforefieldinit ConstraintBuilder/OperatorStack extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            OperatorStack is a type-safe stack for holding ConstraintOperators
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public OperatorStack (NUnit.Framework.Constraints.ConstraintBuilder builder);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class NUnit.Framework.Constraints.ConstraintBuilder builder) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="builder" Type="NUnit.Framework.Constraints.ConstraintBuilder" />
+      </Parameters>
+      <Docs>
+        <param name="builder">The builder.</param>
+        <summary>
+            Initializes a new instance of the <see cref="T:OperatorStack" /> class.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Empty">
+      <MemberSignature Language="C#" Value="public bool Empty { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool Empty" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets a value indicating whether this <see cref="T:OpStack" /> is empty.
+            </summary>
+        <value>
+          <c>true</c> if empty; otherwise, <c>false</c>.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pop">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintOperator Pop ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ConstraintOperator Pop() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintOperator</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+            Pops the topmost operator from the stack.
+            </summary>
+        <returns />
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Push">
+      <MemberSignature Language="C#" Value="public void Push (NUnit.Framework.Constraints.ConstraintOperator op);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Push(class NUnit.Framework.Constraints.ConstraintOperator op) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="op" Type="NUnit.Framework.Constraints.ConstraintOperator" />
+      </Parameters>
+      <Docs>
+        <param name="op">The op.</param>
+        <summary>
+            Pushes the specified operator onto the stack.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Top">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintOperator Top { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintOperator Top" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintOperator</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets the topmost operator without modifying the stack.
+            </summary>
+        <value>The top.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

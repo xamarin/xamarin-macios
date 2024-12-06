@@ -1,0 +1,75 @@
+<Type Name="BinaryConstraint" FullName="NUnit.Framework.Constraints.BinaryConstraint">
+  <TypeSignature Language="C#" Value="public abstract class BinaryConstraint : NUnit.Framework.Constraints.Constraint" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract beforefieldinit BinaryConstraint extends NUnit.Framework.Constraints.Constraint" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.Constraint</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            BinaryConstraint is the abstract base of all constraints
+            that combine two other constraints in some fashion.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public BinaryConstraint (NUnit.Framework.Constraints.Constraint left, NUnit.Framework.Constraints.Constraint right);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class NUnit.Framework.Constraints.Constraint left, class NUnit.Framework.Constraints.Constraint right) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="left" Type="NUnit.Framework.Constraints.Constraint" />
+        <Parameter Name="right" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="left">The first constraint</param>
+        <param name="right">The second constraint</param>
+        <summary>
+            Construct a BinaryConstraint from two other constraints
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="left">
+      <MemberSignature Language="C#" Value="protected NUnit.Framework.Constraints.Constraint left;" />
+      <MemberSignature Language="ILAsm" Value=".field family class NUnit.Framework.Constraints.Constraint left" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            The first constraint being combined
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="right">
+      <MemberSignature Language="C#" Value="protected NUnit.Framework.Constraints.Constraint right;" />
+      <MemberSignature Language="ILAsm" Value=".field family class NUnit.Framework.Constraints.Constraint right" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            The second constraint being combined
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

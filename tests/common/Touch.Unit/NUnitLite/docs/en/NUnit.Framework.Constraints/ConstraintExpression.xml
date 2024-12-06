@@ -1,0 +1,1336 @@
+<Type Name="ConstraintExpression" FullName="NUnit.Framework.Constraints.ConstraintExpression">
+  <TypeSignature Language="C#" Value="public class ConstraintExpression : NUnit.Framework.Constraints.ConstraintExpressionBase" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit ConstraintExpression extends NUnit.Framework.Constraints.ConstraintExpressionBase" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.ConstraintExpressionBase</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            ConstraintExpression represents a compound constraint in the
+            process of being constructed from a series of syntactic elements.
+            Individual elements are appended to the expression as they are
+            reognized. Once an actual Constraint is appended, the expression
+            returns a resolvable Constraint.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ConstraintExpression ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>
+            Initializes a new instance of the <see cref="T:ConstraintExpression" /> class.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ConstraintExpression (NUnit.Framework.Constraints.ConstraintBuilder builder);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class NUnit.Framework.Constraints.ConstraintBuilder builder) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="builder" Type="NUnit.Framework.Constraints.ConstraintBuilder" />
+      </Parameters>
+      <Docs>
+        <param name="builder">The builder.</param>
+        <summary>
+            Initializes a new instance of the <see cref="T:ConstraintExpression" />
+            class passing in a ConstraintBuilder, which may be pre-populated.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="All">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression All { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression All" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression, which will apply
+            the following constraint to all members of a collection,
+            succeeding if all of them succeed.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AssignableFrom">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.AssignableFromConstraint AssignableFrom (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.AssignableFromConstraint AssignableFrom(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.AssignableFromConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is assignable from the type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AssignableFrom&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.AssignableFromConstraint AssignableFrom&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.AssignableFromConstraint AssignableFrom&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.AssignableFromConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is assignable from the type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AssignableTo">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.AssignableToConstraint AssignableTo (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.AssignableToConstraint AssignableTo(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.AssignableToConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is assignable from the type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AssignableTo&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.AssignableToConstraint AssignableTo&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.AssignableToConstraint AssignableTo&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.AssignableToConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is assignable from the type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AtLeast">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.GreaterThanOrEqualConstraint AtLeast (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.GreaterThanOrEqualConstraint AtLeast(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.GreaterThanOrEqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is greater than or equal to the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AtMost">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.LessThanOrEqualConstraint AtMost (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.LessThanOrEqualConstraint AtMost(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.LessThanOrEqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is less than or equal to the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Attribute">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Attribute (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Attribute(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a new AttributeConstraint checking for the
+            presence of a particular attribute on an object.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Attribute&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Attribute&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Attribute&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a new AttributeConstraint checking for the
+            presence of a particular attribute on an object.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="BinarySerializable">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.BinarySerializableConstraint BinarySerializable { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.BinarySerializableConstraint BinarySerializable" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.BinarySerializableConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests whether an object graph is serializable in binary format.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Contains">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.CollectionContainsConstraint Contains (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.CollectionContainsConstraint Contains(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.CollectionContainsConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a new CollectionContainsConstraint checking for the
+            presence of a particular object in the collection.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Contains">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ContainsConstraint Contains (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ContainsConstraint Contains(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ContainsConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a new ContainsConstraint. This constraint
+            will, in turn, make use of the appropriate second-level
+            constraint, depending on the type of the actual argument.
+            This overload is only used if the item sought is a string,
+            since any other type implies that we are looking for a
+            collection member.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ContainsSubstring">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.SubstringConstraint ContainsSubstring (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.SubstringConstraint ContainsSubstring(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.SubstringConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value contains the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Count">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Count { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Count" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a new ConstraintExpression, which will apply the following
+            constraint to the Count property of the object being tested.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Empty">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EmptyConstraint Empty { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EmptyConstraint Empty" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EmptyConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests for empty
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EndsWith">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EndsWithConstraint EndsWith (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EndsWithConstraint EndsWith(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EndsWithConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value ends with the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EqualTo">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualConstraint EqualTo (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EqualConstraint EqualTo(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests two items for equality
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EquivalentTo">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.CollectionEquivalentConstraint EquivalentTo (System.Collections.IEnumerable expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.CollectionEquivalentConstraint EquivalentTo(class System.Collections.IEnumerable expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.CollectionEquivalentConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Collections.IEnumerable" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is a collection containing the same elements as the
+            collection supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="False">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.FalseConstraint False { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.FalseConstraint False" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.FalseConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests for False
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GreaterThan">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.GreaterThanConstraint GreaterThan (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.GreaterThanConstraint GreaterThan(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.GreaterThanConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is greater than the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GreaterThanOrEqualTo">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.GreaterThanOrEqualConstraint GreaterThanOrEqualTo (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.GreaterThanOrEqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is greater than or equal to the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InnerException">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression InnerException { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ResolvableConstraintExpression InnerException" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a new ConstraintExpression, which will apply the following
+            constraint to the InnerException property of the object being tested.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InRange">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.RangeConstraint InRange (IComparable from, IComparable to);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.RangeConstraint InRange(class System.IComparable from, class System.IComparable to) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.RangeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="from" Type="System.IComparable" />
+        <Parameter Name="to" Type="System.IComparable" />
+      </Parameters>
+      <Docs>
+        <param name="from">To be added.</param>
+        <param name="to">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value falls
+            within a specified range.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOf">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is of the type supplied as an argument or a derived type.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOf&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOf&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is of the type supplied as an argument or a derived type.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOfType">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOfType (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOfType(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Obsolete("Use InstanceOf(expectedType)")</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is of the type supplied as an argument or a derived type.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InstanceOfType&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOfType&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.InstanceOfTypeConstraint InstanceOfType&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Obsolete("Use InstanceOf&lt;T&gt;()")</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.InstanceOfTypeConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is of the type supplied as an argument or a derived type.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Length">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Length { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Length" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a new ConstraintExpression, which will apply the following
+            constraint to the Length property of the object being tested.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LessThan">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.LessThanConstraint LessThan (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.LessThanConstraint LessThan(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.LessThanConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is less than the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LessThanOrEqualTo">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.LessThanOrEqualConstraint LessThanOrEqualTo (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.LessThanOrEqualConstraint LessThanOrEqualTo(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.LessThanOrEqualConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the
+            actual value is less than or equal to the suppled argument
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Matches">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.Constraint Matches (NUnit.Framework.Constraints.Constraint constraint);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.Constraint Matches(class NUnit.Framework.Constraints.Constraint constraint) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="constraint" Type="NUnit.Framework.Constraints.Constraint" />
+      </Parameters>
+      <Docs>
+        <param name="constraint">To be added.</param>
+        <summary>
+            Returns the constraint provided as an argument - used to allow custom
+            custom constraints to easily participate in the syntax.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Matches">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.RegexConstraint Matches (string pattern);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.RegexConstraint Matches(string pattern) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.RegexConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pattern" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="pattern">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value matches the Regex pattern supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Matches&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.Constraint Matches&lt;T&gt; (Predicate&lt;T&gt; predicate);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.Constraint Matches&lt;T&gt;(class System.Predicate`1&lt;!!T&gt; predicate) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Constraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="predicate" Type="System.Predicate&lt;T&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="predicate">To be added.</param>
+        <summary>
+            Returns the constraint provided as an argument - used to allow custom
+            custom constraints to easily participate in the syntax.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Member">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.CollectionContainsConstraint Member (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.CollectionContainsConstraint Member(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.CollectionContainsConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a new CollectionContainsConstraint checking for the
+            presence of a particular object in the collection.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Message">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Message { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Message" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a new ConstraintExpression, which will apply the following
+            constraint to the Message property of the object being tested.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NaN">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.NaNConstraint NaN { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.NaNConstraint NaN" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.NaNConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests for NaN
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="No">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression No { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression No" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression that negates any
+            following constraint.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="None">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression None { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression None" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression, which will apply
+            the following constraint to all members of a collection,
+            succeeding if all of them fail.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Not">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression Not { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression Not" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression that negates any
+            following constraint.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Null">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.NullConstraint Null { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.NullConstraint Null" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.NullConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests for null
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ordered">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.CollectionOrderedConstraint Ordered { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.CollectionOrderedConstraint Ordered" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.CollectionOrderedConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests whether a collection is ordered
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Property">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ResolvableConstraintExpression Property (string name);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ResolvableConstraintExpression Property(string name) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ResolvableConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="name">To be added.</param>
+        <summary>
+            Returns a new PropertyConstraintExpression, which will either
+            test for the existence of the named property on the object
+            being tested or apply any following constraint to that property.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SameAs">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.SameAsConstraint SameAs (object expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.SameAsConstraint SameAs(object expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.SameAsConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests that two references are the same object
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SamePath">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.SamePathConstraint SamePath (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.SamePathConstraint SamePath(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.SamePathConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the path provided
+            is the same as an expected path after canonicalization.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SamePathOrUnder">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.SamePathOrUnderConstraint SamePathOrUnder (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.SamePathOrUnderConstraint SamePathOrUnder(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.SamePathOrUnderConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the path provided
+            is the same path or under an expected path after canonicalization.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Some">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression Some { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression Some" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a ConstraintExpression, which will apply
+            the following constraint to all members of a collection,
+            succeeding if at least one of them succeeds.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StartsWith">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.StartsWithConstraint StartsWith (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.StartsWithConstraint StartsWith(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.StartsWithConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value starts with the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StringContaining">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.SubstringConstraint StringContaining (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.SubstringConstraint StringContaining(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.SubstringConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value contains the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StringEnding">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EndsWithConstraint StringEnding (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.EndsWithConstraint StringEnding(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EndsWithConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value ends with the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StringMatching">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.RegexConstraint StringMatching (string pattern);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.RegexConstraint StringMatching(string pattern) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.RegexConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pattern" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="pattern">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value matches the Regex pattern supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StringStarting">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.StartsWithConstraint StringStarting (string expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.StartsWithConstraint StringStarting(string expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.StartsWithConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that succeeds if the actual
+            value starts with the substring supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SubsetOf">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.CollectionSubsetConstraint SubsetOf (System.Collections.IEnumerable expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.CollectionSubsetConstraint SubsetOf(class System.Collections.IEnumerable expected) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.CollectionSubsetConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Collections.IEnumerable" />
+      </Parameters>
+      <Docs>
+        <param name="expected">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual value
+            is a subset of the collection supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="True">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.TrueConstraint True { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.TrueConstraint True" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.TrueConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests for True
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TypeOf">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ExactTypeConstraint TypeOf (Type expectedType);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ExactTypeConstraint TypeOf(class System.Type expectedType) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="expectedType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="expectedType">To be added.</param>
+        <summary>
+            Returns a constraint that tests whether the actual
+            value is of the exact type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TypeOf&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ExactTypeConstraint TypeOf&lt;T&gt; ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class NUnit.Framework.Constraints.ExactTypeConstraint TypeOf&lt;T&gt;() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ExactTypeConstraint</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters />
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <summary>
+            Returns a constraint that tests whether the actual
+            value is of the exact type supplied as an argument.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Unique">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.UniqueItemsConstraint Unique { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.UniqueItemsConstraint Unique" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.UniqueItemsConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests whether a collection
+            contains all unique items.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="With">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.ConstraintExpression With { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.ConstraintExpression With" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.ConstraintExpression</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            With is currently a NOP - reserved for future use.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="XmlSerializable">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.XmlSerializableConstraint XmlSerializable { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.XmlSerializableConstraint XmlSerializable" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.XmlSerializableConstraint</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns a constraint that tests whether an object graph is serializable in xml format.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

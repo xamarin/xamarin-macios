@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
+    <!-- Currently, NuGet is not able to restore existing Xamarin.TVOS packages for a .NET 5 project, so use AssetTargetFallback to tell NuGet that the existing packages work -->
+    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+  </PropertyGroup>
+  <Import Project="../shared.csproj" />
+</Project>

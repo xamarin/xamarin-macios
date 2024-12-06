@@ -1,0 +1,85 @@
+<Type Name="CollectionSubsetConstraint" FullName="NUnit.Framework.Constraints.CollectionSubsetConstraint">
+  <TypeSignature Language="C#" Value="public class CollectionSubsetConstraint : NUnit.Framework.Constraints.CollectionItemsEqualConstraint" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit CollectionSubsetConstraint extends NUnit.Framework.Constraints.CollectionItemsEqualConstraint" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>NUnit.Framework.Constraints.CollectionItemsEqualConstraint</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            CollectionSubsetConstraint is used to determine whether
+            one collection is a subset of another
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public CollectionSubsetConstraint (System.Collections.IEnumerable expected);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(class System.Collections.IEnumerable expected) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="expected" Type="System.Collections.IEnumerable" />
+      </Parameters>
+      <Docs>
+        <param name="expected">The collection that the actual value is expected to be a subset of</param>
+        <summary>
+            Construct a CollectionSubsetConstraint
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="doMatch">
+      <MemberSignature Language="C#" Value="protected override bool doMatch (System.Collections.IEnumerable actual);" />
+      <MemberSignature Language="ILAsm" Value=".method familyhidebysig virtual instance bool doMatch(class System.Collections.IEnumerable actual) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Collections.IEnumerable" />
+      </Parameters>
+      <Docs>
+        <param name="actual">
+        </param>
+        <summary>
+            Test whether the actual collection is a subset of
+            the expected collection provided.
+            </summary>
+        <returns />
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WriteDescriptionTo">
+      <MemberSignature Language="C#" Value="public override void WriteDescriptionTo (NUnit.Framework.Constraints.MessageWriter writer);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig virtual instance void WriteDescriptionTo(class NUnit.Framework.Constraints.MessageWriter writer) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="writer" Type="NUnit.Framework.Constraints.MessageWriter" />
+      </Parameters>
+      <Docs>
+        <param name="writer">
+        </param>
+        <summary>
+            Write a description of this constraint to a MessageWriter
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

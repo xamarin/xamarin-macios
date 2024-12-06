@@ -1,0 +1,171 @@
+<Type Name="NUnitEqualityComparer" FullName="NUnit.Framework.Constraints.NUnitEqualityComparer">
+  <TypeSignature Language="C#" Value="public class NUnitEqualityComparer" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit NUnitEqualityComparer extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            NUnitEqualityComparer encapsulates NUnit's handling of
+            equality tests between objects.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public NUnitEqualityComparer ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CompareAsCollection">
+      <MemberSignature Language="C#" Value="public bool CompareAsCollection { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool CompareAsCollection" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets and sets a flag indicating that arrays should be
+            compared as collections, without regard to their shape.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Default">
+      <MemberSignature Language="C#" Value="public static NUnit.Framework.Constraints.NUnitEqualityComparer Default { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property class NUnit.Framework.Constraints.NUnitEqualityComparer Default" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.NUnitEqualityComparer</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Returns the default NUnitEqualityComparer
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ExternalComparer">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.EqualityAdapter ExternalComparer { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.EqualityAdapter ExternalComparer" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.EqualityAdapter</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets and sets an external comparer to be used to
+            test for equality. It is applied to members of
+            collections, in place of NUnit's own logic.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FailurePoints">
+      <MemberSignature Language="C#" Value="public System.Collections.IList FailurePoints { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class System.Collections.IList FailurePoints" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Collections.IList</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets the list of failure points for the last Match performed.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IgnoreCase">
+      <MemberSignature Language="C#" Value="public bool IgnoreCase { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool IgnoreCase" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets and sets a flag indicating whether case should
+            be ignored in determining equality.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ObjectsEqual">
+      <MemberSignature Language="C#" Value="public bool ObjectsEqual (object x, object y);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance bool ObjectsEqual(object x, object y) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Object" />
+        <Parameter Name="y" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="x">To be added.</param>
+        <param name="y">To be added.</param>
+        <summary>
+            Compares two objects for equality.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tolerance">
+      <MemberSignature Language="C#" Value="public NUnit.Framework.Constraints.Tolerance Tolerance { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class NUnit.Framework.Constraints.Tolerance Tolerance" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>NUnit.Framework.Constraints.Tolerance</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets and sets a tolerance used to compare objects of
+            certin types.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

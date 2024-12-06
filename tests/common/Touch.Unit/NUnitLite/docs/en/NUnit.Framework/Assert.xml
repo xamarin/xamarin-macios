@@ -1,0 +1,841 @@
+<Type Name="Assert" FullName="NUnit.Framework.Assert">
+  <TypeSignature Language="C#" Value="public class Assert" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit Assert extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>
+            The Assert class contains a collection of static methods that
+            implement the most common assertions used in NUnit.
+            </summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Assert ();" />
+      <MemberSignature Language="ILAsm" Value=".method familyhidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>
+            We don't actually want any instances of this object, but some people
+            like to inherit from it to add other static methods. Hence, the
+            protected constructor disallows any instances of this object.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Counter">
+      <MemberSignature Language="C#" Value="public static int Counter { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property int32 Counter" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>
+            Gets the number of assertions executed so far and
+            resets the counter to zero.
+            </summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Equals">
+      <MemberSignature Language="C#" Value="public static bool Equals (object a, object b);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig bool Equals(object a, object b) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="a" Type="System.Object" />
+        <Parameter Name="b" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="a">
+        </param>
+        <param name="b">
+        </param>
+        <summary>
+            The Equals method throws an AssertionException. This is done
+            to make sure there is no mistake by calling this function.
+            </summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Fail">
+      <MemberSignature Language="C#" Value="public static void Fail (string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Fail(string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="message">The message, possibly with format placeholders</param>
+        <param name="args">Arguments used in formatting the string</param>
+        <summary>
+            Throw an assertion exception with a message and optional arguments
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="False">
+      <MemberSignature Language="C#" Value="public static void False (bool condition);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void False(bool condition) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <summary>
+            Asserts that a condition is false. If the condition is true the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="False">
+      <MemberSignature Language="C#" Value="public static void False (bool condition, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void False(bool condition, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is true</param>
+        <summary>
+            Asserts that a condition is false. If the condition is true the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="False">
+      <MemberSignature Language="C#" Value="public static void False (bool condition, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void False(bool condition, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is true</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Asserts that a condition is false. If the condition is true the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ignore">
+      <MemberSignature Language="C#" Value="public static void Ignore ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Ignore() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.IgnoreException" />.
+            This causes the test to be reported as ignored.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ignore">
+      <MemberSignature Language="C#" Value="public static void Ignore (string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Ignore(string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.AssertionException" /> with.</param>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.IgnoreException" /> with the message that is
+            passed in. This causes the test to be reported as ignored.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ignore">
+      <MemberSignature Language="C#" Value="public static void Ignore (string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Ignore(string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.AssertionException" /> with.</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.IgnoreException" /> with the message and arguments
+            that are passed in.  This causes the test to be reported as ignored.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Inconclusive">
+      <MemberSignature Language="C#" Value="public static void Inconclusive ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Inconclusive() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.InconclusiveException" />.
+            This causes the test to be reported as Inconclusive.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Inconclusive">
+      <MemberSignature Language="C#" Value="public static void Inconclusive (string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Inconclusive(string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.InconclusiveException" /> with.</param>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.InconclusiveException" /> with the message that is
+            passed in. This causes the test to be reported as inconclusive.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Inconclusive">
+      <MemberSignature Language="C#" Value="public static void Inconclusive (string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Inconclusive(string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.InconclusiveException" /> with.</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Throws an <see cref="T:NUnit.Framework.InconclusiveException" /> with the message and arguments
+            that are passed in.  This causes the test to be reported as inconclusive.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NotNull">
+      <MemberSignature Language="C#" Value="public static void NotNull (object anObject);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void NotNull(object anObject) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <summary>
+            Verifies that the object that is passed in is not equal to <code>null</code>
+            If the object is <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NotNull">
+      <MemberSignature Language="C#" Value="public static void NotNull (object anObject, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void NotNull(object anObject, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <param name="message">The message to be displayed when the object is null</param>
+        <summary>
+            Verifies that the object that is passed in is not equal to <code>null</code>
+            If the object is <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NotNull">
+      <MemberSignature Language="C#" Value="public static void NotNull (object anObject, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void NotNull(object anObject, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <param name="message">The message to be displayed when the object is null</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Verifies that the object that is passed in is not equal to <code>null</code>
+            If the object is <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Null">
+      <MemberSignature Language="C#" Value="public static void Null (object anObject);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Null(object anObject) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <summary>
+            Verifies that the object that is passed in is equal to <code>null</code>
+            If the object is not null <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Null">
+      <MemberSignature Language="C#" Value="public static void Null (object anObject, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Null(object anObject, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <param name="message">The message to be displayed when the object is not null</param>
+        <summary>
+            Verifies that the object that is passed in is equal to <code>null</code>
+            If the object is not <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Null">
+      <MemberSignature Language="C#" Value="public static void Null (object anObject, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Null(object anObject, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="anObject" Type="System.Object" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="anObject">The object that is to be tested</param>
+        <param name="message">The message to be displayed when the object is not null</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Verifies that the object that is passed in is equal to <code>null</code>
+            If the object is not <code>null</code> then an <see cref="T:NUnit.Framework.AssertionException" />
+            is thrown.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pass">
+      <MemberSignature Language="C#" Value="public static void Pass ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Pass() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+            Throws a <see cref="T:NUnit.Framework.SuccessException" /> with the message and arguments
+            that are passed in. This allows a test to be cut short, with a result
+            of success returned to NUnit.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pass">
+      <MemberSignature Language="C#" Value="public static void Pass (string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Pass(string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.AssertionException" /> with.</param>
+        <summary>
+            Throws a <see cref="T:NUnit.Framework.SuccessException" /> with the message and arguments
+            that are passed in. This allows a test to be cut short, with a result
+            of success returned to NUnit.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pass">
+      <MemberSignature Language="C#" Value="public static void Pass (string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void Pass(string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="message">The message to initialize the <see cref="T:NUnit.Framework.AssertionException" /> with.</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Throws a <see cref="T:NUnit.Framework.SuccessException" /> with the message and arguments
+            that are passed in. This allows a test to be cut short, with a result
+            of success returned to NUnit.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ReferenceEquals">
+      <MemberSignature Language="C#" Value="public static void ReferenceEquals (object a, object b);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void ReferenceEquals(object a, object b) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="a" Type="System.Object" />
+        <Parameter Name="b" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <param name="a">
+        </param>
+        <param name="b">
+        </param>
+        <summary>
+            override the default ReferenceEquals to throw an AssertionException. This
+            implementation makes sure there is no mistake in calling this function
+            as part of Assert.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (bool condition);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(bool condition) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (bool condition, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(bool condition, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is false</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (object actual, NUnit.Framework.Constraints.IResolveConstraint expression);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(object actual, class NUnit.Framework.Constraints.IResolveConstraint expression) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Object" />
+        <Parameter Name="expression" Type="NUnit.Framework.Constraints.IResolveConstraint" />
+      </Parameters>
+      <Docs>
+        <param name="actual">The actual value to test</param>
+        <param name="expression">A Constraint to be applied</param>
+        <summary>
+            Apply a constraint to an actual value, succeeding if the constraint
+            is satisfied and throwing an assertion exception on failure.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (bool condition, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(bool condition, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is false</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (object actual, NUnit.Framework.Constraints.IResolveConstraint expression, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(object actual, class NUnit.Framework.Constraints.IResolveConstraint expression, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Object" />
+        <Parameter Name="expression" Type="NUnit.Framework.Constraints.IResolveConstraint" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="actual">The actual value to test</param>
+        <param name="expression">A Constraint to be applied</param>
+        <param name="message">The message that will be displayed on failure</param>
+        <summary>
+            Apply a constraint to an actual value, succeeding if the constraint
+            is satisfied and throwing an assertion exception on failure.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="That">
+      <MemberSignature Language="C#" Value="public static void That (object actual, NUnit.Framework.Constraints.IResolveConstraint expression, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void That(object actual, class NUnit.Framework.Constraints.IResolveConstraint expression, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="actual" Type="System.Object" />
+        <Parameter Name="expression" Type="NUnit.Framework.Constraints.IResolveConstraint" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="actual">The actual value to test</param>
+        <param name="expression">A Constraint to be applied</param>
+        <param name="message">The message that will be displayed on failure</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Apply a constraint to an actual value, succeeding if the constraint
+            is satisfied and throwing an assertion exception on failure.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="True">
+      <MemberSignature Language="C#" Value="public static void True (bool condition);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void True(bool condition) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="True">
+      <MemberSignature Language="C#" Value="public static void True (bool condition, string message);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void True(bool condition, string message) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is false</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="True">
+      <MemberSignature Language="C#" Value="public static void True (bool condition, string message, object[] args);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void True(bool condition, string message, object[] args) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.6.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="condition" Type="System.Boolean" />
+        <Parameter Name="message" Type="System.String" />
+        <Parameter Name="args" Type="System.Object[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="condition">The evaluated condition</param>
+        <param name="message">The message to display if the condition is false</param>
+        <param name="args">Arguments to be used in formatting the message</param>
+        <summary>
+            Asserts that a condition is true. If the condition is false the method throws
+            an <see cref="T:NUnit.Framework.AssertionException" />.
+            </summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>
