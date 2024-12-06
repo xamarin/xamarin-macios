@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Authors
 //    Sebastien Pouliot  <sebastien@xamarin.com>
 //
@@ -272,7 +272,7 @@ namespace Mono.ApiTools {
 		public override void EndMemberRemoval ()
 		{
 			IndentLevel--;
-			output.WriteLine ("</pre>");;
+			output.WriteLine ("</pre>"); ;
 		}
 
 		public override void DiffAddition (TextChunk chunk, string text, bool breaking)
@@ -311,7 +311,7 @@ namespace Mono.ApiTools {
 		public override void Diff (ApiChange apichange)
 		{
 			output.Write ("<div {0}>", apichange.Breaking ? "data-is-breaking" : "data-is-non-breaking");
-			foreach (var line in apichange.Member.GetStringBuilder (this).ToString ().Split (new[] { Environment.NewLine }, 0)) {
+			foreach (var line in apichange.Member.GetStringBuilder (this).ToString ().Split (new [] { Environment.NewLine }, 0)) {
 				output.Write ('\t');
 				output.WriteLine (line);
 			}

@@ -58,9 +58,9 @@ namespace Mono.ApiTools {
 			if (XNode.DeepEquals (s, t))
 				return;
 
-			if (s == null) {
+			if (s is null) {
 				Add (t.Elements (ElementName));
-			} else if (t == null) {
+			} else if (t is null) {
 				Remove (s.Elements (ElementName));
 			} else {
 				Compare (s.Elements (ElementName), t.Elements (ElementName));
@@ -102,7 +102,7 @@ namespace Mono.ApiTools {
 				SetContext (s);
 				Source = s;
 				var t = Find (target);
-				if (t == null) {
+				if (t is null) {
 					// not in target, it was removed
 					removed.Add (s);
 				} else {
@@ -178,14 +178,14 @@ namespace Mono.ApiTools {
 			if (r)
 				Formatter.EndMemberRemoval ();
 		}
-			
+
 		public abstract string GetDescription (XElement e);
 
 		protected StringBuilder GetObsoleteMessage (XElement e)
 		{
 			var sb = new StringBuilder ();
 			string o = e.GetObsoleteMessage ();
-			if (o != null) {
+			if (o is not null) {
 				sb.Append ("[Obsolete");
 				if (o.Length > 0)
 					sb.Append (" (\"").Append (o).Append ("\")");
@@ -244,7 +244,7 @@ namespace Mono.ApiTools {
 			sb.Append (gp.GetTypeName ("name", State));
 
 			var constraints = gp.DescendantList ("generic-parameter-constraints", "generic-parameter-constraint");
-			if (constraints != null && constraints.Count > 0) {
+			if (constraints is not null && constraints.Count > 0) {
 				sb.Append (" : ");
 				for (int i = 0; i < constraints.Count; i++) {
 					if (i > 0)
@@ -259,8 +259,8 @@ namespace Mono.ApiTools {
 		{
 			var src = source.DescendantList ("generic-parameters", "generic-parameter");
 			var tgt = target.DescendantList ("generic-parameters", "generic-parameter");
-			var srcCount = src == null ? 0 : src.Count;
-			var tgtCount = tgt == null ? 0 : tgt.Count;
+			var srcCount = src is null ? 0 : src.Count;
+			var tgtCount = tgt is null ? 0 : tgt.Count;
 
 			if (srcCount == 0 && tgtCount == 0)
 				return;
@@ -282,14 +282,14 @@ namespace Mono.ApiTools {
 					} else {
 						change.Append (srcName);
 					}
-					}
 				}
+			}
 			change.Append (Formatter.GreaterThan);
 		}
 
 		protected string FormatValue (string type, string value)
 		{
-			if (value == null)
+			if (value is null)
 				return "null";
 
 			if (type == "string")
@@ -312,8 +312,8 @@ namespace Mono.ApiTools {
 		{
 			var src = source.DescendantList ("parameters", "parameter");
 			var tgt = target.DescendantList ("parameters", "parameter");
-			var srcCount = src == null ? 0 : src.Count;
-			var tgtCount = tgt == null ? 0 : tgt.Count;
+			var srcCount = src is null ? 0 : src.Count;
+			var tgtCount = tgt is null ? 0 : tgt.Count;
 
 			change.Append (" (");
 			for (int i = 0; i < System.Math.Max (srcCount, tgtCount); i++) {
@@ -363,8 +363,8 @@ namespace Mono.ApiTools {
 					var srcValue = FormatValue (paramSourceType, src [i].GetAttribute ("defaultValue"));
 					var tgtValue = FormatValue (paramTargetType, tgt [i].GetAttribute ("defaultValue"));
 
-					if (optSource != null) {
-						if (optTarget != null) {
+					if (optSource is not null) {
+						if (optTarget is not null) {
 							change.Append (" = ");
 							if (srcValue != tgtValue) {
 								change.AppendModified (srcValue, tgtValue, false);
@@ -375,7 +375,7 @@ namespace Mono.ApiTools {
 							change.AppendRemoved (" = " + srcValue);
 						}
 					} else {
-						if (optTarget != null)
+						if (optTarget is not null)
 							change.AppendAdded (" = " + tgtValue);
 					}
 				}
@@ -557,7 +557,7 @@ namespace Mono.ApiTools {
 		protected void RemoveAttributes (XElement element)
 		{
 			var srcAttributes = element.Element ("attributes");
-			if (srcAttributes != null)
+			if (srcAttributes is not null)
 				srcAttributes.Remove ();
 
 			foreach (var el in element.Elements ())
@@ -582,15 +582,15 @@ namespace Mono.ApiTools {
 			if (srcObsolete == tgtObsolete)
 				return; // nothing changed
 
-			if (srcObsolete == null) {
-				if (tgtObsolete == null)
+			if (srcObsolete is null) {
+				if (tgtObsolete is null)
 					return; // neither is obsolete
 				var change = new ApiChange (GetDescription (source), State);
 				change.Header = "Obsoleted " + GroupName;
 				Formatter.RenderObsoleteMessage (change.Member, this, GetDescription (target), tgtObsolete);
 				change.AnyChange = true;
 				changes.Add (source, target, change);
-			} else if (tgtObsolete == null) {
+			} else if (tgtObsolete is null) {
 				// Made non-obsolete. Do we care to report this?
 			} else {
 				// Obsolete message changed. Do we care to report this?

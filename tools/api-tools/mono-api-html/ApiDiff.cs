@@ -76,7 +76,7 @@ namespace Mono.ApiTools {
 #if !EXCLUDE_DRIVER
 	class Program {
 
-		public static int Main (string[] args)
+		public static int Main (string [] args)
 		{
 			var showHelp = false;
 			List<string> extra = null;
@@ -102,13 +102,13 @@ namespace Mono.ApiTools {
 					v => config.IgnoreNew.Add (new Regex (v))
 				},
 				{ "ignore-changes-parameter-names", "Ignore changes to parameter names for identically prototyped methods.",
-					v => config.IgnoreParameterNameChanges   = v != null
+					v => config.IgnoreParameterNameChanges   = v is not null
 				},
 				{ "ignore-changes-property-setters", "Ignore adding setters to properties.",
-					v => config.IgnoreAddedPropertySetters = v != null
+					v => config.IgnoreAddedPropertySetters = v is not null
 				},
 				{ "ignore-changes-virtual", "Ignore changing non-`virtual` to `virtual` or adding `override`.",
-					v => config.IgnoreVirtualChanges = v != null
+					v => config.IgnoreVirtualChanges = v is not null
 				},
 				{ "c|colorize:", "Colorize HTML output", v => config.Colorize = string.IsNullOrEmpty (v) ? true : bool.Parse (v) },
 				{ "x|lax", "Ignore duplicate XML entries", v => config.IgnoreDuplicateXml = true },
@@ -127,7 +127,7 @@ namespace Mono.ApiTools {
 				extra = null;
 			}
 
-			if (showHelp || extra == null || extra.Count < 2 || extra.Count > 3) {
+			if (showHelp || extra is null || extra.Count < 2 || extra.Count > 3) {
 				Console.WriteLine (@"Usage: mono-api-html [options] <reference.xml> <assembly.xml> [diff.html]");
 				Console.WriteLine ();
 				Console.WriteLine ("Available options:");
@@ -215,7 +215,7 @@ namespace Mono.ApiTools {
 
 		static State CreateState (ApiDiffFormattedConfig config, string firstInfo, string secondInfo)
 		{
-			if (config == null)
+			if (config is null)
 				config = new ApiDiffFormattedConfig ();
 
 			var state = new State {

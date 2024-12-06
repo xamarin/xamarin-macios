@@ -13,8 +13,7 @@ using System.Xml;
 
 namespace Mono.ApiTools {
 
-	class WellFormedXmlWriter : DefaultXmlWriter
-	{
+	class WellFormedXmlWriter : DefaultXmlWriter {
 		public static bool IsInvalid (int ch)
 		{
 			switch (ch) {
@@ -44,11 +43,11 @@ namespace Mono.ApiTools {
 			for (int i = 0; i < s.Length; i++)
 				if (IsInvalid (s [i])) {
 					if (!allowSurrogate ||
-					    i + 1 == s.Length ||
-					    s [i] < '\uD800' ||
-					    s [i] >= '\uDC00' ||
-					    s [i + 1] < '\uDC00' ||
-					    s [i + 1] >= '\uE000')
+						i + 1 == s.Length ||
+						s [i] < '\uD800' ||
+						s [i] >= '\uDC00' ||
+						s [i + 1] < '\uDC00' ||
+						s [i + 1] >= '\uE000')
 						return i;
 					i++;
 				}
@@ -63,11 +62,11 @@ namespace Mono.ApiTools {
 			for (int i = start; i < end; i++)
 				if (IsInvalid (s [i])) {
 					if (!allowSurrogate ||
-					    i + 1 == end ||
-					    s [i] < '\uD800' ||
-					    s [i] >= '\uDC00' ||
-					    s [i + 1] < '\uDC00' ||
-					    s [i + 1] >= '\uE000')
+						i + 1 == end ||
+						s [i] < '\uD800' ||
+						s [i] >= '\uDC00' ||
+						s [i + 1] < '\uDC00' ||
+						s [i + 1] >= '\uE000')
 						return i;
 					i++;
 				}
@@ -110,8 +109,7 @@ namespace Mono.ApiTools {
 
 	}
 
-	class DefaultXmlWriter : XmlWriter
-	{
+	class DefaultXmlWriter : XmlWriter {
 		XmlWriter writer;
 
 		public DefaultXmlWriter (XmlWriter writer)

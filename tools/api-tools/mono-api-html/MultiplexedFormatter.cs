@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Authors
 //    Rolf Kvinge <rolf@xamarin.com>
 //

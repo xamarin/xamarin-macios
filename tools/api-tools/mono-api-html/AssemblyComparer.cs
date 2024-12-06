@@ -38,7 +38,7 @@ namespace Mono.ApiTools {
 		NamespaceComparer comparer;
 
 		public AssemblyComparer (State state)
-			: this (XDocument.Load(state.SourceFile), XDocument.Load(state.TargetFile), state)
+			: this (XDocument.Load (state.SourceFile), XDocument.Load (state.TargetFile), state)
 		{
 		}
 
@@ -47,7 +47,7 @@ namespace Mono.ApiTools {
 		{
 			source = sourceFile;
 			target = targetFile;
-			comparer =  new NamespaceComparer (state);
+			comparer = new NamespaceComparer (state);
 		}
 
 		public string SourceAssembly { get; private set; }
@@ -55,8 +55,8 @@ namespace Mono.ApiTools {
 
 		public void Compare ()
 		{
-			Compare (source.Element ("assemblies").Elements ("assembly"), 
-			         target.Element ("assemblies").Elements ("assembly"));
+			Compare (source.Element ("assemblies").Elements ("assembly"),
+					 target.Element ("assemblies").Elements ("assembly"));
 		}
 
 		public override void SetContext (XElement current)

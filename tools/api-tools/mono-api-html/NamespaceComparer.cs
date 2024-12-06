@@ -39,7 +39,7 @@ namespace Mono.ApiTools {
 		public NamespaceComparer (State state)
 			: base (state)
 		{
-			comparer =  new ClassComparer (state);
+			comparer = new ClassComparer (state);
 		}
 
 		public void Compare (XElement source, XElement target)
@@ -58,7 +58,7 @@ namespace Mono.ApiTools {
 
 		public override void Added (XElement target, bool wasParentAdded)
 		{
-			var namespaceDescription  = $"{State.Namespace}: Added namespace";
+			var namespaceDescription = $"{State.Namespace}: Added namespace";
 			State.LogDebugMessage ($"Possible -n value: {namespaceDescription}");
 			if (State.IgnoreNew.Any (re => re.IsMatch (namespaceDescription)))
 				return;
@@ -92,7 +92,7 @@ namespace Mono.ApiTools {
 		{
 			var name = source.Attribute ("name").Value;
 
-			var namespaceDescription  = $"{name}: Removed namespace";
+			var namespaceDescription = $"{name}: Removed namespace";
 			State.LogDebugMessage ($"Possible -r value: {namespaceDescription}");
 			if (State.IgnoreRemoved.Any (re => re.IsMatch (namespaceDescription)))
 				return;

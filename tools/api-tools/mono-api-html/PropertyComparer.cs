@@ -62,9 +62,9 @@ namespace Mono.ApiTools {
 			getter = null;
 			setter = null;
 
-			if (methods == null)
+			if (methods is null)
 				return;
-				
+
 			foreach (var m in methods.Elements ("method")) {
 				var n = m.GetAttribute ("name");
 				if (n.StartsWith ("get_", StringComparison.Ordinal)) {
@@ -77,9 +77,9 @@ namespace Mono.ApiTools {
 
 		MethodAttributes GetMethodAttributes (XElement getter, XElement setter)
 		{
-			if (getter == null)
+			if (getter is null)
 				return setter.GetMethodAttributes ();
-			else if (setter == null)
+			else if (setter is null)
 				return getter.GetMethodAttributes ();
 
 			var gAttr = getter.GetMethodAttributes ();
@@ -112,30 +112,30 @@ namespace Mono.ApiTools {
 		{
 			// FIXME: this doesn't render changes in the accessor visibility (a protected setter can become public for instance).
 			change.Append (" {");
-			if (tgtGetter != null) {
-				if (srcGetter != null) {
+			if (tgtGetter is not null) {
+				if (srcGetter is not null) {
 					change.Append (" ").Append ("get;");
 				} else {
 					change.Append (" ").AppendAdded ("get;");
 				}
-			} else if (srcGetter != null) {
+			} else if (srcGetter is not null) {
 				change.Append (" ").AppendRemoved ("get;");
 			}
 
-			if (tgtSetter != null) {
-				if (srcSetter != null) {
+			if (tgtSetter is not null) {
+				if (srcSetter is not null) {
 					change.Append (" ").Append ("set;");
 				} else {
 					change.Append (" ").AppendAdded ("set;");
 				}
-			} else if (srcSetter != null) {
+			} else if (srcSetter is not null) {
 				change.Append (" ").AppendRemoved ("set;");
 			}
 
 			change.Append (" }");
 
 			// Ignore added property setters if asked to
-			if (srcSetter == null && tgtSetter != null && State.IgnoreAddedPropertySetters && !change.Breaking) {
+			if (srcSetter is null && tgtSetter is not null && State.IgnoreAddedPropertySetters && !change.Breaking) {
 				change.AnyChange = false;
 				change.HasIgnoredChanges = true;
 			}
@@ -184,10 +184,10 @@ namespace Mono.ApiTools {
 			List<XElement> srcIndexers = null;
 			List<XElement> tgtIndexers = null;
 			bool isIndexer = false;
-			if (srcGetter != null) {
+			if (srcGetter is not null) {
 				srcIndexers = srcGetter.DescendantList ("parameters", "parameter");
 				tgtIndexers = tgtGetter.DescendantList ("parameters", "parameter");
-				isIndexer = srcIndexers != null && srcIndexers.Count > 0;
+				isIndexer = srcIndexers is not null && srcIndexers.Count > 0;
 			}
 
 			var change = new ApiChange (GetDescription (source), State);
@@ -212,7 +212,7 @@ namespace Mono.ApiTools {
 			@virtual = @override = @static = getter = setter = family = false;
 
 			var methods = e.Element ("methods");
-			if (methods != null) {
+			if (methods is not null) {
 				foreach (var m in methods.Elements ("method")) {
 					@virtual |= m.IsTrue ("virtual");
 					@static |= m.IsTrue ("static");

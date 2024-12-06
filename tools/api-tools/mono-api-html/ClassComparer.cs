@@ -70,7 +70,7 @@ namespace Mono.ApiTools {
 
 		public override void Added (XElement target, bool wasParentAdded)
 		{
-			var addedDescription  = $"{State.Namespace}.{State.Type}: Added type";
+			var addedDescription = $"{State.Namespace}.{State.Type}: Added type";
 			State.LogDebugMessage ($"Possible -n value: {addedDescription}");
 			if (State.IgnoreNew.Any (re => re.IsMatch (addedDescription)))
 				return;
@@ -91,7 +91,7 @@ namespace Mono.ApiTools {
 			if (type == "enum") {
 				// check if [Flags] is present
 				var cattrs = target.Element ("attributes");
-				if (cattrs != null) {
+				if (cattrs is not null) {
 					foreach (var ca in cattrs.Elements ("attribute")) {
 						if (ca.GetAttribute ("name") == "System.FlagsAttribute") {
 							Indent ().WriteLine ("[Flags]");
@@ -121,7 +121,7 @@ namespace Mono.ApiTools {
 
 			var baseclass = target.GetAttribute ("base");
 			if ((type != "enum") && (type != "struct")) {
-				if (baseclass != null) {
+				if (baseclass is not null) {
 					if (baseclass == "System.Object") {
 						// while true we do not need to be reminded every time...
 						baseclass = null;
@@ -135,11 +135,11 @@ namespace Mono.ApiTools {
 			// interfaces on enums are "standard" not user provided - so we do not want to show them
 			if (type != "enum") {
 				var i = target.Element ("interfaces");
-				if (i != null) {
+				if (i is not null) {
 					var interfaces = new List<string> ();
 					foreach (var iface in i.Elements ("interface"))
 						interfaces.Add (icomparer.GetDescription (iface));
-					Output.Write ((baseclass == null) ? " : " : ", ");
+					Output.Write ((baseclass is null) ? " : " : ", ");
 					Output.Write (String.Join (", ", interfaces));
 				}
 			}
@@ -148,14 +148,14 @@ namespace Mono.ApiTools {
 
 			Formatter.IncreaseIndentation ();
 			var t = target.Element ("constructors");
-			if (t != null) {
+			if (t is not null) {
 				Indent ().WriteLine ("// constructors");
 				foreach (var ctor in t.Elements ("constructor"))
 					ccomparer.Added (ctor, true);
 			}
 
 			t = target.Element ("fields");
-			if (t != null) {
+			if (t is not null) {
 				if (type != "enum")
 					Indent ().WriteLine ("// fields");
 				else
@@ -165,28 +165,28 @@ namespace Mono.ApiTools {
 			}
 
 			t = target.Element ("properties");
-			if (t != null) {
+			if (t is not null) {
 				Indent ().WriteLine ("// properties");
 				foreach (var property in t.Elements ("property"))
 					pcomparer.Added (property, true);
 			}
 
 			t = target.Element ("events");
-			if (t != null) {
+			if (t is not null) {
 				Indent ().WriteLine ("// events");
 				foreach (var evnt in t.Elements ("event"))
 					ecomparer.Added (evnt, true);
 			}
 
 			t = target.Element ("methods");
-			if (t != null) {
+			if (t is not null) {
 				Indent ().WriteLine ("// methods");
 				foreach (var method in t.Elements ("method"))
 					mcomparer.Added (method, true);
 			}
 
 			t = target.Element ("classes");
-			if (t != null) {
+			if (t is not null) {
 				Output.WriteLine ();
 				Indent ().WriteLine ("// inner types");
 				State.Parent = State.Type;
@@ -280,7 +280,7 @@ namespace Mono.ApiTools {
 			var tb = target.GetAttribute ("base");
 			var rm = $"{State.Namespace}.{State.Type}: Modified base type: '{sb}' to '{tb}'";
 			State.LogDebugMessage ($"Possible -r value: {rm}");
-			if (sb != tb &&	!State.IgnoreRemoved.Any (re => re.IsMatch (rm))) {
+			if (sb != tb && !State.IgnoreRemoved.Any (re => re.IsMatch (rm))) {
 				var isCompatible = IsBaseChangeCompatible (sb, tb);
 				if (!(State.IgnoreNonbreaking && isCompatible)) {
 					Formatter.BeginMemberModification ("Modified base type");
@@ -298,11 +298,11 @@ namespace Mono.ApiTools {
 			mcomparer.Compare (source, target);
 
 			var si = source.Element ("classes");
-			if (si != null) {
+			if (si is not null) {
 				var ti = target.Element ("classes");
 				kcomparer = new NestedClassComparer (State);
 				State.Parent = State.Type;
-				kcomparer.Compare (si.Elements ("class"), ti == null ? null : ti.Elements ("class"));
+				kcomparer.Compare (si.Elements ("class"), ti is null ? null : ti.Elements ("class"));
 				State.Type = State.Parent;
 			}
 

@@ -58,9 +58,9 @@ namespace Mono.ApiTools {
 			var eGP = e.Element ("generic-parameters");
 			var sGP = Source.Element ("generic-parameters");
 
-			if (eGP == null && sGP == null)
+			if (eGP is null && sGP is null)
 				return true;
-			else if (eGP == null ^ sGP == null)
+			else if (eGP is null ^ sGP is null)
 				return false;
 			else {
 				var eGPs = eGP.Elements ("generic-parameter");
@@ -73,9 +73,9 @@ namespace Mono.ApiTools {
 		{
 			// Removing virtual methods that override another method is not a breaking change.
 			var is_override = e.Attribute ("is-override");
-			if (is_override != null)
+			if (is_override is not null)
 				return is_override.Value != "true";
-			
+
 			return true; // all other removals are breaking changes
 		}
 	}

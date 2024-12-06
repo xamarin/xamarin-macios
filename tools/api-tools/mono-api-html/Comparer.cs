@@ -79,8 +79,8 @@ namespace Mono.ApiTools {
 			foreach (var s in source) {
 				SetContext (s);
 				string sn = s.GetAttribute ("name");
-				var t = target == null ? null : target.SingleOrDefault (x => x.GetAttribute ("name") == sn);
-				if (t == null) {
+				var t = target is null ? null : target.SingleOrDefault (x => x.GetAttribute ("name") == sn);
+				if (t is null) {
 					// not in target, it was removed
 					removed.Add (s);
 				} else {
@@ -99,7 +99,7 @@ namespace Mono.ApiTools {
 				Removed (item);
 			}
 			// remaining == newly added in target
-			if (target != null) {
+			if (target is not null) {
 				foreach (var item in target) {
 					SetContext (item);
 					Added (item, false);

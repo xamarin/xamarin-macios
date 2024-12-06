@@ -18,11 +18,11 @@ namespace Mono.ApiTools {
 
 		public bool IgnoreInheritedInterfaces { get; }
 
-		public AssemblyResolver Resolver { get; } = new AssemblyResolver();
+		public AssemblyResolver Resolver { get; } = new AssemblyResolver ();
 
 		internal bool TryResolve (CustomAttribute attribute)
 		{
-			if (attribute == null)
+			if (attribute is null)
 				throw new ArgumentNullException (nameof (attribute));
 
 			try {
@@ -35,12 +35,12 @@ namespace Mono.ApiTools {
 
 		internal bool IsPublic (TypeReference typeref)
 		{
-			if (typeref == null)
+			if (typeref is null)
 				throw new ArgumentNullException ("typeref");
 
 			try {
 				var td = typeref.Resolve ();
-				if (td == null)
+				if (td is null)
 					return false;
 
 				return td.IsPublic || (td.IsNestedPublic && IsPublic (td.DeclaringType));
@@ -62,17 +62,17 @@ namespace Mono.ApiTools {
 					first = false;
 					continue;
 				}
-				
+
 				if (def.FullName == derivedFrom)
 					return true;
 			}
-			
+
 			return false;
 		}
 
 		internal IEnumerable<TypeDefinition> WalkHierarchy (TypeReference type)
 		{
-			for (var def = type.Resolve (); def != null; def = GetBaseType (def))
+			for (var def = type.Resolve (); def is not null; def = GetBaseType (def))
 				yield return def;
 		}
 
@@ -92,7 +92,7 @@ namespace Mono.ApiTools {
 
 		internal TypeDefinition GetBaseType (TypeDefinition child)
 		{
-			if (child.BaseType == null)
+			if (child.BaseType is null)
 				return null;
 
 			try {
@@ -104,7 +104,7 @@ namespace Mono.ApiTools {
 
 		internal MethodDefinition GetMethod (MethodReference method)
 		{
-			if (method == null)
+			if (method is null)
 				throw new ArgumentNullException (nameof (method));
 
 			try {
@@ -140,9 +140,9 @@ namespace Mono.ApiTools {
 				return method;
 
 			var @base = GetBaseType (method.DeclaringType);
-			while (@base != null) {
+			while (@base is not null) {
 				MethodDefinition base_method = TryMatchMethod (@base.Resolve (), method);
-				if (base_method != null)
+				if (base_method is not null)
 					return GetBaseMethodInTypeHierarchy (base_method) ?? base_method;
 
 				@base = GetBaseType (@base);

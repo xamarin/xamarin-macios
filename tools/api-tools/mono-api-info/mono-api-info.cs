@@ -25,8 +25,7 @@ using System.IO;
 namespace Mono.ApiTools {
 
 #if !EXCLUDE_DRIVER
-	class Driver
-	{
+	class Driver {
 		public static int Main (string [] args)
 		{
 			bool showHelp = false;
@@ -37,16 +36,16 @@ namespace Mono.ApiTools {
 			var options = new Mono.Options.OptionSet {
 				{ "abi",
 					"Generate ABI, not API; contains only classes with instance fields which are not [NonSerialized].",
-					v => config.AbiMode = v != null },
+					v => config.AbiMode = v is not null },
 				{ "f|follow-forwarders",
 					"Follow type forwarders.",
-					v => config.FollowForwarders = v != null },
+					v => config.FollowForwarders = v is not null },
 				{ "ignore-inherited-interfaces",
 					"Ignore interfaces on the base type.",
-					v => config.IgnoreInheritedInterfaces = v != null },
+					v => config.IgnoreInheritedInterfaces = v is not null },
 				{ "ignore-resolution-errors",
 					"Ignore any assemblies that cannot be found.",
-					v => config.IgnoreResolutionErrors = v != null },
+					v => config.IgnoreResolutionErrors = v is not null },
 				{ "d|L|lib|search-directory=",
 					"Check for assembly references in {DIRECTORY}.",
 					v => config.SearchDirectories.Add (v) },
@@ -58,10 +57,10 @@ namespace Mono.ApiTools {
 					v => output = v },
 				{ "h|?|help",
 					"Show this message and exit.",
-					v => showHelp = v != null },
+					v => showHelp = v is not null },
 				{ "contract-api",
 					"Produces contract API with all members at each level of inheritance hierarchy",
-					v => config.FullApiSet = v != null },
+					v => config.FullApiSet = v is not null },
 			};
 
 			try {
@@ -71,7 +70,7 @@ namespace Mono.ApiTools {
 				asms = null;
 			}
 
-			if (showHelp || asms == null || asms.Count == 0) {
+			if (showHelp || asms is null || asms.Count == 0) {
 				Console.WriteLine ("usage: mono-api-info [OPTIONS+] ASSEMBLY+");
 				Console.WriteLine ();
 				Console.WriteLine ("Expose IL structure of CLR assemblies as XML.");
@@ -100,8 +99,7 @@ namespace Mono.ApiTools {
 	}
 #endif
 
-	class State
-	{
+	class State {
 		public bool AbiMode { get; set; } = false;
 
 		public bool FollowForwarders { get; set; } = false;
@@ -124,23 +122,22 @@ namespace Mono.ApiTools {
 		{
 			TypeHelper = new TypeHelper (IgnoreResolutionErrors, IgnoreInheritedInterfaces);
 
-			if (SearchDirectories != null) {
+			if (SearchDirectories is not null) {
 				foreach (var v in SearchDirectories)
 					TypeHelper.Resolver.AddSearchDirectory (v);
 			}
-			if (ResolveFiles != null) {
+			if (ResolveFiles is not null) {
 				foreach (var v in ResolveFiles)
 					TypeHelper.Resolver.ResolveFile (v);
 			}
-			if (ResolveStreams != null) {
+			if (ResolveStreams is not null) {
 				foreach (var v in ResolveStreams)
 					TypeHelper.Resolver.ResolveStream (v);
 			}
 		}
 	}
 
-	public class ApiInfoConfig
-	{
+	public class ApiInfoConfig {
 		public bool AbiMode { get; set; } = false;
 
 		public bool FollowForwarders { get; set; } = false;
@@ -158,11 +155,10 @@ namespace Mono.ApiTools {
 		public List<Stream> ResolveStreams { get; set; } = new List<Stream> ();
 	}
 
-	public static class ApiInfo
-	{
+	public static class ApiInfo {
 		public static void Generate (string assemblyPath, TextWriter outStream, ApiInfoConfig config = null)
 		{
-			if (assemblyPath == null)
+			if (assemblyPath is null)
 				throw new ArgumentNullException (nameof (assemblyPath));
 
 			Generate (new [] { assemblyPath }, null, outStream, config);
@@ -170,7 +166,7 @@ namespace Mono.ApiTools {
 
 		public static void Generate (Stream assemblyStream, TextWriter outStream, ApiInfoConfig config = null)
 		{
-			if (assemblyStream == null)
+			if (assemblyStream is null)
 				throw new ArgumentNullException (nameof (assemblyStream));
 
 			Generate (null, new [] { assemblyStream }, outStream, config);
@@ -188,10 +184,10 @@ namespace Mono.ApiTools {
 
 		public static void Generate (IEnumerable<string> assemblyPaths, IEnumerable<Stream> assemblyStreams, TextWriter outStream, ApiInfoConfig config = null)
 		{
-			if (outStream == null)
+			if (outStream is null)
 				throw new ArgumentNullException (nameof (outStream));
 
-			if (config == null)
+			if (config is null)
 				config = new ApiInfoConfig ();
 
 			var state = new State {
@@ -210,10 +206,10 @@ namespace Mono.ApiTools {
 
 		internal static void Generate (IEnumerable<string> assemblyFiles, IEnumerable<Stream> assemblyStreams, TextWriter outStream, State state = null)
 		{
-			if (outStream == null)
+			if (outStream is null)
 				throw new ArgumentNullException (nameof (outStream));
 
-			if (state == null)
+			if (state is null)
 				state = new State ();
 
 			state.ResolveTypes ();
@@ -223,7 +219,7 @@ namespace Mono.ApiTools {
 			state.TypeHelper.Resolver.AddSearchDirectory (Path.Combine (windir, @"assembly\GAC\MSDATASRC\7.0.3300.0__b03f5f7f11d50a3a"));
 
 			var acoll = new AssemblyCollection (state);
-			if (assemblyFiles != null) {
+			if (assemblyFiles is not null) {
 				foreach (string arg in assemblyFiles) {
 					acoll.Add (arg);
 
@@ -244,7 +240,7 @@ namespace Mono.ApiTools {
 					}
 				}
 			}
-			if (assemblyStreams != null) {
+			if (assemblyStreams is not null) {
 				foreach (var arg in assemblyStreams) {
 					acoll.Add (arg);
 				}
@@ -265,7 +261,7 @@ namespace Mono.ApiTools {
 	}
 
 	class Utils {
-		static char[] CharsToCleanup = new char[] { '<', '>', '/' };
+		static char [] CharsToCleanup = new char [] { '<', '>', '/' };
 
 		public static string CleanupTypeName (TypeReference type)
 		{
@@ -298,8 +294,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class AssemblyCollection
-	{
+	class AssemblyCollection {
 		XmlWriter writer;
 		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
 		State state;
@@ -325,7 +320,7 @@ namespace Mono.ApiTools {
 
 		public void DoOutput ()
 		{
-			if (writer == null)
+			if (writer is null)
 				throw new InvalidOperationException ("Document not set");
 
 			writer.WriteStartElement ("assemblies");
@@ -354,8 +349,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	abstract class BaseData
-	{
+	abstract class BaseData {
 		protected XmlWriter writer;
 		protected State state;
 
@@ -373,8 +367,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class TypeForwardedToData : BaseData
-	{
+	class TypeForwardedToData : BaseData {
 		AssemblyDefinition ass;
 
 		public TypeForwardedToData (XmlWriter writer, AssemblyDefinition ass, State state)
@@ -387,7 +380,7 @@ namespace Mono.ApiTools {
 		{
 			foreach (ExportedType type in ass.MainModule.ExportedTypes) {
 
-				if (((uint)type.Attributes & 0x200000u) == 0)
+				if (((uint) type.Attributes & 0x200000u) == 0)
 					continue;
 
 				writer.WriteStartElement ("attribute");
@@ -409,8 +402,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class AssemblyData : BaseData
-	{
+	class AssemblyData : BaseData {
 		AssemblyDefinition ass;
 
 		public AssemblyData (XmlWriter writer, AssemblyDefinition ass, State state)
@@ -421,7 +413,7 @@ namespace Mono.ApiTools {
 
 		public override void DoOutput ()
 		{
-			if (writer == null)
+			if (writer is null)
 				throw new InvalidOperationException ("Document not set");
 
 			writer.WriteStartElement ("assembly");
@@ -432,14 +424,14 @@ namespace Mono.ApiTools {
 			AttributeData.OutputAttributes (writer, state, ass);
 
 			var types = new List<TypeDefinition> ();
-			if (ass.MainModule.Types != null) {
+			if (ass.MainModule.Types is not null) {
 				types.AddRange (ass.MainModule.Types);
 			}
 
-			if (state.FollowForwarders && ass.MainModule.ExportedTypes != null) {
+			if (state.FollowForwarders && ass.MainModule.ExportedTypes is not null) {
 				foreach (var t in ass.MainModule.ExportedTypes) {
 					var forwarded = t.Resolve ();
-					if (forwarded == null) {
+					if (forwarded is null) {
 						throw new Exception ("Could not resolve forwarded type " + t.FullName + " in " + ass.Name);
 					}
 					types.Add (forwarded);
@@ -464,7 +456,7 @@ namespace Mono.ApiTools {
 				if (!state.AbiMode && ((t.Attributes & TypeAttributes.VisibilityMask) != TypeAttributes.Public))
 					continue;
 
-				if (t.DeclaringType != null)
+				if (t.DeclaringType is not null)
 					continue; // enforce !nested
 
 				if (t.Namespace != current_namespace) {
@@ -496,8 +488,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	abstract class MemberData : BaseData
-	{
+	abstract class MemberData : BaseData {
 		MemberReference [] members;
 
 		public MemberData (XmlWriter writer, MemberReference [] members, State state)
@@ -551,7 +542,7 @@ namespace Mono.ApiTools {
 
 		public virtual bool NoMemberAttributes {
 			get { return false; }
-			set {}
+			set { }
 		}
 
 		public virtual string ParentTag {
@@ -601,8 +592,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class TypeData : MemberData
-	{
+	class TypeData : MemberData {
 		TypeDefinition type;
 
 		public TypeData (XmlWriter writer, TypeDefinition type, State state)
@@ -612,7 +602,7 @@ namespace Mono.ApiTools {
 		}
 		public override void DoOutput ()
 		{
-			if (writer == null)
+			if (writer is null)
 				throw new InvalidOperationException ("Document not set");
 
 			writer.WriteStartElement ("class");
@@ -620,7 +610,7 @@ namespace Mono.ApiTools {
 			string classType = GetClassType (type);
 			AddAttribute ("type", classType);
 
-			if (type.BaseType != null)
+			if (type.BaseType is not null)
 				AddAttribute ("base", Utils.CleanupTypeName (type.BaseType));
 
 			if (type.IsSealed)
@@ -629,14 +619,14 @@ namespace Mono.ApiTools {
 			if (type.IsAbstract)
 				AddAttribute ("abstract", "true");
 
-			if ( (type.Attributes & TypeAttributes.Serializable) != 0 || type.IsEnum)
+			if ((type.Attributes & TypeAttributes.Serializable) != 0 || type.IsEnum)
 				AddAttribute ("serializable", "true");
 
 			string charSet = GetCharSet (type);
 			AddAttribute ("charset", charSet);
 
 			string layout = GetLayout (type);
-			if (layout != null)
+			if (layout is not null)
 				AddAttribute ("layout", layout);
 
 			if (type.PackingSize >= 0) {
@@ -649,7 +639,7 @@ namespace Mono.ApiTools {
 
 			if (type.IsEnum) {
 				var value_type = GetEnumValueField (type);
-				if (value_type == null)
+				if (value_type is null)
 					throw new NotSupportedException ();
 
 				AddAttribute ("enumtype", Utils.CleanupTypeName (value_type.FieldType));
@@ -657,7 +647,7 @@ namespace Mono.ApiTools {
 
 			AttributeData.OutputAttributes (writer, state, type);
 
-			var ifaces =  state.TypeHelper.GetInterfaces (type).
+			var ifaces = state.TypeHelper.GetInterfaces (type).
 				Where ((iface) => state.TypeHelper.IsPublic (iface)). // we're only interested in public interfaces
 				OrderBy (s => s.FullName, StringComparer.Ordinal);
 
@@ -690,7 +680,7 @@ namespace Mono.ApiTools {
 					members.Add (new ConstructorData (writer, ctors, state));
 				}
 
-				PropertyDefinition[] properties = GetProperties (type, state.FullApiSet);
+				PropertyDefinition [] properties = GetProperties (type, state.FullApiSet);
 				if (properties.Length > 0) {
 					Array.Sort (properties, PropertyDefinitionComparer.Default);
 					members.Add (new PropertyData (writer, properties, state));
@@ -759,7 +749,8 @@ namespace Mono.ApiTools {
 			return ((int) type.Attributes).ToString (CultureInfo.InvariantCulture);
 		}
 
-		public static bool MustDocumentMethod (MethodDefinition method) {
+		public static bool MustDocumentMethod (MethodDefinition method)
+		{
 			// All other methods
 			MethodAttributes maskedAccess = method.Attributes & MethodAttributes.MemberAccessMask;
 			return maskedAccess == MethodAttributes.Public
@@ -778,7 +769,7 @@ namespace Mono.ApiTools {
 			if (t.IsInterface)
 				return "interface";
 
-			if (state.TypeHelper.IsDelegate(t))
+			if (state.TypeHelper.IsDelegate (t))
 				return "delegate";
 
 			if (t.IsPointer)
@@ -817,7 +808,8 @@ namespace Mono.ApiTools {
 			return null;
 		}
 
-		FieldDefinition [] GetFields (TypeDefinition type) {
+		FieldDefinition [] GetFields (TypeDefinition type)
+		{
 			ArrayList list = new ArrayList ();
 
 			var fields = type.Fields;
@@ -845,7 +837,8 @@ namespace Mono.ApiTools {
 		}
 
 
-		internal PropertyDefinition [] GetProperties (TypeDefinition type, bool fullAPI) {
+		internal PropertyDefinition [] GetProperties (TypeDefinition type, bool fullAPI)
+		{
 			var list = new List<PropertyDefinition> ();
 
 			var t = type;
@@ -855,8 +848,8 @@ namespace Mono.ApiTools {
 					MethodDefinition getMethod = property.GetMethod;
 					MethodDefinition setMethod = property.SetMethod;
 
-					bool hasGetter = (getMethod != null) && MustDocumentMethod (getMethod);
-					bool hasSetter = (setMethod != null) && MustDocumentMethod (setMethod);
+					bool hasGetter = (getMethod is not null) && MustDocumentMethod (getMethod);
+					bool hasSetter = (setMethod is not null) && MustDocumentMethod (setMethod);
 
 					// if neither the getter or setter should be documented, then
 					// skip the property
@@ -875,17 +868,17 @@ namespace Mono.ApiTools {
 				if (t.IsInterface || t.IsEnum)
 					break;
 
-				if (t.BaseType == null || t.BaseType.FullName == "System.Object")
+				if (t.BaseType is null || t.BaseType.FullName == "System.Object")
 					t = null;
 				else
 					t = state.TypeHelper.GetBaseType (t);
 
-			} while (t != null);
+			} while (t is not null);
 
 			return list.ToArray ();
 		}
 
-		private MethodDefinition[] GetMethods (TypeDefinition type, bool fullAPI)
+		private MethodDefinition [] GetMethods (TypeDefinition type, bool fullAPI)
 		{
 			var list = new List<MethodDefinition> ();
 
@@ -910,7 +903,7 @@ namespace Mono.ApiTools {
 					}
 
 					if (t != type && list.Any (l => l.DeclaringType != method.DeclaringType && l.Name == method.Name && l.Parameters.Count == method.Parameters.Count &&
-					                           l.Parameters.SequenceEqual (method.Parameters, new ParameterComparer ())))
+											   l.Parameters.SequenceEqual (method.Parameters, new ParameterComparer ())))
 						continue;
 
 					list.Add (method);
@@ -922,18 +915,17 @@ namespace Mono.ApiTools {
 				if (t.IsInterface || t.IsEnum)
 					break;
 
-				if (t.BaseType == null || t.BaseType.FullName == "System.Object")
+				if (t.BaseType is null || t.BaseType.FullName == "System.Object")
 					t = null;
 				else
 					t = state.TypeHelper.GetBaseType (t);
 
-			} while (t != null);
+			} while (t is not null);
 
 			return list.ToArray ();
 		}
 
-		sealed class ParameterComparer : IEqualityComparer<ParameterDefinition>
-		{
+		sealed class ParameterComparer : IEqualityComparer<ParameterDefinition> {
 			public bool Equals (ParameterDefinition x, ParameterDefinition y)
 			{
 				return x.ParameterType.Name == y.ParameterType.Name;
@@ -966,7 +958,7 @@ namespace Mono.ApiTools {
 			var ctors = type.Methods.Where (m => m.IsConstructor);//type.GetConstructors (flags);
 			foreach (MethodDefinition constructor in ctors) {
 				// we're only interested in public or protected members
-				if (!MustDocumentMethod(constructor))
+				if (!MustDocumentMethod (constructor))
 					continue;
 
 				list.Add (constructor);
@@ -975,7 +967,7 @@ namespace Mono.ApiTools {
 			return (MethodDefinition []) list.ToArray (typeof (MethodDefinition));
 		}
 
-		private EventDefinition[] GetEvents (TypeDefinition type)
+		private EventDefinition [] GetEvents (TypeDefinition type)
 		{
 			ArrayList list = new ArrayList ();
 
@@ -983,7 +975,7 @@ namespace Mono.ApiTools {
 			foreach (EventDefinition eventDef in events) {
 				MethodDefinition addMethod = eventDef.AddMethod;//eventInfo.GetAddMethod (true);
 
-				if (addMethod == null || !MustDocumentMethod (addMethod))
+				if (addMethod is null || !MustDocumentMethod (addMethod))
 					continue;
 
 				list.Add (eventDef);
@@ -993,8 +985,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class FieldData : MemberData
-	{
+	class FieldData : MemberData {
 		public FieldData (XmlWriter writer, FieldDefinition [] members, State state)
 			: base (writer, members, state)
 		{
@@ -1032,7 +1023,7 @@ namespace Mono.ApiTools {
 				stringValue = Convert.ToString (value, CultureInfo.InvariantCulture);
 				//}
 
-				if (stringValue != null)
+				if (stringValue is not null)
 					AddAttribute ("value", stringValue);
 			}
 		}
@@ -1046,8 +1037,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class PropertyData : MemberData
-	{
+	class PropertyData : MemberData {
 		public PropertyData (XmlWriter writer, PropertyDefinition [] members, State state)
 			: base (writer, members, state)
 		{
@@ -1063,8 +1053,8 @@ namespace Mono.ApiTools {
 		{
 			MethodDefinition _get = prop.GetMethod;
 			MethodDefinition _set = prop.SetMethod;
-			bool haveGet = (_get != null && TypeData.MustDocumentMethod(_get));
-			bool haveSet = (_set != null && TypeData.MustDocumentMethod(_set));
+			bool haveGet = (_get is not null && TypeData.MustDocumentMethod (_get));
+			bool haveSet = (_set is not null && TypeData.MustDocumentMethod (_set));
 			haveParameters = haveGet || (haveSet && _set.Parameters.Count > 1);
 			MethodDefinition [] methods;
 
@@ -1092,7 +1082,7 @@ namespace Mono.ApiTools {
 			bool haveParameters;
 			MethodDefinition [] methods = GetMethods ((PropertyDefinition) memberDefinition, out haveParameters);
 
-			if (methods != null && haveParameters) {
+			if (methods is not null && haveParameters) {
 				string parms = Parameters.GetSignature (methods [0].Parameters);
 				if (!string.IsNullOrEmpty (parms))
 					AddAttribute ("params", parms);
@@ -1107,9 +1097,9 @@ namespace Mono.ApiTools {
 			bool haveParameters;
 			MethodDefinition [] methods = GetMethods ((PropertyDefinition) memberDefenition, out haveParameters);
 
-			if (methods == null)
+			if (methods is null)
 				return;
-			
+
 			MethodData data = new MethodData (writer, methods, state);
 			//data.NoMemberAttributes = true;
 			data.DoOutput ();
@@ -1130,8 +1120,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class EventData : MemberData
-	{
+	class EventData : MemberData {
 		public EventData (XmlWriter writer, EventDefinition [] members, State state)
 			: base (writer, members, state)
 		{
@@ -1166,8 +1155,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class MethodData : MemberData
-	{
+	class MethodData : MemberData {
 		bool noAtts;
 
 		public MethodData (XmlWriter writer, MethodDefinition [] members, State state)
@@ -1187,7 +1175,7 @@ namespace Mono.ApiTools {
 		protected override string GetMemberAttributes (MemberReference memberDefenition)
 		{
 			MethodDefinition method = (MethodDefinition) memberDefenition;
-			return ((int)( method.Attributes)).ToString (CultureInfo.InvariantCulture);
+			return ((int) (method.Attributes)).ToString (CultureInfo.InvariantCulture);
 		}
 
 		protected override ICustomAttributeProvider GetAdditionalCustomAttributeProvider (MemberReference member)
@@ -1214,7 +1202,7 @@ namespace Mono.ApiTools {
 			if (mbase.IsStatic)
 				AddAttribute ("static", "true");
 			var baseMethod = state.TypeHelper.GetBaseMethodInTypeHierarchy (mbase);
-			if (baseMethod != null && baseMethod != mbase) {
+			if (baseMethod is not null && baseMethod != mbase) {
 				// This indicates whether this method is an override of another method.
 				// This information is not necessarily available in the api info for any
 				// particular assembly, because a method is only overriding another if
@@ -1225,9 +1213,9 @@ namespace Mono.ApiTools {
 			string rettype = Utils.CleanupTypeName (mbase.MethodReturnType.ReturnType);
 			if (rettype != "System.Void" || !mbase.IsConstructor)
 				AddAttribute ("returntype", (rettype));
-//
-//			if (mbase.MethodReturnType.HasCustomAttributes)
-//				AttributeData.OutputAttributes (writer, mbase.MethodReturnType);
+			//
+			//			if (mbase.MethodReturnType.HasCustomAttributes)
+			//				AttributeData.OutputAttributes (writer, mbase.MethodReturnType);
 		}
 
 		protected override void AddExtraData (MemberReference memberDefenition)
@@ -1237,7 +1225,7 @@ namespace Mono.ApiTools {
 			if (!(memberDefenition is MethodDefinition))
 				return;
 
-			MethodDefinition mbase = (MethodDefinition)memberDefenition;
+			MethodDefinition mbase = (MethodDefinition) memberDefenition;
 
 			ParameterData parms = new ParameterData (writer, mbase.Parameters, state) {
 				HasExtensionParameter = mbase.CustomAttributes.Any (l => l.AttributeType.FullName == "System.Runtime.CompilerServices.ExtensionAttribute")
@@ -1262,8 +1250,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class ConstructorData : MethodData
-	{
+	class ConstructorData : MethodData {
 		public ConstructorData (XmlWriter writer, MethodDefinition [] members, State state)
 			: base (writer, members, state)
 		{
@@ -1278,8 +1265,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class ParameterData : BaseData
-	{
+	class ParameterData : BaseData {
 		private IList<ParameterDefinition> parameters;
 
 		public ParameterData (XmlWriter writer, IList<ParameterDefinition> parameters, State state)
@@ -1297,15 +1283,15 @@ namespace Mono.ApiTools {
 			foreach (ParameterDefinition parameter in parameters) {
 				writer.WriteStartElement ("parameter");
 				AddAttribute ("name", parameter.Name);
-				AddAttribute ("position", parameter.Method.Parameters.IndexOf(parameter).ToString(CultureInfo.InvariantCulture));
-				AddAttribute ("attrib", ((int) parameter.Attributes).ToString());
+				AddAttribute ("position", parameter.Method.Parameters.IndexOf (parameter).ToString (CultureInfo.InvariantCulture));
+				AddAttribute ("attrib", ((int) parameter.Attributes).ToString ());
 
 				string direction = first && HasExtensionParameter ? "this" : "in";
 				first = false;
 
 				var pt = parameter.ParameterType;
 				var brt = pt as ByReferenceType;
-				if (brt != null) {
+				if (brt is not null) {
 					direction = parameter.IsOut ? "out" : "ref";
 					pt = brt.ElementType;
 				}
@@ -1315,7 +1301,7 @@ namespace Mono.ApiTools {
 				if (parameter.IsOptional) {
 					AddAttribute ("optional", "true");
 					if (parameter.HasConstant)
-						AddAttribute ("defaultValue", parameter.Constant == null ? "NULL" : parameter.Constant.ToString ());
+						AddAttribute ("defaultValue", parameter.Constant is null ? "NULL" : parameter.Constant.ToString ());
 				}
 
 				if (direction != "in")
@@ -1328,8 +1314,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class AttributeData
-	{
+	class AttributeData {
 		State state;
 
 		public AttributeData (State state)
@@ -1339,33 +1324,33 @@ namespace Mono.ApiTools {
 
 		public void DoOutput (XmlWriter writer, IList<ICustomAttributeProvider> providers)
 		{
-			if (writer == null)
+			if (writer is null)
 				throw new InvalidOperationException ("Document not set");
 
-			if (providers == null || providers.Count == 0)
+			if (providers is null || providers.Count == 0)
 				return;
-		
-			if (!providers.Any ((provider) => provider != null && provider.HasCustomAttributes))
+
+			if (!providers.Any ((provider) => provider is not null && provider.HasCustomAttributes))
 				return;
 
 			writer.WriteStartElement ("attributes");
 
 			foreach (var provider in providers) {
-				if (provider == null)
+				if (provider is null)
 					continue;
-				
+
 				if (!provider.HasCustomAttributes)
 					continue;
 
 
 				var ass = provider as AssemblyDefinition;
-				if (ass != null && !state.FollowForwarders)
+				if (ass is not null && !state.FollowForwarders)
 					TypeForwardedToData.OutputForwarders (writer, ass, state);
 
 				var attributes = provider.CustomAttributes.
 					Where ((att) => !SkipAttribute (att)).
 					OrderBy ((a) => a.Constructor.DeclaringType.FullName, StringComparer.Ordinal);
-				
+
 				foreach (var att in attributes) {
 					string attName = Utils.CleanupTypeName (att.Constructor.DeclaringType);
 
@@ -1374,7 +1359,7 @@ namespace Mono.ApiTools {
 
 					var attribute_mapping = CreateAttributeMapping (att);
 
-					if (attribute_mapping != null) {
+					if (attribute_mapping is not null) {
 						var mapping = attribute_mapping.Where ((attr) => attr.Key != "TypeId");
 						if (mapping.Any ()) {
 							writer.WriteStartElement ("properties");
@@ -1385,7 +1370,7 @@ namespace Mono.ApiTools {
 								writer.WriteStartElement ("property");
 								writer.WriteAttributeString ("name", name);
 
-								if (o == null) {
+								if (o is null) {
 									writer.WriteAttributeString ("value", "null");
 								} else {
 									string value = o.ToString ();
@@ -1416,7 +1401,7 @@ namespace Mono.ApiTools {
 			PopulateMapping (ref mapping, attribute);
 
 			var constructor = state.TypeHelper.GetMethod (attribute.Constructor);
-			if (constructor == null || !constructor.HasParameters)
+			if (constructor is null || !constructor.HasParameters)
 				return mapping;
 
 			PopulateMapping (ref mapping, constructor, attribute);
@@ -1428,7 +1413,7 @@ namespace Mono.ApiTools {
 		{
 			if (!attribute.HasProperties)
 				return;
-			
+
 			foreach (var named_argument in attribute.Properties) {
 				var name = named_argument.Name;
 				var arg = named_argument.Argument;
@@ -1436,7 +1421,7 @@ namespace Mono.ApiTools {
 				if (arg.Value is CustomAttributeArgument)
 					arg = (CustomAttributeArgument) arg.Value;
 
-				if (mapping == null)
+				if (mapping is null)
 					mapping = new Dictionary<string, object> (StringComparer.Ordinal);
 				mapping.Add (name, GetArgumentValue (arg.Type, arg.Value));
 			}
@@ -1472,9 +1457,9 @@ namespace Mono.ApiTools {
 					if (!argument.HasValue)
 						break;
 
-					if (field_mapping == null)
+					if (field_mapping is null)
 						field_mapping = new Dictionary<FieldReference, int> ();
-					
+
 					if (!field_mapping.ContainsKey (field))
 						field_mapping.Add (field, (int) argument - 1);
 
@@ -1491,7 +1476,7 @@ namespace Mono.ApiTools {
 			Dictionary<PropertyDefinition, FieldReference> property_mapping = null;
 
 			foreach (PropertyDefinition property in type.Properties) {
-				if (property.GetMethod == null)
+				if (property.GetMethod is null)
 					continue;
 				if (!property.GetMethod.HasBody)
 					continue;
@@ -1504,7 +1489,7 @@ namespace Mono.ApiTools {
 					if (field.DeclaringType.FullName != type.FullName)
 						continue;
 
-					if (property_mapping == null)
+					if (property_mapping is null)
 						property_mapping = new Dictionary<PropertyDefinition, FieldReference> ();
 					property_mapping.Add (property, field);
 					break;
@@ -1523,11 +1508,11 @@ namespace Mono.ApiTools {
 			var ca = attribute.ConstructorArguments;
 			switch (constructor.DeclaringType.FullName) {
 			case "System.Runtime.CompilerServices.DecimalConstantAttribute":
-				var dca = constructor.Parameters[2].ParameterType == constructor.Module.TypeSystem.Int32 ?
-					new DecimalConstantAttribute ((byte) ca[0].Value, (byte) ca[1].Value, (int) ca[2].Value, (int) ca[3].Value, (int) ca[4].Value) :
-					new DecimalConstantAttribute ((byte) ca[0].Value, (byte) ca[1].Value, (uint) ca[2].Value, (uint) ca[3].Value, (uint) ca[4].Value);
+				var dca = constructor.Parameters [2].ParameterType == constructor.Module.TypeSystem.Int32 ?
+					new DecimalConstantAttribute ((byte) ca [0].Value, (byte) ca [1].Value, (int) ca [2].Value, (int) ca [3].Value, (int) ca [4].Value) :
+					new DecimalConstantAttribute ((byte) ca [0].Value, (byte) ca [1].Value, (uint) ca [2].Value, (uint) ca [3].Value, (uint) ca [4].Value);
 
-				if (mapping == null)
+				if (mapping is null)
 					mapping = new Dictionary<string, object> (StringComparer.Ordinal);
 				mapping.Add ("Value", dca.Value);
 				return;
@@ -1535,15 +1520,15 @@ namespace Mono.ApiTools {
 				if (ca.Count != 1)
 					break;
 
-				if (mapping == null)
+				if (mapping is null)
 					mapping = new Dictionary<string, object> (StringComparer.Ordinal);
 
-				if (constructor.Parameters[0].ParameterType == constructor.Module.TypeSystem.Boolean) {
-					mapping.Add ("Bindable", ca[0].Value);
-				} else if (constructor.Parameters[0].ParameterType.FullName == "System.ComponentModel.BindableSupport") {
-					if ((int)ca[0].Value == 0)
+				if (constructor.Parameters [0].ParameterType == constructor.Module.TypeSystem.Boolean) {
+					mapping.Add ("Bindable", ca [0].Value);
+				} else if (constructor.Parameters [0].ParameterType.FullName == "System.ComponentModel.BindableSupport") {
+					if ((int) ca [0].Value == 0)
 						mapping.Add ("Bindable", false);
-					else if ((int)ca[0].Value == 1)
+					else if ((int) ca [0].Value == 1)
 						mapping.Add ("Bindable", true);
 					else
 						throw new NotImplementedException ();
@@ -1555,10 +1540,10 @@ namespace Mono.ApiTools {
 			}
 
 			var field_mapping = CreateArgumentFieldMapping (constructor);
-			if (field_mapping != null) { 
+			if (field_mapping is not null) {
 				var property_mapping = CreatePropertyFieldMapping ((TypeDefinition) constructor.DeclaringType);
 
-				if (property_mapping != null) {
+				if (property_mapping is not null) {
 					foreach (var pair in property_mapping) {
 						int argument;
 						if (!field_mapping.TryGetValue (pair.Value, out argument))
@@ -1566,9 +1551,9 @@ namespace Mono.ApiTools {
 
 						var ca_arg = ca [argument];
 						if (ca_arg.Value is CustomAttributeArgument)
-							ca_arg = (CustomAttributeArgument)ca_arg.Value;
+							ca_arg = (CustomAttributeArgument) ca_arg.Value;
 
-						if (mapping == null)
+						if (mapping is null)
 							mapping = new Dictionary<string, object> (StringComparer.Ordinal);
 						mapping.Add (pair.Key.Name, GetArgumentValue (ca_arg.Type, ca_arg.Value));
 					}
@@ -1579,7 +1564,7 @@ namespace Mono.ApiTools {
 		static object GetArgumentValue (TypeReference reference, object value)
 		{
 			var type = reference.Resolve ();
-			if (type == null)
+			if (type is null)
 				return value;
 
 			if (type.IsEnum) {
@@ -1610,7 +1595,7 @@ namespace Mono.ApiTools {
 		static object GetFlaggedEnumValue (TypeDefinition type, object value)
 		{
 			if (value is ulong)
-				return GetFlaggedEnumValue (type, (ulong)value);
+				return GetFlaggedEnumValue (type, (ulong) value);
 
 			long flags = Convert.ToInt64 (value);
 			var signature = new StringBuilder ();
@@ -1687,11 +1672,11 @@ namespace Mono.ApiTools {
 
 			if (!state.TypeHelper.IsPublic (attribute))
 				return true;
-			
+
 			return attribute.Constructor.DeclaringType.Name.EndsWith ("TODOAttribute", StringComparison.Ordinal);
 		}
 
-		public static void OutputAttributes (XmlWriter writer, State state, params ICustomAttributeProvider[] providers)
+		public static void OutputAttributes (XmlWriter writer, State state, params ICustomAttributeProvider [] providers)
 		{
 			var data = new AttributeData (state);
 			data.DoOutput (writer, providers);
@@ -1702,7 +1687,7 @@ namespace Mono.ApiTools {
 
 		public static string GetSignature (IList<ParameterDefinition> infos)
 		{
-			if (infos == null || infos.Count == 0)
+			if (infos is null || infos.Count == 0)
 				return string.Empty;
 
 			var signature = new StringBuilder ();
@@ -1734,8 +1719,7 @@ namespace Mono.ApiTools {
 
 	}
 
-	class TypeReferenceComparer : IComparer<TypeReference>
-	{
+	class TypeReferenceComparer : IComparer<TypeReference> {
 		public static TypeReferenceComparer Default = new TypeReferenceComparer ();
 
 		public int Compare (TypeReference a, TypeReference b)
@@ -1748,8 +1732,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class MemberReferenceComparer : IComparer
-	{
+	class MemberReferenceComparer : IComparer {
 		public static MemberReferenceComparer Default = new MemberReferenceComparer ();
 
 		public int Compare (object a, object b)
@@ -1760,8 +1743,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class PropertyDefinitionComparer : IComparer<PropertyDefinition>
-	{
+	class PropertyDefinitionComparer : IComparer<PropertyDefinition> {
 		public static PropertyDefinitionComparer Default = new PropertyDefinitionComparer ();
 
 		public int Compare (PropertyDefinition ma, PropertyDefinition mb)
@@ -1783,8 +1765,7 @@ namespace Mono.ApiTools {
 		}
 	}
 
-	class MethodDefinitionComparer : IComparer
-	{
+	class MethodDefinitionComparer : IComparer {
 		public static MethodDefinitionComparer Default = new MethodDefinitionComparer ();
 
 		public int Compare (object a, object b)

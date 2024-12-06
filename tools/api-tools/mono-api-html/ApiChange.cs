@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +6,7 @@ using System.Xml.Linq;
 
 namespace Mono.ApiTools {
 
-	class ApiChange
-	{
+	class ApiChange {
 		public string Header;
 		public TextChunk Member = new TextChunk ();
 		public bool Breaking;

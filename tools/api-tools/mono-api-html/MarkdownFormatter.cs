@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Authors
 //    Sebastien Pouliot  <sebastien.pouliot@microsoft.com>
 //
@@ -178,9 +178,9 @@ namespace Mono.ApiTools {
 
 		public override void DiffModification (TextChunk chunk, string old, string @new, bool breaking)
 		{
-			if (old != null && old.Length > 0)
+			if (old is not null && old.Length > 0)
 				DiffAddition (chunk, old, breaking);
-			if (@new != null && @new.Length > 0)
+			if (@new is not null && @new.Length > 0)
 				DiffRemoval (chunk, @new, true);
 		}
 
@@ -194,7 +194,7 @@ namespace Mono.ApiTools {
 
 		public override void Diff (ApiChange apichange)
 		{
-			foreach (var line in apichange.Member.GetStringBuilder (this).ToString ().Split (new[] { Environment.NewLine }, 0)) {
+			foreach (var line in apichange.Member.GetStringBuilder (this).ToString ().Split (new [] { Environment.NewLine }, 0)) {
 				if (line.Contains ("+++")) {
 					output.WriteLine ("-{0}", Clean (line, "+++", "---"));
 					output.WriteLine ("+{0}", Clean (line, "---", "+++"));

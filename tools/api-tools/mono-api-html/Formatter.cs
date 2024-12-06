@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Authors
 //    Sebastien Pouliot  <sebastien@xamarin.com>
 //
@@ -66,7 +66,7 @@ namespace Mono.ApiTools {
 			output.WriteLine (line);
 		}
 
-		public virtual void WriteLine (string format, params object[] arguments)
+		public virtual void WriteLine (string format, params object [] arguments)
 		{
 			output.WriteLine (format, arguments);
 		}

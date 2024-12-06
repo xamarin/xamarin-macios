@@ -42,7 +42,7 @@ namespace Mono.ApiTools {
 		public static string GetAttribute (this XElement self, string name)
 		{
 			var n = self.Attribute (name);
-			if (n == null)
+			if (n is null)
 				return null;
 			return n.Value;
 		}
@@ -51,14 +51,14 @@ namespace Mono.ApiTools {
 		public static string GetObsoleteMessage (this XElement self)
 		{
 			var cattrs = self.Element ("attributes");
-			if (cattrs == null)
+			if (cattrs is null)
 				return null;
 
 			foreach (var ca in cattrs.Elements ("attribute")) {
 				if (ca.GetAttribute ("name") != "System.ObsoleteAttribute")
 					continue;
 				var props = ca.Element ("properties");
-				if (props == null)
+				if (props is null)
 					return String.Empty; // no description
 				foreach (var p in props.Elements ("property")) {
 					if (p.GetAttribute ("name") != "Message")
@@ -69,24 +69,24 @@ namespace Mono.ApiTools {
 			return null;
 		}
 
-		public static IEnumerable<XElement> Descendants (this XElement self, params string[] names)
+		public static IEnumerable<XElement> Descendants (this XElement self, params string [] names)
 		{
 			XElement el = self;
-			if (el == null)
+			if (el is null)
 				return null;
 
 			for (int i = 0; i < names.Length - 1; i++) {
 				el = el.Element (names [i]);
-				if (el == null)
+				if (el is null)
 					return null;
 			}
 			return el.Elements (names [names.Length - 1]);
 		}
 
-		public static List<XElement> DescendantList (this XElement self, params string[] names)
+		public static List<XElement> DescendantList (this XElement self, params string [] names)
 		{
 			var descendants = self.Descendants (names);
-			if (descendants == null)
+			if (descendants is null)
 				return null;
 			return descendants.ToList ();
 		}
@@ -95,7 +95,7 @@ namespace Mono.ApiTools {
 		public static string GetTypeName (this XElement self, string name, State state)
 		{
 			string type = self.GetAttribute (name);
-			if (type == null)
+			if (type is null)
 				return null;
 
 			StringBuilder sb = null;
@@ -210,13 +210,13 @@ namespace Mono.ApiTools {
 		public static MethodAttributes GetMethodAttributes (this XElement element)
 		{
 			var srcAttribs = element.Attribute ("attrib");
-			return (MethodAttributes) (srcAttribs != null ? Int32.Parse (srcAttribs.Value) : 0);
+			return (MethodAttributes) (srcAttribs is not null ? Int32.Parse (srcAttribs.Value) : 0);
 		}
 
 		public static FieldAttributes GetFieldAttributes (this XElement element)
 		{
 			var srcAttribs = element.Attribute ("attrib");
-			return (FieldAttributes) (srcAttribs != null ? Int32.Parse (srcAttribs.Value) : 0);
+			return (FieldAttributes) (srcAttribs is not null ? Int32.Parse (srcAttribs.Value) : 0);
 		}
 	}
 }

@@ -61,7 +61,7 @@ namespace Mono.ApiTools {
 			if (srcType != tgtType) {
 				change.AppendModified (srcType, tgtType, true);
 				change.Append (" ");
-			} else if (srcType != null) {
+			} else if (srcType is not null) {
 				// ctor don't have a return type
 				change.Append (srcType);
 				change.Append (" ");
@@ -72,7 +72,7 @@ namespace Mono.ApiTools {
 		{
 			if (base.Equals (source, target, changes))
 				return true;
-				
+
 			var change = new ApiChange (GetDescription (source), State);
 			change.Header = "Modified " + GroupName;
 			RenderMethodAttributes (source, target, change);
@@ -91,7 +91,7 @@ namespace Mono.ApiTools {
 			var sb = new StringBuilder ();
 
 			var attribs = e.Attribute ("attrib");
-			if (attribs != null) {
+			if (attribs is not null) {
 				var attr = (MethodAttributes) Int32.Parse (attribs.Value);
 				if ((attr & MethodAttributes.Public) != MethodAttributes.Public) {
 					sb.Append ("protected ");
@@ -116,7 +116,7 @@ namespace Mono.ApiTools {
 			string name = e.GetAttribute ("name");
 
 			var r = e.GetTypeName ("returntype", State);
-			if (r != null) {
+			if (r is not null) {
 				// ctor dont' have a return type
 				sb.Append (r).Append (' ');
 			} else {
@@ -129,7 +129,7 @@ namespace Mono.ApiTools {
 			sb.Append (name.Substring (0, name.IndexOf ('(')));
 
 			var genericp = e.Element ("generic-parameters");
-			if (genericp != null) {
+			if (genericp is not null) {
 				var list = new List<string> ();
 				foreach (var p in genericp.Elements ("generic-parameter")) {
 					list.Add (p.GetTypeName ("name", State));
@@ -139,7 +139,7 @@ namespace Mono.ApiTools {
 
 			sb.Append (" (");
 			var parameters = e.Element ("parameters");
-			if (parameters != null) {
+			if (parameters is not null) {
 				var list = new List<string> ();
 				foreach (var p in parameters.Elements ("parameter")) {
 					var param = p.GetTypeName ("type", State);
@@ -149,7 +149,7 @@ namespace Mono.ApiTools {
 					var direction = p.GetAttribute ("direction");
 					if (direction?.Length > 0)
 						param = direction + " " + param;
-						
+
 					list.Add (param);
 				}
 				sb.Append (String.Join (", ", list));

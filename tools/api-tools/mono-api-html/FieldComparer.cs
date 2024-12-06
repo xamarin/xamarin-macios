@@ -155,17 +155,17 @@ namespace Mono.ApiTools {
 				change.Append (" ");
 				change.Append (name);
 
-				if (srcType == "string" && srcValue != null)
+				if (srcType == "string" && srcValue is not null)
 					srcValue = "\"" + srcValue + "\"";
 
-				if (tgtType == "string" && tgtValue != null)
+				if (tgtType == "string" && tgtValue is not null)
 					tgtValue = "\"" + tgtValue + "\"";
 
 				if (srcValue != tgtValue) {
 					change.Append (" = ");
-					if (srcValue == null)
+					if (srcValue is null)
 						srcValue = "null";
-					if (tgtValue == null)
+					if (tgtValue is null)
 						tgtValue = "null";
 
 					// Hardcode that changes to ObjCRuntime.Constants.[Sdk]Version aren't breaking.
@@ -178,7 +178,7 @@ namespace Mono.ApiTools {
 						break;
 					}
 					change.AppendModified (srcValue, tgtValue, breaking);
-				} else if (srcValue != null) {
+				} else if (srcValue is not null) {
 					change.Append (" = ");
 					change.Append (srcValue);
 				}
@@ -201,8 +201,8 @@ namespace Mono.ApiTools {
 				sb.Append (name).Append (" = ").Append (value).Append (',');
 			} else {
 				var attribs = e.Attribute ("attrib");
-				if (attribs != null) {
-					var attr = (FieldAttributes)Int32.Parse (attribs.Value);
+				if (attribs is not null) {
+					var attr = (FieldAttributes) Int32.Parse (attribs.Value);
 					if ((attr & FieldAttributes.Public) != FieldAttributes.Public) {
 						sb.Append ("protected ");
 					} else {
@@ -219,8 +219,8 @@ namespace Mono.ApiTools {
 				string ftype = e.GetTypeName ("fieldtype", State);
 				sb.Append (ftype).Append (' ');
 				sb.Append (name);
-				if (ftype == "string" && e.Attribute ("value") != null) {
-					if (value == null)
+				if (ftype == "string" && e.Attribute ("value") is not null) {
+					if (value is null)
 						sb.Append (" = null");
 					else
 						sb.Append (" = \"").Append (value).Append ('"');
