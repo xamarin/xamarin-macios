@@ -881,6 +881,20 @@ Whether the native http handler should be the default http handler or not.
 
 Default: true for all platforms except macOS.
 
+## ValidateEntitlements
+
+Choose whether entitlements the app requests should be validated.
+
+Valid values for this property:
+
+* `disable`: Validation is disabled.
+* `warn`: Any validation failures are shown as warnings.
+* `error`: Any validation failures are shown as errors. This is the default.
+
+The validation process may not validate every entitlement, nor is it guaranteed to not be overeager.
+
+If the validation fails for entitlements that actually work, please file a new issue.
+
 ## XamMacResourcePrefix
 
 The directory where resources are stored (this prefix will be removed when copying resources to the app bundle).

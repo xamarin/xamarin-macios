@@ -1662,4 +1662,34 @@
     <data name="E7136" xml:space="preserve">
         <value>Unknown resource type: {1}.</value>
     </data>
+
+    <data name="E7137" xml:space="preserve">
+        <value>The app requests the entitlement '{0}' with the value '{1}', but the provisioning profile '{2}' grants it for the value '{3}'.</value>
+        <comment>
+            This may be either a warning or an error, depending on build configuration.
+        </comment>
+    </data>
+
+    <data name="E7138" xml:space="preserve">
+        <value>Invalid value '{0}' for the 'ValidateEntitlements' property. Valid values are: 'disable', 'warn' or 'error'.</value>
+        <comment>
+            The following are literal names and should not be translated: ValidateEntitlements, disable, warn, error
+        </comment>
+    </data>
+
+    <data name="E7139" xml:space="preserve">
+        <value>The app requests the entitlement '{0}', but no provisioning profile has been specified. Please specify the name of the provisioning profile to use with the 'CodesignProvision' property in the project file.</value>
+        <comment>
+            This may be either a warning or an error, depending on build configuration.
+            The following are literal names and should not be translated: CodesignProvision
+        </comment>
+    </data>
+
+    <data name="E7140" xml:space="preserve">
+        <value>The app requests the entitlement '{0}', but the provisioning profile '{1}' does not contain this entitlement.</value>
+        <comment>
+            This may be either a warning or an error, depending on build configuration.
+        </comment>
+    </data>
+
 </root>

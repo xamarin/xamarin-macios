@@ -755,6 +755,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Debug="$(_BundlerDebug)"
+			ValidateEntitlements="$(ValidateEntitlements)"
 			>
 
 			<!-- $(_CompiledEntitlements) will be passed to the native compiler, it's used to embed the entitlements in the executable -->
