@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MonoTouch.Dialog</RootNamespace>
+    <AssemblyName>MonoTouch.Dialog</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+
+    <!-- warning CA1422: This call site is reachable on: '...' unsupported on: '...': MonoTouch.Dialog isn't really maintained, so we're not removing usage of unsupported APIs unless we really have to, so just ignore any such warnings -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+
+    <!-- warning CA1422: This call site is reachable on: '...' obsoleted on: '...': MonoTouch.Dialog isn't really maintained, so we're not removing usage of obsoleted APIs unless we really have to, so just ignore any such warnings -->
+    <NoWarn>$(NoWarn);CA1422</NoWarn>
+
+  </PropertyGroup>
+</Project>
