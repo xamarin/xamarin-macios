@@ -1,8 +1,0 @@
-.vs/
-.DS_Store
-*.pidb
-*.userprefs
-*.log
-bin/
-obj/
-packages
