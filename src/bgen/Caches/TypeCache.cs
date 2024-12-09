@@ -35,6 +35,7 @@ public class TypeCache {
 	/* fundamental */
 	public Type NSObject { get; }
 	public Type INativeObject { get; }
+	public Type NativeObject { get; }
 
 	/* objcruntime */
 	public Type BlockLiteral { get; }
@@ -195,6 +196,7 @@ public class TypeCache {
 		/* fundamental */
 		NSObject = Lookup (platformAssembly, "Foundation", "NSObject");
 		INativeObject = Lookup (platformAssembly, "ObjCRuntime", "INativeObject");
+		NativeObject = Lookup (platformAssembly, "CoreFoundation", "NativeObject");
 
 		/* objcruntime */
 		BlockLiteral = Lookup (platformAssembly, "ObjCRuntime", "BlockLiteral");
