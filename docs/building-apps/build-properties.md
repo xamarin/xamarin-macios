@@ -1,14 +1,14 @@
 ---
 title: .NET for iOS, Mac Catalyst, macOS, and tvOS build properties
-description: .NET for iOS, Mac Catalyst, macOS, and tvOS build properties
-ms.date: 09/19/2024
+description: This document lists all the MSBuild properties specific to .NET for iOS, Mac Catalyst, macOS, and tvOS
+ms.date: 12/05/2024
 ---
 
 # Build properties for iOS, Mac Catalyst, macOS and tvOS
 
 MSBuild properties control the behavior of the
 [targets](build-targets.md).
-They're specified within the project file, for example **MyApp.csproj**, within
+They're specified within the project file, for example *MyApp.csproj*, within
 an MSBuild PropertyGroup.
 
 ## AltoolPath
