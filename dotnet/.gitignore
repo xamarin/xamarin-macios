@@ -2,6 +2,7 @@ tmpdir
 Workloads/Microsoft.NET.Sdk.*/LICENSE
 WorkloadManifest.json
 WorkloadManifest.targets
+WorkloadDependencies.json
 nupkgs
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.ImplicitNamespaceImports.props
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props
