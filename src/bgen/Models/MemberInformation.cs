@@ -54,7 +54,7 @@ public class MemberInformation {
 	// know whether the code is to call the internal static method implementing a
 	// protocol member (in which case this property is true). See also is_protocol_implementation_method.
 	public bool call_protocol_implementation_method;
-	public string is_forced_owns;
+	public bool is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
 	public bool generate_is_async_overload;
 

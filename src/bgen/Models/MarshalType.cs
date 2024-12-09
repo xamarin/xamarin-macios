@@ -9,14 +9,14 @@ public class MarshalType {
 	public string CreateFromRet { get; }
 	public string? ClosingCreate { get; }
 
-	public MarshalType (Type t, string? encode = null, string? fetch = null, string? create = null, string? closingCreate = ")")
+	public MarshalType (Type t, string? encode = null, string? fetch = null, string? create = null, string? closingCreate = ", %OWNS%)")
 	{
 		Type = t;
 		Encoding = encode ?? Generator.NativeHandleType;
 		ParameterMarshal = fetch ?? "{0}.Handle";
 		if (create is null) {
 			CreateFromRet = $"Runtime.GetINativeObject<global::{t.FullName}> (";
-			ClosingCreate = ", false)!";
+			ClosingCreate = ", %OWNS%)!";
 		} else {
 			CreateFromRet = create;
 			ClosingCreate = closingCreate;
