@@ -461,8 +461,8 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		/analyzer:$(ROSLYN_GENERATOR) \
 		/analyzer:$(ROSLYN_ANALYZER) \
 		/generatedfilesout:$($(2)_DOTNET_BUILD_DIR)/generated-sources \
-		/reportanalyzer:$(ROSLYN_GENERATOR) \
-		/reportanalyzer:$(ROSLYN_ANALYZER) \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_GENERATOR),) \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_ANALYZER),) \
 		-unsafe \
 		-optimize \
 		$$(ARGS_$(1)) \

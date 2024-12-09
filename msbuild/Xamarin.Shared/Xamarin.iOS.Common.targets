@@ -29,61 +29,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_PreparedResourceRules></_PreparedResourceRules>
 	</PropertyGroup>
 
-	<!-- Insert our app bundle generation step -->
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<BuildDependsOn>
-			BuildOnlySettings;
-			PrepareForBuild;
-			_CollectBundleResources;
-			_OptimizePngImages;
-			_OptimizePropertyLists;
-			_OptimizeLocalizationFiles;
-			_PackLibraryResources;
-			_UnpackLibraryResources;
-			$(BuildDependsOn);
-			_GenerateBundleName;
-			_CleanUploaded;
-			_CreateAppBundle;
-			Codesign;
-			CreateIpa;
-			Archive;
-		</BuildDependsOn>
-
-		<CleanDependsOn>
-			$(CleanDependsOn);
-			_ComputeTargetArchitectures;
-			_CleanUploaded;
-		</CleanDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<CreateAppBundleDependsOn>
-			$(CreateAppBundleDependsOn);
-			_DetectSigningIdentity;
-			_CopyResourcesToBundle;
-			_CreateAssetPackManifest;
-			_SmeltMetal;
-			_TemperMetal;
-			_CompileCoreMLModels;
-			_PrepareResourceRules;
-			_CompileEntitlements;
-			_WriteAppManifest;
-			_GetNativeExecutableName;
-			_ParseBundlerArguments;
-			_CompileToNative;
-			_CompileITunesMetadata;
-			_CollectITunesArtwork;
-			_CopyITunesArtwork;
-			_CreateDebugSettings;
-			_CreateDebugConfiguration;
-			_CreatePkgInfo;
-			_CopyAppExtensionsToBundle;
-			_CopyWatchOS2AppsToBundle;
-			_PostProcessAppBundle;
-			_ValidateAppBundle;
-		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
 	<PropertyGroup>
 		<CoreCodesignDependsOn>
 			$(_CodesignAppBundleDependsOn);
