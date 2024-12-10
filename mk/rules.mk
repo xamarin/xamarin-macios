@@ -64,9 +64,6 @@ $(1)_CFLAGS += \
 	-Wno-unused-command-line-argument
 
 $(1)_SWIFTFLAGS += $(SWIFTFLAGS) -sdk $($(1)_SDK)
-
-flags::
-	@printf "$(1) = $(2) = $(3) = \n\t$(1)_CFLAGS=$$($(1)_CFLAGS)\n\t$(1)_SWIFTFLAGS=$$($(1)_SWIFTFLAGS)\n"
 endef
 $(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(eval $(call FlagsTemplate1,$(xcframeworkPlatform),$(DOTNET_$(xcframeworkPlatform)_PLATFORM),$(shell echo $(DOTNET_$(xcframeworkPlatform)_PLATFORM) | tr 'a-z' 'A-Z'))))
 
@@ -78,9 +75,6 @@ define FlagsTemplate2
 $(4)_CFLAGS += $$($(1)_CFLAGS) -arch $(DOTNET_$(4)_ARCHITECTURES) $(CLANG_$(4)_VERSION_MIN)
 $(4)_OBJC_FLAGS += $$($(4)_CFLAGS) $(OBJC_CFLAGS)
 $(4)_SWIFTFLAGS += $$($(1)_SWIFTFLAGS) $(SWIFTC_$(4)_VERSION_MIN)
-
-flags::
-	@printf "$(1) = $(2) = $(3) = $(4)\n\t$(4)_CFLAGS=$$($(4)_CFLAGS)\n\t$(4)_OBJC_FLAGS=$$($(4)_OBJC_FLAGS)\n\t$(4)_SWIFTFLAGS=$$($(4)_SWIFTFLAGS)\n"
 endef
 $(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(foreach rid,$(XCFRAMEWORK_$(xcframeworkPlatform)_RUNTIME_IDENTIFIERS),$(eval $(call FlagsTemplate2,$(xcframeworkPlatform),$(DOTNET_$(xcframeworkPlatform)_PLATFORM),$(shell echo $(DOTNET_$(xcframeworkPlatform)_PLATFORM) | tr 'a-z' 'A-Z'),$(rid)))))
 
