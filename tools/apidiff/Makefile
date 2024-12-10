@@ -18,6 +18,7 @@ ifeq ($(OUTPUT_DIR),)
 OUTPUT_DIR=output
 endif
 
+API_TOOLS_PATH=$(TOP)/tools/api-tools
 MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/$(DOTNET_TFM)/mono-api-info.dll
 MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/$(DOTNET_TFM)/mono-api-html.dll
 
