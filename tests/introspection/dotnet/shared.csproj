@@ -18,6 +18,9 @@
 
     <Nullable>enable</Nullable>
 
+    <!-- warnings IL2026;IL2057;IL2059;IL2070;IL2075;IL2096: trimmability warnings. The introspection tests aren't trimmable (we set MtouchLink=None), so just ignore these -->
+    <NoWarn>$(NoWarn);IL2026;IL2057;IL2059;IL2070;IL2075;IL2096</NoWarn>
+
     <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
     <NoWarn>$(NoWarn);CA1422</NoWarn>
 
