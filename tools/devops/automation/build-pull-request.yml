@@ -141,6 +141,10 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
+  - repository: macios-adr
+    type: git
+    name: macios-adr
+
   - repository: CustomPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/MicroBuildTemplate
