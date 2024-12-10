@@ -32,6 +32,9 @@ using ARKit;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	public abstract class ApiCtorInitTest : ApiBaseTest {
@@ -97,10 +100,6 @@ namespace Introspection {
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
 				return true;
-#if !NET // NSMenuView does not exist in .NET
-			case "NSMenuView":
-				return TestRuntime.IsVM; // skip on vms due to hadware problems
-#endif // !NET
 			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
 			case "MPSCnnNeuronPReLU":
 			case "MPSCnnNeuronHardSigmoid":
@@ -132,11 +131,7 @@ namespace Introspection {
 				return TestRuntime.IsSimulator;
 #endif
 			case "AVSpeechSynthesisVoice": // Calling description crashes the test
-#if __WATCHOS__
-				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
-#else
 				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
-#endif
 			case "SKView":
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)

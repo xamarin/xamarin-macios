@@ -97,8 +97,7 @@ namespace Xharness {
 		[Label ("tvos")]
 		tvOS = 1 << 10,
 		// 1 << 11 is unused
-		[Label ("dotnet")]
-		Dotnet = 1 << 12,
+		// 1 << 12 is unused
 		// 1 << 13 is unused
 		[Label ("all")]
 		All = 0xFFFFFFFF,

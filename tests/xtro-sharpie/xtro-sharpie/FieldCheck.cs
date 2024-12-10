@@ -27,6 +27,7 @@ namespace Extrospection {
 	public class FieldCheck : BaseVisitor {
 
 		Dictionary<string, MemberReference> fields = new Dictionary<string, MemberReference> ();
+		HashSet<string> matchedFields = new ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -88,17 +89,17 @@ namespace Extrospection {
 			if (!fields.TryGetValue (name, out var mr)) {
 				if (!decl.IsDeprecated ())
 					Log.On (framework).Add ($"!missing-field! {name} not bound");
-			} else
-				fields.Remove (name);
+			} else {
+				matchedFields.Add (name);
+			}
 		}
 
 		public override void End ()
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
-			foreach (var kvp in fields) {
-				var extra = kvp.Key;
-				var framework = Helpers.GetFramework (kvp.Value);
-				Log.On (framework).Add ($"!unknown-field! {extra} bound");
+			foreach (var key in fields.Keys.Except (matchedFields)) {
+				var framework = Helpers.GetFramework (fields [key]);
+				Log.On (framework).Add ($"!unknown-field! {key} bound");
 			}
 		}
 	}

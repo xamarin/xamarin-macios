@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -10,7 +11,57 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Cecil.Tests {
-	public class ConstructorTest {
+	public partial class ConstructorTest {
+		static bool TryFindBaseConstructorCalled (MethodDefinition ctor, [NotNullWhen (true)] out MethodReference? ctorCalled, [NotNullWhen (false)] out string? failureReason)
+		{
+			failureReason = null;
+			ctorCalled = null;
+
+			var instructions = ctor.Body.Instructions;
+			foreach (var instr in instructions) {
+				if (instr.OpCode != OpCodes.Call)
+					continue;
+
+				var target = ((MethodReference) instr.Operand).Resolve ();
+				if (target is null) {
+					failureReason = $"Unable to resolve base method call: {instr}";
+					return false;
+				}
+
+				if (!target.IsConstructor)
+					continue;
+
+				if (target.IsStatic)
+					continue;
+
+				if (target.DeclaringType == ctor.DeclaringType) {
+					ctorCalled = target;
+					return true; // forwarding to another ctor in the same class.
+				}
+
+				if (target.DeclaringType != ctor.DeclaringType.BaseType.Resolve ()) {
+					failureReason = $"Not immediate base type? calling {target.DeclaringType} from {ctor.DeclaringType} whose base type is {ctor.DeclaringType.BaseType}";
+					return false;
+				}
+
+				ctorCalled = target;
+				return true;
+			}
+
+			// Ctor just throws - this is still a failure.
+			if (instructions.Count == 4 &&
+				instructions [0].OpCode == OpCodes.Ldarg_0 &&
+				instructions [1].OpCode == OpCodes.Ldstr &&
+				instructions [2].OpCode == OpCodes.Newobj &&
+				instructions [3].OpCode == OpCodes.Throw) {
+				failureReason = $"A ctor must call the NSObjectFlag base ctor even if it only throws an exception.";
+				return false;
+			}
+
+			failureReason = $"No base ctor call found?\n\t{string.Join ("\n\t", ctor.Body.Instructions.Select (v => v.ToString ()))}";
+			return false;
+		}
+
 		static bool IsMatch (MethodDefinition ctor, params (string Namespace, string Name) [] parameterTypes)
 		{
 			if (!ctor.IsConstructor)
@@ -427,6 +478,82 @@ namespace Cecil.Tests {
 				}
 			}
 			Assert.That (failures, Is.Empty, "No failures");
+		}
+
+		[Test]
+		public void NonDefaultCtorDoesNotCallBaseDefaultCtor ()
+		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
+			var failures = new Dictionary<string, FailureWithMessageAndLocation> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				foreach (var type in info.Assembly.MainModule.Types) {
+					if (!type.IsClass || !type.HasMethods)
+						continue;
+
+					if (!SubclassesNSObject (type))
+						continue;
+
+					foreach (var ctor in type.Methods.Where (v => v.HasBody && !v.IsStatic && v.IsConstructor && v.HasParameters && v.Parameters.Count > 0)) {
+						if (!TryFindBaseConstructorCalled (ctor, out var ctorCalled, out var failureMessage)) {
+							var msg = $"{ctor.RenderMethod ()}: {failureMessage}";
+							// Uncomment this to make finding and fixing known failures easier
+							// Console.WriteLine ($"{GetLocation (ctor)}{msg}");
+							failures [ctor.RenderMethod ()] = new FailureWithMessageAndLocation (msg, GetLocation (ctor));
+							continue;
+						}
+
+						if (!ctorCalled.HasParameters || ctorCalled.Parameters.Count == 0) {
+							var msg = $"{ctor.RenderMethod ()}: Calls the base class' default constructor";
+							// Uncomment this to make finding and fixing known failures easier
+							// Console.WriteLine ($"{GetLocation (ctor)}{msg}");
+							failures [ctor.RenderMethod ()] = new FailureWithMessageAndLocation (msg, GetLocation (ctor));
+							continue;
+						}
+					}
+				}
+			}
+			Helper.AssertFailures (failures,
+				knownFailuresNonDefaultCtorDoesNotCallBaseDefaultCtor,
+				nameof (knownFailuresNonDefaultCtorDoesNotCallBaseDefaultCtor),
+				"Non-default ctors that call the base class' default ctor.", (v) => $"{v.Location}: {v.Message}");
+		}
+
+		[Test]
+		public void NoConstructorsWithOutErrorArguments ()
+		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
+			var failures = new Dictionary<string, FailureWithMessageAndLocation> ();
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				foreach (var type in info.Assembly.MainModule.Types) {
+					if (!type.IsClass || !type.HasMethods)
+						continue;
+
+					if (!SubclassesNSObject (type))
+						continue;
+
+					foreach (var ctor in type.Methods.Where (v => !v.IsStatic && v.IsConstructor && v.HasParameters && v.Parameters.Count > 0)) {
+						// Presumably obsolete members have been obsoleted for a reason, so assume there's a correctly bound version.
+						if (ctor.IsObsolete ())
+							continue;
+
+						foreach (var param in ctor.Parameters) {
+							if (param.ParameterType is not ByReferenceType)
+								continue;
+							if (!param.ParameterType.GetElementType ().Is ("Foundation", "NSError"))
+								continue;
+							var msg = $"{ctor.RenderMethod ()}: This constructor has an 'out NSError' parameter. Such constructors should be bound as factory methods instead.";
+							failures [ctor.RenderMethod ()] = new FailureWithMessageAndLocation (msg, GetLocation (ctor));
+							continue;
+						}
+					}
+				}
+			}
+			Helper.AssertFailures (failures,
+				knownFailuresCtorsWithOutNSErrorParameter,
+				nameof (knownFailuresCtorsWithOutNSErrorParameter),
+				"Constructors with 'out NSError' parameters", (v) => $"{v.Location}: {v.Message}");
 		}
 	}
 }

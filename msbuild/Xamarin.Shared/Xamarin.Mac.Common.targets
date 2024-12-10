@@ -29,38 +29,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_PreparedResourceRules></_PreparedResourceRules>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<BuildDependsOn>
-			BuildOnlySettings;
-			_CollectBundleResources;
-			_PackLibraryResources;
-			_UnpackLibraryResources;
-			$(BuildDependsOn);
-			_GenerateBundleName;
-			_CreateAppBundle;
-			Codesign;
-			_CreateInstaller;
-			Archive;
-		</BuildDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<CreateAppBundleDependsOn Condition="'$(UsingAppleNETSdk)' != 'true'">
-			$(CreateAppBundleDependsOn);
-			_DetectSigningIdentity;
-			_CopyResourcesToBundle;
-			_SmeltMetal;
-			_TemperMetal;
-			_CompileEntitlements;
-			_WriteAppManifest;
-			_ParseBundlerArguments;
-			_CompileToNative;
-			_CreatePkgInfo;
-			_CopyAppExtensionsToBundle;
-			_PostProcessAppBundle;
-		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
@@ -81,51 +49,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Condition = "'$(UsingAppleNETSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
-
-		<Mmp
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
-			OutputPath="$(OutputPath)"
-			ApplicationName="$(_AppBundleName)"
-			MainAssembly="$(OutputPath)$(TargetName)$(TargetExt)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			Architecture="$(TargetArchitectures)"
-			ArchiveSymbols="$(MonoSymbolArchive)"
-			CustomBundleName="$(_CustomBundleName)"
-			LinkMode="$(_LinkMode)"
-			Debug="$(_BundlerDebug)"
-			HttpClientHandler="$(HttpClientHandler)"
-			I18n="$(I18n)"
-			Profiling="$(Profiling)"
-			ExtraArgs="$(AppBundleExtraOptions)"
-			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
-			References="@(ReferencePath);@(_BundlerReferencePath)"
-			Registrar="$(Registrar)"
-			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
-			SdkRoot="$(_SdkDevPath)"
-			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
-			SdkVersion="$(_SdkVersion)"
-			IsAppExtension="$(IsAppExtension)"
-			IsXPCService="$(IsXPCService)"
-			EnableSGenConc="$(EnableSGenConc)"
-			AotMode="$(AOTMode)"
-			HybridAOT="$(HybridAOT)"
-			ExplicitAotAssemblies="$(ExplicitAotAssemblies)"
-			StandardOutputImportance="High"
-			XamarinSdkRoot="$(_XamarinSdkRoot)"
-			>
-		</Mmp>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="$(DeviceSpecificOutputPath)bundler.stamp"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
+		<Error Text="Support for Xamarin projects has ended. Please migrate your project to .NET" />
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />

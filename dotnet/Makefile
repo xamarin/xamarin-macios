@@ -58,7 +58,7 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTarget
 ifdef INCLUDE_HOTRESTART
 
 iOS_WINDOWS_NUGET_TARGETS += \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/Xamarin.PreBuilt.iOS.app.zip \
 
 endif
 
@@ -221,6 +221,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile $(GENERATE_VS_WORKLOAD)
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
 		--tfm $(DOTNET_TFM) \
+		--xcode $(XCODE_VERSION) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
@@ -500,9 +501,7 @@ install-system:
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
 	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
-ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
-endif
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR)
@@ -512,7 +511,7 @@ clean-local::
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
+$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
 

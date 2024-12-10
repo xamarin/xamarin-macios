@@ -12,6 +12,7 @@ var shorten = new Dictionary<string, string> ();
 var platforms = new List<(string, string)> ();
 var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
+var xcodeName = string.Empty;
 var outputPath = string.Empty;
 
 var queue = new Queue<string> (args);
@@ -37,6 +38,9 @@ while (queue.Any ()) {
 	case "--tfm":
 		tfm = queue.Dequeue ();
 		break;
+	case "--xcode":
+		xcodeName = $"xcode{queue.Dequeue ()}";
+		break;
 	default:
 		Console.Error.WriteLine ($"Unknown argument: {arg}");
 		return 1;
@@ -48,7 +52,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"  <PropertyGroup>");
 	var allPlatforms = string.Join (".", platforms.Select (v => v.Item1).OrderBy (v => v));
-	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}</TargetName>");
+	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}.{xcodeName}</TargetName>");
 	// Find the iOS version, otherwise use the version of the first platform listed.
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;

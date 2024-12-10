@@ -913,7 +913,6 @@
 !extra-null-allowed! 'Foundation.NSUrlSessionDownloadTask Foundation.NSUrlSession::CreateDownloadTaskFromResumeData(Foundation.NSData,Foundation.NSUrlDownloadSessionResponse)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Boolean Foundation.NSFileManager::Remove(Foundation.NSUrl,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Boolean Foundation.NSFileManager::Remove(System.String,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Boolean Foundation.NSFormatter::IsPartialStringValid(System.String&,Foundation.NSRange&,System.String,Foundation.NSRange,System.String&)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSCoder::EncodeRoot(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSOperationQueue::AddOperation(Foundation.NSOperation)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSOperationQueue::AddOperations(Foundation.NSOperation[],System.Boolean)' has a extraneous [NullAllowed] on parameter #0
