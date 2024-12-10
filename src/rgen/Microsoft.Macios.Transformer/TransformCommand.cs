@@ -4,7 +4,8 @@ namespace Microsoft.Macios.Transformer;
 
 public class TransformCommand : Command {
 
-	public TransformCommand () : base ("rgen-transform", "command to convert outdated bindings to be rgen compatible") {
+	public TransformCommand () : base ("rgen-transform", "command to convert outdated bindings to be rgen compatible")
+	{
 		var input = new Option<string> (["--input", "-i"], "input directory to search for bgen bindings") {
 			//single file support?
 			IsRequired = true
@@ -25,12 +26,13 @@ public class TransformCommand : Command {
 			}
 		});
 		// this.AddOption (new Option<bool> (new string [] { "--verbose", "-v" }, "verbose output"));
-		
+
 		this.SetHandler (Execute);
 	}
 
-    public async Task Execute () {
-        // placeholder for loading/parsing/transforming/writing components
-        await Task.CompletedTask;
-    }
+	public async Task Execute ()
+	{
+		// placeholder for loading/parsing/transforming/writing components
+		await Task.CompletedTask;
+	}
 }
