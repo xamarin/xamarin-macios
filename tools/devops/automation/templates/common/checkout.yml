@@ -38,6 +38,7 @@ steps:
 - checkout: macios-adr
   clean: true
   fetchDepth: 0
+  persistCredentials: true
   fetchTags: false
 
 - checkout: yaml-templates
