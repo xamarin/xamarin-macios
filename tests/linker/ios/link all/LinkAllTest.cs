@@ -279,8 +279,10 @@ namespace LinkAll {
 
 		[Test]
 #if NET
+#pragma warning disable CA1418 // The platform '*' is not a known platform name
 		[SupportedOSPlatform ("none")]
 		[UnsupportedOSPlatform ("none)")]
+#pragma warning restore CA1418
 #else
 		[Introduced (PlatformName.None)]
 		[Deprecated (PlatformName.None)]
@@ -365,7 +367,9 @@ namespace LinkAll {
 			string filename = FindAssemblyPath ();
 #if NET
 			// new behavior across all platforms, see https://github.com/dotnet/runtime/issues/50529
+#pragma warning disable SYSLIB0018 // 'Assembly.ReflectionOnlyLoadFrom(string)' is obsolete: 'ReflectionOnly loading is not supported and throws PlatformNotSupportedException.'
 			Assert.Throws<PlatformNotSupportedException> (() => Assembly.ReflectionOnlyLoadFrom (filename));
+#pragma warning restore SYSLIB0018
 #else
 			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
 #endif
