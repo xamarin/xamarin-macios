@@ -15,7 +15,7 @@
 			https://dev.azure.com/azure-public/vside/_artifacts/feed/xamarin-impl/NuGet/Xamarin.Messaging.Client/
 
 		-->
-		<MessagingVersion Condition="'$(MessagingVersion)' == ''">[2.2.10]</MessagingVersion>
+		<MessagingVersion Condition="'$(MessagingVersion)' == ''">[2.2.13]</MessagingVersion>
 		<HotRestartVersion>[1.1.7]</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
