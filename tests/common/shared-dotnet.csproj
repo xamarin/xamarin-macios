@@ -91,7 +91,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
-		<ProjectReference Include="$(MSBuildThisFileDirectory)\Touch.Unit\Touch.Client\Touch.Client.dotnet.csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)\Touch.Unit\Touch.Client\Touch.Client.$(_PlatformName).csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />

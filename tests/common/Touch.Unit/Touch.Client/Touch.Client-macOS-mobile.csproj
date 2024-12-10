@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Touch.Client</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>Touch.Client</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <DefineConstants>NUNITLITE_NUGET;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\ExcludedCategoryFilter.cs">
+      <Link>ExcludedCategoryFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\HttpTextWriter.cs">
+      <Link>HttpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\NUnitOutputTextWriter.cs">
+      <Link>NUnitOutputTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\TcpTextWriter.cs">
+      <Link>TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\TestRocks.cs">
+      <Link>TestRocks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\TouchOptions.cs">
+      <Link>TouchOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\TouchRunner.cs">
+      <Link>TouchRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NUnitLite\TouchRunner\MacRunner.cs">
+      <Link>MacRunner.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnitLite">
+      <Version>3.12.0</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter">
+      <Version>3.6.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

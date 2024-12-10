@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F611ED96-54B5-4975-99BB-12F50AF95936}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Touch.Client</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>Touch.Client</AssemblyName>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <DefineConstants>NUNITLITE_NUGET;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.MacCatalyst" />
+    <Reference Include="Xamarin.iOS" /> <!-- This is necessary for the MonoTouch.Dialog-1 NuGet, since it references Xamarin.iOS.dll -->
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\NUnitLite\TouchRunner\ExcludedCategoryFilter.cs">
+      <Link>ExcludedCategoryFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\HttpTextWriter.cs">
+      <Link>HttpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\NUnitOutputTextWriter.cs">
+      <Link>NUnitOutputTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TcpTextWriter.cs">
+      <Link>TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TestCaseElement.cs">
+      <Link>TestCaseElement.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TestElement.cs">
+      <Link>TestElement.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TestResultElement.cs">
+      <Link>TestResultElement.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TestRocks.cs">
+      <Link>TestRocks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TestSuiteElement.cs">
+      <Link>TestSuiteElement.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TouchOptions.cs">
+      <Link>TouchOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TouchRunner.cs">
+      <Link>TouchRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NUnitLite\TouchRunner\TouchViewController.cs">
+      <Link>TouchViewController.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- I don't know why the NUnit package reference doesn't end up referencing nunit.framework.dll, and I couldn't figure out why, so instead reference nunit.framework.dll directly -->
+    <PackageReference Include="NUnit" GeneratePathProperty="true">
+      <Version>3.12.0</Version>
+    </PackageReference>
+    <Reference Include="$(PkgNUnit)\lib\netstandard2.0\nunit.framework.dll" />
+    <PackageReference Include="NUnitLite">
+      <Version>3.12.0</Version>
+    </PackageReference>
+    <PackageReference Include="MonoTouch.Dialog" CopyLocal="true" IncludeAssets="all">
+      <Version>2.0.0-pre1</Version>
+      <IncludeAssets>all</IncludeAssets>
+      <CopyLocal>true</CopyLocal>
+    </PackageReference>
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter">
+      <Version>3.6.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <!-- Make sure MonoTouch.Dialog ends up in the output folder -->
+  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(Reference)" Condition="'%(Reference.Filename)' == 'MonoTouch.Dialog'" />
+    </ItemGroup>
+  </Target>
+
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\MacCatalyst\Xamarin.MacCatalyst.CSharp.targets" />
+</Project>
