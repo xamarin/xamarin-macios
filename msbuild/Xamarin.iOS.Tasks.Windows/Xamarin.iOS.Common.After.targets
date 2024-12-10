@@ -396,11 +396,13 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				ToolPath="$(_DotNetHostDirectory)"
 				ILLinkPath="$(_RemoteILLinkPath)"
 				LinkerItemsDirectory="$(_LinkerItemsDirectory)"
+				LinkerCacheDirectory="$(_LinkerCacheDirectory)"
 				DebugSymbols="@(_ILLinkDebugSymbols)"
 				ContinueOnError="ErrorAndContinue">
 			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
 			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
+			<Output TaskParameter="LinkerCacheItems" ItemName="_XamarinLinkerCacheItems" />
 		</Xamarin.MacDev.Tasks.ILLink>
 
 		<PropertyGroup>

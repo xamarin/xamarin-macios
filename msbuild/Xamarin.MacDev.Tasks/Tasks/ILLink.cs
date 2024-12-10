@@ -18,8 +18,14 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string LinkerItemsDirectory { get; set; } = string.Empty;
 
+		[Required]
+		public string LinkerCacheDirectory { get; set; } = string.Empty;
+
 		[Output]
 		public ITaskItem [] LinkerOutputItems { get; set; } = Array.Empty<ITaskItem> ();
+
+		[Output]
+		public ITaskItem [] LinkerCacheItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
 		public ITaskItem [] LinkedItems { get; set; } = Array.Empty<ITaskItem> ();
@@ -32,12 +38,17 @@ namespace Xamarin.MacDev.Tasks {
 			var result = base.Execute ();
 
 			var linkerItems = new List<ITaskItem> ();
+			var linkerCacheItems = new List<ITaskItem> ();
 			var linkedItems = new List<ITaskItem> ();
 
 			if (result) {
 				// Adds all the files in the linker-items dir
 				foreach (var item in Directory.EnumerateFiles (LinkerItemsDirectory)) {
 					linkerItems.Add (new TaskItem (item));
+				}
+
+				foreach (var item in Directory.EnumerateFiles (LinkerCacheDirectory)) {
+					linkerCacheItems.Add (new TaskItem (item));
 				}
 
 				// Adds all the files in the linked output dir
@@ -47,6 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			LinkerOutputItems = linkerItems.ToArray ();
+			LinkerCacheItems = linkerCacheItems.ToArray ();
 			LinkedItems = linkedItems.ToArray ();
 
 			return result;
