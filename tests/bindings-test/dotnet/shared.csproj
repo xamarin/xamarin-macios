@@ -52,7 +52,7 @@
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
     <Compile Include="$(BindingsTestDirectory)\ProtocolTest.cs" />
-    <Compile Include="$(RootTestsDirectory)\monotouch-test\ObjCRuntime\Registrar2.cs">
+    <Compile Include="$(RootTestsDirectory)\monotouch-test\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
     <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
