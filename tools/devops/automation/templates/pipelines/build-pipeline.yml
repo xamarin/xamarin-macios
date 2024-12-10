@@ -158,6 +158,7 @@ resources:
   - repository: macios-adr
     type: git
     name: macios-adr
+    ref: refs/heads/main
 
 variables:
 - ${{ if eq(parameters.isPR, false) }}:

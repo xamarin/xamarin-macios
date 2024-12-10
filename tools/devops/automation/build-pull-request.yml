@@ -144,6 +144,7 @@ resources:
   - repository: macios-adr
     type: git
     name: macios-adr
+    ref: refs/heads/main
 
   - repository: CustomPipelineTemplates
     type: git

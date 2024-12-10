@@ -212,10 +212,7 @@ resources:
     - repository: macios-adr
       type: git
       name: macios-adr
-
-    - repository: macios-adr
-      type: git
-      name: macios-adr
+      ref: refs/heads/main
 
 variables:
   - template: ../variables/common.yml

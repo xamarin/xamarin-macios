@@ -69,6 +69,7 @@ resources:
     - repository: macios-adr
       type: git
       name: macios-adr
+      ref: refs/heads/main
 
     - repository: release-scripts
       type: github
