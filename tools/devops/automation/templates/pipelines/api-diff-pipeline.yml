@@ -50,6 +50,10 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
+  - repository: macios-adr
+    type: git
+    name: macios-adr
+
 variables:
 - template: ../variables/common.yml
 - name: DisablePipelineConfigDetector
