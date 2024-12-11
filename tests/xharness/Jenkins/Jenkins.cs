@@ -66,7 +66,6 @@ namespace Xharness.Jenkins {
 		}
 
 		public List<ITestTask> Tasks { get; private set; } = new List<ITestTask> ();
-		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 		public IResourceManager ResourceManager => resourceManager;
@@ -108,177 +107,29 @@ namespace Xharness.Jenkins {
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
 
-		Task PopulateTasksAsync ()
+		async Task PopulateTasksAsync ()
 		{
-			// Missing:
-			// api-diff
-
 			testSelector.SelectTests (TestSelection);
 
 			DeviceLoader.LoadAllAsync ().DoNotAwait ();
 
-			var simTasksFactory = new RunSimulatorTasksFactory ();
-			var loadsim = simTasksFactory.CreateAsync (this, processManager, testVariationsFactory)
-				.ContinueWith ((v) => {
-					if (v.Status == TaskStatus.RanToCompletion) {
-						Console.WriteLine ("Simulator tasks created");
-						Tasks.AddRange (v.Result);
-					} else {
-						Console.WriteLine ($"Failed to create simulator tasks: {v.Exception}");
-					}
-				});
-
-			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
-
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
 
 			// all factories are enumerators \o/ 
-			var testFactories = new IEnumerable<AppleTestTask> [] {
-				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
-				new NUnitTestTasksEnumerable (this, processManager)
+			var testFactories = new TaskFactory [] {
+				new RunSimulatorTasksFactory (this, processManager, testVariationsFactory),
+				new NUnitTestTasksEnumerable (this, processManager, testVariationsFactory),
+				new RunDeviceTasksFactory (this, processManager, testVariationsFactory),
+				new MacTestTasksFactory (this, processManager, testVariationsFactory, crashReportSnapshotFactory),
 			};
 
-			// add all tests defined by the factory
-			foreach (var f in testFactories) {
-				Tasks.AddRange (f);
-			}
+			// Start creating all the tasks in parallel
+			var tasks = testFactories.Select (v => v.CreateTasksAsync ()).ToArray ();
+			
+			// Wait for everything to finish
+			await Task.WhenAll (tasks);
 
-			// individual special tasks
-			var buildDotNetXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Xtro",
-				Target = "dotnet-wrench",
-				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
-				Timeout = TimeSpan.FromMinutes (15),
-				SupportsParallelExecution = false,
-			};
-
-			var runDotNetXtroReporter = new RunXtroTask (this, buildDotNetXtroTests, processManager, crashReportSnapshotFactory) {
-				Platform = TestPlatform.Mac,
-				TestName = buildDotNetXtroTests.TestName,
-				Mode = ".NET",
-				Ignored = buildDotNetXtroTests.Ignored,
-				WorkingDirectory = buildDotNetXtroTests.WorkingDirectory,
-				AnnotationsDirectory = Path.Combine (buildDotNetXtroTests.WorkingDirectory, "api-annotations-dotnet"),
-			};
-			Tasks.Add (runDotNetXtroReporter);
-
-			var buildDotNetGeneratorProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
-				TestProject = buildDotNetGeneratorProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetGenerator = new DotNetTestTask (this, buildDotNetGenerator, processManager) {
-				TestProject = buildDotNetGeneratorProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Generator tests",
-				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
-			};
-			Tasks.Add (runDotNetGenerator);
-
-			var buildDotNetRoslynGeneratorProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Generator.Tests", "Microsoft.Macios.Generator.Tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetRoslynGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynGeneratorProject, processManager: processManager) {
-				TestProject = buildDotNetRoslynGeneratorProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetRoslynGenerator = new DotNetTestTask (this, buildDotNetRoslynGenerator, processManager) {
-				TestProject = buildDotNetRoslynGeneratorProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Roslyn Generator tests",
-				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
-			};
-			Tasks.Add (runDotNetRoslynGenerator);
-
-			var buildDotNetRoslynAnalyzerProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.Analyzer.Tests", "Microsoft.Macios.Bindings.Analyzer.Tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetRoslynAnalyzer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynAnalyzerProject, processManager: processManager) {
-				TestProject = buildDotNetRoslynAnalyzerProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetRoslynAnalyzer = new DotNetTestTask (this, buildDotNetRoslynAnalyzer, processManager) {
-				TestProject = buildDotNetRoslynAnalyzerProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Roslyn Analyzer tests",
-				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
-			};
-			Tasks.Add (runDotNetRoslynAnalyzer);
-			var buildDotNetRoslynTransformerProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Transformer.Tests", "Microsoft.Macios.Transformer.Tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetRoslynTransformer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynTransformerProject, processManager: processManager) {
-				TestProject = buildDotNetRoslynTransformerProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetRoslynTransformer = new DotNetTestTask (this, buildDotNetRoslynTransformer, processManager) {
-				TestProject = buildDotNetRoslynTransformerProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Roslyn Transformer tests",
-				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
-			};
-			Tasks.Add (runDotNetRoslynTransformer);
-			var buildDotNetRoslynCodefixersProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetRoslynCodefixers = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynCodefixersProject, processManager: processManager) {
-				TestProject = buildDotNetRoslynCodefixersProject,
-				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
-				Platform = TestPlatform.iOS,
-			};
-			var runDotNetRoslynCodefixers = new DotNetTestTask (this, buildDotNetRoslynCodefixers, processManager) {
-				TestProject = buildDotNetRoslynCodefixersProject,
-				Platform = TestPlatform.iOS,
-				TestName = "Roslyn Codefixers tests",
-				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
-			};
-			Tasks.Add (runDotNetRoslynCodefixers);
-
-
-			var buildDotNetTestsProject = new TestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
-				IsDotNetProject = true,
-			};
-			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
-				SpecifyPlatform = false,
-				Platform = TestPlatform.All,
-				ProjectConfiguration = "Debug",
-				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
-			};
-			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
-				TestProject = buildDotNetTestsProject,
-				Platform = TestPlatform.All,
-				TestName = "DotNet tests",
-				Filter = "Category!=Windows",
-				Timeout = TimeSpan.FromMinutes (360),
-				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
-			};
-			Tasks.Add (runDotNetTests);
-
-			var deviceTestFactory = new RunDeviceTasksFactory ();
-			var loaddev = deviceTestFactory.CreateAsync (this, processManager, testVariationsFactory).ContinueWith ((v) => {
-				Console.WriteLine ("Got device tasks completed");
-				Tasks.AddRange (v.Result);
-			});
-
-			return Task.WhenAll (loadsim, loaddev);
+			Tasks.AddRange (tasks.SelectMany (v => v.Result));
 		}
 
 		[DllImport ("libc")]
@@ -504,8 +355,6 @@ namespace Xharness.Jenkins {
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();
-					var allNUnitTasks = new List<NUnitExecuteTask> ();
-					var allMakeTasks = new List<MakeTask> ();
 					var allDeviceTasks = new List<RunDeviceTask> ();
 					var allDotNetTestTasks = new List<DotNetTestTask> ();
 
@@ -519,18 +368,6 @@ namespace Xharness.Jenkins {
 						var execute = task as MacExecuteTask;
 						if (execute is not null) {
 							allExecuteTasks.Add (execute);
-							continue;
-						}
-
-						var nunit = task as NUnitExecuteTask;
-						if (nunit is not null) {
-							allNUnitTasks.Add (nunit);
-							continue;
-						}
-
-						var make = task as MakeTask;
-						if (make is not null) {
-							allMakeTasks.Add (make);
 							continue;
 						}
 
@@ -558,8 +395,6 @@ namespace Xharness.Jenkins {
 					if (!Populating) {
 						allTasks.AddRange (allExecuteTasks);
 						allTasks.AddRange (allSimulatorTasks);
-						allTasks.AddRange (allNUnitTasks);
-						allTasks.AddRange (allMakeTasks);
 						allTasks.AddRange (allDeviceTasks);
 						allTasks.AddRange (allDotNetTestTasks);
 					}

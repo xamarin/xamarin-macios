@@ -6,17 +6,25 @@ using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Mono.CompilerServices.SymbolWriter;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
-	class RunSimulatorTasksFactory {
-
-		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
+	class RunSimulatorTasksFactory : TaskFactory {
+		public RunSimulatorTasksFactory (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		: base (jenkins, processManager, testVariationsFactory)
 		{
-			var runSimulatorTasks = new List<RunSimulatorTask> ();
+		}
 
-			foreach (var project in jenkins.Harness.IOSTestProjects) {
+		public async override Task<IEnumerable<AppleTestTask>> CreateTasksAsync ()
+		{
+			var jenkins = this.Jenkins;
+			var processManager = this.ProcessManager;
+			var testVariationsFactory = this.TestVariationsFactory;
+
+			var runSimulatorTasks = new List<RunSimulatorTask> ();
+			foreach (var project in jenkins.Harness.TestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
 
@@ -25,14 +33,7 @@ namespace Xharness.Jenkins {
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.GenerateVariations) {
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, project.TestPlatform, ignored));
-				} else {
-					if (!project.SkipiOSVariation)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS, ignored));
-					if (!project.SkiptvOSVariation)
-						ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored));
-				}
+				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, project.TestPlatform, ignored));
 
 				var configurations = project.Configurations;
 				if (configurations is null)
@@ -59,14 +60,12 @@ namespace Xharness.Jenkins {
 						derived.Platform = testPlatform;
 						derived.Ignored = configIgnored;
 						derived.TestName = project.Name;
-						derived.Dependency = project.Dependency;
 						derived.CloneTestProject (jenkins.MainLog, processManager, pair.Item1, HarnessConfiguration.RootDirectory);
 						var simTasks = CreateAsync (jenkins, processManager, derived);
 						runSimulatorTasks.AddRange (simTasks);
 						foreach (var task in simTasks) {
 							if (configurations.Length > 1)
 								task.Variation = config;
-							task.TimeoutMultiplier = project.TimeoutMultiplier;
 						}
 					}
 				}
@@ -101,9 +100,12 @@ namespace Xharness.Jenkins {
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
-			TestTarget [] targets = buildTask.Platform.GetAppRunnerTargets ();
+			var targets = buildTask.Platform.GetTestTargetsForSimulator ();
 			TestPlatform [] platforms;
 			bool [] ignored;
+
+			if (targets.Length == 0)
+				return Array.Empty<RunSimulatorTask> ();
 
 			switch (buildTask.Platform) {
 			case TestPlatform.tvOS:

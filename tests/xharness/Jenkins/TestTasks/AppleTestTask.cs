@@ -35,27 +35,7 @@ namespace Xharness.Jenkins.TestTasks {
 			var xcodeRoot = Jenkins.Harness.XcodeRoot;
 
 			process.StartInfo.EnvironmentVariables ["RootTestsDirectory"] = HarnessConfiguration.RootDirectory;
-
-			switch (Platform) {
-			case TestPlatform.iOS:
-			case TestPlatform.tvOS:
-			case TestPlatform.MacCatalyst:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
-				break;
-			case TestPlatform.Mac:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
-				break;
-			case TestPlatform.All:
-				// Don't set:
-				//     MSBuildExtensionsPath 
-				//     TargetFrameworkFallbackSearchPaths
-				// because these values used by both XM and XI and we can't set it to two different values at the same time.
-				// Any test that depends on these values should not be using 'TestPlatform.All'
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
-				break;
-			default:
-				throw new NotImplementedException ($"Unknown test platform: {Platform}");
-			}
+			process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 
 			foreach (var kvp in Environment) {
 				if (kvp.Value is null) {
