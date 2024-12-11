@@ -62,6 +62,8 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2ignore/u2ignore.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2todo/u2todo.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-report/xtro-report.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.csproj"
+dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-html/mono-api-html.csproj"
+dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-info/mono-api-info.csproj"
 dotnet format whitespace --folder "$SRC_DIR"
 
 for file in "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/*/.template.config/localize/*.json "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/.template.config/localize/*.json; do

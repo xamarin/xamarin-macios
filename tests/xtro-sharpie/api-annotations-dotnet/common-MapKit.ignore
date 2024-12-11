@@ -13,8 +13,5 @@
 !deprecated-attribute-missing! MKMapView::showsTraffic missing a [Deprecated] attribute
 !deprecated-attribute-missing! MKMapView::setShowsTraffic: missing a [Deprecated] attribute
 
-## This is rather hard to fix: see comment in the generator (search for MKAnnotation to find it)
-!missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
-
 ## The MKOverlay protocol implements the MKAnnotation protocol, which has a required 'coordinate' property, so the API is there.
 !missing-protocol-member! MKOverlay::coordinate not found
