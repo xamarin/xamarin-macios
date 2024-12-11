@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 
 using AVFoundation;
@@ -230,6 +231,15 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static void AssertNotInterpreter (string message = "This test does not run when using the interpreter")
+	{
+		if (IsCoreCLR)
+			return;
+
+		if (RuntimeFeature.IsDynamicCodeSupported)
+			NUnit.Framework.Assert.Ignore (message);
+	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{

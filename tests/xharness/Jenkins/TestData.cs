@@ -21,5 +21,6 @@ namespace Xharness.Jenkins {
 		public string RuntimeIdentifier;
 		public string Registrar;
 		public bool PublishAot; // NativeAOT
+		public bool UseInterpreter;
 	}
 }
