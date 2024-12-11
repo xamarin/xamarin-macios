@@ -29,8 +29,7 @@
 		<_XamarinRelativeSdkRootDirectory Condition="'$(_XamarinRelativeSdkRootDirectory)' == ''">$(XamarinRelativeSdkRootDirectory)</_XamarinRelativeSdkRootDirectory>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet on macOS, this value will be overriden from Windows  -->
 		<_XamarinSdkRootDirectoryOnMac>$(_XamarinSdkRootDirectory)</_XamarinSdkRootDirectoryOnMac>
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly>$(_XamarinSdkRootDirectory)\tools\msbuild\Xamarin.MacDev.Tasks.dll</_XamarinTaskAssembly>
 
 		<!--
 			PublishAot should only take effect when doing 'dotnet publish', not when doing 'dotnet build'. We distinguish these cases using the '_IsPublishing' property,

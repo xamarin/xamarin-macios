@@ -27,6 +27,7 @@ using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 using JavaScriptCore;
+using Network;
 using Security;
 
 #if MONOMAC
@@ -4975,6 +4976,10 @@ namespace WebKit {
 		[Async]
 		[Export ("fetchAllDataStoreIdentifiers:")]
 		void FetchAllDataStoreIdentifiers (Action<NSArray<NSUuid>> completionHandler);
+
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("proxyConfigurations", ArgumentSemantic.Copy), NullAllowed]
+		NWProxyConfig [] ProxyConfigurations { get; set; }
 	}
 
 	[NoiOS, NoWatch, NoTV]

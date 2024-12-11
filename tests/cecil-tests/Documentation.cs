@@ -235,7 +235,11 @@ namespace Cecil.Tests {
 			} else if (tr is ByReferenceType brt) {
 				name += brt.ElementType.Name + "@";
 			} else if (tr is GenericParameter gp) {
-				name = $"`{gp.Position}";
+				if (gp.DeclaringMethod is not null) {
+					name = $"``{gp.Position}";
+				} else {
+					name = $"`{gp.Position}";
+				}
 			} else if (tr is ArrayType at) {
 				name = GetDocId (at.ElementType);
 				if (at.Rank == 1) {
