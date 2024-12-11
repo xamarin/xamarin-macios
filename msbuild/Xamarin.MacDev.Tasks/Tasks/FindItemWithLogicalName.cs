@@ -8,7 +8,7 @@ using Xamarin.Localization.MSBuild;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public class FindItemWithLogicalName : XamarinTask {
+	public class FindItemWithLogicalName : XamarinTask, IHasProjectDir, IHasResourcePrefix {
 		#region Inputs
 
 		[Required]
@@ -34,10 +34,8 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			if (Items is not null) {
-				var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-
 				foreach (var item in Items) {
-					var logical = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+					var logical = BundleResource.GetLogicalName (this, item);
 
 					if (logical == LogicalName) {
 						Log.LogMessage (MessageImportance.Low, MSBStrings.M0149, LogicalName, item.ItemSpec);

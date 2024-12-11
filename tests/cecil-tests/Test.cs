@@ -14,7 +14,6 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class Test {
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/pull/7760
 		public void IdentifyBackingFieldAssignation (AssemblyInfo info)
@@ -50,7 +49,6 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
 		public void EnsureUIThreadOnInit (AssemblyInfo info)
@@ -85,7 +83,6 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void NoSystemConsoleReference (AssemblyInfo info)
 		{
@@ -127,7 +124,6 @@ namespace Cecil.Tests {
 			// keep up-to-date with the 'bannedCApi' list in tests/mtouch/MiscTests.cs
 		};
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void NoBannedApi (AssemblyInfo info)
 		{
@@ -153,7 +149,6 @@ namespace Cecil.Tests {
 			MacCatalyst,
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/4835
 		public void Unavailable (AssemblyInfo info)

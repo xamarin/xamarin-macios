@@ -23,8 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 			};
 
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
-			if (Configuration.include_dotnet)
-				RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
+			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
 		static void RunMake (string directory, Dictionary<string, string> environment = null)

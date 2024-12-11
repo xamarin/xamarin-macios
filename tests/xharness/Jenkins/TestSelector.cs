@@ -22,8 +22,7 @@ namespace Xharness.Jenkins {
 			PlatformLabel.tvOS |
 			PlatformLabel.iOS |
 			PlatformLabel.iOSSimulator |
-			PlatformLabel.MacCatalyst |
-			PlatformLabel.Dotnet;
+			PlatformLabel.MacCatalyst;
 
 		public bool ForceExtensionBuildOnly { get; set; }
 

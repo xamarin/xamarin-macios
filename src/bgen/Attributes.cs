@@ -111,6 +111,7 @@ public class RetainAttribute : Attribute {
 	public string WrapName { get; set; }
 }
 
+[AttributeUsage (AttributeTargets.ReturnValue, AllowMultiple = false)]
 public class ReleaseAttribute : Attribute {
 }
 
