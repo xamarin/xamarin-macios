@@ -34,6 +34,16 @@ parameters:
 
 # build the source code (build.yml) and detect changes (the nested api-diff.yml)
 steps:
+
+# The following checkout(s) are needed due in order to get the proper set of credentials stored in the git config.
+# Without this, then when the `make reset` command is run, any modules that aren't configured already as submodules
+# will be cloned again. This is fine for all GitHub repos, but falls over for AzDo repos.
+- checkout: macios-adr
+  clean: true
+  persistCredentials: true
+  fetchTags: false
+  path: a/change-detection/tmp/src/macios-adr # Path is rooted from $(Pipeline.Workspace) e.g./Users/builder/azdo/_work/18
+
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
@@ -55,6 +65,7 @@ steps:
   env:
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken) # needed to checkout AzDo repo dependencies
 
 # publish the resulting artifact
 - task: PublishPipelineArtifact@1
