@@ -105,7 +105,7 @@ namespace Xamarin.MacDev.Tasks {
 					.ContinueWith ((v) => {
 						Execution execution = v.Result;
 						if (execution.ExitCode != 0)
-							Log.LogError (MSBStrings.E7133 /* Failed to optimize the image {0}, pngcrush exited with code {1}. */, Path.GetFileName (arg.Input), execution.ExitCode);
+							Log.LogError (MSBStrings.E7134 /* Failed to optimize the image {0}, pngcrush exited with code {1}. */, Path.GetFileName (arg.Input), execution.ExitCode);
 
 						var output = execution.StandardOutput?.ToString () ?? string.Empty;
 						foreach (var line in output.Split ('\n')) {
