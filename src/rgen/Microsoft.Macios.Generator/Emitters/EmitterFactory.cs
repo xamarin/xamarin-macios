@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Context;
+using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -8,16 +10,31 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// Returns the emitter that is related to the provided declaration type.
 /// </summary>
 static class EmitterFactory {
-	public static bool TryCreate<T> (ISymbolBindingContext<T> context, TabbedStringBuilder builder,
+	public static bool TryCreate (CodeChanges changes, RootBindingContext context, SemanticModel semanticModel,
+		INamedTypeSymbol symbol, TabbedStringBuilder builder,
 		[NotNullWhen (true)] out ICodeEmitter? emitter)
-		where T : BaseTypeDeclarationSyntax
 	{
-		emitter = context switch {
-			ClassBindingContext classContext => new ClassEmitter (classContext, builder),
-			ISymbolBindingContext<EnumDeclarationSyntax> enumContext => new EnumEmitter (enumContext, builder),
-			ISymbolBindingContext<InterfaceDeclarationSyntax> interfaceContext => new InterfaceEmitter (interfaceContext, builder),
-			_ => null
-		};
+		switch (changes.BindingType) {
+		case BindingType.Class: {
+			var ctx = new ClassBindingContext (context, semanticModel, symbol);
+			emitter = new ClassEmitter (ctx, builder);
+			break;
+		}
+		case BindingType.SmartEnum: {
+			var ctx = new SymbolBindingContext (context, semanticModel, symbol);
+			emitter = new EnumEmitter (ctx, builder);
+			break;
+		}
+		case BindingType.Protocol: {
+			var ctx = new SymbolBindingContext (context, semanticModel, symbol);
+			emitter = new InterfaceEmitter (ctx, builder);
+			break;
+		}
+		default:
+			emitter = null;
+			break;
+		}
+
 		return emitter is not null;
 	}
 }

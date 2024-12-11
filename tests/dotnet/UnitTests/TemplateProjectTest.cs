@@ -98,7 +98,6 @@ class MainClass {
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var assemblies = 200;
 
-			var xm = Configuration.XamarinMacMobileDll;
 			var csc = Configuration.DotNetCscCommand;
 
 			var references = new List<string> ();

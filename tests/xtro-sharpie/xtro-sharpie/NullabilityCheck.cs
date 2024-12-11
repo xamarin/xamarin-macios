@@ -147,11 +147,15 @@ namespace Extrospection {
 				if (pt.IsValueType)
 					continue;
 
+				// if we used a type by reference (e.g. `ref float foo`), nullability won't be present
+				if (pt.IsByReference)
+					continue;
+
 				Null parameter_nullable;
 
-				// if we used a type by reference (e.g. `ref float foo`); or a nullable type (e.g. `[BindAs]`)
+				// if we used a nullable type (e.g. `[BindAs]`)
 				// then assume it's meant as a nullable type) without additional decorations
-				if (pt.IsByReference || pt.FullName.StartsWith ("System.Nullable`1<", StringComparison.Ordinal)) {
+				if (pt.FullName.StartsWith ("System.Nullable`1<", StringComparison.Ordinal)) {
 					parameter_nullable = Null.Annotated;
 				} else {
 					// check C# 8 compiler attributes

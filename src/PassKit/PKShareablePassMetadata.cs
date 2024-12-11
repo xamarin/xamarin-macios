@@ -6,52 +6,54 @@ using ObjCRuntime;
 
 namespace PassKit {
 
-#if !TVOS && !WATCH
+#if !TVOS
 	public partial class PKShareablePassMetadata {
 
-#if NET
+		/// <summary>This enum describes how to interpret some arguments when creating <see cref="PKShareablePassMetadata" /> instances.</summary>
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
-#endif
 		public enum CardType {
+			/// <summary>The 'templateIdentifier' parameter identifies a card template identifier.</summary>
 			Template = 0,
+			/// <summary>The 'templateIdentifier' parameter identifies a card configuration identifier.</summary>
 			Configuration = 1,
 		}
 
-#if NET
+		/// <summary>Create a new <see cref="PKShareablePassMetadata" /> instance.</summary>
+		/// <param name="credentialIdentifier">The credential identifier for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="sharingInstanceIdentifier">The sharing instance identifer for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="templateIdentifier">The card template identifier for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="preview">The preview for the new <see cref="PKShareablePassMetadata" /> instance.</param>
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
-#endif
 		public PKShareablePassMetadata (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview) :
 			this (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview, CardType.Template)
 		{
 		}
 
-#if NET
+		/// <summary>Create a new <see cref="PKShareablePassMetadata" /> instance.</summary>
+		/// <param name="credentialIdentifier">The credential identifier for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="sharingInstanceIdentifier">The sharing instance identifer for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="templateIdentifier">The template identifier for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="preview">The preview for the new <see cref="PKShareablePassMetadata" /> instance.</param>
+		/// <param name="cardType">Specifies whether the <paramref name="templateIdentifier" /> parameter specifies a card template identifier or a card configuration identifier.</param>
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
-#endif
 		public PKShareablePassMetadata (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview, CardType cardType) : base (NSObjectFlag.Empty)
 		{
 			switch (cardType) {
 			case CardType.Template:
-				InitializeHandle (InitWithCardTemplate (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview),
+				InitializeHandle (_InitWithCardTemplate (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview),
 					"initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:");
 				break;
 			case CardType.Configuration:
-				InitializeHandle (InitWithCardConfiguration (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview),
+				InitializeHandle (_InitWithCardConfiguration (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview),
 					"initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:");
 				break;
 			default:
@@ -59,5 +61,5 @@ namespace PassKit {
 			}
 		}
 	}
-#endif // !TVOS && !WATCH
+#endif // !TVOS
 }

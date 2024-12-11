@@ -1689,8 +1689,6 @@ namespace Xamarin.Bundler {
 					return ProductConstants.iOS;
 				case ApplePlatform.TVOS:
 					return ProductConstants.tvOS;
-				case ApplePlatform.WatchOS:
-					return ProductConstants.watchOS;
 				case ApplePlatform.MacOSX:
 					return ProductConstants.macOS;
 				default:

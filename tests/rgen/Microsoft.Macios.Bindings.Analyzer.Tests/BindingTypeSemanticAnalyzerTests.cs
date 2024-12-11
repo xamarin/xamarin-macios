@@ -10,10 +10,7 @@ namespace Microsoft.Macios.Bindings.Analyzer.Tests;
 public class BindingTypeSemanticAnalyzerTests : BaseGeneratorWithAnalyzerTestClass {
 
 	[Theory]
-	[PlatformInlineData (ApplePlatform.iOS)]
-	[PlatformInlineData (ApplePlatform.TVOS)]
-	[PlatformInlineData (ApplePlatform.MacOSX)]
-	[PlatformInlineData (ApplePlatform.MacCatalyst)]
+	[AllSupportedPlatforms]
 	public async Task BindingTypeMustBePartial (ApplePlatform platform)
 	{
 		const string inputText = @"
@@ -29,10 +26,10 @@ namespace Test {
 		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
 		var diagnostics = await RunAnalyzer (new BindingTypeSemanticAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
-			.Where (d => d.Id == BindingTypeSemanticAnalyzer.DiagnosticId).ToArray ();
+			.Where (d => d.Id == BindingTypeSemanticAnalyzer.RBI0001.Id).ToArray ();
 		Assert.Single (analyzerDiagnotics);
 		// verify the diagnostic message
-		VerifyDiagnosticMessage (analyzerDiagnotics [0], BindingTypeSemanticAnalyzer.DiagnosticId,
+		VerifyDiagnosticMessage (analyzerDiagnotics [0], BindingTypeSemanticAnalyzer.RBI0001.Id,
 			DiagnosticSeverity.Error, "The binding type 'Test.Examples' must declared as a partial class");
 	}
 }

@@ -22,6 +22,15 @@
         <Compile Include="..\..\bgen\PlatformName.cs" >
             <Link>external\PlatformName.cs</Link>
         </Compile>
+       <Compile Include="..\..\ObjCRuntime\ArgumentSemantic.cs">
+           <Link>external\ArgumentSemantic.cs</Link>
+       </Compile>
+        <Compile Include="..\..\ObjCBindings\ExportTag.cs" >
+            <Link>external\ExportTag.cs</Link>
+        </Compile>
+        <Compile Include="..\..\ObjCBindings\FieldTag.cs">
+            <Link>external\FieldTag.cs</Link>
+        </Compile>
     </ItemGroup>
 
 </Project>

@@ -9,9 +9,9 @@ namespace Xamarin.Tests {
 			if (assemblyName.EndsWith (".dll", StringComparison.Ordinal) || assemblyName.EndsWith (".pdb", StringComparison.Ordinal))
 				assemblyName = Path.GetFileNameWithoutExtension (assemblyName);
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
-				if (platform == ApplePlatform.None)
+				if (platform == ApplePlatform.None || platform == ApplePlatform.WatchOS)
 					continue;
-				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true));
+				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform));
 				if (platformAssembly == assemblyName)
 					return true;
 			}
@@ -286,9 +286,7 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest4", isSigned);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest5", isSigned);
 
-			expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.dll"));
-			if (includeDebugFiles)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.pdb"));
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "bindings-framework-test", runtimeIdentifiers, forceSingleRid: !(platform == ApplePlatform.MacCatalyst && isReleaseBuild), includeDebugFiles: includeDebugFiles);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "XTest", isSigned);
 
 			// various directories
@@ -309,7 +307,7 @@ namespace Xamarin.Tests {
 			bool forceSingleRidTouchClient = (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX;
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "Touch.Client", runtimeIdentifiers, forceSingleRidTouchClient, includeDebugFiles: includeDebugFiles);
 			bool forceSinglePlatformAssembly = platform == ApplePlatform.MacOSX;
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSinglePlatformAssembly, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSinglePlatformAssembly, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
 
 			switch (platform) {
@@ -428,6 +426,7 @@ namespace Xamarin.Tests {
 			var valid_prefixes = new string [] {
 				"/System/Library/",
 				"/System/iOSSupport/System/Library/",
+				"/System/iOSSupport/usr/lib/swift/",
 				"/usr/lib/",
 				"@rpath",
 				"@executable_path",
