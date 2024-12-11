@@ -1,5 +1,6 @@
 TOP=../..
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 
@@ -68,10 +69,10 @@ Microsoft.macOS.registrar.coreclr.arm64.m: $(TOP)/src/build/dotnet/macos/64/Micr
 	$(Q) touch $@ $(basename $@).h
 
 %.x86_64.a: %.x86_64.m
-	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
+	$(Q_CC) $(CLANG) -isysroot $(macos_SDK) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
 
 %.arm64.a: %.arm64.m
-	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch arm64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
+	$(Q_CC) $(CLANG) -isysroot $(macos_SDK) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch arm64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
 
 dotnet: $(MMP_TARGETS_DOTNET)
 ifdef INCLUDE_MAC
@@ -82,5 +83,4 @@ endif
 clean-local::
 	rm -rf bin obj
 
-include $(TOP)/mk/rules.mk
 include ../common/Make.common
