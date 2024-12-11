@@ -6,8 +6,6 @@ SUBDIRS=test-libraries dotnet
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
-
 XHARNESS_EXECUTABLE=xharness/bin/Debug/xharness.dll
 
 ifneq ($(RELEASE),)
@@ -45,9 +43,6 @@ package-tests:
 
 test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
-	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
-	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
-	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
@@ -77,9 +72,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
-	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
-	@echo "IOS_DESTDIR=/" >> $@
-	@echo "MAC_DESTDIR=/" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
@@ -165,9 +157,6 @@ check-result:
 		echo Test run crashed; \
 		exit 1; \
 	fi
-
-logdev:
-	$(MTOUCH) --logdev
 
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
