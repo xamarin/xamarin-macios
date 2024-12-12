@@ -1,0 +1,137 @@
+# template that can be extended by pipelines that will be used to run the api-scan tests. This
+# allows to share resources and parameters
+parameters:
+
+  - name: isPR
+    displayName: Is PR build
+    type: boolean
+    default: false
+
+  - name: pool
+    type: string
+    displayName: Bot pool to use
+    default: automatic
+    values:
+      - pr
+      - ci
+      - automatic
+
+  - name: testConfigurations
+    displayName: Test configurations to run
+    type: object
+    default: []
+
+  - name: supportedPlatforms
+    type: object
+    default: [
+      {
+        platform: iOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: macOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: tvOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: MacCatalyst,
+        isDotNetPlatform: true,
+      },
+      {
+        # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+        platform: Multiple,
+        isDotNetPlatform: true,
+      }
+    ]
+
+
+resources:
+  repositories:
+    - repository: self
+      checkoutOptions:
+        submodules: true
+
+    - repository: yaml-templates
+      type: github
+      name: xamarin/yaml-templates
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: maccore
+      type: github
+      name: xamarin/maccore
+      ref: refs/heads/main
+      endpoint: xamarin
+      
+    - repository: macios-adr
+      type: git
+      name: macios-adr
+      ref: refs/heads/main
+
+    - repository: release-scripts
+      type: github
+      name: xamarin/release-scripts
+      ref: refs/heads/only_codesign
+      endpoint: xamarin
+
+variables:
+  - template: ../variables/common.yml
+  - template: ../variables/api-scan.yml
+  - ${{ if eq(parameters.isPR, false) }}:
+      - name: DisablePipelineConfigDetector
+        value: true
+  - ${{ else }}:
+      - name: DisablePipelineConfigDetector
+        value: false
+
+stages:
+  - stage: configure_build
+    displayName: 'Configure'
+    jobs:
+
+      - ${{ if eq(parameters.pool, 'automatic') }}:
+          - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+            pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+              vmImage: ubuntu-latest
+            steps:
+              - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+              # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+              - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+                parameters:
+                  agentPoolPR: $(PRBuildPool)
+                  agentPoolPRUrl: $(PRBuildPoolUrl)
+                  agentPoolCI: $(CIBuildPool)
+                  agentPoolCIUrl: $(CIBuildPoolUrl)
+
+      - job: configure
+        displayName: 'Configure build'
+        pool:
+          vmImage: windows-latest
+
+        variables:
+          isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+          isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+          BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+        steps:
+          - template: ../common/configure.yml
+            parameters: 
+              repositoryAlias: self
+              commit: HEAD
+              testConfigurations: ${{ parameters.testConfigurations }}
+              supportedPlatforms: ${{ parameters.supportedPlatforms }}
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
+              statusContext: 'VSTS: simulator tests' 
+              uploadArtifacts: true
+
+  - template: ../governance/stage.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: self
+      commit: HEAD
+      dependsOn: configure_build
+      use1ES: false

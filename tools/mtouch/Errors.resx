@@ -364,9 +364,9 @@
 	</data>
 
 	<data name="MT0073" xml:space="preserve">
-		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
+		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist or change the SupportedOSPlatformVersion property in your project file.
 		</value>
-		<comment>The following are literal names and should not be translated: SDK, Xcode
+		<comment>The following are literal names and should not be translated: SDK, Xcode, SupportedOSPlatformVersion, Info.plist
 {0} - The version number of the .NET SDK.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The minimum version number.
@@ -376,9 +376,9 @@
 	</data>
 
 	<data name="MX0074" xml:space="preserve">
-		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
+		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or change the SupportedOSPlatformVersion property in your project file, or upgrade to a newer version of {4}.
 		</value>
-		<comment>The following are literal names and should not be translated: SDK, Xcode
+		<comment>The following are literal names and should not be translated: SDK, Xcode, SupportedOSPlatformVersion, Info.plist
 {0} - The version number of the .NET SDK product.
 {1} - The name of the deployment target such as a device, simulator, etc.
 {2} - The maximum version number.
@@ -1931,6 +1931,10 @@
 		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
 	</data>
 
+	<data name="MT4190" xml:space="preserve">
+		<value>The class '{0}' will not be registered because the {1} framework has been deprecated from the {2} SDK.</value>
+	</data>
+
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</value>
@@ -2162,7 +2166,7 @@
 
 	<!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
 	<data name="MX7000" xml:space="preserve">
-		<value>An error occured while executing the custom linker steps. Please review the build log for more information.</value>
+		<value>An error occurred while executing the custom linker steps. Please review the build log for more information.</value>
 	</data>
 
 	<!-- 8XXX are for errors that occur at runtime -->

@@ -97,13 +97,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("tvos11.3")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 3)]
-	[TV (11, 3)]
 #endif
 	public struct MPSImageCoordinate {
 		public nuint X;
@@ -112,13 +109,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("tvos11.3")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 3)]
-	[TV (11, 3)]
 #endif
 	public struct MPSImageRegion {
 		public MPSImageCoordinate Offset;
@@ -136,11 +130,7 @@ namespace MetalPerformanceShaders {
 	public struct MPSImageHistogramInfo {
 		[FieldOffset (0)]
 		public nuint NumberOfHistogramEntries;
-#if ARCH_64
 		[FieldOffset (8)]
-#else
-		[FieldOffset (4)]
-#endif
 		public bool HistogramForAlpha;
 		[FieldOffset (16)]
 		public Vector4 MinPixelValue;
@@ -189,13 +179,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[TV (11, 3)]
-	[iOS (11, 3)]
 #endif
 	public struct MPSStateTextureInfo {
 		public nuint Width;
@@ -233,13 +220,10 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSAxisAlignedBoundingBox {
@@ -263,17 +247,144 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios11.2")]
-	[SupportedOSPlatform ("tvos11.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (11, 2)]
-	[TV (11, 2)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset {
 		public uint RowOffset;
 		public uint ColumnOffset;
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MPSNDArrayOffsets {
+		// NSInteger dimensions[16];
+		nint dimension0;
+		nint dimension1;
+		nint dimension2;
+		nint dimension3;
+		nint dimension4;
+		nint dimension5;
+		nint dimension6;
+		nint dimension7;
+		nint dimension8;
+		nint dimension9;
+		nint dimension10;
+		nint dimension11;
+		nint dimension12;
+		nint dimension13;
+		nint dimension14;
+		nint dimension15;
+
+		public nint [] Dimensions {
+			get => new nint [] {
+						dimension0,
+						dimension1,
+						dimension2,
+						dimension3,
+						dimension4,
+						dimension5,
+						dimension6,
+						dimension7,
+						dimension8,
+						dimension9,
+						dimension10,
+						dimension11,
+						dimension12,
+						dimension13,
+						dimension14,
+						dimension15,
+					};
+			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				if (value.Length != 16)
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), "Length must be 16.");
+
+				dimension0 = value [0];
+				dimension1 = value [1];
+				dimension2 = value [2];
+				dimension3 = value [3];
+				dimension4 = value [4];
+				dimension5 = value [5];
+				dimension6 = value [6];
+				dimension7 = value [7];
+				dimension8 = value [8];
+				dimension9 = value [9];
+				dimension10 = value [10];
+				dimension11 = value [11];
+				dimension12 = value [12];
+				dimension13 = value [13];
+				dimension14 = value [14];
+				dimension15 = value [15];
+			}
+		}
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MPSNDArraySizes {
+		// NSUInteger dimensions[16];
+		nuint dimension0;
+		nuint dimension1;
+		nuint dimension2;
+		nuint dimension3;
+		nuint dimension4;
+		nuint dimension5;
+		nuint dimension6;
+		nuint dimension7;
+		nuint dimension8;
+		nuint dimension9;
+		nuint dimension10;
+		nuint dimension11;
+		nuint dimension12;
+		nuint dimension13;
+		nuint dimension14;
+		nuint dimension15;
+
+		public nuint [] Dimensions {
+			get => new nuint [] {
+						dimension0,
+						dimension1,
+						dimension2,
+						dimension3,
+						dimension4,
+						dimension5,
+						dimension6,
+						dimension7,
+						dimension8,
+						dimension9,
+						dimension10,
+						dimension11,
+						dimension12,
+						dimension13,
+						dimension14,
+						dimension15,
+					};
+			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				if (value.Length != 16)
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), "Length must be 16.");
+
+				dimension0 = value [0];
+				dimension1 = value [1];
+				dimension2 = value [2];
+				dimension3 = value [3];
+				dimension4 = value [4];
+				dimension5 = value [5];
+				dimension6 = value [6];
+				dimension7 = value [7];
+				dimension8 = value [8];
+				dimension9 = value [9];
+				dimension10 = value [10];
+				dimension11 = value [11];
+				dimension12 = value [12];
+				dimension13 = value [13];
+				dimension14 = value [14];
+				dimension15 = value [15];
+			}
+		}
 	}
 }

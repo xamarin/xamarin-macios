@@ -61,6 +61,16 @@ namespace MonoTouchFixtures.Network {
 				});
 			});
 		}
+
+#if __MACOS__ && NET
+		[Test]
+		public void TestCreateLaunchd ()
+		{
+			using var parameters = NWParameters.CreateTcp ();
+			using var instance = NWListener.Create (parameters, "xamarinlaunchdkey");
+			Assert.IsNotNull (instance, "Create");
+		}
+#endif
 	}
 }
 #endif

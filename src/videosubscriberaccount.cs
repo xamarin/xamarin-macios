@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -50,12 +51,16 @@ namespace VideoSubscriberAccount {
 		Granted = 3
 	}
 
+#if !XAMCORE_5_0
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("Use 'VSUserAccountQueryOptions' instead.")]
 	[TV (16, 0), Mac (13, 0), iOS (16, 0), NoMacCatalyst]
 	[Native]
 	enum VSUserAccountQueryOption : ulong {
 		None = 0,
 		AllDevices,
 	}
+#endif // !XAMCORE_5_0
 
 	[TV (16, 0), NoMacCatalyst, iOS (16, 0), Mac (13, 0)]
 	[Flags]
@@ -282,7 +287,7 @@ namespace VideoSubscriberAccount {
 		[NullAllowed, Export ("accountProviderAuthenticationToken")]
 		string AccountProviderAuthenticationToken { get; set; }
 
-		[TV (14, 2), iOS (14, 2), Mac (11, 0)]
+		[TV (14, 2), iOS (14, 2)]
 		[NullAllowed, Export ("applicationAccountProviders", ArgumentSemantic.Copy)]
 		VSAccountApplicationProvider [] ApplicationAccountProviders { get; set; }
 	}
@@ -316,6 +321,9 @@ namespace VideoSubscriberAccount {
 		Api,
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccountType' enum instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccountType' enum instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
@@ -324,6 +332,9 @@ namespace VideoSubscriberAccount {
 		Paid,
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccount' type instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccount' type instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
@@ -338,11 +349,13 @@ namespace VideoSubscriberAccount {
 		[Export ("tierIdentifiers", ArgumentSemantic.Copy)]
 		string [] TierIdentifiers { get; set; }
 
-		[TV (11, 3), iOS (11, 3)]
 		[NullAllowed, Export ("billingIdentifier")]
 		string BillingIdentifier { get; set; }
 	}
 
+	[Deprecated (PlatformName.iOS, 18, 0, message: "Use the 'VSUserAccountManager' type instead.")]
+	[Deprecated (PlatformName.TvOS, 18, 0, message: "Use the 'VSUserAccountManager' type instead.")]
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the 'VSUserAccount' type instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -355,7 +368,7 @@ namespace VideoSubscriberAccount {
 		void SetCurrentSubscription ([NullAllowed] VSSubscription currentSubscription);
 	}
 
-	[TV (14, 2), iOS (14, 2), Mac (11, 0)]
+	[TV (14, 2), iOS (14, 2)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

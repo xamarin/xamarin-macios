@@ -401,6 +401,17 @@ namespace CoreText {
 			}
 		}
 #endif // !XAMCORE_5_0
+
+#if NET && (__IOS__ || __MACCATALYST__)
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		public string? RegistrationUserInfo {
+			get { return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationUserInfo); }
+			set { Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationUserInfo!, value); }
+		}
+#endif
 	}
 
 #if NET

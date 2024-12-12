@@ -9,9 +9,9 @@ namespace Xamarin.Tests {
 			if (assemblyName.EndsWith (".dll", StringComparison.Ordinal) || assemblyName.EndsWith (".pdb", StringComparison.Ordinal))
 				assemblyName = Path.GetFileNameWithoutExtension (assemblyName);
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
-				if (platform == ApplePlatform.None)
+				if (platform == ApplePlatform.None || platform == ApplePlatform.WatchOS)
 					continue;
-				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true));
+				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform));
 				if (platformAssembly == assemblyName)
 					return true;
 			}
@@ -67,6 +67,7 @@ namespace Xamarin.Tests {
 
 				switch (fn) {
 				case "libclrgc.dylib":
+				case "libclrgcexp.dylib":
 				case "libclrjit.dylib":
 				case "libcoreclr.dylib":
 				case "libdbgshim.dylib":
@@ -285,9 +286,7 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest4", isSigned);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest5", isSigned);
 
-			expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.dll"));
-			if (includeDebugFiles)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "bindings-framework-test.pdb"));
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "bindings-framework-test", runtimeIdentifiers, forceSingleRid: !(platform == ApplePlatform.MacCatalyst && isReleaseBuild), includeDebugFiles: includeDebugFiles);
 			AddExpectedFrameworkFiles (platform, expectedFiles, "XTest", isSigned);
 
 			// various directories
@@ -300,17 +299,14 @@ namespace Xamarin.Tests {
 			expectedFiles.Add (Path.Combine (xpcServicesDirectory, "Subfolder"));
 
 			// misc other files not directly related to the test itself
-			if (!isCoreCLR)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt.dat"));
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true, includeDebugFiles: includeDebugFiles);
 			if (platform != ApplePlatform.MacOSX)
-				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: true, includeDebugFiles: includeDebugFiles);
+				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild), includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "nunit.framework.dll"));
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "nunitlite.dll"));
-			expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.dll"));
-			if (includeDebugFiles)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.pdb"));
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, includeDebugFiles: includeDebugFiles);
+			bool forceSingleRid = (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX;
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "Touch.Client", runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
 
 			switch (platform) {
@@ -429,6 +425,7 @@ namespace Xamarin.Tests {
 			var valid_prefixes = new string [] {
 				"/System/Library/",
 				"/System/iOSSupport/System/Library/",
+				"/System/iOSSupport/usr/lib/swift/",
 				"/usr/lib/",
 				"@rpath",
 				"@executable_path",

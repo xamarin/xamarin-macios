@@ -11,20 +11,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Jenkins\ErrorKnowledgeBaseTests.cs" />
-    <Compile Include="TestImporter\Templates\Tests\PListExtensionsTests.cs" />
-    <Compile Include="TestImporter\Tests\ProjectDefinitionTests.cs" />
-    <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
     <Compile Include="Tests\AppRunnerTests.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
-    <Compile Include="TestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
     <Compile Include="Jenkins\ITestTaskExtensionsTests.cs" />
     <Compile Include="Tests\TestTargetExtensionsTests.cs" />
     <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
     <Compile Include="Jenkins\MarkdownReportWriterTests.cs" />
-    <Compile Include="Tests\MacFlavorsExtensionsTests.cs" />
-    <Compile Include="Jenkins\MakeTestTaskEnumerableTests.cs" />
     <Compile Include="Jenkins\NUnitTestTasksEnumerableTests.cs" />
     <Compile Include="Jenkins\JenkinsDeviceLoadterTests.cs" />
     <Compile Include="Jenkins\ResourceManagerTests.cs" />

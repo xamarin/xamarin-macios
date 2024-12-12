@@ -125,6 +125,19 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (15, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.AppleSleepingBreathingDisturbances:
+				case HKQuantityTypeIdentifier.CrossCountrySkiingSpeed:
+				case HKQuantityTypeIdentifier.DistanceCrossCountrySkiing:
+				case HKQuantityTypeIdentifier.DistancePaddleSports:
+				case HKQuantityTypeIdentifier.DistanceRowing:
+				case HKQuantityTypeIdentifier.DistanceSkatingSports:
+				case HKQuantityTypeIdentifier.EstimatedWorkoutEffortScore:
+				case HKQuantityTypeIdentifier.PaddleSportsSpeed:
+				case HKQuantityTypeIdentifier.RowingSpeed:
+				case HKQuantityTypeIdentifier.WorkoutEffortScore:
+					if (!TestRuntime.CheckXcodeVersion (16, 0))
+						continue;
+					break;
 				}
 
 				try {

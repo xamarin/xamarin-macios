@@ -177,17 +177,25 @@ namespace Security {
 
 		public X509Certificate ToX509Certificate ()
 		{
+#if NET
+			return X509CertificateLoader.LoadCertificate (GetRawData ());
+#else
 #if NATIVE_APPLE_CERTIFICATE
 			var impl = new Mono.AppleTls.X509CertificateImplApple (GetCheckedHandle (), false);
 			return new X509Certificate (impl);
 #else
 			return new X509Certificate (GetRawData ());
 #endif
+#endif
 		}
 
 		public X509Certificate2 ToX509Certificate2 ()
 		{
+#if NET
+			return X509CertificateLoader.LoadCertificate (GetRawData ());
+#else
 			return new X509Certificate2 (GetRawData ());
+#endif
 		}
 
 		internal static bool Equals (SecCertificate first, SecCertificate second)
@@ -291,26 +299,22 @@ namespace Security {
 #endif // !__MACCATALYST__
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12, 0)]
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12, 0)]
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 #endif
 		public SecKey? GetKey ()
@@ -490,6 +494,62 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDateRef */ IntPtr SecCertificateCopyNotValidBeforeDate (/* SecCertificateRef */ IntPtr certificate);
+
+		/// <summary>Get the date when this certificate becomes valid.</summary>
+		/// <returns>The date when this certificate becomes valid, or null if the date could not be obtained.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public NSDate? NotValidBeforeDate {
+			get {
+				var ptr = SecCertificateCopyNotValidBeforeDate (Handle);
+				return Runtime.GetNSObject<NSDate> (ptr, owns: true);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDateRef */ IntPtr SecCertificateCopyNotValidAfterDate (/* SecCertificateRef */ IntPtr certificate);
+
+		/// <summary>Get the date when this certificate is no longer valid.</summary>
+		/// <returns>The date when this certificate is no longer valid, or null if the date could not be obtained.</returns>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public NSDate? NotValidAfterDate {
+			get {
+				var ptr = SecCertificateCopyNotValidAfterDate (Handle);
+				return Runtime.GetNSObject<NSDate> (ptr, owns: true);
+			}
+		}
+
 #endif // COREBUILD
 	}
 
@@ -527,6 +587,13 @@ namespace Security {
 			}
 		}
 
+		/// <summary>Create a <see cref="SecIdentity" /> from PKCS #12 data.</summary>
+		/// <param name="data">The PKCS #12 blob data as a byte array.</param>
+		/// <param name="password">The password for the private key in the PKCS #12 data. An empty password is not supported.</param>
+		/// <remarks>
+		///    <para>On macOS 14 or earlier this method requires access to the default keychain,where the private key + certificate will be stored.</para>
+		///    <para>On macOS 15 or later, as well as all other platforms (iOS, tvOS, Mac Catalyst), calling this method will not affect any keychains (a temporary, in-memory keychain is created for the duration of the import).</para>
+		/// </remarks>
 		public static SecIdentity Import (byte [] data, string password)
 		{
 			if (data is null)
@@ -534,8 +601,82 @@ namespace Security {
 			if (string.IsNullOrEmpty (password)) // SecPKCS12Import() doesn't allow empty passwords.
 				throw new ArgumentException (nameof (password));
 			using (var pwstring = new NSString (password))
-			using (var options = NSDictionary.FromObjectAndKey (pwstring, SecImportExport.Passphrase)) {
+			using (var options = NSMutableDictionary.FromObjectAndKey (pwstring, SecImportExport.Passphrase)) {
 				NSDictionary [] array;
+#if __MACOS__
+				/* There are unfortunate platform differences for SecPKCS12Import:
+				 *
+				 * `SecPKCS12Import` will, _on macOS only, not other platforms_, add the imported certificate + private key into the default keychain.
+				 *
+				 * Apple's documentation for [`SecPKCS12Import`](https://developer.apple.com/documentation/security/1396915-secpkcs12import?language=objc)
+				 * implies importing into the keychain is optional ("[...] You can then use the Keychain Services API
+				 * (see [Keychain services](https://developer.apple.com/documentation/security/keychain_services?language=objc))
+				 * to put the identities and associated certificates in the keychain."), but that doesn't match the behavior we're seeing,
+				 * either on the bots nor locally (if I lock the keychain before running the unit test on macOS, I get a dialog asking for
+				 * my password to unlock the keychain when this method is called). Other people on StackOverflow has run into the same issue
+				 * (https://stackoverflow.com/q/33181127), where one of the answers points to the source code (https://stackoverflow.com/a/66846609),
+				 * confirming this behavior.
+				 *
+				 * StackOverflow also suggests using [`SecItemImport`](https://developer.apple.com/documentation/security/1395728-secitemimport)
+				 * instead, which works, with a few caveats:
+				 *
+				 * 1. Importing a PKCS#12 blob only returns the certificate, not the private key. This is a bug, as [confirmed](https://forums.developer.apple.com/forums/thread/31711) by Quinn "The Eskimo!":
+				 *
+				 *    > `SecItemImport` really does support importing private keys without putting them in the keychain,
+				 *    > and that code all runs and works in the PKCS#12 case; internally I see both the certificate and
+				 *    > the private key extracted from the PKCS#12. The problem arises when the code tries to match up
+				 *    > the certificate and private key to form an identity. That code is failing in the no-keychain case,
+				 *    > so you end up getting back just the certificate. Notably, in the PEM case no matching occurs and
+				 *    > thus you get back both the certificate and the private key.
+				 *    >
+				 *    > This is clearly a bug and I’ve filed it as such (r. 25,140,029).
+				 *
+				 *    That was 8 years ago, and 6 years later it still hasn't been fixed (as confirmed by Quinn in the same thread), so it's unlikely it'll ever be fixed.
+				 *
+				 * 2. So I tried exporting the X509Certificate into a PEM string instead, and that works, I successfully
+				 *    get back a `SecKey` instance and a `SecCertificate` instance! Success?
+				 *
+				 * 3. Nope, because there's no way to create a `SecIdentity` from `SecKey`+`SecCertificate`. You have to put
+				 *    the `SecKey` into a keychain, and then pass the `SecCertificate` to [`SecIdentityCreateWithCertificate`](https://developer.apple.com/documentation/security/1401160-secidentitycreatewithcertificate?language=objc),
+				 *    and we're back to where we started.
+				 *
+				 * 4. OK, what about creating a temporary `SecKeychain`, add the `SecKey` there, create the `SecIdentity`, then delete the `SecKeychain`?
+				 *
+				 *      * [`SecKeyChain`](https://developer.apple.com/documentation/security/1401214-seckeychaincreate) was deprecated in macOS 10.10 :/
+				 *      * curl had the same problem:
+				 *          * https://github.com/curl/curl/issues/10038
+				 *          * https://github.com/curl/curl/issues/5403)
+				 *
+				 *          There was PR to use a temporary keychain (https://github.com/curl/curl/pull/10059), with a number of good reasons why it was a bad idea, so it was eventually rejected:
+				 *
+				 *          * The temporary keychain is stored on disk, which isn't particularly fast.
+				 *          * The ownership/rights of the file must be considered to ensure there are no security issues.
+				 *          * Concurrency would have to be considered with regards to cleanup - what if there are multiple threads trying to use the same location on disk.
+				 *
+				 *
+				 * In [this Apple forum thread](https://forums.developer.apple.com/forums/thread/31711) a user gripes about this exact problem:
+				 *
+				 *     > I've resorted to using a private API to created a SecIdentity from a SecCertificate and a SecKey that I already have in memory.
+				 *
+				 * Quinn answers:
+				 *
+				 * > On the macOS front, there’s nothing stopping a command-line tool running on a CI machine using the keychain.
+				 *   There are some pain points but no showstoppers.
+				 *
+				 * FWIW Quinn “The Eskimo!” wrote a document explaining how to find and fix problems with regards to the keychain on CI machines
+				 * (https://developer.apple.com/forums/thread/712005). The last sentence is a gem: "Resetting trust settings is more of a challenge.
+				 * It’s probably possible to do this with the security tool but, honestly, if you think that your CI system has messed up trust settings
+				 * it’s easiest to throw it away and start again from scratch." - in other words if something goes wrong, the easiest is to wipe the
+				 * machine and start over again.
+				 *
+				 *     "some pain points" is somewhat of an understatement...
+				 *
+				 * The good news is that on macOS 15+, Apple added an option to use a temporary, in-memory only keychain, avoiding the whole problem,
+				 * so let's use that!
+				 */
+				if (OperatingSystem.IsMacOSVersionAtLeast (15, 0))
+					options.Add (SecImportExport.ToMemoryOnly, NSNumber.FromBoolean (true));
+#endif
 				SecStatusCode result = SecImportExport.ImportPkcs12 (data, options, out array);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());

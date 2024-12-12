@@ -25,13 +25,11 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
 	public class NWProtocolDefinition : NativeObject {
@@ -181,13 +179,12 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
@@ -196,13 +193,12 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif

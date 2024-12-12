@@ -74,6 +74,8 @@
 !missing-selector! NSObject::accessibilityContainerType not bound
 !missing-selector! NSObject::accessibilityCustomActions not bound
 !missing-selector! NSObject::accessibilityElementsHidden not bound
+!missing-selector! NSObject::accessibilityExpandedStatus not bound
+!missing-selector! NSObject::accessibilityExpandedStatusBlock not bound
 !missing-selector! NSObject::accessibilityFrame not bound
 !missing-selector! NSObject::accessibilityHint not bound
 !missing-selector! NSObject::accessibilityLabel not bound
@@ -102,6 +104,8 @@
 !missing-selector! NSObject::setAccessibilityContainerType: not bound
 !missing-selector! NSObject::setAccessibilityCustomActions: not bound
 !missing-selector! NSObject::setAccessibilityElementsHidden: not bound
+!missing-selector! NSObject::setAccessibilityExpandedStatus: not bound
+!missing-selector! NSObject::setAccessibilityExpandedStatusBlock: not bound
 !missing-selector! NSObject::setAccessibilityFrame: not bound
 !missing-selector! NSObject::setAccessibilityHint: not bound
 !missing-selector! NSObject::setAccessibilityLabel: not bound
@@ -151,9 +155,6 @@
 !extra-enum-value! Managed value 18 for UIViewAutoresizing.FlexibleDimensions not found in native headers
 !extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
 !extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
-
-## it's a `ref` on a struct, which xtro assumes nullable
-!extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
 
 ## added in xcode 14 and is between a #if XAMCORE_5_0
 !incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract

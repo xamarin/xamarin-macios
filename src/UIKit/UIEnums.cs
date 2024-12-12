@@ -2146,6 +2146,10 @@ namespace UIKit {
 		[NoiOS]
 		[NoMacCatalyst]
 		PageDown = 31,
+		[TV (18, 1), NoiOS, NoMacCatalyst]
+		TVRemoteOneTwoThree = 32,
+		[TV (18, 1), NoiOS, NoMacCatalyst]
+		TVRemoteFourColors = 33,
 	}
 
 	[NoWatch]
@@ -2174,7 +2178,7 @@ namespace UIKit {
 		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
 	}
 
-	[NoWatch, iOS (12, 0)]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIUserInterfaceStyle : long {
@@ -2593,7 +2597,7 @@ namespace UIKit {
 		NoLocationAvailable = 2,
 	}
 
-	[iOS (12, 0), TV (12, 0), NoWatch]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIGraphicsImageRendererFormatRange : long {
@@ -2604,7 +2608,7 @@ namespace UIKit {
 	}
 
 	/// <summary>Enumerates print failure reasons.</summary>
-	[iOS (12, 0), NoTV, NoWatch]
+	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIPrintErrorCode : long {
@@ -2833,7 +2837,9 @@ namespace UIKit {
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UIMenuAutoFill")]
 		AutoFill,
-
+		[TV (18, 1), iOS (18, 1), MacCatalyst (18, 1)]
+		[Field ("UIMenuOpen")]
+		Open,
 	}
 
 	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
@@ -3183,7 +3189,7 @@ namespace UIKit {
 		Secondary = 1L << 1,
 	}
 
-	[Flags, TV (13, 4), NoWatch, iOS (13, 4)]
+	[Flags, TV (13, 4), Watch (6, 2), iOS (13, 4)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIAxis : ulong {

@@ -23,7 +23,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<IOSDebugOverWiFi>True</IOSDebugOverWiFi>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.WatchOS.App.Common.props" />
 
@@ -81,8 +81,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
 			AdditionalArguments="$(WKDittoArchitectures)"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)$(AssemblyName)"
 		/>
@@ -93,8 +92,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
 			AdditionalArguments="$(WKDittoArchitectures)"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
+			DittoPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)_WatchKitStub\WK"
 		/>

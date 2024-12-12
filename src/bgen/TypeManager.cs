@@ -300,12 +300,17 @@ public class TypeManager {
 
 		if (t.Namespace is not null) {
 			string ns = t.Namespace;
-			if (NamespaceCache.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+			var isImplicitNamespace = NamespaceCache.ImplicitNamespaces.Contains (ns);
+			var isInMultipleNamespaces = IsInMultipleNamespaces (t);
+			var nonGlobalCandidate = isImplicitNamespace && !isInMultipleNamespaces;
+			if (nonGlobalCandidate || t.IsGenericType) {
 				var targs = t.GetGenericArguments ();
 				if (targs.Length == 0)
 					return t.Name + nullable;
 				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">" + nullable;
 			}
+			if (isInMultipleNamespaces)
+				return "global::" + t.FullName + nullable;
 			if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (ns))
 				return "global::" + t.FullName + nullable;
 			if (t.Name == t.Namespace)
@@ -315,6 +320,17 @@ public class TypeManager {
 		}
 
 		return t.FullName + nullable;
+	}
+
+	bool IsInMultipleNamespaces (Type? type)
+	{
+		if (type is null)
+			return false;
+
+		if (NamespaceCache.TypesInMultipleNamespaces.Contains (type.Name))
+			return true;
+
+		return IsInMultipleNamespaces (type.GetElementType ());
 	}
 
 	// TODO: If we ever have an API with nested properties of the same name more than

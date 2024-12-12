@@ -36,9 +36,6 @@
 !extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
 !extra-enum-value! Managed value -11847 for AVError.OperationInterrupted not found in native headers
 
-# not used on macOS
-!missing-enum! AVAudioSessionInterruptionReason not bound
-
 ## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
 ## so these selectors have been bound manually
 !missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound

@@ -27,8 +27,8 @@ steps:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
 
-  - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-    displayName: 'Show Environment'
+  - pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+    displayName: 'Show Bot Info'
 
   - pwsh: |
       if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -PathType Container) {
@@ -59,15 +59,15 @@ steps:
     inputs:
       dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
       dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-ChangeDetection-$(System.JobAttempt)'
-      buildNumber: 'xamarin-macios/detected-changes/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)'
+      buildNumber: '$(BUILD_REPOSITORY_TITLE)/detected-changes/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)'
       sourcePath: '$(System.DefaultWorkingDirectory)/change-detection/results/'
       detailedLog: true
       usePat: true
 
   # Process the github comment and publish it
   - pwsh: |
-      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-      $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
+      $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/$Env:BUILD_REPOSITORY_TITLE/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
 
       $rootDirectory = Join-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" "change-detection" "results"
 
@@ -84,7 +84,7 @@ steps:
         $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
       }
       $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH
-      $result = $githubComments.NewCommentFromMessage("", "", $converted)
+      $result = $githubComments.NewCommentFromMessage("", "", $converted, "api diff")
     displayName: 'Publish GitHub comment for change detection'
     timeoutInMinutes: 10
     continueOnError: true  # don't let any failures here stop us

@@ -7,3 +7,4 @@
 !missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
 !missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
 !missing-pinvoke! CFCopyHomeDirectoryURL is not bound
+!missing-field! kCFURLFileProtectionCompleteWhenUserInactive not bound

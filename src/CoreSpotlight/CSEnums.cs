@@ -28,6 +28,7 @@ namespace CoreSpotlight {
 		RemoteConnectionError = -1003,
 		QuotaExceeded = -1004,
 		IndexingUnsupported = -1005,
+		MismatchedClientState = -1006,
 	}
 
 	/// <summary>Enumerates errors that can occur while running a Core Spotlight query with <see cref="M:CoreSpotlight.CSSearchQuery.Start" />.</summary>
@@ -52,5 +53,13 @@ namespace CoreSpotlight {
 		Complete,
 		CompleteUnlessOpen,
 		CompleteUntilFirstUserAuthentication,
+	}
+
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[Native]
+	public enum CSUserInteraction : long {
+		Select,
+		Default = Select,
+		Focus,
 	}
 }

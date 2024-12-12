@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
 using Xharness.Jenkins;
-using Xharness.TestImporter;
 
 #nullable enable
 
@@ -34,9 +33,6 @@ namespace Xharness.Tests.Jenkins {
 			// Assert platforms
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.tvOS), "tvos");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.tvOS), "IsEnabled (tvOS)");
-
-			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.watchOS), "watchOS");
-			Assert.IsTrue (selection.IsEnabled (PlatformLabel.watchOS), "IsEnabled (watchOS)");
 
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.iOS), "iOS");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.iOS), "IsEnabled (iOS)");
@@ -91,16 +87,12 @@ namespace Xharness.Tests.Jenkins {
 		{
 			// disable all, then enable a single tests
 			selection.SetEnabled (TestLabel.All, false);
-			selection.SetEnabled (TestLabel.Bcl, true);
 			foreach (var obj in Enum.GetValues (typeof (TestLabel))) {
 				if (obj is TestLabel label) {
 					switch (label) {
 					case TestLabel.All:
 					case TestLabel.None:
 						continue;
-					case TestLabel.Bcl:
-						Assert.IsTrue (selection.IsEnabled (label), label.ToString ());
-						break;
 					default:
 						Assert.IsFalse (selection.IsEnabled (label), label.ToString ());
 						break;
@@ -113,7 +105,6 @@ namespace Xharness.Tests.Jenkins {
 		public void EnableSeveralTests ()
 		{
 			selection.SetEnabled (TestLabel.All, false);
-			selection.SetEnabled (TestLabel.Bcl, true);
 			selection.SetEnabled (TestLabel.Monotouch, true);
 #if NET
 			foreach (var obj in Enum.GetValues<TestLabel> ()) {
@@ -125,7 +116,6 @@ namespace Xharness.Tests.Jenkins {
 					case TestLabel.All:
 					case TestLabel.None:
 						continue;
-					case TestLabel.Bcl:
 					case TestLabel.Monotouch:
 						Assert.IsTrue (selection.IsEnabled (label), label.ToString ());
 						break;

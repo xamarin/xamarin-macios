@@ -32,6 +32,9 @@ using ARKit;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 
 	public abstract class ApiCtorInitTest : ApiBaseTest {
@@ -97,10 +100,6 @@ namespace Introspection {
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
 				return true;
-#if !NET // NSMenuView does not exist in .NET
-			case "NSMenuView":
-				return TestRuntime.IsVM; // skip on vms due to hadware problems
-#endif // !NET
 			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
 			case "MPSCnnNeuronPReLU":
 			case "MPSCnnNeuronHardSigmoid":
@@ -118,16 +117,21 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "CKModifyBadgeOperation":
 			case "CKDiscoverUserInfosOperation": // deprecated, throws exception
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
-			case "AVSpeechSynthesisVoice": // Calling description crashes the test
-#if __WATCHOS__
-				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
-#else
-				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
+			case "MPSGraphExecutableSerializationDescriptor":
+#if __MACCATALYST__
+				// failed assertion `Error: unhandled platform for MPSGraph serialization'
+				return true;
+#elif __IOS__
+				// crashes in the simulator
+				return TestRuntime.IsSimulator;
 #endif
+			case "AVSpeechSynthesisVoice": // Calling description crashes the test
+				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
 			case "SKView":
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)
@@ -142,6 +146,11 @@ namespace Introspection {
 			case "GKHybridStrategist":
 				return true; // GKHybridStrategist has been removed from our bindings
 #endif
+			case "THClient":
+				// The default initializer is documented to work, but it takes a long time before it eventually fails on macOS Sequoia
+				// Looking at the stack trace in Xcode, it seems it hits the network and times out waiting for something?
+				// So just skip the testing, it's likely the constructor is bound correctly, but that it only works in some circumstances.
+				return true;
 			}
 
 			switch (type.Namespace) {
@@ -273,6 +282,10 @@ namespace Introspection {
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
 				if (SkipDueToAttribute (ctor))
+					continue;
+
+				// Don't test methods that have [UnsupportedOSPlatform] + [EditorBrowsable (Never)]
+				if (SkipDueToInvisibleAndUnsupported (ctor))
 					continue;
 
 				if ((ctor is null) || ctor.IsAbstract) {

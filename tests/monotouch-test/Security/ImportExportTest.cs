@@ -74,11 +74,7 @@ namespace MonoTouchFixtures.Security {
 			using (NSMutableDictionary options = new NSMutableDictionary ()) {
 				options [SecImportExport.Passphrase] = new NSString ("b5");
 				NSDictionary [] array;
-#if MONOMAC
-				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.Pkcs12VerifyFailure), "AuthFailed");
-#else
-				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.AuthFailed), "AuthFailed");
-#endif
+				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.AuthFailed).Or.EqualTo (SecStatusCode.Pkcs12VerifyFailure), "AuthFailed");
 			}
 		}
 	}

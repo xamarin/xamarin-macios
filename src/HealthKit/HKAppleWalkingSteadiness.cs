@@ -11,7 +11,7 @@ namespace HealthKit {
 
 #if NET
 	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos13.0")]
 #else
 	[Watch (8, 0)]

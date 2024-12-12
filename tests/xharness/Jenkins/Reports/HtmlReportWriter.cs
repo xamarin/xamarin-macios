@@ -172,7 +172,6 @@ namespace Xharness.Jenkins.Reports {
 	<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-simulator"");'>All simulator tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-ios"");'>All iOS tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-tvos"");'>All tvOS tests</a></li>
-	<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-watchos"");'>All watchOS tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-mac"");'>All Mac tests</a></li>
 </ul>
 </li>
@@ -183,7 +182,6 @@ namespace Xharness.Jenkins.Reports {
 	<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-simulator"");'>All simulator tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-ios"");'>All iOS tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-tvos"");'>All tvOS tests</a></li>
-	<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-watchos"");'>All watchOS tests</a></li>
 	<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-mac"");'>All Mac tests</a></li>
 </ul>
 </li>
@@ -380,10 +378,6 @@ namespace Xharness.Jenkins.Reports {
 						writer.WriteLine ("</div>");
 						writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
-						var testAssemblies = test.ReferencedNunitAndXunitTestAssemblies;
-						if (testAssemblies.Any ())
-							writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
-
 						if (test.KnownFailure is not null)
 							writer.WriteLine ($"Known failure: <a href='{test.KnownFailure.IssueLink}'>{test.KnownFailure.HumanMessage}</a> <br />");
 
@@ -422,11 +416,7 @@ namespace Xharness.Jenkins.Reports {
 								writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 							var runDeviceTest = runTest as RunDeviceTask;
 							if (runDeviceTest?.Device is not null) {
-								if (runDeviceTest.CompanionDevice is not null) {
-									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
-								} else {
-									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
-								}
+								writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
 							}
 						} else {
 							if (test.Duration.Ticks > 0)

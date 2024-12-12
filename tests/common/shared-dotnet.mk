@@ -72,33 +72,37 @@ ifeq ($(PLATFORM),)
 PLATFORM=$(shell basename "$(CURDIR)")
 endif
 
-ifeq ($(RUNTIMEIDENTIFIERS),)
+ifneq ($(RUNTIMEIDENTIFIERS)$(RUNTIMEIDENTIFIER),)
+$(error "Don't set RUNTIMEIDENTIFIER or RUNTIMEIDENTIFIERS, set RID instead")
+endif
+
+ifeq ($(RID),)
 ifeq ($(PLATFORM),iOS)
-RUNTIMEIDENTIFIERS=ios-arm64
+RID=iossimulator-arm64
 else ifeq ($(PLATFORM),tvOS)
-RUNTIMEIDENTIFIERS=tvos-arm64
+RID=tvossimulator-arm64
 else ifeq ($(PLATFORM),MacCatalyst)
 ifeq ($(CONFIG),Release)
-RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
+RID=maccatalyst-x64;maccatalyst-arm64
 else ifneq ($(UNIVERSAL),)
-RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
+RID=maccatalyst-x64;maccatalyst-arm64
 else ifeq ($(shell arch),arm64)
-RUNTIMEIDENTIFIERS=maccatalyst-arm64
+RID=maccatalyst-arm64
 else
-RUNTIMEIDENTIFIERS=maccatalyst-x64
+RID=maccatalyst-x64
 endif
 else ifeq ($(PLATFORM),macOS)
 ifeq ($(CONFIG),Release)
-RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
+RID=osx-x64;osx-arm64
 else ifneq ($(UNIVERSAL),)
-RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
+RID=osx-x64;osx-arm64
 else ifeq ($(shell arch),arm64)
-RUNTIMEIDENTIFIERS=osx-arm64
+RID=osx-arm64
 else
-RUNTIMEIDENTIFIERS=osx-x64
+RID=osx-x64
 endif
 else
-RUNTIMEIDENTIFIERS=unknown-platform-$(PLATFORM)
+RID=unknown-platform-$(PLATFORM)
 endif
 endif
 
@@ -106,10 +110,12 @@ ifneq ($(UNIVERSAL),)
 UNIVERSAL_ARGUMENT=/p:UniversalBuild=true
 endif
 
-ifeq ($(findstring ;,$(RUNTIMEIDENTIFIERS)),;)
+ifeq ($(findstring ;,$(RID)),;)
 PATH_RID=
+export RUNTIMEIDENTIFIERS=$(RID)
 else
-PATH_RID=$(RUNTIMEIDENTIFIERS)/
+PATH_RID=$(RID)/
+export RUNTIMEIDENTIFIER=$(RID)
 endif
 
 

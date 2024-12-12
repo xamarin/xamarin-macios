@@ -16,7 +16,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CompileSceneKitAssets : XamarinTask, ICancelableTask {
+	public class CompileSceneKitAssets : XamarinTask, ICancelableTask, IHasProjectDir, IHasResourcePrefix {
 		string toolExe;
 
 		#region Inputs
@@ -130,7 +130,6 @@ namespace Xamarin.MacDev.Tasks {
 				return taskRunner.RunAsync (this).Result;
 			}
 
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName);
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
@@ -150,7 +149,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				asset.RemoveMetadata ("LogicalName");
 
-				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId));
+				var bundleName = BundleResource.GetLogicalName (this, asset);
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
 
 				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTimeUtc (asset.ItemSpec) > File.GetLastWriteTimeUtc (output.ItemSpec))) {
@@ -202,7 +201,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var tasks = new List<Task> ();
 			foreach (var item in items) {
-				var bundleDir = BundleResource.GetLogicalName (ProjectDir, prefixes, new TaskItem (item), !string.IsNullOrEmpty (SessionId));
+				var bundleDir = BundleResource.GetLogicalName (this, new TaskItem (item));
 				var output = Path.Combine (intermediate, bundleDir);
 
 				tasks.Add (CopySceneKitAssets (item.ItemSpec, output, intermediate));

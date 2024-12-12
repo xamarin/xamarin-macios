@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
@@ -15,8 +16,7 @@ using static Xamarin.Bundler.FileCopier;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	// This is the same as XamarinToolTask, except that it subclasses Task instead.
-	public abstract class XamarinTask : Task {
+	public abstract class XamarinTask : Task, IHasSessionId, ICustomLogger {
 
 		public string SessionId { get; set; } = string.Empty;
 
@@ -31,20 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Product {
 			get {
-				if (IsDotNet)
-					return "Microsoft." + PlatformName;
-
-				switch (Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-				case ApplePlatform.MacCatalyst:
-					return "Xamarin.iOS";
-				case ApplePlatform.MacOSX:
-					return "Xamarin.Mac";
-				default:
-					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-				}
+				return "Microsoft." + PlatformName;
 			}
 		}
 
@@ -68,10 +55,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				return target_framework.Value;
 			}
-		}
-
-		public bool IsDotNet {
-			get { return TargetFramework.IsDotNet; }
 		}
 
 		public string PlatformName {
@@ -120,7 +103,7 @@ namespace Xamarin.MacDev.Tasks {
 			return ExecuteAsync (Log, fileName, arguments, sdkDevPath, environment, mergeOutput, showErrorIfFailure, workingDirectory);
 		}
 
-		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null)
+		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null, CancellationToken? cancellationToken = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
 			var launchEnvironment = environment is null ? new Dictionary<string, string?> () : new Dictionary<string, string?> (environment);
@@ -128,7 +111,18 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
-			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory);
+			if (!string.IsNullOrEmpty (workingDirectory)) {
+				log.LogMessage (MessageImportance.Low, "    Working directory: {0}", workingDirectory);
+			} else {
+				log.LogMessage (MessageImportance.Low, "    Current directory: {0}", Environment.CurrentDirectory);
+			}
+			if (launchEnvironment?.Any () == true) {
+				log.LogMessage (MessageImportance.Low, "    With environment:");
+				foreach (var kvp in launchEnvironment) {
+					log.LogMessage (MessageImportance.Low, "        {0}={1}", kvp.Key, kvp.Value);
+				}
+			}
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory, cancellationToken: cancellationToken);
 			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
@@ -253,5 +247,28 @@ namespace Xamarin.MacDev.Tasks {
 				await runner.GetFileAsync (this, item.ItemSpec).ConfigureAwait (false);
 			}
 		}
+
+		#region Xamarin.MacDev.ICustomLogger
+		void ICustomLogger.LogError (string message, Exception ex)
+		{
+			Log.LogError (message);
+			Log.LogErrorFromException (ex);
+		}
+
+		void ICustomLogger.LogWarning (string messageFormat, params object [] args)
+		{
+			Log.LogWarning (messageFormat, args);
+		}
+
+		void ICustomLogger.LogInfo (string messageFormat, object [] args)
+		{
+			Log.LogMessage (MessageImportance.Normal, messageFormat, args);
+		}
+
+		void ICustomLogger.LogDebug (string messageFormat, params object [] args)
+		{
+			Log.LogMessage (MessageImportance.Low, messageFormat, args);
+		}
+		#endregion
 	}
 }

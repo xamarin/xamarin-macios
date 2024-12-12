@@ -1,0 +1,66 @@
+variables:
+# provisionator-uri setting
+- group: XamarinCompatLab
+
+# allow to override the provisionator channel via a paramter
+- name: PROVISIONATOR_CHANNEL
+  value: ${{ parameters.provisionatorChannel }}
+
+- group: xamops-azdev-secrets
+
+# needed to install the dev certificates in the build machine
+- group: Xamarin Notarization
+- group: Xamarin Signing
+
+# Override the GitHub.Token setting defined in the Xamarin Release group
+# Use a token dedicated to critical production workflows and help avoid GitHub throttling
+# this variable comes from the Xamarin-Secrets group, so we have do have both together
+- group: Xamarin-Secrets
+- name: GitHub.Token
+  value: $(github--pat--vs-mobiletools-engineering-service2)  
+
+# Overrude the azdo build access, as with the GitHub token, this variables depend on the
+# Xamarin-Secrets group.
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+
+#  keying to use for the sining
+- name: SigningKeychain
+  value: "builder.keychain"
+
+# Needed to ensure that devices uses the usb cable to communicate with the devices to run the tests.
+- name: USE_TCP_TUNNEL                                        
+  value: true
+
+# pool information
+- name: PRBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+- name: PRBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+- name: CIBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+- name: CIBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+
+# override the default build revision
+- name: BUILD_REVISION
+  value: azure-devops-$(Build.SourceVersion)
+
+- name: MaciosUploadPrefix
+  value: ''
+
+# set the pipeline to debug mode or not
+- name: system.debug
+  value: false
+
+# the name of our repository
+- name: BUILD_REPOSITORY_TITLE
+  value: 'xamarin-macios'
+
+# point to the vsdrops that we will be using for the diff uploads.
+- name: VSDropsPrefix
+  value: 'https://vsdrop.corp.microsoft.com/file/v1/$(BUILD_REPOSITORY_TITLE)/device-tests'
+

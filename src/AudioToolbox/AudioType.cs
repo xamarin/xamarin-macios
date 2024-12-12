@@ -35,6 +35,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -81,7 +82,13 @@ namespace AudioToolbox {
 		DVIIntelIMA = 0x6d730011,
 		MicrosoftGSM = 0x6d730031,
 		AES3 = 0x61657333, // 'aes3'
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'EnhancedAC3' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		EnhancedAES3 = 0x65632d33, // 'ec-3'
+#endif
+		/// <summary>Enhanced AC-3.</summary>
+		EnhancedAC3 = 0x65632d33, // 'ec-3'
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -95,6 +102,16 @@ namespace AudioToolbox {
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
 		Opus = 0x6f707573, // 'opus'
+		/// <summary>Apple Positional Audio Codec.</summary>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+#else
+		[NoWatch, iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+#endif
+		Apac = 0x61706163, // 'apac'
 	}
 
 	[Flags]
@@ -921,6 +938,46 @@ namespace AudioToolbox {
 #endif
 		Ogg_7_1 = (215U << 16) | 8,
 
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_5_0_E = (216U << 16) | 5,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_5_1_E = (217U << 16) | 6,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_6_1_B = (218U << 16) | 7,
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		MPEG_7_1_D = (219U << 16) | 8,
+
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
@@ -1424,6 +1481,70 @@ namespace AudioToolbox {
 		public override string ToString ()
 		{
 			return string.Format ("[channels={0},dataByteSize={1},ptrData=0x{2:x}]", NumberChannels, DataByteSize, Data);
+		}
+	}
+
+	/// <summary>This struct represents the native <see href="https://developer.apple.com/documentation/coreaudiotypes/audiobufferlist">AudioBufferList</see> struct.</summary>
+	/// <remarks>
+	///   <para>
+	///     Typically it's better to use the <see cref="AudioBuffers" /> class to wrap a pointer to a native AudioBufferList,
+	///     but some audio code needs to minimize memory allocations due to being executed in a realtime thread. In that case,
+	///     using this struct is better, because it's possible to use it without incurring any memory allocations.
+	///   </para>
+	///
+	///   <para>
+	///     Note that this struct should never be created in C#, the only valid way to use it is to cast a pointer (<see cref="IntPtr" />)
+	///     to a pointer of this struct:
+	///   </para>
+	///
+	///   <example>
+	///     <code lang="csharp lang-csharp"><![CDATA[
+	/// public unsafe static void Callback (IntPtr audioBufferListPtr) {
+	///     AudioBufferList* audioBufferList = (AudioBufferList* ) audioBufferListPtr;
+	///     for (var i = 0; i < audioBufferList->Count; i++) {
+	///         AudioBuffer* buffer = audioBufferList->GetBuffer (index),
+	///         // Use the buffer for something
+	///     }
+	/// }
+	///   ]]></code>
+	///   </example>
+	/// </remarks>
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public unsafe readonly ref struct AudioBufferList {
+		readonly uint mNumberOfBuffers;
+
+		/// <summary>Returns the number of audio buffers in this list.</summary>
+		public uint Count { get => mNumberOfBuffers; }
+
+		/// <summary>Return a pointer to the <see cref="AudioBuffer" /> at the specified index.</summary>
+		/// <param name="index">The index of the <see cref="AudioBuffer" /> to retrieve.</param>
+		/// <returns>A pointer to the <see cref="AudioBuffer" /> at the specified index.</returns>
+		public AudioBuffer* GetBuffer (int index)
+		{
+			if (index < 0 || index >= Count)
+				throw new ArgumentOutOfRangeException (nameof (index));
+
+			//
+			// Decodes
+			//
+			// struct AudioBufferList
+			// {
+			//    UInt32      mNumberBuffers;
+			//    AudioBuffer mBuffers[1]; // this is a variable length array of mNumberBuffers elements
+			// }
+			//
+			fixed (uint* bufferPtr = &mNumberOfBuffers) {
+				byte* baddress = (byte*) bufferPtr;
+
+				var ptr = baddress + IntPtr.Size + index * sizeof (AudioBuffer);
+				return (AudioBuffer*) ptr;
+			}
 		}
 	}
 

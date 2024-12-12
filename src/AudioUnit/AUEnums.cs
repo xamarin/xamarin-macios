@@ -31,6 +31,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -68,7 +69,7 @@ namespace AudioUnit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		MidiOutputBufferFull = -66753,
-		[iOS (11, 3), TV (11, 3), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		InvalidParameterValue = -66743,
 		[NoWatch]
@@ -137,7 +138,7 @@ namespace AudioUnit {
 		Milliseconds = 24,
 		Ratio = 25,
 		CustomUnit = 26,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		MIDI2Controller = 27,
 	}
 
@@ -213,7 +214,7 @@ namespace AudioUnit {
 		ProcessIsMaster = 1835103092, // 'mast'
 #endif // !XAMCORE_5_0
 		[NoiOS]
-		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV, NoWatch]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -228,7 +229,7 @@ namespace AudioUnit {
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 		[NoiOS]
-		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
 		[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
 		InputMute = 1852403056, //pmin
@@ -259,12 +260,8 @@ namespace AudioUnit {
 		Main = 0, // 0
 	}
 
-#if XAMCORE_3_0
 	/// <summary>An enumeration whose values specify a kind of <see cref="T:AudioUnit.AudioUnit" />.</summary>
 	[Internal]
-#else
-	[Obsolete ("Please use the strongly typed properties instead.")]
-#endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
 								   // Audio Unit Properties
 		ClassInfo = 0,
@@ -312,16 +309,16 @@ namespace AudioUnit {
 		ParametersForOverview = 57,
 		[MacCatalyst (13, 1)]
 		SupportsMpe = 58,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		LastRenderSampleTime = 61,
-		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
+		[iOS (14, 5), TV (14, 5)]
 		[MacCatalyst (14, 5)]
 		LoadedOutOfProcess = 62,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		MIDIOutputEventListCallback = 63,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		AudioUnitMIDIProtocol = 64,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		HostMIDIProtocol = 65,
 
 #if MONOMAC
@@ -418,21 +415,29 @@ namespace AudioUnit {
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		DistanceParams = 3010,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		AttenuationCurve = 3013,
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		RenderingFlags = 3003,
+		SpatialMixerRenderingFlags = 3003,
+		SpatialMixerSourceMode = 3005,
+		SpatialMixerDistanceParams = 3010,
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'SpatialMixerDistanceParams' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		DistanceParams = SpatialMixerDistanceParams,
+		[Obsolete ("Use 'SpatialMixerAttenuationCurve' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		AttenuationCurve = SpatialMixerAttenuationCurve,
+		[Obsolete ("Use 'SpatialMixerRenderingFlags' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		RenderingFlags = SpatialMixerRenderingFlags,
+#endif
+		SpatialMixerAttenuationCurve = 3013,
+		SpatialMixerOutputType = 3100,
+		SpatialMixerPointSourceInHeadMode = 3103,
+		[Mac (12, 3), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerEnableHeadTracking = 3111,
+		[Mac (13, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerPersonalizedHrtfMode = 3113,
+		[Mac (14, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		SpatialMixerAnyInputIsUsingPersonalizedHrtf = 3116,
 
 		// AUScheduledSoundPlayer
 		ScheduleAudioSlice = 3300,
@@ -622,7 +627,7 @@ namespace AudioUnit {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		DynamicsProcessorMasterGain = 6,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		DynamicsProcessorOverallGain = 6,
 		DynamicsProcessorCompressionAmount = 1000,
 		DynamicsProcessorInputAmplitude = 2000,
@@ -892,7 +897,6 @@ namespace AudioUnit {
 		HrtfHQ = 6,
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		UseOutputType = 7,
 	}
@@ -917,7 +921,7 @@ namespace AudioUnit {
 		Release = 2,
 	}
 
-	[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 	public enum AUVoiceIOSpeechActivityEvent : uint {
 		Started = 0,
 		Ended = 1,

@@ -1,9 +1,10 @@
 #nullable enable
-
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
+
+using NUnit.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.Tests;
@@ -15,6 +16,17 @@ namespace Xamarin.Tests {
 			{ "_BundlerVerbosity", "1" },
 		};
 
+		readonly char [] invalidChars = { '{', '}', '(', ')', '$', ':', ';', '\"', '\'', ',', '=', '|' };
+		protected string TestName {
+			get {
+				var result = TestContext.CurrentContext.Test.Name;
+				foreach (var c in invalidChars.Concat (Path.GetInvalidPathChars ().Concat (Path.GetInvalidFileNameChars ()))) {
+					result = result.Replace (c, '_');
+				}
+				return result.Replace ("_", string.Empty);
+			}
+		}
+
 		protected static Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null, Dictionary<string, string>? extraProperties = null)
 		{
 			var rv = new Dictionary<string, string> (verbosity);
@@ -24,7 +36,20 @@ namespace Xamarin.Tests {
 				foreach (var kvp in extraProperties)
 					rv [kvp.Key] = kvp.Value;
 			}
+
+			if (Configuration.IsBuildingRemotely && !rv.ContainsKey ("IsHotRestartBuild"))
+				AddRemoteProperties (rv);
+
 			return rv;
+		}
+
+		protected static void AddRemoteProperties (Dictionary<string, string> properties)
+		{
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
+			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
+				properties ["ContinueOnDisconnected"] = "false";
 		}
 
 		protected static void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
@@ -55,12 +80,12 @@ namespace Xamarin.Tests {
 			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
@@ -157,6 +182,16 @@ namespace Xamarin.Tests {
 					continue;
 				Directory.Delete (dir, true);
 			}
+		}
+
+		protected static bool CanExecute (ApplePlatform platform, Dictionary<string, string> properties)
+		{
+			if (properties.TryGetValue ("RuntimeIdentifier", out var runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			} else if (properties.TryGetValue ("RuntimeIdentifiers", out runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			}
+			return false;
 		}
 
 		protected static bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
@@ -428,13 +463,6 @@ namespace Xamarin.Tests {
 			return false;
 		}
 
-		public static void AssertErrorCount (IList<BuildLogEvent> errors, int count, string message)
-		{
-			if (errors.Count == count)
-				return;
-			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
-		}
-
 		public static void AssertWarningMessages (IList<BuildLogEvent> actualWarnings, params string [] expectedWarningMessages)
 		{
 			AssertBuildMessages ("warning", actualWarnings, expectedWarningMessages);
@@ -453,9 +481,16 @@ namespace Xamarin.Tests {
 		public static void AssertBuildMessages (string type, IList<BuildLogEvent> actualMessages, params string [] expectedMessages)
 		{
 			AssertBuildMessages (type, actualMessages,
-				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == v)).ToArray (),
+				expectedMessages.Select (v => new Func<string, bool> ((msg) => msg == Canonicalize (v))).ToArray (),
 				expectedMessages.Select (v => new Func<string> (() => v)).ToArray ()
 			);
+		}
+
+		static string Canonicalize (string? msg)
+		{
+			if (msg is null)
+				return string.Empty;
+			return msg.Trim ('\n', '\r', ' ', '\t');
 		}
 
 		static string makeSingleLine (string? msg)
@@ -482,11 +517,11 @@ namespace Xamarin.Tests {
 
 			var failures = new List<string> ();
 			for (var i = 0; i < expectedCount; i++) {
-				var actual = actualMessages [i].Message ?? string.Empty;
+				var actual = Canonicalize (actualMessages [i].Message);
 				var isExpected = matchesExpectedMessage [i];
 				if (!isExpected (actual)) {
 					actual = makeSingleLine (actual);
-					var expected = makeSingleLine (rendersExpectedMessage [i] ());
+					var expected = makeSingleLine (Canonicalize (rendersExpectedMessage [i] ()));
 					failures.Add ($"\tUnexpected {type} message #{i}:\n\t\tExpected: {expected}\n\t\tActual:   {actual}");
 				}
 			}
@@ -508,6 +543,23 @@ namespace Xamarin.Tests {
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+
+		public void AssertTargetExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
+		{
+			var targets = executedTargets.Where (v => v.TargetName == targetName);
+			if (!targets.Any ())
+				Assert.Fail ($"The target '{targetName}' was not executed: no corresponding targets found in binlog ({message})");
+			if (!targets.Any (v => !v.Skipped))
+				Assert.Fail ($"The target '{targetName}' was not executed: the target was found {targets.Count ()} time(s) in the binlog, but they were all skipped ({message})");
+		}
+
+		public void AssertTargetNotExecuted (IEnumerable<TargetExecutionResult> executedTargets, string targetName, string message)
+		{
+			var targets = executedTargets.Where (v => v.TargetName == targetName);
+			if (targets.Any (v => !v.Skipped))
+				Assert.Fail ($"The target '{targetName}' was unexpectedly executed ({message})");
 		}
 
 		static bool? is_in_ci;
@@ -533,5 +585,35 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected Dictionary<string, string> GetHotRestartProperties ()
+		{
+			return GetHotRestartProperties (null, out var _, out var _);
+		}
+
+		protected Dictionary<string, string> GetHotRestartProperties (string? tmpdir, out string hotRestartOutputDir, out string hotRestartAppBundlePath)
+		{
+			var properties = new Dictionary<string, string> ();
+			properties ["IsHotRestartBuild"] = "true";
+			properties ["IsHotRestartEnvironmentReady"] = "true";
+			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
+			properties ["_IsAppSigned"] = "false";
+			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+
+			if (!string.IsNullOrEmpty (tmpdir)) {
+				// Redirect hot restart output to a place we can control from here
+				hotRestartOutputDir = Path.Combine (tmpdir, "out")!;
+				Directory.CreateDirectory (hotRestartOutputDir);
+				properties ["HotRestartSignedAppOutputDir"] = hotRestartOutputDir + Path.DirectorySeparatorChar;
+
+				hotRestartAppBundlePath = Path.Combine (tmpdir, "HotRestartAppBundlePath")!; // Do not create this directory, it will be created and populated with default contents if it doesn't exist.
+				properties ["HotRestartAppBundlePath"] = hotRestartAppBundlePath; // no trailing directory separator char for this property.
+			} else {
+				hotRestartOutputDir = string.Empty;
+				hotRestartAppBundlePath = string.Empty;
+			}
+
+			return properties;
+		}
 	}
 }

@@ -36,6 +36,7 @@ ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
+	Accessibility/AXSettings.cs \
 
 # Accounts
 
@@ -202,7 +203,6 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioFormatAvailability.cs \
 	AudioToolbox/AudioQueue.cs \
 	AudioToolbox/AudioServices.cs \
-	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioToolbox.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
@@ -277,14 +277,11 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVContentKeyResponse.cs \
 	AVFoundation/AVDepthData.cs \
-	AVFoundation/AVFragmentedAsset.cs \
-	AVFoundation/AVFragmentedAssetTrack.cs \
 	AVFoundation/AVLayerVideoGravity.cs \
 	AVFoundation/AVMetadataItemFilter.cs \
 	AVFoundation/AVMetadataMachineReadableCodeObject.cs \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
-	AVFoundation/AVPlayer.cs \
 	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
@@ -296,6 +293,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
+	AVFoundation/AVCaptureReactionType.rgen.cs \
 
 # AVKit
 
@@ -319,6 +317,11 @@ BACKGROUNDTASKS_API_SOURCES = \
 
 BACKGROUNDASSETS_SOURCES = \
 	BackgroundAssets/BACompat.cs \
+
+# BrowserEngineKit
+
+BROWSERENGINEKIT_CORE_SOURCES = \
+	BrowserEngineKit/BEStructs.cs \
 
 # BusinessChat
 
@@ -369,6 +372,9 @@ CLOUDKIT_API_SOURCES = \
 
 CLOUDKIT_SOURCES = \
 	CloudKit/CKCompat.cs \
+	CloudKit/CKFetchNotificationChangesOperation.cs \
+	CloudKit/CKMarkNotificationsReadOperation.cs \
+	CloudKit/CKModifyBadgeOperation.cs \
 	CloudKit/CKRecord.cs \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
@@ -410,7 +416,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactFetchRequest.cs \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
-	Contacts/CNObsolete.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -458,6 +463,7 @@ COREDATA_API_SOURCES = \
 
 COREDATA_SOURCES = \
 	CoreData/NSEntityDescription.cs \
+	CoreData/NSPersistentStoreCoordinator.cs \
 	CoreData/Obsolete.cs \
 
 # CoreFoundation
@@ -615,6 +621,7 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiCompat.cs \
 	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
+	CoreMidi/MidiStructs.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
@@ -637,7 +644,6 @@ COREMOTION_CORE_SOURCES = \
 	CoreMotion/Defs.cs \
 
 COREMOTION_SOURCES = \
-	CoreMotion/CMCompat.cs \
 	CoreMotion/Extras.cs \
 	CoreMotion/CMSensorDataList.cs \
 
@@ -711,6 +717,8 @@ COREVIDEO_CORE_SOURCES = \
 
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
+	CoreVideo/CVMetalBuffer.cs \
+	CoreVideo/CVMetalBufferCache.cs \
 	CoreVideo/CVMetalTexture.cs \
 	CoreVideo/CVMetalTextureAttributes.cs \
 	CoreVideo/CVMetalTextureCache.cs \
@@ -848,7 +856,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDictionary.cs \
 	Foundation/NSDictionary_2.cs \
 	Foundation/NSDirectoryEnumerator.cs \
-	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExceptionError.cs \
@@ -923,6 +930,19 @@ FOUNDATION_SOURCES = \
 	Foundation/ToString.cs \
 	Foundation/NSItemProvider.cs \
 
+# FSKit
+
+# FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
+
+# FSKIT_CORE_SOURCES = \
+# 	FSKit/FSMetaReadahead.cs \
+
+# FSKIT_SOURCES = \
+# 	FSKit/FSBlockDeviceResource.cs \
+# 	FSKit/FSFileName.cs \
+# 	FSKit/FSKitFunctions.cs \
+# 	FSKit/FSMessageConnection.cs \
+
 # GameController
 
 GAMECONTROLLER_API_SOURCES = \
@@ -944,6 +964,7 @@ GAMEKIT_API_SOURCES = \
 	GameKit/GameKit.cs \
 
 GAMEKIT_SOURCES = \
+	GameKit/GKGameCenterViewController.cs \
 	GameKit/GKLocalPlayerListener.cs \
 	GameKit/GameKit2.cs \
 	GameKit/GKCompat.cs \
@@ -986,12 +1007,13 @@ HEALTHKIT_API_SOURCES = \
 
 HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
+	HealthKit/HKAppleSleepingBreathingDisturbances.cs \
 	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
-	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
+	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
 
 # HealthKitUI
@@ -1121,6 +1143,9 @@ JAVASCRIPTCORE_SOURCES = \
 LOCALAUTHENTICATION_API_SOURCES = \
 	LocalAuthentication/LAEnums.cs \
 
+LOCALAUTHENTICATION_SOURCES = \
+	LocalAuthentication/LADomainStateCompanion.cs \
+
 # MapKit
 
 MAPKIT_API_SOURCES = \
@@ -1130,8 +1155,8 @@ MAPKIT_CORE_SOURCES = \
 	MapKit/MapKit.cs \
 
 MAPKIT_SOURCES = \
+	MapKit/MKAddressFilter.cs \
 	MapKit/MKCompat.cs \
-	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
@@ -1143,6 +1168,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
+	MapKit/MKUserLocation.cs \
 
 # MediaAccessibility
 
@@ -1152,6 +1178,16 @@ MEDIAACCESSIBILITY_API_SOURCES = \
 MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
 	MediaAccessibility/MAImageCaptioning.cs \
+
+# MediaExtesion
+
+MEDIAEXTENSION_SOURCES = \
+	MediaExtension/MEByteSource.cs \
+	MediaExtension/MERawProcessingBooleanParameter.cs \
+	MediaExtension/MERawProcessingFloatParameter.cs \
+	MediaExtension/MERawProcessingIntegerParameter.cs \
+	MediaExtension/MERawProcessingListParameter.cs \
+	MediaExtension/MESampleCursor.cs \
 
 # MediaPlayer
 
@@ -1164,7 +1200,6 @@ MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMediaQuery.cs \
 	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
-	MediaPlayer/MPPlayableContentDelegate.cs \
 	MediaPlayer/MPRemoteCommandCenter.cs \
 	MediaPlayer/MPSkipIntervalCommand.cs \
 	MediaPlayer/MPVolumeSettings.cs \
@@ -1202,6 +1237,8 @@ METAL_CORE_SOURCES = \
 METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
+	Metal/MTLCommandBuffer.cs \
+	Metal/MTLCommandQueue.cs \
 	Metal/MTLCompat.cs \
 	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
@@ -1213,6 +1250,7 @@ METAL_SOURCES = \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
 	Metal/MTLRenderPassSampleBufferAttachmentDescriptorArray.cs \
+	Metal/MTLResidencySet.cs \
 	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
@@ -1245,6 +1283,8 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
 	MetalPerformanceShaders/MPSNDArray.cs \
+	MetalPerformanceShaders/MPSNDArrayDescriptor.cs \
+	MetalPerformanceShaders/MPSNDArrayIdentity.cs \
 	MetalPerformanceShaders/MPSNNGraph.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
 	MetalPerformanceShaders/MPSStateBatch.cs \
@@ -1256,6 +1296,7 @@ METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
 
 METALPERFORMANCESHADERSGRAPH_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphExecutable.cs \
 	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
 	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
@@ -1305,7 +1346,6 @@ MULTIPEERCONNECTIVITY_API_SOURCES = \
 	MultipeerConnectivity/Enums.cs \
 
 MULTIPEERCONNECTIVITY_SOURCES = \
-	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
 # Natural Language
@@ -1329,6 +1369,12 @@ NATURALLANGUAGE_SOURCES = \
 NETWORK_API_SOURCES = \
 	Network/NWEnums.cs \
 
+NETWORK_CORE_SOURCES = \
+	Network/NWEndpoint.cs			\
+	Network/NWInterface.cs			\
+	Network/NWParameters.cs			\
+	Network/NWProxyConfig.cs	    \
+
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
 	Network/NWBrowserDescriptor.cs	\
@@ -1340,20 +1386,16 @@ NETWORK_SOURCES = \
 	Network/NWDataTransferReport.cs 	\
 	Network/NWEthernetChannel.cs 	\
 	Network/NWEstablishmentReport.cs	\
-	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
 	Network/NWMulticastGroup.cs		\
 	Network/NWMultiplexGroup.cs		\
-	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
-	Network/NWProxyConfig.cs	\
-	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\
@@ -1476,9 +1518,13 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
-	
+
+PASSKIT_CORE_SOURCES = \
+	PassKit/PKMerchantCategoryCode.cs \
+
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
+	PassKit/PKJapanIndividualNumberCardMetadata.cs \
 	PassKit/PKPayLaterView.cs	\
 	PassKit/PKPaymentRequest.cs	\
 	PassKit/PKShareablePassMetadata.cs \
@@ -1578,7 +1624,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/Constructors.cs \
 	SceneKit/SCNAnimatable.cs \
 	SceneKit/SCNCompat.cs \
-	SceneKit/SCNGeometry.cs \
 	SceneKit/SCNGeometrySource.cs \
 	SceneKit/SCNJavaScript.cs \
 	SceneKit/SCNNode.cs \
@@ -1588,7 +1633,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
-	SceneKit/SCNSceneRenderer.cs \
 	SceneKit/SCNSceneSource.cs \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
@@ -1664,7 +1708,6 @@ SOCIAL_API_SOURCES = \
 	Social/Enums.cs \
 
 SOCIAL_SOURCES = \
-	Social/SLCompat.cs \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
 
@@ -1679,11 +1722,9 @@ SPRITEKIT_API_SOURCES = \
 	SpriteKit/Enums.cs \
 
 SPRITEKIT_SOURCES = \
-	SpriteKit/ObsoleteCompat.cs \
 	SpriteKit/SKAction.cs \
 	SpriteKit/SKKeyframeSequence.cs \
 	SpriteKit/SKNode.cs \
-	SpriteKit/SKFieldNode.cs \
 	SpriteKit/SKShapeNode.cs \
 	SpriteKit/SKUniform.cs \
 	SpriteKit/SKVideoNode.cs \
@@ -1705,7 +1746,7 @@ STOREKIT_SOURCES = \
 	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
-	StoreKit/SKPaymentTransactionObserver.cs \
+	StoreKit/SwiftAPI.cs \
 
 # SystemConfiguration
 
@@ -1736,9 +1777,6 @@ TVSERVICES_CORE_SOURCES = \
 TWITTER_CORE_SOURCES = \
 	Twitter/Enums.cs \
 
-TWITTER_SOURCES = \
-	Twitter/TWCompat.cs \
-
 # UIKit
 
 UIKIT_API_SOURCES = \
@@ -1748,7 +1786,6 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIFontDescriptor.cs \
     UIKit/UIGuidedAccessRestriction.cs \
     UIKit/UIOffset.cs \
-    UIKit/UIPrintInteractionController.cs \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
     XKit/Types.cs \
@@ -1758,11 +1795,10 @@ UIKIT_SOURCES = \
 	UIKit/Compat.cs \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLayoutManager.cs \
+	UIKit/NSTextAttachmentContainer.cs \
 	UIKit/UIAccessibility.cs \
 	UIKit/UIAccessibilityCustomAction.cs \
 	UIKit/UIActionSheet.cs \
-	UIKit/UIActivityItemProvider.cs \
-	UIKit/UIActivityViewController.cs \
 	UIKit/UIAlertView.cs \
 	UIKit/UIAppearance.cs \
 	UIKit/UIApplication.cs \
@@ -1774,15 +1810,12 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionView.cs \
 	UIKit/UICollectionViewLayout.cs \
 	UIKit/UICollectionViewLayoutAttributes.cs \
-	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
 	UIKit/UIConfigurationColorTransformer.cs \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentBrowserViewController.cs \
-	UIKit/UIDocumentMenuViewController.cs \
-	UIKit/UIDocumentPickerViewController.cs \
 	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
@@ -1805,7 +1838,7 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
-	UIKit/UIPrint.cs \
+	UIKit/UIPresentationController.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
@@ -1813,9 +1846,6 @@ UIKIT_SOURCES = \
 	UIKit/UISearchController.cs \
 	UIKit/UISearchDisplayController.cs \
 	UIKit/UISegmentedControl.cs \
-	UIKit/UISimpleTextPrintFormatter.cs \
-	UIKit/UIStoryboardPopoverSegue.cs \
-	UIKit/UIStoryboardSegue.cs \
 	UIKit/UIStringDrawing.cs \
 	UIKit/UITableView.cs \
 	UIKit/UITableViewCell.cs \
@@ -1832,6 +1862,7 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+	UIKit/UIWindowScene.cs \
 
 # UserNotifications
 
@@ -1857,6 +1888,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTDecompressionProperties.cs \
 	VideoToolbox/VTDecompressionSession.cs \
 	VideoToolbox/VTFrameSilo.cs \
+	VideoToolbox/VTHdrPerFrameMetadataGenerationSession.cs \
 	VideoToolbox/VTMultiPassStorage.cs \
 	VideoToolbox/VTPixelRotationProperties.cs \
 	VideoToolbox/VTPixelRotationSession.cs \
@@ -1864,6 +1896,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTPixelTransferSession.cs \
 	VideoToolbox/VTProfessionalVideoWorkflow.cs \
 	VideoToolbox/VTPropertyOptions.cs \
+	VideoToolbox/VTRawProcessingSession.cs \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
 	VideoToolbox/VTUtilities.cs \
@@ -1955,7 +1988,11 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
-	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
+	ObjCBindings/BindingTypeAttribute.cs \
+	ObjCBindings/ExportAttribute.cs \
+	ObjCBindings/ExportTag.cs \
+	ObjCBindings/FieldAttribute.cs \
+	ObjCBindings/FieldTag.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
@@ -2033,7 +2070,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/RuntimeException.cs \
 	ObjCRuntime/RuntimeOptions.cs \
 	ObjCRuntime/Selector.mac.cs \
-	ObjCRuntime/SelectorMarshaler.cs \
 	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TrampolineBlockBase.cs \
@@ -2090,6 +2126,7 @@ MACOS_FRAMEWORKS =          \
 	AVRouting               \
 	BusinessChat            \
 	BackgroundAssets        \
+	BrowserEngineKit        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2109,6 +2146,7 @@ MACOS_FRAMEWORKS =          \
 	CoreText                \
 	CoreWlan                \
 	Darwin                  \
+	DeviceDiscoveryExtension \
 	EventKit                \
 	ExecutionPolicy		\
 	ExtensionKit		\
@@ -2134,6 +2172,7 @@ MACOS_FRAMEWORKS =          \
 	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
+	MediaExtension          \
 	MediaLibrary 		\
 	MediaPlayer             \
 	MediaToolbox            \
@@ -2192,6 +2231,7 @@ IOS_FRAMEWORKS =         \
 	AVKit \
 	AVRouting \
 	Accounts \
+	AccessorySetupKit \
 	AdServices \
 	AdSupport \
 	AddressBook \
@@ -2205,6 +2245,7 @@ IOS_FRAMEWORKS =         \
 	AutomaticAssessmentConfiguration \
 	BackgroundAssets \
 	BackgroundTasks \
+	BrowserEngineKit \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -2344,6 +2385,7 @@ TVOS_FRAMEWORKS =           \
 	AudioToolbox            \
 	AudioUnit               \
 	BackgroundTasks         \
+	BrowserEngineKit        \
 	CFNetwork               \
 	Chip                    \
 	Cinematic              \
@@ -2433,6 +2475,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExecutionPolicy \

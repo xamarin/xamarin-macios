@@ -2250,6 +2250,8 @@ Currently, these types are supported:
 
 * `nint`
 * `nuint`
+* `int`, `uint`
+* `long`, `ulong`
 * `NSNumber`
 * `NSString` (this is the default if none is specified)
 

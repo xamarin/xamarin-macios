@@ -1,0 +1,201 @@
+# template that can be extended by pipelines that will be used to build the project. This
+# allows to share te parameters and resources. 
+
+parameters:
+
+- name: provisionatorChannel
+  displayName: Provisionator channel to use 
+  type: string
+  default: 'latest'
+
+- name: macOSName # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Sonoma'
+
+- name: pool
+  type: string
+  displayName: Bot pool to use
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: runGovernanceTests
+  displayName: Run Governance Checks
+  type: boolean
+  default: true
+
+- name: enableAPIDiff
+  displayName: Enable API diff generation
+  type: boolean
+  default: true
+
+- name: forceInsertion
+  displayName: Force Insertion 
+  type: boolean
+  default: false 
+
+- name: pushNugets
+  type: boolean
+  default: true
+
+- name: pushNugetsToMaestro
+  type: boolean
+  default: true
+
+- name: isPR
+  displayName: Is PR build
+  type: boolean
+  default: false
+
+- name: testConfigurations
+  displayName: Test configurations to run
+  type: object
+  default: []
+
+- name: deviceTestsConfigurations
+  displayName: Device test configurations to run
+  type: object
+  default: [
+    {
+      testPrefix: 'iOS64',
+      stageName: 'ios64b_device',
+      displayName: 'iOS64 Device Tests',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
+      testsLabels: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests iOS',
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
+        'ios',
+      ]
+    },
+    {
+      testPrefix: 'tvos',
+      stageName: 'tvos_device',
+      displayName: 'tvOS Device Tests',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
+      testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests tvOS',
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
+        'tvos',
+      ]
+    }]
+
+- name: macTestsConfigurations
+  displayName: macOS test configurations to run
+  type: object
+  default: [
+    {
+      stageName: 'mac_12_m1',
+      displayName: 'M1 - Mac Ventura (12)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Monterey (12)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Monterey",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    },
+    {
+      stageName: 'mac_13_m1',
+      displayName: 'M1 - Mac Ventura (13)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Ventura (13)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Ventura",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    },
+    {
+      stageName: 'mac_14_x64',
+      displayName: 'X64 - Mac Sonoma (14)',
+      macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
+      useImage: false,
+      statusContext: 'X64 - Mac Sonoma (14)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Sonoma",
+        "macOS.Architecture -equals x64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    }]
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: macios-adr
+    type: git
+    name: macios-adr
+    ref: refs/heads/main
+
+variables:
+- ${{ if eq(parameters.isPR, false) }}:
+  - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
+    - template: ../vsts-variables.yml
+  - template: ../variables.yml
+  - name: MicrobuildConnector
+    value: 'MicroBuild Signing Task (DevDiv)'
+  - name: MaciosUploadPrefix
+    value: ''
+  - name: DisablePipelineConfigDetector
+    value: true
+- ${{ else }}:
+  - template: ../variables.yml
+  - name: MicrobuildConnector
+    value: ''
+  - name: MaciosUploadPrefix
+    value: ''
+  - name: Packaging.EnableSBOMSigning
+    value: false
+
+stages:
+- template: ../main-stage.yml
+  parameters:
+    xcodeChannel: Stable
+    macOSName: ${{ parameters.macOSName }}
+    isPR: ${{ parameters.isPR }}
+    provisionatorChannel: ${{ parameters.provisionatorChannel }}
+    pool: ${{ parameters.pool }}
+    runGovernanceTests: ${{ parameters.runGovernanceTests }}
+    enableAPIDiff: ${{ parameters.enableAPIDiff }}
+    forceInsertion: ${{ parameters.forceInsertion }}
+    pushNugets: ${{ parameters.pushNugets }}
+    pushNugetsToMaestro: ${{ parameters.pushNugetsToMaestro }}
+    ${{ if ne(length(parameters.testConfigurations), 0)}}:
+      testConfigurations: ${{ parameters.testConfigurations }}
+    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
+    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    azureStorage: ${{ variables['azureStorage'] }}
+    azureContainer: ${{ variables['azureContainer'] }}

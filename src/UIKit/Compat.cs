@@ -9,41 +9,13 @@
 //
 
 using System;
+using System.ComponentModel;
+
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
 namespace UIKit {
-
-#if !XAMCORE_3_0
-	public partial class UIAdaptivePresentationControllerDelegate {
-
-		[Obsolete ("Incorrect signature. Use the overload with a UITraitCollection parameter.")]
-		public virtual UIViewController GetAdaptivePresentationStyle (UIPresentationController controller, UIModalPresentationStyle style)
-		{
-			return null;
-		}
-	}
-
-	public partial class UIAdaptivePresentationControllerDelegate_Extensions {
-
-		[Obsolete ("Incorrect signature. Use the overload with a UITraitCollection parameter.")]
-		public static UIViewController GetAdaptivePresentationStyle (IUIAdaptivePresentationControllerDelegate This, UIPresentationController controller, UIModalPresentationStyle style)
-		{
-			return null;
-		}
-	}
-
-	public static partial class NSIdentifier {
-
-		[Obsolete ("Use 'GetIdentifier' method.")]
-		public static string Identifier (this NSLayoutConstraint This)
-		{
-			return This.GetIdentifier ();
-		}
-	}
-#endif
-
 #if !NET && !WATCH
 	public partial class UIPresentationController {
 
@@ -204,6 +176,21 @@ namespace UIKit {
 		public virtual void TextContainerChangedTextView (NSTextContainer container)
 		{
 			throw new NotSupportedException ();
+		}
+	}
+#endif
+
+#if !XAMCORE_5_0 && IOS
+	public partial class UIDocViewController {
+		[Obsolete ("Do not use; this constructor doesn't work.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public UIDocViewController ()
+			: base (ThrowInvalidOperationException ())
+		{
+		}
+		static NSObjectFlag ThrowInvalidOperationException ()
+		{
+			throw new InvalidOperationException ("Do not call this constructor, it may crash the app.");
 		}
 	}
 #endif

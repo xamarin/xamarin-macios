@@ -25,6 +25,7 @@ body:
       options:
       - net8.0-*
       - net9.0-*
+      - net10.0-*
       - Other
     validations:
       required: true
@@ -65,7 +66,6 @@ body:
     attributes:
       label: Build logs
       description: Please get an [MSBuild binlogs](https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#build-logs) and attach it here (zipped, since GitHub doesn't allow attachment of .binlog files)
-      render: shell
   - type: markdown
     attributes:
       value: |

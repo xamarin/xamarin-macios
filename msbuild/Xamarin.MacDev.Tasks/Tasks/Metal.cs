@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -11,77 +12,53 @@ using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
-	public class Metal : XamarinToolTask {
+	public class Metal : XamarinTask, IHasProjectDir, IHasResourcePrefix {
+		CancellationTokenSource? cancellationTokenSource;
+
 		#region Inputs
 
 		[Required]
-		public string IntermediateOutputPath { get; set; }
+		public string IntermediateOutputPath { get; set; } = string.Empty;
+
+		public string MetalPath { get; set; } = string.Empty;
 
 		[Required]
-		public string MinimumOSVersion { get; set; }
+		public string MinimumOSVersion { get; set; } = string.Empty;
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
 		[Required]
-		public string ResourcePrefix { get; set; }
+		public string ResourcePrefix { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = string.Empty;
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkRoot { get; set; }
+		public string SdkRoot { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem SourceFile { get; set; }
+		public ITaskItem? SourceFile { get; set; }
 
 		#endregion
 
 		[Output]
-		public ITaskItem OutputFile { get; set; }
+		public ITaskItem? OutputFile { get; set; }
 
-		string DevicePlatformBinDir {
-			get {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-					return AppleSdkSettings.XcodeVersion.Major >= 11
-						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
-						: Path.Combine (SdkDevPath, "Platforms", "iPhoneOS.platform", "usr", "bin");
-				case ApplePlatform.MacOSX:
-				case ApplePlatform.MacCatalyst:
-					return AppleSdkSettings.XcodeVersion.Major >= 10
-						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
-						: Path.Combine (SdkDevPath, "Platforms", "MacOSX.platform", "usr", "bin");
-				default:
-					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-				}
-			}
-		}
-
-		protected override string ToolName {
-			get { return "metal"; }
-		}
-
-		protected override string GenerateFullPathToTool ()
+		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
+			if (string.IsNullOrEmpty (toolPathOverride)) {
+				arguments.Insert (0, toolName);
+				return "xcrun";
+			}
+			return toolPathOverride;
 		}
 
 		public override bool Execute ()
@@ -89,37 +66,35 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 11)
-				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
-			return base.Execute ();
-		}
+			var env = new Dictionary<string, string?> {
+				{ "SDKROOT", SdkRoot },
+			};
 
-		protected override string GenerateCommandLineCommands ()
-		{
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
-			var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, SourceFile, !string.IsNullOrEmpty (SessionId));
+			var intermediate = Path.Combine (IntermediateOutputPath, MetalPath);
+			var logicalName = BundleResource.GetLogicalName (this, SourceFile!);
 			var path = Path.Combine (intermediate, logicalName);
-			var args = new CommandLineArgumentBuilder ();
+			var args = new List<string> ();
 			var dir = Path.GetDirectoryName (path);
 
-			if (!Directory.Exists (dir))
-				Directory.CreateDirectory (dir);
+			Directory.CreateDirectory (dir);
 
 			OutputFile = new TaskItem (Path.ChangeExtension (path, ".air"));
 			OutputFile.SetMetadata ("LogicalName", Path.ChangeExtension (logicalName, ".air"));
 
-			args.Add ("-arch", "air64");
+			var executable = GetExecutable (args, "metal", MetalPath);
+
+			args.Add ("-arch");
+			args.Add ("air64");
 			args.Add ("-emit-llvm");
 			args.Add ("-c");
 			args.Add ("-gline-tables-only");
 			args.Add ("-ffast-math");
 
 			args.Add ("-serialize-diagnostics");
-			args.AddQuoted (Path.ChangeExtension (path, ".dia"));
+			args.Add (Path.ChangeExtension (path, ".dia"));
 
 			args.Add ("-o");
-			args.AddQuoted (Path.ChangeExtension (path, ".air"));
+			args.Add (Path.ChangeExtension (path, ".air"));
 
 			if (Platform == ApplePlatform.MacCatalyst) {
 				args.Add ($"-target");
@@ -127,23 +102,21 @@ namespace Xamarin.MacDev.Tasks {
 			} else {
 				args.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
 			}
-			args.AddQuoted (SourceFile.ItemSpec);
+			args.Add (SourceFile!.ItemSpec);
 
-			return args.ToString ();
+			cancellationTokenSource = new CancellationTokenSource ();
+			ExecuteAsync (Log, executable, args, environment: env, cancellationToken: cancellationTokenSource.Token).Wait ();
+
+			return !Log.HasLoggedErrors;
 		}
 
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
+		public void Cancel ()
 		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
-		}
-
-		public override void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
+			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-
-			base.Cancel ();
+			} else {
+				cancellationTokenSource?.Cancel ();
+			}
 		}
 	}
 }

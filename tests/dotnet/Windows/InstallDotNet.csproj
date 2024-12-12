@@ -171,6 +171,7 @@
         Command="&quot;$(DotNetToolPath)&quot; workload install %(_WorkloadIds.Identity) --skip-manifest-update --verbosity diag --temp-dir &quot;$(DotNetTempDirectory)&quot; --configfile &quot;$(MacIosRootDirectory)NuGet.config&quot; --skip-sign-check"
         WorkingDirectory="$(MSBuildThisFileDirectory)"
         EnvironmentVariables="DOTNET_MULTILEVEL_LOOKUP=0"
+        IgnoreStandardErrorWarningFormat="true"
     />
     <Touch Files="$(DotNetPacksDirectory).stamp" AlwaysCreate="true" />
   </Target>

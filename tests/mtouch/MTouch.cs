@@ -1029,37 +1029,6 @@ public class B : A {}
 		}
 
 		[Test]
-		[TestCase (Profile.watchOS)]
-		[TestCase (Profile.tvOS)]
-		public void MT0076 (Profile profile)
-		{
-			if (!Configuration.include_watchos || !Configuration.include_tvos)
-				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
-
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = profile;
-				mtouch.Abi = MTouchTool.None;
-				mtouch.CreateTemporaryApp ();
-				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (76, $"No architecture specified (using the --abi argument). An architecture is required for {GetPlatformName (profile)} projects.");
-			}
-		}
-
-		[Test]
-		public void MT0077 ()
-		{
-			if (!Configuration.include_watchos)
-				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
-
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.watchOS;
-				mtouch.CreateTemporaryApp ();
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (77, "WatchOS projects must be extensions.");
-			}
-		}
-
-		[Test]
 		[TestCase (Profile.tvOS)]
 		[TestCase (Profile.watchOS)]
 		[TestCase (Profile.iOS)]
@@ -2639,6 +2608,22 @@ public class TestApp {
 		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
 		[TestCase (Target.Sim, null, "x86_64", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
+		/* clang crashes in Xcode 16 beta 1 with:
+
+				warning: overriding the module target triple with arm64_32-apple-watchos11.0.0 [-Woverride-module]
+				1 warning generated.
+				nonnull metadata must be empty
+				  %LDSTR_23 = load ptr, ptr getelementptr inbounds ([0 x ptr], ptr @mono_aot_Xamarin_WatchOS_llvm_got, i32 0, i32 23), align 4, !nonnull !2
+				in function Xamarin_WatchOS_WatchKit_WKInterfaceController__cctor
+				fatal error: error in backend: Broken function found, compilation aborted!
+				clang++: error: clang frontend command failed with exit code 70 (use -v to see invocation)
+				Apple clang version 16.0.0 (clang-1600.0.20.10)
+				Target: arm64_32-apple-darwin23.5.0
+				Thread model: posix
+				InstalledDir: /Applications/Xcode_16.0.0-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+				clang++: note: diagnostic msg: Error generating preprocessed source(s) - no preprocessable inputs.
+		*/
+		[Ignore ("Crashes in clang")]
 		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
 		{
 			AssertDeviceAvailable ();
@@ -2742,14 +2727,6 @@ public class TestApp {
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
-		}
-
-		[Test]
-		public void ScriptedTests ()
-		{
-			AssertDeviceAvailable ();
-
-			ExecutionHelper.Execute ("make", new [] { "-C", Path.Combine (Configuration.SourceRoot, "tests", "scripted") }, timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]
@@ -4297,7 +4274,7 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monotouch-test</string>
 	<key>MinimumOSVersion</key>
-	<string>12.0</string>
+	<string>12.2</string>
 </dict>
 </plist>
 ";

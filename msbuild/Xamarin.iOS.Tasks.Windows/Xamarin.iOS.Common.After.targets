@@ -12,14 +12,14 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)$(_TaskAssemblyFileName)" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="$(_TaskAssemblyFileNameWindows)" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="$(_TaskAssemblyFileNameWindows)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets')" />
@@ -73,7 +73,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<!-- Creates AppBundle dir on the output path -->
 		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificOutputPath)AppBundle" />
 		<!--Zip AppBundle-->
-		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Sources="$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)" OutputFile="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)AppBundle" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" ZipPath="$(ZipPath)" Recursive="true" Sources="$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)" OutputFile="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)AppBundle" />
 		<!--Copy Zip from Mac-->
 		<Message Text="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
 		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
@@ -109,7 +109,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</PropertyGroup>
 		<MakeDir SessionId="$(BuildSessionId)" Directories="$(_ArchiveZipWorkingDirOnMac)" />
 		<CopyArchiveFiles ArchivePath="$(ArchiveDir)" SessionId="$(BuildSessionId)" AppName="$(BuildAppName)" TargetPath="$(_ArchiveZipWorkingDirOnMac)" />
-		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="$(ArchiveDir)" OutputFile="$(_ArchiveZipFileNameOnMac)" WorkingDirectory="$([System.IO.Path]::GetDirectoryName($(ArchiveDir)))" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" ZipPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="$(ArchiveDir)" OutputFile="$(_ArchiveZipFileNameOnMac)" WorkingDirectory="$([System.IO.Path]::GetDirectoryName($(ArchiveDir)))" />
 		<CreateArchiveDirectory ArchiveBasePath="$(ArchiveBasePath)">
 			<Output TaskParameter="ArchiveRootDir" PropertyName="ArchiveRootDirOnWin" />
 		</CreateArchiveDirectory>
@@ -166,7 +166,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			</_DSYMDir>
 		</ItemGroup>
 		<!--Zip Dsym folders-->
-		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ZipPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)" />
 		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
 		<Unzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)" />
 		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
@@ -403,6 +403,10 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
 		</Xamarin.MacDev.Tasks.ILLink>
 
+		<PropertyGroup>
+			<!-- Sometimes the ILLink task itself fails, in which case the _ILLinkExitCode value won't be set. In this case, set it to a value that will cause the expected error to be shown later on. -->
+			<_ILLinkExitCode Condition="'$(_ILLinkExitCode)' == '' And '$(MSBuildLastTaskResult)' != 'true'">-1</_ILLinkExitCode>
+		</PropertyGroup>
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 
 	</Target>

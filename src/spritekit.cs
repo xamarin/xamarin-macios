@@ -161,7 +161,7 @@ namespace SpriteKit {
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
 	[BaseType (typeof (UIResponder))]
-	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
+	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem, UIFocusItemContainer, UICoordinateSpace {
 #else // WATCHOS
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
@@ -179,7 +179,7 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
@@ -1205,16 +1205,14 @@ namespace SpriteKit {
 		[Static, Export ("shapeNodeWithEllipseOfSize:")]
 		SKShapeNode FromEllipse (CGSize size);
 
-#if XAMCORE_3_0 // Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
+		// Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
 		[Internal]
-#endif
 		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithPoints:count:")]
 		SKShapeNode FromPoints (ref CGPoint points, nuint numPoints);
 
-#if XAMCORE_3_0 // Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
+		// Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
 		[Internal]
-#endif
 		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithSplinePoints:count:")]
 		SKShapeNode FromSplinePoints (ref CGPoint points, nuint numPoints);
@@ -1533,9 +1531,7 @@ namespace SpriteKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
-#if XAMCORE_3_0
 	[DisableDefaultCtor]
-#endif
 #if MONOMAC
 	partial interface SKView : NSSecureCoding {
 #else
@@ -1627,7 +1623,6 @@ namespace SpriteKit {
 
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("disableDepthStencilBuffer")]
 		bool DisableDepthStencilBuffer { get; set; }

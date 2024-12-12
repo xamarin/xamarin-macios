@@ -133,6 +133,13 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (14, 1))
 						continue;
 					break;
+
+				case HKCategoryTypeIdentifier.BleedingAfterPregnancy:
+				case HKCategoryTypeIdentifier.BleedingDuringPregnancy:
+				case HKCategoryTypeIdentifier.SleepApneaEvent:
+					if (!TestRuntime.CheckXcodeVersion (16, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

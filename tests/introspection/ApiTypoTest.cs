@@ -38,6 +38,9 @@ using Foundation;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Introspection {
 	public abstract class ApiTypoTest : ApiBaseTest {
 		protected ApiTypoTest ()
@@ -69,7 +72,6 @@ namespace Introspection {
 
 		HashSet<string> allowed = new HashSet<string> () {
 			"Aac",
-			"Accurracy",
 			"Achivements",
 			"Acos",
 			"Acosh",
@@ -730,27 +732,6 @@ namespace Introspection {
 			"Writeln",
 			"Xattr",
 #endif
-#if !NET
-			"Actionfrom",
-			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
-			"Attributefor",
-			"Attributest",
-			"Failwith",
-			"Imageimage",
-			"Libary",
-			"Musthold",
-			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
-			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
-			"Pathpath",
-			"Rangefor",
-			"Reprandial", // Typo, should be 'Preprandial', fixed in 'HKBloodGlucoseMealTime'
-			"Failwith",
-			"Tearm",
-			"Theevent",
-			"Timestampe", // Existing binding so we can't just remove it.
-			"Toplevel",
-			"Tripple",
-#endif
 		};
 
 		// ease maintenance of the list
@@ -891,10 +872,6 @@ namespace Introspection {
 				message = ((AdviceAttribute) attribute).Message;
 			if (attribute is ObsoleteAttribute)
 				message = ((ObsoleteAttribute) attribute).Message;
-#if !NET
-			if (attribute is AvailabilityBaseAttribute)
-				message = ((AvailabilityBaseAttribute) attribute).Message;
-#endif
 
 			return message;
 		}
@@ -1038,8 +1015,6 @@ namespace Introspection {
 			var sdk = new Version (Constants.SdkVersion);
 #if MONOMAC
 			if (!NSProcessInfo.ProcessInfo.IsOperatingSystemAtLeastVersion (new NSOperatingSystemVersion (sdk.Major, sdk.Minor, sdk.Build == -1 ? 0 : sdk.Build)))
-#elif __WATCHOS__
-			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 #else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 #endif
@@ -1067,15 +1042,6 @@ namespace Introspection {
 #if !XAMCORE_5_0
 				case "AssetsLibraryLibrary":
 				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
-					break;
-#endif
-#if !NET
-#if __TVOS__
-				case "PassKitLibrary": // not part of tvOS
-					break;
-#endif
-				case "libcompression": // bad (missing) suffix
-					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
 				case "ChipLibrary": // Chip is removed entirely beginning Xcode 14
@@ -1130,11 +1096,6 @@ namespace Introspection {
 #if __MACOS__
 						// Only available in macOS 10.15.4+
 						if (fi.Name == "AutomaticAssessmentConfigurationLibrary" && !TestRuntime.CheckXcodeVersion (11, 4))
-							continue;
-#endif
-#if __WATCHOS__
-						// added with watchOS 4 (mistake)
-						if (fi.Name == "VisionLibrary")
 							continue;
 #endif
 						Assert.True (CheckLibrary (s), fi.Name);

@@ -145,7 +145,7 @@ namespace PhotosUI {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
-		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("livePhotoView:canBeginPlaybackWithStyle:")]
 		bool CanBeginPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 
@@ -694,6 +694,11 @@ namespace PhotosUI {
 		[Static]
 		[Export ("timelapseVideosFilter")]
 		PHPickerFilter TimelapseVideosFilter { get; }
+
+		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Static]
+		[Export ("spatialMediaFilter")]
+		PHPickerFilter SpatialMediaFilter { get; }
 
 		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
 		[MacCatalyst (15, 0)]

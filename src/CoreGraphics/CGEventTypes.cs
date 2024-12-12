@@ -358,15 +358,15 @@ namespace CoreGraphics {
 		EventWindowUnderMousePointerThatCanHandleThisEvent = 92,
 
 		// no documentation for this value in the header file.
-		/// <summary>A value that represnets the scroll wheel's scroll phase.</summary>
+		/// <summary>A value that represents the scroll wheel's scroll phase.</summary>
 		ScrollWheelEventScrollPhase = 99,
 
 		// no documentation for this value in the header file.
-		/// <summary>A value that represnets the scroll wheel's scroll count.</summary>
+		/// <summary>A value that represents the scroll wheel's scroll count.</summary>
 		ScrollWheelEventScrollCount = 100,
 
 		// no documentation for this value in the header file.
-		/// <summary>A value that represnets the scroll wheel's scroll momentum.</summary>
+		/// <summary>A value that represents the scroll wheel's scroll momentum.</summary>
 		ScrollWheelEventMomentumPhase = 123,
 
 		// the header file doesn't say whether this is an integer or a double
@@ -376,6 +376,26 @@ namespace CoreGraphics {
 		// the header file doesn't say whether this is an integer or a double
 		/// <summary>The unaccelerated pointer movement for the Y axis.</summary>
 		EventUnacceleratedPointerMovementY = 171,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the scroll wheel's scroll momentum.</summary>
+		ScrollWheelEventMomentumOptionPhase = 173,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the accelerated delta value for axis 1.</summary>
+		ScrollWheelEventAcceleratedDeltaAxis1 = 176,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the accelerated delta value for axis 2.</summary>
+		ScrollWheelEventAcceleratedDeltaAxis2 = 175,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the raw delta value for axis 1.</summary>
+		ScrollWheelEventRawDeltaAxis1 = 178,
+
+		// no documentation for this value in the header file.
+		/// <summary>A value that represents the raw delta value for axis 2.</summary>
+		ScrollWheelEventRawDeltaAxis2 = 177
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;

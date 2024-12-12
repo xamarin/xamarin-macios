@@ -22,7 +22,7 @@ using NativeHandle = System.IntPtr;
 namespace DeviceDiscoveryExtension {
 
 	[Static]
-	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
 	interface DDDeviceProtocolStrings {
 		[Field ("DDDeviceProtocolStringInvalid")]
 		NSString Invalid { get; }
@@ -31,7 +31,7 @@ namespace DeviceDiscoveryExtension {
 		NSString Dial { get; }
 	}
 
-	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface DDDevice {
@@ -82,9 +82,23 @@ namespace DeviceDiscoveryExtension {
 		[iOS (17, 0)]
 		[Export ("supportsGrouping")]
 		bool SupportsGrouping { get; set; }
+
+		[iOS (18, 0)]
+		[Export ("deviceSupports", ArgumentSemantic.Assign)]
+		DDDeviceSupports DeviceSupports { get; set; }
+
+		[iOS (18, 0)]
+		[NullAllowed]
+		[Export ("displayImageName", ArgumentSemantic.Copy)]
+		string DisplayImageName { get; set; }
+
+		[iOS (18, 0)]
+		[NullAllowed]
+		[Export ("SSID", ArgumentSemantic.Copy)]
+		string Ssid { get; set; }
 	}
 
-	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface DDDeviceEvent {
@@ -98,7 +112,7 @@ namespace DeviceDiscoveryExtension {
 		DDEventType EventType { get; }
 	}
 
-	[NoMac, iOS (16, 0), NoMacCatalyst, NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	interface DDDiscoverySession {
 		[Export ("reportEvent:")]

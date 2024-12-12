@@ -1,5 +1,0 @@
-!missing-field! ICTransportTypeProximity not bound
-!missing-selector! ICCameraFile::requestSecurityScopedURLWithCompletion: not bound
-!deprecated-attribute-missing! ICCameraDevice::requestDisableTethering missing a [Deprecated] attribute
-!deprecated-attribute-missing! ICCameraDevice::requestEnableTethering missing a [Deprecated] attribute
-!deprecated-attribute-missing! ICCameraDevice::requestUploadFile:options:uploadDelegate:didUploadSelector:contextInfo: missing a [Deprecated] attribute

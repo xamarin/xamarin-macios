@@ -23,6 +23,8 @@ namespace JavaScriptCore {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Symbol,
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		BigInt,
 	}
 
 	// typedef unsigned -> JSObjectRef.h
@@ -41,5 +43,13 @@ namespace JavaScriptCore {
 	public enum JSClassAttributes : uint {
 		None = 0,
 		NoAutomaticPrototype = 1 << 1
+	}
+
+	[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+	public enum JSRelationCondition : uint {
+		Undefined,
+		Equal,
+		GreaterThan,
+		LessThan,
 	}
 }

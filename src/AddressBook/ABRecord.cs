@@ -45,7 +45,7 @@ using NativeHandle = System.IntPtr;
 namespace AddressBook {
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
@@ -67,9 +67,14 @@ namespace AddressBook {
 
 		public static ABRecord? FromHandle (IntPtr handle)
 		{
+			return FromHandle (handle, false);
+		}
+
+		internal static ABRecord? FromHandle (IntPtr handle, bool owns)
+		{
 			if (handle == IntPtr.Zero)
 				return null;
-			return FromHandle (handle, null, false);
+			return FromHandle (handle, null, owns);
 		}
 
 		internal static ABRecord FromHandle (IntPtr handle, ABAddressBook? addressbook, bool owns = true)

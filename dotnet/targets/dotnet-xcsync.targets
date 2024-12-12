@@ -1,0 +1,9 @@
+<Project>
+	<Target Name="xcsync-generate">
+		<Message Importance="High" Text="xcsync has been moved to a .NET Global tool, install it using `dotnet tool install dotnet-xcsync -g`. For more information visit https://aka.ms/xcsync-learn" />
+	</Target>
+
+	<Target Name="xcsync-sync">
+		<Message Importance="High" Text="xcsync has been moved to a .NET Global tool, install it using `dotnet tool install dotnet-xcsync -g` For more information visit https://aka.ms/xcsync-learn" />
+	</Target>
+</Project>

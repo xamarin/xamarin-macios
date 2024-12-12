@@ -238,23 +238,7 @@ namespace Xamarin.Tests {
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
 
-			var args = new List<string> ();
-			args.Add ("--");
-			args.Add ($"/t:{target}");
-			args.Add (project);
-			if (properties is not null) {
-				foreach (var prop in properties)
-					args.Add ($"/p:{prop.Key}={prop.Value}");
-			}
-			var binlog = Path.Combine (Path.GetDirectoryName (project), $"log-{target}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
-			args.Add ($"/bl:{binlog}");
-
-			var output = new StringBuilder ();
-			var executable = Configuration.XIBuildPath;
-			var rv = Execution.RunWithStringBuildersAsync (executable, args, Configuration.GetBuildEnvironment (platform), output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
-			return new ExecutionResult (output, output, rv.ExitCode) {
-				BinLogPath = binlog,
-			};
+			throw new NotSupportedException ("Legacy projects not supported anymore");
 		}
 	}
 }

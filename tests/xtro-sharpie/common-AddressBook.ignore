@@ -1,4 +1,0 @@
-## Apple headers: Deprecated in iOS 9
-
-## constants were manually bound and this framework is deprecated (Contact)
-## so it's not worth updating the binding code for them

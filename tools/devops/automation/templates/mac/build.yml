@@ -43,7 +43,7 @@ steps:
   parameters:
     CleanseProcesses: true
 
-- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/disable-codeql-arm64.sh
+- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/disable-codeql-arm64.sh
   displayName: 'Disable CodeQL on arm64'
   name: disableCodeQLOnArm64
 
@@ -57,25 +57,23 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
   env:
     OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
 
-- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
-  displayName: 'Clean workspace'
-
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Show Environment'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
 
-- bash: |
-    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
-  displayName: 'Dump Hardware'
+- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
+  displayName: 'Clean bot'
+  continueOnError: true
+  timeoutInMinutes: 60
 
 - bash: |
     if [[ $(ioreg -l | grep -e 'VMware' | wc -l) -ne 0 ]]; then
@@ -95,23 +93,14 @@ steps:
 
   displayName: 'Set VM Vendor'
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
-  displayName: 'Clean bot'
-  continueOnError: true
-  timeoutInMinutes: 60
-
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
 # 1. Set the status of the build to error. It is not a failure since no tests have been ran.
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    if ( -not (Test-HDFreeSpace -Size 5)) {
-      Set-Content -Path "$GITHUB_FAILURE_COMMENT_FILE" -Value "Not enough free space in the host."
-      exit 1
-    }
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
+    Assert-HDFreeSpace -Size 5
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
@@ -122,7 +111,7 @@ steps:
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
+    provisioning_script: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
     github_token: $(Github.Token)
   timeoutInMinutes: 30
@@ -144,9 +133,8 @@ steps:
 # Go get the tests!, this depends on how the test was triggered
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
   - download: macios
-    artifact: mac-test-package
     displayName: Download Mac tests
-    patterns: '**/mac-test-package.7z'
+    artifact: 'mac-test-package'
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
   - pwsh: |
@@ -162,7 +150,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     displayName: Download Mac tests
     inputs:
-      patterns: '**/mac-test-package.7z'
+      artifact: 'mac-test-package'
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/artifacts/tmp
 
@@ -183,8 +171,12 @@ steps:
   displayName: Install dependencies.
   timeoutInMinutes: 60
 
+- task: UseDotNet@2
+  inputs:
+    version: 8.x
+
 - pwsh: >-
-    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run_mac_tests.ps1
+    $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/run_mac_tests.ps1
     -GithubToken $(GitHub.Token)
     -RepositoryUri "$(Build.Repository.Uri)"
     -SourcesDirectory "$(Build.SourcesDirectory)"
@@ -201,7 +193,7 @@ steps:
     MONO_DEBUG: no-gdb-backtrace
     TEST_BOT: $(Agent.Name)
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+- bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
@@ -210,14 +202,14 @@ steps:
 
 # Make sure to report any errors
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+      $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE", "macOS ${{ parameters.statusContext }}")
     } else {
       $message = ":white_check_mark: **All** tests on macOS ${{ parameters.statusContext }} passed."
-      $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
+      $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message, "macOS ${{ parameters.statusContext }}")
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5

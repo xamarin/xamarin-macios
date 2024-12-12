@@ -151,6 +151,17 @@ namespace Foundation {
 			return ((NSNumber) value).Int64Value;
 		}
 
+		protected ulong? GetULongValue (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+
+			if (!Dictionary.TryGetValue (key, out var value))
+				return null;
+
+			return ((NSNumber) value).UInt64Value;
+		}
+
 		protected uint? GetUIntValue (NSString key)
 		{
 			if (key is null)
@@ -535,6 +546,7 @@ namespace Foundation {
 
 		// helper to avoid the (common pattern)
 		// 	var p = x is null ? null : x.Dictionary;
+		[return: NotNullIfNotNull (nameof (self))]
 		static public NSDictionary? GetDictionary (this DictionaryContainer? self)
 		{
 			return self is null ? null : self.Dictionary;

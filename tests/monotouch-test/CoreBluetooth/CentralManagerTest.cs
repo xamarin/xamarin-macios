@@ -41,16 +41,6 @@ namespace MonoTouchFixtures.CoreBluetooth {
 					PoweredOnEvent.Set ();
 			}
 
-#if !XAMCORE_3_0 && !NET
-			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
-			{
-			}
-
-			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
-			{
-			}
-#endif // !XAMCORE_3_0 && !NET
-
 			public override void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
 			{
 			}
@@ -119,11 +109,6 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				// ToString in a CBUUID with true returns the full uuid which can be used to create a NSUuid
 				using (var uuid = new NSUuid (heartRateMonitorUUID.ToString (true)))
 					mgr.RetrievePeripheralsWithIdentifiers (uuid);
-			} else {
-#if !XAMCORE_3_0 && !NET
-				// that API was deprecated in 7.0 and removed from 9.0
-				mgr.RetrievePeripherals (heartRateMonitorUUID);
-#endif // !XAMCORE_3_0 && !NET
 			}
 		}
 	}

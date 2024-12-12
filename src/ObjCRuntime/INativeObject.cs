@@ -55,6 +55,25 @@ namespace ObjCRuntime {
 			return h;
 		}
 #endif
+
+		internal static void CallWithPointerToFirstElementAndCount<T> (T [] array, string arrayVariableName, Action<IntPtr, nuint> callback)
+			where T : INativeObject
+		{
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (arrayVariableName);
+
+			var handles = new IntPtr [array.Length];
+			for (var i = 0; i < handles.Length; i++)
+				handles [i] = array [i].GetNonNullHandle (arrayVariableName + $"[{i}]");
+
+			unsafe {
+				fixed (IntPtr* handlesPtr = handles) {
+					callback ((IntPtr) handlesPtr, (nuint) handles.Length);
+				}
+			}
+
+			GC.KeepAlive (array);
+		}
 	}
 #endif
 }

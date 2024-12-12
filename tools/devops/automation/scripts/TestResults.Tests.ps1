@@ -18,7 +18,7 @@ Describe "TestResults tests" {
 {
     "dotnettests_ios": {
         "LABEL": "dotnettests",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_iOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - iOS",
         "TEST_simulator_tests": "simulator_dotnettests_ios",
@@ -27,7 +27,7 @@ Describe "TestResults tests" {
       },
       "dotnettests_tvos": {
         "LABEL": "dotnettests",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_tvOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - tvOS",
         "TEST_simulator_tests": "simulator_dotnettests_tvos",
@@ -36,7 +36,7 @@ Describe "TestResults tests" {
       },
       "dotnettests_maccatalyst": {
         "LABEL": "dotnettests",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_MacCatalyst",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - MacCatalyst",
         "TEST_simulator_tests": "simulator_dotnettests_maccatalyst",
@@ -45,7 +45,7 @@ Describe "TestResults tests" {
       },
       "dotnettests_macos": {
         "LABEL": "dotnettests",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_macOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - macOS",
         "TEST_simulator_tests": "simulator_dotnettests_macos",
@@ -54,7 +54,7 @@ Describe "TestResults tests" {
       },
       "dotnettests_multiple": {
         "LABEL": "dotnettests",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_Multiple",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - Multiple",
         "TEST_simulator_tests": "simulator_dotnettests_multiple",
@@ -64,7 +64,7 @@ Describe "TestResults tests" {
     "cecil":
     {
         "LABEL": "cecil",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-cecil-tests",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests,run-cecil-tests",
         "LABEL_WITH_PLATFORM": "cecil",
         "STATUS_CONTEXT": "VSTS: simulator tests - cecil",
         "TEST_simulator_tests": "simulator_cecil",
@@ -212,7 +212,6 @@ Describe "TestResults tests" {
         "configuration.BuildNugets": "True",
         "configuration.BuildPkgs": "True",
         "configuration.PR_ID": "20434",
-        "configuration.RunSampleTests": "",
         "configuration.SignPkgs": "True",
         "build.TESTS_BOT": "XAMBOT-1001.Sonoma"
       },

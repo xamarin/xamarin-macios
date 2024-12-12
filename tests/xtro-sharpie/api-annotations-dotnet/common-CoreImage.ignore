@@ -259,3 +259,8 @@
 !incorrect-protocol-member! CIPhotoEffect::extrapolate is REQUIRED and should be abstract
 !incorrect-protocol-member! CIImageProcessorInput::roiTileCount is REQUIRED and should be abstract
 !incorrect-protocol-member! CIImageProcessorInput::roiTileIndex is REQUIRED and should be abstract
+# xcode 16
+!missing-selector! +CIFilter::areaAlphaWeightedHistogramFilter not bound
+!missing-selector! +CIFilter::areaBoundsRedFilter not bound
+!missing-selector! +CIFilter::maximumScaleTransformFilter not bound
+!missing-selector! +CIFilter::toneMapHeadroomFilter not bound

@@ -21,14 +21,13 @@ using System.Linq;
 namespace AuthenticationServices {
 
 #if NET
-	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios15.0")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif

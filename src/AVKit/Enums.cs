@@ -5,7 +5,7 @@ using Foundation;
 
 namespace AVKit {
 
-#if !XAMCORE_3_0 || MONOMAC
+#if MONOMAC
 	// this enum only exists for OSX (not iOS)
 	/// <summary>Determines which user interface elements are visible in the AVPlayerView</summary>
 	[Native]
@@ -35,6 +35,7 @@ namespace AVKit {
 		ContentRatingUnknown = -1100,
 		ContentDisallowedByPasscode = -1101,
 		ContentDisallowedByProfile = -1102,
+		RecordingFailed = -1200,
 	}
 
 	[NoWatch]

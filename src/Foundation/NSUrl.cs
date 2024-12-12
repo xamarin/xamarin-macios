@@ -129,15 +129,4 @@ namespace Foundation {
 			return !(x == y);
 		}
 	}
-
-#if !XAMCORE_3_0
-	public static partial class NSUrl_PromisedItems {
-
-		[Obsolete ("Use overload with an 'out NSObject value' parameter.")]
-		public static bool GetPromisedItemResourceValue (NSUrl This, NSObject value, NSString key, out NSError error)
-		{
-			return This.GetPromisedItemResourceValue (out value, key, out error);
-		}
-	}
-#endif
 }

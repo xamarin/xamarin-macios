@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace Xamarin.Tests {
 
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
+		public List<string> ExtraSources = new List<string> ();
 		public List<string> References = new List<string> ();
 #if NET
 		public List<string>? CompileCommand = null;
@@ -50,25 +52,28 @@ namespace Xamarin.Tests {
 		public string? Out;
 		public int Verbosity = 1;
 
-		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
+		protected override string ToolPath { get => throw new InvalidOperationException (); }
 		protected override string MessagePrefix { get { return "BI"; } }
-		protected override string MessageToolName { get { return Profile == Profile.macOSClassic ? "bgen-classic" : "bgen"; } }
+		protected override string MessageToolName { get { return "bgen"; } }
 
 		public BGenTool ()
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-				EnvironmentVariables = new Dictionary<string, string> ();
-			} else {
-				EnvironmentVariables = new Dictionary<string, string> {
-					{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
-					{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
-				};
-			}
+			EnvironmentVariables = new Dictionary<string, string> ();
 		}
 
 		public void AddTestApiDefinition (string filename)
 		{
 			ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
+		}
+
+		public void AddExtraSourcesRelativeToGeneratorDirectory (string pathRelativeToGeneratorDirectory)
+		{
+			ExtraSources.Add (GetFullPathRelativeToGeneratorDirectory (pathRelativeToGeneratorDirectory));
+		}
+
+		public string GetFullPathRelativeToGeneratorDirectory (string pathRelativeToGeneratorDirectory)
+		{
+			return Path.Combine (Configuration.SourceRoot, "tests", "generator", pathRelativeToGeneratorDirectory);
 		}
 
 		public AssemblyDefinition ApiAssembly {
@@ -169,6 +174,9 @@ namespace Xamarin.Tests {
 			foreach (var s in Sources)
 				sb.Add ($"-s={s}");
 
+			foreach (var x in ExtraSources)
+				sb.Add ($"-x={x}");
+
 			if (ReferenceBclByDefault) {
 				if (tf is null) {
 					// do nothing
@@ -206,6 +214,8 @@ namespace Xamarin.Tests {
 				sb.Add (arg);
 			}
 
+			NoWarn = GetPreviewNoWarn (NoWarn);
+
 			if (NoWarn is not null) {
 				var arg = "--nowarn";
 				if (NoWarn.Length > 0)
@@ -215,6 +225,29 @@ namespace Xamarin.Tests {
 			if (Verbosity != 0)
 				sb.Add ("-" + new string (Verbosity > 0 ? 'v' : 'q', Math.Abs (Verbosity)));
 			return sb.ToArray ();
+		}
+
+		public static void AddPreviewNoWarn (IList<string> argumentList)
+		{
+			var nw = GetPreviewNoWarn (null);
+			if (!string.IsNullOrEmpty (nw))
+				argumentList.Add ($"-nowarn:{nw}");
+		}
+
+#if NET
+		[return: NotNullIfNotNull (nameof (existingNowarn))]
+#endif
+		public static string? GetPreviewNoWarn (string? existingNowarn)
+		{
+			if (Configuration.XcodeIsStable)
+				return existingNowarn;
+
+			var previewNoWarn = $"XCODE_{Configuration.XcodeVersion.Major}_{Configuration.XcodeVersion.Minor}_PREVIEW";
+			if (string.IsNullOrEmpty (existingNowarn)) {
+				return previewNoWarn;
+			} else {
+				return $"{existingNowarn},{previewNoWarn}";
+			}
 		}
 
 		public void AssertExecute (string message)
@@ -395,11 +428,7 @@ namespace Xamarin.Tests {
 			if (assembly is null) {
 				var parameters = new ReaderParameters ();
 				var resolver = new DefaultAssemblyResolver ();
-#if NET
-				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
-#else
-				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
-#endif
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform ()));
 				resolver.AddSearchDirectory (searchdir);
 				parameters.AssemblyResolver = resolver;
 				var tmpDirectory = EnsureTempDir ();

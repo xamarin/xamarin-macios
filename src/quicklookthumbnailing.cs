@@ -76,9 +76,17 @@ namespace QuickLookThumbnailing {
 		[Export ("cancelRequest:")]
 		void CancelRequest (QLThumbnailGenerationRequest request);
 
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'SaveBestRepresentationAsContent' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'SaveBestRepresentationAsContent' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'SaveBestRepresentationAsContent' instead.")]
 		[Async]
 		[Export ("saveBestRepresentationForRequest:toFileAtURL:withContentType:completionHandler:")]
 		void SaveBestRepresentation (QLThumbnailGenerationRequest request, NSUrl fileUrl, string contentType, Action<NSError> completionHandler);
+
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+		[Async]
+		[Export ("saveBestRepresentationForRequest:toFileAtURL:asContentType:completionHandler:")]
+		void SaveBestRepresentationAsContent (QLThumbnailGenerationRequest request, NSUrl fileUrl, string contentType, Action<NSError> completionHandler);
 	}
 
 	[iOS (13, 0)]
@@ -105,7 +113,6 @@ namespace QuickLookThumbnailing {
 		[Export ("representationTypes")]
 		QLThumbnailGenerationRequestRepresentationTypes RepresentationTypes { get; }
 
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("contentType", ArgumentSemantic.Copy)]
@@ -132,7 +139,7 @@ namespace QuickLookThumbnailing {
 		[Export ("NSImage", ArgumentSemantic.Strong)]
 		NSImage NSImage { get; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("contentRect")]
 		CGRect ContentRect { get; }
 	}
@@ -157,7 +164,7 @@ namespace QuickLookThumbnailing {
 	[DisableDefaultCtor]
 	interface QLThumbnailReply {
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("extensionBadge")]
 		string ExtensionBadge { get; set; }
 

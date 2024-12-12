@@ -1,0 +1,4 @@
+# These enums have been removed in XAMCORE_5_0
+!unknown-native-enum! NSCollectionViewDropOperation bound
+!unknown-native-enum! NSCollectionViewItemHighlightState bound
+!unknown-native-enum! NSCollectionViewScrollPosition bound

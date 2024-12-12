@@ -37,8 +37,12 @@ namespace CoreMedia {
 			Cblock.Version = 0;
 #if NET
 			unsafe {
-				Cblock.Allocate = &AllocateCallback;
-				Cblock.Free = &FreeCallback;
+				// Assign function pointers to temporary variable due to https://github.com/dotnet/runtime/issues/107396.
+				delegate* unmanaged<IntPtr, nuint, IntPtr> allocate = &AllocateCallback;
+				delegate* unmanaged<IntPtr, IntPtr, nuint, void> free = &FreeCallback;
+
+				Cblock.Allocate = allocate;
+				Cblock.Free = free;
 			}
 #else
 			Cblock.Allocate = Marshal.GetFunctionPointerForDelegate (static_AllocateCallback);

@@ -13,7 +13,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CompileAppManifest : XamarinTask, ITaskCallback, ICancelableTask {
+	public class CompileAppManifest : XamarinTask, IHasProjectDir, IHasResourcePrefix, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
@@ -61,6 +61,9 @@ namespace Xamarin.MacDev.Tasks {
 		public bool IsWatchApp { get; set; }
 
 		public bool IsWatchExtension { get; set; }
+
+		[Required]
+		public string MinSupportedOSPlatformVersion { get; set; } = string.Empty;
 
 		public ITaskItem [] PartialAppManifests { get; set; } = Array.Empty<ITaskItem> ();
 
@@ -180,21 +183,10 @@ namespace Xamarin.MacDev.Tasks {
 			if (IsWatchApp)
 				return;
 
-			string name;
-			string value;
-
 			// This key is our supported way of determining if an app
 			// was built with Xamarin, so it needs to be present in all apps.
-			if (TargetFramework.IsDotNet) {
-				value = DotNetVersion;
-				name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
-			} else if (Platform != ApplePlatform.MacOSX) {
-				var version = Sdks.XamIOS.ExtendedVersion;
-				value = string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash);
-				name = "com.xamarin.ios";
-			} else {
-				return;
-			}
+			var value = DotNetVersion;
+			var name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
 
 			var dict = new PDictionary ();
 			dict.Add ("Version", new PString (value));
@@ -209,10 +201,9 @@ namespace Xamarin.MacDev.Tasks {
 			// https://developer.apple.com/documentation/swiftui/applying-custom-fonts-to-text
 
 			// Compute the relative location in the app bundle for each font file
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			const string logicalNameKey = "_ComputedLogicalName_";
 			foreach (var item in FontFilesToRegister) {
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, item);
 				item.SetMetadata (logicalNameKey, logicalName);
 			}
 
@@ -302,6 +293,18 @@ namespace Xamarin.MacDev.Tasks {
 				minimumOSVersion = minimumOSVersionInManifest!;
 			}
 
+			// Verify that the value is not lower than the minimum
+			if (!Version.TryParse (MinSupportedOSPlatformVersion, out var minSupportedVersion)) {
+				Log.LogError (MSBStrings.E7125 /* Unable to parse the value '{0}' for the property '{1}. */, MinSupportedOSPlatformVersion, "MinSupportedOSPlatformVersion");
+				return false;
+			} else if (!Version.TryParse (SupportedOSPlatformVersion, out var supportedVersion)) {
+				Log.LogError (MSBStrings.E7125 /* Unable to parse the value '{0}' for the property '{1}. */, SupportedOSPlatformVersion, "SupportedOSPlatformVersion");
+				return false;
+			} else if (minSupportedVersion > supportedVersion) {
+				Log.LogError (MSBStrings.E7126 /* The SupportedOSPlatformVersion value '{0}' in the project file is lower than the minimum value '{1}'." */, SupportedOSPlatformVersion, MinSupportedOSPlatformVersion);
+				return false;
+			}
+
 			// Write out our value
 			plist [minimumVersionKey] = minimumOSVersion;
 
@@ -378,15 +381,17 @@ namespace Xamarin.MacDev.Tasks {
 				dict [key] = value;
 		}
 
-		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
+		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial, bool overwrite)
 		{
 			foreach (var property in partial) {
 				var key = property.Key!;
 				if (plist.ContainsKey (key)) {
+					if (!overwrite)
+						continue;
 					var value = plist [key];
 
 					if (value is PDictionary && property.Value is PDictionary) {
-						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value);
+						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value, overwrite);
 					} else {
 						plist [key] = property.Value.Clone ();
 					}
@@ -403,6 +408,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			foreach (var template in partialLists) {
 				PDictionary partial;
+				var overwrite = !string.Equals (template.GetMetadata ("Overwrite"), "false", StringComparison.OrdinalIgnoreCase);
 
 				try {
 					partial = PDictionary.FromFile (template.ItemSpec)!;
@@ -411,7 +417,7 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				}
 
-				MergePartialPlistDictionary (plist, partial);
+				MergePartialPlistDictionary (plist, partial, overwrite);
 			}
 		}
 

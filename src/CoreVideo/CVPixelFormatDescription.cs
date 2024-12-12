@@ -157,13 +157,11 @@ namespace CoreVideo {
 		[Obsolete ("Use 'CVPixelFormatKeys.ContainsGrayscale' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
 		public static readonly NSString ContainsGrayscaleKey;
@@ -252,13 +250,6 @@ namespace CoreVideo {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CVPixelFormatDescriptionCreateWithPixelFormatType (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, int /* OSType = int32_t */ pixelFormat);
 
-#if !XAMCORE_3_0
-		public static NSDictionary? Create (int pixelFormat)
-		{
-			return Runtime.GetNSObject<NSDictionary> (CVPixelFormatDescriptionCreateWithPixelFormatType (IntPtr.Zero, pixelFormat));
-		}
-#endif
-
 		/// <summary>Create a description of the specified pixel format.</summary>
 		/// <param name="pixelFormat">The pixel format to create a description of.</param>
 		public static NSDictionary? Create (CVPixelFormatType pixelFormat)
@@ -280,16 +271,6 @@ namespace CoreVideo {
 		extern static void CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (
 			/* CFDictionaryRef __nonnull */ IntPtr description, int /* OSType = int32_t */ pixelFormat);
 
-#if !XAMCORE_3_0
-		public static void Register (NSDictionary description, int pixelFormat)
-		{
-			if (description is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
-
-			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, pixelFormat);
-		}
-#endif
-
 		/// <summary>Register a new pixel format with CoreVideo.</summary>
 		/// <param name="description">The pixel format description for the pixel format to register.</param>
 		/// <param name="pixelFormat">The pixel format to register.</param>
@@ -310,10 +291,10 @@ namespace CoreVideo {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0), Watch (8, 0)]
 #endif
@@ -324,10 +305,10 @@ namespace CoreVideo {
 		/// <param name="pixelFormat">The pixel format to check.</param>
 		/// <returns>Whether the specified pixel format is supported or not.</returns>
 #if NET
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0), Watch (8, 0)]
 #endif
@@ -368,6 +349,7 @@ namespace CoreVideo {
 			}
 		}
 #endif
+
 #endif // !COREBUILD
 	}
 }

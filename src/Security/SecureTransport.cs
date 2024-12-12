@@ -49,6 +49,11 @@ namespace Security {
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
 	[NativeName ("tls_ciphersuite_t")]
 	public enum TlsCipherSuite : ushort {
+		[Deprecated (PlatformName.MacOSX, 15, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0)]
+		[Deprecated (PlatformName.WatchOS, 11, 0)]
+		[Deprecated (PlatformName.TvOS, 18, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		RsaWith3desEdeCbcSha = 10,
 		RsaWithAes128CbcSha = 47,
 		RsaWithAes256CbcSha = 53,
@@ -56,9 +61,19 @@ namespace Security {
 		RsaWithAes256GcmSha384 = 157,
 		RsaWithAes128CbcSha256 = 60,
 		RsaWithAes256CbcSha256 = 61,
+		[Deprecated (PlatformName.MacOSX, 15, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0)]
+		[Deprecated (PlatformName.WatchOS, 11, 0)]
+		[Deprecated (PlatformName.TvOS, 18, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		EcdheEcdsaWith3desEdeCbcSha = 49160,
 		EcdheEcdsaWithAes128CbcSha = 49161,
 		EcdheEcdsaWithAes256CbcSha = 49162,
+		[Deprecated (PlatformName.MacOSX, 15, 0)]
+		[Deprecated (PlatformName.iOS, 18, 0)]
+		[Deprecated (PlatformName.WatchOS, 11, 0)]
+		[Deprecated (PlatformName.TvOS, 18, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		EcdheRsaWith3desEdeCbcSha = 49170,
 		EcdheRsaWithAes128CbcSha = 49171,
 		EcdheRsaWithAes256CbcSha = 49172,

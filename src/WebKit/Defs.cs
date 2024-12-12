@@ -32,7 +32,6 @@ namespace WebKit {
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11, 3)]
 		[iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		Download,
@@ -44,7 +43,6 @@ namespace WebKit {
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11, 3)]
 		[iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		Download,
@@ -126,7 +124,7 @@ namespace WebKit {
 		All = UInt64.MaxValue
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
+	[iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKMediaCaptureState : long {
 		None,
@@ -134,7 +132,7 @@ namespace WebKit {
 		Muted,
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
+	[iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKMediaCaptureType : long {
 		Camera,
@@ -142,7 +140,7 @@ namespace WebKit {
 		CameraAndMicrophone,
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
+	[iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKPermissionDecision : long {
 		Prompt,

@@ -42,6 +42,6 @@
 		<string>com.apple.fileprovider-ui</string>
 	</dict>
 	<key>MinimumOSVersion</key>
-	<string>11.0</string>
+	<string>12.2</string>
 </dict>
 </plist>

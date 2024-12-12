@@ -88,6 +88,7 @@ public class BindingTouch : IDisposable {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 	public LibraryManager LibraryManager = new ();
+	public List<string> NoWarn = new ();
 
 	bool disposedValue;
 
@@ -220,13 +221,16 @@ public class BindingTouch : IDisposable {
 				{ "nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
 						try {
 							if (!string.IsNullOrEmpty (v)) {
-								foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-									ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
+								foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+									if (int.TryParse (code, out var nowarnCode))
+										ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, nowarnCode);
+									NoWarn.Add (code);
+								}
 							} else {
 								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
 							}
 						} catch (Exception ex) {
-							throw ErrorHelper.CreateError (26, ex.Message);
+							throw ErrorHelper.CreateError (27, "--nowarn", ex.Message);
 						}
 					}
 				},
@@ -414,6 +418,8 @@ public class BindingTouch : IDisposable {
 				// Ignore it, because we don't expect code to have everything documented.
 				cargs.Add ("-nowarn:1591");
 			}
+			foreach (var nw in NoWarn)
+				cargs.Add ($"-nowarn:{nw}");
 
 			AddNFloatUsing (cargs, config.TemporaryFileDirectory);
 
@@ -487,7 +493,8 @@ public class BindingTouch : IDisposable {
 			// Ignore it, because we don't expect code to have everything documented.
 			cargs.Add ("-nowarn:1591");
 		}
-
+		foreach (var nw in NoWarn)
+			cargs.Add ($"-nowarn:{nw}");
 		AddNFloatUsing (cargs, tmpdir);
 
 		Compile (cargs, 2, tmpdir);

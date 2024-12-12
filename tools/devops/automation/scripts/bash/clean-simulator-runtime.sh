@@ -5,6 +5,18 @@
 set -o pipefail
 IFS=$'\n\t'
 
+# delete all watchOS simulators, we don't need them anymore
+for i in $(xcrun simctl runtime list | grep "watchOS.*Ready" | sed -e 's/.* - //'  -e 's/ .*//'); do
+  xcrun simctl runtime delete "$i"
+done
+
+# delete all simulators not used in the last 90 days
+echo "Checking if there are any old runtimes to delete:"
+xcrun simctl runtime delete --notUsedSinceDays 90 --dry-run | sed 's/^/    /'
+echo "Deleting..."
+xcrun simctl runtime delete --notUsedSinceDays 90| sed 's/^/    /'
+echo "Delete completed."
+
 xcrun simctl runtime list -j > simruntime.json
 cat simruntime.json
 
@@ -46,7 +58,7 @@ for dir in /Library/Developer/CoreSimulator/Volumes/*; do
   sudo diskutil eject "$dir" || true
 done
 # kill the com.apple.CoreSimulator.simdiskimaged service
-sudo launchctl kill 9 system/com.apple.CoreSimulator.simdiskimaged || true
+sudo launchctl kill -9 system/com.apple.CoreSimulator.simdiskimaged || true
 # kill the com.apple.CoreSimulator.CoreSimulatorService service
 # it seems this service starts the simdiskimaged service if it's not running.
 sudo pkill -9 com.apple.CoreSimulator.CoreSimulatorService || true

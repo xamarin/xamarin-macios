@@ -1,1 +1,0 @@
-!extra-null-allowed! 'System.Boolean SafariServices.SSReadingList::SupportsUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0

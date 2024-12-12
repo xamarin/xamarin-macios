@@ -174,6 +174,7 @@ namespace PassKit {
 #if NET
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif // NET
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -186,6 +187,7 @@ namespace PassKit {
 #if NET
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif // NET
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -198,6 +200,7 @@ namespace PassKit {
 #if NET
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif // NET
 		[EditorBrowsable (EditorBrowsableState.Never)]

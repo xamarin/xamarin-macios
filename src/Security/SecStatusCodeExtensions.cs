@@ -24,13 +24,11 @@ namespace Security {
 	public static class SecStatusCodeExtensions {
 
 #if NET
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (11, 3)]
-		[TV (11, 3)]
 		[Watch (4, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -39,13 +37,11 @@ namespace Security {
 			/* void * */ IntPtr reserved); /* always null */
 
 #if NET
-		[SupportedOSPlatform ("ios11.3")]
-		[SupportedOSPlatform ("tvos11.3")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (11, 3)] // Since Mac 10,3
-		[TV (11, 3)]
 		[Watch (4, 3)]
 #endif
 		public static string GetStatusDescription (this SecStatusCode status)

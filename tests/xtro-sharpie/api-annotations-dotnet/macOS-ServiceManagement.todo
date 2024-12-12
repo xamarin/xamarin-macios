@@ -1,3 +1,4 @@
 # Don't know how where these are needed, so not bound for now.
 !missing-field! kSMDomainSystemLaunchd not bound
 !missing-field! kSMDomainUserLaunchd not bound
+!missing-field! SMAppServiceErrorDomain not bound

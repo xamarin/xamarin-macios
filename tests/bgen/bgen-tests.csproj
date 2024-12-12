@@ -5,7 +5,7 @@
     <RootNamespace>bgen_tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
-    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,6 +47,9 @@
     </Compile>
     <Compile Include="..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>

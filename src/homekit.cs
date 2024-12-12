@@ -109,7 +109,16 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMAccessoryDelegate) })]
+	[DisableDefaultCtor]
 	partial interface HMAccessory {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMAccessory instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMAccessory instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMAccessory instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMAccessory instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 
 		[Export ("name")]
 		string Name { get; }
@@ -202,7 +211,7 @@ namespace HomeKit {
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
 
-		[Watch (4, 3), TV (11, 3), iOS (11, 3)]
+		[Watch (4, 3)]
 		[MacCatalyst (14, 0)]
 		[Export ("supportsIdentify")]
 		bool SupportsIdentify { get; }
@@ -404,7 +413,16 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	partial interface HMCharacteristic {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCharacteristic instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCharacteristic instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCharacteristic instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCharacteristic instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("characteristicType", ArgumentSemantic.Copy)]
@@ -482,6 +500,10 @@ namespace HomeKit {
 		[Notification]
 		[Field ("HMCharacteristicPropertySupportsEventNotification")]
 		NSString SupportsEventNotification { get; }
+
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoMac]
+		[Field ("HMCharacteristicPropertyRequiresAuthorizationData")]
+		NSString RequiresAuthorizationData { get; }
 	}
 
 	[MacCatalyst (14, 0)]
@@ -558,32 +580,20 @@ namespace HomeKit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:targetValue:")]
-#if XAMCORE_3_0
 		NativeHandle Constructor (HMCharacteristic characteristic, INSCopying targetValue);
-#else
-		NativeHandle Constructor (HMCharacteristic characteristic, NSObject targetValue);
-#endif
 
 		[Export ("characteristic", ArgumentSemantic.Retain)]
 		HMCharacteristic Characteristic { get; }
 
 		[Export ("targetValue", ArgumentSemantic.Copy)]
-#if XAMCORE_3_0
 		INSCopying TargetValue { get; }
-#else
-		NSObject TargetValue { get; }
-#endif
 
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTargetValue:completionHandler:")]
-#if XAMCORE_3_0
 		void UpdateTargetValue (INSCopying targetValue, Action<NSError> completion);
-#else
-		void UpdateTargetValue (NSObject targetValue, Action<NSError> completion);
-#endif
 	}
 
 	[MacCatalyst (14, 0)]
@@ -666,7 +676,7 @@ namespace HomeKit {
 		void AddAndSetupAccessories (Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+		[NoWatch, NoTV, NoMacCatalyst]
 		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
@@ -967,7 +977,16 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	partial interface HMService {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMService instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMService instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMService instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMService instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 
 		[Export ("accessory", ArgumentSemantic.Weak)]
 		HMAccessory Accessory { get; }
@@ -1022,6 +1041,11 @@ namespace HomeKit {
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("linkedServices", ArgumentSemantic.Copy)]
 		HMService [] LinkedServices { get; }
+
+		[Watch (11, 0), TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("matterEndpointID", ArgumentSemantic.Copy), NullAllowed]
+		// Header doesn't say what kind of number a Matter endpoint ID is, so leaving as 'NSNumber'.
+		NSNumber MatterEndpointId { get; }
 	}
 
 	[MacCatalyst (14, 0)]
@@ -1533,9 +1557,20 @@ namespace HomeKit {
 	[MacCatalyst (14, 0)]
 	[Abstract] // documented as such in header file
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface HMCameraSource {
+#if !XAMCORE_5_0
+		[DesignatedInitializer]
+		[Protected]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraSource instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraSource instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraSource instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraSource instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 
-		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), iOS (14, 5)]
 		[MacCatalyst (14, 5)]
 		[Export ("aspectRatio")]
 		double AspectRatio { get; }
@@ -1563,11 +1598,30 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
-	interface HMCameraControl { }
+	[DisableDefaultCtor]
+	interface HMCameraControl {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraControl instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraControl instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraControl instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraControl instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
+	}
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMCameraControl))]
+	[DisableDefaultCtor]
 	interface HMCameraStreamControl {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraStreamControl instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraStreamControl instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraStreamControl instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraStreamControl instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraStreamControlDelegate Delegate { get; set; }
 
@@ -1600,7 +1654,18 @@ namespace HomeKit {
 	// TODO: Type still available for tvOS even if everything in it is __TVOS_PROHIBITED.
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMCameraSource))]
+	[DisableDefaultCtor]
 	interface HMCameraStream {
+#if !XAMCORE_5_0
+		[DesignatedInitializer]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraStream instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraStream instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraStream instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraStream instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
+
 		[TV (14, 5)]
 		[MacCatalyst (13, 1)]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
@@ -1615,7 +1680,16 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMCameraControl))]
+	[DisableDefaultCtor]
 	interface HMCameraSnapshotControl {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraSnapshotControl instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraSnapshotControl instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraSnapshotControl instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraSnapshotControl instance isn't supported.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraSnapshotControlDelegate Delegate { get; set; }
 
@@ -1642,7 +1716,18 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMCameraSource))]
+	[DisableDefaultCtor]
 	interface HMCameraSnapshot {
+#if !XAMCORE_5_0
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Directly creating an HMCameraSnapshot instance isn't supported.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Directly creating an HMCameraSnapshot instance isn't supported.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message: "Directly creating an HMCameraSnapshot instance isn't supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Directly creating an HMCameraSnapshot instance isn't supported.")]
+		[Export ("init")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ();
+#endif
+
 		[Export ("captureDate", ArgumentSemantic.Copy)]
 		NSDate CaptureDate { get; }
 	}
@@ -1885,7 +1970,7 @@ namespace HomeKit {
 		void DidUpdateNetworkAccessMode (HMNetworkConfigurationProfile profile);
 	}
 
-	[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+	[NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
@@ -1922,10 +2007,10 @@ namespace HomeKit {
 	interface HMMutablePresenceEvent {
 
 		[Export ("presenceEventType", ArgumentSemantic.Assign)]
-		HMPresenceEventType PresenceEventType { get; /* Radar 33883958: https://trello.com/c/TIlzWzrL*/ [NotImplemented] set; }
+		HMPresenceEventType PresenceEventType { get; set; }
 
 		[Export ("presenceUserType", ArgumentSemantic.Assign)]
-		HMPresenceEventUserType PresenceUserType { get; /* Radar 33883958: https://trello.com/c/TIlzWzrL*/ [NotImplemented] set; }
+		HMPresenceEventUserType PresenceUserType { get; set; }
 	}
 
 	[MacCatalyst (14, 0)]
@@ -1987,7 +2072,7 @@ namespace HomeKit {
 		NSDateComponents Offset { get; set; }
 	}
 
-	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
+	[Watch (4, 2), MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessControl {

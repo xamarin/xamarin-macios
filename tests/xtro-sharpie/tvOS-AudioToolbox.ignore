@@ -1,4 +1,0 @@
-# CoreMIDI is not present on tvOS
-!missing-pinvoke! MusicSequenceSetMIDIEndpoint is not bound
-!missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound
-!missing-pinvoke! MusicTrackSetDestMIDIEndpoint is not bound

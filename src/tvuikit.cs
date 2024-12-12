@@ -13,7 +13,6 @@ using NativeHandle = System.IntPtr;
 
 namespace TVUIKit {
 
-	[TV (12, 0)]
 	[Native]
 	public enum TVCaptionButtonViewMotionDirection : long {
 		None = 0,
@@ -31,7 +30,6 @@ namespace TVUIKit {
 		Capitalized,
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (UIControl))]
 	[DisableDefaultCtor] // initWithFrame is the designated initializer
 	interface TVLockupView {
@@ -61,7 +59,6 @@ namespace TVUIKit {
 		NSDirectionalEdgeInsets FocusSizeIncrease { get; set; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (TVLockupView))]
 	interface TVCaptionButtonView {
 
@@ -85,7 +82,6 @@ namespace TVUIKit {
 		string Subtitle { get; set; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (TVLockupView))]
 	interface TVCardView {
 
@@ -97,7 +93,6 @@ namespace TVUIKit {
 		UIColor CardBackgroundColor { get; set; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (UIViewController))]
 	// note: full screen so the default init makes sense
 	interface TVDigitEntryViewController {
@@ -120,14 +115,12 @@ namespace TVUIKit {
 		void ClearEntry (bool animated);
 	}
 
-	[TV (12, 0)]
 	[Protocol]
 	interface TVLockupViewComponent {
 		[Export ("updateAppearanceForLockupViewState:")]
 		void UpdateAppearanceForLockupView (UIControlState state);
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor] // initWithFrame is the designated initializer
 	interface TVLockupHeaderFooterView : TVLockupViewComponent {
@@ -147,7 +140,6 @@ namespace TVUIKit {
 	}
 
 	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'TVMonogramContentConfiguration' APIs instead.")]
-	[TV (12, 0)]
 	[BaseType (typeof (TVLockupView))]
 	interface TVMonogramView {
 
@@ -168,7 +160,6 @@ namespace TVUIKit {
 		string Subtitle { get; set; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (TVLockupView))]
 	interface TVPosterView {
 

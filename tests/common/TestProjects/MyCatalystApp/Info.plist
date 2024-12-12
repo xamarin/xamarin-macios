@@ -15,7 +15,7 @@
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.15</string>
+	<string>12.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>ApplicationName</string>
 	<key>CFBundleIdentifier</key>

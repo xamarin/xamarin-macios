@@ -323,10 +323,8 @@ namespace AVFoundation {
 	}
 
 	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
-#if XAMCORE_3_0
 	[NoiOS]
 	[NoWatch]
-#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -338,9 +336,7 @@ namespace AVFoundation {
 	/// <summary>An enumeration whose values specify how interlaced fields should be dealt with.</summary>
 	///
 	///     <!-- TODO: This should be used with AVCaptureConnection.VideoFieldMode property, but that doesn't appear to exist  -->
-#if XAMCORE_3_0
 	[NoiOS]
-#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[NoWatch]
@@ -350,7 +346,6 @@ namespace AVFoundation {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
 
-	[TV (12, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
@@ -534,7 +529,6 @@ namespace AVFoundation {
 		Auto = 7,
 	}
 
-	[TV (12, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -669,7 +663,6 @@ namespace AVFoundation {
 		AudioDeviceInUseByAnotherClient = 2,
 		VideoDeviceInUseByAnotherClient = 3,
 		VideoDeviceNotAvailableWithMultipleForegroundApps = 4,
-		[iOS (11, 1)]
 		[MacCatalyst (14, 0)]
 		VideoDeviceNotAvailableDueToSystemPressure = 5,
 	}
@@ -1065,7 +1058,6 @@ namespace AVFoundation {
 	}
 	[NoWatch]
 	[NoTV]
-	[Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
@@ -1144,7 +1136,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (11, 1)]
 	[Flags]
 	[Native]
 	public enum AVCaptureSystemPressureFactors : ulong {
@@ -1156,10 +1147,8 @@ namespace AVFoundation {
 		CameraTemperature = (1uL << 3),
 	}
 
-	[TV (11, 2)]
 	[NoWatch]
 	[NoMac]
-	[iOS (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1170,8 +1159,6 @@ namespace AVFoundation {
 	}
 
 	[Watch (5, 0)]
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -1244,7 +1231,6 @@ namespace AVFoundation {
 
 	[TV (14, 0)]
 	[NoWatch]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1255,7 +1241,6 @@ namespace AVFoundation {
 
 	[TV (14, 0)]
 	[Watch (7, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
@@ -1269,7 +1254,6 @@ namespace AVFoundation {
 
 	[TV (14, 0)]
 	[Watch (7, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1283,7 +1267,6 @@ namespace AVFoundation {
 
 	[TV (14, 0)]
 	[Watch (7, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum AVFileTypeProfile {
@@ -1297,7 +1280,6 @@ namespace AVFoundation {
 
 	[TV (15, 0)]
 	[Watch (8, 0)]
-	[Mac (11, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
@@ -1321,7 +1303,6 @@ namespace AVFoundation {
 #endif
 
 	[TV (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
@@ -1333,7 +1314,6 @@ namespace AVFoundation {
 	}
 
 	[TV (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
@@ -1346,7 +1326,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
@@ -1358,7 +1337,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
@@ -1369,7 +1347,6 @@ namespace AVFoundation {
 
 	[Watch (8, 0)]
 	[TV (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
@@ -1381,7 +1358,6 @@ namespace AVFoundation {
 
 	[TV (15, 0)]
 	[NoWatch]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum AVCoordinatedPlaybackSuspensionReason {
@@ -1408,7 +1384,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionAnimation : long {
@@ -1419,7 +1394,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionFontWeight : long {
@@ -1431,7 +1405,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionFontStyle : long {
@@ -1443,7 +1416,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
@@ -1457,7 +1429,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionTextCombine : long {
@@ -1472,7 +1443,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionTextAlignment : long {
@@ -1486,7 +1456,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionRegionWritingMode : long {
@@ -1497,7 +1466,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionRegionScroll : long {
@@ -1508,7 +1476,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionRegionDisplayAlignment : long {
@@ -1520,7 +1487,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionRubyPosition : long {
@@ -1531,7 +1497,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionRubyAlignment : long {
@@ -1544,7 +1509,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (12, 0)]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVCaptionConversionValidatorStatus : long {
@@ -1557,7 +1521,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[Native]
 	public enum AVCapturePrimaryConstituentDeviceSwitchingBehavior : long {
@@ -1570,7 +1533,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (15, 0)]
-	[Mac (12, 0)]
 	[iOS (15, 0)]
 	[Flags]
 	[Native]
@@ -1756,33 +1718,6 @@ namespace AVFoundation {
 		Cleared = 1,
 		Unavailable = 2,
 	}	
-
-	[TV (17, 0), NoWatch, MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-	public enum AVCaptureReactionType {
-		[Field ("AVCaptureReactionTypeThumbsUp")]
-		ThumbsUp,
-
-		[Field ("AVCaptureReactionTypeThumbsDown")]
-		ThumbsDown,
-
-		[Field ("AVCaptureReactionTypeBalloons")]
-		Balloons,
-
-		[Field ("AVCaptureReactionTypeHeart")]
-		Heart,
-
-		[Field ("AVCaptureReactionTypeFireworks")]
-		Fireworks,
-
-		[Field ("AVCaptureReactionTypeRain")]
-		Rain,
-
-		[Field ("AVCaptureReactionTypeConfetti")]
-		Confetti,
-
-		[Field ("AVCaptureReactionTypeLasers")]
-		Lasers,
-	}
 
 	[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
 	enum AVAssetPlaybackConfigurationOption {

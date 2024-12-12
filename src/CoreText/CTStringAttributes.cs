@@ -424,5 +424,22 @@ namespace CoreText {
 			CFMutableDictionary.SetValue (Dictionary.Handle, CTStringAttributeKey.WritingDirection.GetHandle (), array);
 			GC.KeepAlive (numbers); // make sure the numbers aren't freed until we're done with them
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+		// The attribute value must be an object conforming to the CTAdaptiveImageProviding protocol.
+		public ICTAdaptiveImageProviding? AdaptiveImageProvider {
+			get {
+				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.AdaptiveImageProvider.GetHandle ());
+				return Runtime.GetINativeObject<ICTAdaptiveImageProviding> (h, owns: false);
+			}
+			set {
+				Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.AdaptiveImageProvider!, value);
+			}
+		}
+#endif
 	}
 }

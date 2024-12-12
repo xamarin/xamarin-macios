@@ -30,11 +30,6 @@
 
 #nullable enable
 
-// Adding this warning disable since AudioUnitPropertyIDType is removed from public API but used internally
-#if !XAMCORE_3_0
-#pragma warning disable CS0618
-#endif
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -396,22 +391,6 @@ namespace AudioUnit {
 
 		public bool IsPlaying { get { return _isPlaying; } }
 
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
-		public unsafe void SetAudioFormat (AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
-		{
-			var err = AudioUnitSetProperty (Handle,
-							   AudioUnitPropertyIDType.StreamFormat,
-							   scope,
-							   audioUnitElement,
-							   &audioFormat,
-							   (uint) Marshal.SizeOf<AudioToolbox.AudioStreamBasicDescription> ());
-			if (err != 0)
-				throw new AudioUnitException (err);
-		}
-#endif
-
 		public unsafe AudioUnitStatus SetFormat (AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			return (AudioUnitStatus) AudioUnitSetProperty (Handle,
@@ -440,12 +419,12 @@ namespace AudioUnit {
 			return device;
 		}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 #if !MONOMAC && !__MACCATALYST__
 		[Obsolete ("This API is not available on iOS.")]
 #endif
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -477,8 +456,6 @@ namespace AudioUnit {
 			if (err != 0)
 				throw new AudioUnitException ((int) err);
 			return inputDevice;
-#elif !XAMCORE_3_0
-			return 0;
 #endif
 		}
 #endif
@@ -808,7 +785,7 @@ namespace AudioUnit {
 #if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0")]
@@ -824,7 +801,7 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
@@ -852,7 +829,7 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
@@ -869,7 +846,7 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
@@ -1082,7 +1059,7 @@ namespace AudioUnit {
 
 #if MONOMAC || __MACCATALYST__
 #if NET
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
 		[MacCatalyst (15,0)]
@@ -1101,7 +1078,7 @@ namespace AudioUnit {
 		static extern AudioUnitStatus MusicDeviceMIDIEvent (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inStatus, uint /* UInt32 */ inData1, uint /* UInt32 */ inData2, uint /* UInt32 */ inOffsetSampleFrame);
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		// [DllImport (Constants.AudioUnitLibrary)]
 		// static extern MusicDeviceMIDIEvent[] MusicDeviceMIDIEventList (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inOffsetSampleFrame, MIDIEventList eventList);
 
@@ -1163,7 +1140,7 @@ namespace AudioUnit {
 #endif // !COREBUILD
 	}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioObjectPropertyAddress {
 #if !COREBUILD
@@ -1186,7 +1163,7 @@ namespace AudioUnit {
 		}
 #endif // !COREBUILD
 	}
-#endif // !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#endif // MONOMAC || __MACCATALYST__
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -1287,12 +1264,11 @@ namespace AudioUnit {
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (15, 0)]
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[MacCatalyst (15, 0)]
 #endif
 		MidiEventList = 10,

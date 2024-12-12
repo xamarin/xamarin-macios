@@ -98,7 +98,6 @@ namespace Security {
 	/// <summary>Represents shared user name and password for a Website.</summary>
 	[Static]
 	[NoWatch]
-	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
@@ -652,6 +651,18 @@ namespace Security {
 		[Field ("kSecImportExportPassphrase")]
 		NSString Passphrase { get; }
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kSecImportExportKeychain")]
+		NSString Keychain { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kSecImportExportAccess")]
+		NSString Access { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kSecImportToMemoryOnly")]
+		NSString ToMemoryOnly { get; }
+
 		[Field ("kSecImportItemLabel")]
 		NSString Label { get; }
 
@@ -688,6 +699,22 @@ namespace Security {
 
 		[Field ("kSecMatchSubjectContains")]
 		IntPtr MatchSubjectContains { get; }
+
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("kSecMatchHostOrSubdomainOfHost")]
+		IntPtr MatchHostOrSubdomainOfHost { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kSecMatchSubjectStartsWith")]
+		IntPtr MatchSubjectStartsWith { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kSecMatchSubjectEndsWith")]
+		IntPtr MatchSubjectEndsWith { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("kSecMatchSubjectWholeString")]
+		IntPtr MatchSubjectWholeString { get; }
 
 		[Field ("kSecMatchCaseInsensitive")]
 		IntPtr MatchCaseInsensitive { get; }
@@ -1174,7 +1201,6 @@ namespace Security {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Internal]
 	[Static]
@@ -1195,7 +1221,6 @@ namespace Security {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
 	interface SecSharedCredentialInfo {
@@ -1214,12 +1239,14 @@ namespace Security {
 	// Respond with the identity to use for this challenge.
 	delegate void SecProtocolChallengeComplete (SecIdentity2 identity);
 
+	delegate void SecProtocolPreSharedKeySelectionComplete ([NullAllowed] DispatchData psk_identity);
 	//
 	// These are fake NSObject types, used purely for the generator to do all the heavy lifting with block generation
 	//
 	delegate void SecProtocolKeyUpdate (SecProtocolMetadata metadata, [BlockCallback] Action complete);
 	delegate void SecProtocolChallenge (SecProtocolMetadata metadata, [BlockCallback] SecProtocolChallengeComplete challengeComplete);
 	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
+	delegate void SecProtocolPreSharedKeySelection (SecProtocolMetadata metadata, [NullAllowed] DispatchData psk_identity_hint, [BlockCallback] SecProtocolPreSharedKeySelectionComplete complete);
 
 	[Internal]
 	[Partial]
@@ -1235,5 +1262,9 @@ namespace Security {
 		[Export ("options:protocolVerify:verifyQueue:")]
 		[NoMethod]
 		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
+
+		[Export ("options:pskSelectionBlock:pskSelectionQueue:")]
+		[NoMethod]
+		void SetProtocolPreSharedKeySelectionBlock (SecProtocolOptions options, [BlockCallback] SecProtocolPreSharedKeySelection pskSelectionBlock, DispatchQueue pskSelectionQueue);
 	}
 }

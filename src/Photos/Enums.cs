@@ -98,13 +98,6 @@ namespace Photos {
 		SmartFolderEvents = 200,
 		SmartFolderFaces = 201,
 
-#if !XAMCORE_3_0
-		// this was added in the wrong enum type (ref bug #40019)
-		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
-		SmartAlbumSelfPortraits = 210,
-		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
-		SmartAlbumScreenshots = 211,
-#endif
 		Any = Int64.MaxValue,
 	}
 
@@ -176,10 +169,12 @@ namespace Photos {
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumUnableToUpload = 216,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		SmartAlbumRAW = 217,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		SmartAlbumCinematic = 218,
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		SmartAlbumSpatial = 219,
 
 		Any = Int64.MaxValue
 	}
@@ -221,6 +216,8 @@ namespace Photos {
 		PhotoLive = (1 << 3),
 		[MacCatalyst (13, 1)]
 		PhotoDepthEffect = (1 << 4),
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		SmartAlbumSpatial = (1 << 10),
 		VideoStreamed = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
 		VideoTimelapse = (1 << 18),
@@ -408,7 +405,7 @@ namespace Photos {
 		PersistentChangeDetailsUnavailable = 3210,
 	}
 
-	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum PHAccessLevel : long {

@@ -181,6 +181,9 @@ namespace Cecil.Tests {
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
 				foreach (var module in assembly.Modules) {
 					foreach (var type in module.Types) {
+						if (!type.IsPubliclyVisible ())
+							continue;
+
 						switch (type.Namespace) {
 						case "AppKit":
 						case "UIKit":
@@ -288,13 +291,7 @@ namespace Cecil.Tests {
 					"SpriteKit.SKView.EncodeTo (Foundation.NSCoder)",
 
 					// These methods have different optional/required semantics between platforms.
-					"Metal.MTLBlitCommandEncoder_Extensions.GetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr, System.Boolean, Metal.IMTLBuffer, System.UIntPtr)",
-					"Metal.MTLBlitCommandEncoder_Extensions.ResetTextureAccessCounters (Metal.IMTLBlitCommandEncoder, Metal.IMTLTexture, Metal.MTLRegion, System.UIntPtr, System.UIntPtr)",
 					"PassKit.PKPaymentAuthorizationControllerDelegate_Extensions.GetPresentationWindow (PassKit.IPKPaymentAuthorizationControllerDelegate, PassKit.PKPaymentAuthorizationController)",
-					"Metal.MTLTextureWrapper.FirstMipmapInTail",
-					"Metal.MTLTextureWrapper.IsSparse",
-					"Metal.MTLTextureWrapper.TailSizeInBytes",
-
 
 					// HKSeriesBuilder doesn't implement the ISNCopying protocol on all platforms (and shouldn't on any according to the headers, so removed for XAMCORE_5_0).
 					"HealthKit.HKSeriesBuilder.EncodeTo (Foundation.NSCoder)",
@@ -327,6 +324,10 @@ namespace Cecil.Tests {
 					"Foundation.NSAttributedString.ReadableTypeIdentifiers",
 					"Foundation.NSAttributedString.WritableTypeIdentifiers",
 					"Foundation.NSAttributedString.WritableTypeIdentifiersForItemProvider",
+
+					// Same method, but different arguments due to platform differences. We should treat this as the same method, so ignore this failure.
+					"StoreKit.AppStore.RequestReview (XKit.XWindowScene)", // iOS, MacCatalyst
+					"StoreKit.AppStore.RequestReview (XKit.XViewController)", // macOS
 				};
 			}
 		}
@@ -369,6 +370,7 @@ namespace Cecil.Tests {
 			// https://github.com/xamarin/xamarin-macios/issues/17292
 			key = key
 				.Replace ("AppKit.NS", "XKit.X")
+				.Replace ("UIKit.NS", "XKit.X")
 				.Replace ("UIKit.UI", "XKit.X")
 				.Replace ("AppKit.INS", "XKit.IX")
 				.Replace ("UIKit.IUI", "XKit.IX")
@@ -448,6 +450,9 @@ namespace Cecil.Tests {
 		//     public static void Extension () { }
 		// }
 		//
+		// Special case: it's allowed to not have an introduced if the only other attribute is an
+		// UnsupportedOSPlatform with no version.
+		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void AllAttributedItemsMustIncludeCurrentPlatform (AssemblyInfo info)
@@ -474,7 +479,7 @@ namespace Cecil.Tests {
 
 		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
-			if (HasAnyAvailabilityAttribute (item)) {
+			if (HasAnyAvailabilityAttribute (item, onlyUnsupportedWithVersion: true)) {
 				if (IgnoreCurrentPlatform (fullName)) {
 					return;
 				}
@@ -506,13 +511,13 @@ namespace Cecil.Tests {
 		string AssemblyToAttributeName (AssemblyDefinition assembly)
 		{
 			var baseName = assembly.Name.Name + ".dll";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_iOS.Platform, true) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_iOS.Platform) == baseName)
 				return "ios";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_tvOS.Platform, true) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_tvOS.Platform) == baseName)
 				return "tvos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_macOS.Platform, true) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_macOS.Platform) == baseName)
 				return "macos";
-			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_MacCatalyst.Platform, true) == baseName)
+			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_MacCatalyst.Platform) == baseName)
 				return "maccatalyst";
 			throw new NotImplementedException ();
 		}
@@ -572,11 +577,35 @@ namespace Cecil.Tests {
 			return null;
 		}
 
-		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a));
+		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider, bool onlyUnsupportedWithVersion = false)
+		{
+			return provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a, onlyUnsupportedWithVersion));
+		}
+
 		bool HasAnySupportedAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsSupportedAttribute (a));
 
-		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsSupportedAttribute (attribute) || attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute";
+		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsAvailabilityAttribute (attribute, false);
+		bool IsAvailabilityAttribute (CustomAttribute attribute, bool onlyUnsupportedWithVersion)
+		{
+			if (IsSupportedAttribute (attribute))
+				return true;
+
+			return IsUnsupportedAttribute (attribute, onlyUnsupportedWithVersion);
+		}
+
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
+
+		static char [] versionCharacters = new char [] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
+		bool IsUnsupportedAttribute (CustomAttribute attribute, bool onlyWithVersion = false)
+		{
+			if (attribute.AttributeType.Name != "UnsupportedOSPlatformAttribute")
+				return false;
+			if (onlyWithVersion) {
+				var hasVersion = ((string) attribute.ConstructorArguments [0].Value).IndexOfAny (versionCharacters) > -1;
+				return hasVersion;
+			}
+			return true;
+		}
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void ModelMustBeProtocol (AssemblyInfo info)

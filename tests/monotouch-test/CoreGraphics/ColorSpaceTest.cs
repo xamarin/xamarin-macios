@@ -37,14 +37,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "Unknown-GetColorTable");
 		}
 
-#if !XAMCORE_3_0
-		[Test]
-		public void Null ()
-		{
-			CheckUnknown (CGColorSpace.Null);
-		}
-#endif
-
 		[Test]
 		public void CreateDeviceGray ()
 		{
@@ -504,6 +496,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.DoesNotThrow (() => {
 					var result = cs.IsPQBased;
 				});
+			}
+		}
+
+		[Test]
+		public void CopyBaseColorSpace ()
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
+				using var cbcs = cs.CopyBaseColorSpace ();
+				Assert.IsNull (cbcs, "CopyBaseColorSpace");
 			}
 		}
 	}

@@ -101,16 +101,6 @@ namespace Xharness.Jenkins {
 				return false;
 			}
 
-			if (project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.Dotnet)) {
-				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a .NET project and .NET is not included.");
-				return false;
-			}
-
-			if (!project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin)) {
-				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a legacy Xamarin project and legacy Xamarin projects are not included.");
-				return false;
-			}
-
 			var rv = TestSelection.IsEnabled (project.Label);
 			MainLog.WriteLine ($"Including {project.Name} with label {project.Label.ToString ()}: {rv}");
 			return rv;
@@ -145,8 +135,7 @@ namespace Xharness.Jenkins {
 			// all factories are enumerators \o/ 
 			var testFactories = new IEnumerable<AppleTestTask> [] {
 				new MacTestTasksEnumerable (this, processManager, crashReportSnapshotFactory, testVariationsFactory),
-				new NUnitTestTasksEnumerable (this, processManager),
-				new MakeTestTaskEnumerable (this, processManager)
+				new NUnitTestTasksEnumerable (this, processManager)
 			};
 
 			// add all tests defined by the factory
@@ -155,32 +144,12 @@ namespace Xharness.Jenkins {
 			}
 
 			// individual special tasks
-			var buildXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Xtro",
-				Target = "wrench",
-				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) || !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
-				Timeout = TimeSpan.FromMinutes (15),
-				SupportsParallelExecution = false,
-			};
-
-			var runXtroReporter = new RunXtroTask (this, buildXtroTests, processManager, crashReportSnapshotFactory) {
-				Platform = TestPlatform.Mac,
-				TestName = buildXtroTests.TestName,
-				Mode = "Legacy Xamarin",
-				Ignored = buildXtroTests.Ignored,
-				WorkingDirectory = buildXtroTests.WorkingDirectory,
-				AnnotationsDirectory = buildXtroTests.WorkingDirectory,
-			};
-			Tasks.Add (runXtroReporter);
-
 			var buildDotNetXtroTests = new MakeTask (jenkins: this, processManager: processManager) {
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (PlatformLabel.Dotnet)),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -209,9 +178,80 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Generator) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
 			};
 			Tasks.Add (runDotNetGenerator);
+
+			var buildDotNetRoslynGeneratorProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Generator.Tests", "Microsoft.Macios.Generator.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var buildDotNetRoslynGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynGeneratorProject, processManager: processManager) {
+				TestProject = buildDotNetRoslynGeneratorProject,
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetRoslynGenerator = new DotNetTestTask (this, buildDotNetRoslynGenerator, processManager) {
+				TestProject = buildDotNetRoslynGeneratorProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Roslyn Generator tests",
+				Mode = ".NET",
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
+			};
+			Tasks.Add (runDotNetRoslynGenerator);
+
+			var buildDotNetRoslynAnalyzerProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.Analyzer.Tests", "Microsoft.Macios.Bindings.Analyzer.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var buildDotNetRoslynAnalyzer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynAnalyzerProject, processManager: processManager) {
+				TestProject = buildDotNetRoslynAnalyzerProject,
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetRoslynAnalyzer = new DotNetTestTask (this, buildDotNetRoslynAnalyzer, processManager) {
+				TestProject = buildDotNetRoslynAnalyzerProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Roslyn Analyzer tests",
+				Mode = ".NET",
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
+			};
+			Tasks.Add (runDotNetRoslynAnalyzer);
+			var buildDotNetRoslynTransformerProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Transformer.Tests", "Microsoft.Macios.Transformer.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var buildDotNetRoslynTransformer = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynTransformerProject, processManager: processManager) {
+				TestProject = buildDotNetRoslynTransformerProject,
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetRoslynTransformer = new DotNetTestTask (this, buildDotNetRoslynTransformer, processManager) {
+				TestProject = buildDotNetRoslynTransformerProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Roslyn Transformer tests",
+				Mode = ".NET",
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
+			};
+			Tasks.Add (runDotNetRoslynTransformer);
+			var buildDotNetRoslynCodefixersProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "rgen", "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var buildDotNetRoslynCodefixers = new MSBuildTask (jenkins: this, testProject: buildDotNetRoslynCodefixersProject, processManager: processManager) {
+				TestProject = buildDotNetRoslynCodefixersProject,
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var runDotNetRoslynCodefixers = new DotNetTestTask (this, buildDotNetRoslynCodefixers, processManager) {
+				TestProject = buildDotNetRoslynCodefixersProject,
+				Platform = TestPlatform.iOS,
+				TestName = "Roslyn Codefixers tests",
+				Mode = ".NET",
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator),
+			};
+			Tasks.Add (runDotNetRoslynCodefixers);
+
 
 			var buildDotNetTestsProject = new TestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
@@ -228,7 +268,7 @@ namespace Xharness.Jenkins {
 				TestName = "DotNet tests",
 				Filter = "Category!=Windows",
 				Timeout = TimeSpan.FromMinutes (360),
-				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			Tasks.Add (runDotNetTests);
 

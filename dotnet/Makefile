@@ -14,6 +14,7 @@ DOTNET_PLATFORMS_LOWERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr A-Z a-z)
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval NET7_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET7_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET8_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET8_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -39,6 +40,8 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.Trimming.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/dotnet-xcsync.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.MaciOS.Sdk.Xcode.targets \
 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
@@ -55,7 +58,7 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTarget
 ifdef INCLUDE_HOTRESTART
 
 iOS_WINDOWS_NUGET_TARGETS += \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/Xamarin.PreBuilt.iOS.app.zip \
 
 endif
 
@@ -116,7 +119,8 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@NUGET_VERSION_FULL@/$$($(2)_NUGET_VERSION_FULL)/g" \
-		-e "s/@TARGET_PLATFORM_VERSION@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_EXE@/$$($(2)_NUGET_OS_VERSION)/g" \
+		-e "s/@TARGET_PLATFORM_VERSION_LIBRARY@/$$($(2)_TARGET_PLATFORM_VERSION_LIBRARY)/g" \
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
@@ -168,44 +172,44 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props: target
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
+include $(TOP)/scripts/generate-target-platforms/fragment.mk
 define SupportedTargetPlatforms
-Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/builds/Versions-$(1).plist.in Makefile ./generate-target-platforms.csharp Makefile
+Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/builds/Versions-$(1).plist.in Makefile $(GENERATE_TARGET_PLATFORMS) Makefile
 	$(Q) rm -f $$@.tmp
-	$(Q) ./generate-target-platforms.csharp $(1) "$(DOTNET_TFM)" "$$(SUPPORTED_API_VERSIONS_$(2))" $$@.tmp
+	$(Q) $(GENERATE_TARGET_PLATFORMS_EXEC) $(1) "$(DOTNET_TFM)" "$$(SUPPORTED_API_VERSIONS_$(2))" $$@.tmp
 	$(Q) mv $$@.tmp $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
+include $(TOP)/scripts/generate-workloadmanifest-json/fragment.mk
+include $(TOP)/scripts/generate-workloadmanifest-targets/fragment.mk
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_JSON) | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Versions.props
+	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_JSON_EXEC) "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Versions.props
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_TARGETS) | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "net7.0" "$(SUPPORTED_API_VERSIONS_$(4))"
+	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_TARGETS_EXEC) "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
-	$$(Q) $(CP) $$< $$@
 
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
-WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
-LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET7_$(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET8_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 # Always use the commit distance as the third number in the VS component version, as it should always increase across all branches.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE).0))
 
-$(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
+include $(TOP)/scripts/generate-vs-workload/fragment.mk
+$(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile $(GENERATE_VS_WORKLOAD)
 	$(Q) rm -f $@.tmp
-	$(Q_GEN) ./generate-vs-workload.csharp \
+	$(Q_GEN) $(GENERATE_VS_WORKLOAD_EXEC) \
 		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(platform)_MSI_VERSION)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
 		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(platform)_MSI_VERSION)) \
@@ -213,6 +217,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
 		--tfm $(DOTNET_TFM) \
+		--xcode $(XCODE_VERSION) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
@@ -295,6 +300,7 @@ define InstallWorkload
 .stamp-workload-replace-$1-$(DOTNET_VERSION):
 	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET_VERSION): $(shell echo $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3)"
 	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3
+	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/workloadsets
 	$(Q) touch $$@
 
 $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET_VERSION) | $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)
@@ -432,17 +438,6 @@ WINDOWS_PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsBundle,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
-define CreateMsi
-$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx: ./generate-wix.csharp Makefile $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip
-	$$(Q_GEN) ./generate-wix.csharp "$1" "$$@" "$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip.tmpdir/dotnet" "$2"
-
-$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi: $(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx .stamp-check-wixl
-	$$(Q_GEN) wixl -o "$$@" "$$<" -a x64
-
-MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
-endef
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
-
 NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET) workload install --skip-manifest-update \
@@ -453,23 +448,9 @@ NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed
 
 TARGETS += .stamp-install-workloads
 
-.stamp-check-wixl:
-	$(Q) if ! type wixl; then \
-		echo "Installing msitools to get wixl..."; \
-		if ! brew install msitools; then \
-			if ! type wixl; then \
-				echo "Failed to install wixl"; \
-				exit 1; \
-			fi; \
-		fi; \
-		echo "Installed msitools"; \
-	fi
-	$(Q) touch $@
-
 TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
-msi: $(MSI_TARGETS)
-package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
+package: $(PACKAGE_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 # Helper targets for templates
 #
@@ -516,9 +497,7 @@ install-system:
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
 	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
-ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
-endif
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR)
@@ -528,7 +507,7 @@ clean-local::
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
+$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
 
@@ -546,4 +525,9 @@ all-hook::
 	$(Q) $(MAKE) shutdown-build-server
 
 shutdown-build-server:
-	$(Q) $(DOTNET) build-server shutdown
+	$(Q) echo "Shutting down build servers:"
+	$(Q) $(DOTNET) build-server shutdown | sed 's/^/    /' || true
+	$(Q) echo "Listing .NET processes still alive:"
+	$(Q) pgrep -lf "^$(DOTNET)" | sed 's/^/    /' || true
+	$(Q) echo "Killing the above mentioned processes."
+	$(Q) pkill -9 -f "^$(DOTNET)" | sed 's/^/    /' || true

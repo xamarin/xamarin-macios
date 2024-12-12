@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: missing a [Deprecated] attribute
-!deprecated-attribute-wrong! INSendMessageIntent::initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender: has 12.0 not 11.0 on [Deprecated] attribute

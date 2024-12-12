@@ -17,8 +17,6 @@ namespace Xamarin.Linker {
 		{
 			var app = Configuration.Application;
 
-			app.SelectRegistrar ();
-
 			switch (app.Registrar) {
 			case RegistrarMode.Dynamic:
 				// Nothing to do here

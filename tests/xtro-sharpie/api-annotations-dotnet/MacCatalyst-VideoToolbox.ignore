@@ -1,3 +1,9 @@
 ### API not marked with unavailable (but without availability for tvOS/iOS/Catalyst)
 !missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
 !missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
+
+## Requires binding CMTaggedBuffer from CoreMedia first
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrame is not bound
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrameWithOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound

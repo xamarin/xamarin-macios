@@ -8,19 +8,14 @@
 // Copyright 2011 Xamarin, Inc
 //
 
-#if !WATCH
-
 using System;
 using System.Collections;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+using UIKit;
 
-#if XAMCORE_3_0
-using TextAttributes = UIKit.UIStringAttributes;
-#else
-using TextAttributes = UIKit.UITextAttributes;
-#endif
+#nullable enable
 
 namespace UIKit {
 	public partial class UISegmentedControl {
@@ -92,49 +87,5 @@ namespace UIKit {
 
 			return NSArray.FromStrings (strings);
 		}
-
-		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
-		{
-			if (attributes is null)
-				throw new ArgumentNullException ("attributes");
-
-#if XAMCORE_3_0
-			var dict = attributes.Dictionary;
-#else
-			using var dict = attributes.ToDictionary ();
-#endif
-			_SetTitleTextAttributes (dict, state);
-		}
-
-		public TextAttributes GetTitleTextAttributes (UIControlState state)
-		{
-			using (var d = _GetTitleTextAttributes (state)) {
-				return new TextAttributes (d);
-			}
-		}
-
-		public partial class UISegmentedControlAppearance {
-			public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
-			{
-				if (attributes is null)
-					throw new ArgumentNullException ("attributes");
-
-#if XAMCORE_3_0
-				var dict = attributes.Dictionary;
-#else
-				using var dict = attributes.ToDictionary ();
-#endif
-				_SetTitleTextAttributes (dict, state);
-			}
-
-			public TextAttributes GetTitleTextAttributes (UIControlState state)
-			{
-				using (var d = _GetTitleTextAttributes (state)) {
-					return new TextAttributes (d);
-				}
-			}
-		}
 	}
 }
-
-#endif // !WATCH

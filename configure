@@ -37,9 +37,6 @@ Usage: configure [options]
     --enable-documentation  Enable building of API documentation
     --disable-documentation Disable building of API documentation.
 
-    --enable-install-source  Enable building of API documentation
-    --disable-install-source Disable building of API documentation.
-
     --enable-legacy-xamarin  Enable building the legacy version of Xamarin.iOS/Xamarin.Mac.
     --disable-legacy-xamarin Disable building the legacy version of Xamarin.iOS/Xamarin.Mac.
 
@@ -69,7 +66,6 @@ while test "x$1" != x; do
         echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
         echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
         echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
-        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
         echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
         echo "Disabled all platforms"
         shift
@@ -106,16 +102,6 @@ while test "x$1" != x; do
     --enable-tvos)
         echo "INCLUDE_TVOS=1" >> $CONFIGURED_FILE
         echo "tvOS Build enabled"
-        shift
-        ;;
-    --disable-watchos)
-        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
-        echo "watchOS Build disabled"
-        shift
-        ;;
-    --enable-watchos)
-        echo "INCLUDE_WATCH=1" >> $CONFIGURED_FILE
-        echo "watchOS Build enabled"
         shift
         ;;
     --disable-maccatalyst)
@@ -170,12 +156,12 @@ while test "x$1" != x; do
         shift
         ;;
     --enable-dotnet)
-        echo "ENABLE_DOTNET=1" >> "$CONFIGURED_FILE"
+        # This is the default, and there's no way do enable it, so ignore this argument
         shift
         ;;
     --disable-dotnet)
-        echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
-        shift
+        echo "It's not possible to disable .NET anymore."
+        exit 1
         ;;
     --enable-dotnet-windows)
         echo "$1 is ignored. Use --enable-dotnet instead"
@@ -185,20 +171,12 @@ while test "x$1" != x; do
         echo "$1 is ignored. Use --disable-dotnet instead"
         shift
         ;;
-    --enable-install-source)
-        echo "ENABLE_INSTALL_SOURCE=1" >> "$CONFIGURED_FILE"
-        shift
-        ;;
-    --disable-install-source)
-        echo "ENABLE_INSTALL_SOURCE=" >> "$CONFIGURED_FILE"
-        shift
-        ;;
     --enable-legacy-xamarin)
-        echo "INCLUDE_XAMARIN_LEGACY=1" >> "$CONFIGURED_FILE"
-        shift
+        echo "It's not possible to enable legacy Xamarin anymore."
+        exit 1
         ;;
     --disable-legacy-xamarin)
-        echo "INCLUDE_XAMARIN_LEGACY=" >> "$CONFIGURED_FILE"
+        # This is the default, and there's no way do enable it, so ignore this argument
         shift
         ;;
     --custom-dotnet=*)

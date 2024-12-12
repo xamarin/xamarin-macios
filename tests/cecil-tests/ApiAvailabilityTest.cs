@@ -54,7 +54,8 @@ namespace Cecil.Tests {
 			var failures = new Dictionary<string, ObsoletedFailure> ();
 			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
-				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
+				var values = kvp.Value.Where (v => !v.Api.HasEditorBrowseableNeverAttribute ());
+				var attributes = values.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
 				var obsoleted = attributes.Where (v => v?.Obsoleted is not null).ToArray ();
 
 				// No obsoleted, nothing to check
@@ -70,7 +71,7 @@ namespace Cecil.Tests {
 				if (!notObsoletedNorUnsupported.Any ())
 					continue;
 
-				var failure = new ObsoletedFailure (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
+				var failure = new ObsoletedFailure (kvp.Key, values.First ().Api, obsoleted, notObsoletedNorUnsupported);
 				failures [failure.Key] = failure;
 
 				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();
@@ -171,12 +172,10 @@ namespace Cecil.Tests {
 			"HealthKit.HKUnit HealthKit.HKUnit::Calorie()",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::DanceInspiredTraining",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::MixedMetabolicCardioTraining",
-			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, Foundation.NSDictionary)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, HealthKit.HKMetadata)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate)",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
-			"Intents.INCallRecord..ctor(System.String, Foundation.NSDate, Intents.INPerson, Intents.INCallRecordType, Intents.INCallCapability, System.Nullable`1<System.Double>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Int32>)",
 			"Intents.INCallRecordType Intents.INStartCallIntent::RecordTypeForRedialing()",
 			"Intents.INCarChargingConnectorType Intents.INCarChargingConnectorType::Tesla",
 			"Intents.INSetClimateSettingsInCarIntent..ctor(System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, Intents.INCarAirCirculationMode, Foundation.NSNumber, Foundation.NSNumber, Intents.INRelativeSetting, Foundation.NSMeasurement`1<Foundation.NSUnitTemperature>, Intents.INRelativeSetting, Intents.INCarSeat)",
@@ -227,10 +226,6 @@ namespace Cecil.Tests {
 			"Security.SslContext.SetSessionTickets(System.Boolean)",
 			"Security.SslProtocol Security.SecProtocolMetadata::NegotiatedProtocolVersion()",
 			"Speech.SFVoiceAnalytics Speech.SFTranscriptionSegment::VoiceAnalytics()",
-			"StoreKit.SKCloudServiceController.RequestPersonalizationToken(System.String, System.Action`2<Foundation.NSString,Foundation.NSError>)",
-			"StoreKit.SKCloudServiceController.RequestPersonalizationTokenAsync(System.String)",
-			"StoreKit.SKMutablePayment.PaymentWithProduct(System.String)",
-			"StoreKit.SKStoreReviewController.RequestReview()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMaxFrameDuration()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMinFrameDuration()",
 			"System.Boolean AVFoundation.AVCapturePhotoSettings::AutoDualCameraFusionEnabled()",
@@ -246,8 +241,6 @@ namespace Cecil.Tests {
 			"System.String PassKit.PKShareablePassMetadata::LocalizedDescription()",
 			"System.String PassKit.PKShareablePassMetadata::OwnerDisplayName()",
 			"System.String PassKit.PKShareablePassMetadata::TemplateIdentifier()",
-			"System.String Speech.SFSpeechRecognitionRequest::InteractionIdentifier()",
-			"System.String StoreKit.SKProduct::ContentVersion()",
 			"System.String UserNotifications.UNMutableNotificationContent::SummaryArgument()",
 			"System.String UserNotifications.UNNotificationContent::SummaryArgument()",
 			"System.UIntPtr UserNotifications.UNMutableNotificationContent::SummaryArgumentCount()",
@@ -423,6 +416,7 @@ namespace Cecil.Tests {
 				case "SceneKit.SCNAnimationPlayer.PauseAnimation(Foundation.NSString)":
 				case "SceneKit.SCNAnimationPlayer.RemoveAnimation(Foundation.NSString, System.Runtime.InteropServices.NFloat)":
 				case "SceneKit.SCNAnimationPlayer.ResumeAnimation(Foundation.NSString)":
+				case "System.Boolean AccessorySetupKit.ASPickerDisplayItem::AllowsRename()": // Apple introduced and deprecated in the same version.
 					return true;
 				}
 				break;
@@ -458,6 +452,7 @@ namespace Cecil.Tests {
 				case "Intents.IINSendMessageIntentHandling.ResolveGroupName(Intents.INSendMessageIntent, System.Action`1<Intents.INStringResolutionResult>)":
 				case "Security.SecSharedCredential.RequestSharedWebCredential(System.String, System.String, System.Action`2<Security.SecSharedCredentialInfo[],Foundation.NSError>)":
 				case "System.String Intents.INSendMessageIntent::GroupName()":
+				case "AVFoundation.AVAudioSessionInterruptionReason AVFoundation.AVAudioSessionInterruptionReason::AppWasSuspended":
 					return true;
 				}
 				break;
@@ -473,6 +468,7 @@ namespace Cecil.Tests {
 			switch (fullname) {
 			case "GameKit.GKScore.ReportLeaderboardScores(GameKit.GKLeaderboardScore[], GameKit.GKChallenge[], System.Action`1<Foundation.NSError>)":
 			case "GameKit.GKScore.ReportLeaderboardScoresAsync(GameKit.GKLeaderboardScore[], GameKit.GKChallenge[])":
+			case "Intents.INMessageReactionType Intents.INMessageReactionType::EmojiReaction":
 				return true;
 			}
 

@@ -317,12 +317,9 @@ namespace Metal {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (12, 0)]
-	[TV (12, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
@@ -585,13 +582,12 @@ namespace Metal {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
 	[Introduced (PlatformName.TvOS, 16, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -603,13 +599,12 @@ namespace Metal {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("maccatalyst13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos17.0")]
 #else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
 	[Introduced (PlatformName.TvOS, 17,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -621,13 +616,12 @@ namespace Metal {
 #endif
 
 #if NET
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("tvos16.1")]
 #else
 	[MacCatalyst (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[TV (16, 1)]
 #endif

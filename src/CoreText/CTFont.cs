@@ -2302,13 +2302,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (7, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -2316,13 +2315,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (7, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[iOS (14, 0)]
 #endif
 		public string? GetGlyphName (CGGlyph glyph)
@@ -2668,6 +2666,99 @@ namespace CoreText {
 		}
 
 		#endregion
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreTextLibrary)]
+		extern static /* CGRect */ CGRect CTFontGetTypographicBoundsForAdaptiveImageProvider (
+			/* CTFontRef */ IntPtr font,
+			/* id<CTAdaptiveImageProviding> __Nullable */ IntPtr provider);
+
+		/// <summary>Computes metrics that clients performing their own typesetting of an adaptive image glyph need.</summary>
+		/// <returns>The typographic bounds in points expressed as a rectangle, where the rectangle's Width property corresponds to the advance width, the rectangle's Bottom property corresponds to the ascent (above the baseline), and Top property corresponds to the descent (below the baseline).</returns>
+		/// <param name="provider">The adaptive image provider used during the computation. If null, then default results will be returned, on the assumption that an image is not yet available.</param>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public CGRect GetTypographicBoundsForAdaptiveImageProvider (ICTAdaptiveImageProviding? provider)
+		{
+			return CTFontGetTypographicBoundsForAdaptiveImageProvider (Handle, provider.GetHandle ());
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		[DllImport (Constants.CoreTextLibrary)]
+		extern static void CTFontDrawImageFromAdaptiveImageProviderAtPoint (
+			/* CTFontRef */ IntPtr font,
+			/* id<CTAdaptiveImageProviding> __Nullable */ IntPtr provider,
+			/* CGPoint */ CGPoint point,
+			/* CGContexRef */ IntPtr context);
+
+		/// <summary>Draws the image for an adaptive image glyph at the given point.</summary>
+		/// <param name="provider">The adaptive image provider used during the rendering.</param>
+		/// <param name="point">The adaptive image glyph is rendered relative to this point.</param>
+		/// <param name="context">The <see cref="CoreGraphics.CGBitmapContext" /> where the adaptive image glyph is drawn.</param>
+#if NET
+		[SupportedOSPlatform ("ios18.0")]
+		[SupportedOSPlatform ("maccatalyst18.0")]
+		[SupportedOSPlatform ("macos15.0")]
+		[SupportedOSPlatform ("tvos18.0")]
+#else
+		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+#endif
+		public void DrawImage (ICTAdaptiveImageProviding provider, CGPoint point, CGContext context)
+		{
+			CTFontDrawImageFromAdaptiveImageProviderAtPoint (Handle, provider.GetNonNullHandle (nameof (provider)), point, context.GetNonNullHandle (nameof (context)));
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
+#endif
+		[DllImport (Constants.CoreTextLibrary)]
+		extern static byte CTFontHasTable (
+			/* CTFontRef */ IntPtr font,
+			/* CTFontTableTag */ CTFontTable tag);
+
+		/// <summary>Checks whether a table is present in a font.</summary>
+		/// <param name="tag">The table identifier to check for.</param>
+		/// <returns>Whether the table is present in the font or not.</returns>
+		/// <remarks>The check behaves as if <see cref="CTFontTableOptions.None" /> was specified.</remarks>
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
+#endif
+		public bool HasTable (CTFontTable tag)
+		{
+			return CTFontHasTable (GetCheckedHandle (), tag) != 0;
+		}
+
+
 		public override string? ToString ()
 		{
 			return FullName;

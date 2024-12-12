@@ -26,12 +26,29 @@
 	<string>com.xamarin.Xamarin-PreBuilt</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIImageName</key>
+		<string>appiconfg</string>
+	</dict>
 	<key>CFBundleName</key>
 	<string>Xamarin.PreBuilt</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon60x60</string>
+				<string>appicon20x20</string>
+				<string>appicon29x29</string>
+				<string>appicon40x40</string>
+				<string>appicon60x60</string>
+				<string>appicon76x76</string>
+				<string>appicon83.5x83.5</string>
+			</array>
+		</dict>
+	</dict>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIFileSharingEnabled</key>

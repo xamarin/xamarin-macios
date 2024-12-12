@@ -160,7 +160,13 @@ namespace Xamarin.Tests {
 			Assert.That (asm, Does.Exist, "Assembly existence");
 			// Verify that there's no resources in the assembly
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count (), Is.EqualTo (2), "2 resources"); // There are 2 embedded resources by default by the F# compiler.
+			var expectedFSharpResources = new string [] {
+				"FSharpOptimizationCompressedData.fsharplibrary",
+				"FSharpSignatureCompressedData.fsharplibrary",
+				"FSharpSignatureCompressedDataB.fsharplibrary",
+			};
+			var actualFSharpResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
+			Assert.That (actualFSharpResources, Is.EqualTo (expectedFSharpResources), "F# resources:"); // There are some embedded resources by default by the F# compiler.
 		}
 
 		[TestCase (ApplePlatform.iOS)]
@@ -421,7 +427,7 @@ namespace Xamarin.Tests {
 				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 				Assert.That (appPath, Does.Not.Exist, "There is an .app");
 				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
+				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform)), Does.Not.Exist, "Platform assembly is in the bundle");
 				break;
 			case ApplePlatform.MacCatalyst:
 				break;
@@ -497,19 +503,19 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x84", true)] // it's x86, not x84
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.iOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.iOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.iOS, "tvos-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.TVOS, "tvos-x64", false)] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.TVOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.TVOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "iossimulator-x64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacOSX, "osx-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacOSX, "macos-arm64", true)] // it's osx, not macos
 		[TestCase (ApplePlatform.MacOSX, "helloworld", true)] // random text
 		[TestCase (ApplePlatform.MacOSX, "ios-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacCatalyst, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.MacCatalyst, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "ios-arm64", false)] // valid RID for another platform
 		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier, bool notRecognized)
 		{
 			var project = "MySimpleApp";
@@ -782,6 +788,234 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS)]
+		public void LibraryWithResourcesOnWindows (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			LibraryWithResources (platform, anyLibraryResources: false);
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS)]
+		public void LibraryWithResourcesOnRemoteWindows (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			LibraryWithResources (platform);
+		}
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void LibraryWithResources (ApplePlatform platform, bool anyLibraryResources = true)
+		{
+			var project = "LibraryWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			// https://github.com/xamarin/xamarin-macios/issues/15031
+			Assert.That (allTargets, Does.Contain ("_CompileAppManifest"), "Did execute '_CompileAppManifest'");
+			Assert.That (allTargets, Does.Contain ("_DetectSdkLocations"), "Did execute '_DetectSdkLocations'");
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
+				Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
+
+			var lines = BinLog.PrintToLines (rv.BinLogPath);
+			// Find the resulting binding assembly from the build log
+			var assemblies = FilterToAssembly (lines, project);
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			using var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			var actualResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
+
+			string [] expectedResources;
+
+			if (anyLibraryResources) {
+				var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
+				var expectedList = new List<string> ();
+				expectedList.Add ($"__{platformPrefix}_content_A.ttc");
+				expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_sArcher__Attack.plist");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_stexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_Assets.car");
+				expectedList.Add ($"__{platformPrefix}_content_B.otf");
+				expectedList.Add ($"__{platformPrefix}_content_C.ttf");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_stexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_scene.dae");
+				switch (platform) {
+				case ApplePlatform.iOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
+					break;
+				case ApplePlatform.TVOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
+					break;
+				case ApplePlatform.MacCatalyst:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
+					break;
+				case ApplePlatform.MacOSX:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sMainMenu.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sNSWindowController-B8D-0N-5wS.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
+					break;
+				}
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sanalytics_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smetadata.json");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.net");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.shape");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.weights");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sneural__network__optionals_scoremldata.bin");
+				expectedResources = expectedList.ToArray ();
+			} else {
+				expectedResources = new string [0];
+			}
+			CollectionAssert.AreEquivalent (expectedResources, actualResources, "Resources");
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		public void AppWithLibraryWithResourcesReference (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, false, false);
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void AppWithLibraryWithResourcesReferenceOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, true, false);
+		}
+
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void AppWithLibraryWithResourcesReferenceWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, false, isUsingHotRestart: true);
+		}
+
+		void AppWithLibraryWithResourcesReferenceImpl (ApplePlatform platform, string runtimeIdentifiers, bool remoteWindows, bool isUsingHotRestart)
+		{
+			var project = "AppWithLibraryWithResourcesReference";
+			var config = "Debug";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var library_project = GetProjectPath ("LibraryWithResources", platform: platform);
+			Clean (library_project);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: config);
+			Clean (project_path);
+
+			Dictionary<string, string>? extraProperties = null;
+			string? tmpdir;
+			string? hotRestartOutputDir = null;
+			string? hotRestartAppBundlePath = null;
+			if (isUsingHotRestart) {
+				tmpdir = Cache.CreateTemporaryDirectory ();
+				extraProperties = GetHotRestartProperties (tmpdir, out hotRestartOutputDir, out hotRestartAppBundlePath);
+			}
+
+			var properties = GetDefaultProperties (runtimeIdentifiers, extraProperties);
+			properties ["Configuration"] = config;
+			if (remoteWindows) {
+				// Copy the app bundle to Windows so that we can inspect the results.
+				properties ["CopyAppBundleToWindows"] = "true";
+			}
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var appBundleInfo = new AppBundleInfo (platform, appPath, project_path, remoteWindows, runtimeIdentifiers, config, isUsingHotRestart, hotRestartOutputDir, hotRestartAppBundlePath);
+			var appBundleContents = appBundleInfo.GetAppBundleFiles (true).ToHashSet ();
+
+			appBundleInfo.DumpAppBundleContents ();
+
+			Assert.Multiple (() => {
+				var resourcesDirectory = GetResourcesDirectory (platform, "");
+
+				var fontDirectory = resourcesDirectory;
+				var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+				var fontBFile = Path.Combine (fontDirectory, "B.otf");
+				var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+				Assert.That (appBundleContents, Does.Contain (fontAFile), "A.ttc existence");
+				Assert.That (appBundleContents, Does.Contain (fontBFile), "B.otf existence");
+				Assert.That (appBundleContents, Does.Contain (fontCFile), "C.ttf existence");
+
+				var atlasTexture = Path.Combine (resourcesDirectory, "Archer_Attack.atlasc", "Archer_Attack.plist");
+				AssertExistsOrUsingHotRestart (atlasTexture, "AtlasTexture - Archer_Attack");
+
+				var scnAssetsDir = Path.Combine (resourcesDirectory, "art.scnassets");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "scene.scn"), "scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "texture.png"), "texture.png");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "Assets.car"), "Assets.car");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "scene.scn"), "DirWithResources/linkedArt.scnassets/scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "texture.png"), "DirWithResources/linkedArt.scnassets/texture.png");
+
+				var mainStoryboard = Path.Combine (resourcesDirectory, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (mainStoryboard, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (Path.Combine (mainStoryboard, "Info.plist"), "Main.storyboardc/Info.plist");
+
+				var colladaScene = Path.Combine (resourcesDirectory, "scene.dae");
+				AssertExistsOrUsingHotRestart (colladaScene, "Collada - scene.dae");
+
+				var mlModel = Path.Combine (resourcesDirectory, "SqueezeNet.mlmodelc");
+				AssertExistsOrUsingHotRestart (mlModel, "CoreMLModel");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics"), "CoreMLModel/analytics");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics", "coremldata.bin"), "CoreMLModel/analytics/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "coremldata.bin"), "CoreMLModel/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "metadata.json"), "CoreMLModel/metadata.json");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model"), "CoreMLModel/model");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.net"), "CoreMLModel/model.espresso.net");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.shape"), "CoreMLModel/model.espresso.shape");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.weights"), "CoreMLModel/model.espresso.weights");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model", "coremldata.bin"), "CoreMLModel/model/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals"), "CoreMLModel/neural_network_optionals");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals", "coremldata.bin"), "CoreMLModel/neural_network_optionals/coremldata.bin");
+			});
+
+			void AssertExistsOrUsingHotRestart (string path, string message)
+			{
+				var exists = appBundleContents.Contains (path);
+				if (exists ^ isUsingHotRestart)
+					return;
+				Assert.Fail ($"Expected either hot restart to be enabled ({isUsingHotRestart}) or the file '{path}' to be in the app bundle ({exists}): {message}");
+			}
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
@@ -853,16 +1087,6 @@ namespace Xamarin.Tests {
 
 				if (rx == "bindings-framework-test") {
 					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
-						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-						addHere.AddRange (new string [] {
-							$"{lib}.xcframework/watchos-arm64_32_armv7k",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
-							$"{lib}.xcframework/watchos-x86_64-simulator",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
-						});
-
 						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
 						addHere.AddRange (new string [] {
 							$"{lib}.xcframework/tvos-arm64",
@@ -961,18 +1185,6 @@ namespace Xamarin.Tests {
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
 				});
 
-				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-				addHere.AddRange (new string [] {
-					"XTest.xcframework/watchos-arm64_32_armv7k",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
-					"XTest.xcframework/watchos-x86_64-simulator",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
-				});
-
 				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
 				Assert.That (missing, Is.Empty, "No missing files");
 
@@ -1014,13 +1226,13 @@ namespace Xamarin.Tests {
 				Where (v => {
 					if (v.Length < 10)
 						return false;
-					if (v [0] != '/')
+					if (v [0] != '/' && !(char.IsAsciiLetter (v [0]) && v [1] == ':'))
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!(v.Contains ("/bin/", StringComparison.Ordinal) || v.Contains ("\\bin\\", StringComparison.Ordinal)))
 						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					if (v.Contains ("/ref/", StringComparison.Ordinal) || v.Contains ("\\ref\\", StringComparison.Ordinal))
 						return false; // Skip reference assemblies
 					return true;
 				});
@@ -1063,22 +1275,36 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS)]
-		[TestCase (ApplePlatform.TVOS)]
-		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensions (ApplePlatform platform)
+		public void BuildProjectsWithExtensions (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", runtimeIdentifier, platform, out var appPath);
 			var extensionProjectDir = GetProjectPath ("ExtensionProject", platform: platform);
 
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			DotNet.AssertBuild (consumingProjectDir, verbosity);
+			var properties = GetDefaultProperties (runtimeIdentifier);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
+			if (isNativeAot) {
+				properties ["PublishAot"] = "true";
+				properties ["_IsPublishing"] = "true";
+			}
+
+			DotNet.AssertBuild (consumingProjectDir, properties);
+
+			var extensionPath = Path.Combine (appPath, GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 
 			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
@@ -1086,23 +1312,34 @@ namespace Xamarin.Tests {
 			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
 		}
 
-		[TestCase (ApplePlatform.iOS)]
-		[TestCase (ApplePlatform.TVOS)]
-		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", true)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
+		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
-			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
 
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			DotNet.AssertBuild (consumingProjectDir, verbosity);
+			var properties = GetDefaultProperties (runtimeIdentifier);
 
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			if (isNativeAot) {
+				properties ["PublishAot"] = "true";
+				properties ["_IsPublishing"] = "true";
+			}
+
+			DotNet.AssertBuild (consumingProjectDir, properties);
+
+			var extensionPath = Path.Combine (appPath, GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
 			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
@@ -1119,7 +1356,7 @@ namespace Xamarin.Tests {
 			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownE.framework", "UnknownE")), "UnknownE");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifier, appExecutable);
 		}
 
 
@@ -1160,7 +1397,19 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			// We want RuntimeIdentifier(s) so to be specified in a file, otherwise they're applied to the library
+			// project as well, and that might not be valid.
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (properties.ContainsKey ("RuntimeIdentifiers")) {
+				properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+				properties.Remove ("RuntimeIdentifiers");
+			}
+			if (properties.ContainsKey ("RuntimeIdentifier")) {
+				properties ["file:RuntimeIdentifier"] = properties ["RuntimeIdentifier"];
+				properties.Remove ("RuntimeIdentifier");
+			}
+
+			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
@@ -1218,23 +1467,6 @@ namespace Xamarin.Tests {
 			} else {
 				DotNet.AssertBuild (project_path, properties);
 			}
-		}
-
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.3")]
-		public void CatalystAppOptimizedForMacOS_InvalidMinOS (ApplePlatform platform, string runtimeIdentifier, string minOS)
-		{
-			var project = "CatalystAppOptimizedForMacOS";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
-
-			var project_path = GetProjectPath (project, platform: platform);
-			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
-			properties ["SupportedOSPlatformVersion"] = minOS;
-			var rv = DotNet.AssertBuildFailure (project_path, properties);
-			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {minOS} (equivalent to macOS 10.15.2).", errors [0].Message, "Error message");
 		}
 
 		[Test]
@@ -1311,11 +1543,37 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		public void BuildNet7_0App (ApplePlatform platform, string runtimeIdentifiers)
 		{
+			var tfm = "net7.0";
 			var project = "Net7_0SimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net7.0");
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: tfm);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
+			// Due to an implementation detail in .NET, the same error message is shown twice.
+			var targetFramework = $"{tfm}-{platform.AsString ().ToLowerInvariant ()}";
+			AssertErrorMessages (errors,
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.",
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void BuildNet8_0App (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "Net8_0SimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net8.0");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
@@ -1326,8 +1584,8 @@ namespace Xamarin.Tests {
 			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
-			Assert.AreEqual ("7.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
-			Assert.AreEqual ("7.0", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+			Assert.AreEqual ("8.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("8.0", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
@@ -1607,9 +1865,9 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 
-			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
+			AssertThatDylibExistsAndIsReidentified (appPath, "libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
@@ -1632,6 +1890,30 @@ namespace Xamarin.Tests {
 			if (CanExecute (platform, runtimeIdentifiers)) {
 				var output = ExecuteWithMagicWordAndAssert (appExecutable);
 				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void CompressedXCFrameworkInBindingProjectApp (ApplePlatform platform)
+		{
+			var project = "CompressedXCFrameworkInBindingProjectApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			if (CanExecute (platform, properties)) {
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 
@@ -1671,24 +1953,64 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
-		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers)
+		public void BuildMyNativeAotAppWithTrimAnalysisWarning (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			var project = "MySimpleApp";
+			var project = "MyNativeAotAppWithTrimAnalysisWarning";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			// We expect to get a warning from the trim analzyer in Debug build
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+
+			// Ignore warnings we haven't fixed yet
+			if (platform == ApplePlatform.iOS) {
+				warnings = warnings.Where (w => w.Message?.Trim () != "Supported iPhone orientations have not been set").ToArray ();
+			}
+
+			Assert.AreEqual (1, warnings.Length, "Warning count");
+			Assert.AreEqual (warnings [0].Code, "IL2075", "Warning code");
+			Assert.AreEqual (warnings [0].Message, "'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicProperties' in call to 'System.Type.GetProperties()'. The return value of method 'System.Object.GetType()' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "", "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Debug")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Debug")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Debug")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Release")]
+		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
 			properties ["PublishAot"] = "true";
 			properties ["_IsPublishing"] = "true"; // quack like "dotnet publish"
 			properties ["ExcludeNUnitLiteReference"] = "true"; // we're asserting no warnings, and NUnitLite produces a lot of them, so ignore NUnitLite
 			properties ["ExcludeTouchUnitReference"] = "true"; // we're asserting no warnings, and Touch.Unit produces a lot of them, so ignore Touch.Unit
 			properties ["TrimmerSingleWarn"] = "false"; // don't be shy, we want to know what the problem is
 			var rv = DotNet.AssertBuild (project_path, properties);
+
+			Assert.True (Directory.Exists (appPath), $"App file expected at: {appPath}");
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
@@ -1782,7 +2104,7 @@ namespace Xamarin.Tests {
 			// Pick a target platform version that we don't really support,
 			// but don't show an error in .NET 8 because of backwards compat.
 			// The earliest target OS version should do.
-			var minSupportedOSVersion = GetSupportedTargetPlatformVersions (platform).First ();
+			var minSupportedOSVersion = GetMinSupportedOSPlatformVersion (platform);
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
 			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
 
@@ -1835,6 +2157,11 @@ namespace Xamarin.Tests {
 				.ToArray ();
 		}
 
+		string GetMinSupportedOSPlatformVersion (ApplePlatform platform)
+		{
+			return Configuration.GetVariable ($"DOTNET_MIN_{platform.AsString ().ToUpperInvariant ()}_SDK_VERSION", "unknown MinSupportedOSPlatformVersion");
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x86_64")]
 		[TestCase (ApplePlatform.iOS, "MtouchArch", "ARMv7s")]
@@ -1856,7 +2183,6 @@ namespace Xamarin.Tests {
 			properties [property] = value;
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			AssertErrorCount (errors, 1, "Error count");
 			AssertErrorMessages (errors, $"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.");
 		}
 
@@ -2010,7 +2336,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")] // Should be reenalbed once https://github.com/dotnet/runtime/issues/105510 gets fixed
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "-all,System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "all,-System.Private.CoreLib")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "")]
 		public void DedupUniversalAppTest (ApplePlatform platform, string runtimeIdentifiers, string mtouchInterpreter)
@@ -2070,6 +2396,753 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["SetAppendRuntimeIdentifierToOutputPathToFalse"] = "true";
 			DotNet.AssertBuild (project_path, properties);
+		}
+
+		static string [] expectedFrameworks_iOS_None = [
+			"/System/Library/Frameworks/Accelerate.framework/Accelerate",
+			"/System/Library/Frameworks/Accessibility.framework/Accessibility",
+			"/System/Library/Frameworks/AccessorySetupKit.framework/AccessorySetupKit",
+			"/System/Library/Frameworks/Accounts.framework/Accounts",
+			"/System/Library/Frameworks/AddressBook.framework/AddressBook",
+			"/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI",
+			"/System/Library/Frameworks/AdServices.framework/AdServices",
+			"/System/Library/Frameworks/AdSupport.framework/AdSupport",
+			"/System/Library/Frameworks/AppClip.framework/AppClip",
+			"/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency",
+			"/System/Library/Frameworks/ARKit.framework/ARKit",
+			"/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox",
+			"/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices",
+			"/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/AutomaticAssessmentConfiguration",
+			"/System/Library/Frameworks/AVFoundation.framework/AVFoundation",
+			"/System/Library/Frameworks/AVKit.framework/AVKit",
+			"/System/Library/Frameworks/AVRouting.framework/AVRouting",
+			"/System/Library/Frameworks/BackgroundAssets.framework/BackgroundAssets",
+			"/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks",
+			"/System/Library/Frameworks/BusinessChat.framework/BusinessChat",
+			"/System/Library/Frameworks/CallKit.framework/CallKit",
+			"/System/Library/Frameworks/CarPlay.framework/CarPlay",
+			"/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
+			"/System/Library/Frameworks/Cinematic.framework/Cinematic",
+			"/System/Library/Frameworks/ClassKit.framework/ClassKit",
+			"/System/Library/Frameworks/CloudKit.framework/CloudKit",
+			"/System/Library/Frameworks/Contacts.framework/Contacts",
+			"/System/Library/Frameworks/ContactsUI.framework/ContactsUI",
+			"/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit",
+			"/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth",
+			"/System/Library/Frameworks/CoreData.framework/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+			"/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics",
+			"/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics",
+			"/System/Library/Frameworks/CoreImage.framework/CoreImage",
+			"/System/Library/Frameworks/CoreLocation.framework/CoreLocation",
+			"/System/Library/Frameworks/CoreLocationUI.framework/CoreLocationUI",
+			"/System/Library/Frameworks/CoreMedia.framework/CoreMedia",
+			"/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI",
+			"/System/Library/Frameworks/CoreML.framework/CoreML",
+			"/System/Library/Frameworks/CoreMotion.framework/CoreMotion",
+			"/System/Library/Frameworks/CoreNFC.framework/CoreNFC",
+			"/System/Library/Frameworks/CoreSpotlight.framework/CoreSpotlight",
+			"/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony",
+			"/System/Library/Frameworks/CoreText.framework/CoreText",
+			"/System/Library/Frameworks/CoreVideo.framework/CoreVideo",
+			"/System/Library/Frameworks/CryptoTokenKit.framework/CryptoTokenKit",
+			"/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck",
+			"/System/Library/Frameworks/DeviceDiscoveryExtension.framework/DeviceDiscoveryExtension",
+			"/System/Library/Frameworks/EventKit.framework/EventKit",
+			"/System/Library/Frameworks/EventKitUI.framework/EventKitUI",
+			"/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory",
+			"/System/Library/Frameworks/FileProvider.framework/FileProvider",
+			"/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI",
+			"/System/Library/Frameworks/Foundation.framework/Foundation",
+			"/System/Library/Frameworks/GameController.framework/GameController",
+			"/System/Library/Frameworks/GameKit.framework/GameKit",
+			"/System/Library/Frameworks/GameplayKit.framework/GameplayKit",
+			"/System/Library/Frameworks/GLKit.framework/GLKit",
+			"/System/Library/Frameworks/GSS.framework/GSS",
+			"/System/Library/Frameworks/HealthKit.framework/HealthKit",
+			"/System/Library/Frameworks/HealthKitUI.framework/HealthKitUI",
+			"/System/Library/Frameworks/HomeKit.framework/HomeKit",
+			"/System/Library/Frameworks/IdentityLookup.framework/IdentityLookup",
+			"/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI",
+			"/System/Library/Frameworks/ImageIO.framework/ImageIO",
+			"/System/Library/Frameworks/Intents.framework/Intents",
+			"/System/Library/Frameworks/IntentsUI.framework/IntentsUI",
+			"/System/Library/Frameworks/IOSurface.framework/IOSurface",
+			"/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore",
+			"/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation",
+			"/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication",
+			"/System/Library/Frameworks/MapKit.framework/MapKit",
+			"/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility",
+			"/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
+			"/System/Library/Frameworks/MediaSetup.framework/MediaSetup",
+			"/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox",
+			"/System/Library/Frameworks/Messages.framework/Messages",
+			"/System/Library/Frameworks/MessageUI.framework/MessageUI",
+			"/System/Library/Frameworks/Metal.framework/Metal",
+			"/System/Library/Frameworks/MetalFX.framework/MetalFX",
+			"/System/Library/Frameworks/MetalKit.framework/MetalKit",
+			"/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders",
+			"/System/Library/Frameworks/MetalPerformanceShadersGraph.framework/MetalPerformanceShadersGraph",
+			"/System/Library/Frameworks/MetricKit.framework/MetricKit",
+			"/System/Library/Frameworks/MLCompute.framework/MLCompute",
+			"/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices",
+			"/System/Library/Frameworks/ModelIO.framework/ModelIO",
+			"/System/Library/Frameworks/MultipeerConnectivity.framework/MultipeerConnectivity",
+			"/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage",
+			"/System/Library/Frameworks/NearbyInteraction.framework/NearbyInteraction",
+			"/System/Library/Frameworks/Network.framework/Network",
+			"/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension",
+			"/System/Library/Frameworks/NotificationCenter.framework/NotificationCenter",
+			"/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
+			"/System/Library/Frameworks/OSLog.framework/OSLog",
+			"/System/Library/Frameworks/PassKit.framework/PassKit",
+			"/System/Library/Frameworks/PDFKit.framework/PDFKit",
+			"/System/Library/Frameworks/PencilKit.framework/PencilKit",
+			"/System/Library/Frameworks/PHASE.framework/PHASE",
+			"/System/Library/Frameworks/Photos.framework/Photos",
+			"/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
+			"/System/Library/Frameworks/PushKit.framework/PushKit",
+			"/System/Library/Frameworks/PushToTalk.framework/PushToTalk",
+			"/System/Library/Frameworks/QuartzCore.framework/QuartzCore",
+			"/System/Library/Frameworks/QuickLook.framework/QuickLook",
+			"/System/Library/Frameworks/QuickLookThumbnailing.framework/QuickLookThumbnailing",
+			"/System/Library/Frameworks/ReplayKit.framework/ReplayKit",
+			"/System/Library/Frameworks/SafariServices.framework/SafariServices",
+			"/System/Library/Frameworks/SafetyKit.framework/SafetyKit",
+			"/System/Library/Frameworks/SceneKit.framework/SceneKit",
+			"/System/Library/Frameworks/ScreenTime.framework/ScreenTime",
+			"/System/Library/Frameworks/Security.framework/Security",
+			"/System/Library/Frameworks/SensitiveContentAnalysis.framework/SensitiveContentAnalysis",
+			"/System/Library/Frameworks/SensorKit.framework/SensorKit",
+			"/System/Library/Frameworks/SharedWithYou.framework/SharedWithYou",
+			"/System/Library/Frameworks/SharedWithYouCore.framework/SharedWithYouCore",
+			"/System/Library/Frameworks/ShazamKit.framework/ShazamKit",
+			"/System/Library/Frameworks/Social.framework/Social",
+			"/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis",
+			"/System/Library/Frameworks/Speech.framework/Speech",
+			"/System/Library/Frameworks/SpriteKit.framework/SpriteKit",
+			"/System/Library/Frameworks/StoreKit.framework/StoreKit",
+			"/System/Library/Frameworks/Symbols.framework/Symbols",
+			"/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
+			"/System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork",
+			"/System/Library/Frameworks/Twitter.framework/Twitter",
+			"/System/Library/Frameworks/UIKit.framework/UIKit",
+			"/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers",
+			"/System/Library/Frameworks/UserNotifications.framework/UserNotifications",
+			"/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI",
+			"/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount",
+			"/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox",
+			"/System/Library/Frameworks/Vision.framework/Vision",
+			"/System/Library/Frameworks/VisionKit.framework/VisionKit",
+			"/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity",
+			"/System/Library/Frameworks/WebKit.framework/WebKit",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+			"/System/Library/Frameworks/CryptoKit.framework/CryptoKit",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDataDetection.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFileProvider.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUIKit.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
+		];
+
+		static string [] expectedFrameworks_iOS_Full = [
+			"/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
+			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+			"/System/Library/Frameworks/Foundation.framework/Foundation",
+			"/System/Library/Frameworks/GSS.framework/GSS",
+			"/System/Library/Frameworks/Security.framework/Security",
+			"/System/Library/Frameworks/UIKit.framework/UIKit",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+		];
+
+		static string [] expectedFrameworks_tvOS_None = [
+			"/System/Library/Frameworks/Accelerate.framework/Accelerate",
+			"/System/Library/Frameworks/Accessibility.framework/Accessibility",
+			"/System/Library/Frameworks/AdSupport.framework/AdSupport",
+			"/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency",
+			"/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox",
+			"/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices",
+			"/System/Library/Frameworks/AVFoundation.framework/AVFoundation",
+			"/System/Library/Frameworks/AVKit.framework/AVKit",
+			"/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks",
+			"/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
+			"/System/Library/Frameworks/Cinematic.framework/Cinematic",
+			"/System/Library/Frameworks/CloudKit.framework/CloudKit",
+			"/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth",
+			"/System/Library/Frameworks/CoreData.framework/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+			"/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics",
+			"/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics",
+			"/System/Library/Frameworks/CoreImage.framework/CoreImage",
+			"/System/Library/Frameworks/CoreLocation.framework/CoreLocation",
+			"/System/Library/Frameworks/CoreMedia.framework/CoreMedia",
+			"/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI",
+			"/System/Library/Frameworks/CoreML.framework/CoreML",
+			"/System/Library/Frameworks/CoreSpotlight.framework/CoreSpotlight",
+			"/System/Library/Frameworks/CoreText.framework/CoreText",
+			"/System/Library/Frameworks/CoreVideo.framework/CoreVideo",
+			"/System/Library/Frameworks/CryptoKit.framework/CryptoKit",
+			"/System/Library/Frameworks/CryptoTokenKit.framework/CryptoTokenKit",
+			"/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck",
+			"/System/Library/Frameworks/DeviceDiscoveryUI.framework/DeviceDiscoveryUI",
+			"/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory",
+			"/System/Library/Frameworks/Foundation.framework/Foundation",
+			"/System/Library/Frameworks/GameController.framework/GameController",
+			"/System/Library/Frameworks/GameKit.framework/GameKit",
+			"/System/Library/Frameworks/GameplayKit.framework/GameplayKit",
+			"/System/Library/Frameworks/GLKit.framework/GLKit",
+			"/System/Library/Frameworks/HomeKit.framework/HomeKit",
+			"/System/Library/Frameworks/ImageIO.framework/ImageIO",
+			"/System/Library/Frameworks/Intents.framework/Intents",
+			"/System/Library/Frameworks/IOSurface.framework/IOSurface",
+			"/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore",
+			"/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation",
+			"/System/Library/Frameworks/MapKit.framework/MapKit",
+			"/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility",
+			"/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
+			"/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox",
+			"/System/Library/Frameworks/Metal.framework/Metal",
+			"/System/Library/Frameworks/MetalKit.framework/MetalKit",
+			"/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders",
+			"/System/Library/Frameworks/MetalPerformanceShadersGraph.framework/MetalPerformanceShadersGraph",
+			"/System/Library/Frameworks/MLCompute.framework/MLCompute",
+			"/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices",
+			"/System/Library/Frameworks/ModelIO.framework/ModelIO",
+			"/System/Library/Frameworks/MultipeerConnectivity.framework/MultipeerConnectivity",
+			"/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage",
+			"/System/Library/Frameworks/Network.framework/Network",
+			"/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension",
+			"/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
+			"/System/Library/Frameworks/OSLog.framework/OSLog",
+			"/System/Library/Frameworks/PHASE.framework/PHASE",
+			"/System/Library/Frameworks/Photos.framework/Photos",
+			"/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
+			"/System/Library/Frameworks/QuartzCore.framework/QuartzCore",
+			"/System/Library/Frameworks/ReplayKit.framework/ReplayKit",
+			"/System/Library/Frameworks/SceneKit.framework/SceneKit",
+			"/System/Library/Frameworks/Security.framework/Security",
+			"/System/Library/Frameworks/SharedWithYou.framework/SharedWithYou",
+			"/System/Library/Frameworks/ShazamKit.framework/ShazamKit",
+			"/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis",
+			"/System/Library/Frameworks/SpriteKit.framework/SpriteKit",
+			"/System/Library/Frameworks/StoreKit.framework/StoreKit",
+			"/System/Library/Frameworks/Symbols.framework/Symbols",
+			"/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
+			"/System/Library/Frameworks/TVMLKit.framework/TVMLKit",
+			"/System/Library/Frameworks/TVServices.framework/TVServices",
+			"/System/Library/Frameworks/TVUIKit.framework/TVUIKit",
+			"/System/Library/Frameworks/UIKit.framework/UIKit",
+			"/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers",
+			"/System/Library/Frameworks/UserNotifications.framework/UserNotifications",
+			"/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount",
+			"/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox",
+			"/System/Library/Frameworks/Vision.framework/Vision",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUIKit.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+		];
+
+		static string [] expectedFrameworks_tvOS_Full = [
+			"/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+			"/System/Library/Frameworks/Foundation.framework/Foundation",
+			"/System/Library/Frameworks/Security.framework/Security",
+			"/System/Library/Frameworks/UIKit.framework/UIKit",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+		];
+
+		static string [] expectedFrameworks_macOS_None = [
+			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrgcexp.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
+			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
+			"@executable_path/../../Contents/MonoBundle/libhostfxr.dylib",
+			"@executable_path/../../Contents/MonoBundle/libhostpolicy.dylib",
+			"@executable_path/../../Contents/MonoBundle/libmscordaccore.dylib",
+			"@executable_path/../../Contents/MonoBundle/libmscordbi.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Globalization.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.IO.Compression.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Net.Security.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Security.Cryptography.Native.Apple.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Security.Cryptography.Native.OpenSsl.dylib",
+			"/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate",
+			"/System/Library/Frameworks/Accessibility.framework/Versions/A/Accessibility",
+			"/System/Library/Frameworks/Accounts.framework/Versions/A/Accounts",
+			"/System/Library/Frameworks/AdServices.framework/Versions/A/AdServices",
+			"/System/Library/Frameworks/AdSupport.framework/Versions/A/AdSupport",
+			"/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+			"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+			"/System/Library/Frameworks/AppTrackingTransparency.framework/Versions/A/AppTrackingTransparency",
+			"/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox",
+			"/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit",
+			"/System/Library/Frameworks/AuthenticationServices.framework/Versions/A/AuthenticationServices",
+			"/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/Versions/A/AutomaticAssessmentConfiguration",
+			"/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation",
+			"/System/Library/Frameworks/AVKit.framework/Versions/A/AVKit",
+			"/System/Library/Frameworks/AVRouting.framework/Versions/A/AVRouting",
+			"/System/Library/Frameworks/BackgroundAssets.framework/Versions/A/BackgroundAssets",
+			"/System/Library/Frameworks/BusinessChat.framework/Versions/A/BusinessChat",
+			"/System/Library/Frameworks/CallKit.framework/Versions/A/CallKit",
+			"/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+			"/System/Library/Frameworks/Cinematic.framework/Versions/A/Cinematic",
+			"/System/Library/Frameworks/ClassKit.framework/Versions/A/ClassKit",
+			"/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
+			"/System/Library/Frameworks/Contacts.framework/Versions/A/Contacts",
+			"/System/Library/Frameworks/ContactsUI.framework/Versions/A/ContactsUI",
+			"/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+			"/System/Library/Frameworks/CoreAudioKit.framework/Versions/A/CoreAudioKit",
+			"/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth",
+			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage",
+			"/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation",
+			"/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+			"/System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI",
+			"/System/Library/Frameworks/CoreML.framework/Versions/A/CoreML",
+			"/System/Library/Frameworks/CoreMotion.framework/Versions/A/CoreMotion",
+			"/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+			"/System/Library/Frameworks/CoreSpotlight.framework/Versions/A/CoreSpotlight",
+			"/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+			"/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+			"/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN",
+			"/System/Library/Frameworks/CryptoTokenKit.framework/Versions/A/CryptoTokenKit",
+			"/System/Library/Frameworks/DeviceCheck.framework/Versions/A/DeviceCheck",
+			"/System/Library/Frameworks/DeviceDiscoveryExtension.framework/Versions/A/DeviceDiscoveryExtension",
+			"/System/Library/Frameworks/EventKit.framework/Versions/A/EventKit",
+			"/System/Library/Frameworks/ExecutionPolicy.framework/Versions/A/ExecutionPolicy",
+			"/System/Library/Frameworks/ExtensionKit.framework/Versions/A/ExtensionKit",
+			"/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory",
+			"/System/Library/Frameworks/FileProvider.framework/Versions/A/FileProvider",
+			"/System/Library/Frameworks/FileProviderUI.framework/Versions/A/FileProviderUI",
+			"/System/Library/Frameworks/FinderSync.framework/Versions/A/FinderSync",
+			"/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+			"/System/Library/Frameworks/GameController.framework/Versions/A/GameController",
+			"/System/Library/Frameworks/GameKit.framework/Versions/A/GameKit",
+			"/System/Library/Frameworks/GameplayKit.framework/Versions/A/GameplayKit",
+			"/System/Library/Frameworks/GLKit.framework/Versions/A/GLKit",
+			"/System/Library/Frameworks/HealthKit.framework/Versions/A/HealthKit",
+			"/System/Library/Frameworks/ImageCaptureCore.framework/Versions/A/ImageCaptureCore",
+			"/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO",
+			"/System/Library/Frameworks/Intents.framework/Versions/A/Intents",
+			"/System/Library/Frameworks/IntentsUI.framework/Versions/A/IntentsUI",
+			"/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+			"/System/Library/Frameworks/iTunesLibrary.framework/Versions/A/iTunesLibrary",
+			"/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/JavaScriptCore",
+			"/System/Library/Frameworks/LinkPresentation.framework/Versions/A/LinkPresentation",
+			"/System/Library/Frameworks/LocalAuthentication.framework/Versions/A/LocalAuthentication",
+			"/System/Library/Frameworks/LocalAuthenticationEmbeddedUI.framework/Versions/A/LocalAuthenticationEmbeddedUI",
+			"/System/Library/Frameworks/MailKit.framework/Versions/A/MailKit",
+			"/System/Library/Frameworks/MapKit.framework/Versions/A/MapKit",
+			"/System/Library/Frameworks/MediaAccessibility.framework/Versions/A/MediaAccessibility",
+			"/System/Library/Frameworks/MediaExtension.framework/Versions/A/MediaExtension",
+			"/System/Library/Frameworks/MediaLibrary.framework/Versions/A/MediaLibrary",
+			"/System/Library/Frameworks/MediaPlayer.framework/Versions/A/MediaPlayer",
+			"/System/Library/Frameworks/MediaToolbox.framework/Versions/A/MediaToolbox",
+			"/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+			"/System/Library/Frameworks/MetalFX.framework/Versions/A/MetalFX",
+			"/System/Library/Frameworks/MetalKit.framework/Versions/A/MetalKit",
+			"/System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/MetalPerformanceShaders",
+			"/System/Library/Frameworks/MetalPerformanceShadersGraph.framework/Versions/A/MetalPerformanceShadersGraph",
+			"/System/Library/Frameworks/MetricKit.framework/Versions/A/MetricKit",
+			"/System/Library/Frameworks/MLCompute.framework/Versions/A/MLCompute",
+			"/System/Library/Frameworks/ModelIO.framework/Versions/A/ModelIO",
+			"/System/Library/Frameworks/MultipeerConnectivity.framework/Versions/A/MultipeerConnectivity",
+			"/System/Library/Frameworks/NaturalLanguage.framework/Versions/A/NaturalLanguage",
+			"/System/Library/Frameworks/Network.framework/Versions/A/Network",
+			"/System/Library/Frameworks/NetworkExtension.framework/Versions/A/NetworkExtension",
+			"/System/Library/Frameworks/NotificationCenter.framework/Versions/A/NotificationCenter",
+			"/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL",
+			"/System/Library/Frameworks/OSLog.framework/Versions/A/OSLog",
+			"/System/Library/Frameworks/PassKit.framework/Versions/A/PassKit",
+			"/System/Library/Frameworks/PencilKit.framework/Versions/A/PencilKit",
+			"/System/Library/Frameworks/PHASE.framework/Versions/A/PHASE",
+			"/System/Library/Frameworks/Photos.framework/Versions/A/Photos",
+			"/System/Library/Frameworks/PhotosUI.framework/Versions/A/PhotosUI",
+			"/System/Library/Frameworks/PushKit.framework/Versions/A/PushKit",
+			"/System/Library/Frameworks/Quartz.framework/Versions/A/Quartz",
+			"/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+			"/System/Library/Frameworks/QuickLook.framework/Versions/A/QuickLook",
+			"/System/Library/Frameworks/QuickLookThumbnailing.framework/Versions/A/QuickLookThumbnailing",
+			"/System/Library/Frameworks/ReplayKit.framework/Versions/A/ReplayKit",
+			"/System/Library/Frameworks/SafariServices.framework/Versions/A/SafariServices",
+			"/System/Library/Frameworks/SafetyKit.framework/Versions/A/SafetyKit",
+			"/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit",
+			"/System/Library/Frameworks/ScreenCaptureKit.framework/Versions/A/ScreenCaptureKit",
+			"/System/Library/Frameworks/ScreenTime.framework/Versions/A/ScreenTime",
+			"/System/Library/Frameworks/ScriptingBridge.framework/Versions/A/ScriptingBridge",
+			"/System/Library/Frameworks/Security.framework/Versions/A/Security",
+			"/System/Library/Frameworks/SensitiveContentAnalysis.framework/Versions/A/SensitiveContentAnalysis",
+			"/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement",
+			"/System/Library/Frameworks/SharedWithYou.framework/Versions/A/SharedWithYou",
+			"/System/Library/Frameworks/SharedWithYouCore.framework/Versions/A/SharedWithYouCore",
+			"/System/Library/Frameworks/ShazamKit.framework/Versions/A/ShazamKit",
+			"/System/Library/Frameworks/Social.framework/Versions/A/Social",
+			"/System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis",
+			"/System/Library/Frameworks/Speech.framework/Versions/A/Speech",
+			"/System/Library/Frameworks/SpriteKit.framework/Versions/A/SpriteKit",
+			"/System/Library/Frameworks/StoreKit.framework/Versions/A/StoreKit",
+			"/System/Library/Frameworks/Symbols.framework/Versions/A/Symbols",
+			"/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration",
+			"/System/Library/Frameworks/ThreadNetwork.framework/Versions/A/ThreadNetwork",
+			"/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+			"/System/Library/Frameworks/UserNotifications.framework/Versions/A/UserNotifications",
+			"/System/Library/Frameworks/UserNotificationsUI.framework/Versions/A/UserNotificationsUI",
+			"/System/Library/Frameworks/VideoSubscriberAccount.framework/Versions/A/VideoSubscriberAccount",
+			"/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox",
+			"/System/Library/Frameworks/Vision.framework/Versions/A/Vision",
+			"/System/Library/Frameworks/WebKit.framework/Versions/A/WebKit",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftIOKit.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftOSLog.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
+		];
+
+		static string [] expectedFrameworks_macOS_Full = [
+			"@executable_path/../../Contents/MonoBundle/libclrgc.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrgcexp.dylib",
+			"@executable_path/../../Contents/MonoBundle/libclrjit.dylib",
+			"@executable_path/../../Contents/MonoBundle/libcoreclr.dylib",
+			"@executable_path/../../Contents/MonoBundle/libhostfxr.dylib",
+			"@executable_path/../../Contents/MonoBundle/libhostpolicy.dylib",
+			"@executable_path/../../Contents/MonoBundle/libmscordaccore.dylib",
+			"@executable_path/../../Contents/MonoBundle/libmscordbi.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Globalization.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.IO.Compression.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Net.Security.Native.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Security.Cryptography.Native.Apple.dylib",
+			"@executable_path/../../Contents/MonoBundle/libSystem.Security.Cryptography.Native.OpenSsl.dylib",
+			"/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+			"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+			"/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
+			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+			"/System/Library/Frameworks/Quartz.framework/Versions/A/Quartz",
+			"/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+			"/System/Library/Frameworks/Security.framework/Versions/A/Security",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+		];
+
+		static string [] expectedFrameworks_MacCatalyst_None = [
+			"/System/iOSSupport/System/Library/Frameworks/AddressBook.framework/Versions/A/AddressBook",
+			"/System/iOSSupport/System/Library/Frameworks/AppClip.framework/Versions/A/AppClip",
+			"/System/iOSSupport/System/Library/Frameworks/AuthenticationServices.framework/Versions/A/AuthenticationServices",
+			"/System/iOSSupport/System/Library/Frameworks/AVKit.framework/Versions/A/AVKit",
+			"/System/iOSSupport/System/Library/Frameworks/BusinessChat.framework/Versions/A/BusinessChat",
+			"/System/iOSSupport/System/Library/Frameworks/ContactsUI.framework/Versions/A/ContactsUI",
+			"/System/iOSSupport/System/Library/Frameworks/CoreAudioKit.framework/Versions/A/CoreAudioKit",
+			"/System/iOSSupport/System/Library/Frameworks/CoreLocationUI.framework/Versions/A/CoreLocationUI",
+			"/System/iOSSupport/System/Library/Frameworks/CoreNFC.framework/Versions/A/CoreNFC",
+			"/System/iOSSupport/System/Library/Frameworks/EventKitUI.framework/Versions/A/EventKitUI",
+			"/System/iOSSupport/System/Library/Frameworks/GameController.framework/Versions/A/GameController",
+			"/System/iOSSupport/System/Library/Frameworks/GameKit.framework/Versions/A/GameKit",
+			"/System/iOSSupport/System/Library/Frameworks/GameplayKit.framework/Versions/A/GameplayKit",
+			"/System/iOSSupport/System/Library/Frameworks/HealthKitUI.framework/Versions/A/HealthKitUI",
+			"/System/iOSSupport/System/Library/Frameworks/HomeKit.framework/Versions/A/HomeKit",
+			"/System/iOSSupport/System/Library/Frameworks/IdentityLookupUI.framework/Versions/A/IdentityLookupUI",
+			"/System/iOSSupport/System/Library/Frameworks/IntentsUI.framework/Versions/A/IntentsUI",
+			"/System/iOSSupport/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/JavaScriptCore",
+			"/System/iOSSupport/System/Library/Frameworks/LinkPresentation.framework/Versions/A/LinkPresentation",
+			"/System/iOSSupport/System/Library/Frameworks/MapKit.framework/Versions/A/MapKit",
+			"/System/iOSSupport/System/Library/Frameworks/MediaPlayer.framework/Versions/A/MediaPlayer",
+			"/System/iOSSupport/System/Library/Frameworks/Messages.framework/Versions/A/Messages",
+			"/System/iOSSupport/System/Library/Frameworks/MessageUI.framework/Versions/A/MessageUI",
+			"/System/iOSSupport/System/Library/Frameworks/MetalKit.framework/Versions/A/MetalKit",
+			"/System/iOSSupport/System/Library/Frameworks/MobileCoreServices.framework/Versions/A/MobileCoreServices",
+			"/System/iOSSupport/System/Library/Frameworks/MultipeerConnectivity.framework/Versions/A/MultipeerConnectivity",
+			"/System/iOSSupport/System/Library/Frameworks/PassKit.framework/Versions/A/PassKit",
+			"/System/iOSSupport/System/Library/Frameworks/PDFKit.framework/Versions/A/PDFKit",
+			"/System/iOSSupport/System/Library/Frameworks/PencilKit.framework/Versions/A/PencilKit",
+			"/System/iOSSupport/System/Library/Frameworks/PhotosUI.framework/Versions/A/PhotosUI",
+			"/System/iOSSupport/System/Library/Frameworks/QuickLook.framework/Versions/A/QuickLook",
+			"/System/iOSSupport/System/Library/Frameworks/ReplayKit.framework/Versions/A/ReplayKit",
+			"/System/iOSSupport/System/Library/Frameworks/SafariServices.framework/Versions/A/SafariServices",
+			"/System/iOSSupport/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit",
+			"/System/iOSSupport/System/Library/Frameworks/ScreenTime.framework/Versions/A/ScreenTime",
+			"/System/iOSSupport/System/Library/Frameworks/SharedWithYou.framework/Versions/A/SharedWithYou",
+			"/System/iOSSupport/System/Library/Frameworks/Social.framework/Versions/A/Social",
+			"/System/iOSSupport/System/Library/Frameworks/SpriteKit.framework/Versions/A/SpriteKit",
+			"/System/iOSSupport/System/Library/Frameworks/StoreKit.framework/Versions/A/StoreKit",
+			"/System/iOSSupport/System/Library/Frameworks/UIKit.framework/Versions/A/UIKit",
+			"/System/iOSSupport/System/Library/Frameworks/UserNotificationsUI.framework/Versions/A/UserNotificationsUI",
+			"/System/iOSSupport/System/Library/Frameworks/VisionKit.framework/Versions/A/VisionKit",
+			"/System/iOSSupport/System/Library/Frameworks/WebKit.framework/Versions/A/WebKit",
+			"/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate",
+			"/System/Library/Frameworks/Accessibility.framework/Versions/A/Accessibility",
+			"/System/Library/Frameworks/Accounts.framework/Versions/A/Accounts",
+			"/System/Library/Frameworks/AdServices.framework/Versions/A/AdServices",
+			"/System/Library/Frameworks/AdSupport.framework/Versions/A/AdSupport",
+			"/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+			"/System/Library/Frameworks/AppTrackingTransparency.framework/Versions/A/AppTrackingTransparency",
+			"/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox",
+			"/System/Library/Frameworks/AutomaticAssessmentConfiguration.framework/Versions/A/AutomaticAssessmentConfiguration",
+			"/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation",
+			"/System/Library/Frameworks/AVRouting.framework/Versions/A/AVRouting",
+			"/System/Library/Frameworks/BackgroundAssets.framework/Versions/A/BackgroundAssets",
+			"/System/Library/Frameworks/BackgroundTasks.framework/Versions/A/BackgroundTasks",
+			"/System/Library/Frameworks/CallKit.framework/Versions/A/CallKit",
+			"/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+			"/System/Library/Frameworks/ClassKit.framework/Versions/A/ClassKit",
+			"/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
+			"/System/Library/Frameworks/Contacts.framework/Versions/A/Contacts",
+			"/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+			"/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth",
+			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+			"/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
+			"/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage",
+			"/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation",
+			"/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+			"/System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI",
+			"/System/Library/Frameworks/CoreML.framework/Versions/A/CoreML",
+			"/System/Library/Frameworks/CoreMotion.framework/Versions/A/CoreMotion",
+			"/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+			"/System/Library/Frameworks/CoreSpotlight.framework/Versions/A/CoreSpotlight",
+			"/System/Library/Frameworks/CoreTelephony.framework/Versions/A/CoreTelephony",
+			"/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+			"/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+			"/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN",
+			"/System/Library/Frameworks/CryptoKit.framework/Versions/A/CryptoKit",
+			"/System/Library/Frameworks/CryptoTokenKit.framework/Versions/A/CryptoTokenKit",
+			"/System/Library/Frameworks/DeviceCheck.framework/Versions/A/DeviceCheck",
+			"/System/Library/Frameworks/DeviceDiscoveryExtension.framework/Versions/A/DeviceDiscoveryExtension",
+			"/System/Library/Frameworks/EventKit.framework/Versions/A/EventKit",
+			"/System/Library/Frameworks/ExecutionPolicy.framework/Versions/A/ExecutionPolicy",
+			"/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory",
+			"/System/Library/Frameworks/FileProvider.framework/Versions/A/FileProvider",
+			"/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+			"/System/Library/Frameworks/GSS.framework/Versions/A/GSS",
+			"/System/Library/Frameworks/HealthKit.framework/Versions/A/HealthKit",
+			"/System/Library/Frameworks/IdentityLookup.framework/Versions/A/IdentityLookup",
+			"/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO",
+			"/System/Library/Frameworks/Intents.framework/Versions/A/Intents",
+			"/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+			"/System/Library/Frameworks/LocalAuthentication.framework/Versions/A/LocalAuthentication",
+			"/System/Library/Frameworks/MediaAccessibility.framework/Versions/A/MediaAccessibility",
+			"/System/Library/Frameworks/MediaToolbox.framework/Versions/A/MediaToolbox",
+			"/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+			"/System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/MetalPerformanceShaders",
+			"/System/Library/Frameworks/MetalPerformanceShadersGraph.framework/Versions/A/MetalPerformanceShadersGraph",
+			"/System/Library/Frameworks/MetricKit.framework/Versions/A/MetricKit",
+			"/System/Library/Frameworks/MLCompute.framework/Versions/A/MLCompute",
+			"/System/Library/Frameworks/ModelIO.framework/Versions/A/ModelIO",
+			"/System/Library/Frameworks/NaturalLanguage.framework/Versions/A/NaturalLanguage",
+			"/System/Library/Frameworks/NearbyInteraction.framework/Versions/A/NearbyInteraction",
+			"/System/Library/Frameworks/Network.framework/Versions/A/Network",
+			"/System/Library/Frameworks/NetworkExtension.framework/Versions/A/NetworkExtension",
+			"/System/Library/Frameworks/OSLog.framework/Versions/A/OSLog",
+			"/System/Library/Frameworks/PHASE.framework/Versions/A/PHASE",
+			"/System/Library/Frameworks/Photos.framework/Versions/A/Photos",
+			"/System/Library/Frameworks/PushKit.framework/Versions/A/PushKit",
+			"/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+			"/System/Library/Frameworks/QuickLookThumbnailing.framework/Versions/A/QuickLookThumbnailing",
+			"/System/Library/Frameworks/Security.framework/Versions/A/Security",
+			"/System/Library/Frameworks/SensitiveContentAnalysis.framework/Versions/A/SensitiveContentAnalysis",
+			"/System/Library/Frameworks/SensorKit.framework/Versions/A/SensorKit",
+			"/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement",
+			"/System/Library/Frameworks/SharedWithYouCore.framework/Versions/A/SharedWithYouCore",
+			"/System/Library/Frameworks/ShazamKit.framework/Versions/A/ShazamKit",
+			"/System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis",
+			"/System/Library/Frameworks/Speech.framework/Versions/A/Speech",
+			"/System/Library/Frameworks/Symbols.framework/Versions/A/Symbols",
+			"/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration",
+			"/System/Library/Frameworks/ThreadNetwork.framework/Versions/A/ThreadNetwork",
+			"/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+			"/System/Library/Frameworks/UserNotifications.framework/Versions/A/UserNotifications",
+			"/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox",
+			"/System/Library/Frameworks/Vision.framework/Versions/A/Vision",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+			"/System/iOSSupport/usr/lib/swift/libswiftUIKit.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDataDetection.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFileProvider.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftIOKit.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftOSLog.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
+		];
+
+		static string [] expectedFrameworks_MacCatalyst_Full = [
+			"/System/iOSSupport/System/Library/Frameworks/UIKit.framework/Versions/A/UIKit",
+			"/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+			"/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
+			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
+			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+			"/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+			"/System/Library/Frameworks/GSS.framework/Versions/A/GSS",
+			"/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+			"/System/Library/Frameworks/Security.framework/Versions/A/Security",
+			"/usr/lib/libc++.1.dylib",
+			"/usr/lib/libcompression.dylib",
+			"/usr/lib/libiconv.2.dylib",
+			"/usr/lib/libicucore.A.dylib",
+			"/usr/lib/libobjc.A.dylib",
+			"/usr/lib/libSystem.B.dylib",
+			"/usr/lib/libz.1.dylib",
+		];
+
+		static IEnumerable<TestCaseData> GetLinkedWithNativeLibrariesTestCases ()
+		{
+			// Generally speaking, whenever we bind a new framework, we'll have to adjust the LinkMode="None" test cases,
+			// but we shouldn't have to adjust the LinkMode="Full" test cases (which would typically mean that we'll end
+			// up linking with said framework in every app - it's also an indication that we're not trimming away as much
+			// as we want, because just adding an (unused) framework shouldn't make it impossible to trim away all the
+			// code in that framework).
+			//
+			// However, new .NET versions often require updates to both the "None" and "Full lists of frameworks and libraries.
+			//
+
+			yield return new TestCaseData (ApplePlatform.iOS, "ios-arm64", "None", expectedFrameworks_iOS_None);
+			yield return new TestCaseData (ApplePlatform.iOS, "ios-arm64", "Full", expectedFrameworks_iOS_Full);
+			yield return new TestCaseData (ApplePlatform.TVOS, "tvos-arm64", "None", expectedFrameworks_tvOS_None);
+			yield return new TestCaseData (ApplePlatform.TVOS, "tvos-arm64", "Full", expectedFrameworks_tvOS_Full);
+			yield return new TestCaseData (ApplePlatform.MacOSX, "osx-arm64", "None", expectedFrameworks_macOS_None);
+			yield return new TestCaseData (ApplePlatform.MacOSX, "osx-arm64", "Full", expectedFrameworks_macOS_Full);
+			yield return new TestCaseData (ApplePlatform.MacCatalyst, "maccatalyst-x64", "None", expectedFrameworks_MacCatalyst_None);
+			yield return new TestCaseData (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Full", expectedFrameworks_MacCatalyst_Full);
+		}
+
+		[TestCaseSource (nameof (GetLinkedWithNativeLibrariesTestCases))]
+		public void LinkedWithNativeLibraries (ApplePlatform platform, string runtimeIdentifiers, string linkMode, string [] expectedFrameworks)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchLink"] = linkMode;
+			properties ["LinkMode"] = linkMode;
+			if (platform != ApplePlatform.MacOSX)
+				properties ["UseInterpreter"] = "true"; // just to speed up the build
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			var actualFrameworks = GetLinkedWithFrameworks (appExecutable);
+			CollectionAssert.AreEquivalent (
+				expectedFrameworks.OrderBy (v => v).ToArray (),
+				actualFrameworks.OrderBy (v => v).ToArray (),
+				"Frameworks");
+		}
+
+		static HashSet<string> GetLinkedWithFrameworks (string path)
+		{
+			var rv = new HashSet<string> ();
+			foreach (var file in MachO.Read (path)) {
+				foreach (var lc in file.load_commands) {
+					if (lc is DylibLoadCommand loadCommand) {
+						rv.Add (loadCommand.name);
+					}
+				}
+			}
+			return rv;
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "13.1")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "10.0")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "10.0")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "10.0")]
+		public void InvalidSupportedOSPlatformVersion (ApplePlatform platform, string runtimeIdentifiers, string version)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var minVersion = GetMinSupportedOSPlatformVersion (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["SupportedOSPlatformVersion"] = version;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
 	}
 }

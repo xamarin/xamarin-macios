@@ -95,7 +95,6 @@ namespace Xamarin.Linker {
 		{
 			base.TryProcess ();
 
-			App.SelectRegistrar ();
 			if (App.Registrar != RegistrarMode.ManagedStatic)
 				return;
 
@@ -460,6 +459,14 @@ namespace Xamarin.Linker {
 					il.Emit (OpCodes.Ldc_I4, 4133);
 					postLeaveBranch.Operand = il.Body.Instructions.Last ();
 					il.Emit (OpCodes.Ldstr, $"Cannot construct an instance of the type '{method.DeclaringType.FullName}' from Objective-C because the type is generic.");
+					il.Emit (OpCodes.Call, abr.Runtime_CreateRuntimeException);
+					il.Emit (OpCodes.Throw);
+					// We're throwing an exception, so there's no need for any more code.
+					skipEverythingAfter = il.Body.Instructions.Last ();
+				} else if (method.DeclaringType.IsAbstract) {
+					il.Emit (OpCodes.Ldc_I4, 4180);
+					postLeaveBranch.Operand = il.Body.Instructions.Last ();
+					il.Emit (OpCodes.Ldstr, $"Cannot construct an instance of the type '{method.DeclaringType.FullName}' from Objective-C because the type is abstract.");
 					il.Emit (OpCodes.Call, abr.Runtime_CreateRuntimeException);
 					il.Emit (OpCodes.Throw);
 					// We're throwing an exception, so there's no need for any more code.

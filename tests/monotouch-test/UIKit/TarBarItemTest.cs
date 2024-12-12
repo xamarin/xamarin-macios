@@ -44,20 +44,26 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Ctor_2 ()
 		{
-			using (UITabBarItem tbi = new UITabBarItem (UITabBarSystemItem.Bookmarks, nint.MaxValue)) {
-				Assert.Null (tbi.BadgeValue, "BadgeValue");
-				Assert.True (tbi.Enabled, "Enabled");
+			Assert.Multiple (() => {
+				using (UITabBarItem tbi = new UITabBarItem (UITabBarSystemItem.Bookmarks, nint.MaxValue)) {
+					Assert.Null (tbi.BadgeValue, "BadgeValue");
+					Assert.True (tbi.Enabled, "Enabled");
 #if !__TVOS__
-				Assert.Null (tbi.FinishedSelectedImage, "FinishedSelectedImage");
-				Assert.Null (tbi.FinishedUnselectedImage, "FinishedUnselectedImage");
+					Assert.Null (tbi.FinishedSelectedImage, "FinishedSelectedImage");
+					Assert.Null (tbi.FinishedUnselectedImage, "FinishedUnselectedImage");
 #endif
-				Assert.Null (tbi.Image, "Image");
-				Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
-				Assert.That (tbi.Tag, Is.EqualTo (nint.MaxValue), "Tag");
-				Assert.Null (tbi.Title, "Title");
-				Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Horizontal");
-				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
-			}
+					if (TestRuntime.CheckXcodeVersion (16, 0)) {
+						Assert.NotNull (tbi.Image, "Image");
+					} else {
+						Assert.Null (tbi.Image, "Image");
+					}
+					Assert.That (tbi.ImageInsets, Is.EqualTo (UIEdgeInsets.Zero), "ImageInsets");
+					Assert.That (tbi.Tag, Is.EqualTo (nint.MaxValue), "Tag");
+					Assert.That (tbi.Title, Is.Null.Or.EqualTo ("Bookmarks"), "Title");
+					Assert.That (tbi.TitlePositionAdjustment.Horizontal, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Horizontal");
+					Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
+				}
+			});
 		}
 
 		[Test]

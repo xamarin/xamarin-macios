@@ -30,7 +30,8 @@ namespace AutomaticAssessmentConfiguration {
 	}
 
 	[iOS (14, 0)]
-	[MacCatalyst (14, 0)]
+	[MacCatalyst (18, 0)]
+	[Mac (15, 0)]
 	[Native]
 	enum AEAutocorrectMode : long {
 		None = 0,
@@ -43,23 +44,23 @@ namespace AutomaticAssessmentConfiguration {
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("autocorrectMode")]
 		AEAutocorrectMode AutocorrectMode { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsSpellCheck")]
 		bool AllowsSpellCheck { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsPredictiveKeyboard")]
 		bool AllowsPredictiveKeyboard { get; set; }
 
-		[NoMac, iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[Mac (15, 0), iOS (14, 0)]
+		[MacCatalyst (18, 0)]
 		[Export ("allowsKeyboardShortcuts")]
 		bool AllowsKeyboardShortcuts { get; set; }
 
@@ -134,7 +135,7 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("initWithConfiguration:")]
 		NativeHandle Constructor (AEAssessmentConfiguration configuration);
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
@@ -182,7 +183,7 @@ namespace AutomaticAssessmentConfiguration {
 		void FailedToUpdate (AEAssessmentSession session, AEAssessmentConfiguration configuration, NSError error);
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_5_0
 	[DisableDefaultCtor]
@@ -213,5 +214,9 @@ namespace AutomaticAssessmentConfiguration {
 	interface AEAssessmentParticipantConfiguration : NSCopying {
 		[Export ("allowsNetworkAccess")]
 		bool AllowsNetworkAccess { get; set; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("configurationInfo", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> ConfigurationInfo { get; set; }
 	}
 }

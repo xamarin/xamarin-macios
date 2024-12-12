@@ -65,6 +65,15 @@ References:
 * https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
 * https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/preview-apis#experimentalattribute
 
+## Previws of new API bindings (XCODE_x_y_PREVIEW)
+
+We sometimes release previews of new API bindings, and until these are deemed
+stable (by both Apple and us), we mark all our API bindings as preview of the
+new Xcode version.
+
+The diagnostic id is `XCODE_x_y_PREVIEW`, where `x` and `y` are Xcode's major and
+minor versions.
+
 ## CryptoTokenKit (APL0001)
 
 CryptoTokenKit requires special hardware to test, so it's not trivial for us to do so.
@@ -75,4 +84,29 @@ We've tentatively set .NET 10 as the release when we'll stop marking CryptoToken
 
 The diagnostic id for CryptoTokenKit is APL0001.
 
+## FSKit (APL0002)
+
+FSKit is a new framework in macOS 15.0 to implement a file system in user space.
+
+At the moment implementing a file system is out of our reach, so we haven't
+been able to validate the API, and as such we mark every type in this
+framework as preview API for a while.
+
+We've tentatively set .NET 11 as the release when we'll stop marking FSKit as preview API.
+
+The diagnostic id for FSKit is APL0002.
+
+## StoreKit.AppStore.RequestReview (APL0004)
+
+The
+[AppStore.RequestReview](https://developer.apple.com/documentation/storekit/appstore/3954432-requestreview/)
+method is Swift API we've bound manually, and as such it's marked as experimental until .NET 10.
+
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
+
+## Rgen (APL0003)
+
+Rgen is the new Roslyn codegenerator based binding tool. The tool is underdevelopment and its API is open to change until
+a stable release is announced.
+
+The diagnostic id for Rgen is APL0003.

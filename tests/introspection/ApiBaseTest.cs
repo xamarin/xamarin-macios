@@ -20,6 +20,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -35,6 +36,9 @@ using ObjCRuntime;
 #if MONOTOUCH
 using UIKit;
 #endif
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
@@ -103,8 +107,6 @@ namespace Introspection {
 		protected TextWriter Writer {
 #if MONOMAC
 			get { return Console.Out; }
-#elif __WATCHOS__
-			get { return Console.Out; }
 #else
 			get { return AppDelegate.Runner.Writer; }
 #endif
@@ -141,6 +143,20 @@ namespace Introspection {
 		protected virtual bool Skip (Attribute attribute)
 		{
 			return false;
+		}
+
+		protected bool SkipDueToInvisibleAndUnsupported (MemberInfo member)
+		{
+			if (member is null)
+				return false;
+
+			if (SkipDueToInvisibleAndUnsupported (member.DeclaringType))
+				return true;
+
+			if (!MemberHasUnsupported (member))
+				return false;
+
+			return MemberHasEditorBrowsableNever (member);
 		}
 
 		protected virtual bool SkipDueToAttribute (MemberInfo member)
@@ -195,11 +211,18 @@ namespace Introspection {
 
 		public bool MemberHasObsolete (MemberInfo member)
 		{
-#if NET
-			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
-#else
-			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
-#endif
+			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<ObsoletedOSPlatformAttribute> (member);
+		}
+
+		public bool MemberHasUnsupported (MemberInfo member)
+		{
+			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<UnsupportedOSPlatformAttribute> (member);
+		}
+
+		public bool MemberHasEditorBrowsableNever (MemberInfo member)
+		{
+			var attribute = member.GetCustomAttribute<EditorBrowsableAttribute> (false);
+			return attribute?.State == EditorBrowsableState.Never;
 		}
 
 		/// <summary>

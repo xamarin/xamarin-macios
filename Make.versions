@@ -6,8 +6,8 @@
 #
 # IOS_NUGET_VERSION (major/minor/patch #)
 # TVOS_NUGET_VERSION (major/minor/patch #)
-# WATCHOS_NUGET_VERSION (major/minor/patch #)
 # MACOS_NUGET_VERSION (major/minor/patch #)
+# MACCATALYST_NUGET_VERSION (major/minor/patch #)
 #
 # Update version numbers on main as well, to the next version
 #
@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=17.5.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=9.5.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=17.99.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=9.99.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -65,12 +65,17 @@ MAC_PACKAGE_VERSION=9.5.0.$(MAC_COMMIT_DISTANCE)
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 
-IOS_NUGET_OS_VERSION=17.5
-TVOS_NUGET_OS_VERSION=17.5
-WATCHOS_NUGET_OS_VERSION=10.5
-MACOS_NUGET_OS_VERSION=14.5
-MACCATALYST_NUGET_OS_VERSION=17.5
+IOS_NUGET_OS_VERSION=18.1
+TVOS_NUGET_OS_VERSION=18.1
+MACOS_NUGET_OS_VERSION=15.1
+MACCATALYST_NUGET_OS_VERSION=18.1
 
+# The following are the OS versions we first supported with the current .NET version.
+# These versions must *not* change with minor .NET updates, only major .NET releases.
+IOS_TARGET_PLATFORM_VERSION_LIBRARY=18.0
+TVOS_TARGET_PLATFORM_VERSION_LIBRARY=18.0
+MACOS_TARGET_PLATFORM_VERSION_LIBRARY=15.0
+MACCATALYST_TARGET_PLATFORM_VERSION_LIBRARY=18.0
 
 # In theory we should define the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
 # * We release support for iOS 14.5 with .NET 6
@@ -100,6 +105,13 @@ MACCATALYST_NUGET_OS_VERSION=17.5
 # So we've made the decision that the default target platform version is
 # always the latest target platform version.
 
+# However, this turns out to be somewhat of a complication for library developers,
+# because they typically don't need Xcode to build their projects, and if we auto-
+# update their TargetPlatformVersion to the latest, then all their customers
+# have to also update their workloads, which for some people end up being a rather
+# nasty surprise (because with the above algorithm it happens without developer
+# action). Thus we follow .NET's default platform version scheme for library projects:
+# it won't change in minor .NET releases.
 
 #
 # Here we list all the releases we support for each platform.
@@ -127,7 +139,7 @@ MACCATALYST_NUGET_OS_VERSION=17.5
 # would add support for trying the preview release by doing:
 #
 #     <TargetFramework>net9.0-18.0</TargetFramework>
-#     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+#     <NoWarn>XCODE_16_0_PREVIEW;$(NoWarn)</NoWarn>
 #
 # Note that any SUPPORTED_API_VERSIONS entry below for older OS versions need a corresponding entry in
 # the eng/Version.Details.xml and eng/Versions.props files.
@@ -142,7 +154,17 @@ SUPPORTED_API_VERSIONS_MACCATALYST=$(DOTNET_TFM)-$(MACCATALYST_NUGET_OS_VERSION)
 
 # Add older versions here!
 
-SUPPORTED_API_VERSIONS_IOS+=$(DOTNET_TFM)-17.0
-SUPPORTED_API_VERSIONS_TVOS+=$(DOTNET_TFM)-17.0
-SUPPORTED_API_VERSIONS_MACOS+=$(DOTNET_TFM)-14.0
-SUPPORTED_API_VERSIONS_MACCATALYST+=$(DOTNET_TFM)-17.0
+SUPPORTED_API_VERSIONS_IOS+=net8.0-17.0
+SUPPORTED_API_VERSIONS_TVOS+=net8.0-17.0
+SUPPORTED_API_VERSIONS_MACOS+=net8.0-14.0
+SUPPORTED_API_VERSIONS_MACCATALYST+=net8.0-17.0
+
+SUPPORTED_API_VERSIONS_IOS+=net8.0-18.0
+SUPPORTED_API_VERSIONS_TVOS+=net8.0-18.0
+SUPPORTED_API_VERSIONS_MACOS+=net8.0-15.0
+SUPPORTED_API_VERSIONS_MACCATALYST+=net8.0-18.0
+
+SUPPORTED_API_VERSIONS_IOS+=net9.0-18.0
+SUPPORTED_API_VERSIONS_TVOS+=net9.0-18.0
+SUPPORTED_API_VERSIONS_MACOS+=net9.0-15.0
+SUPPORTED_API_VERSIONS_MACCATALYST+=net9.0-18.0

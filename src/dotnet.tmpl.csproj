@@ -21,7 +21,7 @@
     <CompilerResponseFile>..\..\..\..\rsp\ios-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'tvOS'">
-    <DefineConstants>$(DefineConstants);__TVOS__;TVOS;MONOTOUCH;IPHONE;XAMCORE_3_0;SYSTEM_NET_HTTP</DefineConstants>
+    <DefineConstants>$(DefineConstants);__TVOS__;TVOS;MONOTOUCH;IPHONE;SYSTEM_NET_HTTP</DefineConstants>
     <CompilerResponseFile>..\..\..\..\rsp\tvos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(_TargetPlatform)' == 'macOS'">

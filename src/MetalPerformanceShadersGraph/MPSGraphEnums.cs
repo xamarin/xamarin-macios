@@ -23,6 +23,14 @@ namespace MetalPerformanceShadersGraph {
 		Chw = 4,
 		Hwc = 5,
 		Hw = 6,
+		[Mac (13, 2), iOS (16, 3), TV (16, 3), MacCatalyst (16, 3)]
+		Ncdhw = 7,
+		[Mac (13, 2), iOS (16, 3), TV (16, 3), MacCatalyst (16, 3)]
+		Ndhwc = 8,
+		[Mac (13, 2), iOS (16, 3), TV (16, 3), MacCatalyst (16, 3)]
+		Oidhw = 9,
+		[Mac (13, 2), iOS (16, 3), TV (16, 3), MacCatalyst (16, 3)]
+		Dhwio = 10,
 	}
 
 	[Native]
@@ -31,6 +39,8 @@ namespace MetalPerformanceShadersGraph {
 		Valid = 1,
 		Same = 2,
 		ExplicitOffset = 3,
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		OnnxSameLower = 4,
 	}
 
 	[Native]
@@ -101,4 +111,15 @@ namespace MetalPerformanceShadersGraph {
 		BoxMuller = 1,
 	}
 
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+	public enum MPSGraphOptimization : ulong {
+		Level0 = 0,
+		Level1 = 1L,
+	}
+
+	[TV (15, 4), Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
+	public enum MPSGraphOptimizationProfile : ulong {
+		Performance = 0,
+		PowerEfficiency = 1L,
+	}
 }

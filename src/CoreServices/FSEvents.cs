@@ -38,9 +38,7 @@ namespace CoreServices
 #endif
 		UseExtendedData = 0x00000040,
 #if NET
-		[SupportedOSPlatform ("macos11.0")]
-#else
-		[Mac (11,0)]
+		[SupportedOSPlatform ("macos")]
 #endif
 		FullHistory = 0x00000080,
 	}

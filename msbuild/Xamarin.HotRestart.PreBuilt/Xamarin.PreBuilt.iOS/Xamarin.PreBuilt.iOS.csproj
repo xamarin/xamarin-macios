@@ -26,8 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\appiconfg.png" />
-    <BundleResource Include="Resources\appiconfg@2x.png" />
-    <BundleResource Include="Resources\appiconfg@3x.png" />
   </ItemGroup>
 
   <!-- For debug only, copies files from a AdditionalFiles directory into the bundle (i.e. an app to be interpreted) -->

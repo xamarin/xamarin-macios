@@ -65,7 +65,6 @@ public class ForcedTypeAttribute : Attribute {
 //
 // Valid on return values and parameters
 //
-// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for NET, etc
 //
 [Obsolete ("This attribute no longer has any effect; do not use")]
 public class ProtocolizeAttribute : Attribute {
@@ -112,6 +111,7 @@ public class RetainAttribute : Attribute {
 	public string WrapName { get; set; }
 }
 
+[AttributeUsage (AttributeTargets.ReturnValue, AllowMultiple = false)]
 public class ReleaseAttribute : Attribute {
 }
 
@@ -883,15 +883,6 @@ public class NoMethodAttribute : Attribute {
 }
 
 #if NET
-public enum PlatformName : byte {
-	None,
-	MacOSX,
-	iOS,
-	WatchOS,
-	TvOS,
-	MacCatalyst,
-}
-
 public enum AvailabilityKind {
 	Introduced,
 	Deprecated,

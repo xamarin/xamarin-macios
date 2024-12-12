@@ -63,6 +63,8 @@ namespace CoreVideo {
 		CV48RGB = 0x62343872,
 		CV32AlphaGray = 0x62333261,
 		CV16Gray = 0x62313667,
+		/// <summary>30-bit RGB, 10-bit big endian samples, 2 unused padding bits (at most significant end).</summary>
+		CV30RGB_r210 = 0x72323130, // 'r210'
 		CV422YpCbCr8 = 0x32767579,
 		CV4444YpCbCrA8 = 0x76343038,
 		CV4444YpCbCrA8R = 0x72343038,
@@ -122,6 +124,57 @@ namespace CoreVideo {
 		CV64Rgba_DownscaledProResRaw = 0x62703634, // 'bp64'
 												   // iOS 14.2
 		CV64RgbaLE = 0x6C363472,
+
+		/* Lossless pixel formats */
+
+		/// <summary>Lossless-compressed form of <see cref="CV32BGRA" />.</summary>
+		Lossless_32BGRA = ('&' << 24) + ('B' << 16) + ('G' << 8) + 'A', // '&BGA'
+
+		/// <summary>Lossless-compressed form of <see cref="CV64RGBAHalf" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossless_64RGBAHalf = ('&' << 24) + ('R' << 16) + ('h' << 8) + 'A', // '&RhA'
+
+		/// <summary>Lossless-compressed form of <see cref="CV420YpCbCr8BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossless_420YpCbCr8BiPlanarVideoRange = ('&' << 24) + ('8' << 16) + ('v' << 8) + '0', // '&8v0'
+
+		/// <summary>Lossless-compressed form of <see cref="CV420YpCbCr8BiPlanarFullRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossless_420YpCbCr8BiPlanarFullRange = ('&' << 24) + ('8' << 16) + ('f' << 8) + '0', // '&8f0'
+
+		/// <summary>Lossless-compressed form of <see cref="CV420YpCbCr10BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct. Compressed-packed with bo padding bits between pixels.</remarks>
+		Lossless_420YpCbCr10PackedBiPlanarVideoRange = ('&' << 24) + ('x' << 16) + ('v' << 8) + '0', // '&xv0'
+
+		/// <summary>Lossless-compressed form of <see cref="CV422YpCbCr10BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct. Compressed-packed with bo padding bits between pixels.</remarks>
+		Lossless_422YpCbCr10PackedBiPlanarVideoRange = ('&' << 24) + ('x' << 16) + ('v' << 8) + '2', // '&xv2'
+
+		/// <summary>Lossless-compressed form of <see cref="CV420YpCbCr10BiPlanarFullRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct. Compressed-packed with bo padding bits between pixels.</remarks>
+		Lossless_420YpCbCr10PackedBiPlanarFullRange = ('&' << 24) + ('x' << 16) + ('f' << 8) + '0', // '&xf0'
+
+		/* Lossy pixel formats */
+
+		/// <summary>Lossy-compressed form of <see cref="CV32BGRA" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossy_32BGRA = ('-' << 24) + ('B' << 16) + ('G' << 8) + 'A', // '-BGA'
+
+		/// <summary>Lossy-compressed form of <see cref="CV420YpCbCr8BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossy_420YpCbCr8BiPlanarVideoRange = ('-' << 24) + ('8' << 16) + ('v' << 8) + '0', // '-8v0'
+
+		/// <summary>Lossy-compressed form of <see cref="CV420YpCbCr8BiPlanarFullRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct.</remarks>
+		Lossy_420YpCbCr8BiPlanarFullRange = ('-' << 24) + ('8' << 16) + ('f' << 8) + '0', // '-8f0'
+
+		/// <summary>Lossy-compressed form of <see cref="CV420YpCbCr10BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct. Compressed-packed with bo padding bits between pixels.</remarks>
+		Lossy_420YpCbCr10PackedBiPlanarVideoRange = ('-' << 24) + ('x' << 16) + ('v' << 8) + '0', // '-xv0'
+
+		/// <summary>Lossy-compressed form of <see cref="CV422YpCbCr10BiPlanarVideoRange" />.</summary>
+		/// <remarks>No CVPlanarPixelBufferInfo struct. Compressed-packed with bo padding bits between pixels.</remarks>
+		Lossy_422YpCbCr10PackedBiPlanarVideoRange = ('-' << 24) + ('x' << 16) + ('v' << 8) + '2', // '-xv2'
 	}
 
 #if !COREBUILD
@@ -135,13 +188,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif
@@ -150,13 +202,12 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
-		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
-		[Mac (12, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 #endif

@@ -1,3 +1,0 @@
-!missing-enum! AVVideoFrameAnalysisType not bound
-!missing-selector! AVPlayerView::setVideoFrameAnalysisTypes: not bound
-!missing-selector! AVPlayerView::videoFrameAnalysisTypes not bound

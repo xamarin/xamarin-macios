@@ -53,7 +53,6 @@ namespace Xharness.Jenkins {
 
 			var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
 				Ignored = ignored,
-				BCLTest = project.Label == TestLabel.Bcl,
 				TestName = project.Name,
 				IsUnitTest = true,
 			};
@@ -76,9 +75,6 @@ namespace Xharness.Jenkins {
 				if (project.Ignore == true)
 					ignored = true;
 
-				if (!jenkins.TestSelection.IsEnabled (TestLabel.Mmp) && project.Path.Contains ("mmptest"))
-					ignored = true;
-
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
@@ -92,7 +88,6 @@ namespace Xharness.Jenkins {
 					build.Platform = platform;
 					build.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
 					build.ProjectConfiguration = config;
-					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					build.Dependency = project.Dependency;

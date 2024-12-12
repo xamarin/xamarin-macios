@@ -288,6 +288,10 @@ namespace MetalFX {
 		[Export ("autoExposureEnabled")]
 		bool AutoExposureEnabled { [Bind ("isAutoExposureEnabled")] get; set; }
 
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Export ("requiresSynchronousInitialization")]
+		bool RequiresSynchronousInitialization { get; set; }
+
 		[Export ("inputContentPropertiesEnabled")]
 		bool InputContentPropertiesEnabled { [Bind ("isInputContentPropertiesEnabled")] get; set; }
 

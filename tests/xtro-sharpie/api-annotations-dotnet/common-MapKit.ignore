@@ -1,3 +1,4 @@
+## We've re-implemented these in managed code
 !missing-field! MKMapRectNull not bound
 !missing-field! MKMapRectWorld not bound
 !missing-field! MKMapSizeWorld not bound
@@ -11,3 +12,6 @@
 !deprecated-attribute-missing! MKMapView::setShowsBuildings: missing a [Deprecated] attribute
 !deprecated-attribute-missing! MKMapView::showsTraffic missing a [Deprecated] attribute
 !deprecated-attribute-missing! MKMapView::setShowsTraffic: missing a [Deprecated] attribute
+
+## The MKOverlay protocol implements the MKAnnotation protocol, which has a required 'coordinate' property, so the API is there.
+!missing-protocol-member! MKOverlay::coordinate not found

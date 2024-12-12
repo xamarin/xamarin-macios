@@ -228,6 +228,26 @@ namespace Social {
 		[NullAllowed] // by default this property is null
 		[Export ("autoCompletionViewController", ArgumentSemantic.Strong)]
 		SocialViewController AutoCompletionViewController { get; set; }
+
+#if NET
+		// Inlined manually from UITextViewDelegate/NSTextViewDelegate, because the one from the *Delegate type
+		// has different availability attributes depending on the platform.
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("textViewWritingToolsWillBegin:")]
+		new void WritingToolsWillBegin (SocialTextView textView);
+
+		// Inlined manually from UITextViewDelegate/NSTextViewDelegate, because the one from the *Delegate type
+		// has different availability attributes depending on the platform.
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("textViewWritingToolsDidEnd:")]
+		new void WritingToolsDidEnd (SocialTextView textView);
+
+		// Inlined manually from UITextViewDelegate/NSTextViewDelegate, because the one from the *Delegate type
+		// has different availability attributes depending on the platform.
+		[iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), MacCatalyst (18, 0), NoTV]
+		[Export ("textView:writingToolsIgnoredRangesInEnclosingRange:")]
+		new NSValue [] GetWritingToolsIgnoredRangesInEnclosingRange (SocialTextView textView, NSRange enclosingRange);
+#endif
 	}
 
 

@@ -1,9 +1,3 @@
-BrewPackages (
-    "shellcheck",
-    "yamllint",
-    "cmake", 
-    "p7zip",
-    "msitools",
-    "wget",
-    "azure-cli"
- );
+#load "provision-shared.csx"
+
+ProvisionBrewPackages ();

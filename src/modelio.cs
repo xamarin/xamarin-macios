@@ -254,7 +254,7 @@ namespace ModelIO {
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
 
-		[iOS (15, 0), Mac (12, 0), TV (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		[Export ("originals", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Originals { get; set; }
 
@@ -1776,7 +1776,6 @@ namespace ModelIO {
 		[return: NullAllowed]
 		MDLTexture CreateTexture (string name, [NullAllowed] NSBundle bundleOrNil);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("textureNamed:assetResolver:")]
@@ -2894,7 +2893,6 @@ namespace ModelIO {
 		[Export ("jointBindTransforms")]
 		MDLMatrix4x4Array JointBindTransforms { get; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("jointRestTransforms")]
 		MDLMatrix4x4Array JointRestTransforms { get; }
@@ -3249,4 +3247,12 @@ namespace ModelIO {
 		nuint _GetDoubleQuaternionArray (IntPtr valuesArray, nuint maxCount);
 	}
 
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface MDLUtility {
+		[Static]
+		[Export ("convertToUSDZ:writeToURL:")]
+		void ConvertToUsdz (NSUrl inputUrl, NSUrl outputUrl);
+	}
 }

@@ -22,6 +22,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 
@@ -218,15 +219,6 @@ namespace AppKit {
 	#endregion
 
 	#region NSFileWrapper
-#if !XAMCORE_3_0
-	[NoMacCatalyst]
-	[Flags]
-	[Native]
-	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
-	public enum NSFileWrapperReadingOptions : ulong {
-		Immediate = 1, WithoutMapping = 2
-	}
-#endif
 	#endregion
 
 	#region NSParagraphStyle
@@ -363,7 +355,6 @@ namespace AppKit {
 		Regular = 0,
 		Small = 1,
 		Mini = 2,
-		[Mac (11, 0)]
 		Large = 3,
 	}
 
@@ -891,7 +882,10 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Native]
 	public enum NSWindowSharingType : ulong {
-		None, ReadOnly, ReadWrite
+		None,
+		ReadOnly,
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'ReadOnly' instead.")]
+		ReadWrite,
 	}
 
 	[NoMacCatalyst]
@@ -1983,13 +1977,29 @@ namespace AppKit {
 		ApplicationOnlyMask = 1
 	}
 
+#if XAMCORE_5_0
+	[NoMacCatalyst]
+#else
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "This enum doesn't exist on this platform.")]
+#if __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
+#endif
 	[Native]
 	public enum NSCollectionViewDropOperation : long {
 		On = 0, Before = 1
 	}
 
+#if XAMCORE_5_0
+	[NoMacCatalyst]
+#else
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "This enum doesn't exist on this platform.")]
+#if __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
+#endif
 	[Native]
 	public enum NSCollectionViewItemHighlightState : long {
 		None = 0,
@@ -1998,7 +2008,15 @@ namespace AppKit {
 		AsDropTarget = 3
 	}
 
+#if XAMCORE_5_0
+	[NoMacCatalyst]
+#else
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "This enum doesn't exist on this platform.")]
+#if __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
+#endif
 	[Native]
 	[Flags]
 	public enum NSCollectionViewScrollPosition : ulong {
@@ -3112,7 +3130,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSTableViewStyle : long {
 		Automatic,
@@ -3123,7 +3140,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSTitlebarSeparatorStyle : long {
 		Automatic,
@@ -3133,7 +3149,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSWindowToolbarStyle : long {
 		Automatic,
@@ -3157,7 +3172,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Mac (11, 0)]
 	[Native]
 	public enum NSImageSymbolScale : long {
 		Small = 1,

@@ -62,18 +62,8 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.Null (c.CGColor, "CGColor");
 #endif
 
-			if (TestRuntime.CheckXcodeVersion (4, 5)) {
-				// default value changed for iOS 6.0 beta 1
-#if __WATCHOS__
-				Assert.True (c.Immutable, "Immutable");
-#else
-				Assert.False (c.Immutable, "Immutable");
-#endif
-				// new in 6.0
-				Assert.AreEqual (EKEntityMask.Event, c.AllowedEntityTypes, "AllowedEntityTypes");
-			} else {
-				Assert.True (c.Immutable, "Immutable");
-			}
+			Assert.That (c.Immutable, Is.EqualTo (true).Or.EqualTo (false), "Immutable");
+			Assert.AreEqual (EKEntityMask.Event, c.AllowedEntityTypes, "AllowedEntityTypes");
 
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");

@@ -18,9 +18,8 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class XcodeCompilerToolTask : XamarinTask {
+	public abstract class XcodeCompilerToolTask : XamarinTask, IHasProjectDir, IHasResourcePrefix {
 		protected bool Link { get; set; }
-		IList<string>? prefixes;
 		string? toolExe;
 
 		#region Inputs
@@ -110,15 +109,6 @@ namespace Xamarin.MacDev.Tasks {
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
 		}
 
-		protected IList<string> ResourcePrefixes {
-			get {
-				if (prefixes is null)
-					prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-
-				return prefixes;
-			}
-		}
-
 		protected abstract string ToolName { get; }
 
 		protected virtual bool UseCompilationDirectory {
@@ -164,6 +154,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (watch)
 				yield return "watch";
+
+			if ((devices & IPhoneDeviceType.TV) != 0)
+				yield return "tv";
 
 			yield break;
 		}
@@ -229,6 +222,11 @@ namespace Xamarin.MacDev.Tasks {
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
 			var arguments = args.ToList ();
+
+			// don't bother executing the tool if we've already looged errors.
+			if (Log.HasLoggedErrors)
+				return 1;
+
 			var rv = ExecuteAsync (tool, arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
 			var exitCode = rv.ExitCode;
 			var messages = rv.StandardOutput!.ToString ();

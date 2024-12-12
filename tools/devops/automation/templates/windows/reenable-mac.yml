@@ -19,8 +19,8 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
-  displayName: 'Dump Environment'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+  displayName: 'Show Bot Info'
 
 - task: AzureKeyVault@2
   inputs:
@@ -47,9 +47,17 @@ steps:
   condition: always()
   continueOnError: true
 
+# Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
+- template: ./generate-token.yml
+
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
+
+    $azdoBearerToken = "$(AzDO.BearerToken)"
+    $azdoBearerTokenHint = $azdoBearerToken.Substring(0, 8)
+    Write-Host "AzDO.BearerToken (hint): ${azdoBearerTokenHint}"
+
+    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $azdoBearerToken
 
     # get the pool and the agent objects and enable the bot
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")

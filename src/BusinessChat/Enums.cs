@@ -5,7 +5,6 @@ using Foundation;
 
 namespace BusinessChat {
 
-	[iOS (11, 3)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum BCChatButtonStyle : long {
@@ -15,7 +14,6 @@ namespace BusinessChat {
 
 	[Deprecated (PlatformName.MacOSX, 13, 1)]
 	[Deprecated (PlatformName.iOS, 16, 2)]
-	[iOS (11, 3)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
 	public enum BCParameterName {

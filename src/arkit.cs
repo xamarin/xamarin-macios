@@ -59,7 +59,6 @@ namespace ARKit {
 		Initializing,
 		ExcessiveMotion,
 		InsufficientFeatures,
-		[iOS (11, 3)]
 		Relocalizing,
 	}
 
@@ -101,11 +100,9 @@ namespace ARKit {
 	public enum ARHitTestResultType : ulong {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
-		[iOS (11, 3)]
 		EstimatedVerticalPlane = 1 << 2,
 		ExistingPlane = 1 << 3,
 		ExistingPlaneUsingExtent = 1 << 4,
-		[iOS (11, 3)]
 		ExistingPlaneUsingGeometry = 1 << 5,
 	}
 
@@ -114,7 +111,6 @@ namespace ARKit {
 	[Native]
 	public enum ARPlaneAnchorAlignment : long {
 		Horizontal,
-		[iOS (11, 3)]
 		Vertical,
 	}
 
@@ -147,12 +143,10 @@ namespace ARKit {
 	public enum ARPlaneDetection : ulong {
 		None = 0,
 		Horizontal = 1 << 0,
-		[iOS (11, 3)]
 		Vertical = 1 << 1,
 	}
 
 	/// <summary>Enumerates environmental texturing strategies used with <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=ARKit%20ARWorld%20Tracking%20Probe%20Anchor&amp;scope=Xamarin" title="T:ARKit.ARWorldTrackingProbeAnchor">T:ARKit.ARWorldTrackingProbeAnchor</a></format> objects.</summary>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum AREnvironmentTexturing : long {
@@ -162,7 +156,6 @@ namespace ARKit {
 	}
 
 	/// <summary>Enumerates the states of a world-mapping session.</summary>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARWorldMappingStatus : long {
@@ -172,7 +165,6 @@ namespace ARKit {
 		Mapped,
 	}
 
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneClassificationStatus : long {
@@ -182,7 +174,6 @@ namespace ARKit {
 		Known,
 	}
 
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneClassification : long {
@@ -317,7 +308,6 @@ namespace ARKit {
 		Decoded,
 	}
 
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
@@ -335,7 +325,6 @@ namespace ARKit {
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 
-		[iOS (12, 0)]
 		[NullAllowed, Export ("name")]
 		string Name { get; }
 
@@ -353,13 +342,11 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (Matrix4 transform);
 
-		[iOS (12, 0)]
 		[Export ("initWithName:transform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (string name, Matrix4 transform);
 
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12, 0)]
 		[Export ("initWithAnchor:")]
 		NativeHandle Constructor (ARAnchor anchor);
 	}
@@ -421,7 +408,6 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		CGPoint Project (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
 
-		[iOS (12, 0)]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("unprojectPoint:ontoPlaneWithTransform:orientation:viewportSize:")]
 		Vector3 Unproject (CGPoint point, Matrix4 planeTransform, UIInterfaceOrientation orientation, CGSize viewportSize);
@@ -476,7 +462,6 @@ namespace ARKit {
 		[NullAllowed, Export ("rawFeaturePoints", ArgumentSemantic.Strong)]
 		ARPointCloud RawFeaturePoints { get; }
 
-		[iOS (12, 0)]
 		[Export ("worldMappingStatus")]
 		ARWorldMappingStatus WorldMappingStatus { get; }
 
@@ -572,13 +557,11 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARPlaneAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12, 0)]
 		[Export ("initWithAnchor:")]
 		NativeHandle Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
-		[iOS (12, 0)]
 		[Static]
 		[Export ("classificationSupported")]
 		bool ClassificationSupported { [Bind ("isClassificationSupported")] get; }
@@ -599,15 +582,12 @@ namespace ARKit {
 			get;
 		}
 
-		[iOS (11, 3)]
 		[Export ("geometry", ArgumentSemantic.Strong)]
 		ARPlaneGeometry Geometry { get; }
 
-		[iOS (12, 0)]
 		[Export ("classificationStatus", ArgumentSemantic.Assign)]
 		ARPlaneClassificationStatus ClassificationStatus { get; }
 
-		[iOS (12, 0)]
 		[Export ("classification", ArgumentSemantic.Assign)]
 		ARPlaneClassification Classification { get; }
 
@@ -617,7 +597,6 @@ namespace ARKit {
 	}
 
 	/// <summary>Geometry representing a plane detected in the real world.</summary>
-	[iOS (11, 3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARPlaneGeometry : NSSecureCoding {
@@ -650,7 +629,6 @@ namespace ARKit {
 		IntPtr GetRawBoundaryVertices ();
 	}
 
-	[iOS (11, 3)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNPlaneGeometry {
@@ -685,7 +663,6 @@ namespace ARKit {
 	}
 
 	/// <summary>An image resource that contains pre-processed images to be recognized in the real-world.</summary>
-	[iOS (11, 3)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -718,7 +695,6 @@ namespace ARKit {
 	}
 
 	/// <summary>Summary information about the video feed used in the AR simulation.</summary>
-	[iOS (11, 3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ARVideoFormat : NSCopying {
@@ -787,7 +763,6 @@ namespace ARKit {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CreateRaycastQuery' instead.")]
 		ARHitTestResult [] HitTest (CGPoint point, ARHitTestResultType types);
 
-		[iOS (12, 0)]
 		[Export ("unprojectPoint:ontoPlaneWithTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector3 Unproject (CGPoint point, Matrix4 planeTransform);
@@ -923,17 +898,14 @@ namespace ARKit {
 		[Export ("removeAnchor:")]
 		void RemoveAnchor (ARAnchor anchor);
 
-		[iOS (11, 3)]
 		[Export ("setWorldOrigin:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		void SetWorldOrigin (Matrix4 relativeTransform);
 
-		[iOS (12, 0)]
 		[Async]
 		[Export ("getCurrentWorldMapWithCompletionHandler:")]
 		void GetCurrentWorldMap (Action<ARWorldMap, NSError> completionHandler);
 
-		[iOS (12, 0)]
 		[Async]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("createReferenceObjectWithTransform:center:extent:completionHandler:")]
@@ -981,7 +953,6 @@ namespace ARKit {
 		[Export ("sessionInterruptionEnded:")]
 		void InterruptionEnded (ARSession session);
 
-		[iOS (11, 3)]
 		[Export ("sessionShouldAttemptRelocalization:")]
 		bool ShouldAttemptRelocalization (ARSession session);
 
@@ -1037,7 +1008,6 @@ namespace ARKit {
 
 #if !NET
 		// even if static - it's abstract
-		[iOS (11, 3)]
 		[Static]
 		[Obsolete ("This is an abstract static method. You need to call 'GetSupportedVideoFormats ()' from a subclass to get results.")]
 		ARVideoFormat [] SupportedVideoFormats {
@@ -1047,7 +1017,6 @@ namespace ARKit {
 		}
 #endif
 
-		[iOS (11, 3)]
 		[Export ("videoFormat", ArgumentSemantic.Strong)]
 		ARVideoFormat VideoFormat { get; set; }
 
@@ -1094,16 +1063,13 @@ namespace ARKit {
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
 
-		[iOS (11, 3)]
 		[Static]
 		[Export ("supportedVideoFormats")]
 		ARVideoFormat [] GetSupportedVideoFormats ();
 
-		[iOS (11, 3)]
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
 
-		[iOS (12, 0)]
 		[Export ("environmentTexturing", ArgumentSemantic.Assign)]
 		AREnvironmentTexturing EnvironmentTexturing { get; set; }
 
@@ -1114,11 +1080,9 @@ namespace ARKit {
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
 
-		[iOS (12, 0)]
 		[NullAllowed, Export ("initialWorldMap", ArgumentSemantic.Strong)]
 		ARWorldMap InitialWorldMap { get; set; }
 
-		[iOS (11, 3)]
 		[NullAllowed] //null_resettable
 		[Export ("detectionImages", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceImage> DetectionImages { get; set; }
@@ -1127,11 +1091,9 @@ namespace ARKit {
 		[Export ("automaticImageScaleEstimationEnabled")]
 		bool AutomaticImageScaleEstimationEnabled { get; set; }
 
-		[iOS (12, 0)]
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
 
-		[iOS (12, 0)]
 		[Export ("detectionObjects", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceObject> DetectionObjects { get; set; }
 
@@ -1177,12 +1139,10 @@ namespace ARKit {
 	[BaseType (typeof (ARConfiguration))]
 	interface AROrientationTrackingConfiguration {
 
-		[iOS (11, 3)]
 		[Static]
 		[Export ("supportedVideoFormats")]
 		ARVideoFormat [] GetSupportedVideoFormats ();
 
-		[iOS (11, 3)]
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
 
@@ -1217,7 +1177,6 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARFaceTrackingConfiguration {
-		[iOS (11, 3)]
 		[Static]
 		[Export ("supportedVideoFormats")]
 		ARVideoFormat [] GetSupportedVideoFormats ();
@@ -1356,7 +1315,6 @@ namespace ARKit {
 
 		float NoseSneerRight { get; set; }
 
-		[iOS (12, 0)]
 		float TongueOut { get; set; }
 	}
 
@@ -1518,7 +1476,6 @@ namespace ARKit {
 		[Field ("ARBlendShapeLocationNoseSneerRight")]
 		NSString NoseSneerRightKey { get; }
 
-		[iOS (12, 0)]
 		[Field ("ARBlendShapeLocationTongueOut")]
 		NSString TongueOutKey { get; }
 	}
@@ -1529,7 +1486,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12, 0)]
 		[Export ("initWithAnchor:")]
 		NativeHandle Constructor (ARAnchor anchor);
 
@@ -1542,21 +1498,18 @@ namespace ARKit {
 		[Export ("geometry")]
 		ARFaceGeometry Geometry { get; }
 
-		[iOS (12, 0)]
 		[Export ("leftEyeTransform")]
 		Matrix4 LeftEyeTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
 
-		[iOS (12, 0)]
 		[Export ("rightEyeTransform")]
 		Matrix4 RightEyeTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
 
-		[iOS (12, 0)]
 		[Export ("lookAtPoint")]
 		Vector3 LookAtPoint {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1641,13 +1594,11 @@ namespace ARKit {
 	}
 
 	/// <summary>A <see cref="T:ARKit.ARAnchor" /> that tracks an image detected in the real world.</summary>
-	[iOS (11, 3)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARImageAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12, 0)]
 		[Export ("initWithAnchor:")]
 		NativeHandle Constructor (ARAnchor anchor);
 
@@ -1682,7 +1633,6 @@ namespace ARKit {
 	///     <remarks>
 	///       <para>Developers should use this subclass of <see cref="T:ARKit.ARConfiguration" /> in scenarios where a known image, viewable by the rear-facing camera, is a more reliable anchor than real-world features from a broader field of view. For instance, a poster or advetisement located in a moving train car. </para>
 	///     </remarks>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARImageTrackingConfiguration {
@@ -1709,7 +1659,6 @@ namespace ARKit {
 	///     <remarks>
 	///       <para>This <see cref="T:ARKit.ARConfiguration" /> is intended to be used during development only. It is expensive in terms of computation, power, and memory. Developers can use the higher-fidelity data generated in sessions using this configuration to create <see cref="T:ARKit.ARReferenceObject" /> instances that can be used later.</para>
 	///     </remarks>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARObjectScanningConfiguration {
@@ -1730,7 +1679,6 @@ namespace ARKit {
 	}
 
 	/// <summary>Source for environmentally-based lighting.</summary>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
@@ -1758,7 +1706,6 @@ namespace ARKit {
 	}
 
 	/// <summary>Digital representation of a 3D object to be detected in the real world.</summary>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1816,7 +1763,6 @@ namespace ARKit {
 
 	/// <summary>
 	///       <see cref="T:ARKit.ARAnchor" /> subclass that tracks a recognized real-world 3D object.</summary>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
@@ -1833,7 +1779,6 @@ namespace ARKit {
 	///     <remarks>
 	///       <para>Developers can use an <see cref="T:ARKit.ARWorldMap" /> to serialize a mixed-reality scene. The serialized data can be used at a later time to recreate a scene or shared with another user to create a shared experience.</para>
 	///     </remarks>
-	[iOS (12, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

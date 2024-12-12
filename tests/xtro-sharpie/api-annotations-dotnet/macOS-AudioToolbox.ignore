@@ -14,7 +14,9 @@
 !missing-pinvoke! AudioFileComponentGetProperty is not bound
 !missing-pinvoke! AudioFileComponentGetPropertyInfo is not bound
 !missing-pinvoke! AudioFileComponentGetUserData is not bound
+!missing-pinvoke! AudioFileComponentGetUserDataAtOffset is not bound
 !missing-pinvoke! AudioFileComponentGetUserDataSize is not bound
+!missing-pinvoke! AudioFileComponentGetUserDataSize64 is not bound
 !missing-pinvoke! AudioFileComponentInitializeWithCallbacks is not bound
 !missing-pinvoke! AudioFileComponentOpenURL is not bound
 !missing-pinvoke! AudioFileComponentOpenWithCallbacks is not bound

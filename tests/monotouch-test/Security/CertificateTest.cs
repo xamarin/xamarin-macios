@@ -401,6 +401,10 @@ namespace MonoTouchFixtures.Security {
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.NotNull (cert.GetKey (), "GetKey");
 			}
+			if (TestRuntime.CheckXcodeVersion (16, 0)) {
+				Assert.NotNull (cert.NotValidBeforeDate, "NotValidBeforeDate");
+				Assert.NotNull (cert.NotValidAfterDate, "NotValidAfterDate");
+			}
 		}
 
 		[Test]
@@ -423,7 +427,11 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void MailX1 ()
 		{
+#if NET
+			using (var cert = X509CertificateLoader.LoadCertificate (mail_google_com)) {
+#else
 			using (var cert = new X509Certificate (mail_google_com)) {
+#endif
 				/*
 				 * This X509Certificate constructor will use SecCertificateCreateWithData() and
 				 * store the SecCertificateRef in its Handle.
@@ -447,7 +455,11 @@ namespace MonoTouchFixtures.Security {
 		[Ignore ("https://bugzilla.xamarin.com/show_bug.cgi?id=39952")]
 		public void MailX2 ()
 		{
+#if NET
+			using (var cert = X509CertificateLoader.LoadCertificate (mail_google_com)) {
+#else
 			using (var cert = new X509Certificate2 (mail_google_com)) {
+#endif
 				/*
 				 * FIXME: This X509Certificate2 constructor will use Mono.Security to parse the
 				 *        certificate, but also call the base class'es .ctor with the byte array.

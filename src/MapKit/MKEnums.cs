@@ -144,7 +144,6 @@ namespace MapKit {
 		Circle,
 		[TV (14, 0)]
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		None,
 	}
@@ -175,6 +174,8 @@ namespace MapKit {
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
 		Query = 1 << 2,
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		PhysicalFeature = 1 << 3,
 	}
 
 	[Flags]
@@ -184,6 +185,8 @@ namespace MapKit {
 	public enum MKLocalSearchResultType : ulong {
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		PhysicalFeature = 1 << 2,
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
@@ -356,6 +359,138 @@ namespace MapKit {
 
 		[Field ("MKPointOfInterestCategoryZoo")]
 		Zoo,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryAnimalService")]
+		AnimalService,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryAutomotiveRepair")]
+		AutomotiveRepair,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryBaseball")]
+		Baseball,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryBasketball")]
+		Basketball,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryBeauty")]
+		Beauty,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryBowling")]
+		Bowling,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryCastle")]
+		Castle,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryConventionCenter")]
+		ConventionCenter,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryDistillery")]
+		Distillery,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryFairground")]
+		Fairground,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryFishing")]
+		Fishing,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryFortress")]
+		Fortress,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryGolf")]
+		Golf,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryGoKart")]
+		GoKart,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryHiking")]
+		Hiking,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryKayaking")]
+		Kayaking,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryLandmark")]
+		Landmark,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryMailbox")]
+		Mailbox,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryMiniGolf")]
+		MiniGolf,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryMusicVenue")]
+		MusicVenue,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryNationalMonument")]
+		NationalMonument,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryPlanetarium")]
+		Planetarium,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryRockClimbing")]
+		RockClimbing,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryRVPark")]
+		RVPark,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySkatePark")]
+		SkatePark,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySkating")]
+		Skating,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySkiing")]
+		Skiing,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySoccer")]
+		Soccer,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySpa")]
+		Spa,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySurfing")]
+		Surfing,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategorySwimming")]
+		Swimming,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryTennis")]
+		Tennis,
+
+		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[Field ("MKPointOfInterestCategoryVolleyball")]
+		Volleyball,
 	}
 
 #endif

@@ -55,21 +55,13 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 			var pxbuffer = new CVPixelBuffer (originalCGImage.Width, originalCGImage.Height, CVPixelFormatType.CV32ARGB,
 							   new CVPixelBufferAttributes { CGImageCompatibility = true, CGBitmapContextCompatibility = true });
-#if !XAMCORE_3_0
-			pxbuffer.Lock (CVOptionFlags.None);
-#else
 			pxbuffer.Lock (CVPixelBufferLock.None);
-#endif
 			using (var colorSpace = CGColorSpace.CreateDeviceRGB ())
 			using (var ctx = new CGBitmapContext (pxbuffer.BaseAddress, originalCGImage.Width, originalCGImage.Height, 8,
 								 4 * originalCGImage.Width, colorSpace, CGBitmapFlags.NoneSkipLast)) {
 				ctx.RotateCTM (0);
 				ctx.DrawImage (new CGRect (0, 0, originalCGImage.Width, originalCGImage.Height), originalCGImage);
-#if !XAMCORE_3_0
-				pxbuffer.Unlock (CVOptionFlags.None);
-#else
 				pxbuffer.Unlock (CVPixelBufferLock.None);
-#endif
 			}
 
 			Assert.NotNull (pxbuffer, "VTUtilitiesTests.ToCGImageTest pxbuffer should not be null");
@@ -124,6 +116,45 @@ namespace MonoTouchFixtures.VideoToolbox {
 			// ensure that the call does not crash, we do not have anyother thing to test since there is 
 			// no way to know if it was a success
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);
+		}
+
+		static CMVideoCodecType [] GetAllCMVideoCodecTypes ()
+		{
+			return Enum.GetValues<CMVideoCodecType> ();
+		}
+
+		[Test]
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) codecType, out var fde);
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			using var dict = VTUtilities.CopyVideoDecoderExtensionProperties (desc, out var vtError);
+			Assert.That (vtError, Is.EqualTo (VTStatus.CouldNotFindVideoDecoder).Or.EqualTo (VTStatus.CouldNotFindExtensionErr), "VTError");
+			Assert.IsNull (dict, "CopyVideoDecoderExtensionProperties");
+
+			// I have not been able to figure out what kind of CMVideoFormatDescription is needed for CopyVideoDecoderExtensionProperties to work,
+			// so I can't test that case.
+		}
+
+		[Test]
+		[TestCaseSource (nameof (GetAllCMVideoCodecTypes))]
+		public void CopyRawVideoDecoderExtensionPropertiesTest (CMVideoCodecType codecType)
+		{
+			TestRuntime.AssertXcodeVersion (16, 0);
+
+			using var desc = CMFormatDescription.Create (CMMediaType.Video, (uint) codecType, out var fde);
+			Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
+			Assert.IsNotNull (desc, "CMFormatDescription");
+			using var dict = VTUtilities.CopyRawProcessorExtensionProperties (desc, out var vtError);
+			Assert.That (vtError, Is.EqualTo (VTStatus.CouldNotCreateInstance).Or.EqualTo (VTStatus.CouldNotFindExtensionErr), "VTError");
+			Assert.IsNull (dict, "CopyRawProcessorExtensionProperties");
+
+			// I have not been able to figure out what kind of CMVideoFormatDescription is needed for VTRawProcessingSession,
+			// so I can't test the case where a CMFormatDescription is handled.
 		}
 #endif
 

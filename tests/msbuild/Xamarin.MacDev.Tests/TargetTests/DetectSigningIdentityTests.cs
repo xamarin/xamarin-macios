@@ -66,10 +66,26 @@ namespace Xamarin.MacDev.Tasks {
 			var recordArgs = BinLog.ReadBuildEvents (rv.BinLogPath).ToList ();
 			var taskIndex = recordArgs.FindIndex (v => v is TaskStartedEventArgs tsea && tsea.TaskName == "DetectSigningIdentity");
 			Assert.That (taskIndex, Is.GreaterThan (0), "Task index");
-			var taskParameterIndex = recordArgs.FindIndex (taskIndex + 1, v => v is BuildMessageEventArgs bmea && bmea.Message.StartsWith ("Task Parameter:BundleIdentifier="));
+			var taskParameterIndex = recordArgs.FindIndex (taskIndex + 1, v => {
+				if (!(v is BuildMessageEventArgs bmea))
+					return false;
+				if (bmea.Message.StartsWith ("Task Parameter:BundleIdentifier="))
+					return true;
+				if (bmea.Message.StartsWith ("TaskInput: BundleIdentifier"))
+					return true;
+				return false;
+			});
 			Assert.That (taskParameterIndex, Is.GreaterThan (0), "Parameter index");
 			var taskParameter = (BuildMessageEventArgs) recordArgs [taskParameterIndex];
-			var bundleIdentifier = taskParameter.Message.Substring ("Task Parameter:BundleIdentifier=".Length);
+			var taskMessage = taskParameter.Message;
+			string bundleIdentifier;
+			if (taskMessage.StartsWith ("Task Parameter:BundleIdentifier=")) {
+				bundleIdentifier = taskMessage.Substring ("Task Parameter:BundleIdentifier=".Length);
+			} else if (taskMessage.StartsWith ("TaskInput: BundleIdentifier")) {
+				bundleIdentifier = taskMessage.Substring ("TaskInput: BundleIdentifier".Length).Trim ();
+			} else {
+				bundleIdentifier = "Unhandled task message format.";
+			}
 			Assert.AreEqual ("com.xamarin.detectsigningidentitytest", bundleIdentifier, "Bundle identifier");
 		}
 	}

@@ -55,7 +55,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>Enumerates message classification actions.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -179,7 +178,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>A classification request.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -193,7 +191,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>An incoming call.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -208,7 +205,6 @@ namespace IdentityLookup {
 
 	/// <summary>Base class for classes that support users in reporting unwanted communications.</summary>
 	[Abstract]
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -220,7 +216,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>Handles the classification of messages to mark them as junk, mark them as not junk, and/or to block the sender.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -232,7 +227,6 @@ namespace IdentityLookup {
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILClassificationAction Action { get; }
 
-		[iOS (12, 1)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("userString")]
 		string UserString { get; set; }
@@ -248,7 +242,6 @@ namespace IdentityLookup {
 
 	/// <summary>Base class for incoming calls and messages.</summary>
 	[Abstract]
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -268,7 +261,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>A request to report a message.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -282,7 +274,6 @@ namespace IdentityLookup {
 	}
 
 	/// <summary>An incoming SMS message.</summary>
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]

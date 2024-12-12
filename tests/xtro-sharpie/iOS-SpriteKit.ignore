@@ -1,1 +1,0 @@
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::set_Color(UIKit.UIColor)' has a extraneous [NullAllowed] on parameter #0

@@ -127,6 +127,8 @@ namespace Extrospection {
 			case "UInt8":
 			case "int8_t":
 			case "uint8_t":
+			case "MIDIUInteger4": // 4 usable bits in 8 bits
+			case "MIDIUInteger7": // 7 usable bits in 8 bits
 				native_size = 1;
 				break;
 			default:

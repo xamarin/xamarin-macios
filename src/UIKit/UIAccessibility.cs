@@ -328,7 +328,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (14, 0)]
 		[iOS (14, 0)]
@@ -340,7 +340,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (14, 0)]
 		[iOS (14, 0)]
@@ -389,7 +389,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (14, 0)]
 		[iOS (14, 0)]
@@ -401,7 +401,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("ios14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (14, 0)]
 		[iOS (14, 0)]

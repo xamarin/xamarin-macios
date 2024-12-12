@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySimpleApp", "MySimpleApp.csproj", "{B7C29D40-0079-416C-8507-FE9EE82FBD4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionConsumer", "ExtensionConsumer.csproj", "{B7C29D40-0079-416C-8507-FE9EE82FBD4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionProject", "..\..\ExtensionProject\macOS\ExtensionProject.csproj", "{C32EB68F-1FF7-42DE-ABD8-C0151497595A}"
 EndProject

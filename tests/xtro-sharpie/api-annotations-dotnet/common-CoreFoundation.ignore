@@ -141,6 +141,7 @@
 !missing-field! kCFNumberFormatterMaxIntegerDigits not bound
 !missing-field! kCFNumberFormatterMaxSignificantDigits not bound
 !missing-field! kCFNumberFormatterMinFractionDigits not bound
+!missing-field! kCFNumberFormatterMinGroupingDigits not bound
 !missing-field! kCFNumberFormatterMinIntegerDigits not bound
 !missing-field! kCFNumberFormatterMinSignificantDigits not bound
 !missing-field! kCFNumberFormatterMinusSign not bound
@@ -305,11 +306,15 @@
 !missing-field! kCFURLVolumeURLKey not bound
 !missing-field! kCFURLVolumeUUIDStringKey not bound
 !missing-pinvoke! CFAbsoluteTimeGetCurrent is not bound
+!missing-pinvoke! CFAllocatorAllocateBytes is not bound
+!missing-pinvoke! CFAllocatorAllocateTyped is not bound
 !missing-pinvoke! CFAllocatorCreate is not bound
 !missing-pinvoke! CFAllocatorGetContext is not bound
 !missing-pinvoke! CFAllocatorGetDefault is not bound
 !missing-pinvoke! CFAllocatorGetPreferredSizeForSize is not bound
 !missing-pinvoke! CFAllocatorReallocate is not bound
+!missing-pinvoke! CFAllocatorReallocateBytes is not bound
+!missing-pinvoke! CFAllocatorReallocateTyped is not bound
 !missing-pinvoke! CFAllocatorSetDefault is not bound
 !missing-pinvoke! CFArrayAppendArray is not bound
 !missing-pinvoke! CFArrayAppendValue is not bound
@@ -339,6 +344,7 @@
 !missing-pinvoke! CFAttributedStringGetAttributeAndLongestEffectiveRange is not bound
 !missing-pinvoke! CFAttributedStringGetAttributes is not bound
 !missing-pinvoke! CFAttributedStringGetAttributesAndLongestEffectiveRange is not bound
+!missing-pinvoke! CFAttributedStringGetBidiLevelsAndResolvedDirections is not bound
 !missing-pinvoke! CFAttributedStringGetLength is not bound
 !missing-pinvoke! CFAttributedStringGetMutableString is not bound
 !missing-pinvoke! CFAttributedStringGetString is not bound

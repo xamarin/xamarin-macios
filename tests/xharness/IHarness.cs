@@ -22,30 +22,13 @@ namespace Xharness {
 		IResultParser ResultParser { get; }
 		AppBundleLocator AppBundleLocator { get; }
 		ITunnelBore TunnelBore { get; }
-		string XIBuildPath { get; }
 		List<iOSTestProject> IOSTestProjects { get; }
 		List<MacTestProject> MacTestProjects { get; }
-		string WatchOSContainerTemplate { get; }
-		string WatchOSAppTemplate { get; }
-		string WatchOSExtensionTemplate { get; }
-		string TodayContainerTemplate { get; }
-		string TodayExtensionTemplate { get; }
-		string BCLTodayExtensionTemplate { get; }
-		string MONO_PATH { get; }
-		string TVOS_MONO_PATH { get; }
 		bool INCLUDE_IOS { get; }
 		bool INCLUDE_TVOS { get; }
-		bool INCLUDE_WATCH { get; }
 		bool INCLUDE_MAC { get; }
 		bool INCLUDE_MACCATALYST { get; }
 		string JENKINS_RESULTS_DIRECTORY { get; }
-		string MAC_DESTDIR { get; }
-		string IOS_DESTDIR { get; }
-		string MONO_IOS_SDK_DESTDIR { get; }
-		string MONO_MAC_SDK_DESTDIR { get; }
-		bool ENABLE_DOTNET { get; }
-		bool INCLUDE_XAMARIN_LEGACY { get; }
-		string SYSTEM_MONO { get; set; }
 		string DOTNET_DIR { get; set; }
 		string DOTNET_TFM { get; }
 		string XcodeRoot { get; }
@@ -62,9 +45,7 @@ namespace Xharness {
 		bool? IncludeSystemPermissionTests { get; set; }
 		bool InCI { get; }
 		bool UseTcpTunnel { get; }
-		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
-		bool DisableWatchOSOnWrench { get; }
 
 		#endregion
 

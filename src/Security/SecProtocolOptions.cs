@@ -27,13 +27,11 @@ using NativeHandle = System.IntPtr;
 namespace Security {
 
 #if NET
-	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[Watch (5, 0)]
 #endif
 	public class SecProtocolOptions : NativeObject {
@@ -97,9 +95,9 @@ namespace Security {
 		public void AddTlsCipherSuite (TlsCipherSuite cipherSuite) => sec_protocol_options_append_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
@@ -114,9 +112,9 @@ namespace Security {
 		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCipherSuiteGroup cipherSuiteGroup);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
@@ -155,9 +153,9 @@ namespace Security {
 		public void AddTlsCipherSuiteGroup (TlsCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_append_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
@@ -173,9 +171,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_min_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
@@ -216,9 +214,9 @@ namespace Security {
 		public void SetTlsMinVersion (TlsProtocolVersion protocol) => sec_protocol_options_set_min_tls_protocol_version (GetCheckedHandle (), protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
@@ -234,9 +232,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_max_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
@@ -400,9 +398,9 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use non-DHE cipher suites instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use non-DHE cipher suites instead.")]
@@ -418,9 +416,9 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_diffie_hellman_parameters (IntPtr handle, IntPtr dispatchDataParameter);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use non-DHE cipher suites instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use non-DHE cipher suites instead.")]
@@ -592,5 +590,78 @@ namespace Security {
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}
 #endif
+
+#if NET
+#if !COREBUILD
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_challenge_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_challenge_t */ challenge_block, IntPtr /* dispatch_queue_t */ challenge_queue);
+
+		/// <summary>Set the challenge callback.</summary>
+		/// <param name="challenge">The callback to call during a challenge.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetChallengeBlock (SecProtocolChallenge challenge, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolChallenge.Invoke;
+				using var block = new BlockLiteral (trampoline, challenge, typeof (Trampolines.SDSecProtocolChallenge), nameof (Trampolines.SDSecProtocolChallenge.Invoke));
+				sec_protocol_options_set_challenge_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_verify_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_verify_t */ verify_block, IntPtr /* dispatch_queue_t */ verify_block_queue);
+
+		/// <summary>Set the verify callback.</summary>
+		/// <param name="verify">The callback to call during verification.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetVerifyBlock (SecProtocolVerify verify, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolVerify.Invoke;
+				using var block = new BlockLiteral (trampoline, verify, typeof (Trampolines.SDSecProtocolVerify), nameof (Trampolines.SDSecProtocolVerify.Invoke));
+				sec_protocol_options_set_verify_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[DllImport (Constants.SecurityLibrary)]
+		unsafe static extern void sec_protocol_options_set_pre_shared_key_selection_block (sec_protocol_options_t options, BlockLiteral* /* sec_protocol_pre_shared_key_selection_t */ psk_selection_block, IntPtr /* dispatch_queue_t */ psk_selection_queue);
+
+		/// <summary>Set the pre-shared key selection callback.</summary>
+		/// <param name="selection">The callback to call during pre-shared key selection.</param>
+		/// <param name="queue">The queue where the callback is called.</param>
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		public void SetPreSharedKeySelectionBlock (SecProtocolPreSharedKeySelection selection, DispatchQueue queue)
+		{
+			unsafe {
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolPreSharedKeySelection.Invoke;
+				using var block = new BlockLiteral (trampoline, selection, typeof (Trampolines.SDSecProtocolPreSharedKeySelection), nameof (Trampolines.SDSecProtocolPreSharedKeySelection.Invoke));
+				sec_protocol_options_set_pre_shared_key_selection_block (GetCheckedHandle (), &block, queue.GetNonNullHandle (nameof (queue)));
+			}
+		}
+#endif // !COREBUILD
+#endif // NET
 	}
 }

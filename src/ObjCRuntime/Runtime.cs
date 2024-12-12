@@ -1830,6 +1830,18 @@ namespace ObjCRuntime {
 		{
 			return GetNSObject ((IntPtr) ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
+
+		/// <summary>Wraps an unmanaged <see cref="NativeHandle" /> into a fully typed <see cref="NSObject" />, or returns an existing wrapper object if one already exists.</summary>
+		/// <param name="ptr">A pointer to an unmanaged <see cref="NSObject" /> or any class that derives from the Objective-C NSObject class.</param>
+		/// <param name="owns">Pass true if the caller has a reference to the native object, and wants to give it to the managed wrapper instance. Otherwise pass false (and the native object will be retained if needed).</param>
+		/// <returns>An instance of a class that derives <see cref="NSObject" />.</returns>
+		/// <remarks>
+		///   <para>The runtime create an instance of the most derived managed class.</para>
+		/// </remarks>
+		public static NSObject? GetNSObject (NativeHandle ptr, bool owns)
+		{
+			return GetNSObject ((IntPtr) ptr, owns, MissingCtorResolution.ThrowConstructor1NotFound);
+		}
 #endif
 
 		public static NSObject? GetNSObject (IntPtr ptr)
@@ -1839,15 +1851,26 @@ namespace ObjCRuntime {
 
 		internal static NSObject? GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false)
 		{
+			return GetNSObject (ptr, false, missingCtorResolution, evenInFinalizerQueue);
+		}
+
+		internal static NSObject? GetNSObject (IntPtr ptr, bool owns, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false)
+		{
 			if (ptr == IntPtr.Zero)
 				return null;
 
 			var o = TryGetNSObject (ptr, evenInFinalizerQueue);
 
-			if (o is not null)
+			if (o is not null) {
+				if (owns)
+					o.DangerousRelease ();
 				return o;
+			}
 
-			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
+			o = ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
+			if (owns)
+				NSObject.DangerousRelease (ptr);
+			return o;
 		}
 
 		static public T? GetNSObject<T> (IntPtr ptr) where T : NSObject
@@ -2722,22 +2745,12 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public static ulong ConvertNativeEnumValueToManaged (nuint value, bool targetTypeHasMaxValue)
 		{
-#if ARCH_32
-			// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue
-			if (targetTypeHasMaxValue && value == nuint.MaxValue)
-				return ulong.MaxValue;
-#endif
 			return (ulong) value;
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public static long ConvertNativeEnumValueToManaged (nint value, bool targetTypeHasMaxValue)
 		{
-#if ARCH_32
-			// Check if we got Int32.MaxValue, which should probably be Int64.MaxValue
-			if (targetTypeHasMaxValue && value == nint.MaxValue)
-				return long.MaxValue;
-#endif
 			return (long) value;
 		}
 
@@ -2782,6 +2795,7 @@ namespace ObjCRuntime {
 #endif
 		}
 	}
+
 
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr> {
 		public bool Equals (IntPtr x, IntPtr y)

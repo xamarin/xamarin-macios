@@ -302,7 +302,6 @@ namespace iTunesLibrary {
 		[Export ("master")]
 		bool Master { [Bind ("isMaster")] get; }
 
-		[Mac (12, 0)]
 		[Export ("primary")]
 		bool Primary { [Bind ("isPrimary")] get; }
 

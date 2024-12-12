@@ -16,12 +16,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (14, 0)]
-	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]

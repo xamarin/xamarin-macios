@@ -714,6 +714,12 @@ namespace CoreImage {
 				return new CIBlendWithBlueMask (handle);
 			case "CIBlendWithRedMask":
 				return new CIBlendWithRedMask (handle);
+			case "CIMaximumScaleTransform":
+				return new CIMaximumScaleTransform (handle);
+			case "CIToneMapHeadroom":
+				return new CIToneMapHeadroom (handle);
+			case "CIAreaBoundsRed":
+				return new CIAreaBoundsRed (handle);
 			default:
 				throw new NotImplementedException (String.Format ("Unknown filter type returned: `{0}', returning a default CIFilter", filterName));
 			}
@@ -746,12 +752,4 @@ namespace CoreImage {
 		}
 #endif
 	}
-
-#if MONOMAC && !XAMCORE_3_0 && !NET
-	[Obsolete ("This type has been renamed to CICmykHalftone.")]
-	public class CICMYKHalftone : CICmykHalftone {
-		public CICMYKHalftone () {}
-		public CICMYKHalftone (IntPtr handle) : base (handle) {}
-	}
-#endif
 }

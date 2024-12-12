@@ -21,12 +21,13 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
-#if __MACOS__ || __MACCATALYST__
 		[Test]
 		public void GetAllDevicesTest ()
 		{
 #if __MACCATALYST__
 			TestRuntime.AssertXcodeVersion (13, 0);
+#elif !__MACOS__
+			TestRuntime.AssertXcodeVersion (16, 0);
 #endif
 			NSObject refObj = new NSObject ();
 			var devices = MTLDevice.GetAllDevices ();
@@ -35,7 +36,6 @@ namespace MonoTouchFixtures.Metal {
 			// in which case we'll get an empty array of devices.
 			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
 		}
-#endif
 
 #if __MACOS__
 		[Test]

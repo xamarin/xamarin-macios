@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Versioning;
 
 using AVFoundation;
 using CoreBluetooth;
@@ -115,6 +116,59 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static ApplePlatform CurrentPlatform {
+		get {
+#if __MACCATALYST__
+			return ApplePlatform.MacCatalyst;
+#elif __IOS__
+			return ApplePlatform.iOS;
+#elif __TVOS__
+			return ApplePlatform.TVOS;
+#elif __MACOS__
+			return ApplePlatform.MacOSX;
+#elif __WATCHOS__
+			return ApplePlatform.WatchOS;
+#else
+#error Unknown platform
+#endif
+		}
+	}
+
+	// This returns the string for the platform as used in the OSPlatformAttribute's PlatformName property.
+	public static string GetOSPlatformName (ApplePlatform platform)
+	{
+		switch (platform) {
+		case ApplePlatform.iOS:
+			return "ios";
+		case ApplePlatform.MacOSX:
+			return "macos";
+		case ApplePlatform.TVOS:
+			return "tvos";
+		case ApplePlatform.MacCatalyst:
+			return "maccatalyst";
+		default:
+			throw new Exception ($"Unknown platform: {platform}");
+		}
+	}
+
+	public static bool HasOSPlatformAttributeForCurrentPlatform<T> (ICustomAttributeProvider provider) where T : OSPlatformAttribute
+	{
+		return HasOSPlatformAttribute<T> (provider, CurrentPlatform);
+	}
+
+	public static bool HasOSPlatformAttribute<T> (ICustomAttributeProvider provider, ApplePlatform platform) where T : OSPlatformAttribute
+	{
+		var attribs = provider.GetCustomAttributes (false);
+		var platformName = GetOSPlatformName (platform);
+		foreach (var attrib in attribs) {
+			if (attrib is T platformAttribute) {
+				if (platformAttribute.PlatformName.StartsWith (platformName, StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+		}
+		return false;
+	}
 
 	public static Version GetSDKVersion ()
 	{
@@ -403,6 +457,35 @@ partial class TestRuntime {
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 16:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (11, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (18, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (18, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (15, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (11, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (18, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (18, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (15, 1);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			default:
+				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
+			}
 		case 15:
 			switch (minor) {
 			case 0:
@@ -1503,6 +1586,31 @@ partial class TestRuntime {
 		}
 	}
 	class LinkerSentinel { }
+
+	// Determine if any assemblies were linked by checking if a few uncommon classes in corlib are still here.
+	static bool? link_any;
+#if NET
+	[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This property checks whether the trimmer is enabled by checking if a type survived trimming; it's thus trimmer safe in that the any behavioral difference when the trimmer is enabled is exactly what it's looking for.")]
+#endif
+	public static bool IsLinkAny {
+		get {
+			if (!link_any.HasValue) {
+				var uncommonTypes = new string [] {
+					"System.Action`14",
+					"System.DBNull",
+					"System.Diagnostics.Debugger",
+					"System.Func`15",
+				};
+				link_any = false;
+				foreach (var uncommonType in uncommonTypes) {
+					link_any = typeof (int).Assembly.GetType (uncommonType) is null;
+					if (link_any == true)
+						break;
+				}
+			}
+			return link_any.Value;
+		}
+	}
 
 	public static bool IsOptimizeAll {
 		get {

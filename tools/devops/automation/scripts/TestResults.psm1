@@ -53,7 +53,7 @@ class TestResult {
     [string] $Context
     hidden [int] $Passed
     hidden [int] $Failed
-    hidden [string[]] $NotTestSummaryLabels = @("install-source")
+    hidden [string[]] $NotTestSummaryLabels = @()
 
     TestResult (
         [string] $path,

@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.ComponentModel;
+using AVFoundation;
 using ObjCRuntime;
 using CoreVideo;
 using CoreGraphics;
@@ -44,6 +46,8 @@ namespace ScreenCaptureKit {
 		UserStopped = -3817,
 		FailedToStartAudioCapture = -3818,
 		FailedToStopAudioCapture = -3819,
+		FailedToStartMicrophoneCapture = -3820,
+		SystemStoppedStream = -3821,
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -63,8 +67,11 @@ namespace ScreenCaptureKit {
 		Screen,
 		[Mac (13, 0)]
 		Audio,
+		[Mac (15, 0)]
+		Microphone,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'SCShareableContentStyle' instead.")]
 	[NoiOS, NoTV, NoWatch, Mac (14, 0), NoMacCatalyst]
 	[Native]
 	public enum SCStreamType : long {
@@ -105,6 +112,23 @@ namespace ScreenCaptureKit {
 		Window,
 		Display,
 		Application,
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (15, 0), NoMacCatalyst]
+	[Native]
+	public enum SCCaptureDynamicRange : long {
+		Sdr,
+		HdrLocalDisplay,
+		HdrCanonicalDisplay,
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (15, 0), NoMacCatalyst]
+	[Native]
+	public enum SCStreamConfigurationPreset : long {
+		CaptureHdrStreamLocalDisplay,
+		CaptureHdrStreamCanonicalDisplay,
+		CaptureHdrScreenshotLocalDisplay,
+		CaptureHdrScreenshotCanonicalDisplay,
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -260,19 +284,19 @@ namespace ScreenCaptureKit {
 
 		[Internal]
 		[Export ("initWithDisplay:excludingWindows:")]
-		NativeHandle InitWithDisplayExcludingWindows (SCDisplay display, SCWindow [] excludedWindows);
+		NativeHandle _InitWithDisplayExcludingWindows (SCDisplay display, SCWindow [] excludedWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:includingWindows:")]
-		NativeHandle InitWithDisplayIncludingWindows (SCDisplay display, SCWindow [] includedWindows);
+		NativeHandle _InitWithDisplayIncludingWindows (SCDisplay display, SCWindow [] includedWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:includingApplications:exceptingWindows:")]
-		NativeHandle InitWithDisplayIncludingApplications (SCDisplay display, SCRunningApplication [] includingApplications, SCWindow [] exceptingWindows);
+		NativeHandle _InitWithDisplayIncludingApplications (SCDisplay display, SCRunningApplication [] includingApplications, SCWindow [] exceptingWindows);
 
 		[Internal]
 		[Export ("initWithDisplay:excludingApplications:exceptingWindows:")]
-		NativeHandle InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
+		NativeHandle _InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
 
 		// per docs, the following selectors are available for 12.3+
 		// but return types are SCStreamType and SCShareableContentStyle are 14.0+
@@ -402,6 +426,27 @@ namespace ScreenCaptureKit {
 		[Mac (14, 2)]
 		[Export ("includeChildWindows")]
 		bool IncludeChildWindows { get; set; }
+
+		[Mac (15, 0)]
+		[Export ("showMouseClicks", ArgumentSemantic.Assign)]
+		bool ShowMouseClicks { get; set; }
+
+		[Mac (15, 0)]
+		[Export ("captureMicrophone", ArgumentSemantic.Assign)]
+		bool CaptureMicrophone { get; set; }
+
+		[Mac (15, 0)]
+		[Export ("microphoneCaptureDeviceID", ArgumentSemantic.Strong), NullAllowed]
+		string MicrophoneCaptureDeviceId { get; set; }
+
+		[Mac (15, 0)]
+		[Export ("captureDynamicRange", ArgumentSemantic.Assign)]
+		SCCaptureDynamicRange CaptureDynamicRange { get; set; }
+
+		[Static]
+		[Mac (15, 0)]
+		[Export ("streamConfigurationWithPreset:")]
+		SCStreamConfiguration Create (SCStreamConfigurationPreset preset);
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -437,6 +482,14 @@ namespace ScreenCaptureKit {
 		[Mac (13, 0)]
 		[Export ("synchronizationClock")]
 		CMClock SynchronizationClock { [return: NullAllowed] get; }
+
+		[Mac (15, 0)]
+		[Export ("addRecordingOutput:error:")]
+		bool AddRecordingOutput (SCRecordingOutput recordingOutput, out NSError error);
+
+		[Mac (15, 0)]
+		[Export ("removeRecordingOutput:error:")]
+		bool RemoveRecordingOutput (SCRecordingOutput recordingOutput, out NSError error);
 	}
 
 	interface ISCStreamDelegate { }
@@ -454,9 +507,14 @@ namespace ScreenCaptureKit {
 		[Export ("stream:didStopWithError:")]
 		void DidStop (SCStream stream, NSError error);
 
+#if !XAMCORE_5_0
+		// Looks like this was a beta method that got removed in stable, but we ended up releasing the binding for it anyways.
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Do not use this method.")]
 		[Mac (14, 4)]
 		[Export ("userDidStopStream:")]
 		void UserDidStop (SCStream stream);
+#endif
 
 		[Mac (14, 0)]
 		[Export ("outputVideoEffectDidStartForStream:")]
@@ -581,5 +639,58 @@ namespace ScreenCaptureKit {
 		[Export ("captureImageWithFilter:configuration:completionHandler:")]
 		[Async]
 		void CaptureImage (SCContentFilter contentFilter, SCStreamConfiguration config, [NullAllowed] Action<CGImage, NSError> completionHandler);
+	}
+
+	[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	interface SCRecordingOutputConfiguration {
+		[Export ("outputURL", ArgumentSemantic.Copy)]
+		NSUrl OutputUrl { get; set; }
+
+		[Export ("videoCodecType", ArgumentSemantic.Copy)]
+		[BindAs (typeof (AVVideoCodecType))]
+		NSString VideoCodecType { get; set; }
+
+		[Export ("outputFileType", ArgumentSemantic.Copy)]
+		[BindAs (typeof (AVFileTypes))]
+		NSString OutputFileType { get; set; }
+
+		[Export ("availableVideoCodecTypes")]
+		[BindAs (typeof (AVVideoCodecType []))]
+		NSString [] AvailableVideoCodecTypes { get; }
+
+		[Export ("availableOutputFileTypes")]
+		[BindAs (typeof (AVFileTypes []))]
+		NSString [] AvailableOutputFileTypes { get; }
+	}
+
+	[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+	interface SCRecordingOutputDelegate {
+		[Export ("recordingOutputDidStartRecording:")]
+		void DidStartRecording (SCRecordingOutput recordingOutput);
+
+		[Export ("recordingOutput:didFailWithError:")]
+		void DidFail (SCRecordingOutput recordingOutput, NSError error);
+
+		[Export ("recordingOutputDidFinishRecording:")]
+		void DidFinishRecording (SCRecordingOutput recordingOutput);
+	}
+
+	interface ISCRecordingOutputDelegate { }
+
+	[Mac (15, 0), NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SCRecordingOutput {
+		[Export ("recordedDuration")]
+		CMTime RecordedDuration { get; }
+
+		[Export ("recordedFileSize")]
+		nint RecordedFileSize { get; }
+
+		[Export ("initWithConfiguration:delegate:")]
+		NativeHandle Constructor (SCRecordingOutputConfiguration recordingOutputConfiguration, ISCRecordingOutputDelegate @delegate);
 	}
 }

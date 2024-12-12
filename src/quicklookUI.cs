@@ -184,12 +184,12 @@ namespace QuickLookUI {
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLFilePreviewRequest {
@@ -197,13 +197,13 @@ namespace QuickLookUI {
 		NSUrl FileUrl { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewProvider : NSExtensionRequestHandling {
 	}
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLPreviewReplyAttachment {
@@ -221,7 +221,7 @@ namespace QuickLookUI {
 	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewReply {
 		[Export ("stringEncoding")]

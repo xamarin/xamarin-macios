@@ -1,3 +1,0 @@
-# Mono.CSharp.InternalErrorException : (1,1): InteractiveHost
-# NUnit.Framework.AssertionException : Internal compiler error: Internal compiler error: Internal compiler error: Internal compiler error: The predefined type `Microsoft.CSharp.RuntimeBinder.Binder' is not defined or imported
-MonoTests.EvaluatorTest.ExpressionsTest.DynamicStatement

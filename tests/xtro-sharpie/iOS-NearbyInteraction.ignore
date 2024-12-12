@@ -1,1 +1,0 @@
-!incorrect-protocol-member! NIDeviceCapability::supportsExtendedDistanceMeasurement is REQUIRED and should be abstract

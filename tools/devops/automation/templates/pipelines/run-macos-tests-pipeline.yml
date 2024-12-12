@@ -1,0 +1,277 @@
+# template to be extended by those pipelines that will run tests after a build.
+parameters:
+
+  - name: isPR
+    displayName: State if the tests are ran for a PR build
+    type: boolean
+    default: false
+
+  - name: repositoryAlias
+    type: string
+    default: self
+
+  - name: commit
+    type: string
+    default: HEAD
+
+  - name: stageDisplayNamePrefix
+    type: string
+    default: ''
+
+  - name: macTestsConfigurations
+    displayName: macOS test configurations to run
+    type: object
+    default: [
+      {
+        stageName: 'mac_12_m1',
+        displayName: 'M1 - Mac Ventura (12)',
+        macPool: 'VSEng-VSMac-Xamarin-Shared',
+        useImage: false,
+        statusContext: 'M1 - Mac Monterey (12)',
+        demands: [
+          "Agent.OS -equals Darwin",
+          "macOS.Name -equals Monterey",
+          "macOS.Architecture -equals arm64",
+          "Agent.HasDevices -equals False",
+          "Agent.IsPaired -equals False"
+        ]
+      },
+      {
+        stageName: 'mac_13_m1',
+        displayName: 'M1 - Mac Ventura (13)',
+        macPool: 'VSEng-VSMac-Xamarin-Shared',
+        useImage: false,
+        statusContext: 'M1 - Mac Ventura (13)',
+        demands: [
+          "Agent.OS -equals Darwin",
+          "macOS.Name -equals Ventura",
+          "macOS.Architecture -equals arm64",
+          "Agent.HasDevices -equals False",
+          "Agent.IsPaired -equals False"
+        ]
+      },
+      {
+        stageName: 'mac_14_x64',
+        displayName: 'X64 - Mac Sonoma (14)',
+        macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
+        useImage: false,
+        statusContext: 'X64 - Mac Sonoma (14)',
+        demands: [
+          "Agent.OS -equals Darwin",
+          "macOS.Name -equals Sonoma",
+          "macOS.Architecture -equals x64",
+          "Agent.HasDevices -equals False",
+          "Agent.IsPaired -equals False"
+        ]
+      },
+      {
+        stageName: 'mac_15_arm64',
+        displayName: 'arm64 - Mac Sequoia (15)',
+        macPool: 'VSEng-VSMac-Xamarin-Shared',
+        useImage: false,
+        statusContext: 'arm64 - Mac Sequoia (15)',
+        demands: [
+          "Agent.OS -equals Darwin",
+          "macOS.Name -equals Sequoia",
+          "macOS.Architecture -equals arm64",
+          "Agent.HasDevices -equals False",
+          "Agent.IsPaired -equals False"
+        ]
+      }]
+
+  - name: pool
+    type: string
+    default: automatic
+    values:
+      - pr
+      - ci
+      - automatic
+
+  - name: supportedPlatforms
+    type: object
+    default: [
+      {
+        platform: iOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: macOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: tvOS,
+        isDotNetPlatform: true,
+      },
+      {
+        platform: MacCatalyst,
+        isDotNetPlatform: true,
+      },
+      {
+        # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+        platform: Multiple,
+        isDotNetPlatform: true,
+      }
+    ]
+
+
+  - name: testConfigurations
+    type: object
+    default: [
+      # Disabled by default #
+      # {
+      #   label: bcl,
+      #   splitByPlatforms: false,
+      # },
+      {
+        label: cecil,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: dotnettests,
+        splitByPlatforms: true,
+        needsMultiplePlatforms: true,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: fsharp,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: framework,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: generator,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: interdependent-binding-projects,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: introspection,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: linker,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: mmp,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: monotouch,
+        splitByPlatforms: true,
+        needsMultiplePlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: msbuild,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: xcframework,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+      {
+        label: xtro,
+        splitByPlatforms: false,
+        testPrefix: 'simulator_tests',
+      },
+    ]
+
+resources:
+  repositories:
+    - repository: self
+      checkoutOptions:
+        submodules: true
+
+    - repository: yaml-templates
+      type: github
+      name: xamarin/yaml-templates
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: maccore
+      type: github
+      name: xamarin/maccore
+      ref: refs/heads/main
+      endpoint: xamarin
+
+    - repository: macios-adr
+      type: git
+      name: macios-adr
+      ref: refs/heads/main
+
+variables:
+  - template: ../variables/common.yml
+  - name: DisablePipelineConfigDetector
+    value: true
+
+stages:
+
+  - stage: configure_build
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
+    jobs:
+
+      - ${{ if eq(parameters.pool, 'automatic') }}:
+          - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+            pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+              vmImage: ubuntu-latest
+            steps:
+              - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+              # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+              - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+                parameters:
+                  agentPoolPR: $(PRBuildPool)
+                  agentPoolPRUrl: $(PRBuildPoolUrl)
+                  agentPoolCI: $(CIBuildPool)
+                  agentPoolCIUrl: $(CIBuildPoolUrl)
+
+      - job: configure
+        displayName: 'Configure build'
+        pool:
+          vmImage: windows-latest
+
+        variables:
+          isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+          isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+          BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+        steps:
+          - template: ../common/load_configuration.yml
+            parameters: 
+              repositoryAlias: ${{ parameters.repositoryAlias }}
+              commit: ${{ parameters.commit }}
+              testConfigurations: ${{ parameters.testConfigurations }}
+              supportedPlatforms: ${{ parameters.supportedPlatforms }}
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
+              statusContext: 'VSTS: simulator tests' 
+              uploadArtifacts: true
+
+  - ${{ each config in parameters.macTestsConfigurations }}:
+      - template: ../mac/stage.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+          stageName: ${{ config.stageName }}
+          displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
+          macPool: ${{ config.macPool }}
+          useImage: ${{ config.useImage }}
+          statusContext: ${{ config.statusContext }}
+          keyringPass: $(pass--lab--mac--builder--keychain)
+          demands: ${{ config.demands }}
+          postPipeline: true

@@ -10,7 +10,7 @@ using NativeHandle = System.IntPtr;
 namespace LocalAuthentication {
 
 	/// <summary>Enumerates supported biometric authentication types.</summary>
-	[NoWatch]
+	[Watch (11, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -77,7 +77,9 @@ namespace LocalAuthentication {
 		[Export ("evaluateAccessControl:operation:localizedReason:reply:")]
 		void EvaluateAccessControl (SecAccessControl accessControl, LAAccessControlOperation operation, string localizedReason, Action<bool, NSError> reply);
 
-
+		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'LADomainStateBiometry.StateHash' instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'LADomainStateBiometry.StateHash' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'LADomainStateBiometry.StateHash' instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("evaluatedPolicyDomainState")]
 		[NullAllowed]
@@ -119,6 +121,10 @@ namespace LocalAuthentication {
 		[MacCatalyst (13, 1)]
 		[Export ("biometryType")]
 		LABiometryType BiometryType { get; }
+
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Export ("domainState")]
+		LADomainState DomainState { get; }
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
@@ -293,5 +299,155 @@ namespace LocalAuthentication {
 		[Async]
 		[Export ("loadDataWithCompletion:")]
 		void LoadData (LASecretCompletionHandler handler);
+	}
+
+	[Flags]
+	[Native]
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0), NoTV]
+	enum LACompanionType : long {
+		None = 0,
+		[NoiOS, NoWatch, NoTV, NoMacCatalyst]
+		Watch = 1 << 0,
+		[NoMac, NoWatch, NoTV]
+		Mac = 1 << 1,
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LADomainStateBiometry {
+		[Export ("biometryType")]
+		LABiometryType BiometryType { get; }
+
+		[Export ("stateHash"), NullAllowed]
+		NSData StateHash { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LADomainStateCompanion {
+		[Export ("availableCompanionTypes")]
+		NSSet<NSNumber> WeakAvailableCompanionTypes { get; }
+
+		[Export ("stateHash"), NullAllowed]
+		NSData StateHash { get; }
+
+		[Export ("stateHashForCompanionType:")]
+		[return: NullAllowed]
+		NSData GetStateHash (LACompanionType companionType);
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LADomainState {
+		[Export ("biometry")]
+		LADomainStateBiometry Biometry { get; }
+
+		[Export ("companion")]
+		LADomainStateCompanion Companion { get; }
+
+		[Export ("stateHash"), NullAllowed]
+		NSData StateHash { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LAEnvironment {
+		[Export ("addObserver:")]
+		void AddObserver (ILAEnvironmentObserver observer);
+
+		[Export ("removeObserver:")]
+		void RemoveObserver (ILAEnvironmentObserver observer);
+
+		[Static]
+		[Export ("currentUser")]
+		LAEnvironment CurrentUser { get; }
+
+		[Export ("state")]
+		LAEnvironmentState State { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof (NSObject))]
+	interface LAEnvironmentObserver {
+		[Export ("environment:stateDidChangeFromOldState:")]
+		void StateDidChangeFromOldState (LAEnvironment environment, LAEnvironmentState oldState);
+	}
+
+	interface ILAEnvironmentObserver { }
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LAEnvironmentMechanism {
+		[Export ("isUsable")]
+		bool IsUsable { get; }
+
+		[Export ("localizedName")]
+		string LocalizedName { get; }
+
+		[Export ("iconSystemName")]
+		string IconSystemName { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (LAEnvironmentMechanism))]
+	[DisableDefaultCtor]
+	interface LAEnvironmentMechanismBiometry {
+		[Export ("biometryType")]
+		LABiometryType BiometryType { get; }
+
+		[Export ("isEnrolled")]
+		bool IsEnrolled { get; }
+
+		[Export ("isLockedOut")]
+		bool IsLockedOut { get; }
+
+		[Export ("stateHash")]
+		NSData StateHash { get; }
+
+		[Export ("builtInSensorInaccessible")]
+		bool BuiltInSensorInaccessible { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (LAEnvironmentMechanism))]
+	[DisableDefaultCtor]
+	interface LAEnvironmentMechanismCompanion {
+		[Export ("type")]
+		LACompanionType Type { get; }
+
+		[Export ("stateHash"), NullAllowed]
+		NSData StateHash { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (LAEnvironmentMechanism))]
+	[DisableDefaultCtor]
+	interface LAEnvironmentMechanismUserPassword {
+		[Export ("isSet")]
+		bool IsSet { get; }
+	}
+
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), Watch (11, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface LAEnvironmentState : NSCopying {
+		[Export ("biometry"), NullAllowed]
+		LAEnvironmentMechanismBiometry Biometry { get; }
+
+		[Export ("userPassword"), NullAllowed]
+		LAEnvironmentMechanismUserPassword UserPassword { get; }
+
+		[NoWatch]
+		[Export ("companions")]
+		LAEnvironmentMechanismCompanion [] Companions { get; }
+
+		[Export ("allMechanisms")]
+		LAEnvironmentMechanism [] AllMechanisms { get; }
 	}
 }

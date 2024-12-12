@@ -60,6 +60,7 @@ namespace Xamarin.Linker {
 
 			CreateRegistrarType (info);
 
+			abr.SaveCurrentAssembly ();
 			abr.ClearCurrentAssembly ();
 		}
 
@@ -418,11 +419,26 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Ret);
 		}
 
+		void AddTypeInterfaceImplementation (TypeDefinition type, TypeReference iface)
+		{
+			if (type.HasInterfaces && type.Interfaces.Any (v => v.InterfaceType == iface))
+				return;
+
+			var ifaceImplementation = new InterfaceImplementation (iface);
+			type.Interfaces.Add (ifaceImplementation);
+			Annotations.Mark (ifaceImplementation);
+			Annotations.Mark (ifaceImplementation.InterfaceType);
+			Annotations.Mark (ifaceImplementation.InterfaceType.Resolve ());
+		}
+
 		void ImplementConstructNSObjectFactoryMethod (TypeDefinition type, MethodReference ctor)
 		{
 			// skip creating the factory for NSObject itself
 			if (type.Is ("Foundation", "NSObject"))
 				return;
+
+			// Make sure the type implements INSObjectFactory, otherwise we can't override the _Xamarin_ConstructNSObject method from it.
+			AddTypeInterfaceImplementation (type, abr.Foundation_INSObjectFactory);
 
 			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructNSObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.Foundation_NSObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
@@ -455,6 +471,9 @@ namespace Xamarin.Linker {
 			var nsobjectConstructor = type.IsNSObject (DerivedLinkContext) ? FindNSObjectConstructor (type) : null;
 			if (nsobjectConstructor is null && ctor is null)
 				return;
+
+			// Make sure the type implements INativeObject, otherwise we can't override the _Xamarin_ConstructINativeObject method from it.
+			AddTypeInterfaceImplementation (type, abr.ObjCRuntime_INativeObject);
 
 			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructINativeObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);

@@ -31,6 +31,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags));
+				flags &= ~NetworkReachabilityFlags.TransientConnection; // Remove the TransientConnection flag if it's set
 				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "Reachable");
 			}
 		}
@@ -93,6 +94,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#2");
+				flags &= ~NetworkReachabilityFlags.TransientConnection; // Remove the TransientConnection flag if it's set
 				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#2 Reachable");
 			}
 
@@ -107,7 +109,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		void CheckLoopbackFlags (NetworkReachabilityFlags flags, string number, bool has_address)
 		{
 			var noFlags = (NetworkReachabilityFlags) 0;
-			var otherFlags = (flags & ~(NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.IsLocalAddress | NetworkReachabilityFlags.IsDirect));
+			var otherFlags = (flags & ~(NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.IsLocalAddress | NetworkReachabilityFlags.IsDirect | NetworkReachabilityFlags.TransientConnection));
 
 			// Different versions of OSes report different flags. Trying to
 			// figure out which OS versions have which flags set turned out to

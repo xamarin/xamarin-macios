@@ -41,7 +41,6 @@ namespace JavaScriptCore {
 		[Export ("inspectable")]
 		bool Inspectable { [Bind ("isInspectable")] get; set; }
 
-		[Mac (10, 10), iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("evaluateScript:withSourceURL:")]
 		JSValue EvaluateScript (string script, NSUrl sourceUrl);
@@ -186,6 +185,14 @@ namespace JavaScriptCore {
 
 		[Export ("toUInt32")]
 		uint ToUInt32 ();
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("toInt64")]
+		long ToInt64 ();
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("toUInt64")]
+		ulong ToUInt64 ();
 
 		[Export ("toNumber")]
 		NSNumber ToNumber ();
@@ -333,6 +340,50 @@ namespace JavaScriptCore {
 		[MacCatalyst (13, 1)]
 		[Export ("isSymbol")]
 		bool IsSymbol { get; }
+
+		[Static]
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("valueWithNewBigIntFromString:inContext:")]
+		[return: NullAllowed]
+		JSValue CreateNewBigInt (string @string, JSContext context);
+
+		[Static]
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("valueWithNewBigIntFromInt64:inContext:")]
+		[return: NullAllowed]
+		JSValue CreateNewBigInt (long int64, JSContext context);
+
+		[Static]
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("valueWithNewBigIntFromUInt64:inContext:")]
+		[return: NullAllowed]
+		JSValue CreateNewBigInt (ulong uint64, JSContext context);
+
+		[Static]
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("valueWithNewBigIntFromDouble:inContext:")]
+		[return: NullAllowed]
+		JSValue CreateNewBigInt (double uint64, JSContext context);
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("isBigInt")]
+		bool IsBigInt { get; }
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("compareJSValue:")]
+		JSRelationCondition Compare (JSValue other);
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("compareInt64:")]
+		JSRelationCondition Compare (long other);
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("compareUInt64:")]
+		JSRelationCondition Compare (ulong other);
+
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		[Export ("compareDouble:")]
+		JSRelationCondition Compare (double other);
 	}
 
 	/// <summary>Class that maintains a binding between a JavaScript and Objective-C value.</summary>
@@ -340,9 +391,7 @@ namespace JavaScriptCore {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/JavaScriptCore/JSManagedValue">Apple documentation for <c>JSManagedValue</c></related>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_3_0
 	[DisableDefaultCtor]
-#endif
 	partial interface JSManagedValue {
 		[Static, Export ("managedValueWithValue:")]
 		JSManagedValue Get (JSValue value);

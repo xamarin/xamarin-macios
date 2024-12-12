@@ -7,6 +7,11 @@ namespace StoreKit {
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
 	/// <summary>Transaction state.</summary>
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -70,6 +75,11 @@ namespace StoreKit {
 	}
 
 	/// <summary>Enumerates authorization states for music store access.</summary>
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -81,20 +91,28 @@ namespace StoreKit {
 	}
 
 	/// <summary>Enumerates flags that describe the user's local music library capabilities..</summary>
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
 		None = 0,
 		MusicCatalogPlayback = 1 << 0,
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
 	/// <summary>Enumerates visiblity settings for a promoted product.</summary>
-	[Mac (11, 0)]
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -105,7 +123,12 @@ namespace StoreKit {
 	}
 
 	/// <summary>Defines the natural period for a subscription.</summary>
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -116,7 +139,12 @@ namespace StoreKit {
 	}
 
 	/// <summary>Enumerates how a discount price is applied.</summary>
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
+	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
+	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {

@@ -57,6 +57,14 @@ namespace Xamarin.Tests {
 						return false;
 					}
 					break;
+				case 0000: // this is what mmp reports
+				case 5203:
+					switch (msg.Message) {
+					case "-ld_classic is deprecated and will be removed in a future release":
+					case "Native linking warning: warning: -ld_classic is deprecated and will be removed in a future release":
+						return false;
+					}
+					break;
 				}
 
 				return true;
@@ -97,6 +105,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public void FilterUnrelatedWarnings ()
+		{
+			messages = messages.FilterUnrelatedWarnings ().ToList ();
+		}
+
 		public int Execute (IList<string> arguments)
 		{
 			return Execute (ToolPath, arguments, false);
@@ -114,22 +127,7 @@ namespace Xamarin.Tests {
 
 		public int Execute (string toolPath, IList<string> arguments, bool always_show_output)
 		{
-			output.Clear ();
-			output_lines = null;
-
-			var args = new List<string> ();
-			args.Add ("-t");
-			args.Add ("--");
-			args.Add (toolPath);
-			args.AddRange (arguments);
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, args, EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
-
-			if ((rv != 0 || always_show_output) && output.Length > 0)
-				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
-
-			ParseMessages ();
-
-			return rv;
+			throw new NotSupportedException ("Legacy projects not supported anymore");
 		}
 
 		static bool IndexOfAny (string line, out int start, out int end, params string [] values)

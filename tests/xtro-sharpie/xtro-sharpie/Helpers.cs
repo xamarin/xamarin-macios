@@ -450,7 +450,9 @@ namespace Extrospection {
 
 		public static string GetFramework (Decl decl)
 		{
-			var header_file = decl.PresumedLoc.FileName;
+			var header_file = decl.PresumedLoc?.FileName;
+			if (header_file is null)
+				return null;
 			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
 			if (fxh <= 0)
 				return null;

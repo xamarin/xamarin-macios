@@ -221,10 +221,10 @@ mkdir -p "$(dirname "$GH_COMMENTS_FILE")"
 
 if test -z "$SKIP_DIRTY_CHECK"; then
 	if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
-		report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
+		report_error_line "${RED}** Error: Working directory isn't clean - check build log for more information.${CLEAR}"
 		# The funny GIT_COLOR_P syntax is explained here: https://stackoverflow.com/a/61551944/183422
-		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
-		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' || true
 		exit 1
 	fi
 fi
@@ -243,7 +243,7 @@ function upon_exit ()
 		echo "Generator diff: $GENERATOR_DIFF_FILE"
 	fi
 	if ! test -z "$APIDIFF_FILE"; then
-		echo "API diff: $APIDIFF_FILE"
+		echo "API diff (vs $BASE_HASH): $APIDIFF_FILE"
 	fi
 	if ! test -z "$STABLE_API_COMPARISON_FILE"; then
 		echo "API diff (vs stable): $STABLE_API_COMPARISON_FILE"
@@ -362,37 +362,53 @@ if test -n "$ENABLE_API_DIFF"; then
 	#   Then we restore the original hash, and finally we calculate the api diff.
 	#
 	echo "💪 ${BLUE}Computing API diff vs ${WHITE}${BASE_HASH}${BLUE}${CLEAR} 💪"
-
-	# Compute the TFM of the previous hash
-	PREVIOUS_DOTNET_TFM=$(make -C "$OUTPUT_SRC_DIR/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_TFM)
-	PREVIOUS_DOTNET_TFM=${PREVIOUS_DOTNET_TFM#*=}
-
-	# Calculate apidiff references according to the temporary build
-	echo "    ${BLUE}Updating apidiff references...${CLEAR}"
-	rm -rf "$APIDIFF_RESULTS_DIR" "$APIDIFF_TMP_DIR"
-	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
-		EC=${PIPESTATUS[0]}
-		report_error_line "${RED}Failed to update apidiff references${CLEAR}"
-		exit "$EC"
-	fi
-
-	# Now compare the current build against those references
-	echo "    ${BLUE}Running apidiff...${CLEAR}"
 	APIDIFF_FILE=$APIDIFF_RESULTS_DIR/api-diff.html
-	if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" SKIP_XAMARIN_VS_DOTNET=1 SKIP_IOS_VS_MACCATALYST=1 DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
-		EC=${PIPESTATUS[0]}
-		report_error_line "${RED}Failed to run apidiff${CLEAR}"
-		exit "$EC"
-	fi
+	APIDIFF_MARKDOWN=$APIDIFF_RESULTS_DIR/api-diff.md
 
-	# Now create the markdowns with these references
-	echo "    ${BLUE}Creating markdowns...${CLEAR}"
-	if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
-		EC=${PIPESTATUS[0]}
-		report_error_line "${RED}Failed to create markdowns${CLEAR}"
-		exit "$EC"
-	fi
-	echo "    ${BLUE}Computed API diff vs ${WHITE}${BASE_HASH}${BLUE}: ${WHITE}$APIDIFF_FILE${BLUE}.${CLEAR}"
+	( # use a sub-shell to be able to set environment variables here and not affect the rest of the script
+		export APIDIFF_DIR="$APIDIFF_TMP_DIR"
+		export OUTPUT_DIR="$APIDIFF_RESULTS_DIR"
+
+		rm -rf "$APIDIFF_RESULTS_DIR"
+		mkdir -p "$APIDIFF_RESULTS_DIR"
+
+		# get all the currently selected platforms
+		FILE="$ROOT_DIR/tools/devops/DOTNET_PLATFORMS.txt"
+		make print-variable-value-to-file VARIABLE=DOTNET_PLATFORMS FILE=$FILE -C "$ROOT_DIR/tools/devops"
+		DOTNET_PLATFORMS=($(cat $FILE))
+		rm -f "$FILE"
+
+		shopt -s nullglob
+
+		# Point our apidiff to the dlls of the other commit
+		for platform in "${DOTNET_PLATFORMS[@]}"; do
+			dlls=($OUTPUT_SRC_DIR/xamarin-macios/_build/Microsoft.$platform.Ref.*/ref/net*/Microsoft.$platform.dll)
+			if [[ ${#dlls[@]} != 1 ]]; then
+				report_error_line "${RED}Unable to find exactly one assembly, found ${#dlls[@]} assemblies:${CLEAR}"
+				report_error_line "${dlls[@]}"
+				exit 1
+			fi
+
+			# store the first dll in the COMPARISON_DLL_<platform> variable
+			printf -v "COMPARISON_DLL_$platform" "%s" "${dlls[0]}"
+			# export it for the apidiff makefile
+			eval "export COMPARISON_DLL_$platform"
+		done
+
+		# Clean up a bit before we do anything
+		( cd "$ROOT_DIR/tools/apidiff" && git clean -xfdq )
+
+		# Now compare the current build against those references
+		echo "    ${BLUE}Running apidiff...${CLEAR}"
+		if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 2>&1 | sed 's/^/        /'; then
+			EC=${PIPESTATUS[0]}
+			report_error_line "${RED}Failed to run apidiff${CLEAR}"
+			exit "$EC"
+		fi
+	)
+	echo "    ${BLUE}Computed API diff vs ${WHITE}${BASE_HASH}${BLUE}:${CLEAR}"
+	echo "        ${WHITE}$APIDIFF_FILE${CLEAR}"
+	echo "        ${WHITE}$APIDIFF_MARKDOWN	${CLEAR}"
 	echo ""
 else
 	echo "${BLUE}Skipped API diff vs ${WHITE}${BASE_HASH}${BLUE}.${CLEAR}"
@@ -405,11 +421,23 @@ if test -n "$ENABLE_STABLE_API_COMPARISON"; then
 	echo "💪 ${BLUE}Computing API diff vs stable${CLEAR} 💪"
 	rm -Rf "$STABLE_API_COMPARISON_RESULTS_DIR" "$STABLE_API_COMPARISON_TMP_DIR"
 	mkdir -p "$STABLE_API_COMPARISON_RESULTS_DIR" "$STABLE_API_COMPARISON_TMP_DIR"
+
+	# Clean up a bit before we do anything
+	( cd "$ROOT_DIR/tools/apidiff" && git clean -xfdq )
+
+	# Now compare the current build against those references
+	echo "    ${BLUE}Running apidiff...${CLEAR}"
 	make -j8 -C "$ROOT_DIR/tools/apidiff" APIDIFF_DIR="$STABLE_API_COMPARISON_TMP_DIR" OUTPUT_DIR="$STABLE_API_COMPARISON_RESULTS_DIR" 2>&1 | sed 's/^/        /'
+
 	# remove empty files
 	find "$STABLE_API_COMPARISON_RESULTS_DIR" -size 0 -print0 | xargs -0 rm
-	echo "    ${BLUE}Computed API diff vs stable: ${WHITE}$STABLE_API_COMPARISON_RESULTS_DIR/index.html${BLUE}${CLEAR}"
 	STABLE_API_COMPARISON_FILE=$STABLE_API_COMPARISON_RESULTS_DIR/api-diff.html
+	STABLE_API_COMPARISON_MARKDOWN=$STABLE_API_COMPARISON_RESULTS_DIR/api-diff.md
+
+	echo "    ${BLUE}Computed API diff vs stable:${CLEAR}"
+	echo "        ${WHITE}$STABLE_API_COMPARISON_FILE${CLEAR}"
+	echo "        ${WHITE}$STABLE_API_COMPARISON_MARKDOWN${CLEAR}"
+	echo ""
 else
 	echo "${BLUE}Skipped API diff vs stable.${CLEAR}"
 fi
@@ -417,7 +445,6 @@ fi
 if [ -z ${INCLUDE_IOS+x} ]; then INCLUDE_IOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_IOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_TVOS+x} ]; then INCLUDE_TVOS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_TVOS | sed 's/.*=//'); fi
 if [ -z ${INCLUDE_MAC+x} ]; then INCLUDE_MAC=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_MAC | sed 's/.*=//'); fi
-if [ -z ${INCLUDE_WATCH+x} ]; then INCLUDE_WATCH=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=INCLUDE_WATCH | sed 's/.*=//'); fi
 if [ -z ${DOTNET_PLATFORMS+x} ]; then DOTNET_PLATFORMS=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_PLATFORMS | sed 's/.*=//'); fi
 if [ -z ${DOTNET_TFM+x} ]; then DOTNET_TFM=$(make -C "$ROOT_DIR"/tools/devops print-variable VARIABLE=DOTNET_TFM | sed 's/.*=//'); fi
 

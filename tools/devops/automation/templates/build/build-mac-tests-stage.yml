@@ -39,11 +39,9 @@ jobs:
 # This job builds the macOS tests.
 - job: build_macos_tests_job
   displayName: 'Build macOS tests'
-  timeoutInMinutes: 120
+  timeoutInMinutes: 180
   variables:
     DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-    ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
-    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:

@@ -12,9 +12,7 @@ parameters:
   default: true
 
 variables:
-- template: templates/variables.yml
-- name: MaciosUploadPrefix
-  value: ''
+- template: templates/variables/common.yml
 
 resources:
   repositories:
@@ -38,12 +36,6 @@ resources:
     type: github
     name: xamarin/maccore
     ref: refs/heads/main
-    endpoint: xamarin
-
-  - repository: release-scripts
-    type: github
-    name: xamarin/release-scripts
-    ref: refs/heads/only_codesign
     endpoint: xamarin
 
 trigger:
@@ -76,7 +68,7 @@ stages:
 
       - pwsh: |
           git remote remove origin
-          git remote add origin https://$(github--pat--vs-mobiletools-engineering-service2--repo-user)@github.com/xamarin/xamarin-macios.git
+          git remote add origin https://$(github--pat--vs-mobiletools-engineering-service2--repo-user)@github.com/$(Build.Repository.Name).git
           git remote # don't add -v else we see the pat
 
           git config user.email "valco@microsoft.com"

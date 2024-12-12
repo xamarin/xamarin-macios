@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
@@ -30,18 +31,13 @@ using System.Linq;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
 	public abstract class ApiSignatureTest : ApiBaseTest {
-#if NET
 		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
-#else
-		const string NFloatTypeName = "System.nfloat";
-#endif
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		// note: the returned string is not ours to free
 		static extern IntPtr objc_getClass (string name);
@@ -864,10 +860,13 @@ namespace Introspection {
 				case "AdviceAttribute":
 				case "ObsoletedAttribute":
 				case "DeprecatedAttribute":
-				case "UnsupportedOSPlatformAttribute":
 					return true;
 				}
 			}
+
+			if (TestRuntime.HasOSPlatformAttributeForCurrentPlatform<UnsupportedOSPlatformAttribute> (mi))
+				return true;
+
 			return false;
 		}
 

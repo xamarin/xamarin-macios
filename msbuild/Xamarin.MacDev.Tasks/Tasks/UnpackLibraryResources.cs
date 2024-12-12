@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Collections.Generic;
 
@@ -15,7 +17,6 @@ using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
 	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
-		MetadataLoadContext? universe;
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
@@ -25,9 +26,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string IntermediateOutputPath { get; set; } = string.Empty;
-
-		[Required]
-		public ITaskItem [] ReferenceAssemblies { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public ITaskItem [] ReferencedLibraries { get; set; } = Array.Empty<ITaskItem> ();
@@ -52,15 +50,6 @@ namespace Xamarin.MacDev.Tasks {
 		#endregion
 
 		public override bool Execute ()
-		{
-			try {
-				return ExecuteImpl ();
-			} finally {
-				universe?.Dispose ();
-			}
-		}
-
-		bool ExecuteImpl ()
 		{
 			if (ShouldExecuteRemotely ()) {
 				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
@@ -87,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogMessage (MessageImportance.Low, MSBStrings.M0168, asm.ItemSpec);
 				} else {
 					var perAssemblyOutputPath = Path.Combine (IntermediateOutputPath, "unpack", asm.GetMetadata ("Filename"));
-					var extracted = ExtractContentAssembly (asm.ItemSpec, perAssemblyOutputPath).ToArray ();
+					var extracted = ExtractContentAssembly (asm.ItemSpec, perAssemblyOutputPath);
 
 					results.AddRange (extracted);
 
@@ -113,60 +102,91 @@ namespace Xamarin.MacDev.Tasks {
 			return false;
 		}
 
-		IEnumerable<ITaskItem> ExtractContentAssembly (string assembly, string intermediatePath)
+		List<ITaskItem> ExtractContentAssembly (string assembly, string intermediatePath)
 		{
+			var rv = new List<ITaskItem> ();
+
 			if (!File.Exists (assembly)) {
 				Log.LogMessage (MessageImportance.Low, $"Not inspecting assembly because it doesn't exist: {assembly}");
-				yield break;
+				return rv;
 			}
 
-			var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
-			var manifestResources = GetAssemblyManifestResources (assembly).ToArray ();
-			if (!manifestResources.Any ())
-				yield break;
+			try {
+				var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
+				using var peStream = File.OpenRead (assembly);
+				using var peReader = new PEReader (peStream);
+				var metadataReader = PEReaderExtensions.GetMetadataReader (peReader);
+				Log.LogMessage (MessageImportance.Low, $"Inspecting resources in assembly {assembly}");
+				foreach (var manifestResourceHandle in metadataReader.ManifestResources) {
+					var manifestResource = metadataReader.GetManifestResource (manifestResourceHandle);
+					if (!manifestResource.Implementation.IsNil)
+						continue; // embedded resources have Implementation.IsNil = true, and those are the ones we care about
 
-			Log.LogMessage (MessageImportance.Low, $"Inspecting assembly with {manifestResources.Length} resources: {assembly}");
-			foreach (var embedded in manifestResources) {
-				string rpath;
+					var name = metadataReader.GetString (manifestResource.Name);
+					if (string.IsNullOrEmpty (name))
+						continue;
 
-				if (embedded.Name.StartsWith ("__" + Prefix + "_content_", StringComparison.Ordinal)) {
-					var mangled = embedded.Name.Substring (("__" + Prefix + "_content_").Length);
-					rpath = UnmangleResource (mangled);
-				} else if (embedded.Name.StartsWith ("__" + Prefix + "_page_", StringComparison.Ordinal)) {
-					var mangled = embedded.Name.Substring (("__" + Prefix + "_page_").Length);
-					rpath = UnmangleResource (mangled);
-				} else {
-					continue;
-				}
+					string rpath;
 
-				var path = Path.Combine (intermediatePath, rpath);
-				var file = new FileInfo (path);
-
-				var item = new TaskItem (path);
-				item.SetMetadata ("LogicalName", rpath);
-				item.SetMetadata ("Optimize", "false");
-
-				if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
-					Log.LogMessage ("    Up to date: {0}", rpath);
-				} else {
-					Log.LogMessage ("    Unpacking: {0}", rpath);
-
-					Directory.CreateDirectory (Path.GetDirectoryName (path));
-
-					using (var stream = File.Open (path, FileMode.Create)) {
-						using (var resource = embedded.Open ())
-							resource.CopyTo (stream);
+					if (name.StartsWith ("__" + Prefix + "_content_", StringComparison.Ordinal)) {
+						var mangled = name.Substring (("__" + Prefix + "_content_").Length);
+						rpath = UnmangleResource (mangled);
+					} else if (name.StartsWith ("__" + Prefix + "_page_", StringComparison.Ordinal)) {
+						var mangled = name.Substring (("__" + Prefix + "_page_").Length);
+						rpath = UnmangleResource (mangled);
+					} else {
+						continue;
 					}
 
-					unpackedResources.Add (item);
+					var path = Path.Combine (intermediatePath, rpath);
+					var file = new FileInfo (path);
+
+					var item = new TaskItem (path);
+					item.SetMetadata ("LogicalName", rpath);
+					item.SetMetadata ("Optimize", "false");
+
+					if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
+						Log.LogMessage ("    Up to date: {0}", rpath);
+					} else {
+						Log.LogMessage ("    Unpacking: {0}", rpath);
+
+						Directory.CreateDirectory (Path.GetDirectoryName (path));
+
+						var resourceDirectory = peReader.GetSectionData (peReader.PEHeaders.CorHeader!.ResourcesDirectory.RelativeVirtualAddress);
+						var reader = resourceDirectory.GetReader ((int) manifestResource.Offset, resourceDirectory.Length - (int) manifestResource.Offset);
+						var length = reader.ReadUInt32 ();
+						if (length > reader.RemainingBytes)
+							throw new BadImageFormatException ();
+#if NET
+						using var fs = new FileStream (path, FileMode.Create, FileAccess.Write, FileShare.Read);
+						unsafe {
+							var span = new ReadOnlySpan<byte> (reader.CurrentPointer, (int) length);
+							fs.Write (span);
+						}
+#else
+						var buffer = new byte [4096];
+						using var fs = new FileStream (path, FileMode.Create, FileAccess.Write, FileShare.Read, buffer.Length);
+						var left = (int) length;
+						while (left > 0) {
+							var read = Math.Min (left, buffer.Length);
+							reader.ReadBytes (read, buffer, 0);
+							fs.Write (buffer, 0, read);
+							left -= read;
+						}
+#endif
+						unpackedResources.Add (item);
+					}
+
+					rv.Add (item);
 				}
-
-				yield return item;
+			} catch (Exception e) {
+				Log.LogMessage (MessageImportance.Low, $"Unable to load the resources from the assembly '{assembly}': {e}");
+				return new List<ITaskItem> ();
 			}
-
-			yield break;
+			return rv;
 		}
 
+		// The opposite function is PackLibraryResources.EscapeMangledResource
 		static string UnmangleResource (string mangled)
 		{
 			var unmangled = new StringBuilder (mangled.Length);
@@ -182,6 +202,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (escaped) {
 					switch (c) {
+					case 's': c = Path.DirectorySeparatorChar; break;
 					case 'b': c = '\\'; break;
 					case 'f': c = '/'; break;
 					case '_': c = '_'; break;
@@ -237,25 +258,5 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => ItemsFiles;
 
-		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
-		{
-			if (universe is null)
-				universe = new MetadataLoadContext (new PathAssemblyResolver (ReferenceAssemblies.Select (v => v.ItemSpec)));
-
-			Assembly assembly;
-			try {
-				assembly = universe.LoadFromAssemblyPath (fileName);
-			} catch (Exception e) {
-				Log.LogMessage (MessageImportance.Low, $"Unable to load the assembly '{fileName}: {e}");
-				yield break;
-			}
-
-			foreach (var resourceName in assembly.GetManifestResourceNames ()) {
-				var info = assembly.GetManifestResourceInfo (resourceName);
-				if (!info.ResourceLocation.HasFlag (ResourceLocation.Embedded))
-					continue;
-				yield return new ManifestResource (resourceName, () => assembly.GetManifestResourceStream (resourceName));
-			}
-		}
 	}
 }

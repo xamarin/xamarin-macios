@@ -876,19 +876,6 @@
         <value>Could not resolve UTI for {0} in catalog {1}</value>
     </data>
 
-    <data name="E0183" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK</value>
-    </data>
-
-    <data name="E0184" xml:space="preserve">
-        <value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
-    </data>
-
-    <data name="E0185" xml:space="preserve">
-        <value>An error occurred while trying to verify the compatibility between Xcode and the .NET SDK. Details: {0}
-        </value>
-    </data>
-
     <data name="E0186" xml:space="preserve">
         <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
     </data>
@@ -1576,4 +1563,95 @@
         <comment>RuntimeIdentifier: don't translate (it's the name of a MSBuild property)</comment>
     </data>
 
+    <data name="E7125" xml:space="preserve">
+        <value>Unable to parse the value '{0}' for the property '{1}.</value>
+        <comment>
+            {0}: user-provided value
+            {1}: name of an MSBuild property
+        </comment>
+    </data>
+
+    <data name="E7126" xml:space="preserve">
+        <value>The SupportedOSPlatformVersion value '{0}' in the project file is lower than the minimum value '{1}'.</value>
+        <comment>SupportedOSPlatformVersion: don't translate (it's the name of an MSBuild property)</comment>
+    </data>
+
+    <data name="E7127" xml:space="preserve">
+        <value>Can't find the AlternateAppIcon '{0}' among the image resources. There are {1} app icons in the image resources: {2}.</value>
+        <comment>
+            * AlternateAppIcon: don't translate (it's the name of an MSBuild property)
+            * {1}: count of image resources
+            * {2}: comma separated list of resources.
+        </comment>
+    </data>
+
+    <data name="E7128" xml:space="preserve">
+        <value>The image resource '{0}' is specified as both 'AppIcon' and 'AlternateAppIcon'.</value>
+        <comment>
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+            * AlternateAppIcon: don't translate (it's the name of an MSBuild property)
+        </comment>
+    </data>
+
+    <data name="E7129" xml:space="preserve">
+        <value>Can't specify both 'XSAppIconAssets' in the Info.plist and 'AppIcon' in the project file. Please select one or the other.</value>
+        <comment>
+            * XSAppIconAssets: don't translate (it's the name of an MSBuild property)
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+        </comment>
+    </data>
+
+    <data name="E7130" xml:space="preserve">
+        <value>Can't find the AppIcon '{0}' among the image resources. There are {1} app icons in the image resources: {2}.</value>
+        <comment>
+            * AppIcon: don't translate (it's the name of an MSBuild property)
+            * {1}: count of image resources
+            * {2}: comma separated list of resources.
+        </comment>
+    </data>
+
+    <data name="E7131" xml:space="preserve">
+        <value>The source '{0}' does not exist.</value>
+        <comment>{0}: path to a file or a directory</comment>
+    </data>
+
+    <data name="E7132" xml:space="preserve">
+        <value>Unable to parse the 'AdditionalArguments' value: {0}</value>
+        <comment>
+            AdditionalArguments: don't translate (it's the name of an MSBuild property)
+            {0}: additional arguments passed to the task
+        </comment>
+    </data>
+
+    <data name="E7133" xml:space="preserve">
+        <value>The item '{0}' does not have a '{1}' value set.</value>
+        <comment>
+            {0}: a path to a file
+            {1}: the name of a MSBuild metadata
+        </comment>
+    </data>
+
+    <data name="XcodeBuild_CreateNativeRef" xml:space="preserve">
+        <value>Adding reference to Xcode project output: '{0}'. The '%(CreateNativeReference)' metadata can be set to 'false' to opt out of this behavior.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, '%(CreateNativeReference)', metadata, 'false'
+            {0}: The path to the XCFramework output that will be referenced
+        </comment>
+    </data>
+
+    <data name="XcodeBuild_InvalidItem" xml:space="preserve">
+        <value>The Xcode project item: '{0}' could not be found. Please update the 'Include' value to a path containing a valid '.xcodeproj' file.</value>
+        <comment>
+            The following are literal names and should not be translated: Xcode, 'Include', '.xcodeproj'
+            {0}: An invalid path to an Xcode project file
+        </comment>
+    </data>
+
+    <data name="E7134" xml:space="preserve">
+        <value>Failed to optimize the image {0}, pngcrush exited with code {1}.</value>
+        <comment>
+            {0}: the path to an image
+            {1}: the exit code of a process
+        </comment>
+    </data>
 </root>

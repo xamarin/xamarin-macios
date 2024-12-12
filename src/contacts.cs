@@ -161,12 +161,6 @@ namespace Contacts {
 		[Field ("CNContactPropertyNotFetchedExceptionName")]
 		NSString PropertyNotFetchedExceptionName { get; }
 
-#if !XAMCORE_3_0
-		// now exposed with the corresponding CNErrorCode enum
-		[Field ("CNErrorDomain")]
-		NSString ErrorDomain { get; }
-#endif
-
 		// CNContact_PredicatesExtension - they should be in a [Category] but it makes
 		// [Static] API hard (and ugly) to use since they become extension methods (and
 		// do not look static anymore.
@@ -375,13 +369,13 @@ namespace Contacts {
 		NSString ContactPropertyAttribute { get; }
 
 		[Static]
-		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[iOS (14, 0), Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("descriptorForRequiredKeysForDelimiter")]
 		ICNKeyDescriptor RequiredKeysForDelimiter { get; }
 
 		[Static]
-		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[iOS (14, 0), Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("descriptorForRequiredKeysForNameOrder")]
 		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
@@ -1483,12 +1477,12 @@ namespace Contacts {
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
 
-		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[iOS (14, 0), Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
 		NSString GranddaughterOrNiece { get; }
 
-		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[iOS (14, 0), Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("CNLabelContactRelationGrandsonOrNephew")]
 		NSString GrandsonOrNephew { get; }
@@ -2372,7 +2366,7 @@ namespace Contacts {
 		[Field ("CNLabelPhoneNumberiPhone")]
 		NSString iPhone { get; }
 
-		[Watch (7, 2), Mac (11, 1), iOS (14, 3)]
+		[Watch (7, 2), iOS (14, 3)]
 		[MacCatalyst (14, 3)]
 		[Field ("CNLabelPhoneNumberAppleWatch")]
 		NSString AppleWatch { get; }
@@ -2567,7 +2561,7 @@ namespace Contacts {
 		[Export ("removeMember:fromGroup:")]
 		void RemoveMember (CNContact contact, CNGroup group);
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
 

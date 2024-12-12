@@ -108,6 +108,7 @@ namespace CoreMedia {
 		Cinepak = 0x63766964,
 		JPEG = 0x6a706567,
 		JPEG_OpenDML = 0x646d6231,
+		JPEG_XL = ('j' << 24) + ('x' << 16) + ('l' << 8) + 'c', // 'jxlc'
 		SorensonVideo = 0x53565131,
 		SorensonVideo3 = 0x53565133,
 		H263 = 0x68323633,
@@ -115,7 +116,7 @@ namespace CoreMedia {
 		Mpeg4Video = 0x6d703476,
 		Mpeg2Video = 0x6d703276,
 		Mpeg1Video = 0x6d703176,
-		[iOS (14, 0), TV (14, 0), Watch (7, 0), Mac (11, 0)]
+		[iOS (14, 0), TV (14, 0), Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 		VP9 = 0x76703039,
 		DvcNtsc = 0x64766320,
@@ -138,7 +139,6 @@ namespace CoreMedia {
 		[iOS (14, 5)]
 		[TV (14, 5)]
 		[Watch (7, 4)]
-		[Mac (11, 3)]
 		[MacCatalyst (14, 5)]
 		DolbyVisionHevc = 0x64766831,
 		DisparityHevc = 0x64697368,

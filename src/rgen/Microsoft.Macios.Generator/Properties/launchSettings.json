@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "DebugRoslynSourceGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../Microsoft.Macios.Generator.Sample/Microsoft.Macios.Generator.Sample.csproj"
+    }
+  }
+}

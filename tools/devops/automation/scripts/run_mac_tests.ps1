@@ -21,7 +21,7 @@ param
     $StatusContext
 )
 
-Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
 $statuses = New-GitHubStatusesObjectFromUrl -Url "$RepositoryUri" -Token $GitHubToken
 
 Write-Host "Found tests"
@@ -36,7 +36,7 @@ dir env:
 # Claim that the tests timed out before we start
 Set-Content -Path "$GithubFailureCommentFile" -Value "Tests timed out"
 
-$macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
+$macTest = @("dontlink", "introspection", "linksdk", "linkall", "monotouch-test")
 foreach ($t in $macTest) {
   $testName = "exec-$t"
   Write-Host "Execution test $testName"

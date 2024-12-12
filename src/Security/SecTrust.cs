@@ -325,27 +325,23 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
-		[TV (12, 0)]
-		[iOS (12, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe static extern byte SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, /* CFErrorRef** */ IntPtr* error);
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
-		[TV (12, 0)]
-		[iOS (12, 0)]
 #endif
 		public bool Evaluate (out NSError? error)
 		{
@@ -445,27 +441,23 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
-		[TV (12, 1, 1)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
 
 #if NET
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
-		[TV (12, 1, 1)]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
@@ -477,14 +469,12 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
-		[TV (12, 1, 1)]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{

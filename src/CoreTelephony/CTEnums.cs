@@ -24,7 +24,6 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (12, 0)]
 	[Native]
 	public enum CTCellularPlanProvisioningAddPlanResult : long {
 		Unknown,

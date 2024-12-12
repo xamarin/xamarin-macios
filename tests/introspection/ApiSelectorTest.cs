@@ -26,9 +26,8 @@ using NUnit.Framework;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
@@ -38,6 +37,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			if (type.ContainsGenericParameters)
 				return true;
 
@@ -174,16 +176,6 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
-#if !NET
-			case "NSUrl":
-			case "ARQuickLookPreviewItem":
-				switch (selectorName) {
-				case "previewItemTitle":
-					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in .NET)
-					return true;
-				}
-				break;
-#endif
 			case "MKMapItem": // Selector not available on iOS 32-bit
 				switch (selectorName) {
 				case "encodeWithCoder:":
@@ -370,6 +362,16 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
+				case "convertPoint:fromCoordinateSpace:":
+				case "convertPoint:toCoordinateSpace:":
+				case "convertRect:fromCoordinateSpace:":
+				case "convertRect:toCoordinateSpace:":
+				case "focusItemsInRect:":
+				case "bounds":
+				case "coordinateSpace":
+					if (!TestRuntime.CheckXcodeVersion (16, 0))
+						return true;
+					break;
 				}
 				break;
 			case "INPriceRange":
@@ -389,7 +391,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
+#if __MACOS__ || __MACCATALYST__
 			case "AVPlayerItem":
 				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
 				case "nowPlayingInfo":
@@ -1010,9 +1012,53 @@ namespace Introspection {
 				case "willMoveToView:":
 				case "view":
 					return !TestRuntime.CheckXcodeVersion (15, 4);
-					break;
 				}
 				break;
+			case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput":
+				// Added protocol conformance to NSCopying/NSSecureCoding in Xcode 16.0
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (16, 0);
+				}
+				break;
+			case "GKLeaderboardEntry":
+				// It's not possible to create an instance of GKLeaderboardEntry, so I believe that whenever Apple
+				// returns an instance they return something that responds to these selectors, thus we have to
+				// provide bindings for them.
+				switch (selectorName) {
+				case "context":
+				case "date":
+				case "formattedScore":
+				case "rank":
+				case "score":
+					return true;
+				}
+				break;
+#if __MACCATALYST__
+			case "GKLeaderboardSet":
+				switch (selectorName) {
+				case "loadImageWithCompletionHandler:":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+			case "GKLocalPlayer":
+				switch (selectorName) {
+				case "isPresentingFriendRequestViewController":
+					// This exists in both iOS and macOS, so not existing in Mac Catalyst is weird - so just provide the binding.
+					return true;
+				}
+				break;
+#endif // __MACCATALYST__
+#if !XAMCORE_5_0
+			case "NSSharingCollaborationModeRestriction":
+				switch (selectorName) {
+				case "setAlertRecoverySuggestionButtonLaunchURL:":// binding mistake
+					return true;
+				}
+				break;
+#endif
 			}
 
 			// old binding mistake
@@ -1108,11 +1154,7 @@ namespace Introspection {
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			if (fi is null)
 				return IntPtr.Zero; // e.g. *Delegate
-#if NET
 			return (NativeHandle) fi.GetValue (null);
-#else
-			return (IntPtr) fi.GetValue (null);
-#endif
 		}
 
 		[Test]
@@ -1179,8 +1221,13 @@ namespace Introspection {
 				if (!init)
 					ReportError ("Selector {0} used on a constructor (not a method) on {1}", name, t.FullName);
 			} else {
-				if (init)
-					ReportError ("Selector {0} used on a method (not a constructor) on {1}", name, t.FullName);
+				if (init) {
+					var isPubliclyVisible = m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly;
+					if (isPubliclyVisible || !m.Name.StartsWith ("_Init", StringComparison.Ordinal)) {
+						// ignore methods that start '_Init' and aren't publicly exposed, they're probably used by manually bound ctors.
+						ReportError ($"Selector {name} used on the method '{m.Name}' (not a constructor) on {t.FullName}");
+					}
+				}
 			}
 		}
 
@@ -1194,6 +1241,9 @@ namespace Introspection {
 		protected virtual bool SkipInit (string selector, MethodBase m)
 		{
 			switch (selector) {
+			// MPSGraphExecutable
+			case "initWithMPSGraphPackageAtURL:compilationDescriptor:":
+			case "initWithCoreMLPackageAtURL:compilationDescriptor:":
 			// NSAttributedString
 			case "initWithHTML:documentAttributes:":
 			case "initWithRTF:documentAttributes:":
@@ -1240,20 +1290,8 @@ namespace Introspection {
 			case "initWithMinCenterCoordinateDistance:":
 			case "initExcludingCategories:":
 			case "initIncludingCategories:":
-			// Vision
-			case "initWithCenter:diameter:":
-			case "initWithCenter:radius:":
-			case "initWithR:theta:":
-			// PassKit
-			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
-			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-			// SCContentFilter
-			case "initWithDisplay:excludingApplications:exceptingWindows:":
-			case "initWithDisplay:excludingWindows:":
-			case "initWithDisplay:includingApplications:exceptingWindows:":
-			case "initWithDisplay:includingWindows:":
 				var mi = m as MethodInfo;
 				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
 			// NSAppleEventDescriptor
@@ -1269,6 +1307,20 @@ namespace Introspection {
 			// DDDevicePickerViewController
 			case "initWithBrowseDescriptor:parameters:":
 				return true;
+			// MKAddressFilter
+			case "initExcludingOptions:":
+			case "initIncludingOptions:":
+				return true;
+			// GKGameCenterViewController
+			case "initWithAchievementID:":
+			case "initWithLeaderboardSetID:":
+				return true;
+			case "initWithBytes:length:":
+				switch (m.DeclaringType.Name) {
+				case "FSFileName":
+					return true;
+				}
+				return false;
 			default:
 				return false;
 			}

@@ -21,6 +21,7 @@ There are a number of properties that are contingent upon the configuration sett
 |--------------------------	|-------------------	|---------------------------------------	|
 | CodesignDisableTimestamp 	| true              	|                                       	|
 | DebuggerSupport          	| true              	|                                       	|
+| NoSymbolStrip          	| true              	|                                       	|
 | RuntimeIdentifiers       	| maccatalyst-x64   	| TargetFramework == netx.x-maccatalyst 	|
 | RuntimeIdentifiers       	| osx-x64           	| TargetFramework == netx.x-macos       	|
 | UseSystemResourceKeys    	| false             	|                                       	|
