@@ -34,8 +34,7 @@ param
 
 # update the config of the repository url to use the correct authentication headers, for more information read: 
 # https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows#use-a-pat
-$user = "AnyUser"
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $AccessToken)))
-$headers = @{Authorization = "Basic {0}" -f $base64AuthInfo}
-git -C "$RepositoryPath" config "http.https://devdiv@dev.azure.com/devdiv/DevDiv/_git/$Repository.extraheader" "$headers"
+$headers = "Authorization: Basic " + [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":" + $AccessToken))
+git -C "$RepositoryPath" config "http.https://devdiv@dev.azure.com/devdiv/DevDiv/_git/$Repository.extraheader=$headers"
+git -C "$RepositoryPath" config --get-all http.extraheader
 
