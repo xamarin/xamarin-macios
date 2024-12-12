@@ -27,7 +27,6 @@ param
 
 # update the config of the repository url to use the correct authentication headers, for more information read: 
 # https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows#use-a-pat
-$headers = "Authorization: Basic " + [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":" + $AccessToken))
-git -C "$RepositoryPath" config http.extraheader="Authorization: bearer $AccessToken"
+git -C "$RepositoryPath" config http.extraheader "Authorization: bearer $AccessToken"
 git -C "$RepositoryPath" config --get-all http.extraheader
 
