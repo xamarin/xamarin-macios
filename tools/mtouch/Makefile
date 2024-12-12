@@ -1,5 +1,6 @@
 TOP=../..
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 # without this many compiler warnings about unused functions and variables
 # in system headers show up.
@@ -38,16 +39,16 @@ define RunRegistrar
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 .libs/Microsoft.$(9).registrar.$(10).a: .libs/Microsoft.$(9).registrar.$(10).m .libs/Microsoft.$(9).registrar.$(10).h | .libs
-	$$(Q_CC) $$(IOS_CC) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime
+	$$(Q_CC) $$(CLANG) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime
 endef
-$(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR64_CFLAGS),,,iOS,iossimulator-x64))
-$(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR_ARM64_CFLAGS),,,iOS,iossimulator-arm64))
-$(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(DEVICE64_CFLAGS),,,iOS,ios-arm64))
-$(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_CFLAGS),,,tvOS,tvossimulator-x64))
-$(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_ARM64_CFLAGS),,,tvOS,tvossimulator-arm64))
-$(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(DEVICETV_CFLAGS),,,tvOS,tvos-arm64))
-$(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_X86_64_CFLAGS),,,MacCatalyst,maccatalyst-x64))
-$(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_ARM64_CFLAGS),,,MacCatalyst,maccatalyst-arm64))
+$(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(iossimulator-x64_CFLAGS),,,iOS,iossimulator-x64))
+$(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(iossimulator-arm64_CFLAGS),,,iOS,iossimulator-arm64))
+$(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(ios-arm64_CFLAGS),,,iOS,ios-arm64))
+$(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(tvossimulator-x64_CFLAGS),,,tvOS,tvossimulator-x64))
+$(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(tvossimulator-arm64_CFLAGS),,,tvOS,tvossimulator-arm64))
+$(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(tvos-arm64_CFLAGS),,,tvOS,tvos-arm64))
+$(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(maccatalyst-x64_CFLAGS),,,MacCatalyst,maccatalyst-x64))
+$(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(maccatalyst-arm64_CFLAGS),,,MacCatalyst,maccatalyst-arm64))
 
 TARGETS_DOTNET = \
 	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/native/Microsoft.$(platform).registrar.a)) \
@@ -93,5 +94,4 @@ verify-sorted-resx:
 clean-dotnet:
 	rm -f $(TARGETS_DOTNET)
 
-include $(TOP)/mk/rules.mk
 include ../common/Make.common

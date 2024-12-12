@@ -16,8 +16,7 @@ using static Xamarin.Bundler.FileCopier;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	// This is the same as XamarinToolTask, except that it subclasses Task instead.
-	public abstract class XamarinTask : Task, IHasSessionId {
+	public abstract class XamarinTask : Task, IHasSessionId, ICustomLogger {
 
 		public string SessionId { get; set; } = string.Empty;
 
@@ -32,20 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Product {
 			get {
-				if (IsDotNet)
-					return "Microsoft." + PlatformName;
-
-				switch (Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-				case ApplePlatform.MacCatalyst:
-					return "Xamarin.iOS";
-				case ApplePlatform.MacOSX:
-					return "Xamarin.Mac";
-				default:
-					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-				}
+				return "Microsoft." + PlatformName;
 			}
 		}
 
@@ -69,10 +55,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				return target_framework.Value;
 			}
-		}
-
-		public bool IsDotNet {
-			get { return TargetFramework.IsDotNet; }
 		}
 
 		public string PlatformName {
@@ -265,5 +247,28 @@ namespace Xamarin.MacDev.Tasks {
 				await runner.GetFileAsync (this, item.ItemSpec).ConfigureAwait (false);
 			}
 		}
+
+		#region Xamarin.MacDev.ICustomLogger
+		void ICustomLogger.LogError (string message, Exception ex)
+		{
+			Log.LogError (message);
+			Log.LogErrorFromException (ex);
+		}
+
+		void ICustomLogger.LogWarning (string messageFormat, params object [] args)
+		{
+			Log.LogWarning (messageFormat, args);
+		}
+
+		void ICustomLogger.LogInfo (string messageFormat, object [] args)
+		{
+			Log.LogMessage (MessageImportance.Normal, messageFormat, args);
+		}
+
+		void ICustomLogger.LogDebug (string messageFormat, params object [] args)
+		{
+			Log.LogMessage (MessageImportance.Low, messageFormat, args);
+		}
+		#endregion
 	}
 }

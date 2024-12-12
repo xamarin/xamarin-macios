@@ -87,7 +87,7 @@ namespace MediaToolbox
 
 		MTAudioProcessingTapCallbacks callbacks;
 		
-		internal static MTAudioProcessingTap? FromHandle (IntPtr handle)
+		internal static MTAudioProcessingTap? FromHandle (IntPtr handle, bool owns)
 		{
 			lock (handles){
 				if (handles.TryGetValue (handle, out var ret))

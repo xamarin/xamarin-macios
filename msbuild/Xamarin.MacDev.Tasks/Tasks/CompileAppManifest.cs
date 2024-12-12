@@ -183,21 +183,10 @@ namespace Xamarin.MacDev.Tasks {
 			if (IsWatchApp)
 				return;
 
-			string name;
-			string value;
-
 			// This key is our supported way of determining if an app
 			// was built with Xamarin, so it needs to be present in all apps.
-			if (TargetFramework.IsDotNet) {
-				value = DotNetVersion;
-				name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
-			} else if (Platform != ApplePlatform.MacOSX) {
-				var version = Sdks.XamIOS.ExtendedVersion;
-				value = string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash);
-				name = "com.xamarin.ios";
-			} else {
-				return;
-			}
+			var value = DotNetVersion;
+			var name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
 
 			var dict = new PDictionary ();
 			dict.Add ("Version", new PString (value));

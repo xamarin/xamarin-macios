@@ -281,7 +281,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataMachineReadableCodeObject.cs \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
-	AVFoundation/AVPlayer.cs \
 	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
@@ -1168,6 +1167,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
+	MapKit/MKUserLocation.cs \
 
 # MediaAccessibility
 
@@ -1372,6 +1372,7 @@ NETWORK_CORE_SOURCES = \
 	Network/NWEndpoint.cs			\
 	Network/NWInterface.cs			\
 	Network/NWParameters.cs			\
+	Network/NWProxyConfig.cs	    \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
@@ -1394,7 +1395,6 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
-	Network/NWProxyConfig.cs	\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\
