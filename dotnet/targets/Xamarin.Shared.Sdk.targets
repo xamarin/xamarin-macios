@@ -1337,8 +1337,9 @@
 			<IlcReference Include="@(ManagedAssemblyToLink)" Exclude="@(ManagedBinary)" />
 
 			<!-- Process UnmanagedCallersOnly attributes from every assembly -->
-			<UnmanagedEntryPointsAssembly Remove="System.Private.CoreLib" />
-			<UnmanagedEntryPointsAssembly Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
+			<_UnmanagedEntryPointsAssembliesToAdd Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
+			<_UnmanagedEntryPointsAssembliesToAdd Remove="System.Private.CoreLib" />
+			<UnmanagedEntryPointsAssembly Include="@(_UnmanagedEntryPointsAssembliesToAdd)" />
 
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
