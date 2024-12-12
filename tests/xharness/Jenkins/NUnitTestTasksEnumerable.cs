@@ -11,7 +11,7 @@ using Xharness.Jenkins.TestTasks;
 namespace Xharness.Jenkins {
 	abstract class TaskFactory {
 		protected Jenkins Jenkins { get; private set; }
-		protected IMlaunchProcessManager ProcessManager { get; private set;  }
+		protected IMlaunchProcessManager ProcessManager { get; private set; }
 		protected TestVariationsFactory TestVariationsFactory { get; private set; }
 
 		public TaskFactory (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)

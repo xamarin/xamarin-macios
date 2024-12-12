@@ -28,8 +28,7 @@ namespace Xharness.Jenkins {
 
 			var rv = new List<AppleTestTask> ();
 
-			foreach (var project in jenkins.Harness.TestProjects)
-			{
+			foreach (var project in jenkins.Harness.TestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
 
@@ -64,7 +63,7 @@ namespace Xharness.Jenkins {
 						SupportsParallelExecution = false,
 					};
 					build.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
-					
+
 					var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
 						Ignored = ignored,
 						TestName = project.Name,
@@ -83,7 +82,7 @@ namespace Xharness.Jenkins {
 						v.Variation = string.IsNullOrEmpty (v.Variation) ? config : v.Variation;
 					}
 
-					rv.AddRange(variations);
+					rv.AddRange (variations);
 				}
 			}
 

@@ -125,7 +125,7 @@ namespace Xharness.Jenkins {
 
 			// Start creating all the tasks in parallel
 			var tasks = testFactories.Select (v => v.CreateTasksAsync ()).ToArray ();
-			
+
 			// Wait for everything to finish
 			await Task.WhenAll (tasks);
 

@@ -7,7 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	class RunDeviceTasksFactory  : TaskFactory {
+	class RunDeviceTasksFactory : TaskFactory {
 		public RunDeviceTasksFactory (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		: base (jenkins, processManager, testVariationsFactory)
 		{
@@ -58,10 +58,9 @@ namespace Xharness.Jenkins {
 					tunnelBore: jenkins.TunnelBore,
 					errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 					useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-					candidates: candidates)
-					{
-						Ignored = ignored,
-					};
+					candidates: candidates) {
+					Ignored = ignored,
+				};
 
 				rv.Add (runTask);
 			}
