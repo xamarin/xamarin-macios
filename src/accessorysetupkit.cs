@@ -173,6 +173,10 @@ namespace AccessorySetupKit {
 		[Export ("bluetoothManufacturerDataMask", ArgumentSemantic.Copy), NullAllowed]
 		NSData BluetoothManufacturerDataMask { get; set; }
 
+		[iOS (18, 2)]
+		[Export ("bluetoothNameSubstringCompareOptions", ArgumentSemantic.Assign), NullAllowed]
+		NSStringCompareOptions BluetoothNameSubstringCompareOptions { get; set; }
+
 		[Export ("bluetoothNameSubstring", ArgumentSemantic.Copy), NullAllowed]
 		string BluetoothNameSubstring { get; set; }
 
