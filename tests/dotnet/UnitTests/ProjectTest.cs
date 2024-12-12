@@ -2025,6 +2025,20 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", "Release")]
 		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
+			PublishAotImpl (platform, runtimeIdentifiers, configuration);
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
+		[Category ("RemoteWindows")]
+		public void PublishAotOnWindows (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			PublishAotImpl (platform, runtimeIdentifiers, configuration);
+		}
+
+		void PublishAotImpl (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
