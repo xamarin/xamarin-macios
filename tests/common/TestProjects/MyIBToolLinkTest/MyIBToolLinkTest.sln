@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIBToolLinkTest", "MyIBToolLinkTest.csproj", "{05E76504-33DF-400F-8527-3BBAC7E9FDF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Release|iPhone.ActiveCfg = Release|iPhone
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Release|iPhone.Build.0 = Release|iPhone
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{05E76504-33DF-400F-8527-3BBAC7E9FDF1}.Debug|iPhone.Build.0 = Debug|iPhone
+	EndGlobalSection
+EndGlobal
