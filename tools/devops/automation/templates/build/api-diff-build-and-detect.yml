@@ -38,7 +38,7 @@ steps:
 # The following checkout(s) are needed due in order to get the proper set of credentials stored in the git config.
 # Without this, then when the `make reset` command is run, any modules that aren't configured already as submodules
 # will be cloned again. This is fine for all GitHub repos, but falls over for AzDo repos.
-- checkout: macios-adr
+- checkout: macios-adr-tmp
   clean: true
   persistCredentials: true
   fetchTags: false

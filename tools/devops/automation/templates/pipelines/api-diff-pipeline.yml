@@ -55,6 +55,11 @@ resources:
     name: macios-adr
     ref: refs/heads/main
 
+  - repository: macios-adr-tmp
+    type: git
+    name: macios-adr
+    ref: refs/heads/main
+
 variables:
 - template: ../variables/common.yml
 - name: DisablePipelineConfigDetector
