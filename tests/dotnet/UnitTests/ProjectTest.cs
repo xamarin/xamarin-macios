@@ -1865,9 +1865,9 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 
-			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
+			AssertThatDylibExistsAndIsReidentified (appPath, "libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}

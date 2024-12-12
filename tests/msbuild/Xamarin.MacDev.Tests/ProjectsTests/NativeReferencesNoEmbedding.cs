@@ -76,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 			ClearMessages ();
 
 			// Touching native library should
-			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework/XTest"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "XTest.framework", "XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}

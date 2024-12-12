@@ -9,10 +9,13 @@ if [[ $DEPENDENCY_MODULE =~ git@github.com ]]; then
 	# git@ url
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/git@github.com:/}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
-else
+elif [[ $DEPENDENCY_MODULE =~ https://github.com ]]; then
 	# https:// url
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/github.com\//}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
+elif [[ $DEPENDENCY_MODULE =~ devdiv@dev.azure.com ]]; then
+	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/devdiv@dev.azure.com\/devdiv\/}
+	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/_git*}
 fi
 
 if test -d "$DEPENDENCY_PATH"; then

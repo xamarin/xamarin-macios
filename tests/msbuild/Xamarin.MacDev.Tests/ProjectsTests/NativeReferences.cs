@@ -27,7 +27,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
-			var include = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework");
+			var include = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "XTest.framework");
 			var metadata = new Dictionary<string, string> {
 				{ "IsCxx", "False" },
 				{ "Kind", "Framework" },

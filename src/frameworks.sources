@@ -281,7 +281,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataMachineReadableCodeObject.cs \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
-	AVFoundation/AVPlayer.cs \
 	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \

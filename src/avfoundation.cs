@@ -13823,9 +13823,18 @@ namespace AVFoundation {
 		[Export ("hasNewPixelBufferForItemTime:")]
 		bool HasNewPixelBufferForItemTime (CMTime itemTime);
 
+#if !XAMCORE_5_0
 		[Protected]
 		[Export ("copyPixelBufferForItemTime:itemTimeForDisplay:")]
 		IntPtr WeakCopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay);
+#endif
+
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("copyPixelBufferForItemTime:itemTimeForDisplay:")]
+		[return: Release]
+		CVPixelBuffer CopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVPlayerItemOutputPullDelegate delegateClass, [NullAllowed] DispatchQueue delegateQueue);

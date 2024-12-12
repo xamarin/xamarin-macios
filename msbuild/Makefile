@@ -146,7 +146,7 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)
 $(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
 
 # this is a directory-creating target.
-# we sort to remove duplicates, which can happen if MAC_DESTDIR and IOS_DESTDIR are the same (both create a '/Library/Frameworks/Mono.framework/External/xbuild/Xamarin' target)
+# we sort to remove duplicates
 $(sort $(MSBUILD_DIRECTORIES)):
 	$(Q) mkdir -p $@
 
