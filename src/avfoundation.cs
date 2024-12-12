@@ -17880,6 +17880,11 @@ namespace AVFoundation {
     	[Export ("preferredTagCollections", ArgumentSemantic.Copy)]
     	NSObject[] PreferredTagCollections { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 2)]
+		[Deprecated (PlatformName.iOS, 18, 2)]
+		[Deprecated (PlatformName.TvOS, 18, 2)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 2)]
+		[Deprecated (PlatformName.WatchOS, 11, 12)]
     	[NullAllowed, Export ("defaultPixelBufferAttributes", ArgumentSemantic.Copy)]
     	NSDictionary<NSString, NSObject> DefaultPixelBufferAttributes { get; set; }
     }

@@ -639,6 +639,8 @@ namespace AVFoundation {
 		CinematicExtended,
 		[NoMac, NoiOS, NoMacCatalyst, NoWatch]
 		PreviewOptimized = 4,
+		[NoMac, iOS (17,0), MacCatalyst (17,0), NoWatch]
+		CinematicExtendedEnhanced= 5,
 		Auto = -1
 	}
 
