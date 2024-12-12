@@ -46,5 +46,9 @@ steps:
   fetchTags: false
 
 - pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
-  displayName: 'Clean git mess from VSTS'
+  displayName: 'Set maccore Token'
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
+
+- pwsh: ./set_vsts_extra_header.ps1 -Repository macios-adr -AccessToken "$(System.AccessToken)" -RepositoryPath "$(System.DefaultWorkingDirectory)/macios-adr"
+  displayName: 'Set macios-adr git extra headers'
   workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
