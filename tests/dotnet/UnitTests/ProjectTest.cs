@@ -3112,7 +3112,7 @@ namespace Xamarin.Tests {
 		public void BuildPerfFixesOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfNotOnWindows ();
-			
+
 			var project = "MySimpleApp";
 
 			Configuration.IgnoreIfIgnoredPlatform (platform);
