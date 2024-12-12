@@ -19,7 +19,7 @@ elif [[ $DEPENDENCY_MODULE =~ devdiv@dev.azure.com ]]; then
 	DEPENDENCY_AUTH="-c http.extraheader=\"AUTHORIZATION: bearer $SYSTEM_ACCESSTOKEN\""
 fi
 
-echo "*** [$DEPENDENCY_NAME] testing fot git repo in $DEPENDENCY_PATH"
+echo "*** [$DEPENDENCY_NAME] testing for git repo in $DEPENDENCY_PATH"
 if test -d "$DEPENDENCY_PATH"; then
 	cd "$DEPENDENCY_PATH"
 	# Check if we have the remote we need
