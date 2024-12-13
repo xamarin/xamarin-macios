@@ -16,10 +16,7 @@ elif [[ $DEPENDENCY_MODULE =~ https://github.com ]]; then
 elif [[ $DEPENDENCY_MODULE =~ devdiv@dev.azure.com ]]; then
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/devdiv@dev.azure.com\/devdiv\/}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/_git*}
-	AUTH_HEADER='http.extraheader="AUTHORIZATION: bearer '
-	AUTH_HEADER+="$SYSTEM_ACCESSTOKEN"
-	AUTH_HEADER+='"'
-	echo "Auth header is $AUTH_HEADER"
+	AUTH_HEADER="http.extraheader=\"AUTHORIZATION: bearer $SYSTEM_ACCESSTOKEN\""
 	DEPENDENCY_AUTH=(-c "$AUTH_HEADER")
 fi
 
