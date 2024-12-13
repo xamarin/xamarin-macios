@@ -113,6 +113,7 @@ namespace Xamarin.Tests {
 
 			// Verify value defaults to false when not set
 			properties ["Configuration"] = configuration;
+			properties ["MtouchLink"] = "None";
 
 			DotNet.AssertBuild (project_path, properties);
 
