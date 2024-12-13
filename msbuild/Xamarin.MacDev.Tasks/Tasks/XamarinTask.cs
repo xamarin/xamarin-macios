@@ -16,7 +16,7 @@ using static Xamarin.Bundler.FileCopier;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class XamarinTask : Task, IHasSessionId {
+	public abstract class XamarinTask : Task, IHasSessionId, ICustomLogger {
 
 		public string SessionId { get; set; } = string.Empty;
 
@@ -247,5 +247,28 @@ namespace Xamarin.MacDev.Tasks {
 				await runner.GetFileAsync (this, item.ItemSpec).ConfigureAwait (false);
 			}
 		}
+
+		#region Xamarin.MacDev.ICustomLogger
+		void ICustomLogger.LogError (string message, Exception ex)
+		{
+			Log.LogError (message);
+			Log.LogErrorFromException (ex);
+		}
+
+		void ICustomLogger.LogWarning (string messageFormat, params object [] args)
+		{
+			Log.LogWarning (messageFormat, args);
+		}
+
+		void ICustomLogger.LogInfo (string messageFormat, object [] args)
+		{
+			Log.LogMessage (MessageImportance.Normal, messageFormat, args);
+		}
+
+		void ICustomLogger.LogDebug (string messageFormat, params object [] args)
+		{
+			Log.LogMessage (MessageImportance.Low, messageFormat, args);
+		}
+		#endregion
 	}
 }

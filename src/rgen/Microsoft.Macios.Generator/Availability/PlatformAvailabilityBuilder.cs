@@ -19,8 +19,8 @@ readonly partial struct PlatformAvailability {
 	public sealed class Builder {
 		readonly ApplePlatform platform;
 		Version? supportedVersion;
-		readonly Dictionary<Version, string?> unsupported = new ();
-		readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
+		readonly SortedDictionary<Version, string?> unsupported = new ();
+		readonly SortedDictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 		/// <summary>
 		/// Create a builder for the given platform.
