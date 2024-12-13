@@ -1,8 +1,6 @@
 TOP = ..
 SUBDIRS=test-libraries dotnet
 
-# disabled for now: mac-test
-
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
@@ -98,16 +96,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@printf "XCODE_VERSION=$(XCODE_VERSION)\n" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_MIN_$(platform)_SDK_VERSION=$(DOTNET_MIN_$(platform)_SDK_VERSION)\\n)" | sed 's/^ //' >> $@
 
-clean-local::
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhone /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-unified.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhone /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-unified.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-tvos.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-tvos.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhone /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-watchos.sln
-	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhone /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests-watchos.sln
-
 ## run targets = build + [install] + exec
 
 run run-all run-tests run-test run-unit-tests:
@@ -115,31 +103,6 @@ run run-all run-tests run-test run-unit-tests:
 		$(MAKE) -C $$subdir run || exit 1; \
 	done
 	$(Q) $(MAKE) run-local
-
-# separate build-dev-* entries because some of them are build with debug other (llvm) with release
-build-dev-bots:
-	@echo "These tests are now in the mtouch test suite"
-
-build-% run-% exec-% install-%:
-	@echo ""
-	@echo "\033[0;31mUnknown target: $@\033[0m"
-	@echo ""
-	@echo "Syntax is: <action>-<platform>-<where>-<what>"
-	@echo "    Action: build, install (only for device), exec, run (= build + install + exec)."
-	@echo "    Platform: ios, tvos, watchos (can be skipped, in which case all platforms are executed)"
-	@echo "    Where: "
-	@echo "        ios: sim = [simclassic + simunified = [sim32, sim64]]; dev = [devclassic + devunified]"
-	@echo "        tvos/watchos: sim, dev"
-	@echo "    What: The test project to run"
-	@echo ""
-	@echo "Example:"
-	@echo ""
-	@echo "    # this will run monotouch-test on an Apple TV device"
-	@echo "    $ make run-tvos-dev-monotouch-test"
-	@echo ""
-	@echo "For more info read README.md."
-	@echo ""
-	@exit 1
 
 check-result:
 	@test -z "$(BUILD_REVISION)" || echo "@MonkeyWrench: AddFile: $(abspath $(FILE))"
@@ -211,90 +174,6 @@ else ifdef INCLUDE_MACCATALYST
 else
 	@echo Not enabled
 endif
-
-#XI
-ifdef INCLUDE_IOS
-wrench-mtouch:
-	@echo Not here anymore
-
-wrench-btouch:
-	@echo Not here anymore
-
-wrench-build-unit-test-dev:
-	@echo Not here anymore
-
-wrench-sim-linksdk:
-	@echo Not here anymore
-
-wrench-sim-linkall:
-	@echo Not here anymore
-
-wrench-sim-dontlink:
-	@echo Not here anymore
-
-else
-wrench-mtouch wrench-btouch wrench-build-unit-test-dev:
-	@echo "iOS tests have been disabled [$@]"
-endif
-
-## XM
-ifdef INCLUDE_MAC
-wrench-mac-dontlink:
-	@echo Not here anymore
-
-wrench-mac-mmp:
-	@echo Now part of wrench-mac-mmptest
-
-wrench-mac-misc:
-	@echo Tests mac-misc tests removed
-
-wrench-mac-apidiff:
-	@echo This is done in the normal api-diff target now.
-
-wrench-mac-drm:
-	@echo "The DRM tests have all been removed."
-
-wrench-mac-api:
-	@echo Not here anymore
-
-wrench-mac-mmptest:
-	@echo Not here anymore
-
-wrench-mac-msbuild:
-	@echo Not here anymore
-
-wrench-mac-binding-project:
-	@echo Not here anymore
-
-wrench-mac-introspection:
-	@echo Not here anymore
-
-wrench-mac-xammac_tests:
-	@echo Not here anymore
-else
-wrench-mac-%:
-	@echo "Mac tests have been disabled [$@]"
-endif
-
-wrench-msbuild:
-	@echo Not here anymore
-
-wrench-docs:
-	@echo "Docs have been disabled [$@]"
-
-# the wrenchhelper-* targets are generated.
-wrench-sim-%:
-	@echo Not here anymore
-
-wrench-%:
-	@echo Not here anymore
-
-wrench-jenkins: $(XHARNESS_EXECUTABLE)
-	$(Q) rm -f $@-failed.stamp
-	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) --use-system=true || echo "$$?" > $@-failed.stamp
-	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
-	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
-	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
 
 jenkins: $(XHARNESS_EXECUTABLE)
 	$(Q) $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --markdown-summary=$(abspath $(CURDIR))/TestSummary.md --use-system=true $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
