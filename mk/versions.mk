@@ -67,7 +67,6 @@ $(shell rm -f .check-versions-failure)
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
-$(eval $(call CheckSubmoduleTemplate,api-tools,API_TOOLS))
 
 include $(TOP)/mk/xamarin.mk
 

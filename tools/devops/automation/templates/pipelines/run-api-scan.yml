@@ -65,6 +65,11 @@ resources:
       name: xamarin/maccore
       ref: refs/heads/main
       endpoint: xamarin
+      
+    - repository: macios-adr
+      type: git
+      name: macios-adr
+      ref: refs/heads/main
 
     - repository: release-scripts
       type: github

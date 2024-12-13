@@ -37,7 +37,6 @@ Review
 * bindings-generated.m [DONE]
 * bindings.m [DONE]
 * extension-main.m [DONE]
-* launcher.m [MAC ONLY; NOT DONE]
 * mono-runtime.m [PASS-THROUGH ONLY]
 * monotouch-debug.m [DONE]
 * monotouch-main.m [COMPLETE-ISH]

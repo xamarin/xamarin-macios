@@ -200,18 +200,13 @@ Workloads/Microsoft.NET.Sdk.$(1)/WorkloadDependencies.json: Makefile $(TOP)/Make
 	$$(Q_GEN) $(GENERATE_WORKLOADDEPENDENCIES_JSON_EXEC) "$(1)" "$$($(4)_NUGET_VERSION_NO_METADATA)" "$(XCODE_VERSION)" "$$($(4)_NUGET_OS_VERSION)" "$$@.tmp"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
-	$$(Q) $(CP) $$< $$@
-
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadDependencies.json
-WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadDependencies.json
-LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET8_$(platform)_NUGET_VERSION_NO_METADATA))))
 

@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
 		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-		<FatName>ios-fat</FatName>
 	</PropertyGroup>
 	<Import Project="..\shared.csproj" />
 </Project>
