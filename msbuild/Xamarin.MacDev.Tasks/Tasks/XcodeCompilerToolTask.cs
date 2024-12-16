@@ -18,9 +18,8 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class XcodeCompilerToolTask : XamarinTask {
+	public abstract class XcodeCompilerToolTask : XamarinTask, IHasProjectDir, IHasResourcePrefix {
 		protected bool Link { get; set; }
-		IList<string>? prefixes;
 		string? toolExe;
 
 		#region Inputs
@@ -108,15 +107,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected string DeveloperRootBinDir {
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
-		}
-
-		protected IList<string> ResourcePrefixes {
-			get {
-				if (prefixes is null)
-					prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-
-				return prefixes;
-			}
 		}
 
 		protected abstract string ToolName { get; }

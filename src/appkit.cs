@@ -8635,6 +8635,9 @@ namespace AppKit {
 		[Export ("selectedItems", ArgumentSemantic.Copy)]
 		NSMenuItem [] SelectedItems { get; set; }
 
+		[Mac (15, 2)]
+		[Export ("automaticallyInsertsWritingToolsItems")]
+		bool AutomaticallyInsertsWritingToolsItems { get; set; }
 	}
 
 	interface INSMenuDelegate { }
@@ -8805,6 +8808,11 @@ namespace AppKit {
 		[Mac (14, 4)]
 		[Export ("subtitle", ArgumentSemantic.Copy), NullAllowed]
 		string Subtitle { get; set; }
+
+		[Static]
+		[Mac (15, 2)]
+		[Export ("writingToolsItems", ArgumentSemantic.Copy)]
+		NSMenuItem [] WritingToolsItems { get; }
 	}
 
 	[NoMacCatalyst]
@@ -13730,7 +13738,7 @@ namespace AppKit {
 
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use Begin with the callback instead.")]
 		[Export ("beginSheetForDirectory:file:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-		void Begin (string directory, string filename, NSWindow docWindow, NSObject modalDelegate, Selector selector, IntPtr context);
+		void Begin ([NullAllowed] string directory, string filename, NSWindow docWindow, NSObject modalDelegate, Selector selector, IntPtr context);
 
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use RunModal without parameters instead.")]
 		[Export ("runModalForDirectory:file:")]
@@ -15779,6 +15787,10 @@ namespace AppKit {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSAdaptiveImageGlyphAttributeName")]
 		NSString AdaptiveImageGlyph { get; }
+
+		[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Field ("NSWritingToolsExclusionAttributeName")]
+		NSString WritingToolsExclusion { get; }
 	}
 
 	delegate NSObject NSStoryboardControllerCreator (NSCoder coder);
@@ -16090,18 +16102,22 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frameRect);
 
+		[NullAllowed]
 		[Export ("window")]
 		NSWindow Window { get; }
 
+		[NullAllowed]
 		[Export ("superview")]
 		NSView Superview { get; }
 
 		[Export ("isDescendantOf:")]
 		bool IsDescendantOf (NSView aView);
 
+		[return: NullAllowed]
 		[Export ("ancestorSharedWithView:")]
 		NSView AncestorSharedWithView (NSView aView);
 
+		[NullAllowed]
 		[Export ("opaqueAncestor")]
 		NSView OpaqueAncestor { get; }
 
@@ -16142,10 +16158,10 @@ namespace AppKit {
 		void ViewDidMoveToSuperview ();
 
 		[Export ("didAddSubview:")]
-		void DidAddSubview ([NullAllowed] NSView subview);
+		void DidAddSubview (NSView subview);
 
 		[Export ("willRemoveSubview:")]
-		void WillRemoveSubview ([NullAllowed] NSView subview);
+		void WillRemoveSubview (NSView subview);
 
 		[Export ("removeFromSuperview")]
 		void RemoveFromSuperview ();
@@ -16304,6 +16320,7 @@ namespace AppKit {
 		[Export ("displayRectIgnoringOpacity:inContext:")]
 		void DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context);
 
+		[return: NullAllowed]
 		[Export ("bitmapImageRepForCachingDisplayInRect:")]
 		NSBitmapImageRep BitmapImageRepForCachingDisplayInRect (CGRect rect);
 
@@ -16352,12 +16369,14 @@ namespace AppKit {
 		[Export ("translateRectsNeedingDisplayInRect:by:")]
 		void TranslateRectsNeedingDisplay (CGRect clipRect, CGSize delta);
 
+		[return: NullAllowed]
 		[Export ("hitTest:")]
 		NSView HitTest (CGPoint aPoint);
 
 		[Export ("mouse:inRect:")]
 		bool IsMouseInRect (CGPoint aPoint, CGRect aRect);
 
+		[return: NullAllowed]
 		[Export ("viewWithTag:")]
 		NSObject ViewWithTag (nint aTag);
 
@@ -16368,7 +16387,7 @@ namespace AppKit {
 		bool PerformKeyEquivalent (NSEvent theEvent);
 
 		[Export ("acceptsFirstMouse:")]
-		bool AcceptsFirstMouse (NSEvent theEvent);
+		bool AcceptsFirstMouse ([NullAllowed] NSEvent theEvent);
 
 		[Export ("shouldDelayWindowOrderingForEvent:")]
 		bool ShouldDelayWindowOrderingForEvent (NSEvent theEvent);
@@ -16416,12 +16435,15 @@ namespace AppKit {
 		[Export ("shouldDrawColor")]
 		bool ShouldDrawColor { get; }
 
+		[NullAllowed]
 		[Export ("enclosingScrollView")]
 		NSScrollView EnclosingScrollView { get; }
 
+		[return: NullAllowed]
 		[Export ("menuForEvent:")]
 		NSMenu MenuForEvent (NSEvent theEvent);
 
+		[return: NullAllowed]
 		[Static]
 		[Export ("defaultMenu")]
 		NSMenu DefaultMenu ();
@@ -16473,6 +16495,7 @@ namespace AppKit {
 		//[Export ("getRectsExposedDuringLiveResize:count:")]
 		// void GetRectsExposedDuringLiveResizecount
 
+		[NullAllowed]
 		[Export ("inputContext")]
 		NSTextInputContext InputContext { get; }
 
@@ -16535,15 +16558,17 @@ namespace AppKit {
 		[Export ("alphaValue")]
 		nfloat AlphaValue { get; set; }
 
-		[Export ("backgroundFilters", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("backgroundFilters", ArgumentSemantic.Copy)]
 		CIFilter [] BackgroundFilters { get; set; }
 
-		[Export ("compositingFilter", ArgumentSemantic.Retain), NullAllowed]
+		[NullAllowed]
+		[Export ("compositingFilter", ArgumentSemantic.Retain)]
 		CIFilter CompositingFilter { get; set; }
 
-		[Export ("contentFilters", ArgumentSemantic.Copy), NullAllowed]
+		[Export ("contentFilters", ArgumentSemantic.Copy)]
 		CIFilter [] ContentFilters { get; set; }
 
+		[NullAllowed]
 		[Export ("shadow", ArgumentSemantic.Copy)]
 		NSShadow Shadow { get; set; }
 
@@ -16578,10 +16603,10 @@ namespace AppKit {
 		bool DragPromisedFilesOfTypes (string [] typeArray, CGRect aRect, NSObject sourceObject, bool slideBack, NSEvent theEvent);
 
 		[Export ("exitFullScreenModeWithOptions:")]
-		void ExitFullscreenModeWithOptions (NSDictionary options);
+		void ExitFullscreenModeWithOptions ([NullAllowed] NSDictionary options);
 
 		[Export ("enterFullScreenMode:withOptions:")]
-		bool EnterFullscreenModeWithOptions (NSScreen screen, NSDictionary options);
+		bool EnterFullscreenModeWithOptions (NSScreen screen, [NullAllowed] NSDictionary options);
 
 		[Export ("isInFullScreenMode")]
 		bool IsInFullscreenMode { get; }
@@ -16708,12 +16733,15 @@ namespace AppKit {
 		[Export ("nextKeyView")]
 		NSView NextKeyView { get; set; }
 
+		[NullAllowed]
 		[Export ("previousKeyView")]
 		NSView PreviousKeyView { get; }
 
+		[NullAllowed]
 		[Export ("nextValidKeyView")]
 		NSView NextValidKeyView { get; }
 
+		[NullAllowed]
 		[Export ("previousValidKeyView")]
 		NSView PreviousValidKeyView { get; }
 
@@ -16748,7 +16776,7 @@ namespace AppKit {
 		NSData DataWithPdfInsideRect (CGRect rect);
 
 		[Export ("print:")]
-		void Print (NSObject sender);
+		void Print ([NullAllowed] NSObject sender);
 
 		[Export ("printJobTitle")]
 		string PrintJobTitle { get; }
@@ -16884,6 +16912,7 @@ namespace AppKit {
 		[Export ("preparedContentRect")]
 		CGRect PreparedContentRect { get; set; }
 
+		[NullAllowed]
 		[Export ("pressureConfiguration", ArgumentSemantic.Strong)]
 		NSPressureConfiguration PressureConfiguration { get; set; }
 
@@ -16982,6 +17011,14 @@ namespace AppKit {
 		[Mac (14, 0)]
 		[Export ("displayLinkWithTarget:selector:")]
 		CADisplayLink GetDisplayLink (NSObject target, Selector selector);
+
+#if !__MACCATALYST__
+		// category NSWritingToolsCoordinator (NSView)
+		[NoMacCatalyst]
+		[NullAllowed, Export ("writingToolsCoordinator", ArgumentSemantic.Assign)]
+		[Mac (15, 2)]
+		NSWritingToolsCoordinator WritingToolsCoordinator { get; set; }
+#endif
 	}
 
 	[NoMacCatalyst]
@@ -18863,6 +18900,10 @@ namespace AppKit {
 			[Wrap ("SetContentType (value.GetConstant()!)")]
 			set;
 		}
+
+		[Mac (15, 2)]
+		[Export ("allowsWritingTools")]
+		bool AllowsWritingTools { get; set; }
 	}
 
 	[NoMacCatalyst]
@@ -20305,6 +20346,10 @@ namespace AppKit {
 		[Mac (15, 0), MacCatalyst (18, 0)]
 		[Export ("removeItemWithItemIdentifier:")]
 		void RemoveItem (string itemIdentifier);
+
+		[Mac (15, 2), MacCatalyst (18, 2)]
+		[Field ("NSToolbarWritingToolsItemIdentifier")]
+		NSString NSToolbarWritingToolsItemIdentifier { get; }
 	}
 
 	interface INSToolbarDelegate { }
@@ -28793,5 +28838,35 @@ namespace AppKit {
 		Low = -1000,
 		High = 1000,
 		User = 2000,
+	}
+
+	[Category]
+	[BaseType (typeof (NSResponder))]
+	[Mac (15, 2), NoMacCatalyst]
+	interface NSResponder_NSWritingToolsSupport {
+		[Export ("showWritingTools:")]
+		void ShowWritingTools ([NullAllowed] NSObject sender);
+	}
+
+	[NoMacCatalyst, Mac (15, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSTextPreview {
+		[Export ("initWithSnapshotImage:presentationFrame:candidateRects:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CGImage snapshotImage, CGRect presentationFrame, [BindAs (typeof (CGRect []))] NSValue [] candidateRects);
+
+		[Export ("initWithSnapshotImage:presentationFrame:")]
+		NativeHandle Constructor (CGImage snapshotImage, CGRect presentationFrame);
+
+		[Export ("previewImage")]
+		CGImage PreviewImage { get; }
+
+		[Export ("presentationFrame")]
+		CGRect PresentationFrame { get; }
+
+		[Export ("candidateRects")]
+		[BindAs (typeof (CGRect []))]
+		NSValue [] CandidateRects { get; }
 	}
 }

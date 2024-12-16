@@ -13,7 +13,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class CompileAppManifest : XamarinTask, ITaskCallback, ICancelableTask {
+	public class CompileAppManifest : XamarinTask, IHasProjectDir, IHasResourcePrefix, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
@@ -183,21 +183,10 @@ namespace Xamarin.MacDev.Tasks {
 			if (IsWatchApp)
 				return;
 
-			string name;
-			string value;
-
 			// This key is our supported way of determining if an app
 			// was built with Xamarin, so it needs to be present in all apps.
-			if (TargetFramework.IsDotNet) {
-				value = DotNetVersion;
-				name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
-			} else if (Platform != ApplePlatform.MacOSX) {
-				var version = Sdks.XamIOS.ExtendedVersion;
-				value = string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash);
-				name = "com.xamarin.ios";
-			} else {
-				return;
-			}
+			var value = DotNetVersion;
+			var name = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
 
 			var dict = new PDictionary ();
 			dict.Add ("Version", new PString (value));
@@ -212,10 +201,9 @@ namespace Xamarin.MacDev.Tasks {
 			// https://developer.apple.com/documentation/swiftui/applying-custom-fonts-to-text
 
 			// Compute the relative location in the app bundle for each font file
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			const string logicalNameKey = "_ComputedLogicalName_";
 			foreach (var item in FontFilesToRegister) {
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
+				var logicalName = BundleResource.GetLogicalName (this, item);
 				item.SetMetadata (logicalNameKey, logicalName);
 			}
 

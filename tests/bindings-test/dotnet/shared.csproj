@@ -52,9 +52,7 @@
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
     <Compile Include="$(BindingsTestDirectory)\ProtocolTest.cs" />
-    <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\Registrar.cs">
-      <Link>Registrar.cs</Link>
-    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\Registrar.cs" />
     <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
@@ -95,7 +93,7 @@
       <Link>libframework.h</Link>
     </None>
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework\Info.plist" />
   </ItemGroup>
 
   <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">

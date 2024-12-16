@@ -78,6 +78,13 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __TVOS__
+			// This framework is only available on device
+			case "BrowserEngineKit":
+				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
+					return true;
+				break;
+#endif // __TVOS__
 			}
 
 			switch (type.Name) {
@@ -226,6 +233,10 @@ namespace Introspection {
 			case "UITextLoupeSession":
 				// crashes on the bots, although I can't reproduce locally.
 				return true;
+			case "BrowserEngineKit":
+				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
+					return true;
+				break;
 			}
 			return base.Skip (type);
 		}

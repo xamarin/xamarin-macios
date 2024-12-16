@@ -1416,9 +1416,9 @@ namespace Metal {
 		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		ConcurrentDispatchThreads = 1 << 6,
-		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[NoMac, iOS (17, 0), TV (18, 1), MacCatalyst (17, 0)]
 		DrawMeshThreadgroups = (1uL << 7),
-		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+		[NoMac, iOS (17, 0), TV (18, 1), MacCatalyst (17, 0)]
 		DrawMeshThreads = (1uL << 8),
 	}
 

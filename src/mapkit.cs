@@ -1362,7 +1362,11 @@ namespace MapKit {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst (13, 1)]
-	interface MKUserLocation : IMKAnnotation { // This is wrong. It should be MKAnnotation but we can't due to API compat. When you fix this remove hack in generator.cs to enable warning again
+#if XAMCORE_5_0
+	interface MKUserLocation : MKAnnotation {
+#else
+	interface MKUserLocation : IMKAnnotation { // This is wrong. It should be MKAnnotation but we can't due to API compat. When you fix this remove hack in generator.cs to enable warning again. In the meantime, we're stating that MKUserLocation implements the IMKAnnotation protocol by using a manual binding.
+#endif
 		[Export ("updating")]
 		bool Updating { [Bind ("isUpdating")] get; }
 

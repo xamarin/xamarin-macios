@@ -67,9 +67,14 @@ namespace AddressBook {
 
 		public static ABRecord? FromHandle (IntPtr handle)
 		{
+			return FromHandle (handle, false);
+		}
+
+		internal static ABRecord? FromHandle (IntPtr handle, bool owns)
+		{
 			if (handle == IntPtr.Zero)
 				return null;
-			return FromHandle (handle, null, false);
+			return FromHandle (handle, null, owns);
 		}
 
 		internal static ABRecord FromHandle (IntPtr handle, ABAddressBook? addressbook, bool owns = true)
