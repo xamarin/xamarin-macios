@@ -118,13 +118,13 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : long {
 		Unspecified = 0,
 		Back = 1,
-		Front = 2
+		Front = 2,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -622,16 +622,20 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : long {
 		Off,
-		Standard,
-		Cinematic,
+		Standard = 1,
+		Cinematic = 2,
 		[iOS (13, 0)]
 		[MacCatalyst (14, 0)]
-		CinematicExtended,
-		Auto = -1
+		CinematicExtended = 3,
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0), NoMac]
+		PreviewOptimized = 4,
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		CinematicExtendedEnhanced = 5,
+		Auto = -1,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1022,7 +1026,7 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureOutputDataDroppedReason : long {
 		None = 0,

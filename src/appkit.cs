@@ -8635,6 +8635,9 @@ namespace AppKit {
 		[Export ("selectedItems", ArgumentSemantic.Copy)]
 		NSMenuItem [] SelectedItems { get; set; }
 
+		[Mac (15, 2)]
+		[Export ("automaticallyInsertsWritingToolsItems")]
+		bool AutomaticallyInsertsWritingToolsItems { get; set; }
 	}
 
 	interface INSMenuDelegate { }
@@ -8805,6 +8808,11 @@ namespace AppKit {
 		[Mac (14, 4)]
 		[Export ("subtitle", ArgumentSemantic.Copy), NullAllowed]
 		string Subtitle { get; set; }
+
+		[Static]
+		[Mac (15, 2)]
+		[Export ("writingToolsItems", ArgumentSemantic.Copy)]
+		NSMenuItem [] WritingToolsItems { get; }
 	}
 
 	[NoMacCatalyst]
@@ -13730,7 +13738,7 @@ namespace AppKit {
 
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use Begin with the callback instead.")]
 		[Export ("beginSheetForDirectory:file:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
-		void Begin (string directory, string filename, NSWindow docWindow, NSObject modalDelegate, Selector selector, IntPtr context);
+		void Begin ([NullAllowed] string directory, string filename, NSWindow docWindow, NSObject modalDelegate, Selector selector, IntPtr context);
 
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use RunModal without parameters instead.")]
 		[Export ("runModalForDirectory:file:")]
@@ -15779,6 +15787,10 @@ namespace AppKit {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSAdaptiveImageGlyphAttributeName")]
 		NSString AdaptiveImageGlyph { get; }
+
+		[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Field ("NSWritingToolsExclusionAttributeName")]
+		NSString WritingToolsExclusion { get; }
 	}
 
 	delegate NSObject NSStoryboardControllerCreator (NSCoder coder);
@@ -16999,6 +17011,14 @@ namespace AppKit {
 		[Mac (14, 0)]
 		[Export ("displayLinkWithTarget:selector:")]
 		CADisplayLink GetDisplayLink (NSObject target, Selector selector);
+
+#if !__MACCATALYST__
+		// category NSWritingToolsCoordinator (NSView)
+		[NoMacCatalyst]
+		[NullAllowed, Export ("writingToolsCoordinator", ArgumentSemantic.Assign)]
+		[Mac (15, 2)]
+		NSWritingToolsCoordinator WritingToolsCoordinator { get; set; }
+#endif
 	}
 
 	[NoMacCatalyst]
@@ -18880,6 +18900,10 @@ namespace AppKit {
 			[Wrap ("SetContentType (value.GetConstant()!)")]
 			set;
 		}
+
+		[Mac (15, 2)]
+		[Export ("allowsWritingTools")]
+		bool AllowsWritingTools { get; set; }
 	}
 
 	[NoMacCatalyst]
@@ -20322,6 +20346,10 @@ namespace AppKit {
 		[Mac (15, 0), MacCatalyst (18, 0)]
 		[Export ("removeItemWithItemIdentifier:")]
 		void RemoveItem (string itemIdentifier);
+
+		[Mac (15, 2), MacCatalyst (18, 2)]
+		[Field ("NSToolbarWritingToolsItemIdentifier")]
+		NSString NSToolbarWritingToolsItemIdentifier { get; }
 	}
 
 	interface INSToolbarDelegate { }
@@ -28810,5 +28838,35 @@ namespace AppKit {
 		Low = -1000,
 		High = 1000,
 		User = 2000,
+	}
+
+	[Category]
+	[BaseType (typeof (NSResponder))]
+	[Mac (15, 2), NoMacCatalyst]
+	interface NSResponder_NSWritingToolsSupport {
+		[Export ("showWritingTools:")]
+		void ShowWritingTools ([NullAllowed] NSObject sender);
+	}
+
+	[NoMacCatalyst, Mac (15, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSTextPreview {
+		[Export ("initWithSnapshotImage:presentationFrame:candidateRects:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CGImage snapshotImage, CGRect presentationFrame, [BindAs (typeof (CGRect []))] NSValue [] candidateRects);
+
+		[Export ("initWithSnapshotImage:presentationFrame:")]
+		NativeHandle Constructor (CGImage snapshotImage, CGRect presentationFrame);
+
+		[Export ("previewImage")]
+		CGImage PreviewImage { get; }
+
+		[Export ("presentationFrame")]
+		CGRect PresentationFrame { get; }
+
+		[Export ("candidateRects")]
+		[BindAs (typeof (CGRect []))]
+		NSValue [] CandidateRects { get; }
 	}
 }
