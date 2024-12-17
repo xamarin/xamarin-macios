@@ -973,6 +973,9 @@ namespace Introspection {
 				return m.DeclaringType.Name == "NSTextContentManager";
 			case "AccommodatePresentedItemEviction": // comes from a protocol implementation
 				return m.DeclaringType.Name == "NSFilePresenter" || m.DeclaringType.Name == "UIDocument";
+			case "StartCapture":
+			case "StopCapture": // it does not make sense for these APIs
+				return m.DeclaringType.Name == "SCStream";
 			}
 			return false;
 		}
