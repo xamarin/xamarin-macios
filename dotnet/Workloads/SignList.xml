@@ -3,7 +3,7 @@
   <ItemGroup>
     <Skip Include="System.Reflection.MetadataLoadContext.dll" />
     <!-- Microsoft.iOS.Windows.Sdk content -->
-    <Skip Include="tools\msbuild\Microsoft.Win32.Registry.dll" />
+    <Skip Include="tools\msbuild\iOS\Microsoft.Win32.Registry.dll" />
     <Skip Include="tools\msbuild\iOS\System.Buffers.dll" />
     <Skip Include="tools\msbuild\iOS\System.Formats.Asn1.dll" />
     <Skip Include="tools\msbuild\iOS\System.Memory.dll" />
