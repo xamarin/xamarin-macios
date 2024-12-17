@@ -16,8 +16,7 @@ elif [[ $DEPENDENCY_MODULE =~ https://github.com ]]; then
 elif [[ $DEPENDENCY_MODULE =~ devdiv@dev.azure.com ]]; then
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/devdiv@dev.azure.com\/devdiv\/}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/_git*}
-	AUTH_HEADER="http.extraheader=\"AUTHORIZATION: bearer $SYSTEM_ACCESSTOKEN\""
-	DEPENDENCY_AUTH=(-c "$AUTH_HEADER")
+	DEPENDENCY_AUTH="-c http.extraheader=\"AUTHORIZATION: bearer $SYSTEM_ACCESSTOKEN\""
 fi
 
 echo "*** [$DEPENDENCY_NAME] testing fot git repo in $DEPENDENCY_PATH"
@@ -40,12 +39,10 @@ if test -d "$DEPENDENCY_PATH"; then
 	fi
 
 else
-	echo "** [$DEPENDENCY_NAME] Auth is " "${DEPENDENCY_AUTH[@]}"
 	echo "*** [$DEPENDENCY_NAME] git" "${DEPENDENCY_AUTH[@]}" "clone $DEPENDENCY_MODULE --recursive $DEPENDENCY_DIRECTORY -b $DEPENDENCY_BRANCH --origin $DEPENDENCY_REMOTE"
 	mkdir -p "$(dirname "$DEPENDENCY_PATH")"
 	cd "$(dirname "$DEPENDENCY_PATH")"
-	git "${DEPENDENCY_AUTH[@]}" "$DEPENDENCY_MODULE" --recursive "$DEPENDENCY_DIRECTORY" -b "$DEPENDENCY_BRANCH" --origin "$DEPENDENCY_REMOTE"
-	echo "Last command run was ["!:0"] with arguments ["!:*"]"
+	git "$DEPENDENCY_AUTH" "$DEPENDENCY_MODULE" --recursive "$DEPENDENCY_DIRECTORY" -b "$DEPENDENCY_BRANCH" --origin "$DEPENDENCY_REMOTE"
 	cd "$DEPENDENCY_DIRECTORY"
 fi
 
