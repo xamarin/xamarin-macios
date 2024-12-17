@@ -729,10 +729,6 @@ namespace Introspection {
 					return true;
 				break;
 #endif
-			case "NSExtensionRequestHandling":
-				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
-					return true;
-				break;
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;
