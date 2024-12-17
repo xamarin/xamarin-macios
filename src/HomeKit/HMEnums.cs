@@ -1125,7 +1125,7 @@ namespace HomeKit {
 		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
 		GarageDoorOpener,
 
-#if !WATCH && !TVOS
+#if !TVOS
 		[Obsolete ("Use 'GarageDoorOpener' instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]

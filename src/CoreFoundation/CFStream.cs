@@ -39,7 +39,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 #if NET
 using CFNetwork;
-#elif !WATCH
+#else
 using CoreServices;
 #endif
 using ObjCRuntime;
@@ -279,7 +279,6 @@ namespace CoreFoundation {
 			}
 		}
 
-#if !WATCH
 		// CFSocketStream.h in CFNetwork.framework (not CoreFoundation)
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -332,7 +331,6 @@ namespace CoreFoundation {
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
 			}
 		}
-#endif
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -383,7 +381,6 @@ namespace CoreFoundation {
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
 			}
 		}
-#if !WATCH
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -477,7 +474,6 @@ namespace CoreFoundation {
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
 			return new CFHTTPStream (handle, true);
 		}
-#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc,

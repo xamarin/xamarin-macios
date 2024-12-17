@@ -345,7 +345,6 @@ namespace CoreMedia {
 			}
 		}
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -501,7 +500,6 @@ namespace CoreMedia {
 
 			return new CMClock (ptr, false);
 		}
-#endif
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimebaseGetTimeWithTimeScale (/* CMTimebaseRef */ IntPtr timebase, CMTimeScale timescale, CMTimeRoundingMethod method);
@@ -685,7 +683,7 @@ namespace CoreMedia {
 			return SystemVersion.CheckiOS (9, 0);
 #elif MONOMAC
 			return SystemVersion.CheckmacOS (10, 11);
-#elif TVOS || WATCH
+#elif TVOS
 			return true;
 #endif
 		}
@@ -696,10 +694,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMasterTimebase (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMasterTimebase (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -713,10 +709,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMasterClock (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMasterClock (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -730,10 +724,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMaster (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMaster (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -747,10 +739,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyUltimateMasterClock (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetUltimateMasterClock (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;

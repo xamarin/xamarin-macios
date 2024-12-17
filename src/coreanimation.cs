@@ -49,7 +49,7 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
-#if __WATCHOS__ || __TVOS__
+#if __TVOS__
 using CAEdrMetadata = Foundation.NSObject;
 #endif
 
@@ -1226,8 +1226,6 @@ namespace CoreAnimation {
 	[Protocol (FormalSince = "10.0")]
 #elif MONOMAC
 	[Protocol (FormalSince = "10.12")]
-#elif WATCH
-	[Protocol (FormalSince = "3.0")]
 #else
 	[Protocol]
 #endif
@@ -1432,8 +1430,6 @@ namespace CoreAnimation {
 	[Protocol (FormalSince = "10.0")]
 #elif MONOMAC
 	[Protocol (FormalSince = "10.12")]
-#elif WATCH
-	[Protocol (FormalSince = "3.0")]
 #else
 	[Synthetic]
 #endif

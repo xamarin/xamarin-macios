@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !NET
+#if !NET
 using System;
 using System.Drawing;
 using System.Diagnostics;
@@ -52,4 +52,4 @@ namespace Intents {
 		}
 	} /* class INCarSeatResolutionResult */
 }
-#endif // __WATCHOS__ && !NET
+#endif // !NET

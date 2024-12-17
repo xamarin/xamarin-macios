@@ -10,9 +10,7 @@ using System;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#if !WATCH
 using Metal;
-#endif
 
 namespace CoreVideo {
 

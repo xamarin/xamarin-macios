@@ -445,7 +445,6 @@ namespace VideoToolbox {
 			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}
 
-#if !__WATCHOS__
 #if NET
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("ios17.0")]
@@ -471,6 +470,5 @@ namespace VideoToolbox {
 		{
 			return VTIsStereoMVHEVCEncodeSupported () != 0;
 		}
-#endif // !__WATCHOS__
 	}
 }

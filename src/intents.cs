@@ -3428,11 +3428,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INStartAudioCallIntentHandling, INStartVideoCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
-#if !WATCH
 	, INStartVideoCallIntentHandling {
-#else
-	{
-#endif
 	}
 
 	/// <summary>Interface combining several interfaces related to various car-related intents.</summary>
@@ -3483,11 +3479,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSendMessageIntentHandling, INSearchForMessagesIntentHandling and INSetMessageAttributeIntentHandling' instead.")]
 	[Protocol]
 	interface INMessagesDomainHandling : INSendMessageIntentHandling, INSearchForMessagesIntentHandling
-#if !WATCH
 	, INSetMessageAttributeIntentHandling {
-#else
-	{
-#endif
 	}
 
 	/// <summary>Interface combining several interfaces related to various payment-related intents.</summary>

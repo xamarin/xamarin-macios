@@ -41,19 +41,14 @@ using NMatrix3 = global::OpenTK.NMatrix3;
 using NMatrix4x3 = global::OpenTK.NMatrix4x3;
 #endif
 
-#if !WATCH
 using AudioUnit;
 using AVKit;
 using CoreAnimation;
 using CoreImage;
 using MediaToolbox;
-#else
-// hack: ease compilation without extra defines
-using CIBarcodeDescriptor = Foundation.NSObject;
-#endif
 
 // cinematic is not present in certain platforms
-#if WATCH || __MACCATALYST__
+#if __MACCATALYST__
 using CNAssetInfo = Foundation.NSObject;
 using CNCompositionInfo = Foundation.NSObject;
 #else
@@ -83,35 +78,7 @@ using UIKit;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if WATCH
-using AVCaptureWhiteBalanceGains = Foundation.NSString;
-// stubs to ease compilation using
-namespace AudioUnit {
-	interface AudioUnit {}
-}
-#endif
-
 namespace AVFoundation {
-
-#if WATCH
-	// stubs to ease compilation using
-	interface AudioComponent {}
-	interface AudioComponentDescription {}
-	interface AudioComponentInstantiationOptions {}
-	interface MusicSequence {}
-	interface AVInterstitialTimeRange {}
-	interface AVNavigationMarkersGroup {}
-	interface AVVideoSettingsCompressed {}
-	interface AVVideoSettingsUncompressed {}
-	interface AUAudioUnit {}
-	interface CALayer {}
-	interface CIContext {}
-	interface CIImage {}
-	interface CVPixelBufferAttributes {}
-	interface CVPixelBufferPool {}
-	interface MTAudioProcessingTap {}
-#endif
-
 #if XAMCORE_5_0
 	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
 #else
@@ -1057,7 +1024,6 @@ namespace AVFoundation {
 		[Export ("disableManualRenderingMode")]
 		void DisableManualRenderingMode ();
 
-#if !WATCH
 		[MacCatalyst (13, 1)]
 		[Export ("connectMIDI:to:format:block:")]
 		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode destinationNode, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiOutputEventBlock tapHandler);
@@ -1065,7 +1031,6 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("connectMIDI:toNodes:format:block:")]
 		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode [] destinationNodes, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiOutputEventBlock tapHandler);
-#endif
 
 		[MacCatalyst (13, 1)]
 		[Export ("disconnectMIDI:from:")]
@@ -1362,9 +1327,7 @@ namespace AVFoundation {
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface AVAudioMixing : AVAudioStereoMixing
-#if !WATCH
 		, AVAudio3DMixing
-#endif
 	{
 
 		[MacCatalyst (13, 1)]
@@ -4959,9 +4922,7 @@ namespace AVFoundation {
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface AVUrlAsset
-#if !WATCH
 		: AVContentKeyRecipient
-#endif
 {
 
 		[Export ("URL", ArgumentSemantic.Copy)]
@@ -11352,9 +11313,6 @@ namespace AVFoundation {
 	///       <para>Once a capture session has begun, application developers must bracket configuration changes with calls to <see cref="M:AVFoundation.AVCaptureDevice.LockForConfiguration(Foundation.NSError@)" /> and <see cref="M:AVFoundation.AVCaptureDevice.UnlockForConfiguration" />.</para>
 	///     </remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureDevice_Class/index.html">Apple documentation for <c>AVCaptureDevice</c></related>
-#if WATCH
-	[Static]
-#endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -12423,12 +12381,7 @@ namespace AVFoundation {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AVPlayer {
-
-#if WATCH
-		[Notification]
-#else
 		[Notification (typeof (AVPlayerRateDidChangeEventArgs))]
-#endif
 		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("AVPlayerRateDidChangeNotification")]
 		NSString RateDidChangeNotification { get; }

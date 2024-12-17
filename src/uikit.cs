@@ -21,11 +21,9 @@ using Contacts;
 #else
 using CNContact = System.Object;
 #endif
-#if !WATCH
 using MediaPlayer;
 using CoreImage;
 using CoreAnimation;
-#endif
 using CoreData;
 using UserNotifications;
 using UniformTypeIdentifiers;
@@ -35,81 +33,14 @@ using Symbols;
 using FileProvider;
 using LinkPresentation;
 #endif // IOS
-#if TVOS || WATCH
+#if TVOS
 using LPLinkMetadata = Foundation.NSObject;
-#endif // TVOS || WATCH
+#endif // TVOS
 using Intents;
 
 // Unfortunately this file is a mix of #if's andso we list
 // some classes untilis used instead of #if's directives
 // to avoid the usage of more #if's
-#if WATCH
-using CATransform3D = Foundation.NSObject;
-using CALayer = Foundation.NSObject;
-using CADisplayLink = Foundation.NSObject;
-using CoreAnimation = Foundation.NSObject;
-using CIColor = Foundation.NSObject;
-using CIImage = Foundation.NSObject;
-
-using MPMoviePlayerViewController = Foundation.NSObject;
-
-using UIInteraction = Foundation.NSObjectProtocol;
-using UIDynamicItem = Foundation.NSObjectProtocol;
-using UITextFieldDelegate = Foundation.NSObjectProtocol;
-using UITextPasteItem = Foundation.NSObjectProtocol;
-using UICollectionViewDataSource = Foundation.NSObjectProtocol;
-using UITableViewDataSource = Foundation.NSObjectProtocol;
-using IUITextInput = Foundation.NSObjectProtocol;
-using IUICoordinateSpace = Foundation.NSObjectProtocol;
-using UIAccessibilityIdentification = Foundation.NSObjectProtocol;
-
-using UIActivity = Foundation.NSObject;
-using UICollectionViewLayout = Foundation.NSObject;
-using UITraitCollection = Foundation.NSObject;
-using UIButton = Foundation.NSObject;
-using UIBlurEffect = Foundation.NSObject;
-using UIControl = Foundation.NSObject;
-using UIViewController = Foundation.NSObject;
-using UIGestureRecognizer = Foundation.NSObject;
-using UIAction = Foundation.NSObject;
-using UITextField = Foundation.NSObject;
-using UITextPosition = Foundation.NSObject;
-using UITextRange = Foundation.NSObject;
-using UITextSelectionRect = Foundation.NSObject;
-using UIStoryboard = Foundation.NSObject;
-using UIResponder = Foundation.NSObject;
-using UIScreen = Foundation.NSObject;
-using UIWindow = Foundation.NSObject;
-using UIApplicationShortcutItem = Foundation.NSObject;
-using UICollectionViewCell = Foundation.NSObject;
-using UICollectionView = Foundation.NSObject;
-using UITableViewCell = Foundation.NSObject;
-using UITableView = Foundation.NSObject;
-using UICollectionReusableView = Foundation.NSObject;
-using UIVisualEffect = Foundation.NSObject;
-using UILayoutGuide = Foundation.NSObject;
-using UISwipeActionsConfiguration = Foundation.NSObject;
-using UINib = Foundation.NSObject;
-using UIFocusSystem = Foundation.NSObject;
-using UIPrinterPickerController = Foundation.NSObject;
-using UISplitViewController = Foundation.NSObject;
-using UIAdaptivePresentationControllerDelegate = Foundation.NSObject;
-using UIPresentationController = Foundation.NSObject;
-using UIToolbar = Foundation.NSObject;
-using UITabBar = Foundation.NSObject;
-using UIEvent = Foundation.NSObject;
-using UIUserActivityRestoring = Foundation.NSObject;
-using UITouch = Foundation.NSObject;
-using UIPress = Foundation.NSObject;
-using UIPressesEvent = Foundation.NSObject;
-using UIRegion = Foundation.NSObject;
-using UITextInputPasswordRules = Foundation.NSObject;
-using UIUserNotificationSettings = Foundation.NSObject;
-using UIScrollView = Foundation.NSObject;
-using UIFloatRange = Foundation.NSObject;
-using NSSymbolEffect = Foundation.NSObject;
-using NSSymbolContentTransition = Foundation.NSObject;
-#endif // WATCH
 
 #if !IOS
 using UIPointerAccessoryPosition = Foundation.NSObject;
@@ -860,7 +791,6 @@ namespace UIKit {
 		[Notification (typeof (UIAccessibilityAnnouncementFinishedEventArgs))]
 		NSString AnnouncementDidFinishNotification { get; }
 
-#if !WATCH
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VoiceOverStatusDidChangeNotification' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'VoiceOverStatusDidChangeNotification' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'VoiceOverStatusDidChangeNotification' instead.")]
@@ -887,7 +817,6 @@ namespace UIKit {
 		[Field ("UIAccessibilityGuidedAccessStatusDidChangeNotification")]
 		[Notification]
 		NSString GuidedAccessStatusDidChangeNotification { get; }
-#endif
 
 		[Field ("UIAccessibilityScreenChangedNotification")]
 		int ScreenChangedNotification { get; } // This is int, not nint
@@ -921,7 +850,6 @@ namespace UIKit {
 		[Field ("UIAccessibilitySpeechAttributeAnnouncementPriority")]
 		NSString SpeechAttributeAnnouncementPriority { get; }
 
-#if !WATCH
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("UIAccessibilityBoldTextStatusDidChangeNotification")]
@@ -969,7 +897,6 @@ namespace UIKit {
 		[Notification]
 		[Field ("UIAccessibilitySwitchControlStatusDidChangeNotification")]
 		NSString SwitchControlStatusDidChangeNotification { get; }
-#endif
 
 		[MacCatalyst (13, 1)]
 		[Field ("UIAccessibilityNotificationSwitchControlIdentifier")]
@@ -990,7 +917,6 @@ namespace UIKit {
 		[Field ("UIAccessibilityResumeAssistiveTechnologyNotification")]
 		int ResumeAssistiveTechnologyNotification { get; } // UIAccessibilityNotifications => uint32_t
 
-#if !WATCH
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("UIAccessibilitySpeakScreenStatusDidChangeNotification")]
@@ -1005,7 +931,6 @@ namespace UIKit {
 		[Notification]
 		[Field ("UIAccessibilityShakeToUndoDidChangeNotification")]
 		NSString ShakeToUndoDidChangeNotification { get; }
-#endif
 
 		// FIXME: we only used this on a few types before, none of them available on tvOS
 		// but a new member was added to the platform... 
@@ -1038,7 +963,6 @@ namespace UIKit {
 		[Field ("UIAccessibilityNotificationVoiceOverIdentifier")]
 		NSString NotificationVoiceOverIdentifier { get; }
 
-#if !WATCH
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
@@ -1061,7 +985,6 @@ namespace UIKit {
 		[Notification]
 		[Field ("UIAccessibilityOnOffSwitchLabelsDidChangeNotification")]
 		NSString OnOffSwitchLabelsDidChangeNotification { get; }
-#endif
 
 		[MacCatalyst (13, 1)]
 		[Field ("UIAccessibilitySpeechAttributeQueueAnnouncement")]
@@ -5302,7 +5225,7 @@ namespace UIKit {
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -CGColor not defined for the UIColor <UIPlaceholderColor: 0x114f5ad0>; need to first convert colorspace.
 	[DisableDefaultCtor]
 	interface UIColor : NSSecureCoding, NSCopying
-#if !TVOS && !WATCH
+#if !TVOS
 		, NSItemProviderWriting, NSItemProviderReading
 #endif
 	{
@@ -5560,7 +5483,7 @@ namespace UIKit {
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		string [] ReadableTypeIdentifiers { get; }
@@ -5571,7 +5494,7 @@ namespace UIKit {
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		UIColor GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
@@ -5582,7 +5505,7 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		string [] WritableTypeIdentifiers { get; }
@@ -8539,12 +8462,10 @@ namespace UIKit {
 
 	[BaseType (typeof (NSObject))]
 	interface UIImage : NSSecureCoding
-#if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
 #if !TVOS
 		, NSItemProviderWriting, NSItemProviderReading, UIItemProviderPresentationSizeProviding
 #endif
-#endif // !WATCH
 	{
 		[ThreadSafe]
 		[Export ("initWithContentsOfFile:")]
@@ -8571,7 +8492,6 @@ namespace UIKit {
 		[return: NullAllowed]
 		UIImage FromBundle (string name);
 
-#if !WATCH
 		// Thread-safe in iOS 9 or later according to docs.
 #if IOS
 		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
@@ -8582,7 +8502,6 @@ namespace UIKit {
 		[Static, Export ("imageNamed:inBundle:compatibleWithTraitCollection:")]
 		[return: NullAllowed]
 		UIImage FromBundle (string name, [NullAllowed] NSBundle bundle, [NullAllowed] UITraitCollection traitCollection);
-#endif // !WATCH
 
 		[Static]
 		[Export ("imageWithContentsOfFile:")]
@@ -8622,7 +8541,7 @@ namespace UIKit {
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		string [] ReadableTypeIdentifiers { get; }
@@ -8633,7 +8552,7 @@ namespace UIKit {
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		UIImage GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
@@ -8832,7 +8751,7 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-#if !WATCH && !TVOS
+#if !TVOS
 		new
 #endif
 		string [] WritableTypeIdentifiers { get; }
@@ -10133,9 +10052,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	interface UIImageView
-#if !WATCH
 	: UIAccessibilityContentSizeCategoryImageAdjusting
-#endif // !WATCH
 	{
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
@@ -16610,9 +16527,7 @@ namespace UIKit {
 #if !TVOS
 		, UILargeContentViewerItem, UIPopoverPresentationControllerSourceItem
 #endif
-#if !WATCH
 		, CALayerDelegate
-#endif
 	{
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
@@ -20959,19 +20874,13 @@ namespace UIKit {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIUserNotificationAction_class/index.html">Apple documentation for <c>UIUserNotificationAction</c></related>
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
-#if WATCH
-	[Static]
-#else
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-#endif
 	partial interface UIUserNotificationAction
-#if !WATCH
 		: NSCopying, NSMutableCopying, NSSecureCoding
-#endif
 		{
 
 		[MacCatalyst (13, 1)]
@@ -21008,20 +20917,12 @@ namespace UIKit {
 		[Field ("UIUserNotificationTextInputActionButtonTitleKey")]
 		NSString TextInputActionButtonTitleKey { get; }
 
-#if !WATCH
 		// note: defined twice, where watchOS is defined it says it's not in iOS, the other one (for iOS 9) says it's not in tvOS
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNTextInputNotificationResponse.UserText' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UNTextInputNotificationResponse.UserText' instead.")]
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
 		NSString ResponseTypedTextKey { get; }
-#else
-#if !NET // No longer present in watchOS 7.0
-		// note: defined twice, where watchOS is defined it says it's not in iOS, the other one (for iOS 9) says it's not in tvOS
-		[Field ("UIUserNotificationActionResponseTypedTextKey")]
-		NSString ResponseTypedTextKey { get; }
-#endif // !NET
-#endif // !WATCH
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIUserNotificationAction" /> that can be modified after creation.</summary>
@@ -29948,10 +29849,8 @@ namespace UIKit {
 		[Export ("wantsImmediatePresentation")]
 		bool WantsImmediatePresentation { get; set; }
 
-#if !WATCH
 		[Export ("preferredFrameRateRange")]
 		CAFrameRateRange PreferredFrameRateRange { get; set; }
-#endif
 
 		[NullAllowed]
 		[Export ("currentUpdateInfo")]

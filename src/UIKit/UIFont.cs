@@ -266,7 +266,6 @@ namespace UIKit {
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant ());
 		}
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -287,7 +286,6 @@ namespace UIKit {
 		{
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant (), traitCollection);
 		}
-#endif
 
 #if NET
 		[SupportedOSPlatform ("ios")]

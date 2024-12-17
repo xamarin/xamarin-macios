@@ -10,10 +10,6 @@ using System.ComponentModel;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if WATCH
-interface UIView {}
-#endif
-
 namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
@@ -246,8 +242,6 @@ namespace HomeKit {
 		void DidUpdateFirmwareVersion (HMAccessory accessory, string firmwareVersion);
 	}
 
-#if !WATCH
-	// __WATCHOS_PROHIBITED
 	/// <summary>Browses and discovers <see cref="T:HomeKit.HMAccessory" /> objects.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/HomeKit/Reference/HMAccessoryBrowser_Class/index.html">Apple documentation for <c>HMAccessoryBrowser</c></related>
@@ -296,7 +290,6 @@ namespace HomeKit {
 		[Export ("accessoryBrowser:didRemoveNewAccessory:"), EventArgs ("HMAccessoryBrowser")]
 		void DidRemoveNewAccessory (HMAccessoryBrowser browser, HMAccessory accessory);
 	}
-#endif // !WATCH
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]

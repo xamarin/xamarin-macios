@@ -41,7 +41,6 @@ namespace WatchConnectivity {
 		[Export ("activateSession")]
 		void ActivateSession ();
 
-#if !WATCH
 		[Export ("paired")]
 		bool Paired { [Bind ("isPaired")] get; }
 
@@ -54,7 +53,6 @@ namespace WatchConnectivity {
 		[Export ("watchDirectoryURL")]
 		[NullAllowed]
 		NSUrl WatchDirectoryUrl { get; }
-#endif
 
 		[Export ("reachable")]
 		bool Reachable { [Bind ("isReachable")] get; }
@@ -81,10 +79,8 @@ namespace WatchConnectivity {
 		[Export ("transferUserInfo:")]
 		WCSessionUserInfoTransfer TransferUserInfo (NSDictionary<NSString, NSObject> userInfo);
 
-#if !WATCH
 		[Export ("transferCurrentComplicationUserInfo:")]
 		WCSessionUserInfoTransfer TransferCurrentComplicationUserInfo (NSDictionary<NSString, NSObject> userInfo);
-#endif
 
 		[Export ("outstandingUserInfoTransfers", ArgumentSemantic.Copy)]
 		WCSessionUserInfoTransfer [] OutstandingUserInfoTransfers { get; }
@@ -126,11 +122,8 @@ namespace WatchConnectivity {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WCSessionDelegate {
-
-#if !WATCH
 		[Export ("sessionWatchStateDidChange:")]
 		void SessionWatchStateDidChange (WCSession session);
-#endif
 
 		[Export ("sessionReachabilityDidChange:")]
 		void SessionReachabilityDidChange (WCSession session);
@@ -227,10 +220,8 @@ namespace WatchConnectivity {
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionUserInfoTransfer : NSSecureCoding {
 
-#if !WATCH
 		[Export ("currentComplicationInfo")]
 		bool CurrentComplicationInfo { [Bind ("isCurrentComplicationInfo")] get; }
-#endif
 
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> UserInfo { get; }

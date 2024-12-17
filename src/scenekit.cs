@@ -46,12 +46,10 @@ using Vector3 = global::OpenTK.NVector3;
 using Vector4 = global::OpenTK.Vector4;
 #endif
 
-#if !WATCH
 using CoreAnimation;
 using CoreImage;
-#endif
 
-#if WATCH || NET
+#if NET
 using AnimationType = global::SceneKit.ISCNAnimationProtocol;
 #else
 using AnimationType = global::CoreAnimation.CAAnimation;
@@ -59,13 +57,11 @@ using AnimationType = global::CoreAnimation.CAAnimation;
 
 using CoreGraphics;
 using SpriteKit;
-#if !WATCH
 using ModelIO;
 using Metal;
 using GameplayKit;
-#endif
 
-#if MONOMAC || WATCH || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 using EAGLContext = System.Object;
 #endif
 
@@ -86,12 +82,7 @@ using GLContext = global::OpenGLES.EAGLContext;
 using GLContext = global::Foundation.NSObject; // won't be used -> but must compile
 #endif
 
-#if WATCH
-using NSView = global::Foundation.NSObject; // won't be used ->but must compile
-using SCNGeometryTessellator = global::Foundation.NSObject; // won't be used ->but must compile
-#else
 using NSView = global::UIKit.UIView;
-#endif
 
 using NSColor = global::UIKit.UIColor;
 using NSFont = global::UIKit.UIFont;
@@ -104,30 +95,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace SceneKit {
-
-#if WATCH
-	// stubs to limit the number of preprocessor directives in the source file
-	interface CAAnimation {}
-	interface CALayer {}
-	interface CAMediaTimingFunction {}
-	interface MDLAsset {}
-	interface MDLCamera {}
-	interface MDLLight {}
-	interface MDLMaterial {}
-	interface MDLMesh {}
-	interface MDLObject {}
-	interface MDLSubmesh {}
-	enum MTLPixelFormat {}
-	enum MTLVertexFormat {}
-	interface IMTLBuffer {}
-	interface IMTLCommandBuffer {}
-	interface IMTLCommandQueue {}
-	interface IMTLDevice {}
-	interface IMTLLibrary {}
-	interface IMTLRenderCommandEncoder {}
-	interface MTLRenderPassDescriptor {}
-#endif
-
 	/// <summary>Callback used to reflect progress during execution of <see cref="M:SceneKit.SCNSceneSource.SceneFromOptions(SceneKit.SCNSceneLoadingOptions,SceneKit.SCNSceneSourceStatusHandler)" />.</summary>
 	[MacCatalyst (13, 1)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
@@ -1168,7 +1135,6 @@ namespace SceneKit {
 		nint IndicesChannelCount { get; }
 	}
 
-#if !WATCH
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1197,7 +1163,6 @@ namespace SceneKit {
 		[Export ("smoothingMode", ArgumentSemantic.Assign)]
 		SCNTessellationSmoothingMode SmoothingMode { get; set; }
 	}
-#endif
 
 	/// <summary>Constants for use with the <c>options</c> argument in <see cref="M:SceneKit.SCNNode.HitTest(SceneKit.SCNVector3,SceneKit.SCNVector3,SceneKit.SCNHitTestOptions)" />.</summary>
 	[MacCatalyst (13, 1)]
@@ -1850,14 +1815,12 @@ namespace SceneKit {
 		NSData GetPrecomputedLightingEnvironmentData (NSObject contents, [NullAllowed] IMTLDevice device, out NSError error);
 	}
 
-#if !WATCH
 	/// <summary>Defines the <see cref="P:SceneKit.SCNProgramSemanticOptions.MappingChannel" /> for use with <see cref="M:SceneKit.SCNProgram.SetSemantic(Foundation.NSString,System.String,SceneKit.SCNProgramSemanticOptions)" />.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SCNProgram")]
 	interface SCNProgramSemanticOptions {
 		nuint MappingChannel { get; set; }
 	}
-#endif
 
 	/// <summary>Configuration options for hit-testing in SCNNode and SCNSceneRenderer</summary>
 	///     <remarks>
@@ -2597,11 +2560,9 @@ namespace SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void SetSemantic ([NullAllowed] NSString geometrySourceSemantic, string symbol, [NullAllowed] NSDictionary options);
 
-#if !WATCH
 		[MacCatalyst (13, 1)]
 		[Wrap ("SetSemantic (geometrySourceSemantic, symbol, options.GetDictionary ())")]
 		void SetSemantic (NSString geometrySourceSemantic, string symbol, SCNProgramSemanticOptions options);
-#endif
 
 		[Export ("semanticForSymbol:")]
 		[return: NullAllowed]
@@ -2797,9 +2758,7 @@ namespace SceneKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SCNScene :
-#if !WATCH
 		GKSceneRootNodeType,
-#endif
 		NSSecureCoding {
 
 		[Static]
@@ -3655,7 +3614,6 @@ namespace SceneKit {
 		NSString LowPowerDeviceKey { get; }
 	}
 
-#if !WATCH
 	/// <summary>A <see cref="T:Foundation.DictionaryContainer" /> that defines <c>options</c> when instantiating a <see cref="T:SceneKit.SCNView" />.</summary>
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SCNRenderingOptionsKeys")]
@@ -3664,7 +3622,6 @@ namespace SceneKit {
 
 		bool LowPowerDevice { get; set; }
 	}
-#endif
 
 	/// <summary>A <see cref="T:UIKit.UIView" /> that renders <see cref="T:SceneKit.SCNScene" />s.</summary>
 	///     
@@ -3711,11 +3668,9 @@ namespace SceneKit {
 		[NullAllowed]
 		EAGLContext EAGLContext { get; set; }
 
-#if !WATCH
 		[MacCatalyst (13, 1)]
 		[Wrap ("this (frame, options.GetDictionary ())")]
 		NativeHandle Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
-#endif
 
 		[Export ("initWithFrame:options:")]
 		NativeHandle Constructor (CGRect frame, [NullAllowed] NSDictionary options);

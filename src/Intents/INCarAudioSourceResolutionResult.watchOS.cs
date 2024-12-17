@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !NET
+#if !NET
 
 using System;
 using System.Drawing;
@@ -53,4 +53,4 @@ namespace Intents {
 		}
 	} /* class INCarAudioSourceResolutionResult */
 }
-#endif // __WATCHOS__ && !NET
+#endif // !NET

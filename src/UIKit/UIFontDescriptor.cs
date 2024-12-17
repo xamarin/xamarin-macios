@@ -22,12 +22,10 @@ namespace UIKit {
 #if !COREBUILD
 		public UIFontAttributes (NSDictionary dictionary) : base (dictionary) { }
 
-#if !WATCH
 		public UIFontAttributes (params UIFontFeature [] features)
 		{
 			FeatureSettings = features;
 		}
-#endif
 
 		public string Family {
 			get {
@@ -168,7 +166,6 @@ namespace UIKit {
 			}
 		}
 
-#if !WATCH
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
@@ -184,7 +181,6 @@ namespace UIKit {
 				Dictionary [UIFontDescriptor.FeatureSettingsAttribute] = NSArray.FromNativeObjects (value);
 			}
 		}
-#endif
 #endif
 	}
 
@@ -407,7 +403,6 @@ namespace UIKit {
 			}
 		}
 
-#if !WATCH
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
@@ -420,7 +415,6 @@ namespace UIKit {
 				return strong;
 			}
 		}
-#endif
 	}
 
 	// that's a convenience enum that maps to UIFontDescriptorXXX which are internal (hidden) NSString

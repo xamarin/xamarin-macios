@@ -52,7 +52,6 @@ namespace AVFoundation {
 			: base (dictionary)
 		{
 		}
-#if !WATCH
 		public bool? PreferPreciseDurationAndTiming {
 			set {
 				SetBooleanValue (AVUrlAsset.PreferPreciseDurationAndTimingKey, value);
@@ -70,7 +69,6 @@ namespace AVFoundation {
 				return (AVAssetReferenceRestrictions?) (ulong?) GetNUIntValue (AVUrlAsset.ReferenceRestrictionsKey);
 			}
 		}
-#endif
 #endif
 	}
 }

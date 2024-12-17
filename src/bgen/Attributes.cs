@@ -937,9 +937,6 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 		case PlatformName.TvOS:
 			builder.AppendLine ("#if __TVOS__");
 			break;
-		case PlatformName.WatchOS:
-			builder.AppendLine ("#if __WATCHOS__");
-			break;
 		case PlatformName.MacOSX:
 			builder.AppendLine ("#if __MACOS__");
 			break;

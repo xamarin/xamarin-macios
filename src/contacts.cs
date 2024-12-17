@@ -1750,7 +1750,7 @@ namespace Contacts {
 		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);
 
 
-#if !NET && !WATCH
+#if !NET
 		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
@@ -1768,11 +1768,10 @@ namespace Contacts {
 		[return: NullAllowed]
 		CNContainer [] GetContainers ([NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
 
-#if !WATCH
 		[Export ("executeSaveRequest:error:")]
 		[return: NullAllowed]
 		bool ExecuteSaveRequest (CNSaveRequest saveRequest, [NullAllowed] out NSError error);
-#endif
+
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
@@ -2516,7 +2515,6 @@ namespace Contacts {
 		NSString LocalizedPropertyNameAttribute { get; }
 	}
 
-#if !WATCH
 	/// <summary>A request that performs a save operation for contacts.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNSaveRequest_Class/index.html">Apple documentation for <c>CNSaveRequest</c></related>
@@ -2566,7 +2564,6 @@ namespace Contacts {
 		[Export ("shouldRefetchContacts")]
 		bool ShouldRefetchContacts { get; set; }
 	}
-#endif // !WATCH
 
 	/// <summary>A profile for a social network, such as Facebook or Twitter.</summary>
 	///     

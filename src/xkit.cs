@@ -5,9 +5,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
-#if !WATCH
 using CoreAnimation;
-#endif
 using CoreGraphics;
 using CoreText;
 using UniformTypeIdentifiers;
@@ -45,13 +43,6 @@ using NSTypesetter = System.Object;
 using NSTypesetterBehavior = System.Object;
 using NSView = System.Object;
 using NSWindow = System.Object;
-#if WATCH
-using CATransform3D=System.Object;
-using NSTextContainer=System.Object;
-using NSTextStorage=System.Object;
-using UIDynamicItem=System.Object;
-using UITraitCollection = Foundation.NSObject;
-#endif // WATCH
 #else
 using UICollectionLayoutListConfiguration=System.Object;
 using UIContentInsetsReference=System.Object;
@@ -77,11 +68,7 @@ using LineBreakMode = UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior = UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory = UIKit.UICollectionElementCategory;
 using StringAttributes = UIKit.UIStringAttributes;
-#if WATCH
-using View=System.Object;
-#else
 using View = UIKit.UIView;
-#endif
 #endif
 
 #if MONOMAC
@@ -2165,7 +2152,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSCollectionLayoutVisibleItem
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 	: UIDynamicItem
 #endif
 	{
@@ -2540,9 +2527,9 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding, NSTextAttachmentLayout
-#if !WATCH && !MONOMAC
+#if !MONOMAC
 	, UIAccessibilityContentSizeCategoryImageAdjusting
-#endif // !WATCH
+#endif // !MONOMAC
 	{
 		[NoiOS]
 		[NoTV]

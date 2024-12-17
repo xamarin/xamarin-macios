@@ -16,11 +16,6 @@ using UIWindow = AppKit.NSWindow;
 #else
 using UIKit;
 #endif
-#if WATCH
-using UIControl = Foundation.NSObject;
-using UIViewController = Foundation.NSObject;
-using UIWindow = Foundation.NSObject;
-#endif
 #if !TVOS
 using LocalAuthentication;
 #endif
@@ -61,7 +56,7 @@ namespace AuthenticationServices {
 	[Partial]
 	interface ASExtensionErrorCodeExtensions {
 
-#if NET || TVOS || WATCH
+#if NET || TVOS
 		// Type `ASExtensionErrorCode` is already decorated, so it becomes a duplicate (after code gen)
 		// on those platforms and intro tests complains (on other platforms, e.g. iOS, Catalyst)
 		// OTOH if we don't add them here then we'll get the extra, not really usable, extension type

@@ -291,7 +291,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !WATCH
 	public static class AVUtilities {
 
 		[DllImport (Constants.AVFoundationLibrary)]
@@ -302,7 +301,6 @@ namespace AVFoundation {
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);
 		}
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("macos")]

@@ -147,8 +147,6 @@ namespace CoreVideo {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
 			if (SystemVersion.CheckiOS (15, 0))
-#elif WATCH
-			if (SystemVersion.CheckwatchOS (8, 0))
 #endif
 			return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
@@ -200,8 +198,6 @@ namespace CoreVideo {
 		{
 #if IOS || __MACCATALYST__ || TVOS
 			if (SystemVersion.CheckiOS (15, 0))
-#elif WATCH
-			if (SystemVersion.CheckwatchOS (8, 0))
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (12, 0))
 #endif

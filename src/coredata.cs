@@ -14,9 +14,7 @@ using CloudKit;
 #if MONOMAC
 using AppKit;
 #endif
-#if !WATCH
 using CoreSpotlight;
-#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -951,7 +949,7 @@ namespace CoreData {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSManagedObjectContext : NSCoding
-#if !WATCH && !TVOS
+#if !TVOS
 	, NSLocking
 #endif
 #if MONOMAC
@@ -1736,7 +1734,6 @@ namespace CoreData {
 		NSFetchRequest FetchRequest { get; }
 	}
 
-#if !WATCH
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1792,7 +1789,6 @@ namespace CoreData {
 		[Export ("stopSpotlightIndexing")]
 		void StopSpotlightIndexing ();
 	}
-#endif
 
 	// NSPersistentStore is an abstract type according to Apple's documentation, but Apple
 	// also have internal subclasses of NSPersistentStore, and in those cases our closest
@@ -1872,12 +1868,10 @@ namespace CoreData {
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
 
-#if !WATCH
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
-#endif
 
 		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
@@ -2010,9 +2004,9 @@ namespace CoreData {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // iOS8 -> Core Data: warning: client failed to call designated initializer on NSPersistentStoreCoordinator
 	partial interface NSPersistentStoreCoordinator
-#if !WATCH && !TVOS
+#if !TVOS
 		: NSLocking
-#endif // !WATCH
+#endif // !TVOS
 	{
 
 		[Static, Export ("registeredStoreTypes", ArgumentSemantic.Strong)]

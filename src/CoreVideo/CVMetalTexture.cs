@@ -8,8 +8,6 @@
 //
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -80,5 +78,3 @@ namespace CoreVideo {
 		}
 	}
 }
-
-#endif // IOS || TVOS

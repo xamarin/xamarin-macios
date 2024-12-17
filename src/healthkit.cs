@@ -1397,7 +1397,7 @@ namespace HealthKit {
 		[Export ("identifier")]
 		NSString Identifier { get; }
 
-#if NET || WATCH
+#if NET
 		[Internal]
 #else
 		[Obsolete ("Use 'HKQuantityType.Create (HKQuantityTypeIdentifier)'.")]
@@ -1407,7 +1407,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKQuantityType GetQuantityType ([NullAllowed] NSString hkTypeIdentifier);
 
-#if NET || WATCH
+#if NET
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCategoryType.Create (HKCategoryTypeIdentifier)'.")]
@@ -1417,7 +1417,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCategoryType GetCategoryType ([NullAllowed] NSString hkCategoryTypeIdentifier);
 
-#if NET || WATCH
+#if NET
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)'.")]
@@ -1427,7 +1427,7 @@ namespace HealthKit {
 		[return: NullAllowed]
 		HKCharacteristicType GetCharacteristicType ([NullAllowed] NSString hkCharacteristicTypeIdentifier);
 
-#if NET || WATCH
+#if NET
 		[Internal]
 #else
 		[Obsolete ("Use 'HKCorrelationType.Create (HKCorrelationTypeIdentifier)'.")]

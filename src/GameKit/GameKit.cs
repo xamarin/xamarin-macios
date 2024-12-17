@@ -177,13 +177,8 @@ namespace GameKit {
 	[Deprecated (PlatformName.TvOS, 12, 0)]
 	[Deprecated (PlatformName.iOS, 12, 0)]
 	[Native]
-#if WATCH
-	// removed in Xcode 10 but a breaking change (for us) to remove
-	[Obsolete ("Not used in watchOS.")]
-#else
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
-#endif
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,

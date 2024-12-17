@@ -1,6 +1,6 @@
 #nullable enable
 
-#if !NET && (IOS || WATCHOS)
+#if !NET && IOS
 
 using System;
 using Foundation;

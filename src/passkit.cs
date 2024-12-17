@@ -295,7 +295,6 @@ namespace PassKit {
 		PKContact BillingContact { get; }
 	}
 
-#if !WATCH
 	/// <summary>Delegate called when the user has selected a shipping address.</summary>
 	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
 	/// <summary>Delegate called when the user has selected a shipping method.</summary>
@@ -452,7 +451,6 @@ namespace PassKit {
 		[Export ("supportsDisbursementsUsingNetworks:capabilities:")]
 		bool SupportsDisbursements (string [] supportedNetworks, PKMerchantCapability capabilities);
 	}
-#endif
 
 	/// <summary>A summary item (such as grand total, tax, or discounts) within a payment request.</summary>
 	///     
@@ -1215,7 +1213,6 @@ namespace PassKit {
 		NSString Napas { get; }
 	}
 
-#if !WATCH
 	/// <summary>A button used to activate an Apple Pay payment. Available styles and types are defined by <see cref="T:PassKit.PKPaymentButtonStyle" /> and <see cref="T:PassKit.PKPaymentButtonType" />.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PassKit/Reference/PKPaymentButton_Class/index.html">Apple documentation for <c>PKPaymentButton</c></related>
@@ -1259,7 +1256,6 @@ namespace PassKit {
 		[Export ("addPassButtonStyle", ArgumentSemantic.Assign)]
 		PKAddPassButtonStyle Style { get; set; }
 	}
-#endif // !WATCH
 
 	/// <summary>Defines the constant string <see cref="P:PassKit.PKEncryptionScheme.Ecc_V2" />.</summary>
 	[MacCatalyst (13, 1)]

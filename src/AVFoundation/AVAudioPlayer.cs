@@ -29,7 +29,6 @@ using System.Runtime.InteropServices;
 #nullable enable
 
 namespace AVFoundation {
-#if !WATCH
 	public partial class AVAudioPlayer {
 
 		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
@@ -76,5 +75,4 @@ namespace AVFoundation {
 			return FromData (data, out _);
 		}
 	}
-#endif // !WATCH
 }

@@ -33,9 +33,6 @@ using UIViewController = AppKit.NSViewController;
 #else
 using NSImage = UIKit.UIImage;
 #endif
-#if WATCH
-using UIViewController = Foundation.NSObject;
-#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -79,9 +76,9 @@ namespace MediaPlayer {
 		[Export ("persistentID")]
 		ulong PersistentID { get; }
 
-#if IOS || WATCH || TVOS
+#if IOS || TVOS
 	}
-#if MONOMAC || WATCH
+#if MONOMAC
 	[Static]
 #else
 	[BaseType (typeof (MPMediaEntity))]
@@ -885,13 +882,8 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 	[MacCatalyst (14, 0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerController is no longer available. Use AVPlayerViewController in AVKit.
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
-#if WATCH
-	[Static]
-	interface MPMoviePlayerController {
-#else
 	[BaseType (typeof (NSObject))]
 	interface MPMoviePlayerController : MPMediaPlayback {
-#endif
 		[MacCatalyst (13, 1)]
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]

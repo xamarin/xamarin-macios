@@ -8,8 +8,6 @@
 // Copyright 2011-2013 Xamarin Inc. All rights reserved
 //
 
-#if !WATCH
-
 using System;
 using System.Collections.Generic;
 using Foundation;
@@ -229,5 +227,3 @@ namespace UIKit {
 	}
 #endif
 }
-
-#endif // !WATCH

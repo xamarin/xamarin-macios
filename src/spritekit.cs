@@ -9,10 +9,8 @@
 using System;
 using System.ComponentModel;
 
-#if !WATCH
 using CoreImage;
 using GameplayKit;
-#endif
 
 using AVFoundation;
 using ObjCRuntime;
@@ -21,9 +19,7 @@ using CoreFoundation;
 using CoreGraphics;
 using CoreVideo;
 using SceneKit;
-#if !WATCH
 using Metal;
-#endif
 
 #if NET
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
@@ -64,13 +60,6 @@ using UIKit;
 using NSLineBreakMode = global::UIKit.UILineBreakMode;
 using pfloat = System.Single;
 using NSEvent = System.Object;
-#if !WATCH
-using UIView = global::UIKit.UIView;
-#endif
-#endif
-
-#if WATCH
-using UITouch = System.Object;
 #endif
 
 #if !NET
@@ -78,20 +67,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace SpriteKit {
-
-#if WATCH
-	// stubs to limit the number of preprocessor directives in the source file
-	interface AVPlayer {}
-	interface CIFilter {}
-	interface GKPolygonObstacle {}
-	interface UIView {}
-	interface IMTLCommandBuffer {}
-	interface IMTLCommandQueue {}
-	interface IMTLDevice {}
-	interface IMTLRenderCommandEncoder {}
-	interface MTLRenderPassDescriptor {}
-#endif
-
 	/// <summary>The delegate that acts as the enumeration handler for <see cref="M:SpriteKit.SKNode.EnumerateChildNodes(System.String,SpriteKit.SKNodeChildEnumeratorHandler)" />.</summary>
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
 	/// <summary>A method that maps <paramref name="time" />, a value between 0 and 1, to a return value between 0 snd 1.</summary>
@@ -162,9 +137,8 @@ namespace SpriteKit {
 #elif IOS || TVOS
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem, UIFocusItemContainer, UICoordinateSpace {
-#else // WATCHOS
-	[BaseType (typeof (NSObject))]
-	partial interface SKNode : NSSecureCoding, NSCopying {
+#else
+#error Unknown platform
 #endif
 		[DesignatedInitializer]
 		[Export ("init")]
@@ -187,7 +161,7 @@ namespace SpriteKit {
 		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
 
 		[Export ("frame")]
-#if !(MONOMAC || WATCH)
+#if !MONOMAC
 		// For iOS+tvOS we also get this property from the UIFocusItem protocol, but we redefine it here to get the right availability attributes.
 		new
 #endif
@@ -384,7 +358,6 @@ namespace SpriteKit {
 		void SetValue (SKAttributeValue value, string key);
 #endif
 
-#if !WATCH
 		// Extensions from GameplayKit, inlined to avoid ugly static extension syntax
 		[MacCatalyst (13, 1)]
 		[Static]
@@ -400,7 +373,6 @@ namespace SpriteKit {
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle [] GetObstaclesFromNodePhysicsBodies (SKNode [] nodes);
-#endif
 	}
 
 	[NoiOS]
@@ -566,9 +538,7 @@ namespace SpriteKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
-#if !WATCH
 		: GKSceneRootNodeType
-#endif
 	{
 		[Export ("initWithSize:")]
 		NativeHandle Constructor (CGSize size);
@@ -1384,22 +1354,6 @@ namespace SpriteKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
-
-#if WATCH
-		[Static, Export ("videoNodeWithFileNamed:")]
-		SKVideoNode VideoNodeWithFileNamed (string videoFile);
-
-		[Static, Export ("videoNodeWithURL:")]
-		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
-
-		[DesignatedInitializer]
-		[Export ("initWithFileNamed:")]
-		NativeHandle Constructor (string videoFile);
-
-		[DesignatedInitializer]
-		[Export ("initWithURL:")]
-		NativeHandle Constructor (NSUrl url);
-#else
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
 
@@ -1430,7 +1384,6 @@ namespace SpriteKit {
 
 		[Export ("initWithURL:"), Internal]
 		IntPtr InitWithURL (NSUrl url);
-#endif
 
 		[Export ("play")]
 		void Play ();
@@ -1765,13 +1718,11 @@ namespace SpriteKit {
 		[Export ("CGImage")]
 		CGImage CGImage { get; }
 
-#if !WATCH
 		// Static Category from GameplayKit
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("textureWithNoiseMap:")]
 		SKTexture FromNoiseMap (GKNoiseMap noiseMap);
-#endif
 	}
 
 	/// <summary>A method that modifies a texture in place.</summary>
@@ -1866,12 +1817,8 @@ namespace SpriteKit {
 		[Export ("initWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[MarshalNativeExceptions]
-#if WATCH
-		NativeHandle Constructor (string name, Vector2 value);
-#else
 		[Internal]
 		IntPtr InitWithNameVectorFloat2 (string name, Vector2 value);
-#endif
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -1885,12 +1832,8 @@ namespace SpriteKit {
 		[MacCatalyst (13, 1)]
 		[Export ("initWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if WATCH
-		NativeHandle Constructor (string name, Vector3 value);
-#else
 		[Internal]
 		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
-#endif
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10, 0)]
@@ -1904,12 +1847,8 @@ namespace SpriteKit {
 		[MacCatalyst (13, 1)]
 		[Export ("initWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if WATCH
-		NativeHandle Constructor (string name, Vector4 value);
-#else
 		[Internal]
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
-#endif
 
 #if !NET
 		[Internal]
@@ -1925,12 +1864,8 @@ namespace SpriteKit {
 		[Sealed]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if WATCH
-		NativeHandle Constructor (string name, Matrix2 value);
-#else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
-#endif // WATCH
 #endif // !NET
 
 		[MacCatalyst (13, 1)]
@@ -1950,12 +1885,8 @@ namespace SpriteKit {
 		[Sealed]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if WATCH
-		NativeHandle Constructor (string name, Matrix3 value);
-#else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
-#endif // WATCH
 #endif // !NET
 
 		[MacCatalyst (13, 1)]
@@ -1977,12 +1908,8 @@ namespace SpriteKit {
 		[Export ("initWithName:matrixFloat4x4:")]
 		[Sealed]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-#if WATCH
-		NativeHandle Constructor (string name, Matrix4 value);
-#else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
-#endif // WATCH
 #endif // !NET
 
 		[MacCatalyst (13, 1)]
@@ -2014,12 +1941,8 @@ namespace SpriteKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
-#if WATCH
-		Vector2 FloatVector2Value {
-#else
 		[Internal]
 		Vector2 _VectorFloat2Value {
-#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2037,12 +1960,8 @@ namespace SpriteKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
-#if WATCH
-		Vector3 FloatVector3Value {
-#else
 		[Internal]
 		Vector3 _VectorFloat3Value {
-#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2060,12 +1979,8 @@ namespace SpriteKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
-#if WATCH
-		Vector4 FloatVector4Value {
-#else
 		[Internal]
 		Vector4 _VectorFloat4Value {
-#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2081,18 +1996,6 @@ namespace SpriteKit {
 		Matrix2 _FloatMatrix2Value { get; set; }
 #endif // !NET
 
-#if !NET && WATCH
-		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
-		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
-		Matrix2 FloatMatrix2x2Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-#endif
-
-#if !NET && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix2x2Value' property.
-#endif
 		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
 		MatrixFloat2x2 MatrixFloat2x2Value {
@@ -2111,18 +2014,6 @@ namespace SpriteKit {
 		Matrix3 _FloatMatrix3Value { get; set; }
 #endif // !NET
 
-#if !NET && WATCH
-		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
-		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
-		Matrix3 FloatMatrix3x3Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-#endif
-
-#if !NET && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix3x3Value' property.
-#endif
 		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
 		MatrixFloat3x3 MatrixFloat3x3Value {
@@ -2141,18 +2032,6 @@ namespace SpriteKit {
 		Matrix4 _FloatMatrix4Value { get; set; }
 #endif // !NET
 
-#if !NET && WATCH
-		[Obsolete ("Use 'MatrixFloat4x4Value' instead.")]
-		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
-		Matrix4 FloatMatrix4x4Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-#endif
-
-#if !NET && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix4x4Value' property.
-#endif
 		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
 		MatrixFloat4x4 MatrixFloat4x4Value {
@@ -3371,13 +3250,11 @@ namespace SpriteKit {
 		[Export ("centerOfTileAtColumn:row:")]
 		CGPoint GetCenterOfTile (nuint column, nuint row);
 
-#if !WATCH
 		// Static Category from GameplayKit
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
 		SKTileMapNode [] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber [] thresholds);
-#endif
 
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }

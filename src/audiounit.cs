@@ -31,7 +31,7 @@ using UIKit;
 using MediaToolbox;
 using AUViewControllerBase = UIKit.UIViewController;
 #endif
-#if WATCH || TVOS
+#if TVOS
 using MidiCIProfile = Foundation.NSObject;
 using MidiCIProfileState = Foundation.NSObject;
 #endif

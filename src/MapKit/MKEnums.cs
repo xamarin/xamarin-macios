@@ -224,7 +224,6 @@ namespace MapKit {
 		Muted,
 	}
 
-#if !WATCH
 	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum MKPointOfInterestCategory {
@@ -481,6 +480,4 @@ namespace MapKit {
 		[Field ("MKPointOfInterestCategoryVolleyball")]
 		Volleyball,
 	}
-
-#endif
 }

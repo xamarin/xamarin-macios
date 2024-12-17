@@ -439,7 +439,7 @@ namespace CloudKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
-#if NET || WATCH
+#if NET
 	[Abstract] // as per docs
 #endif
 	interface CKDatabaseOperation {
@@ -684,11 +684,7 @@ namespace CloudKit {
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[MacCatalyst (13, 1)]
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
 	[DesignatedDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
 
@@ -737,11 +733,7 @@ namespace CloudKit {
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
 	[DesignatedDefaultCtor]
-#endif
 	interface CKFetchRecordZonesOperation {
 
 		[Export ("initWithRecordZoneIDs:")]
@@ -808,7 +800,7 @@ namespace CloudKit {
 	}
 
 	[MacCatalyst (13, 1)]
-#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSSortDescriptor))]
@@ -831,11 +823,7 @@ namespace CloudKit {
 	delegate void CKModifyRecordsOperationPerRecordDeleteHandler (CKRecordID recordId, NSError error);
 
 	[MacCatalyst (13, 1)]
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
 	[DesignatedDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
@@ -907,11 +895,7 @@ namespace CloudKit {
 	delegate void CKModifyRecordZonesPerRecordZoneDeleteHandler (CKRecordZoneID zoneId, NSError error);
 
 	[MacCatalyst (13, 1)]
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
 	[DesignatedDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
@@ -1001,7 +985,7 @@ namespace CloudKit {
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
-#if NET || WATCH
+#if NET
 	[Abstract] // as per doc
 #endif
 	interface CKNotification : NSSecureCoding {
@@ -1195,7 +1179,7 @@ namespace CloudKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor]
-#if NET || WATCH
+#if NET
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
@@ -1316,11 +1300,7 @@ namespace CloudKit {
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
-#if WATCH
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
-#else
 	[DesignatedDefaultCtor]
-#endif
 	interface CKQueryOperation {
 
 		[Field ("CKQueryOperationMaximumResults")]
@@ -1524,7 +1504,7 @@ namespace CloudKit {
 	}
 
 	[MacCatalyst (13, 1)]
-#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSObject))]

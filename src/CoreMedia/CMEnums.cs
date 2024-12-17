@@ -227,7 +227,6 @@ namespace CoreMedia {
 		Invalidated = -12744,
 	}
 
-#if !WATCH
 	public enum LensStabilizationStatus {
 		Active,
 		OutOfRange,
@@ -235,7 +234,6 @@ namespace CoreMedia {
 		Off,
 		None,
 	}
-#endif
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMClock" />s.</summary>

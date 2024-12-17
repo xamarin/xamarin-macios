@@ -1,4 +1,3 @@
-#if !WATCH
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
@@ -21,4 +20,3 @@ namespace AVFoundation {
 		}
 	}
 }
-#endif

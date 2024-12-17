@@ -12,7 +12,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 namespace SharedWithYouCore {
 

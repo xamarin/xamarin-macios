@@ -15,16 +15,9 @@ using CoreVideo;
 using Foundation;
 using ImageIO;
 
-#if !WATCH
 using Metal;
 using Vision;
 using CoreImage;
-#else
-using IMTLCommandBuffer = global::Foundation.NSObject; // Won't be used just to make compilation happy.
-using IMTLTexture = global::Foundation.NSObject; // Won't be used just to make compilation happy.
-using IMTLDevice = global::Foundation.NSObject;
-using VNImageCropAndScaleOption = global::System.nuint;
-#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;

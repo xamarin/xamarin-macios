@@ -15,7 +15,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public static class IMTLRenderCommandEncoder_Extensions {
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -29,9 +28,7 @@ namespace Metal {
 			fixed (void* handle = viewports)
 				This.SetViewports ((IntPtr) handle, (nuint) (viewports?.Length ?? 0));
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -45,9 +42,7 @@ namespace Metal {
 			fixed (void* handle = scissorRects)
 				This.SetScissorRects ((IntPtr) handle, (nuint) (scissorRects?.Length ?? 0));
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -61,9 +56,7 @@ namespace Metal {
 			fixed (void* handle = offsets)
 				This.SetTileBuffers (buffers, (IntPtr) handle, range);
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -80,6 +73,5 @@ namespace Metal {
 				}
 			}
 		}
-#endif // !WATCH
 	}
 }

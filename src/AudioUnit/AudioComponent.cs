@@ -55,7 +55,7 @@ namespace AudioUnit {
 
 #if !COREBUILD
 
-#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#if !TVOS || (TVOS && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
@@ -66,7 +66,7 @@ namespace AudioUnit {
 #else
 	[NoTV]
 #endif
-#if ((WATCH || TVOS) && !NET)
+#if TVOS && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
@@ -131,7 +131,7 @@ namespace AudioUnit {
 #else
 	[NoTV]
 #endif
-#if ((WATCH || TVOS) && !NET)
+#if TVOS && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class AudioComponentInfo : DictionaryContainer {
@@ -233,7 +233,7 @@ namespace AudioUnit {
 			}
 		}
 	}
-#endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#endif // !TVOS || (TVOS && !NET)
 
 #endif // !COREBUILD
 

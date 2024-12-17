@@ -259,7 +259,6 @@ namespace CoreLocation {
 		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get; }
 
-		// __WATCHOS_PROHIBITED removed in Xcode 8.0 beta 2, assuming it's valid for 3.0+
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("startUpdatingLocation")]

@@ -7,8 +7,6 @@
 // Copyright 2013, Xamarin Inc
 //
 
-#if !WATCH
-
 using System;
 #if IOS
 using System.Drawing;
@@ -210,5 +208,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

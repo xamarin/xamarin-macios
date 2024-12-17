@@ -843,7 +843,6 @@ namespace CoreMedia {
 			/* CMSampleBufferRef* */ IntPtr* sBufOut);
 
 #if !NET
-#if !WATCH
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, CMSampleTimingInfo [] sampleTiming, out CMSampleBufferError error)
@@ -854,7 +853,6 @@ namespace CoreMedia {
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sampleTiming), "Only a single sample is allowed.");
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
-#endif // !WATCH
 #endif // !NET
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -1047,7 +1045,6 @@ namespace CoreMedia {
 			}
 		}
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -1072,7 +1069,6 @@ namespace CoreMedia {
 				return LensStabilizationStatus.None;
 			}
 		}
-#endif // !WATCH
 #endif // !MONOMAC
 	}
 #endif

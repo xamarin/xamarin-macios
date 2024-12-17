@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc (http://www.xamarin.com)
 //
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 using System;
 using Foundation;
@@ -46,4 +46,4 @@ namespace AVFoundation {
 	}
 }
 
-#endif // !TVOS && !WATCH
+#endif // !TVOS

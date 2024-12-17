@@ -23,7 +23,7 @@ using Vector3 = global::OpenTK.Vector3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 
-#if __IOS__ || WATCH
+#if __IOS__
 namespace NearbyInteraction {
 	partial class NINearbyObject
 	{

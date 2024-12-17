@@ -32,7 +32,6 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 #nullable enable
 
-#if !WATCH
 namespace SpriteKit {
 	public partial class SKUniform {
 
@@ -283,4 +282,3 @@ namespace SpriteKit {
 #endif // !NET
 	}
 }
-#endif // !WATCH

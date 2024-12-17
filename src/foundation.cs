@@ -48,10 +48,8 @@ using QuickLook;
 #if !TVOS
 using Contacts;
 #endif
-#if !WATCH
 using CoreAnimation;
 using CoreSpotlight;
-#endif
 using CoreMedia;
 using SceneKit;
 using Security;
@@ -105,19 +103,7 @@ using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
 #endif
 
-#if WATCH
-// dummy usings to make code compile without having the actual types available (forto work)
-using NSAppleEventSendOptions = Foundation.NSObject;
-using NSBezierPath = Foundation.NSObject;
-using NSImage = Foundation.NSObject;
-using CSSearchableItemAttributeSet = Foundation.NSObject;
-#endif
-
-#if WATCH
-using CIBarcodeDescriptor = Foundation.NSObject;
-#else
 using CoreImage;
-#endif
 
 #if !IOS
 using APActivationPayload = Foundation.NSObject;
@@ -129,7 +115,7 @@ using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
 #endif
 
-#if IOS || WATCH || TVOS
+#if IOS || TVOS
 using NSAppearance = UIKit.UIAppearance;
 using NSColor = UIKit.UIColor;
 using NSNotificationSuspensionBehavior = Foundation.NSObject;
@@ -296,11 +282,9 @@ namespace Foundation {
 		, NSItemProviderReading, NSItemProviderWriting
 #endif
 	{
-#if !WATCH
 		// Inlined from the NSAttributedStringAttachmentConveniences category
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromAttachment (NSTextAttachment attachment);
-#endif
 
 		// Inlined from the NSAttributedStringAttachmentConveniences category
 		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
@@ -4574,10 +4558,8 @@ namespace Foundation {
 		[Field ("kCLErrorDomain", "CoreLocation")]
 		NSString CoreLocationErrorDomain { get; }
 
-#if !WATCH
 		[Field ("kCFErrorDomainCFNetwork", "CFNetwork")]
 		NSString CFNetworkErrorDomain { get; }
-#endif
 
 		[NoMac, NoTV]
 		[MacCatalyst (13, 1)]
@@ -4709,7 +4691,7 @@ namespace Foundation {
 		string [] CallStackSymbols { get; }
 	}
 
-#if !NET && !WATCH
+#if !NET
 	[Obsolete ("NSExpressionHandler is deprecated, please use FromFormat (string, NSObject[]) instead.")]
 	delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 #endif
@@ -4736,7 +4718,7 @@ namespace Foundation {
 		[Static, Export ("expressionWithFormat:")]
 		NSExpression FromFormat (string expressionFormat);
 
-#if !NET && !WATCH
+#if !NET
 		[Obsolete ("Use 'FromFormat (string, NSObject[])' instead.")]
 		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
@@ -4765,7 +4747,7 @@ namespace Foundation {
 		[Static, Export ("expressionForFunction:selectorName:arguments:")]
 		NSExpression FromFunction (NSExpression target, string name, NSExpression [] parameters);
 
-#if !NET && !WATCH
+#if !NET
 		[Obsolete ("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, [NullAllowed] NSExpression [] parameters);
@@ -4918,9 +4900,7 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	interface NSNull : NSSecureCoding, NSCopying
-#if !WATCH
 	, CAAction
-#endif
 	{
 		[Export ("null"), Static]
 		[Internal]
@@ -5777,10 +5757,6 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-#if WATCH
-	[Advice (Constants.UnavailableOnWatchOS)]
-	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
-#endif
 	interface NSUbiquitousKeyValueStore {
 		[Static]
 		[Export ("defaultStore")]
@@ -12079,14 +12055,12 @@ namespace Foundation {
 		[Export ("MKCoordinateSpanValue")]
 		MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
 
-#if !WATCH
 		[Export ("valueWithCATransform3D:")]
 		[Static]
 		NSValue FromCATransform3D (CoreAnimation.CATransform3D transform);
 
 		[Export ("CATransform3DValue")]
 		CoreAnimation.CATransform3D CATransform3DValue { get; }
-#endif
 
 		[iOS (16, 0)]
 		[Mac (13, 0)]

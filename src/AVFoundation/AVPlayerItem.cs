@@ -1,5 +1,3 @@
-#if !WATCH
-
 using System;
 
 using Foundation;
@@ -26,5 +24,3 @@ namespace AVFoundation {
 		}
 	}
 }
-
-#endif

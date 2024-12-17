@@ -16,9 +16,9 @@ namespace HomeKit {
 
 #if !NET
 		[NoTV]
-#if (WATCH || TVOS)
+#if TVOS
 		[Obsolete ("This API is not available on this platform.")]
-#endif // WATCH || TVOS
+#endif // TVOS
 		[Obsoleted (PlatformName.iOS, 9, 0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 		public virtual void RemoveUser (HMUser user, Action<NSError> completion)
 		{
@@ -26,9 +26,9 @@ namespace HomeKit {
 		}
 
 		[NoTV]
-#if (WATCH || TVOS)
+#if TVOS
 		[Obsolete ("This API is not available on this platform.")]
-#endif // WATCH || TVOS
+#endif // TVOS
 		[Obsoleted (PlatformName.iOS, 9, 0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 		public virtual Task RemoveUserAsync (HMUser user)
 		{

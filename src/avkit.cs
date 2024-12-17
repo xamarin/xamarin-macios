@@ -37,7 +37,7 @@ using UIAction = Foundation.NSObject;
 using UIMenuElement = Foundation.NSObject;
 #endif // !MONOMAC
 
-#if TVOS || WATCH
+#if TVOS
 using AVCustomRoutingController = Foundation.NSObject;
 using AVCustomRoutingEvent = Foundation.NSObject;
 using AVCustomRoutingActionItem = Foundation.NSObject;

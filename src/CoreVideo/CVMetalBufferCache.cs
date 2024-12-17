@@ -1,4 +1,3 @@
-#if !WATCH
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -153,4 +152,3 @@ namespace CoreVideo {
 #endif // !COREBUILD
 	}
 }
-#endif // !WATCH

@@ -12,14 +12,11 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreLocation;
-
-#if !WATCH
 using CoreMedia;
-#endif
 
 using Intents;
 
-#if MONOMAC || WATCH
+#if MONOMAC
 using UIScene = Foundation.NSObject;
 #else
 using UIKit;
@@ -327,10 +324,8 @@ namespace UserNotifications {
 		// can be either a CMTime or a NSNumber (in seconds). Exposing both options
 		// in the strong dictionary because watchOS does not have CMTime or
 		// CoreMedia framework at all.
-#if !WATCH
 		[Export ("ThumbnailTime")]
 		CMTime ThumbnailTime { get; set; }
-#endif // !WATCH
 
 		[Export ("ThumbnailTime")]
 		double ThumbnailTimeInSeconds { get; set; }

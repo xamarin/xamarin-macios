@@ -30,23 +30,13 @@ namespace UIKit {
 		}
 	}
 
-#if WATCH
-	// There's no UIApplication on the watch, but we use the class extensively in bindings (EnsureUIThread, etc)
-	// so we include it as an internal type.
-	internal
-#else
-	public
-#endif
-	partial class UIApplication
-#if !WATCH
+	public partial class UIApplication
 	: UIResponder
-#endif
 	{
 		static Thread? mainThread;
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
 
-#if !WATCH
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
 		[DllImport ("__Internal")]
@@ -64,7 +54,6 @@ namespace UIKit {
 			Runtime.ThrowException (gchandle);
 			return rv;
 		}
-#endif
 
 		// called from NSExtension.Initialize (so other, future stuff, can be added if needed)
 		// NOTE: must be called from the main thread, e.g. for extensions
@@ -77,7 +66,6 @@ namespace UIKit {
 			mainThread = Thread.CurrentThread;
 		}
 
-#if !WATCH
 		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
@@ -101,7 +89,6 @@ namespace UIKit {
 			Initialize ();
 			UIApplicationMain (args?.Length ?? 0, args, IntPtr.Zero, IntPtr.Zero);
 		}
-#endif
 
 		public static void EnsureUIThread ()
 		{
@@ -126,7 +113,6 @@ namespace UIKit {
 		}
 	}
 
-#if !WATCH
 	public partial class UIContentSizeCategoryChangedEventArgs {
 		public UIContentSizeCategory NewValue {
 			get {
@@ -134,5 +120,4 @@ namespace UIKit {
 			}
 		}
 	}
-#endif
 }

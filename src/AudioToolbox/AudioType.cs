@@ -146,14 +146,12 @@ namespace AudioToolbox {
 		CafIsLittleEndian = (1 << 1)
 	}
 
-#if !WATCH
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioFormatInfo {
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public byte* MagicCookieWeak;
 		public int MagicCookieSize;
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -222,7 +220,6 @@ namespace AudioToolbox {
 			return desc;
 		}
 
-#if !WATCH
 		public unsafe static AudioChannelLayoutTag []? GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
@@ -373,7 +370,6 @@ namespace AudioToolbox {
 				return data != 0;
 			}
 		}
-#endif // !WATCH
 
 		public override string ToString ()
 		{
@@ -606,7 +602,6 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !WATCH
 		public unsafe string? Name {
 			get {
 				IntPtr sptr;
@@ -638,7 +633,6 @@ namespace AudioToolbox {
 				return new CFString (sptr, true);
 			}
 		}
-#endif
 
 		internal unsafe IntPtr ToPointer ()
 		{
@@ -974,7 +968,7 @@ namespace AudioToolbox {
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
-#if !COREBUILD && !WATCH
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -1034,7 +1028,6 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !WATCH
 		[Advice ("Use the strongly typed 'AudioTag' instead.")]
 		public int Tag {
 			get {
@@ -1054,13 +1047,11 @@ namespace AudioToolbox {
 				ChannelUsage = (AudioChannelBit) value;
 			}
 		}
-#endif
 
 		public AudioChannelLayoutTag AudioTag;
 		public AudioChannelBit ChannelUsage;
 		public AudioChannelDescription []? Channels;
 
-#if !WATCH
 		public unsafe string? Name {
 			get {
 				IntPtr sptr;
@@ -1125,7 +1116,6 @@ namespace AudioToolbox {
 			Marshal.FreeHGlobal (ptr);
 			return layout;
 		}
-#endif // !WATCH
 
 		internal static AudioChannelLayout? FromHandle (IntPtr handle)
 		{
@@ -1163,7 +1153,6 @@ namespace AudioToolbox {
 			return buffer;
 		}
 
-#if !WATCH
 		public static AudioFormatError Validate (AudioChannelLayout layout)
 		{
 			if (layout is null)
@@ -1300,7 +1289,6 @@ namespace AudioToolbox {
 				return data;
 			}
 		}
-#endif // !WATCH
 
 		public NSData AsData ()
 		{

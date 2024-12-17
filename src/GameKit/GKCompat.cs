@@ -12,15 +12,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace GameKit {
-#if WATCH && !NET
-	[Obsolete ("This API is not available on this platform.")]
-	public static class GKGameSessionErrorCodeExtensions {
-		[Obsolete ("Always returns null.")]
-		public static NSString? GetDomain (this GKGameSessionErrorCode self) => null;
-	}
-#endif
-
-#if !NET && !WATCH
+#if !NET
 	public partial class GKGameSession {
 
 		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]

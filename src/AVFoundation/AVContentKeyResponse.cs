@@ -15,7 +15,6 @@ using System.Runtime.CompilerServices;
 
 namespace AVFoundation {
 
-#if !WATCH
 	public partial class AVContentKeyResponse {
 
 		public static AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData) => Create (fairPlayStreamingKeyResponseData, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);
@@ -30,5 +29,4 @@ namespace AVFoundation {
 			}
 		}
 	}
-#endif
 }

@@ -1194,7 +1194,6 @@ namespace AVFoundation {
 		PlayAndRecordVoice = 2,
 	}
 
-#if !WATCH
 	[MacCatalyst (13, 1)]
 	public enum AVContentKeyResponseDataType {
 		FairPlayStreamingKeyResponseData,
@@ -1203,7 +1202,6 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		AuthorizationTokenData,
 	}
-#endif
 
 	[TV (15, 0)]
 	[iOS (15, 0)]

@@ -133,7 +133,6 @@ namespace SceneKit {
 			Row3 = new SCNVector4 (m30, m31, m32, m33);
 		}
 
-#if !WATCH
 		public SCNMatrix4 (CoreAnimation.CATransform3D transform)
 		{
 			Row0 = new SCNVector4 ((pfloat) transform.M11, (pfloat) transform.M12, (pfloat) transform.M13, (pfloat) transform.M14);
@@ -141,7 +140,6 @@ namespace SceneKit {
 			Row2 = new SCNVector4 ((pfloat) transform.M31, (pfloat) transform.M32, (pfloat) transform.M33, (pfloat) transform.M34);
 			Row3 = new SCNVector4 ((pfloat) transform.M41, (pfloat) transform.M42, (pfloat) transform.M43, (pfloat) transform.M44);
 		}
-#endif
 
 		#endregion
 

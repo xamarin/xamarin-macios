@@ -7,7 +7,7 @@
 // Copyright 2021 Microsoft Corporation
 //
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 using System;
 using System.Runtime.InteropServices;

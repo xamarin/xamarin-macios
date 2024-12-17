@@ -69,14 +69,6 @@ namespace GameKit {
 	delegate void GKChallengeComposeHandler2 (UIViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer [] sentPlayers);
 #endif
 
-#if WATCH
-	// hacks to letwork properly
-	interface UIAppearance {}
-	interface UIViewController {}
-	interface UINavigationController {}
-	interface UIWindow {}
-#endif
-
 	/// <summary>Interface representing the required methods (if any) of the protocol <see cref="T:GameKit.GKVoiceChatClient" />.</summary>
 	///     <remarks>
 	///       <para>This interface contains the required methods (if any) from the protocol defined by <see cref="T:GameKit.GKVoiceChatClient" />.</para>
@@ -808,7 +800,7 @@ namespace GameKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GKPlayer))]
 	interface GKLocalPlayer
-#if !TVOS && !WATCH // from GKSavedGame category
+#if !TVOS // from GKSavedGame category
 		: GKSavedGameListener
 #endif
 	{
@@ -860,9 +852,7 @@ namespace GameKit {
 		[NullAllowed] // by default this property is null
 		[Export ("authenticateHandler", ArgumentSemantic.Copy)]
 		[MacCatalyst (13, 1)]
-#if WATCH
-		Action<NSError> AuthenticateHandler { get; set; }
-#elif !MONOMAC
+#if !MONOMAC
 		Action<UIViewController, NSError> AuthenticateHandler { get; set; }
 #else
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
@@ -2668,12 +2658,10 @@ namespace GameKit {
 	[MacCatalyst (13, 1)]
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKLocalPlayerListener : GKTurnBasedEventListener
-#if !TVOS && !WATCH
+#if !TVOS
 		, GKSavedGameListener
 #endif
-#if !WATCH
 		, GKChallengeListener, GKInviteEventListener
-#endif
 	{
 	}
 

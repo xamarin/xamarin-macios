@@ -1,4 +1,4 @@
-#if !WATCH && NET
+#if NET
 
 #nullable enable
 
@@ -89,4 +89,4 @@ namespace VideoToolbox {
 	}
 }
 
-#endif // !WATCH
+#endif // NET

@@ -33,7 +33,6 @@ namespace AVFoundation {
 			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
 		}
 	}
-#if !WATCH
 #if MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
@@ -471,7 +470,6 @@ namespace AVFoundation {
 	}
 
 #endif // TVOS
-#endif // !WATCH
 
 #if IOS // includes __MACCATALYST__
 	public partial class AVCaptureManualExposureBracketedStillImageSettings {

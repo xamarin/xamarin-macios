@@ -5,16 +5,11 @@ using ObjCRuntime;
 
 namespace MapKit {
 
-#if !WATCH || (WATCH && !NET)
-
 #if NET
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#endif
-#if WATCH && !NET
-	[Obsolete ("This API is not available on this platform.")]
 #endif
 	// .net does not allow float-based enumerations
 	public static class MKFeatureDisplayPriority {
@@ -22,5 +17,4 @@ namespace MapKit {
 		public const float DefaultHigh = 750f;
 		public const float DefaultLow = 250f;
 	}
-#endif
 }

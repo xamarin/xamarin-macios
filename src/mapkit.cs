@@ -39,24 +39,6 @@ using UIViewController = AppKit.NSViewController;
 #else
 using NSAppearance = Foundation.NSObject;
 #endif
-#if WATCH
-// helper for
-using MKMapView=Foundation.NSObject;
-using MKAnnotationView=Foundation.NSObject;
-using MKShape = Foundation.NSObject;
-using MKOverlay = Foundation.NSObjectProtocol;
-using MKPolygon = Foundation.NSObject;
-using MKPolyline = Foundation.NSObject;
-using MKOverlayPathRenderer = Foundation.NSObject;
-using IMKOverlay = Foundation.NSObject;
-using MKDirectionsRequest = Foundation.NSObject;
-using UITraitCollection = Foundation.NSObject;
-using UIControl = Foundation.NSObject;
-using MKTileOverlayPath = Foundation.NSObject;
-using UIBarButtonItem = Foundation.NSObject;
-using MKCircle = Foundation.NSObject;
-using UIViewController = Foundation.NSObject;
-#endif
 #if TVOS
 using CNPostalAddress = Foundation.NSObject;
 #endif
@@ -94,7 +76,6 @@ namespace MapKit {
 
 	interface IMKAnnotation { }
 
-#if !WATCH
 	[BaseType (typeof (MKAnnotation))]
 	[Model]
 	[Protocol]
@@ -329,7 +310,6 @@ namespace MapKit {
 		[Export ("highwayPreference", ArgumentSemantic.Assign)]
 		MKDirectionsRoutePreference HighwayPreference { get; set; }
 	}
-#endif // !WATCH
 
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst (13, 1)]
@@ -2249,10 +2229,6 @@ namespace MapKit {
 		[NullAllowed, Export ("mapView", ArgumentSemantic.Weak)]
 		MKMapView MapView { get; set; }
 	}
-
-#if WATCH
-	interface MKPointOfInterestCategory {}
-#endif
 
 	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]

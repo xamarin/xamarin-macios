@@ -1,4 +1,3 @@
-#if !WATCH
 using System;
 using System.Runtime.InteropServices;
 
@@ -54,5 +53,3 @@ namespace CoreVideo {
 #endif // !COREBUILD
 	}
 }
-
-#endif // !WATCH

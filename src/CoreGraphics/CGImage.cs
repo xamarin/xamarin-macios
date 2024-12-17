@@ -300,14 +300,13 @@ namespace CoreGraphics {
 								  imageOption);
 			return FromHandle (imageRef, true);
 		}
-#elif !WATCH
+#else
 		public static CGImage? ScreenImage {
 			get {
 				return UIKit.UIScreen.MainScreen.Capture ().CGImage;
 			}
 		}
 #endif
-
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static unsafe /* CGImageRef */ IntPtr CGImageCreateWithJPEGDataProvider (/* CGDataProviderRef */ IntPtr source,

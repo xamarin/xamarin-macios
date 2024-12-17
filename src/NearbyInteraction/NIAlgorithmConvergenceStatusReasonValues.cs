@@ -7,7 +7,7 @@
 // Copyright 2022 Microsoft Corp.
 //
 
-#if IOS || WATCH || __MACCATALYST__
+#if IOS || __MACCATALYST__
 
 #nullable enable
 
@@ -49,4 +49,4 @@ namespace NearbyInteraction {
 		}
 	}
 }
-#endif // IOS || WATCH || __MACCATALYST__
+#endif // IOS || __MACCATALYST__

@@ -599,7 +599,6 @@ namespace Security {
 			return SSLContextGetTypeID ();
 		}
 
-#if !WATCH
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
@@ -621,7 +620,6 @@ namespace Security {
 			Runtime.NSLog ("SetSessionStrengthPolicy is not available anymore.");
 			return SslStatus.Success;
 		}
-#endif
 #endif // !XAMCORE_5_0
 
 #if NET

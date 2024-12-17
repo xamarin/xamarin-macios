@@ -41,7 +41,7 @@ using MidiChannelNumber = System.Byte;
 using NativeHandle = System.IntPtr;
 #endif
 
-#if TVOS || WATCH
+#if TVOS
 using MidiEndpoint = System.Object;
 using MidiCIDeviceIdentification = System.Object;
 using MidiCIDeviceIdentification_Blittable = System.Object;

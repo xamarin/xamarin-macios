@@ -9,7 +9,7 @@
 // Copyright 2012-2015, Xamarin Inc.
 //
 
-#if !WATCH && !MONOMAC
+#if !MONOMAC
 using AddressBook;
 #endif
 using ObjCRuntime;
@@ -24,7 +24,7 @@ using AppKit;
 using UIKit;
 #endif
 
-#if !WATCH && !MONOMAC
+#if !MONOMAC
 using EKAlarmType = Foundation.NSObject;
 #else
 using ABAddressBook = Foundation.NSObject;

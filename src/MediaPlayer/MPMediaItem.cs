@@ -9,7 +9,7 @@
 // Copyright 2011-2012 Xamarin, Inc
 //
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 
 using System;
 using System.Collections;

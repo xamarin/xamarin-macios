@@ -393,7 +393,6 @@ namespace VideoToolbox {
 			return VTIsHardwareDecodeSupported (codecType) != 0;
 		}
 
-#if !__WATCHOS__
 #if NET
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("ios17.0")]
@@ -419,6 +418,5 @@ namespace VideoToolbox {
 		{
 			return VTIsStereoMVHEVCDecodeSupported () != 0;
 		}
-#endif // !__WATCHOS__
 	}
 }

@@ -24,9 +24,6 @@ using UIWindowScene = Foundation.NSObject;
 #else
 using UIKit;
 #endif
-#if WATCH
-using UIViewController = Foundation.NSObject;
-#endif
 using System;
 
 #if !NET

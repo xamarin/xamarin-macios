@@ -108,7 +108,6 @@ namespace UIKit {
 #endif
 	}
 
-#if !WATCH
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
@@ -159,7 +158,6 @@ namespace UIKit {
 		[Field ("UIFloatRangeInfinite")] // fake (but helps testing and could also help documentation)
 		public static UIFloatRange Infinite = new UIFloatRange (nfloat.NegativeInfinity, nfloat.PositiveInfinity);
 	}
-#endif
 
 #if IOS || __MACCATALYST__
 #if NET
