@@ -45,7 +45,7 @@ namespace JavaScriptCore {
 		NoAutomaticPrototype = 1 << 1
 	}
 
-	[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+	[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), Mac (15, 0)]
 	public enum JSRelationCondition : uint {
 		Undefined,
 		Equal,

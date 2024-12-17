@@ -1865,9 +1865,9 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 
-			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
+			AssertThatDylibExistsAndIsReidentified (appPath, "libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
@@ -2636,6 +2636,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension",
 			"/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
 			"/System/Library/Frameworks/OSLog.framework/OSLog",
+			"/System/Library/Frameworks/PDFKit.framework/PDFKit",
 			"/System/Library/Frameworks/PHASE.framework/PHASE",
 			"/System/Library/Frameworks/Photos.framework/Photos",
 			"/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
@@ -2926,6 +2927,7 @@ namespace Xamarin.Tests {
 			"/System/iOSSupport/System/Library/Frameworks/ReplayKit.framework/Versions/A/ReplayKit",
 			"/System/iOSSupport/System/Library/Frameworks/SafariServices.framework/Versions/A/SafariServices",
 			"/System/iOSSupport/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit",
+			"/System/iOSSupport/System/Library/Frameworks/ScreenCaptureKit.framework/Versions/A/ScreenCaptureKit",
 			"/System/iOSSupport/System/Library/Frameworks/ScreenTime.framework/Versions/A/ScreenTime",
 			"/System/iOSSupport/System/Library/Frameworks/SharedWithYou.framework/Versions/A/SharedWithYou",
 			"/System/iOSSupport/System/Library/Frameworks/Social.framework/Versions/A/Social",

@@ -1761,5 +1761,43 @@ namespace GeneratorTests {
 				Assert.IsTrue (p.ParameterType.IsPointer, $"Pointer parameter type: {p.Name}");
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ReleaseAttribute (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "tests/release-attribute.cs");
+			bgen.AssertNoWarnings ();
+
+			var passesOwnsEqualsTrue = new Func<MethodDefinition, bool> ((method) => {
+				foreach (var ins in method.Body.Instructions) {
+					switch (ins.OpCode.Code) {
+					case Code.Call:
+					case Code.Calli:
+					case Code.Callvirt:
+						var mr = (MethodReference) ins.Operand;
+						switch (mr.Name) {
+						case "GetINativeObject":
+						case "GetNSObject":
+						case "FromHandle":
+							var prev = ins.Previous;
+							return prev.OpCode.Code == Code.Ldc_I4_1;
+						}
+						break;
+					}
+				}
+				return false;
+			});
+
+			// The last argument in the call to GetNSObject, GetINativeObject or FromHandle (or any other object-creating methods) must be 'true'.
+			var methods = bgen.ApiAssembly.MainModule.GetType ("NS", "ReleaseAttributeTest").Methods
+								.Where ((v) => !v.IsConstructor)
+								.Where (v => v.Name != "get_ClassHandle");
+			Assert.Multiple (() => {
+				foreach (var method in methods)
+					Assert.True (passesOwnsEqualsTrue (method), method.Name);
+			});
+		}
 	}
 }

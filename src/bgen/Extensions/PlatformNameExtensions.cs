@@ -61,6 +61,7 @@ public static class PlatformNameExtensions {
 		switch (currentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.MacCatalyst:
+		case PlatformName.TvOS:
 			pdfKitMap = "PDFKit";
 			return true;
 		case PlatformName.MacOSX:

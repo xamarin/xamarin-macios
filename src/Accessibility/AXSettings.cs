@@ -19,6 +19,12 @@ namespace Accessibility {
 	public enum AXSettingsFeature : long {
 		/// <summary>Jump to the "Allow Apps to Request to Use" setting in Personal Voice.</summary>
 		PersonalVoiceAllowAppsToRequestToUse = 1,
+		/// <summary>Jump to the "Allow Apps to Add Audio to Calls." setting in Personal Voice.</summary>
+		[SupportedOSPlatform ("ios18.2")]
+		[SupportedOSPlatform ("maccatalyst18.2")]
+		[SupportedOSPlatform ("macos15.2")]
+		[SupportedOSPlatform ("tvos18.2")]
+		AllowAppsToAddAudioToCalls,
 	}
 
 	public static class AXSettings {

@@ -115,12 +115,12 @@ DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86 = $(foreach file,$(IOS_WINDOWS_MOBILED
 DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64 = $(foreach file,$(IOS_WINDOWS_MOBILEDEVICE_TOOLS),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/imobiledevice-x64/$(file).*)
 
 .copy-windows-files: .build-stamp
-	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild
-	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/
-	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/imobiledevice-x86
-	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/imobiledevice-x86/
-	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/imobiledevice-x64
-	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/imobiledevice-x64/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/imobiledevice-x86
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/imobiledevice-x86/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/imobiledevice-x64
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64) $(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/imobiledevice-x64/
 
 .dotnet-windows: .build-stamp .copy-windows-files
 
@@ -146,7 +146,7 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)
 $(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
 
 # this is a directory-creating target.
-# we sort to remove duplicates, which can happen if MAC_DESTDIR and IOS_DESTDIR are the same (both create a '/Library/Frameworks/Mono.framework/External/xbuild/Xamarin' target)
+# we sort to remove duplicates
 $(sort $(MSBUILD_DIRECTORIES)):
 	$(Q) mkdir -p $@
 

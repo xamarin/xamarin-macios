@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.102-servicing.24579.1">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.102-servicing.24610.2">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>cbec38b13edc53f701225f8f087fb5a2dbfd3679</Sha>
+      <Sha>a345a00343aa14a693aec75a3d56fc07e99e517f</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -95,9 +95,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="10.0.0-prerelease.24575.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="10.0.0-prerelease.24604.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>9fca69998474507f6515c1351efe027dbf194c87</Sha>
+      <Sha>5979ebc659fb87460f6761bf782fede6ca8911f0</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.24572.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
