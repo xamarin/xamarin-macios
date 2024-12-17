@@ -40,11 +40,12 @@ if test -d "$DEPENDENCY_PATH"; then
 	fi
 
 else
-	echo "Auth is " "${DEPENDENCY_AUTH[@]}"
+	echo "** [$DEPENDENCY_NAME] Auth is " "${DEPENDENCY_AUTH[@]}"
 	echo "*** [$DEPENDENCY_NAME] git" "${DEPENDENCY_AUTH[@]}" "clone $DEPENDENCY_MODULE --recursive $DEPENDENCY_DIRECTORY -b $DEPENDENCY_BRANCH --origin $DEPENDENCY_REMOTE"
 	mkdir -p "$(dirname "$DEPENDENCY_PATH")"
 	cd "$(dirname "$DEPENDENCY_PATH")"
 	git "${DEPENDENCY_AUTH[@]}" "$DEPENDENCY_MODULE" --recursive "$DEPENDENCY_DIRECTORY" -b "$DEPENDENCY_BRANCH" --origin "$DEPENDENCY_REMOTE"
+	echo "Last command run was ["!:0"] with arguments ["!:*"]"
 	cd "$DEPENDENCY_DIRECTORY"
 fi
 
