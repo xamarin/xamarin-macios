@@ -30,9 +30,9 @@ class AttributeComparer : IComparer<AttributeCodeChange> {
 		return 0;
 	}
 }
-class AttributesEqualityComparer : IEqualityComparer<ImmutableArray<AttributeCodeChange>> {
+class AttributesEqualityComparer : EqualityComparer<ImmutableArray<AttributeCodeChange>> {
 
-	public bool Equals (ImmutableArray<AttributeCodeChange> x, ImmutableArray<AttributeCodeChange> y)
+	public override bool Equals (ImmutableArray<AttributeCodeChange> x, ImmutableArray<AttributeCodeChange> y)
 	{
 		if (x.Length != y.Length)
 			return false;
@@ -46,7 +46,7 @@ class AttributesEqualityComparer : IEqualityComparer<ImmutableArray<AttributeCod
 		return true;
 	}
 
-	public int GetHashCode (ImmutableArray<AttributeCodeChange> obj)
+	public override int GetHashCode (ImmutableArray<AttributeCodeChange> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var change in obj) {
