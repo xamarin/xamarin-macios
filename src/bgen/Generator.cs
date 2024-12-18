@@ -6344,6 +6344,8 @@ public partial class Generator : IMemberGatherer {
 						print ("return Dlfcn.GetNFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == TypeCache.CoreGraphics_CGSize) {
 						print ("return Dlfcn.GetCGSize (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
+					} else if (field_pi.PropertyType == TypeCache.CMTag) {
+						print ("return Dlfcn.GetStruct<CoreMedia.CMTag> (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType.IsEnum) {
 						var btype = field_pi.PropertyType.GetEnumUnderlyingType ();
 						if (smartEnumTypeName is not null) {
