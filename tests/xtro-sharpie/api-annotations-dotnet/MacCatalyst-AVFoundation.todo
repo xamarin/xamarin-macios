@@ -275,8 +275,6 @@
 !missing-type! AVSpeechSynthesisProviderRequest not bound
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !deprecated-attribute-missing! AVCaptureConnection::isVideoOrientationSupported missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::setVideoOrientation: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::videoOrientation missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::enqueueSampleBuffer: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::error missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::flush missing a [Deprecated] attribute
@@ -288,7 +286,6 @@
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::stopRequestingMediaData missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::timebase missing a [Deprecated] attribute
 !extra-designated-initializer! AVPlayerLooper::initWithPlayer:templateItem:timeRange: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-enum! AVAudioApplicationRecordPermission not bound
 !missing-enum! AVAudioSessionRenderingMode not bound
 !missing-enum! AVAudioVoiceProcessingOtherAudioDuckingLevel not bound
 !missing-enum! AVAudioVoiceProcessingSpeechActivityEvent not bound
@@ -301,7 +298,6 @@
 !missing-enum! CMTagCollectionVideoOutputPreset not bound
 !missing-enum-value! AVCaptureColorSpace native value AVCaptureColorSpace_AppleLog = 3 not bound
 !missing-enum-value! AVCaptureSystemPressureFactors native value AVCaptureSystemPressureFactorCameraTemperature = 8 not bound
-!missing-enum-value! AVCaptureVideoStabilizationMode native value AVCaptureVideoStabilizationModePreviewOptimized = 4 not bound
 !missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
 !missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
@@ -348,8 +344,6 @@
 !missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetWriterInputTaggedPixelBufferGroupAdaptor::assetWriterInputTaggedPixelBufferGroupAdaptorWithAssetWriterInput:sourcePixelBufferAttributes: not bound
-!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
-!missing-selector! +AVAudioApplication::sharedInstance not bound
 !missing-selector! +AVCaptureDevice::reactionEffectGesturesEnabled not bound
 !missing-selector! +AVCaptureDevice::reactionEffectsEnabled not bound
 !missing-selector! +AVCaptureDevice::setUserPreferredCamera: not bound
@@ -373,9 +367,6 @@
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::initWithAssetWriterInput:sourcePixelBufferAttributes: not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::pixelBufferPool not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::sourcePixelBufferAttributes not bound
-!missing-selector! AVAudioApplication::isInputMuted not bound
-!missing-selector! AVAudioApplication::recordPermission not bound
-!missing-selector! AVAudioApplication::setInputMuted:error: not bound
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioInputNode::setVoiceProcessingOtherAudioDuckingConfiguration: not bound
 !missing-selector! AVAudioInputNode::voiceProcessingOtherAudioDuckingConfiguration not bound
@@ -385,9 +376,7 @@
 !missing-selector! AVAudioSession::renderingMode not bound
 !missing-selector! AVAudioSession::setPrefersInterruptionOnRouteDisconnect:error: not bound
 !missing-selector! AVAudioSession::supportedOutputChannelLayouts not bound
-!missing-selector! AVCaptureConnection::isVideoRotationAngleSupported: not bound
 !missing-selector! AVCaptureConnection::setVideoRotationAngle: not bound
-!missing-selector! AVCaptureConnection::videoRotationAngle not bound
 !missing-selector! AVCaptureDeskViewApplication::presentWithCompletionHandler: not bound
 !missing-selector! AVCaptureDeskViewApplication::presentWithLaunchConfiguration:completionHandler: not bound
 !missing-selector! AVCaptureDeskViewApplicationLaunchConfiguration::mainWindowFrame not bound
@@ -491,7 +480,6 @@
 !missing-selector! AVZoomRange::minZoomFactor not bound
 !missing-type! AVAssetVariantVideoLayoutAttributes not bound
 !missing-type! AVAssetWriterInputTaggedPixelBufferGroupAdaptor not bound
-!missing-type! AVAudioApplication not bound
 !missing-type! AVCaptureDeskViewApplication not bound
 !missing-type! AVCaptureDeskViewApplicationLaunchConfiguration not bound
 !missing-type! AVCaptureDeviceRotationCoordinator not bound
@@ -532,7 +520,6 @@
 !missing-enum! AVCaptureMultichannelAudioMode not bound
 !missing-enum! AVPlayerInterstitialEventTimelineOccupancy not bound
 !missing-enum! AVPlayerItemSegmentType not bound
-!missing-enum-value! AVCaptureVideoStabilizationMode native value AVCaptureVideoStabilizationModeCinematicExtendedEnhanced = 5 not bound
 !missing-enum-value! AVError native value AVErrorToneMappingFailed = -11885 not bound
 !missing-field! AVAssetImageGeneratorDynamicRangePolicyForceSDR not bound
 !missing-field! AVAssetImageGeneratorDynamicRangePolicyMatchSource not bound
@@ -862,8 +849,6 @@
 !missing-field! AVMetadataQuickTimeMetadataKeyFullFrameRatePlaybackIntent not bound
 !missing-field! AVVideoCodecTypeJPEGXL not bound
 !missing-protocol! AVCaptureSessionControlsDelegate not bound
-!missing-protocol-member! AVCaptureFileOutputRecordingDelegate::captureOutput:didPauseRecordingToOutputFileAtURL:fromConnections: not found
-!missing-protocol-member! AVCaptureFileOutputRecordingDelegate::captureOutput:didResumeRecordingToOutputFileAtURL:fromConnections: not found
 !missing-selector! AVCaptureControl::isEnabled not bound
 !missing-selector! AVCaptureControl::setEnabled: not bound
 !missing-selector! AVCaptureDeviceFormat::systemRecommendedExposureBiasRange not bound
@@ -923,3 +908,16 @@
 !missing-type! AVCaptureSystemExposureBiasSlider not bound
 !missing-type! AVCaptureSystemZoomSlider not bound
 !missing-type! AVExposureBiasRange not bound
+!missing-enum! AVAudioApplicationMicrophoneInjectionPermission not bound
+!missing-enum! AVAudioSessionMicrophoneInjectionMode not bound
+!missing-field! AVAudioSessionMicrophoneInjectionCapabilitiesChangeNotification not bound
+!missing-field! AVAudioSessionMicrophoneInjectionIsAvailableKey not bound
+!missing-selector! +AVAudioApplication::requestMicrophoneInjectionPermissionWithCompletionHandler: not bound
+!missing-selector! AVAudioApplication::microphoneInjectionPermission not bound
+!missing-selector! AVAudioSession::isAVAudioSessionAvailable not bound
+!missing-selector! AVAudioSession::preferredAVAudioSessionMode not bound
+!missing-selector! AVAudioSession::setPreferredAVAudioSessionMode:error: not bound
+!missing-selector! AVAudioSession::isEchoCancelledInputAvailable not bound
+!missing-selector! AVAudioSession::isEchoCancelledInputEnabled not bound
+!missing-selector! AVAudioSession::prefersEchoCancelledInput not bound
+!missing-selector! AVAudioSession::setPrefersEchoCancelledInput:error: not bound

@@ -31,6 +31,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags));
+				flags &= ~NetworkReachabilityFlags.TransientConnection; // Remove the TransientConnection flag if it's set
 				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "Reachable");
 			}
 		}

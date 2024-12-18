@@ -55,6 +55,13 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+#if __TVOS__
+			// This framework is only available on device
+			case "BrowserEngineKit":
+				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
+					return true;
+				break;
+#endif // __TVOS__
 			}
 
 			switch (type.Name) {
@@ -130,6 +137,10 @@ namespace Introspection {
 			case "ASCredentialIdentity":
 			case "ASCredentialRequest":
 				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+			case "BrowserEngineKit":
+				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
 					return true;
 				break;
 			}

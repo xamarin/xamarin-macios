@@ -78,6 +78,13 @@ namespace Introspection {
 			case "AssetsLibrary":
 				// removed in Xcode 15.3
 				return true;
+#if __TVOS__
+			// This framework is only available on device
+			case "BrowserEngineKit":
+				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
+					return true;
+				break;
+#endif // __TVOS__
 			}
 
 			switch (p.Name) {

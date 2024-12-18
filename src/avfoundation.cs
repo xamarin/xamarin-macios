@@ -2745,12 +2745,54 @@ namespace AVFoundation {
 		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
 		[Export ("renderingMode")]
 		AVAudioSessionRenderingMode RenderingMode { get; }
+
+		[Notification (typeof (MicrophoneInjectionCapabilitiesChangeEventArgs))]
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Field ("AVAudioSessionMicrophoneInjectionCapabilitiesChangeNotification")]
+		NSString MicrophoneInjectionCapabilitiesChangeNotification { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("setPrefersEchoCancelledInput:error:")]
+		bool SetPrefersEchoCancelledInput (bool value, [NullAllowed] out NSError error);
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("prefersEchoCancelledInput")]
+		bool PrefersEchoCancelledInput { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isEchoCancelledInputEnabled")]
+		bool IsEchoCancelledInputEnabled { get; }
+
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isEchoCancelledInputAvailable")]
+		bool IsEchoCancelledInputAvailable { get; }
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("setPreferredMicrophoneInjectionMode:error:")]
+		bool SetPreferredMicrophoneInjectionMode (AVAudioSessionMicrophoneInjectionMode inValue, [NullAllowed] out NSError outError);
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("preferredMicrophoneInjectionMode")]
+		AVAudioSessionMicrophoneInjectionMode PreferredMicrophoneInjectionMode { get; }
+
+		// inlined from the MicrophoneInjection category on AVAudioSession
+		[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+		[Export ("isMicrophoneInjectionAvailable")]
+		bool IsMicrophoneInjectionAvailable { get; }
 	}
 
 	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
 	interface RenderingModeChangeNotificationEventArgs {
 		[Export ("AVAudioSessionRenderingModeNewRenderingModeKey")]
 		AVAudioSessionRenderingMode NewRenderingMode { get; }
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	interface MicrophoneInjectionCapabilitiesChangeEventArgs {
+		[Export ("AVAudioSessionMicrophoneInjectionIsAvailableKey")]
+		bool IsAvailable { get; }
 	}
 
 	[NoMac]
@@ -9398,7 +9440,7 @@ namespace AVFoundation {
 	/// <include file="../docs/api/AVFoundation/AVCaptureSession.xml" path="/Documentation/Docs[@DocId='T:AVFoundation.AVCaptureSession']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureSession {
 
@@ -9493,11 +9535,11 @@ namespace AVFoundation {
 		[Field ("AVCaptureSessionPresetInputPriority")]
 		NSString PresetInputPriority { get; }
 
-		[NoiOS, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst, NoTV]
 		[Field ("AVCaptureSessionPreset320x240")]
 		NSString Preset320x240 { get; }
 
-		[NoiOS, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst, NoTV]
 		[Field ("AVCaptureSessionPreset960x540")]
 		NSString Preset960x540 { get; }
 
@@ -9556,6 +9598,7 @@ namespace AVFoundation {
 		[Export ("synchronizationClock")]
 		CMClock SynchronizationClock { get; }
 
+		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 12, 3, message: "Use 'SynchronizationClock' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'SynchronizationClock' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'SynchronizationClock' instead.")]
@@ -9609,7 +9652,7 @@ namespace AVFoundation {
 	/// <include file="../docs/api/AVFoundation/AVCaptureConnection.xml" path="/Documentation/Docs[@DocId='T:AVFoundation.AVCaptureConnection']/*" />
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureConnection {
 
@@ -9644,7 +9687,11 @@ namespace AVFoundation {
 		[Export ("videoMirrored")]
 		bool VideoMirrored { [Bind ("isVideoMirrored")] get; set; }
 
+		[NoTV]
 		[Export ("videoOrientation", ArgumentSemantic.Assign)]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use VideoRotationAngle instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use VideoRotationAngle instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use VideoRotationAngle instead.")]
 		AVCaptureVideoOrientation VideoOrientation { get; set; }
 
 		[Export ("inputPorts")]
@@ -9659,21 +9706,25 @@ namespace AVFoundation {
 		[Export ("isVideoOrientationSupported")]
 		bool SupportsVideoOrientation { get; }
 
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("supportsVideoMinFrameDuration")]
 		bool SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get; }
 
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set; }
 
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("supportsVideoMaxFrameDuration")]
 		bool SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get; }
 
+		[NoTV]
 		[Export ("videoMaxFrameDuration")]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
@@ -9702,6 +9753,7 @@ namespace AVFoundation {
 		bool SupportsVideoStabilization { [Bind ("isVideoStabilizationSupported")] get; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("videoStabilizationEnabled")]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'ActiveVideoStabilizationMode' instead.")]
 		[MacCatalyst (13, 1)]
@@ -9709,6 +9761,7 @@ namespace AVFoundation {
 		bool VideoStabilizationEnabled { [Bind ("isVideoStabilizationEnabled")] get; }
 
 		[NoMac]
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PreferredVideoStabilizationMode' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PreferredVideoStabilizationMode' instead.")]
@@ -9727,10 +9780,12 @@ namespace AVFoundation {
 
 		[Unavailable (PlatformName.MacCatalyst)]
 		[NoiOS]
+		[NoTV]
 		[Export ("supportsVideoFieldMode")]
 		bool SupportsVideoFieldMode { [Bind ("isVideoFieldModeSupported")] get; }
 
 		[NoiOS]
+		[NoTV]
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("videoFieldMode")]
 		AVVideoFieldMode VideoFieldMode { get; set; }
@@ -9745,6 +9800,13 @@ namespace AVFoundation {
 		[Export ("cameraIntrinsicMatrixDeliveryEnabled")]
 		bool CameraIntrinsicMatrixDeliveryEnabled { [Bind ("isCameraIntrinsicMatrixDeliveryEnabled")] get; set; }
 
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), TV (17, 0)]
+		[Export ("isVideoRotationAngleSupported:")]
+		bool IsVideoRotationAngleSupported (nfloat videoRotationAngle);
+
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), TV (17, 0)]
+		[Export ("videoRotationAngle")]
+		nfloat VideoRotationAngle { get; }
 	}
 
 	/// <summary>An audio channel in a capture connection.</summary>
@@ -9752,7 +9814,7 @@ namespace AVFoundation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureAudioChannel_Class/index.html">Apple documentation for <c>AVCaptureAudioChannel</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureAudioChannel {
 		[Export ("peakHoldLevel")]
@@ -9775,7 +9837,7 @@ namespace AVFoundation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureInput_Class/index.html">Apple documentation for <c>AVCaptureInput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureInput because it is an abstract superclass.
 	[DisableDefaultCtor]
@@ -9793,7 +9855,7 @@ namespace AVFoundation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureInputPort_Class/index.html">Apple documentation for <c>AVCaptureInputPort</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureInputPort {
@@ -9997,7 +10059,7 @@ namespace AVFoundation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureOutput_Class/index.html">Apple documentation for <c>AVCaptureOutput</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 #if NET
 	// Making a class abstract has problems (see https://github.com/xamarin/xamarin-macios/issues/4969), so not doing this (yet).
@@ -10058,7 +10120,7 @@ namespace AVFoundation {
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVCaptureVideoPreviewLayer_Class/index.html">Apple documentation for <c>AVCaptureVideoPreviewLayer</c></related>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[BaseType (typeof (CALayer))]
 	interface AVCaptureVideoPreviewLayer {
 		[NullAllowed] // by default this property is null
@@ -10074,6 +10136,7 @@ namespace AVFoundation {
 		NSString WeakVideoGravity { get; set; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("orientation")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.VideoOrientation' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10081,6 +10144,7 @@ namespace AVFoundation {
 		AVCaptureVideoOrientation Orientation { get; set; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("automaticallyAdjustsMirroring")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.AutomaticallyAdjustsVideoMirroring' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10088,6 +10152,7 @@ namespace AVFoundation {
 		bool AutomaticallyAdjustsMirroring { get; set; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("mirrored")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.VideoMirrored' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10095,6 +10160,7 @@ namespace AVFoundation {
 		bool Mirrored { [Bind ("isMirrored")] get; set; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("isMirroringSupported")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.IsVideoMirroringSupported' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10102,6 +10168,7 @@ namespace AVFoundation {
 		bool MirroringSupported { get; }
 
 		[NoMac]
+		[NoTV]
 		[Export ("isOrientationSupported")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVCaptureConnection.IsVideoOrientationSupported' instead.")]
 		[MacCatalyst (13, 1)]
@@ -10414,7 +10481,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVCaptureOutput))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureFileOutput because it is an abstract superclass.
 	[DisableDefaultCtor]
-	[NoTV]
+	[TV (17, 0)]
 	interface AVCaptureFileOutput {
 		[Export ("recordedDuration")]
 		CMTime RecordedDuration { get; }
@@ -10443,11 +10510,11 @@ namespace AVFoundation {
 		[Export ("stopRecording")]
 		void StopRecording ();
 
-		[NoiOS, MacCatalyst (15, 0)]
+		[iOS (18, 0), MacCatalyst (15, 0), TV (18, 0)]
 		[Export ("pauseRecording")]
 		void PauseRecording ();
 
-		[NoiOS, MacCatalyst (15, 0)]
+		[iOS (18, 0), MacCatalyst (15, 0), TV (18, 0)]
 		[Export ("resumeRecording")]
 		void ResumeRecording ();
 
@@ -10458,7 +10525,7 @@ namespace AVFoundation {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		IAVCaptureFileOutputDelegate Delegate { get; set; }
 
-		[NoiOS, MacCatalyst (15, 0)]
+		[iOS (18, 0), MacCatalyst (15, 0), TV (18, 0)]
 		[Export ("recordingPaused")]
 		bool RecordingPaused { [Bind ("isRecordingPaused")] get; }
 	}
@@ -10471,26 +10538,30 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
+	[TV (17, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	interface AVCaptureFileOutputRecordingDelegate {
 		[Export ("captureOutput:didStartRecordingToOutputFileAtURL:fromConnections:")]
 		void DidStartRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections);
 
+		[iOS (18, 2), Mac (15, 2), MacCatalyst (18, 2), TV (18, 2)]
+		[Export ("captureOutput:didStartRecordingToOutputFileAtURL:startPTS:fromConnections:")]
+		void DidStartRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, CMTime startPts, NSObject [] connections);
+
 		[Abstract]
 		[Export ("captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:"), CheckDisposed]
 		void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, [NullAllowed] NSError error);
 
-		[NoMacCatalyst, NoiOS]
+		[MacCatalyst (18, 0), iOS (18, 0), TV (18, 0)]
 		[Export ("captureOutput:didPauseRecordingToOutputFileAtURL:fromConnections:")]
 		void DidPauseRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections);
 
-		[NoMacCatalyst, NoiOS]
+		[MacCatalyst (18, 0), iOS (18, 0), TV (18, 0)]
 		[Export ("captureOutput:didResumeRecordingToOutputFileAtURL:fromConnections:")]
 		void DidResumeRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections);
 
-		[NoMacCatalyst, NoiOS]
+		[NoMacCatalyst, NoiOS, NoTV]
 		[Export ("captureOutput:willFinishRecordingToOutputFileAtURL:fromConnections:error:")]
 		void WillFinishRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections, [NullAllowed] NSError error);
 	}
@@ -13823,9 +13894,18 @@ namespace AVFoundation {
 		[Export ("hasNewPixelBufferForItemTime:")]
 		bool HasNewPixelBufferForItemTime (CMTime itemTime);
 
+#if !XAMCORE_5_0
 		[Protected]
 		[Export ("copyPixelBufferForItemTime:itemTimeForDisplay:")]
 		IntPtr WeakCopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay);
+#endif
+
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("copyPixelBufferForItemTime:itemTimeForDisplay:")]
+		[return: Release]
+		CVPixelBuffer CopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVPlayerItemOutputPullDelegate delegateClass, [NullAllowed] DispatchQueue delegateQueue);
@@ -17045,6 +17125,69 @@ namespace AVFoundation {
 	interface AVCaptionConversionAdjustment {
 		[Export ("adjustmentType")]
 		string AdjustmentType { get; }
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	[Native]
+	enum AVAudioSessionMicrophoneInjectionMode : long {
+		None = 0,
+		SpokenAudio = 1,
+	}
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum AVAudioApplicationRecordPermission : long {
+		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
+		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
+		Granted = ('g' << 24) + ('r' << 16) + ('n' << 8) + 't', // 'grnt'
+	}
+
+	[iOS (18, 2), NoTV, NoMac, NoMacCatalyst]
+	[Native]
+	public enum AVAudioApplicationMicrophoneInjectionPermission : long {
+		ServiceDisabled = ('s' << 24) + ('r' << 16) + ('d' << 8) + 's', // 'srds'
+		Undetermined = ('u' << 24) + ('n' << 16) + ('d' << 8) + 't', // 'undt'
+		Denied = ('d' << 24) + ('e' << 16) + ('n' << 8) + 'y', // 'deny'
+		Granted = ('g' << 24) + ('r' << 16) + ('n' << 8) + 't', // 'grnt'
+	}
+
+	delegate bool AVAudioApplicationSetInputMuteStateChangeHandler (bool inputShouldBeMuted);
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVAudioApplication {
+		[Static]
+		[Export ("sharedInstance")]
+		AVAudioApplication SharedInstance { get; }
+
+		[Export ("setInputMuted:error:")]
+		bool SetInputMuted (bool muted, [NullAllowed] out NSError outError);
+
+		[Export ("inputMuted")]
+		bool InputMuted { [Bind ("isInputMuted")] get; }
+
+		[NoTV, NoMacCatalyst, NoiOS, Mac (14, 0)]
+		[Export ("setInputMuteStateChangeHandler:error:")]
+		bool SetInputMuteStateChangeHandler ([NullAllowed] AVAudioApplicationSetInputMuteStateChangeHandler inputMuteHandler, [NullAllowed] out NSError outError);
+
+		[Export ("recordPermission")]
+		AVAudioApplicationRecordPermission RecordPermission { get; }
+
+		[Static]
+		[Export ("requestRecordPermissionWithCompletionHandler:")]
+		[Async]
+		void RequestRecordPermission (Action<bool> response);
+
+		[NoTV, NoMac, NoMacCatalyst, iOS (18, 2)]
+		[Export ("microphoneInjectionPermission")]
+		AVAudioApplicationMicrophoneInjectionPermission MicrophoneInjectionPermission { get; }
+
+		[NoTV, NoMac, NoMacCatalyst, iOS (18, 2)]
+		[Static]
+		[Export ("requestMicrophoneInjectionPermissionWithCompletionHandler:")]
+		[Async]
+		void RequestMicrophoneInjectionPermission (Action<AVAudioApplicationMicrophoneInjectionPermission> response);
 	}
 
 }

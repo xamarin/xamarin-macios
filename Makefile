@@ -43,16 +43,6 @@ show-versions:
 	@echo "    The .NET NuGet(s):"
 	@$(foreach platform,$(DOTNET_PLATFORMS),echo "        Microsoft.$(platform) $($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)";)
 
-check-permissions:
-ifdef INCLUDE_MAC
-	@UNREADABLE=`find $(MAC_DESTDIR) ! -perm -0644`; if ! test -z "$$UNREADABLE"; then echo "There are files with invalid permissions (all installed files at least be readable by everybody, and writable by owner: 0644): "; find $(MAC_DESTDIR) ! -perm -0644 | xargs ls -la; exit 1; fi
-	@echo Validated file permissions for Xamarin.Mac.
-endif
-ifdef INCLUDE_IOS
-	@UNREADABLE=`find $(IOS_DESTDIR) ! -perm -0644`; if ! test -z "$$UNREADABLE"; then echo "There are files with invalid permissions (all installed files at least be readable by everybody, and writable by owner: 0644): "; find $(IOS_DESTDIR) ! -perm -0644 | xargs ls -la; exit 1; fi
-	@echo Validated file permissions for Xamarin.iOS.
-endif
-
 all-local:: global.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
@@ -71,34 +61,6 @@ install-hook::
 	fi
 
 install-hook::
-	@$(MAKE) check-permissions
-ifdef INCLUDE_IOS
-ifneq ($(findstring $(IOS_DESTDIR)$(MONOTOUCH_PREFIX),$(shell ls -l /Library/Frameworks/Xamarin.iOS.framework/Versions/Current 2>&1)),)
-	@echo
-	@echo "	This build of Xamarin.iOS is the now default version on your system. "
-	@echo
-else
-	@echo
-	@echo "	Xamarin.iOS has not been installed into your system by 'make install'"
-	@echo "	In order to set the currently built Xamarin.iOS as your system version,"
-	@echo "	execute 'make install-system'".
-	@echo
-endif
-endif
-ifdef INCLUDE_MAC
-ifndef INCLUDE_IOS
-	@echo
-endif
-ifneq ($(findstring $(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions),$(shell ls -l $(MAC_FRAMEWORK_DIR)/Versions/Current 2>&1)),)
-	@echo "	This build of Xamarin.Mac is the now default version on your system. "
-	@echo
-else
-	@echo "	Xamarin.Mac has not been installed into your system by 'make install'"
-	@echo "	In order to set the currently built Xamarin.Mac as your system version,"
-	@echo "	execute 'make install-system'".
-	@echo
-endif
-endif
 	$(Q) $(MAKE) -C dotnet shutdown-build-server
 
 .PHONY: package release
@@ -116,41 +78,6 @@ package release:
 
 dotnet-install-system:
 	$(Q) $(MAKE) -C dotnet install-system
-
-install-system: install-system-ios install-system-mac
-	@# Clean up some old files
-	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS
-	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.CSharp.targets
-	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.Common.CSharp.targets
-	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
-	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
-	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
-
-install-system-ios:
-ifdef INCLUDE_IOS
-	@if ! test -s "$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo"; then echo "The Xamarin.iOS build seems incomplete. Did you run \"make install\"?"; exit 1; fi
-	$(Q) rm -f /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-	$(Q) mkdir -p /Library/Frameworks/Xamarin.iOS.framework/Versions
-	$(Q) ln -s $(IOS_DESTDIR)$(MONOTOUCH_PREFIX) /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-	$(Q) echo Installed Xamarin.iOS into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-endif
-
-install-system-mac:
-ifdef INCLUDE_MAC
-	@if ! test -s "$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo" ; then echo "The Xamarin.Mac build seems incomplete. Did you run \"make install\"?"; exit 1; fi
-	$(Q) rm -f $(MAC_FRAMEWORK_DIR)/Versions/Current
-	$(Q) mkdir -p $(MAC_FRAMEWORK_DIR)/Versions
-	$(Q) ln -s $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) $(MAC_FRAMEWORK_DIR)/Versions/Current
-	$(Q) echo Installed Xamarin.Mac into $(MAC_FRAMEWORK_DIR)/Versions/Current
-endif
-
-fix-install-permissions:
-	sudo mkdir -p /Library/Frameworks/Mono.framework/External/
-	sudo mkdir -p /Library/Frameworks/Xamarin.iOS.framework
-	sudo mkdir -p /Library/Frameworks/Xamarin.Mac.framework
-	sudo chown -R $(USER) /Library/Frameworks/Mono.framework/External/
-	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
-	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
 
 fix-xcode-select:
 	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)

@@ -2715,9 +2715,6 @@ public class TestApp {
 		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release")]
 		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release")]
 		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release")]
 		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)

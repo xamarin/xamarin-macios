@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Macios.Generator.Attributes;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
@@ -28,14 +27,14 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// </summary>
 	public Version? SupportedVersion { get; }
 
-	readonly Dictionary<Version, string?> unsupported = new ();
+	readonly SortedDictionary<Version, string?> unsupported = new ();
 
 	/// <summary>
 	/// Dictionary that contains all the obsoleted versions and their optional data.
 	/// </summary>
 	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
-	readonly Dictionary<Version, (string? Message, string? Url)> obsoleted = new ();
+	readonly SortedDictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 	/// <summary>
 	/// Dictionary tath contains all the unsupported versions and their optional data.
@@ -51,8 +50,8 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
 
 	PlatformAvailability (ApplePlatform platform, Version? supportedVersion,
-		Dictionary<Version, string?> unsupportedVersions,
-		Dictionary<Version, (string? Message, string? Url)> obsoletedVersions)
+		SortedDictionary<Version, string?> unsupportedVersions,
+		SortedDictionary<Version, (string? Message, string? Url)> obsoletedVersions)
 	{
 		Platform = platform;
 		SupportedVersion = supportedVersion;
@@ -71,7 +70,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		// important, the default copy constructor of a record wont do this. It will use the same ref, not
 		// something we want to do because it will mean that two records will modify the same collection
 		unsupported = new (other.unsupported);
-		obsoleted = new (other.ObsoletedVersions);
+		obsoleted = new (other.obsoleted);
 	}
 
 	/// <summary>
