@@ -30,7 +30,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+		[iOS (16,0), NoMac, NoTV, MacCatalyst (16,0)]
 #endif // NET
 		[DllImport (Constants.NearbyInteractionLibrary)]
 		static extern NativeHandle /* NSString */ NIAlgorithmConvergenceStatusReasonDescription (NativeHandle /* NIAlgorithmConvergenceStatusReason */ reason);
@@ -41,7 +41,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+		[iOS (16,0), NoMac, NoTV, MacCatalyst (16,0)]
 #endif // NET
 		public static NSString GetConvergenceStatusReason (NIAlgorithmConvergenceStatusReason reason)
 		{

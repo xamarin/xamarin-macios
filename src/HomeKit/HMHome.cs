@@ -16,7 +16,6 @@ namespace HomeKit {
 
 #if !NET
 		[NoTV]
-		[NoWatch]
 #if (WATCH || TVOS)
 		[Obsolete ("This API is not available on this platform.")]
 #endif // WATCH || TVOS
@@ -27,7 +26,6 @@ namespace HomeKit {
 		}
 
 		[NoTV]
-		[NoWatch]
 #if (WATCH || TVOS)
 		[Obsolete ("This API is not available on this platform.")]
 #endif // WATCH || TVOS

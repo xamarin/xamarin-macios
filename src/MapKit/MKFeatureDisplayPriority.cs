@@ -12,8 +12,6 @@ namespace MapKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 #if WATCH && !NET
 	[Obsolete ("This API is not available on this platform.")]

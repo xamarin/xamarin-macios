@@ -179,7 +179,6 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
-		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
@@ -228,7 +227,6 @@ namespace SpriteKit {
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
 
 		[NoMac]
-		[Watch (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("focusBehavior", ArgumentSemantic.Assign)]
 		SKNodeFocusBehavior FocusBehavior { get; set; }
@@ -351,21 +349,18 @@ namespace SpriteKit {
 		void MoveToParent (SKNode parent);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle [] ObstaclesFromNodeBounds (SKNode [] nodes);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle [] ObstaclesFromNodePhysicsBodies (SKNode [] nodes);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
@@ -374,39 +369,33 @@ namespace SpriteKit {
 #if !NET
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 #endif
 
 #if !WATCH
 		// Extensions from GameplayKit, inlined to avoid ugly static extension syntax
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle [] GetObstaclesFromSpriteTextures (SKNode [] sprites, float accuracy);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle [] GetObstaclesFromNodeBounds (SKNode [] nodes);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
@@ -416,7 +405,6 @@ namespace SpriteKit {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[Category, BaseType (typeof (NSEvent))]
 	partial interface SKNodeEvent_NSEvent {
@@ -428,7 +416,6 @@ namespace SpriteKit {
 	/// <summary>Extension methods for <see cref="T:UIKit.UITouch" /> that aide with conversion to Sprite Kit coordinates.</summary>
 	[NoMac]
 	[MacCatalyst (13, 1)]
-	[NoWatch]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
 
@@ -449,7 +436,6 @@ namespace SpriteKit {
 	[BaseType (typeof (SKNode))]
 	partial interface SKEffectNode : SKWarpable {
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("filter", ArgumentSemantic.Retain)]
@@ -609,17 +595,14 @@ namespace SpriteKit {
 		[Export ("physicsWorld")]
 		SKPhysicsWorld PhysicsWorld { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("convertPointFromView:")]
 		CGPoint ConvertPointFromView (CGPoint point);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("convertPointToView:")]
 		CGPoint ConvertPointToView (CGPoint point);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("view", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -634,12 +617,10 @@ namespace SpriteKit {
 		[Export ("didSimulatePhysics")]
 		void DidSimulatePhysics ();
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("didMoveToView:")]
 		void DidMoveToView (SKView view);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("willMoveFromView:")]
 		void WillMoveFromView (SKView view);
@@ -1528,7 +1509,6 @@ namespace SpriteKit {
 	///       <para>Application developers should note the availability of debugging properties, such as <see cref="P:SpriteKit.SKView.ShowsFPS" />.</para>
 	///     </remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/SpriteKit/Reference/SKView/index.html">Apple documentation for <c>SKView</c></related>
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor]
@@ -1639,7 +1619,6 @@ namespace SpriteKit {
 	/// <summary>Delegate object for <see cref="T:SpriteKit.SKView" /> objects, allowing the developer to control the frame rate.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/SpriteKit/SKViewDelegate">Apple documentation for <c>SKViewDelegate</c></related>
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -1695,7 +1674,6 @@ namespace SpriteKit {
 		[Static, Export ("doorwayWithDuration:")]
 		SKTransition DoorwayWithDuration (double sec);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("transitionWithCIFilter:duration:")]
 		SKTransition TransitionWithCIFilter (CIFilter filter, double sec);
@@ -1736,7 +1714,6 @@ namespace SpriteKit {
 		[Static, Export ("textureWithData:size:rowLength:alignment:")]
 		SKTexture FromData (NSData pixelData, CGSize size, uint /* unsigned int*/ rowLength, uint /* unsigned int */ alignment);
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("textureByApplyingCIFilter:")]
 		SKTexture TextureByApplyingCIFilter (CIFilter filter);
@@ -1790,7 +1767,6 @@ namespace SpriteKit {
 
 #if !WATCH
 		// Static Category from GameplayKit
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("textureWithNoiseMap:")]
@@ -1878,7 +1854,6 @@ namespace SpriteKit {
 		NativeHandle Constructor (string name, float /* float, not CGFloat */ value);
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -1899,7 +1874,6 @@ namespace SpriteKit {
 #endif
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -1919,7 +1893,6 @@ namespace SpriteKit {
 #endif
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -1940,7 +1913,6 @@ namespace SpriteKit {
 
 #if !NET
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -1968,7 +1940,6 @@ namespace SpriteKit {
 
 #if !NET
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -1994,7 +1965,6 @@ namespace SpriteKit {
 
 #if !NET
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2034,7 +2004,6 @@ namespace SpriteKit {
 		float FloatValue { get; set; } /* float, not CGFloat */
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2058,7 +2027,6 @@ namespace SpriteKit {
 		}
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2082,7 +2050,6 @@ namespace SpriteKit {
 		}
 
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2110,7 +2077,6 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
-		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
 #endif // !NET
@@ -2138,7 +2104,6 @@ namespace SpriteKit {
 
 #if !NET
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -2169,7 +2134,6 @@ namespace SpriteKit {
 
 #if !NET
 		[Internal]
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
@@ -3409,7 +3373,6 @@ namespace SpriteKit {
 
 #if !WATCH
 		// Static Category from GameplayKit
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
@@ -3600,7 +3563,6 @@ namespace SpriteKit {
 
 	// SKRenderer is not available for WatchKit apps and the iOS simulator
 	/// <summary>The class used to render SpriteKit.</summary>
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

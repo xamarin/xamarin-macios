@@ -96,7 +96,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[NoWatch]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
@@ -109,7 +108,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 #else
-		[NoWatch, iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
 #endif
 		Apac = 0x61706163, // 'apac'
 	}
@@ -866,7 +865,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -879,7 +877,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -892,7 +889,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -905,7 +901,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -918,7 +913,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -931,7 +925,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -944,7 +937,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_5_0_E = (216U << 16) | 5,
 
@@ -954,7 +947,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_5_1_E = (217U << 16) | 6,
 
@@ -964,7 +957,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_6_1_B = (218U << 16) | 7,
 
@@ -974,7 +967,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_7_1_D = (219U << 16) | 8,
 

@@ -40,7 +40,6 @@ namespace AVFoundation {
 		Max = 0x7F
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
@@ -53,7 +52,6 @@ namespace AVFoundation {
 		Cancelled
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVAssetReader.h
@@ -65,7 +63,6 @@ namespace AVFoundation {
 		Cancelled,
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
@@ -79,7 +76,6 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVCaptureVideoOrientation : long {
@@ -90,7 +86,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -99,7 +94,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -108,7 +102,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -117,7 +110,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[TV (17, 0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -128,7 +120,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -141,7 +132,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -161,7 +151,6 @@ namespace AVFoundation {
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVError : long {
@@ -247,7 +236,6 @@ namespace AVFoundation {
 		RequestCancelled = -11879,
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -257,7 +245,6 @@ namespace AVFoundation {
 		None
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
@@ -276,7 +263,6 @@ namespace AVFoundation {
 	}
 #endif
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
@@ -284,7 +270,6 @@ namespace AVFoundation {
 		Unknown, Loading, Loaded, Failed, Cancelled
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -294,7 +279,6 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -308,7 +292,6 @@ namespace AVFoundation {
 		ForbidAll = 0xFFFF,
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
@@ -318,7 +301,6 @@ namespace AVFoundation {
 
 	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
 	[NoiOS]
-	[NoWatch]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -333,14 +315,12 @@ namespace AVFoundation {
 	[NoiOS]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -349,7 +329,6 @@ namespace AVFoundation {
 		ShouldResume = 1
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -358,7 +337,6 @@ namespace AVFoundation {
 		NotifyOthersOnDeactivation = 1
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -366,12 +344,10 @@ namespace AVFoundation {
 		None = 0,
 		[NoTV]
 		[NoMac] // Removed in Xcode 12 GM
-		[NoWatch] // Removed in Xcode 12 GM
 		[MacCatalyst (13, 1)]
 		Speaker = 0x73706b72 // 'spkr'
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -393,12 +369,10 @@ namespace AVFoundation {
 		MixWithOthers = 1,
 		DuckOthers = 2,
 		[NoMac] // Removed in Xcode 12 GM
-		[NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		AllowBluetooth = 4,
 		[NoMac] // Removed in Xcode 12 GM
-		[NoWatch] // Removed in Xcode 12 GM
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		DefaultToSpeaker = 8,
@@ -410,18 +384,15 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		AllowBluetoothA2DP = 32,
 		[NoMac] // Removed in Xcode 12 GM
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		AllowAirPlay = 64,
 		[NoMac]
 		[NoTV]
 		[iOS (14, 5)]
-		[Watch (7, 3)]
 		[MacCatalyst (14, 5)]
 		OverrideMutedMicrophoneInterruption = 128,
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -456,7 +427,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -481,7 +451,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -518,12 +487,10 @@ namespace AVFoundation {
 		HrtfHQ = 6,
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		Auto = 7,
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVAudioSessionRecordPermission : ulong {
@@ -532,7 +499,6 @@ namespace AVFoundation {
 		Granted = 1735552628 /*'grnt'*/
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVAudioSessionSilenceSecondaryAudioHintType : ulong {
@@ -613,7 +579,6 @@ namespace AVFoundation {
 		Linear = 3
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : long {
@@ -621,7 +586,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : long {
@@ -640,7 +604,6 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	public enum AVCaptureAutoFocusSystem : long {
 		None,
@@ -651,7 +614,6 @@ namespace AVFoundation {
 #if !MONOMAC
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	[NoMac]
 	public enum AVCaptureSessionInterruptionReason : long {
@@ -706,7 +668,6 @@ namespace AVFoundation {
 
 	[NoTV]
 	[iOS (13, 0)]
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -717,7 +678,6 @@ namespace AVFoundation {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
@@ -732,7 +692,6 @@ namespace AVFoundation {
 
 	[iOS (15, 0)]
 	[TV (15, 0)]
-	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
 	public enum AVSampleBufferRequestDirection : long {
@@ -743,7 +702,6 @@ namespace AVFoundation {
 
 	[iOS (15, 0)]
 	[TV (15, 0)]
-	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
 	public enum AVSampleBufferRequestMode : long {
@@ -755,7 +713,6 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	public enum AVCaptureColorSpace : long {
 		Srgb = 0,
@@ -772,7 +729,6 @@ namespace AVFoundation {
 		Forever = -1
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVPlayerTimeControlStatus : long {
@@ -781,7 +737,6 @@ namespace AVFoundation {
 		Playing
 	}
 
-	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -790,7 +745,6 @@ namespace AVFoundation {
 		Aggregated = 1,
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVPlayerLooperStatus : long {
@@ -801,7 +755,6 @@ namespace AVFoundation {
 	}
 
 	[NoiOS]
-	[NoWatch]
 	[NoMac]
 	[NoMacCatalyst]
 	[Native]
@@ -812,7 +765,6 @@ namespace AVFoundation {
 	}
 
 	[NoiOS]
-	[NoWatch]
 	[NoMac]
 	[NoMacCatalyst]
 	[Native]
@@ -821,7 +773,6 @@ namespace AVFoundation {
 		SkipItem
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVContentKeyRequestStatus : long {
@@ -833,7 +784,6 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
@@ -844,7 +794,6 @@ namespace AVFoundation {
 		ReceivedObsoleteContentKey,
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
@@ -854,7 +803,6 @@ namespace AVFoundation {
 		[Field ("AVContentKeySystemClearKey")]
 		ClearKey = 1,
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
 		AVContentKeySystemClearKey = ClearKey,
@@ -867,7 +815,6 @@ namespace AVFoundation {
 	}
 
 	// Convience enum for native string values 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum AVAssetExportSessionPreset {
 		[MacCatalyst (13, 1)]
@@ -908,7 +855,6 @@ namespace AVFoundation {
 		PresetHevc3840x2160 = 12,
 	}
 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum AVOutputSettingsPreset {
 		[Field ("AVOutputSettingsPreset640x480")]
@@ -936,21 +882,18 @@ namespace AVFoundation {
 		PresetHevc3840x2160 = 12, // we added the wrong value in the export enum, we use the same so that they can be swap
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("AVOutputSettingsPresetHEVC1920x1080WithAlpha")]
 		PresetHevc1920x1080WithAlpha = 13,
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160WithAlpha")]
 		PresetHevc3840x2160WithAlpha = 14,
 
 		[NoTV]
-		[NoWatch]
 		[Mac (12, 1)]
 		[NoiOS]
 		[NoMacCatalyst]
@@ -959,7 +902,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[Native]
 	public enum AVDepthDataAccuracy : long {
 		Relative = 0,
@@ -982,7 +924,6 @@ namespace AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
@@ -990,7 +931,6 @@ namespace AVFoundation {
 		LongForm = 1,
 		Independent = 2,
 		[iOS (14, 0)]
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[MacCatalyst (14, 0)]
@@ -1014,7 +954,6 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	public enum AVCaptureLensStabilizationStatus : long {
 		Unsupported = 0,
@@ -1025,7 +964,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureOutputDataDroppedReason : long {
@@ -1035,7 +973,6 @@ namespace AVFoundation {
 		Discontinuity = 3,
 	}
 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum AVVideoApertureMode {
 		[Field ("AVVideoApertureModeCleanAperture")]
@@ -1047,7 +984,6 @@ namespace AVFoundation {
 		[Field ("AVVideoApertureModeEncodedPixels")]
 		EncodedPixels = 2,
 	}
-	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
@@ -1058,7 +994,6 @@ namespace AVFoundation {
 		Important = 1,
 	}
 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum AVAssetWriterInputMediaDataLocation {
 		[Field ("AVAssetWriterInputMediaDataLocationInterleavedWithMainMediaData")]
@@ -1068,7 +1003,6 @@ namespace AVFoundation {
 		BeforeMainMediaDataNotInterleaved = 1,
 	}
 
-	[NoWatch]
 	[MacCatalyst (15, 0)]
 	public enum AVVideoCodecType {
 		[Field ("AVVideoCodecTypeH264")]
@@ -1087,28 +1021,24 @@ namespace AVFoundation {
 		Hevc = 5,
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (15, 0)]
 		[Field ("AVVideoCodecTypeAppleProRes422HQ")]
 		AppleProRes422HQ = 6,
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (15, 0)]
 		[Field ("AVVideoCodecTypeAppleProRes422LT")]
 		AppleProRes422LT = 7,
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (15, 0)]
 		[Field ("AVVideoCodecTypeAppleProRes422Proxy")]
 		AppleProRes422Proxy = 8,
 
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (15, 0)]
 		[Field ("AVVideoCodecTypeHEVCWithAlpha")]
@@ -1116,7 +1046,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[Native]
 	public enum AVDepthDataQuality : long {
 		Low = 0,
@@ -1124,7 +1053,6 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[NoMac]
 	[Flags]
@@ -1136,7 +1064,6 @@ namespace AVFoundation {
 		DepthModuleTemperature = (1 << 2)
 	}
 
-	[NoWatch]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1147,7 +1074,6 @@ namespace AVFoundation {
 		DolbyVision = 0x4,
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -1162,7 +1088,6 @@ namespace AVFoundation {
 		Normal = 0x6e726d6c, //1852992876 - 'nrml'
 	}
 
-	[Watch (6, 0)]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -1173,7 +1098,6 @@ namespace AVFoundation {
 		Female,
 	}
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch]
 	[NoTV]
 	[NoMac]
 	[iOS (13, 0)]
@@ -1185,7 +1109,6 @@ namespace AVFoundation {
 	}
 
 	[TV (13, 0)]
-	[NoWatch]
 	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1197,7 +1120,6 @@ namespace AVFoundation {
 	}
 
 	[TV (13, 0)]
-	[NoWatch]
 	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1209,7 +1131,6 @@ namespace AVFoundation {
 	}
 
 	[TV (13, 0)]
-	[NoWatch]
 	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -1219,7 +1140,6 @@ namespace AVFoundation {
 	}
 
 	[TV (14, 0)]
-	[NoWatch]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1229,7 +1149,6 @@ namespace AVFoundation {
 	}
 
 	[TV (14, 0)]
-	[Watch (7, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
@@ -1242,7 +1161,6 @@ namespace AVFoundation {
 	}
 
 	[TV (14, 0)]
-	[Watch (7, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1255,7 +1173,6 @@ namespace AVFoundation {
 	}
 
 	[TV (14, 0)]
-	[Watch (7, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum AVFileTypeProfile {
@@ -1268,7 +1185,6 @@ namespace AVFoundation {
 	}
 
 	[TV (15, 0)]
-	[Watch (8, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Native]
@@ -1279,12 +1195,10 @@ namespace AVFoundation {
 	}
 
 #if !WATCH
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum AVContentKeyResponseDataType {
 		FairPlayStreamingKeyResponseData,
 		[TV (13, 0)]
-		[NoWatch]
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		AuthorizationTokenData,
@@ -1293,7 +1207,6 @@ namespace AVFoundation {
 
 	[TV (15, 0)]
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
@@ -1304,7 +1217,6 @@ namespace AVFoundation {
 
 	[TV (15, 0)]
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
@@ -1313,7 +1225,6 @@ namespace AVFoundation {
 		ResumeImmediately = (1uL << 0),
 	}
 
-	[NoWatch]
 	[NoTV]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
@@ -1324,7 +1235,6 @@ namespace AVFoundation {
 		VoiceIsolation = 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
@@ -1334,7 +1244,6 @@ namespace AVFoundation {
 		MicrophoneModes = 2,
 	}
 
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
@@ -1346,7 +1255,6 @@ namespace AVFoundation {
 	}
 
 	[TV (15, 0)]
-	[NoWatch]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum AVCoordinatedPlaybackSuspensionReason {
@@ -1370,7 +1278,6 @@ namespace AVFoundation {
 		UserIsChangingCurrentTime,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1380,7 +1287,6 @@ namespace AVFoundation {
 		CharacterReveal = 1,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1391,7 +1297,6 @@ namespace AVFoundation {
 		Bold = 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1402,7 +1307,6 @@ namespace AVFoundation {
 		Italic = 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1415,7 +1319,6 @@ namespace AVFoundation {
 		Overline = 1uL << 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1429,7 +1332,6 @@ namespace AVFoundation {
 		FourDigits = 4,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1442,7 +1344,6 @@ namespace AVFoundation {
 		Right = 4,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1452,7 +1353,6 @@ namespace AVFoundation {
 		TopToBottomAndRightToLeft = 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1462,7 +1362,6 @@ namespace AVFoundation {
 		RollUp = 1,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1473,7 +1372,6 @@ namespace AVFoundation {
 		After = 2,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1483,7 +1381,6 @@ namespace AVFoundation {
 		After = 1,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1495,7 +1392,6 @@ namespace AVFoundation {
 		DistributeSpaceAround = 3,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -1507,7 +1403,6 @@ namespace AVFoundation {
 		Stopped = 3,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[MacCatalyst (15, 0)]
 	[iOS (15, 0)]
@@ -1519,7 +1414,6 @@ namespace AVFoundation {
 		Locked = 3,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[MacCatalyst (15, 0)]
 	[iOS (15, 0)]
@@ -1532,7 +1426,7 @@ namespace AVFoundation {
 		ExposureModeChanged = 1uL << 2,
 	}
 
-	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+	[TV (17, 2), NoMac, iOS (17, 2), NoMacCatalyst]
 	[Native]
 	public enum AVAudioSessionRenderingMode : long {
 		NotApplicable = 0,

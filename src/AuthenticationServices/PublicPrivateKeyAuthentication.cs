@@ -26,7 +26,6 @@ namespace AuthenticationServices {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]

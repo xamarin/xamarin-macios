@@ -9,30 +9,26 @@ namespace LocalAuthentication {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LAPolicy : long {
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'DeviceOwnerAuthenticationWithCompanion' instead.")]
 		[NoiOS]
-		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithWatch = 3,
-		[NoWatch, NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
+		[NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
 		DeviceOwnerAuthenticationWithCompanion = 3,
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'DeviceOwnerAuthenticationWithBiometricsOrCompanion' instead.")]
 		[NoiOS]
-		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithBiometricsOrWatch = 4,
-		[NoWatch, NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
+		[NoTV, MacCatalyst (18, 0), Mac (15, 0), iOS (18, 0)]
 		DeviceOwnerAuthenticationWithBiometricsOrCompanion = 4,
 		[Obsolete ("Use DeviceOwnerAuthenticationWithBiometricsOrWatch enum value instead.")]
 		[NoiOS]
-		[NoWatch]
 		[NoMacCatalyst]
 		OwnerAuthenticationWithBiometricsOrWatch = DeviceOwnerAuthenticationWithBiometricsOrWatch,
-		[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0)]
+		[NoMac, NoiOS, NoMacCatalyst]
 		DeviceOwnerAuthenticationWithWristDetection = 5,
 	}
 
@@ -72,25 +68,21 @@ namespace LocalAuthentication {
 		AppCancel = -9,
 		InvalidContext = -10,
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'CompanionNotAvailable' instead.")]
-		[NoiOS, NoWatch, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst]
 		WatchNotAvailable = -11,
-		[NoiOS, NoWatch, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst]
 		BiometryNotPaired = -12,
-		[NoiOS, NoWatch, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst]
 		BiometryDisconnected = -13,
-		[NoiOS, NoWatch, NoMacCatalyst]
+		[NoiOS, NoMacCatalyst]
 		InvalidDimension = -14,
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		BiometryNotAvailable = -6,
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		BiometryNotEnrolled = -7,
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		BiometryLockout = -8,
 		NotInteractive = -1004,
-		[NoWatch]
 		CompanionNotAvailable = -11,
 	}
 
@@ -100,7 +92,7 @@ namespace LocalAuthentication {
 	[Native]
 	public enum LACredentialType : long {
 		ApplicationPassword = 0,
-		[iOS (13, 4), NoWatch, NoTV]
+		[iOS (13, 4), NoTV]
 		[MacCatalyst (13, 1)]
 		SmartCardPin = -3,
 	}
@@ -120,7 +112,7 @@ namespace LocalAuthentication {
 		UseKeyKeyExchange,
 	}
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	[Native]
 	public enum LARightState : long {
 		Unknown = 0,

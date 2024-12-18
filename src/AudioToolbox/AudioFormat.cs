@@ -47,8 +47,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFormat {

@@ -12,8 +12,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 	public partial class AudioRendererWasFlushedAutomaticallyEventArgs {
 		public CMTime AudioRendererFlushTime {

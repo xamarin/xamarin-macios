@@ -39,7 +39,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'Network.framework' instead.")]
 #endif
 	public class SslContext : NativeObject {
 

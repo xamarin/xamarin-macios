@@ -53,7 +53,6 @@ using Midi2DeviceRevisionLevel = System.Object;
 namespace CoreMidi {
 
 
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (13, 1)]
 	// NSUInteger -> MIDINetworkSession.h
@@ -64,7 +63,7 @@ namespace CoreMidi {
 		Anyone,
 	}
 
-	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIProtocolID")]
 	public enum MidiProtocolId {
@@ -72,7 +71,7 @@ namespace CoreMidi {
 		Protocol_2_0 = 2,
 	}
 
-	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDICVStatus")]
 	public enum MidiCVStatus : uint {
@@ -94,7 +93,7 @@ namespace CoreMidi {
 		PerNoteMgmt = 15,
 	}
 
-	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
@@ -109,7 +108,6 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Stream' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'Stream' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'Stream' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'Stream' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'Stream' instead.")]
 		UnknownF = Stream,
 #endif
@@ -117,7 +115,7 @@ namespace CoreMidi {
 		Invalid = 0xFF,
 	}
 
-	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
@@ -129,7 +127,7 @@ namespace CoreMidi {
 		MixedDataSetPayload = 9,
 	}
 
-	[iOS (14, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
@@ -147,7 +145,7 @@ namespace CoreMidi {
 		SystemReset = 255,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDINoteAttribute")]
 	public enum MidiNoteAttribute : byte {
 		None = 0,
@@ -156,7 +154,7 @@ namespace CoreMidi {
 		Pitch = 3,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIPerNoteManagementOptions")]
 	[Flags]
 	public enum MidiPerNoteManagementOptions : byte {
@@ -164,26 +162,26 @@ namespace CoreMidi {
 		Detach = 1 << 1,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIProgramChangeOptions")]
 	[Flags]
 	public enum MidiProgramChangeOptions : byte {
 		BankValid = 1 << 0,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIUtilityStatus")]
 	public enum MidiUtilityStatus : uint {
 		Noop = 0,
 		JitterReductionClock = 1,
 		JitterReductionTimestamp = 2,
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		DeltaClockstampTicksPerQuarterNote = 0x3,
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		TicksSinceLastEvent = 0x4
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("UMPStreamMessageStatus")]
 	public enum UmpStreamMessageStatus : uint {
 		EndpointDiscovery = 0x00,
@@ -200,7 +198,7 @@ namespace CoreMidi {
 		EndOfClip = 0x21,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDIUMPFunctionBlockMIDI1Info")]
 	public enum MidiUmpFunctionBlockMidi1Info {
 		NotMidi1 = 0,
@@ -208,7 +206,7 @@ namespace CoreMidi {
 		RestrictedBandwidth = 2
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDIUMPFunctionBlockUIHint")]
 	public enum MidiUmpFunctionBlockUIHint {
 		Unknown = 0,
@@ -217,7 +215,7 @@ namespace CoreMidi {
 		SenderReceiver = 3
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDIUMPFunctionBlockDirection")]
 	public enum MidiUmpFunctionBlockDirection {
 		Unknown = 0,
@@ -226,7 +224,7 @@ namespace CoreMidi {
 		Bidirectional = 3
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("UMPStreamMessageFormat")]
 	public enum UmpStreamMessageFormat : byte {
 		Complete = 0x00,
@@ -235,7 +233,7 @@ namespace CoreMidi {
 		End = 0x03
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICICategoryOptions")]
 	public enum MidiCICategoryOptions : byte /* MIDIUInteger7 = typedef UInt8 MIDIUInteger7;   //! 7  bits usable; allowed values 0x0~0x7F */ {
 		ProtocolNegotiation = (1 << 1),
@@ -244,7 +242,7 @@ namespace CoreMidi {
 		ProcessInquirySupported = (1 << 4),
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIDeviceType")]
 	public enum MidiCIDeviceType : byte /* UInt8 */ {
 		Unknown = 0,
@@ -253,7 +251,7 @@ namespace CoreMidi {
 		UsbMidi,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIProfileMessageType")]
 	public enum MidiCIProfileMessageType : byte /* MIDIUInteger7 = typedef UInt8 MIDIUInteger7;   //! 7  bits usable; allowed values 0x0~0x7F */ {
 		ProfileInquiry = 0x20,
@@ -269,7 +267,7 @@ namespace CoreMidi {
 		ProfileSpecificData = 0x2F,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIPropertyExchangeMessageType")]
 	public enum MidiCIPropertyExchangeMessageType : byte /* MIDIUInteger7 = typedef UInt8 MIDIUInteger7;   //! 7  bits usable; allowed values 0x0~0x7F */ {
 		InquiryPropertyExchangeCapabilities = 0x30,
@@ -285,7 +283,7 @@ namespace CoreMidi {
 		Notify = 0x3F,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIProcessInquiryMessageType")]
 	public enum MidiCIProcessInquiryMessageType : byte /* MIDIUInteger7 = typedef UInt8 MIDIUInteger7;   //! 7  bits usable; allowed values 0x0~0x7F */ {
 		InquiryProcessInquiryCapabilities = 0x40,
@@ -295,7 +293,7 @@ namespace CoreMidi {
 		EndOfMidiMessageReport = 0x44,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIManagementMessageType")]
 	public enum MidiCIManagementMessageType : byte /* MIDIUInteger7 = typedef UInt8 MIDIUInteger7;   //! 7  bits usable; allowed values 0x0~0x7F */ {
 		Discovery = 0x70,
@@ -307,7 +305,7 @@ namespace CoreMidi {
 		MIDICINAK = 0x7F,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIProfileType")]
 	public enum MidiCIProfileType : byte /* UInt8  */ {
 		SingleChannel = 1,
@@ -316,7 +314,7 @@ namespace CoreMidi {
 		Multichannel = 4,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDIUMPCIObjectBackingType")]
 	public enum MidiUmpCIObjectBackingType : byte /* UInt8  */ {
 		Unknown = 0,
@@ -325,7 +323,7 @@ namespace CoreMidi {
 		UsbMidi,
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDICIPropertyExchangeRequestID")]
 	public enum MidiCIPropertyExchangeRequestID : byte /* UInt8  */ {
 		BadRequest = 0xFF,
@@ -335,7 +333,6 @@ namespace CoreMidi {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkHost_ClassReference/index.html">Apple documentation for <c>MIDINetworkHost</c></related>
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkHost")]
 	[DisableDefaultCtor]
@@ -375,7 +372,6 @@ namespace CoreMidi {
 
 	/// <summary>Global methods and constants for using CoreMidi.</summary>
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface Midi {
@@ -395,7 +391,6 @@ namespace CoreMidi {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkConnection_ClassReference/index.html">Apple documentation for <c>MIDINetworkConnection</c></related>
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkConnection")]
@@ -411,7 +406,6 @@ namespace CoreMidi {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDINetworkSession_ClassReference/index.html">Apple documentation for <c>MIDINetworkSession</c></related>
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkSession")]
 	// default 'init' crash the application
@@ -480,7 +474,7 @@ namespace CoreMidi {
 
 	}
 
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfile")]
 	[DisableDefaultCtor]
@@ -500,18 +494,18 @@ namespace CoreMidi {
 		NativeHandle Constructor (NSData data);
 
 		/* Notifications */
-		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("MIDICIProfileWasUpdatedNotification")]
 		[Notification]
 		NSString WasUpdatedNotification { get; }
 
-		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("MIDICIProfileWasRemovedNotification")]
 		[Notification]
 		NSString WasRemovedNotification { get; }
 	}
 
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfileState")]
 	[DisableDefaultCtor]
@@ -543,7 +537,7 @@ namespace CoreMidi {
 	delegate void MidiCIProfileSpecificDataHandler (MidiCISession session, byte channel, MidiCIProfile profile, NSData data);
 	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICISession")]
 	[DisableDefaultCtor]
@@ -623,7 +617,7 @@ namespace CoreMidi {
 		MidiCIProfileSpecificDataHandler ProfileSpecificDataHandler { get; set; }
 	}
 
-	[iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDeviceInfo")]
 	[DisableDefaultCtor]
@@ -658,7 +652,7 @@ namespace CoreMidi {
 		NativeHandle Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
-	[iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveredNode")]
 	[DisableDefaultCtor]
@@ -689,7 +683,7 @@ namespace CoreMidi {
 
 	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode [] discoveredNodes);
 
-	[iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveryManager")]
@@ -707,7 +701,7 @@ namespace CoreMidi {
 
 	interface IMidiCIProfileResponderDelegate { }
 
-	[iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
@@ -731,7 +725,7 @@ namespace CoreMidi {
 		void HandleData (MidiCIProfile profile, byte channel, NSData inData);
 	}
 
-	[iOS (14, 0), NoTV, NoWatch]
+	[iOS (14, 0), NoTV]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIResponder")]
 	[DisableDefaultCtor]
@@ -770,212 +764,212 @@ namespace CoreMidi {
 
 	[Internal]
 	enum MidiProperty {
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyName")]
 		Name,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyManufacturer")]
 		Manufacturer,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyModel")]
 		Model,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyUniqueID")]
 		UniqueId,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyDeviceID")]
 		DeviceId,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceiveChannels")]
 		ReceiveChannels,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitChannels")]
 		TransmitChannels,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyMaxSysExSpeed")]
 		MaxSysExSpeed,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyAdvanceScheduleTimeMuSec")]
 		AdvanceScheduleTimeMuSec,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsEmbeddedEntity")]
 		IsEmbeddedEntity,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsBroadcast")]
 		IsBroadcast,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertySingleRealtimeEntity")]
 		SingleRealtimeEntity,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyConnectionUniqueID")]
 		ConnectionUniqueId,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyOffline")]
 		Offline,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyPrivate")]
 		Private,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyDriverOwner")]
 		DriverOwner,
 
-		[NoiOS, NoTV, NoMacCatalyst, NoWatch]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kMIDIPropertyFactoryPatchNameFile")]
 		FactoryPatchNameFile,
 
-		[NoiOS, NoTV, NoMacCatalyst, NoWatch]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kMIDIPropertyUserPatchNameFile")]
 		UserPatchNameFile,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyNameConfiguration")]
 		NameConfiguration,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyNameConfigurationDictionary")]
 		NameConfigurationDictionary,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyImage")]
 		Image,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyDriverVersion")]
 		DriverVersion,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertySupportsGeneralMIDI")]
 		SupportsGeneralMidi,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertySupportsMMC")]
 		SupportsMmc,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyCanRoute")]
 		CanRoute,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesClock")]
 		ReceivesClock,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesMTC")]
 		ReceivesMtc,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesNotes")]
 		ReceivesNotes,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesProgramChanges")]
 		ReceivesProgramChanges,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesBankSelectMSB")]
 		ReceivesBankSelectMsb,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyReceivesBankSelectLSB")]
 		ReceivesBankSelectLsb,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsClock")]
 		TransmitsClock,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsMTC")]
 		TransmitsMtc,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsNotes")]
 		TransmitsNotes,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsProgramChanges")]
 		TransmitsProgramChanges,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsBankSelectMSB")]
 		TransmitsBankSelectMsb,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyTransmitsBankSelectLSB")]
 		TransmitsBankSelectLsb,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyPanDisruptsStereo")]
 		PanDisruptsStereo,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsSampler")]
 		IsSampler,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsDrumMachine")]
 		IsDrumMachine,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsMixer")]
 		IsMixer,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyIsEffectUnit")]
 		IsEffectUnit,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyMaxReceiveChannels")]
 		MaxReceiveChannels,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyMaxTransmitChannels")]
 		MaxTransmitChannels,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyDriverDeviceEditorApp")]
 		DriverDeviceEditorApp,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertySupportsShowControl")]
 		SupportsShowControl,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyDisplayName")]
 		DisplayName,
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Field ("kMIDIPropertyProtocolID")]
 		ProtocolId,
 
-		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV]
 		[Field ("kMIDIPropertyUMPActiveGroupBitmap")]
 		UmpActiveGroupBitmap,
 
-		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV]
 		[Field ("kMIDIPropertyUMPCanTransmitGroupless")]
 		UmpCanTransmitGroupless,
 
-		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV, NoWatch]
+		[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
 		[Field ("kMIDIPropertyAssociatedEndpoint")]
 		AssociatedEndpoint,
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDevice")]
 	[DisableDefaultCtor]
 	interface MidiCIDevice {
@@ -1021,7 +1015,7 @@ namespace CoreMidi {
 
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDeviceManager")]
 	[DisableDefaultCtor]
 	interface MidiCIDeviceManager {
@@ -1034,7 +1028,7 @@ namespace CoreMidi {
 
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDIUMPCIProfile")]
 	[DisableDefaultCtor]
 	interface MidiUmpCIProfile {
@@ -1066,7 +1060,7 @@ namespace CoreMidi {
 		bool SetProfileState (bool isEnabled, ushort enabledChannelCount, out NSError error);
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDI2DeviceInfo")]
 	[DisableDefaultCtor]
 	interface Midi2DeviceInfo {
@@ -1087,14 +1081,14 @@ namespace CoreMidi {
 	}
 
 	[Flags]
-	[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[NativeName ("MIDIUMPProtocolOptions")]
 	public enum MidiUmpProtocolOptions : byte /* MIDIUInteger4 */ {
 		SupportedProtocolMidi1 = 1,
 		SupportedProtocolMidi2 = 1 << 1,
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDIUMPEndpoint")]
 	[DisableDefaultCtor]
 	interface MidiUmpEndpoint {
@@ -1148,7 +1142,7 @@ namespace CoreMidi {
 		NSString WasUpdatedNotification { get; }
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDIUMPFunctionBlock")]
 	[DisableDefaultCtor]
 	interface MidiUmpFunctionBlock {
@@ -1191,7 +1185,7 @@ namespace CoreMidi {
 		NSString WasUpdatedNotification { get; }
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[Static]
 	interface MidiCIDeviceManagerDictionaryKey {
 		[Field ("MIDICIDeviceObjectKey")]
@@ -1201,7 +1195,7 @@ namespace CoreMidi {
 		NSString CIProfileObjectKey { get; }
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[Static]
 	interface MidiUmpEndpointManagerDictionaryKey {
 		[Field ("MIDIUMPEndpointObjectKey")]
@@ -1211,7 +1205,7 @@ namespace CoreMidi {
 		NSString UmpFunctionBlockObject { get; }
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDIUMPEndpointManager")]
 	[DisableDefaultCtor]
 	interface MidiUmpEndpointManager {
@@ -1225,7 +1219,7 @@ namespace CoreMidi {
 
 	delegate void MidiReceiveBlock (IntPtr eventList, IntPtr srcConnRefCon);
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (MidiUmpEndpoint), Name = "MIDIUMPMutableEndpoint")]
 	[DisableDefaultCtor]
 	interface MidiUmpMutableEndpoint {
@@ -1248,7 +1242,7 @@ namespace CoreMidi {
 		bool SetEnabled (bool isEnabled, out NSError error);
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (MidiUmpFunctionBlock), Name = "MIDIUMPMutableFunctionBlock")]
 	[DisableDefaultCtor]
 	interface MidiUmpMutableFunctionBlock {

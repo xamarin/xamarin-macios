@@ -13,7 +13,6 @@ using NativeHandle = System.IntPtr;
 
 namespace GameKit {
 #if WATCH && !NET
-	[Unavailable (PlatformName.WatchOS)]
 	[Obsolete ("This API is not available on this platform.")]
 	public static class GKGameSessionErrorCodeExtensions {
 		[Obsolete ("Always returns null.")]
@@ -55,9 +54,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public interface IGKPeerPickerControllerDelegate : INativeObject, IDisposable
 	{
@@ -72,9 +69,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public static class GKPeerPickerControllerDelegate_Extensions {
 		public static void ConnectionTypeSelected (this IGKPeerPickerControllerDelegate This, GKPeerPickerController picker, GKPeerPickerConnectionType type)
@@ -107,9 +102,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public unsafe class GKPeerPickerControllerDelegate : NSObject, IGKPeerPickerControllerDelegate {
 		public GKPeerPickerControllerDelegate () : base (NSObjectFlag.Empty)
@@ -157,9 +150,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public class GKPeerPickerController : NSObject {
 		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (Constants.TypeUnavailable); } }

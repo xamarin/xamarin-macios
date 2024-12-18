@@ -23,7 +23,6 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetViewports (this IMTLRenderCommandEncoder This, MTLViewport [] viewports)
 		{
@@ -40,7 +39,6 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetScissorRects (this IMTLRenderCommandEncoder This, MTLScissorRect [] scissorRects)
 		{
@@ -57,7 +55,6 @@ namespace Metal {
 		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer [] buffers, nuint [] offsets, NSRange range)
 		{
@@ -74,7 +71,6 @@ namespace Metal {
 		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState [] samplers, float [] lodMinClamps, float [] lodMaxClamps, NSRange range)
 		{

@@ -400,7 +400,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[iOS (17, 0), TV (17, 0), Mac (14, 0), NoWatch]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static /* Boolean */ byte VTIsStereoMVHEVCDecodeSupported ();
@@ -413,7 +413,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[iOS (17, 0), TV (17, 0), Mac (14, 0), NoWatch]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0)]
 #endif
 		public static bool IsStereoMvHevcDecodeSupported ()
 		{

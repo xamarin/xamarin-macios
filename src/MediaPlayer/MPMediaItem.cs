@@ -319,7 +319,6 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("ios14.5")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7, 4)]
 		[TV (14, 5)]
 		[iOS (14, 5)]
 #endif

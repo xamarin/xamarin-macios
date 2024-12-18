@@ -311,7 +311,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -391,7 +390,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -520,7 +518,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -537,7 +534,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -630,7 +626,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -682,7 +677,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -700,7 +694,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -728,7 +721,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]
@@ -751,7 +743,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 	[NoMacCatalyst]

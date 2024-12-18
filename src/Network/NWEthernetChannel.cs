@@ -35,7 +35,6 @@ namespace Network {
 	// [UnsupportedOSPlatform ("tvos")]
 	// [UnsupportedOSPlatform ("ios")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoiOS]
 #endif

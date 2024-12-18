@@ -104,11 +104,9 @@ namespace WatchConnectivity {
 		[Export ("hasContentPending")]
 		bool HasContentPending { get; }
 
-		[NoWatch]
 		[Export ("remainingComplicationUserInfoTransfers")]
 		nuint RemainingComplicationUserInfoTransfers { get; }
 
-		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("companionAppInstalled")]
 		bool CompanionAppInstalled { [Bind ("isCompanionAppInstalled")] get; }
@@ -173,18 +171,15 @@ namespace WatchConnectivity {
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch]
 		[Export ("sessionDidBecomeInactive:")]
 		void DidBecomeInactive (WCSession session);
 
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch]
 		[Export ("sessionDidDeactivate:")]
 		void DidDeactivate (WCSession session);
 
-		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("sessionCompanionAppInstalledDidChange:")]
 		void CompanionAppInstalledDidChange (WCSession session);
@@ -221,7 +216,6 @@ namespace WatchConnectivity {
 		[Export ("cancel")]
 		void Cancel ();
 
-		[Watch (5, 0)]
 		[Export ("progress")]
 		NSProgress Progress { get; }
 	}

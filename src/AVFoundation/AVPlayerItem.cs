@@ -15,8 +15,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[NoWatch]
 #endif
 		public AVVideoApertureMode VideoApertureMode {
 			get { return AVVideoApertureModeExtensions.GetValue (_VideoApertureMode); }

@@ -521,7 +521,6 @@ namespace AVFoundation {
 	[Deprecated (PlatformName.MacOSX, 12, 0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.iOS, 15, 0, PlatformArchitecture.All)]
 	[Deprecated (PlatformName.MacCatalyst, 15, 0, PlatformArchitecture.All)]
-	[Deprecated (PlatformName.WatchOS, 8, 0, PlatformArchitecture.All)]
 	public partial class AVPlayerInterstitialEventObserver : NSObject {
 
 		public virtual AVPlayerInterstitialEvent [] InterstitialEvents => throw new NotImplementedException ();

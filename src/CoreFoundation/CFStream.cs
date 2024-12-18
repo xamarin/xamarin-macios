@@ -190,7 +190,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -210,7 +209,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -240,7 +238,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -261,7 +258,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -295,7 +291,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -318,7 +313,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -350,7 +344,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
@@ -371,7 +364,6 @@ namespace CoreFoundation {
 		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
 		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]

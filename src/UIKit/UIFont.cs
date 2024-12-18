@@ -167,7 +167,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Watch (9, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 		static nfloat GetFontWidth (UIFontWidth width)
 		{
@@ -317,7 +317,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Watch (9, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 		public static UIFont SystemFontOfSize (nfloat fontSize, UIFontWeight weight, UIFontWidth width)
 		{

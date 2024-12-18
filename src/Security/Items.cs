@@ -1438,7 +1438,6 @@ namespace Security {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public bool UseDataProtectionKeychain {
 			get {

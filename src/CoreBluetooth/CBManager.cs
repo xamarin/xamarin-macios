@@ -14,7 +14,6 @@ namespace CoreBluetooth {
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (13,0)]
-		[Watch (6,0)]
 #endif
 		public static CBManagerAuthorization Authorization {
 			get {
