@@ -406,4 +406,244 @@ namespace Accessibility {
 		[Field ("AXTechnologyZoom")]
 		Zoom,
 	}
+
+	[iOS (18, 2), NoTV, NoMacCatalyst, NoMac]
+	[Native]
+	public enum AXFeatureOverrideSessionError : long {
+		Undefined = 0,
+		AppNotEntitled,
+		OverrideIsAlreadyActive,
+		OverrideNotFoundForUUID,
+	}
+
+	[iOS (18, 2), NoTV, NoMacCatalyst, NoMac]
+	[Flags]
+	[Native]
+	public enum AXFeatureOverrideSessionOptions : ulong {
+		Grayscale = 1uL << 0,
+		InvertColors = 1uL << 1,
+		VoiceControl = 1uL << 2,
+		VoiceOver = 1uL << 3,
+		Zoom = 1uL << 4,
+	}
+
+	[iOS (18, 2), NoTV, NoMacCatalyst, NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AXFeatureOverrideSession {
+	}
+
+	[iOS (18, 2), NoTV, NoMacCatalyst, NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AXFeatureOverrideSessionManager {
+		[Static]
+		[Export ("sharedInstance")]
+		AXFeatureOverrideSessionManager SharedInstance { get; }
+
+		[Export ("beginOverrideSessionEnablingOptions:disablingOptions:error:")]
+		[return: NullAllowed]
+		AXFeatureOverrideSession BeginOverrideSession (AXFeatureOverrideSessionOptions enableOptions, AXFeatureOverrideSessionOptions disableOptions, [NullAllowed] out NSError error);
+
+		[Export ("endOverrideSession:error:")]
+		bool EndOverrideSession (AXFeatureOverrideSession session, [NullAllowed] out NSError error);
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AXMathExpression {
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionNumber {
+		[Export ("initWithContent:")]
+		NativeHandle Constructor (string content);
+
+		[Export ("content")]
+		string Content { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionIdentifier {
+		[Export ("initWithContent:")]
+		NativeHandle Constructor (string content);
+
+		[Export ("content")]
+		string Content { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionOperator {
+		[Export ("initWithContent:")]
+		NativeHandle Constructor (string content);
+
+		[Export ("content")]
+		string Content { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionText {
+		[Export ("initWithContent:")]
+		NativeHandle Constructor (string content);
+
+		[Export ("content")]
+		string Content { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionFenced {
+		[Export ("initWithExpressions:openString:closeString:")]
+		NativeHandle Constructor (AXMathExpression [] expressions, string openString, string closeString);
+
+		[Export ("expressions")]
+		AXMathExpression [] Expressions { get; }
+
+		[Export ("openString")]
+		string OpenString { get; }
+
+		[Export ("closeString")]
+		string CloseString { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionRow {
+		[Export ("initWithExpressions:")]
+		NativeHandle Constructor (AXMathExpression [] expressions);
+
+		[Export ("expressions")]
+		AXMathExpression [] Expressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionTable {
+		[Export ("initWithExpressions:")]
+		NativeHandle Constructor (AXMathExpression [] expressions);
+
+		[Export ("expressions")]
+		AXMathExpression [] Expressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionTableRow {
+		[Export ("initWithExpressions:")]
+		NativeHandle Constructor (AXMathExpression [] expressions);
+
+		[Export ("expressions")]
+		AXMathExpression [] Expressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionTableCell {
+		[Export ("initWithExpressions:")]
+		NativeHandle Constructor (AXMathExpression [] expressions);
+
+		[Export ("expressions")]
+		AXMathExpression [] Expressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionUnderOver {
+		[Export ("initWithBaseExpression:underExpression:overExpression:")]
+		NativeHandle Constructor (AXMathExpression baseExpression, AXMathExpression underExpression, AXMathExpression overExpression);
+
+		[Export ("baseExpression")]
+		AXMathExpression BaseExpression { get; }
+
+		[Export ("underExpression")]
+		AXMathExpression UnderExpression { get; }
+
+		[Export ("overExpression")]
+		AXMathExpression OverExpression { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionSubSuperscript {
+		[Export ("initWithBaseExpression:subscriptExpressions:superscriptExpressions:")]
+		NativeHandle Constructor (AXMathExpression [] baseExpression, AXMathExpression [] subscriptExpressions, AXMathExpression [] superscriptExpressions);
+
+		[Export ("baseExpression")]
+		AXMathExpression BaseExpression { get; }
+
+		[Export ("subscriptExpressions")]
+		AXMathExpression [] SubscriptExpressions { get; }
+
+		[Export ("superscriptExpressions")]
+		AXMathExpression [] SuperscriptExpressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionFraction {
+		[Export ("initWithNumeratorExpression:denimonatorExpression:")]
+		NativeHandle Constructor (AXMathExpression numeratorExpression, AXMathExpression denimonatorExpression);
+
+		[Export ("numeratorExpression")]
+		AXMathExpression NumeratorExpression { get; }
+
+		[Export ("denimonatorExpression")]
+		AXMathExpression DenimonatorExpression { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionMultiscript {
+		[Export ("initWithBaseExpression:prescriptExpressions:postscriptExpressions:")]
+		NativeHandle Constructor (AXMathExpression baseExpression, AXMathExpressionSubSuperscript [] prescriptExpressions, AXMathExpressionSubSuperscript [] postscriptExpressions);
+
+		[Export ("baseExpression")]
+		AXMathExpression BaseExpression { get; }
+
+		[Export ("prescriptExpressions")]
+		AXMathExpressionSubSuperscript [] PrescriptExpressions { get; }
+
+		[Export ("postscriptExpressions")]
+		AXMathExpressionSubSuperscript [] PostscriptExpressions { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (AXMathExpression))]
+	[DisableDefaultCtor]
+	interface AXMathExpressionRoot {
+		[Export ("initWithRadicandExpressions:rootIndexExpression:")]
+		NativeHandle Constructor (AXMathExpression [] radicandExpressions, AXMathExpression rootIndexExpression);
+
+		[Export ("radicandExpressions")]
+		AXMathExpression [] RadicandExpressions { get; }
+
+		[Export ("rootIndexExpression")]
+		AXMathExpression RootIndexExpression { get; }
+	}
+
+	[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface AXMathExpressionProvider {
+		[Abstract]
+		[NullAllowed, Export ("accessibilityMathExpression")]
+		AXMathExpression AccessibilityMathExpression { get; }
+	}
 }

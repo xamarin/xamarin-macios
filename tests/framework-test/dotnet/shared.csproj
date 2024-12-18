@@ -22,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <BundleResource Include="$(FrameworkTestDirectory)\iOS\Resources\Default-568h%402x.png">
+    <BundleResource Include="$(FrameworkTestDirectory)\Resources\Default-568h%402x.png">
       <Link>Resources\Default-568h%402x.png</Link>
     </BundleResource>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(FrameworkTestDirectory)\iOS\FrameworkTests.cs" />
+    <Compile Include="$(FrameworkTestDirectory)\FrameworkTests.cs" />
     <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
     <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />

@@ -839,6 +839,12 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
+		new Export ("void", "mono_debugger_agent_unhandled_exception",
+			"MonoException *", "e"
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
+
 		#endregion
 
 		#region mini/mono-private-unstable.

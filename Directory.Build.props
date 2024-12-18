@@ -4,6 +4,10 @@
 		<DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
 		<MonoCecilPackageVersion>0.11.5</MonoCecilPackageVersion>
 		<MSBuildStructuredLoggerPackageVersion>2.2.158</MSBuildStructuredLoggerPackageVersion>
+		<MicrosoftBuildPackageVersion>16.10.0</MicrosoftBuildPackageVersion>
+		<MicrosoftBuildFrameworkPackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildFrameworkPackageVersion>
+		<MicrosoftBuildTasksCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildTasksCorePackageVersion>
+		<MicrosoftBuildUtilitiesCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildUtilitiesCorePackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>

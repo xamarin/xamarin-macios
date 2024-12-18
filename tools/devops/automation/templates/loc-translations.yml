@@ -23,7 +23,7 @@ steps:
     commit: ${{ parameters.commit }}
     clean: true
     submodules: recursive
-    path: s/xamarin-macios
+    path: s/$(BUILD_REPOSITORY_TITLE)
     fetchTags: false
 
 - ${{ if parameters.isPR }}:
@@ -63,7 +63,7 @@ steps:
 
 - pwsh: |
     git remote remove origin
-    git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+    git remote add origin https://$(GitHub.Token)@github.com/$(Build.Repository.Name).git
     git remote # don't add -v else we see the pat
 
     git config user.email "valco@microsoft.com"

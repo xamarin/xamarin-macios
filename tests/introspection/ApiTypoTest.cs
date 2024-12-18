@@ -72,7 +72,6 @@ namespace Introspection {
 
 		HashSet<string> allowed = new HashSet<string> () {
 			"Aac",
-			"Accurracy",
 			"Achivements",
 			"Acos",
 			"Acosh",
@@ -1082,6 +1081,13 @@ namespace Introspection {
 						break;
 					goto default;
 #endif
+#if __TVOS__
+				// This framework is only available on device
+				case "BrowserEngineKitLibrary":
+					if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
+						continue;
+					goto default;
+#endif // __TVOS__
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
 #if __IOS__

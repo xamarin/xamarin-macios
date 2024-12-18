@@ -26,10 +26,10 @@ namespace Xamarin.MacDev.Tasks {
 		public string BaseLibDllPath { get; set; } = string.Empty;
 
 		[Output]
-		public string BTouchToolExe { get; set; } = string.Empty;
+		public string BGenToolExe { get; set; } = string.Empty;
 
 		[Output]
-		public string BTouchToolPath { get; set; } = string.Empty;
+		public string BGenToolPath { get; set; } = string.Empty;
 
 		[Output]
 		public string DotNetCscCompiler { get; set; } = string.Empty;
@@ -55,63 +55,33 @@ namespace Xamarin.MacDev.Tasks {
 			var projectPath = Path.Combine (projectDir, "ComputeRemoteGeneratorProperties.csproj");
 			var outputFile = Path.Combine (projectDir, "ComputedProperties.txt");
 			var binlog = Path.Combine (projectDir, "ComputeRemoteGeneratorProperties.binlog");
-			string executable;
 			string csproj;
 
 			if (Directory.Exists (projectDir))
 				Directory.Delete (projectDir, true);
 			Directory.CreateDirectory (projectDir);
 
-			if (IsDotNet) {
-				csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
+			csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
 		<TargetFramework>net{TargetFramework.Version}-{PlatformName.ToLower ()}</TargetFramework>
 		<IsBindingProject>true</IsBindingProject>
 	</PropertyGroup>
 </Project>";
-			} else {
-				string targetsFile;
-				switch (Platform) {
-				case ApplePlatform.iOS:
-					targetsFile = $"$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.iOS.ObjCBinding.CSharp.targets";
-					break;
-				case ApplePlatform.TVOS:
-					targetsFile = $"$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.TVOS.ObjCBinding.CSharp.targets";
-					break;
-				case ApplePlatform.WatchOS:
-					targetsFile = $"$(MSBuildExtensionsPath)/Xamarin/iOS/Xamarin.WatchOS.ObjCBinding.CSharp.targets";
-					break;
-				case ApplePlatform.MacOSX:
-					targetsFile = "$(MSBuildExtensionsPath)/Xamarin/Mac/Xamarin.Mac.ObjCBinding.CSharp.targets";
-					break;
-				default:
-					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
-				}
-				csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<Project DefaultTargets=""Build"" ToolsVersion=""4.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
-  <Import Project=""{targetsFile}"" />
-</Project>";
-			}
+
 			File.WriteAllText (projectPath, csproj);
 
 			var arguments = new List<string> ();
 			var environment = default (Dictionary<string, string?>);
-			string? workingDirectory = null;
+			var executable = this.GetDotNetPath ();
+			var workingDirectory = Path.GetDirectoryName (executable);
 
-			if (IsDotNet) {
-				executable = this.GetDotNetPath ();
-				workingDirectory = Path.GetDirectoryName (executable);
+			arguments.Add ("build");
 
-				arguments.Add ("build");
+			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
-				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
-
-				if (!string.IsNullOrEmpty (customHome)) {
-					environment = new Dictionary<string, string?> { { "HOME", customHome } };
-				}
-			} else {
-				executable = "/Library/Frameworks/Mono.framework/Commands/msbuild";
+			if (!string.IsNullOrEmpty (customHome)) {
+				environment = new Dictionary<string, string?> { { "HOME", customHome } };
 			}
 
 			arguments.Add ("/p:OutputFilePath=" + outputFile);
@@ -139,11 +109,11 @@ namespace Xamarin.MacDev.Tasks {
 				case "BaseLibDllPath":
 					BaseLibDllPath = value;
 					break;
-				case "BTouchToolExe":
-					BTouchToolExe = value;
+				case "BGenToolExe":
+					BGenToolExe = value;
 					break;
-				case "BTouchToolPath":
-					BTouchToolPath = value;
+				case "BGenToolPath":
+					BGenToolPath = value;
 					break;
 				case "_DotNetCscCompiler":
 					DotNetCscCompiler = value;
