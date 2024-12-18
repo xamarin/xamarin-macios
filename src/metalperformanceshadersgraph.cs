@@ -1717,6 +1717,14 @@ namespace MetalPerformanceShadersGraph {
 		[Export ("sliceTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
 		MPSGraphTensor Slice (MPSGraphTensor tensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
 
+		[TV (18, 2), MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("sliceTensor:startTensor:endTensor:strideTensor:startMask:endMask:squeezeMask:name:")]
+		MPSGraphTensor Slice (MPSGraphTensor tensor, MPSGraphTensor startTensor, MPSGraphTensor endTensor, MPSGraphTensor strideTensor, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+
+		[TV (18, 2), MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("sliceTensor:startTensor:sizeTensor:squeezeMask:name:")]
+		MPSGraphTensor Slice (MPSGraphTensor tensor, MPSGraphTensor startTensor, MPSGraphTensor sizeTensor, uint squeezeMask, [NullAllowed] string name);
+
 		// -(MPSGraphTensor * _Nonnull)sliceGradientTensor:(MPSGraphTensor * _Nonnull)inputGradientTensor fwdInShapeTensor:(MPSGraphTensor * _Nonnull)fwdInShapeTensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides name:(NSString * _Nullable)name;
 		[Export ("sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:name:")]
 		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, [NullAllowed] string name);
@@ -1724,6 +1732,14 @@ namespace MetalPerformanceShadersGraph {
 		// -(MPSGraphTensor * _Nonnull)sliceGradientTensor:(MPSGraphTensor * _Nonnull)inputGradientTensor fwdInShapeTensor:(MPSGraphTensor * _Nonnull)fwdInShapeTensor starts:(NSArray<NSNumber *> * _Nonnull)starts ends:(NSArray<NSNumber *> * _Nonnull)ends strides:(NSArray<NSNumber *> * _Nonnull)strides startMask:(uint32_t)startMask endMask:(uint32_t)endMask squeezeMask:(uint32_t)squeezeMask name:(NSString * _Nullable)name;
 		[Export ("sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:startMask:endMask:squeezeMask:name:")]
 		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, [BindAs (typeof (int []))] NSNumber [] starts, [BindAs (typeof (int []))] NSNumber [] ends, [BindAs (typeof (int []))] NSNumber [] strides, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+
+		[TV (18, 2), MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("sliceGradientTensor:fwdInShapeTensor:startTensor:endTensor:strideTensor:startMask:endMask:squeezeMask:name:")]
+		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, MPSGraphTensor startTensor, MPSGraphTensor endTensor, MPSGraphTensor strideTensor, uint startMask, uint endMask, uint squeezeMask, [NullAllowed] string name);
+
+		[TV (18, 2), MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("sliceGradientTensor:fwdInShapeTensor:startTensor:sizeTensor:squeezeMask:name:")]
+		MPSGraphTensor SliceGradient (MPSGraphTensor inputGradientTensor, MPSGraphTensor fwdInShapeTensor, MPSGraphTensor startTensor, MPSGraphTensor sizeTensor, uint squeezeMask, [NullAllowed] string name);
 
 		[TV (17, 4), Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("sliceUpdateDataTensor:updateTensor:startsTensor:endsTensor:stridesTensor:startMask:endMask:squeezeMask:name:")]

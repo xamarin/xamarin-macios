@@ -424,6 +424,8 @@ namespace Introspection {
 				case "UISwipeGestureRecognizer":
 				case "UIScreenEdgePanGestureRecognizer":
 				case "UIHoverGestureRecognizer":
+				// Xcode 16.2 Conformance not in headers
+				case "SCSensitivityAnalysis":
 					return true;
 				}
 				break;
@@ -640,6 +642,9 @@ namespace Introspection {
 					// Foundation.MonoTouchException : Objective-C exception thrown. Name: NSInvalidArgumentException Reason: *** -supportsSecureCoding cannot be sent to an abstract object of class NSLocalizedNumberFormatRule: Create a concrete instance!
 					return true;
 				case "FSResource": // header says yes, runtime says no
+					return true;
+				// Xcode 16.2 Conformance not in headers
+				case "SCSensitivityAnalysis":
 					return true;
 				}
 				break;
