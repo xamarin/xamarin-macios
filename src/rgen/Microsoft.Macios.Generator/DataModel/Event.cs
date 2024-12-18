@@ -58,7 +58,7 @@ readonly struct Event : IEquatable<Event> {
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
 
-		var modifiersComparer = new ModifiersComparer ();
+		var modifiersComparer = new ModifiersEqualityComparer ();
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 

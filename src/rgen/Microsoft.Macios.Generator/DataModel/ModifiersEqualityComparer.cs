@@ -6,8 +6,9 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-public class ModifiersComparer : IEqualityComparer<ImmutableArray<SyntaxToken>> {
-	public bool Equals (ImmutableArray<SyntaxToken> x, ImmutableArray<SyntaxToken> y)
+public class ModifiersEqualityComparer : EqualityComparer<ImmutableArray<SyntaxToken>> {
+	/// <inheritdoc/>
+	public override bool Equals (ImmutableArray<SyntaxToken> x, ImmutableArray<SyntaxToken> y)
 	{
 		if (x.Length != y.Length)
 			return false;
@@ -21,7 +22,8 @@ public class ModifiersComparer : IEqualityComparer<ImmutableArray<SyntaxToken>> 
 		return true;
 	}
 
-	public int GetHashCode (ImmutableArray<SyntaxToken> obj)
+	/// <inheritdoc/>
+	public override int GetHashCode (ImmutableArray<SyntaxToken> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var token in obj) {

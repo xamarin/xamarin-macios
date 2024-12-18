@@ -6,15 +6,15 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class ModifiersComparerTests {
-	readonly ModifiersComparer comparer = new ModifiersComparer ();
+public class ModifiersEqualityComparerTests {
+	readonly ModifiersEqualityComparer equalityComparer = new ModifiersEqualityComparer ();
 
 	[Fact]
 	public void CompareEmpty ()
 	{
 		var x = ImmutableArray<SyntaxToken>.Empty;
 		var y = ImmutableArray<SyntaxToken>.Empty;
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -27,7 +27,7 @@ public class ModifiersComparerTests {
 		ImmutableArray<SyntaxToken> y = [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 		];
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -41,7 +41,7 @@ public class ModifiersComparerTests {
 			SyntaxFactory.Token (SyntaxKind.ProtectedKeyword),
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 		];
-		Assert.False (comparer.Equals (x, y));
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -56,7 +56,7 @@ public class ModifiersComparerTests {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 		];
 
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 
 	[Fact]
@@ -71,6 +71,6 @@ public class ModifiersComparerTests {
 			SyntaxFactory.Token (SyntaxKind.PrivateKeyword),
 		];
 
-		Assert.True (comparer.Equals (x, y));
+		Assert.True (equalityComparer.Equals (x, y));
 	}
 }
