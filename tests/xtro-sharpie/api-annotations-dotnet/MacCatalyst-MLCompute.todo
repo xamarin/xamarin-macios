@@ -37,7 +37,6 @@
 !deprecated-attribute-missing! MLCPoolingLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCReductionLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCReshapeLayer missing a [Deprecated] attribute
-!deprecated-attribute-missing! MLCRMSPropOptimizer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCScatterLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCSelectionLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCSGDOptimizer missing a [Deprecated] attribute
