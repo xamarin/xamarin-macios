@@ -1723,7 +1723,7 @@ namespace Intents {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		AlgorithmicRadioStation,
-		[Watch (6, 2, 1), iOS (13, 4, 1)]
+		[iOS (13, 4, 1)]
 		[MacCatalyst (13, 1)]
 		News,
 	}
