@@ -43,6 +43,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Default ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			var tag = default (CMTag);
 			AssertTag (tag, CMTagCategory.Undefined, CMTagDataType.Invalid, 0, false, false, 0, false, 0, false, 0, false, 0, "Default");
 		}
@@ -50,6 +52,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Create ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			Assert.Multiple (() => {
 				AssertTag (
 					CMTag.CreateWithSInt64Value (CMTagCategory.MediaType, 314),
@@ -72,6 +76,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Equals ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			Assert.Multiple (() => {
 				Assert.AreEqual (true, CMTag.Equals (default (CMTag), default (CMTag)), "Default");
 				Assert.AreEqual (true, CMTag.Equals (CMTag.Invalid, CMTag.Invalid), "Invalid");
@@ -131,6 +137,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Compare ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			Assert.Multiple (() => {
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (default (CMTag), default (CMTag)), "Default");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.Invalid, CMTag.Invalid), "Invalid");
@@ -210,6 +218,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Fields ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			Assert.Multiple (() => {
 				AssertTag (CMTag.Invalid, CMTagCategory.Undefined, CMTagDataType.Invalid, 0, false, false, 0, false, 0, false, 0, false, 0, "Invalid");
 				AssertTag (CMTag.MediaTypeVideo, CMTagCategory.MediaType, CMTagDataType.OSType, FourCC ("vide"), true, false, 0, true, FourCC ("vide"), false, 0, false, 0, "MediaTypeVideo");
@@ -234,6 +244,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void ToStringTests ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			Assert.Multiple (() => {
 				Assert.AreEqual ("{category:''{INVALID}", default (CMTag).ToString (), "Default");
 				Assert.AreEqual ("{category:''{INVALID}", CMTag.Invalid.ToString (), "Invalid");
@@ -259,6 +271,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Dictionary ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			var roundTrip = new Action<CMTag, string> ((tag, message) => {
 				var dict = tag.ToDictionary ();
 				var deserializedTag = CMTag.Create (dict);
@@ -290,6 +304,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Hash ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
 
 			Assert.Multiple (() => {
 				Assert.AreNotEqual (0, default (CMTag).GetHashCode (), "Default");
