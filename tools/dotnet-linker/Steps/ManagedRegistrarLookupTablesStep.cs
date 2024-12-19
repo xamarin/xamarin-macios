@@ -264,6 +264,8 @@ namespace Xamarin.Linker {
 			// No match, return -1
 			il.Emit (OpCodes.Ldc_I4_M1);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 		}
 
 		void GenerateLookupType (AssemblyTrampolineInfo infos, TypeDefinition registrarType, List<TypeData> types)
@@ -304,6 +306,8 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Initobj, abr.System_RuntimeTypeHandle);
 			il.Emit (OpCodes.Ldloc, temporary);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 		}
 
 		void GenerateConstructNSObject (TypeDefinition registrarType)
@@ -360,6 +364,8 @@ namespace Xamarin.Linker {
 			// return default (NSObject);
 			il.Emit (OpCodes.Ldnull);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 		}
 
 		void GenerateConstructINativeObject (TypeDefinition registrarType)
@@ -417,6 +423,8 @@ namespace Xamarin.Linker {
 			// return default (NSObject)
 			il.Emit (OpCodes.Ldnull);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 		}
 
 		void AddTypeInterfaceImplementation (TypeDefinition type, TypeReference iface)
@@ -457,6 +465,8 @@ namespace Xamarin.Linker {
 				il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
 			il.Emit (OpCodes.Newobj, ctor);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 
 			Annotations.Mark (createInstanceMethod);
 		}
@@ -530,6 +540,8 @@ namespace Xamarin.Linker {
 				throw new UnreachableException ();
 			}
 
+			body.GenerateILOffsets();
+
 			Annotations.Mark (createInstanceMethod);
 		}
 
@@ -568,7 +580,7 @@ namespace Xamarin.Linker {
 			var method = type.AddMethod ("RegisterWrapperTypes", MethodAttributes.Private | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.System_Void);
 			method.AddParameter ("type", abr.System_Collections_Generic_Dictionary2.CreateGenericInstanceType (abr.System_RuntimeTypeHandle, abr.System_RuntimeTypeHandle));
 			method.Overrides.Add (abr.IManagedRegistrar_RegisterWrapperTypes);
-			method.CreateBody (out var il);
+			var body = method.CreateBody (out var il);
 
 			// Find all the protocol interfaces that are defined in the current assembly, and their corresponding wrapper type,
 			// and add the pair to the dictionary.
@@ -596,6 +608,8 @@ namespace Xamarin.Linker {
 			}
 
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 		}
 
 		void GenerateLookupUnmanagedFunction (TypeDefinition registrar_type, IList<TrampolineInfo> trampolineInfos)
@@ -619,7 +633,7 @@ namespace Xamarin.Linker {
 			method.AddParameter ("symbol", abr.System_String);
 			method.AddParameter ("id", abr.System_Int32);
 			method.Overrides.Add (abr.IManagedRegistrar_LookupUnmanagedFunction);
-			method.CreateBody (out var il);
+			var body = method.CreateBody (out var il);
 			if (lookupMethods is null) {
 				il.Emit (OpCodes.Ldc_I4_M1);
 				il.Emit (OpCodes.Conv_I);
@@ -629,6 +643,7 @@ namespace Xamarin.Linker {
 				il.Emit (OpCodes.Call, lookupMethods);
 			}
 			il.Emit (OpCodes.Ret);
+			body.GenerateILOffsets();
 		}
 
 		// If WrappedLook is true we'll wrap the ldftn instruction in a separate method, which can be useful for debugging,
@@ -653,7 +668,7 @@ namespace Xamarin.Linker {
 			method = type.AddMethod (name, MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.Static, abr.System_IntPtr);
 			method.AddParameter ("symbol", abr.System_String);
 			method.AddParameter ("id", abr.System_Int32);
-			method.CreateBody (out var il);
+			var body = method.CreateBody (out var il);
 
 			if (level == levels) {
 				// This is the leaf method where we do the actual lookup.
@@ -673,9 +688,10 @@ namespace Xamarin.Linker {
 					var mr = abr.CurrentAssembly.MainModule.ImportReference (md);
 					if (WrappedLookup) {
 						var wrappedLookup = type.AddMethod (name + ti.Id, MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.HideBySig, abr.System_IntPtr);
-						wrappedLookup.CreateBody (out var wrappedIl);
+						var wrappedBody = wrappedLookup.CreateBody (out var wrappedIl);
 						wrappedIl.Emit (OpCodes.Ldftn, mr);
 						wrappedIl.Emit (OpCodes.Ret);
+						wrappedBody.GenerateILOffsets();
 
 						targets [i] = Instruction.Create (OpCodes.Call, wrappedLookup);
 					} else {
@@ -746,6 +762,8 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Ldc_I4_M1);
 			il.Emit (OpCodes.Conv_I);
 			il.Emit (OpCodes.Ret);
+
+			body.GenerateILOffsets();
 
 			return method;
 		}
