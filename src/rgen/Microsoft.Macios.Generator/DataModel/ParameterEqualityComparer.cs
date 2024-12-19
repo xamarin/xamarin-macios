@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class ParameterEqualityComparer : IEqualityComparer<ImmutableArray<Parameter>> {
+class ParameterEqualityComparer : EqualityComparer<ImmutableArray<Parameter>> {
 
 	/// <inheritdoc/>
-	public bool Equals (ImmutableArray<Parameter> x, ImmutableArray<Parameter> y)
+	public override bool Equals (ImmutableArray<Parameter> x, ImmutableArray<Parameter> y)
 	{
 		// we know as a fact that parameter names have to be unique, otherwise we could not 
 		// compile the code. So make sure that all the parameters with the same name are the same
@@ -20,7 +20,7 @@ class ParameterEqualityComparer : IEqualityComparer<ImmutableArray<Parameter>> {
 	}
 
 	/// <inheritdoc/>
-	public int GetHashCode (ImmutableArray<Parameter> obj)
+	public override int GetHashCode (ImmutableArray<Parameter> obj)
 	{
 		var hashCode = new HashCode ();
 		foreach (var constructor in obj) {

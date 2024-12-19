@@ -5,8 +5,9 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class ConstructorsEqualityComparer : IEqualityComparer<ImmutableArray<Constructor>> {
-	public bool Equals (ImmutableArray<Constructor> x, ImmutableArray<Constructor> y)
+class ConstructorsEqualityComparer : EqualityComparer<ImmutableArray<Constructor>> {
+	/// <inheritdoc/>
+	public override bool Equals (ImmutableArray<Constructor> x, ImmutableArray<Constructor> y)
 	{
 		// group the constructors based on the number of parameters. We create two dictionaries, that will have 
 		// the number of params as the key, and a list of constructors as the value
@@ -19,7 +20,8 @@ class ConstructorsEqualityComparer : IEqualityComparer<ImmutableArray<Constructo
 		return dictionaryComparer.Equals (xConstructors, yConstructors);
 	}
 
-	public int GetHashCode (ImmutableArray<Constructor> obj)
+	/// <inheritdoc/>
+	public override int GetHashCode (ImmutableArray<Constructor> obj)
 	{
 		var hashCode = new HashCode ();
 		foreach (var ctr in obj) {
