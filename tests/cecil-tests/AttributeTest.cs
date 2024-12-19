@@ -328,6 +328,15 @@ namespace Cecil.Tests {
 					// Same method, but different arguments due to platform differences. We should treat this as the same method, so ignore this failure.
 					"StoreKit.AppStore.RequestReview (XKit.XWindowScene)", // iOS, MacCatalyst
 					"StoreKit.AppStore.RequestReview (XKit.XViewController)", // macOS
+
+					// This is from the UIGestureRecognizerDelegate protocol: PdfView does not implement UIGestureRecognizerDelegate on tvOS.
+					"PdfKit.PdfView.ShouldBeRequiredToFailBy (XKit.XGestureRecognizer, XKit.XGestureRecognizer)",
+					"PdfKit.PdfView.ShouldBegin (XKit.XGestureRecognizer)",
+					"PdfKit.PdfView.ShouldReceiveEvent (XKit.XGestureRecognizer, XKit.XEvent)",
+					"PdfKit.PdfView.ShouldReceivePress (XKit.XGestureRecognizer, XKit.XPress)",
+					"PdfKit.PdfView.ShouldReceiveTouch (XKit.XGestureRecognizer, XKit.XTouch)",
+					"PdfKit.PdfView.ShouldRecognizeSimultaneously (XKit.XGestureRecognizer, XKit.XGestureRecognizer)",
+					"PdfKit.PdfView.ShouldRequireFailureOf (XKit.XGestureRecognizer, XKit.XGestureRecognizer)",
 				};
 			}
 		}

@@ -17,6 +17,6 @@ build-generator-tests:
 run-generator-tests:
 	$(Q) $(DOTNET) test Microsoft.Macios.Generator.Tests/Microsoft.Macios.Generator.Tests.csproj $(TEST_FILTER)
 
-build-all: build-bindings-analyzer-tests build-generator-tests
+build build-all: build-bindings-analyzer-tests build-generator-tests
 
 run-tests run test: run-bindings-analyzer-tests run-generator-tests

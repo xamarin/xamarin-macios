@@ -35,6 +35,12 @@ steps:
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
   fetchTags: false
 
+- checkout: macios-adr
+  clean: true
+  fetchDepth: 0
+  persistCredentials: true
+  fetchTags: false
+
 - checkout: yaml-templates
   clean: true
   fetchTags: false

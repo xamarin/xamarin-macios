@@ -4,26 +4,28 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class DeclarationCodeChangesEqualityComparer : IEqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
+class DeclarationCodeChangesEqualityComparer : EqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
 	Changes)> {
 	readonly CodeChangesEqualityComparer comparer = new ();
 
-	public bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
+	/// <inheritdoc/>
+	public override bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
 		(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) y)
 	{
 		return comparer.Equals (x.Changes, y.Changes);
 	}
 
-	public int GetHashCode ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) obj)
+	/// <inheritdoc/>
+	public override int GetHashCode ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) obj)
 		=> comparer.GetHashCode (obj.Changes);
 }
 
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
 /// </summary>
-class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
+class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 	/// <inheritdoc />
-	public bool Equals (CodeChanges x, CodeChanges y)
+	public override bool Equals (CodeChanges x, CodeChanges y)
 	{
 		// things that mean a code change is the same:
 		// - the fully qualified symbol is the same
@@ -74,7 +76,7 @@ class CodeChangesEqualityComparer : IEqualityComparer<CodeChanges> {
 	}
 
 	/// <inheritdoc />
-	public int GetHashCode (CodeChanges obj)
+	public override int GetHashCode (CodeChanges obj)
 	{
 		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.EnumMembers);
 	}

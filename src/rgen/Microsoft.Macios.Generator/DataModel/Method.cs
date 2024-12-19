@@ -80,7 +80,7 @@ readonly struct Method : IEquatable<Method> {
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
-		var modifiersComparer = new ModifiersComparer ();
+		var modifiersComparer = new ModifiersEqualityComparer ();
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 

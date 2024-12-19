@@ -205,12 +205,12 @@ namespace Xamarin.Tests {
 		[SetUp]
 		public virtual void Setup ()
 		{
-			testDirectory = GetTestDirectory (forceClone: true);
+			//testDirectory = GetTestDirectory (forceClone: true);
 			AssertValidDeviceBuild ();
-			MonoTouchProject = SetupProjectPaths ("MySingleView");
-			LibraryProject = SetupProjectPaths ("MySingleView/MyLibrary", false);
-			MonoTouchProjectInstance = new MSBuildProject (MonoTouchProject, this);
-			LibraryProjectInstance = new MSBuildProject (LibraryProject, this);
+			//MonoTouchProject = SetupProjectPaths ("MySingleView");
+			//LibraryProject = SetupProjectPaths ("MySingleView/MyLibrary", false);
+			//MonoTouchProjectInstance = new MSBuildProject (MonoTouchProject, this);
+			//LibraryProjectInstance = new MSBuildProject (LibraryProject, this);
 
 			Engine = new BuildEngine ();
 		}
