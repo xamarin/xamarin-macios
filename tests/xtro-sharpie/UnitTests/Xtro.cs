@@ -12,7 +12,7 @@ namespace Xamarin.Tests {
 			var dir = "/Users/rolf/work/maccore/xharness/xamarin-macios/tests/xtro-sharpie";
 			var args = new [] {
 				"-C", dir,
-				"report.zip",
+				"report-dotnet/report.zip",
 				"-j", "8",
 			};
 			var rv = ExecutionHelper.Execute ("make", args);
@@ -29,7 +29,7 @@ namespace Xamarin.Tests {
 				TestContext.AddTestAttachment (zippedReport, "HTML report (zipped)");
 			}
 
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			Assert.AreEqual (0, rv, "ExitCode");
 		}
 	}
 }
