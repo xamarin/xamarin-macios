@@ -154,6 +154,16 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void Create_Markdown_Url_Error ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (new NSUrl (""), markdownOptions, null, out var e);
+			Assert.IsNull (obj, "IsNull");
+			Assert.IsNotNull (e, "Error");
+		}
+
+
+		[Test]
 		public void Create_Url ()
 		{
 			var textFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
@@ -168,7 +178,17 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsNull (e, "Error 2");
 				Assert.IsNotNull (obj, "IsNull 2");
 			}
+		}
 
+		[Test]
+		public void Create_Markdown_Url ()
+		{
+			var textFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
+			var textUrl = NSUrl.CreateFileUrl (textFile);
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (textUrl, markdownOptions, null, out var e);
+			Assert.IsNull (e, "Error");
+			Assert.IsNotNull (obj, "IsNull");
 		}
 
 		[Test]
@@ -189,6 +209,15 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void Create_Markdown_Data_Error ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (NSData.FromArray (new byte [] { (byte) '[', (byte) '!', (byte) '"', (byte) '$', (byte) '%', (byte) '&', (byte) '/', (byte) '(', (byte) ')', (byte) '=', (byte) '?', (byte) '¿', (byte) '^', (byte) '*', (byte) '¨', (byte) '´', (byte) '}', (byte) '\\' }), markdownOptions, null, out var e);
+			Assert.IsNull (obj, "IsNull");
+			Assert.IsNotNull (e, "Error");
+		}
+
+		[Test]
 		public void Create_Data ()
 		{
 			{
@@ -201,6 +230,25 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsNotNull (obj, "IsNull 2");
 				Assert.IsNull (e, "Error 2");
 			}
+		}
+
+		[Test]
+		public void Create_Markdown_Data ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (new NSData (), markdownOptions, null, out var e);
+			Assert.IsNotNull (obj, "IsNull");
+			Assert.IsNull (e, "Error");
+		}
+
+
+		[Test]
+		public void Create_Markdown_String ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create ("#markdown", markdownOptions, null, out var e);
+			Assert.IsNotNull (obj, "IsNull");
+			Assert.IsNull (e, "Error");
 		}
 
 #if !__WATCHOS__
