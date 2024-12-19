@@ -348,6 +348,7 @@ namespace AVKit {
 
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("infoViewActions", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		UIAction [] InfoViewActions { get; set; }
 
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
@@ -691,6 +692,10 @@ namespace AVKit {
 		[Mac (13, 0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
 		[Export ("setMagnification:centeredAtPoint:")]
 		void SetMagnification (nfloat magnification, CGPoint centeredAtPoint);
+
+		[Mac (14, 0)]
+		[Export ("videoFrameAnalysisTypes")]
+		AVVideoFrameAnalysisType VideoFrameAnalysisTypes { get; set; }
 	}
 
 	interface IAVPlayerViewPictureInPictureDelegate { }
@@ -1010,18 +1015,15 @@ namespace AVKit {
 
 		// interface AVPictureInPictureControllerContentSource_VideoCallSupport
 		[NoWatch, NoTV, NoMac]
-		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("initWithActiveVideoCallSourceView:contentViewController:")]
 		NativeHandle Constructor (UIView sourceView, AVPictureInPictureVideoCallViewController contentViewController);
 
 		[NullAllowed]
 		[NoWatch, NoTV, NoMac]
-		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("activeVideoCallSourceView", ArgumentSemantic.Weak)]
 		UIView ActiveVideoCallSourceView { get; }
 
 		[NoWatch, NoTV, NoMac]
-		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("activeVideoCallContentViewController")]
 		AVPictureInPictureVideoCallViewController ActiveVideoCallContentViewController { get; }
 
@@ -1143,7 +1145,7 @@ namespace AVKit {
 		string LocalizedNumericName { get; }
 	}
 
-	[iOS (17, 2), NoMac, NoMacCatalyst, NoTV, NoWatch]
+	[iOS (17, 2), NoMac, MacCatalyst (17, 2), NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureEvent {
@@ -1151,7 +1153,7 @@ namespace AVKit {
 		AVCaptureEventPhase Phase { get; }
 	}
 
-	[iOS (17, 2), NoMac, NoMacCatalyst, NoTV, NoWatch]
+	[iOS (17, 2), NoMac, MacCatalyst (17, 2), NoTV, NoWatch]
 	[Native]
 	public enum AVCaptureEventPhase : ulong {
 		Began,
@@ -1159,7 +1161,7 @@ namespace AVKit {
 		Cancelled,
 	}
 
-	[iOS (17, 2), NoMac, NoMacCatalyst, NoTV, NoWatch]
+	[iOS (17, 2), NoMac, MacCatalyst (17, 2), NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureEventInteraction : UIInteraction {
@@ -1172,4 +1174,39 @@ namespace AVKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
+
+	[TV (17,0), NoMac, NoiOS, NoMacCatalyst]
+	[BaseType (typeof(UIViewController))]
+	interface AVContinuityDevicePickerViewController
+	{
+		[Static]
+		[Export ("supported")]
+		bool Supported { [Bind ("isSupported")] get; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IAVContinuityDevicePickerViewControllerDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+	}
+
+	[TV (17,0), NoMac, NoiOS, NoMacCatalyst]
+	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
+	[BaseType (typeof(NSObject))]
+	interface AVContinuityDevicePickerViewControllerDelegate
+	{
+		[Export ("continuityDevicePickerWillBeginPresenting:")]
+		void WillBeginPresenting (AVContinuityDevicePickerViewController pickerViewController);
+
+		[Export ("continuityDevicePicker:didConnectDevice:")]
+		void DidConnectDevice (AVContinuityDevicePickerViewController pickerViewController, AVContinuityDevice device);
+
+		[Export ("continuityDevicePickerDidCancel:")]
+		void DidCancel (AVContinuityDevicePickerViewController pickerViewController);
+
+		[Export ("continuityDevicePickerDidEndPresenting:")]
+		void DidEndPresenting (AVContinuityDevicePickerViewController pickerViewController);
+	}
+	interface IAVContinuityDevicePickerViewControllerDelegate {}
 }
