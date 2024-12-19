@@ -11,10 +11,4 @@
 	<assembly fullname="Microsoft.iOS">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
-	<assembly fullname="Microsoft.tvOS">
-		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
-	</assembly>
-	<assembly fullname="Microsoft.MacCatalyst">
-		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
-	</assembly>
 </linker>
