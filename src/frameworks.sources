@@ -33,6 +33,7 @@ ACCELERATE_SOURCES = \
 # Accessibility
 
 ACCESSIBILITY_SOURCES = \
+	Accessibility/AXFeatureOverrideSessionError.cs \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
@@ -2421,6 +2422,7 @@ TVOS_FRAMEWORKS =           \
 	MultipeerConnectivity   \
 	NetworkExtension        \
 	OpenGLES                \
+	PdfKit                  \
 	Phase                   \
 	Photos                  \
 	PhotosUI                \
@@ -2522,6 +2524,7 @@ MACCATALYST_FRAMEWORKS = \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenCaptureKit \
 	ScreenTime \
 	Security \
 	SensitiveContentAnalysis \

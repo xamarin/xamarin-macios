@@ -3025,6 +3025,10 @@ namespace UIKit {
 		[TV (17, 0), NoWatch, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("activateSceneSessionForRequest:errorHandler:")]
 		void ActivateSceneSession (UISceneSessionActivationRequest request, [NullAllowed] Action<NSError> errorHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), TV (18, 2)]
+		[Field ("UIApplicationOpenDefaultApplicationsSettingsURLString")]
+		NSString UIApplicationOpenDefaultApplicationsSettingsUrlString { get; }
 	}
 
 	/// <summary>Icon for a Quick Action shortcut, which appears in response to user-applied pressure.</summary>
@@ -12845,6 +12849,10 @@ namespace UIKit {
 		[TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("useSelectionForFind:")]
 		void UseSelectionForFind ([NullAllowed] NSObject sender);
+
+		[NoTV, iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("showWritingTools:")]
+		void ShowWritingTools ([NullAllowed] NSObject sender);
 	}
 
 #if !NET // These two methods are in the UIResponderStandardEditActions protocol
@@ -14242,6 +14250,10 @@ namespace UIKit {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSAdaptiveImageGlyphAttributeName")]
 		NSString AdaptiveImageGlyph { get; }
+
+		[NoTV, Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Field ("NSWritingToolsExclusionAttributeName")]
+		NSString WritingToolsExclusion { get; }
 
 	}
 
@@ -16428,6 +16440,10 @@ namespace UIKit {
 		[NoWatch, NoTV, NoMacCatalyst, iOS (18, 0)]
 		[Export ("textFormattingConfiguration", ArgumentSemantic.Copy), NullAllowed]
 		UITextFormattingViewControllerConfiguration TextFormattingConfiguration { get; set; }
+
+		[NoTV, MacCatalyst (18, 2), iOS (18, 2)]
+		[Export ("writingToolsCoordinator")]
+		UIWritingToolsCoordinator WritingToolsCoordinator { get; }
 	}
 
 	interface IUITextViewDelegate { }
@@ -30933,4 +30949,32 @@ namespace UIKit {
 		void SetAccessibilityTextInputResponderHandler ([NullAllowed] UITextInputReturnHandler handler);
 	}
 
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Native]
+	public enum UIApplicationCategory : long {
+		UIApplicationCategoryWebBrowser = 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Native]
+	public enum UIApplicationCategoryDefaultStatus : long {
+		Unavailable,
+		IsDefault,
+		NotDefault,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[ErrorDomain ("UIApplicationCategoryDefaultErrorDomain")]
+	[Native]
+	public enum UIApplicationCategoryDefaultErrorCode : long {
+		RateLimited = 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Category]
+	[BaseType (typeof (UIApplication))]
+	interface UIApplication_DefaultApplication {
+		[Export ("defaultStatusForCategory:error:")]
+		UIApplicationCategoryDefaultStatus GetDefaultStatus (UIApplicationCategory category, [NullAllowed] out NSError error);
+	}
 }

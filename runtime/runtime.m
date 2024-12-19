@@ -2348,6 +2348,11 @@ xamarin_process_managed_exception (MonoObject *exception)
 	if (exception == NULL)
 		return;
 
+#if !defined (CORECLR_RUNTIME)
+	if (mono_is_debugger_attached ())
+		mono_debugger_agent_unhandled_exception ((MonoException *) exception);
+#endif
+
 	MarshalManagedExceptionMode mode;
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
 

@@ -16,8 +16,10 @@ elif [[ $DEPENDENCY_MODULE =~ https://github.com ]]; then
 elif [[ $DEPENDENCY_MODULE =~ devdiv@dev.azure.com ]]; then
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/devdiv@dev.azure.com\/devdiv\/}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/_git*}
+	DEPENDENCY_AUTH="-c http.extraheader=\"AUTHORIZATION: bearer $SYSTEM_ACCESSTOKEN\""
 fi
 
+echo "*** [$DEPENDENCY_NAME] testing fot git repo in $DEPENDENCY_PATH"
 if test -d "$DEPENDENCY_PATH"; then
 	cd "$DEPENDENCY_PATH"
 	# Check if we have the remote we need
@@ -37,10 +39,10 @@ if test -d "$DEPENDENCY_PATH"; then
 	fi
 
 else
-	echo "*** [$DEPENDENCY_NAME] git clone $DEPENDENCY_MODULE --recursive $DEPENDENCY_DIRECTORY -b $DEPENDENCY_BRANCH --origin $DEPENDENCY_REMOTE"
+	echo "*** [$DEPENDENCY_NAME] git $DEPENDENCY_AUTH clone $DEPENDENCY_MODULE --recursive $DEPENDENCY_DIRECTORY -b $DEPENDENCY_BRANCH --origin $DEPENDENCY_REMOTE"
 	mkdir -p "$(dirname "$DEPENDENCY_PATH")"
 	cd "$(dirname "$DEPENDENCY_PATH")"
-	git clone "$DEPENDENCY_MODULE" --recursive "$DEPENDENCY_DIRECTORY" -b "$DEPENDENCY_BRANCH" --origin "$DEPENDENCY_REMOTE"
+	git "$DEPENDENCY_AUTH" "$DEPENDENCY_MODULE" --recursive "$DEPENDENCY_DIRECTORY" -b "$DEPENDENCY_BRANCH" --origin "$DEPENDENCY_REMOTE"
 	cd "$DEPENDENCY_DIRECTORY"
 fi
 
