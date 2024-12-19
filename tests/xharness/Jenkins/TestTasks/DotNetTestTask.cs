@@ -29,9 +29,11 @@ namespace Xharness.Jenkins.TestTasks {
 					"--results-directory:" + Logs.Directory,
 					"--logger:console;verbosity=detailed",
 					"--logger:trx;LogFileName=" + Path.GetFileName (trx.FullPath),
-					"--logger:nunit;LogFileName=" + Path.GetFileName (xml.FullPath),
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
+
+				if (TestProject?.IsNUnitTestProject == true)
+					args.Add ($"--logger:nunit;LogFileName={Path.GetFileName (xml.FullPath)}");
 
 				var envTestFilter = global::System.Environment.GetEnvironmentVariable ("TEST_FILTER");
 				if (!string.IsNullOrEmpty (envTestFilter)) {

@@ -38,6 +38,21 @@ namespace Xharness {
 			IsExecutableProject = isExecutableProject;
 		}
 
+		bool? is_nunit_test_project;
+		public bool IsNUnitTestProject {
+			get {
+				if (!is_nunit_test_project.HasValue) {
+					if (string.IsNullOrEmpty (Path)) {
+						is_nunit_test_project = false;
+					} else {
+						is_nunit_test_project = File.ReadAllLines (Path).Any (v => v.Contains ("<PackageReference", StringComparison.Ordinal) && v.Contains ("\"nunit\"", StringComparison.OrdinalIgnoreCase));
+					}
+				}
+
+				return is_nunit_test_project.Value;
+			}
+		}
+
 		public XmlDocument Xml {
 			get {
 				if (xml is null) {
