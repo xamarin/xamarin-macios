@@ -30,9 +30,9 @@ namespace MonoTouchFixtures.AVFoundation {
 			if (value.Length != 4)
 				throw new ArgumentOutOfRangeException ();
 			return (((uint) value [0]) << 24) +
-			       (((uint) value [1]) << 16) +
-			       (((uint) value [2]) <<  8) +
-			       (((uint) value [3]) <<  0);
+				   (((uint) value [1]) << 16) +
+				   (((uint) value [2]) << 8) +
+				   (((uint) value [3]) << 0);
 		}
 
 		[Test]

@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		public void Equals ()
 		{
 			Assert.Multiple (() => {
-				Assert.AreEqual (true, CMTag.Equals (default(CMTag), default(CMTag)), "Default");
+				Assert.AreEqual (true, CMTag.Equals (default (CMTag), default (CMTag)), "Default");
 				Assert.AreEqual (true, CMTag.Equals (CMTag.Invalid, CMTag.Invalid), "Invalid");
 				Assert.AreEqual (true, CMTag.Equals (CMTag.MediaTypeVideo, CMTag.MediaTypeVideo), "MediaTypeVideo");
 				Assert.AreEqual (true, CMTag.Equals (CMTag.MediaSubTypeMebx, CMTag.MediaSubTypeMebx), "MediaSubTypeMebx");
@@ -132,7 +132,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		public void Compare ()
 		{
 			Assert.Multiple (() => {
-				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (default(CMTag), default(CMTag)), "Default");
+				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (default (CMTag), default (CMTag)), "Default");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.Invalid, CMTag.Invalid), "Invalid");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.MediaTypeVideo, CMTag.MediaTypeVideo), "MediaTypeVideo");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.MediaSubTypeMebx, CMTag.MediaSubTypeMebx), "MediaSubTypeMebx");
@@ -229,13 +229,13 @@ namespace MonoTouchFixtures.CoreMedia {
 				AssertTag (CMTag.PackingTypeSideBySide, CMTagCategory.PackingType, CMTagDataType.OSType, FourCC ("side"), true, false, 0, true, FourCC ("side"), false, 0, false, 0, "PackingTypeSideBySide");
 				AssertTag (CMTag.PackingTypeOverUnder, CMTagCategory.PackingType, CMTagDataType.OSType, FourCC ("over"), true, false, 0, true, FourCC ("over"), false, 0, false, 0, "PackingTypeOverUnder");
 			});
- 		}
+		}
 
 		[Test]
 		public void ToStringTests ()
 		{
 			Assert.Multiple (() => {
-				Assert.AreEqual ("{category:''{INVALID}", default(CMTag).ToString (), "Default");
+				Assert.AreEqual ("{category:''{INVALID}", default (CMTag).ToString (), "Default");
 				Assert.AreEqual ("{category:''{INVALID}", CMTag.Invalid.ToString (), "Invalid");
 				Assert.AreEqual ("{category:'mdia' value:'vide' <OSType>}", CMTag.MediaTypeVideo.ToString (), "MediaTypeVideo");
 				Assert.AreEqual ("{category:'msub' value:'mebx' <OSType>}", CMTag.MediaSubTypeMebx.ToString (), "MediaSubTypeMebx");
@@ -259,15 +259,14 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Dictionary ()
 		{
-			var roundTrip = new Action<CMTag, string> ((tag, message) =>
-			{
+			var roundTrip = new Action<CMTag, string> ((tag, message) => {
 				var dict = tag.ToDictionary ();
 				var deserializedTag = CMTag.Create (dict);
 				Assert.AreEqual (true, CMTag.Equals (tag, deserializedTag), message);
 			});
 
 			Assert.Multiple (() => {
-				roundTrip (default(CMTag), "Default");
+				roundTrip (default (CMTag), "Default");
 				roundTrip (CMTag.Invalid, "Invalid");
 				roundTrip (CMTag.MediaTypeVideo, "MediaTypeVideo");
 				roundTrip (CMTag.MediaSubTypeMebx, "MediaSubTypeMebx");
@@ -293,7 +292,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		{
 
 			Assert.Multiple (() => {
-				Assert.AreNotEqual (0, default(CMTag).GetHashCode (), "Default");
+				Assert.AreNotEqual (0, default (CMTag).GetHashCode (), "Default");
 				Assert.AreNotEqual (0, CMTag.Invalid.GetHashCode (), "Invalid");
 				Assert.AreNotEqual (0, CMTag.MediaTypeVideo.GetHashCode (), "MediaTypeVideo");
 				Assert.AreNotEqual (0, CMTag.MediaSubTypeMebx.GetHashCode (), "MediaSubTypeMebx");

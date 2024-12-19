@@ -196,13 +196,13 @@ namespace ObjCRuntime {
 		/// <param name="handle">Handle to the dynamic library previously opened with <see cref="dlopen(string,int)" />.</param>
 		/// <param name="symbol">Name of the public symbol in the dynamic library to look up.</param>
 		/// <returns>The struct from the library, or an empty struct (<c>default(T)</c>) if the symbol couldn't be found.</returns>
-		public static T GetStruct<T> (IntPtr handle, string symbol) where T: unmanaged
+		public static T GetStruct<T> (IntPtr handle, string symbol) where T : unmanaged
 		{
 			var ptr = GetIndirect (handle, symbol);
 			if (ptr == IntPtr.Zero)
 				return default (T);
 			unsafe {
-				return *(T *) ptr;
+				return *(T*) ptr;
 			}
 		}
 

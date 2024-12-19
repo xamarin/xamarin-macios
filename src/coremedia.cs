@@ -336,26 +336,23 @@ namespace CoreMedia {
 #endif
 
 	[Flags]
-	[TV (17, 0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
-	public enum CMStereoViewComponents : ulong
-	{
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum CMStereoViewComponents : ulong {
 		None = 0x0,
 		LeftEye = 1uL << 0,
 		RightEye = 1uL << 1,
 	}
 
 	[Flags]
-	[TV (17, 0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
-	public enum CMStereoViewInterpretationOptions : ulong
-	{
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum CMStereoViewInterpretationOptions : ulong {
 		Default = 0,
 		StereoOrderReversed = 1uL << 0,
 		AdditionalViews = 1uL << 1,
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMTagCollectionError
-	{
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMTagCollectionError {
 		Success = 0,
 		ParamErr = -15740,
 		AllocationFailed = -15741,
@@ -369,42 +366,38 @@ namespace CoreMedia {
 		NotYetImplemented = -15749,
 	}
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17, 0)]
-	public enum CMTaggedBufferGroupError
-	{
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum CMTaggedBufferGroupError {
 		Success = 0,
 		ParamErr = -15780,
 		AllocationFailed = -15781,
 		InternalError = -15782,
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMTagError
-	{
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMTagError {
 		Success = 0,
 		ParamErr = -15730,
 		AllocationFailed = -15731,
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMTagCategory : uint
-	{
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMTagCategory : uint {
 		Undefined = 0,
-		MediaType                = ('m' << 24) + ('d' << 16) + ('i' << 8) + 'a', // 'mdia'
-		MediaSubType             = ('m' << 24) + ('s' << 16) + ('u' << 8) + 'b', // 'msub'
-		TrackId                  = ('t' << 24) + ('r' << 16) + ('a' << 8) + 'k', // 'trak'
-		ChannelId                = ('v' << 24) + ('c' << 16) + ('h' << 8) + 'n', // 'vchn'
-		VideoLayerId             = ('v' << 24) + ('l' << 16) + ('a' << 8) + 'y', // 'vlay'
-		PixelFormat              = ('p' << 24) + ('i' << 16) + ('x' << 8) + 'f', // 'pixf'
-		PackingType              = ('p' << 24) + ('a' << 16) + ('c' << 8) + 'k', // 'pack'
-		ProjectionType           = ('p' << 24) + ('r' << 16) + ('o' << 8) + 'j', // 'proj'
-		StereoView               = ('e' << 24) + ('y' << 16) + ('e' << 8) + 's', // 'eyes'
+		MediaType = ('m' << 24) + ('d' << 16) + ('i' << 8) + 'a', // 'mdia'
+		MediaSubType = ('m' << 24) + ('s' << 16) + ('u' << 8) + 'b', // 'msub'
+		TrackId = ('t' << 24) + ('r' << 16) + ('a' << 8) + 'k', // 'trak'
+		ChannelId = ('v' << 24) + ('c' << 16) + ('h' << 8) + 'n', // 'vchn'
+		VideoLayerId = ('v' << 24) + ('l' << 16) + ('a' << 8) + 'y', // 'vlay'
+		PixelFormat = ('p' << 24) + ('i' << 16) + ('x' << 8) + 'f', // 'pixf'
+		PackingType = ('p' << 24) + ('a' << 16) + ('c' << 8) + 'k', // 'pack'
+		ProjectionType = ('p' << 24) + ('r' << 16) + ('o' << 8) + 'j', // 'proj'
+		StereoView = ('e' << 24) + ('y' << 16) + ('e' << 8) + 's', // 'eyes'
 		StereoViewInterpretation = ('e' << 24) + ('y' << 16) + ('i' << 8) + 'p', // 'eyip'
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMTagDataType : uint
-	{
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMTagDataType : uint {
 		Invalid = 0,
 		SInt64 = 2,
 		Float64 = 3,
@@ -485,26 +478,23 @@ namespace CoreMedia {
 		NSString DataTypeKey { get; }
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMProjectionType : ulong
-	{
-		Rectangular =         ('r' << 24) + ('e' << 16) + ('c' << 8) + 't', // 'rect',
-		Equirectangular =     ('e' << 24) + ('q' << 16) + ('u' << 8) + 'i', // 'equi',
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMProjectionType : ulong {
+		Rectangular = ('r' << 24) + ('e' << 16) + ('c' << 8) + 't', // 'rect',
+		Equirectangular = ('e' << 24) + ('q' << 16) + ('u' << 8) + 'i', // 'equi',
 		HalfEquirectangular = ('h' << 24) + ('e' << 16) + ('q' << 8) + 'u', // 'hequ',
-		Fisheye =             ('f' << 24) + ('i' << 16) + ('s' << 8) + 'h', // 'fish',
+		Fisheye = ('f' << 24) + ('i' << 16) + ('s' << 8) + 'h', // 'fish',
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMPackingType : ulong
-	{
-		None       = ('n' << 24) + ('o' << 16) + ('n' << 8) + 'e', // 'none',
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMPackingType : ulong {
+		None = ('n' << 24) + ('o' << 16) + ('n' << 8) + 'e', // 'none',
 		SideBySide = ('s' << 24) + ('i' << 16) + ('d' << 8) + 'e', // 'side',
-		OverUnder  = ('o' << 24) + ('v' << 16) + ('e' << 8) + 'r', // 'over',
+		OverUnder = ('o' << 24) + ('v' << 16) + ('e' << 8) + 'r', // 'over',
 	}
 
-	[MacCatalyst (17,0), TV (17,0), Mac (14,0), iOS (17,0)]
-	public enum CMTaggedBufferGroupFormatType
-	{
+	[MacCatalyst (17, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+	public enum CMTaggedBufferGroupFormatType {
 		TaggedBufferGroup = ('t' << 24) + ('b' << 16) + ('g' << 8) + 'r', // 'tbgr',
 	}
 }

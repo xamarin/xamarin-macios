@@ -21,7 +21,7 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst17.0")]
 	[SupportedOSPlatform ("macos14.0")]
 	[SupportedOSPlatform ("tvos17.0")]
-	public partial class CMTagCollection : NativeObject	{
+	public partial class CMTagCollection : NativeObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 		internal CMTagCollection (NativeHandle handle, bool owns)
@@ -56,7 +56,7 @@ namespace CoreMedia {
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <param name="tags">The tags in the new tag collection.</param>
 		/// <returns>A new tag collection with the specified tags, or null in case of failure.</returns>
-		public static CMTagCollection? Create (out CMTagCollectionError status, params CMTag[] tags)
+		public static CMTagCollection? Create (out CMTagCollectionError status, params CMTag [] tags)
 		{
 			IntPtr handle;
 			unsafe {
@@ -70,7 +70,7 @@ namespace CoreMedia {
 		/// <summary>Create a new tag collection for the specified tags.</summary>
 		/// <param name="tags">The tags in the new tag collection.</param>
 		/// <returns>A new tag collection with the specified tags, or null in case of failure.</returns>
-		public static CMTagCollection? Create (params CMTag[] tags)
+		public static CMTagCollection? Create (params CMTag [] tags)
 		{
 			return Create (out var _, tags);
 		}
@@ -200,12 +200,12 @@ namespace CoreMedia {
 		unsafe extern static byte /* Boolean */ CMTagCollectionContainsSpecifiedTags (
 				IntPtr /* CMTagCollectionRef */ tagCollection,
 				CMTag* /* const CMTag * CM_NONNULL */ containedTags,
-				nint /* CMItemCount */ containedTagCount );
+				nint /* CMItemCount */ containedTagCount);
 
 		/// <summary>Checks if this tag collection contains all the specified tags.</summary>
 		/// <param name="tags">The tags to check for.</param>
 		/// <returns>True if the tag collection contains all the specified tags, false otherwise.</returns>
-		public bool ContainsTags (params CMTag[] tags)
+		public bool ContainsTags (params CMTag [] tags)
 		{
 			if (tags is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (tags));
@@ -251,14 +251,14 @@ namespace CoreMedia {
 
 		/// <summary>Get all the tags in the current tag collection.</summary>
 		/// <returns>All the tags in the current tag collection, or null in case of failure.</returns>
-		public CMTag[]? Tags {
+		public CMTag []? Tags {
 			get => GetTags (out var _);
 		}
 
 		/// <summary>Get all the tags in the current tag collection.</summary>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>All the tags in the current tag collection, or null case of failure (and <paramref name="status" /> will contain an error code).</returns>
-		public CMTag[]? GetTags (out CMTagCollectionError status)
+		public CMTag []? GetTags (out CMTagCollectionError status)
 		{
 			var array = new CMTag [Count];
 			status = GetTags (array, array.Length, out var _);
@@ -272,7 +272,7 @@ namespace CoreMedia {
 		/// <param name="tagCount">The number of tags to copy.</param>
 		/// <param name="tagsCopied">The number of tags copied.</param>
 		/// <returns>An error code in case of failure, 0 in case of success. <see cref="CMTagCollectionError.ExhaustedBufferSize" /> is returned if the <paramref name="tags" /> array isn't big enough for all the tags (but as many tags as the array could hold were copied to the array).</returns>
-		public CMTagCollectionError GetTags (CMTag[] tags, nint tagCount, out nint tagsCopied)
+		public CMTagCollectionError GetTags (CMTag [] tags, nint tagCount, out nint tagsCopied)
 		{
 			if (tags is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (tags));
@@ -284,7 +284,7 @@ namespace CoreMedia {
 
 			unsafe {
 				fixed (CMTag* tagPtr = tags)
-					return CMTagCollectionGetTags (GetCheckedHandle (), tagPtr, tagCount, (nint *) Unsafe.AsPointer<nint> (ref tagsCopied));
+					return CMTagCollectionGetTags (GetCheckedHandle (), tagPtr, tagCount, (nint*) Unsafe.AsPointer<nint> (ref tagsCopied));
 			}
 		}
 
@@ -300,7 +300,7 @@ namespace CoreMedia {
 		/// <param name="category">The category of the tags to find.</param>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>All the tags in the current tag collection with the specified category, or null case of failure (and <paramref name="status" /> will contain an error code).</returns>
-		public CMTag[]? GetTags (CMTagCategory category, out CMTagCollectionError status)
+		public CMTag []? GetTags (CMTagCategory category, out CMTagCollectionError status)
 		{
 			var array = new CMTag [GetCount (category)];
 			status = GetTags (category, array, array.Length, out var _);
@@ -315,7 +315,7 @@ namespace CoreMedia {
 		/// <param name="tagCount">The number of tags to copy.</param>
 		/// <param name="tagsCopied">The number of tags copied.</param>
 		/// <returns>An error code in case of failure, 0 in case of success. <see cref="CMTagCollectionError.ExhaustedBufferSize" /> is returned if the <paramref name="tags" /> array isn't big enough for all the tags (but as many tags as the array could hold were copied to the array).</returns>
-		public CMTagCollectionError GetTags (CMTagCategory category, CMTag[] tags, nint tagCount, out nint tagsCopied)
+		public CMTagCollectionError GetTags (CMTagCategory category, CMTag [] tags, nint tagCount, out nint tagsCopied)
 		{
 			if (tags is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (tags));
@@ -327,7 +327,7 @@ namespace CoreMedia {
 
 			unsafe {
 				fixed (CMTag* tagPtr = tags)
-					return CMTagCollectionGetTagsWithCategory (GetCheckedHandle (), category, tagPtr, tagCount, (nint *) Unsafe.AsPointer<nint> (ref tagsCopied));
+					return CMTagCollectionGetTagsWithCategory (GetCheckedHandle (), category, tagPtr, tagCount, (nint*) Unsafe.AsPointer<nint> (ref tagsCopied));
 			}
 		}
 
@@ -373,7 +373,7 @@ namespace CoreMedia {
 		/// <param name="filter">The callback to call for each tag.</param>
 		/// <returns>The number of tags that matches the specified filter.</returns>
 		/// <remarks>This will call the <paramref name="filter" /> function twice for each tag, once to count them, once again to return them.</remarks>
-		public CMTag[]? GetTags (CMTagCollectionTagFilterFunction filter)
+		public CMTag []? GetTags (CMTagCollectionTagFilterFunction filter)
 		{
 			var array = new CMTag [GetCount (filter)];
 			var status = GetTags (filter, array, array.Length, out var _);
@@ -388,7 +388,7 @@ namespace CoreMedia {
 		/// <param name="tagCount">The number of tags to copy.</param>
 		/// <param name="tagsCopied">The number of tags copied.</param>
 		/// <returns>An error code in case of failure, 0 in case of success. <see cref="CMTagCollectionError.ExhaustedBufferSize" /> is returned if the <paramref name="tags" /> array isn't big enough for all the tags (but as many tags as the array could hold were copied to the array).</returns>
-		public CMTagCollectionError GetTags (CMTagCollectionTagFilterFunction filter, CMTag[] tags, nint tagCount, out nint tagsCopied)
+		public CMTagCollectionError GetTags (CMTagCollectionTagFilterFunction filter, CMTag [] tags, nint tagCount, out nint tagsCopied)
 		{
 			if (filter is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (filter));
@@ -409,7 +409,7 @@ namespace CoreMedia {
 						GetCheckedHandle (),
 						tagPtr,
 						tagCount,
-						(nint *) Unsafe.AsPointer<nint> (ref tagsCopied),
+						(nint*) Unsafe.AsPointer<nint> (ref tagsCopied),
 						&CMTagCollectionTagFilterFunction_Callback,
 						GCHandle.ToIntPtr (gchandle));
 				}
@@ -430,7 +430,7 @@ namespace CoreMedia {
 		/// <param name="categories">The categories to match.</param>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>A new tag collection, with all the tags matching the specified categories from this tag collection, or null in case of failure.</returns>
-		public CMTagCollection? CreateWithCopyOfTags (out CMTagCollectionError status, params CMTagCategory[] categories)
+		public CMTagCollection? CreateWithCopyOfTags (out CMTagCollectionError status, params CMTagCategory [] categories)
 		{
 			if (categories is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (categories));
@@ -689,7 +689,7 @@ namespace CoreMedia {
 		/// <summary>Add all the specified tags this tag collection.</summary>
 		/// <param name="tags">The tags to add.</param>
 		/// <returns>An error code in case of failure, 0 in case of success.</returns>
-		public CMTagCollectionError Add (params CMTag[] tags)
+		public CMTagCollectionError Add (params CMTag [] tags)
 		{
 			if (tags is null)
 				ThrowHelper.ThrowArgumentNullException (nameof (tags));

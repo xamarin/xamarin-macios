@@ -50,9 +50,9 @@ namespace CoreMedia {
 		/// <param name="buffers">An array of pixel buffers.</param>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>A newly created <see cref="CMTaggedBufferGroup" /> instance if successful, otherwise null (and <paramref name="status" /> will contain an error code).</returns>
-		public static CMTaggedBufferGroup? Create (CMTagCollection[] tagCollections, CVPixelBuffer[] buffers, out CMTaggedBufferGroupError status)
+		public static CMTaggedBufferGroup? Create (CMTagCollection [] tagCollections, CVPixelBuffer [] buffers, out CMTaggedBufferGroupError status)
 		{
-			return Create (tagCollections, (NativeObject[]) buffers, out status);
+			return Create (tagCollections, (NativeObject []) buffers, out status);
 		}
 
 		/// <summary>Create a new <see cref="CMTaggedBufferGroup" /> instance.</summary>
@@ -60,9 +60,9 @@ namespace CoreMedia {
 		/// <param name="buffers">An array of sample buffers.</param>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>A newly created <see cref="CMTaggedBufferGroup" /> instance if successful, otherwise null (and <paramref name="status" /> will contain an error code).</returns>
-		public static CMTaggedBufferGroup? Create (CMTagCollection[] tagCollections, CMSampleBuffer[] buffers, out CMTaggedBufferGroupError status)
+		public static CMTaggedBufferGroup? Create (CMTagCollection [] tagCollections, CMSampleBuffer [] buffers, out CMTaggedBufferGroupError status)
 		{
-			return Create (tagCollections, (NativeObject[]) buffers, out status);
+			return Create (tagCollections, (NativeObject []) buffers, out status);
 		}
 
 		/// <summary>Create a new <see cref="CMTaggedBufferGroup" /> instance.</summary>
@@ -70,7 +70,7 @@ namespace CoreMedia {
 		/// <param name="buffers">An array of buffers, either <see cref="CMSampleBuffer" /> or <see cref="CVPixelBuffer" />.</param>
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <returns>A newly created <see cref="CMTaggedBufferGroup" /> instance if successful, otherwise null (and <paramref name="status" /> will contain an error code).</returns>
-		public static CMTaggedBufferGroup? Create (CMTagCollection[] tagCollections, NativeObject[] buffers, out CMTaggedBufferGroupError status)
+		public static CMTaggedBufferGroup? Create (CMTagCollection [] tagCollections, NativeObject [] buffers, out CMTaggedBufferGroupError status)
 		{
 			IntPtr handle;
 
@@ -107,7 +107,7 @@ namespace CoreMedia {
 		/// <param name="status">An error code in case of failure, 0 in case of success.</param>
 		/// <param name="groups">The group of <see cref="CMTaggedBufferGroup" /> instances to combine.</param>
 		/// <returns>A newly created <see cref="CMTaggedBufferGroup" /> instance if successful, otherwise null (and <paramref name="status" /> will contain an error code).</returns>
-		public static CMTaggedBufferGroup? Combine (out CMTaggedBufferGroupError status, params CMTaggedBufferGroup[] groups)
+		public static CMTaggedBufferGroup? Combine (out CMTaggedBufferGroupError status, params CMTaggedBufferGroup [] groups)
 		{
 			IntPtr handle;
 
@@ -121,7 +121,7 @@ namespace CoreMedia {
 		/// <summary>Create a new <see cref="CMTaggedBufferGroup" /> by combining other tagged buffer groups.</summary>
 		/// <param name="groups">The group of <see cref="CMTaggedBufferGroup" /> instances to combine.</param>
 		/// <returns>A newly created <see cref="CMTaggedBufferGroup" /> instance if successful, otherwise null.</returns>
-		public static CMTaggedBufferGroup? Combine (params CMTaggedBufferGroup[] groups)
+		public static CMTaggedBufferGroup? Combine (params CMTaggedBufferGroup [] groups)
 		{
 			return Combine (out var _, groups);
 		}
@@ -187,7 +187,7 @@ namespace CoreMedia {
 		public unsafe CVPixelBuffer? GetPixelBuffer (CMTag tag, out nint index)
 		{
 			index = 0;
-			var rv = CMTaggedBufferGroupGetCVPixelBufferForTag (GetCheckedHandle (), tag, (nint *) Unsafe.AsPointer<nint> (ref index));
+			var rv = CMTaggedBufferGroupGetCVPixelBufferForTag (GetCheckedHandle (), tag, (nint*) Unsafe.AsPointer<nint> (ref index));
 			return CVPixelBuffer.Create (rv, false);
 		}
 
@@ -204,7 +204,7 @@ namespace CoreMedia {
 		public unsafe CVPixelBuffer? GetPixelBuffer (CMTagCollection tagCollection, out nint index)
 		{
 			index = 0;
-			var rv = CMTaggedBufferGroupGetCVPixelBufferForTagCollection (GetCheckedHandle (), tagCollection.GetCheckedHandle (), (nint *) Unsafe.AsPointer<nint> (ref index));
+			var rv = CMTaggedBufferGroupGetCVPixelBufferForTagCollection (GetCheckedHandle (), tagCollection.GetCheckedHandle (), (nint*) Unsafe.AsPointer<nint> (ref index));
 			return CVPixelBuffer.Create (rv, false);
 		}
 
@@ -239,7 +239,7 @@ namespace CoreMedia {
 		public unsafe CMSampleBuffer? GetSampleBuffer (CMTag tag, out nint index)
 		{
 			index = 0;
-			var rv = CMTaggedBufferGroupGetCMSampleBufferForTag (GetCheckedHandle (), tag, (nint *) Unsafe.AsPointer<nint> (ref index));
+			var rv = CMTaggedBufferGroupGetCMSampleBufferForTag (GetCheckedHandle (), tag, (nint*) Unsafe.AsPointer<nint> (ref index));
 			return CMSampleBuffer.Create (rv, false);
 		}
 
@@ -256,7 +256,7 @@ namespace CoreMedia {
 		public unsafe CMSampleBuffer? GetSampleBuffer (CMTagCollection tagCollection, out nint index)
 		{
 			index = 0;
-			var rv = CMTaggedBufferGroupGetCMSampleBufferForTagCollection (GetCheckedHandle (), tagCollection.GetCheckedHandle (), (nint *) Unsafe.AsPointer<nint> (ref index));
+			var rv = CMTaggedBufferGroupGetCMSampleBufferForTagCollection (GetCheckedHandle (), tagCollection.GetCheckedHandle (), (nint*) Unsafe.AsPointer<nint> (ref index));
 			return CMSampleBuffer.Create (rv, false);
 		}
 
