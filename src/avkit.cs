@@ -1175,10 +1175,9 @@ namespace AVKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
-	[TV (17,0), NoMac, NoiOS, NoMacCatalyst]
-	[BaseType (typeof(UIViewController))]
-	interface AVContinuityDevicePickerViewController
-	{
+	[TV (17, 0), NoMac, NoiOS, NoMacCatalyst]
+	[BaseType (typeof (UIViewController))]
+	interface AVContinuityDevicePickerViewController {
 		[Static]
 		[Export ("supported")]
 		bool Supported { [Bind ("isSupported")] get; }
@@ -1191,11 +1190,10 @@ namespace AVKit {
 		NSObject WeakDelegate { get; set; }
 	}
 
-	[TV (17,0), NoMac, NoiOS, NoMacCatalyst]
+	[TV (17, 0), NoMac, NoiOS, NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false), Model]
-	[BaseType (typeof(NSObject))]
-	interface AVContinuityDevicePickerViewControllerDelegate
-	{
+	[BaseType (typeof (NSObject))]
+	interface AVContinuityDevicePickerViewControllerDelegate {
 		[Export ("continuityDevicePickerWillBeginPresenting:")]
 		void WillBeginPresenting (AVContinuityDevicePickerViewController pickerViewController);
 
@@ -1208,5 +1206,5 @@ namespace AVKit {
 		[Export ("continuityDevicePickerDidEndPresenting:")]
 		void DidEndPresenting (AVContinuityDevicePickerViewController pickerViewController);
 	}
-	interface IAVContinuityDevicePickerViewControllerDelegate {}
+	interface IAVContinuityDevicePickerViewControllerDelegate { }
 }
