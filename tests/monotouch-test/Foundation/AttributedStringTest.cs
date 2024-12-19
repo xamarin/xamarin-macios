@@ -140,9 +140,17 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Create_Url_Error ()
 		{
-			var obj = NSAttributedString.Create (new NSUrl (""), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
-			Assert.IsNull (obj, "IsNull");
-			Assert.IsNotNull (e, "Error");
+			{
+				using var obj = NSAttributedString.Create (new NSUrl (""), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNull (obj, "IsNull");
+				Assert.IsNotNull (e, "Error");
+			}
+
+			{
+				using var obj = NSAttributedString.Create (new NSUrl (""), new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNull (obj, "IsNull 2");
+				Assert.IsNotNull (e, "Error 2");
+			}
 		}
 
 		[Test]
@@ -150,9 +158,17 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var textFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
 			var textUrl = NSUrl.CreateFileUrl (textFile);
-			var obj = NSAttributedString.Create (textUrl, new NSAttributedStringDocumentAttributes (), out var rda, out var e);
-			Assert.IsNull (e, "Error");
-			Assert.IsNotNull (obj, "IsNull");
+			{
+				using var obj = NSAttributedString.Create (textUrl, new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNull (e, "Error");
+				Assert.IsNotNull (obj, "IsNull");
+			}
+			{
+				using var obj = NSAttributedString.Create (textUrl, new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNull (e, "Error 2");
+				Assert.IsNotNull (obj, "IsNull 2");
+			}
+
 		}
 
 		[Test]
@@ -160,17 +176,31 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var attributes = new NSAttributedStringDocumentAttributes ();
 			attributes.DocumentType = NSDocumentType.RTF;
-			var obj = NSAttributedString.Create (NSData.FromArray (new byte [42]), attributes, out var rda, out var e);
-			Assert.IsNull (obj, "IsNull");
-			Assert.IsNotNull (e, "Error");
+			{
+				using var obj = NSAttributedString.Create (NSData.FromArray (new byte [42]), attributes, out var rda, out var e);
+				Assert.IsNull (obj, "IsNull");
+				Assert.IsNotNull (e, "Error");
+			}
+			{
+				using var obj = NSAttributedString.Create (NSData.FromArray (new byte [42]), attributes, out var e);
+				Assert.IsNull (obj, "IsNull 2");
+				Assert.IsNotNull (e, "Error 2");
+			}
 		}
 
 		[Test]
 		public void Create_Data ()
 		{
-			var obj = NSAttributedString.Create (new NSData (), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
-			Assert.IsNotNull (obj, "IsNull");
-			Assert.IsNull (e, "Error");
+			{
+				using var obj = NSAttributedString.Create (new NSData (), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNotNull (obj, "IsNull");
+				Assert.IsNull (e, "Error");
+			}
+			{
+				using var obj = NSAttributedString.Create (new NSData (), new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNotNull (obj, "IsNull 2");
+				Assert.IsNull (e, "Error 2");
+			}
 		}
 
 #if !__WATCHOS__
