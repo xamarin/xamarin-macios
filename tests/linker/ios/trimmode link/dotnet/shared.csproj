@@ -12,6 +12,24 @@
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
     <UseNativeHttpHandler>false</UseNativeHttpHandler>
+
+    <!-- warning SYSLIB0014: 'X.Y' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. -->
+    <!-- We use obsolete APIs all the time, sometimes to test that those APIs work, so ignore this warning. -->
+    <NoWarn>$(NoWarn);SYSLIB0014</NoWarn>
+
+    <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
+    <NoWarn>$(NoWarn);CA1422</NoWarn>
+
+    <!--
+      warning CS0436: The type 'ApplePlatform' in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs' conflicts with the imported type 'ApplePlatform' in 'EmbeddedResources, Version=1.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065'. Using the type defined in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs'
+
+      We get the 'ApplePlatform' enum from two referenced projects, which causes a type resolution failure unless this project also has the type (in which case this project's type wins the type resolution) - but that triggers the CS0436 warning, so ignore it.
+    -->
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -27,7 +45,7 @@
 
   <ItemGroup>
     <None Include="Info.plist" />
-    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
+    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\$(_PlatformName)\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
@@ -59,9 +77,6 @@
     <Compile Include="$(ThisTestDirectory)\ReflectionTest.cs" />
     <Compile Include="$(ThisTestDirectory)\HttpClientHandlerTest.cs" />
     <Compile Include="$(ThisTestDirectory)\CanaryTest.cs" />
-    <Compile Include="$(ThisTestDirectory)\..\..\..\common\TestRuntime.cs">
-        <Link>TestRuntime.cs</Link>
-    </Compile>
     <Compile Include="$(ThisTestDirectory)\..\..\ILReader.cs">
       <Link>ILReader.cs</Link>
     </Compile>

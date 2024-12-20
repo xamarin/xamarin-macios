@@ -1654,4 +1654,12 @@
             {1}: the exit code of a process
         </comment>
     </data>
+
+    <data name="E7135" xml:space="preserve">
+        <value>Unknown resource type: {1}.</value>
+    </data>
+
+    <data name="E7136" xml:space="preserve">
+        <value>Unknown resource type: {1}.</value>
+    </data>
 </root>

@@ -48,21 +48,15 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
-  <!-- Replaces the ProtectedData assembly by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
       <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
 
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
-
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
-
       <ReferencePath Remove="@(ReferencePathToRemove)" />
 
       <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
 
       <ReferencePath Include="@(ReferencePathToAdd)">
         <DestinationSubDirectory />

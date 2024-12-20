@@ -494,16 +494,6 @@
 !missing-type! AVVideoOutputSpecification not bound
 !missing-type! AVVideoPerformanceMetrics not bound
 !missing-type! AVZoomRange not bound
-!deprecated-attribute-missing! AVAggregateAssetDownloadTask missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:forMediaSelection: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:willDownloadToURL: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:assetDownloadTask:didFinishDownloadingToURL: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:assetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadTask::loadedTimeRanges missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadTask::options missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadURLSession::aggregateAssetDownloadTaskWithURLAsset:mediaSelections:assetTitle:assetArtworkData:options: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadURLSession::assetDownloadTaskWithURLAsset:assetTitle:assetArtworkData:options: missing a [Deprecated] attribute
 !missing-enum! AVCaptionAnimation not bound
 !missing-enum! AVCaptionConversionValidatorStatus not bound
 !missing-enum! AVCaptionDecoration not bound
