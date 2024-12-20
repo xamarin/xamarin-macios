@@ -745,7 +745,9 @@ namespace LinkSdk {
 		}
 
 		class AddedInSilverlight5 : INotifyPropertyChanging {
+#pragma warning disable CS0067 // The event 'LinkSdkRegressionTest.AddedInSilverlight5.PropertyChanging' is never used
 			public event PropertyChangingEventHandler PropertyChanging;
+#pragma warning restore CS0067
 		}
 
 		[Test]
@@ -1053,7 +1055,7 @@ namespace LinkSdk {
 			bool tvos = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.TV;
 			if (tvos)
 				docs = Path.Combine (libs, "Caches", "Documents");
-#else
+#elif !__MACOS__
 			bool tvos = false;
 #endif
 

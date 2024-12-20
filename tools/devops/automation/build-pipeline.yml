@@ -150,6 +150,11 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
+    - repository: macios-adr
+      type: git
+      name: macios-adr
+      ref: refs/heads/main
+
     - repository: CustomPipelineTemplates
       type: git
       name: 1ESPipelineTemplates/MicroBuildTemplate
@@ -220,6 +225,7 @@ extends:
         exclude:
           - repository: yaml-templates
           - repository: sdk-insertions
+          - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
     stages:
       - template: templates/main-stage.yml
         parameters:

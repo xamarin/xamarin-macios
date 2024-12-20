@@ -13,13 +13,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BundleTest {
-#if __WATCHOS__
-		const string ExpectedAppName = "monotouchtest.appex";
-#elif MONOMAC && !NET
-		const string ExpectedAppName = "xammac_tests.app";
-#else
 		const string ExpectedAppName = "monotouchtest.app";
-#endif
 
 		[Test]
 		public void TestGetAll ()
@@ -82,13 +76,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestGetMain ()
 		{
 			var main = CFBundle.GetMain ();
-#if __WATCHOS__
-			var expectedBundleId = "com.xamarin.monotouch-test_watch.watchkitapp.watchkitextension";
-#elif MONOMAC && !NET
-			var expectedBundleId = "com.xamarin.xammac_tests";
-#else
 			var expectedBundleId = "com.xamarin.monotouch-test";
-#endif
 			Assert.AreEqual (expectedBundleId, main.Identifier);
 			Assert.IsTrue (main.HasLoadedExecutable);
 		}
@@ -104,9 +92,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestExecutableUrl ()
 		{
 			var main = CFBundle.GetMain ();
-#if MONOMAC && !NET
-			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "xammac_tests");
-#elif __MACCATALYST__ || __MACOS__
+#if __MACCATALYST__ || __MACOS__
 			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "monotouchtest");
 #else
 			var executableRelativePath = Path.Combine (ExpectedAppName, "monotouchtest");

@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 
 using AVFoundation;
@@ -230,6 +231,15 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static void AssertNotInterpreter (string message = "This test does not run when using the interpreter")
+	{
+		if (IsCoreCLR)
+			return;
+
+		if (RuntimeFeature.IsDynamicCodeSupported)
+			NUnit.Framework.Assert.Ignore (message);
+	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
@@ -480,6 +490,18 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (18, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (15, 1);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (11, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (18, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (18, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (15, 2);
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif

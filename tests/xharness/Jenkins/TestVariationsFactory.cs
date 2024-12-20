@@ -29,8 +29,7 @@ namespace Xharness.Jenkins {
 		{
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
-			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
-			var supports_interpreter = true;
+			var supports_interpreter = test.Platform != TestPlatform.Mac;
 			var supports_dynamic_registrar_on_device = true;
 			var ignore = test.TestProject.Ignore;
 			var mac_supports_arm64 = Harness.CanRunArm64;
@@ -82,11 +81,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug: SGenConc", AppBundleExtraOptions = "", Debug = true, Profiling = false, EnableSGenConc = true, Ignored = ignore };
 					}
 					if (supports_interpreter) {
-						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", AppBundleExtraOptions = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", AppBundleExtraOptions = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
-						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", AppBundleExtraOptions = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
+						yield return new TestData { Variation = "Debug (interpreter)", TestVariation = "interpreter", Debug = true, Profiling = false, Ignored = ignore, Defines = "" };
 					}
 					if (test.TestProject.IsDotNetProject) {
 						yield return new TestData { Variation = "Release (LLVM)", Debug = false, UseLlvm = true, Ignored = ignore };
@@ -126,6 +121,11 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug (managed static registrar)", Registrar = "managed-static", Debug = true, Profiling = false, Ignored = ignore };
 						yield return new TestData { Variation = "Release (managed static registrar, all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "managed-static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
 						yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = ignore, RuntimeIdentifier = x64_sim_runtime_identifier, LinkMode = "Full" };
+					}
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", TestVariation = "interpreter", Debug = true, Profiling = false, Ignored = ignore };
+						// interpreter+release fails due to https://github.com/dotnet/runtime/issues/110649.
+						// yield return new TestData { Variation = "Release (interpreter)", TestVariation = "interpreter", Debug = false, Profiling = false, Ignored = ignore, UseLlvm = false };
 					}
 					break;
 				case "introspection":
@@ -175,6 +175,10 @@ namespace Xharness.Jenkins {
 							yield return new TestData { Variation = "Release (managed static registrar, all optimizations)", AppBundleExtraOptions = "--optimize:all", Registrar = "managed-static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
 						}
 					}
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", TestVariation = "interpreter", Debug = true, Profiling = false, Ignored = ignore };
+						yield return new TestData { Variation = "Release (interpreter)", TestVariation = "interpreter", Debug = false, Profiling = false, Ignored = ignore, UseLlvm = false };
+					}
 					break;
 				}
 				break;
@@ -212,6 +216,7 @@ namespace Xharness.Jenkins {
 					var use_llvm = test_data.UseLlvm;
 					var registrar = test_data.Registrar;
 					var publishaot = test_data.PublishAot;
+					var test_variation = test_data.TestVariation;
 
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
@@ -271,6 +276,8 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetProperty ("_IsPublishing", "true", last: false); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
 							clone.Xml.SetProperty ("IlcTreatWarningsAsErrors", "false", last: false); // We're enabling warnaserror by default, but we're not warning-free for ILC (especially for NUnit), so disable warnaserror for ILC - https://github.com/xamarin/xamarin-macios/issues/19911
 						}
+						if (!string.IsNullOrEmpty (test_variation))
+							clone.Xml.SetProperty ("TestVariation", test_variation);
 						clone.Xml.Save (clone.Path);
 					});
 

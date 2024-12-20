@@ -408,7 +408,7 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $
 
 $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll build/.build-adr-stamp | $($(2)_DOTNET_BUILD_DIR)/doc
 ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) run -C $(MACCORE_PATH)/tools/apple-doc-reader ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
+	$(Q) $(MAKE) run -C $(ADR_PATH) ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
 else
 	$$(Q) $$(CP) $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $$@
 endif
@@ -416,8 +416,8 @@ endef
 
 build/.build-adr-stamp:
 ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) build -C $(MACCORE_PATH)/tools/apple-doc-reader
-	$(Q) $(MAKE) create -C $(MACCORE_PATH)/tools/apple-doc-reader
+	$(Q) $(MAKE) build -C $(ADR_PATH)
+	$(Q) $(MAKE) create -C $(ADR_PATH)
 endif
 	$(Q) touch $@
 
@@ -461,8 +461,8 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		/analyzer:$(ROSLYN_GENERATOR) \
 		/analyzer:$(ROSLYN_ANALYZER) \
 		/generatedfilesout:$($(2)_DOTNET_BUILD_DIR)/generated-sources \
-		/reportanalyzer:$(ROSLYN_GENERATOR) \
-		/reportanalyzer:$(ROSLYN_ANALYZER) \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_GENERATOR),) \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_ANALYZER),) \
 		-unsafe \
 		-optimize \
 		$$(ARGS_$(1)) \

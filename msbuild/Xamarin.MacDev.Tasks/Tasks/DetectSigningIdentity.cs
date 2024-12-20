@@ -523,6 +523,20 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			try {
+				LoggingService.SetCustomLogger (this);
+				ExecuteImpl ();
+				if (!Log.HasLoggedErrors) {
+					ReportDetectedCodesignInfo ();
+				}
+				return !Log.HasLoggedErrors;
+			} finally {
+				LoggingService.SetCustomLogger (null);
+			}
+		}
+
+		bool ExecuteImpl ()
+		{
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
@@ -571,14 +585,11 @@ namespace Xamarin.MacDev.Tasks {
 			// If the developer chooses to use the placeholder codesigning key, accept that.
 			if (SigningKey == "-") {
 				DetectedCodeSigningKey = SigningKey;
-				ReportDetectedCodesignInfo ();
 				return !Log.HasLoggedErrors;
 			}
 
 			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
-					ReportDetectedCodesignInfo ();
-
 					return !Log.HasLoggedErrors;
 				}
 			} else if (Platform == ApplePlatform.MacCatalyst) {
@@ -587,8 +598,6 @@ namespace Xamarin.MacDev.Tasks {
 					doesNotNeedCodeSigningCertificate = false;
 				if (doesNotNeedCodeSigningCertificate) {
 					DetectedCodeSigningKey = "-";
-
-					ReportDetectedCodesignInfo ();
 
 					return !Log.HasLoggedErrors;
 				}
@@ -645,8 +654,6 @@ namespace Xamarin.MacDev.Tasks {
 						DetectedCodeSigningKey = null;
 					}
 
-					ReportDetectedCodesignInfo ();
-
 					return !Log.HasLoggedErrors;
 				}
 
@@ -654,8 +661,6 @@ namespace Xamarin.MacDev.Tasks {
 					// The "-" key is a special value allowed by the codesign utility that
 					// allows us to get away with not having an actual codesign key.
 					DetectedCodeSigningKey = "-";
-
-					ReportDetectedCodesignInfo ();
 
 					return !Log.HasLoggedErrors;
 				}
@@ -684,8 +689,6 @@ namespace Xamarin.MacDev.Tasks {
 
 				codesignCommonName = SecKeychain.GetCertificateCommonName (certs [0]);
 				DetectedCodeSigningKey = certs [0].Thumbprint;
-
-				ReportDetectedCodesignInfo ();
 
 				return !Log.HasLoggedErrors;
 			}
@@ -725,8 +728,6 @@ namespace Xamarin.MacDev.Tasks {
 				DetectedDistributionType = identity.Profile.DistributionType.ToString ();
 				DetectedAppId = identity.AppId;
 
-				ReportDetectedCodesignInfo ();
-
 				return !Log.HasLoggedErrors;
 			}
 
@@ -745,8 +746,6 @@ namespace Xamarin.MacDev.Tasks {
 				DetectedCodeSigningKey = identity.SigningKey?.Thumbprint;
 				DetectedProvisioningProfile = identity.Profile.Uuid;
 				DetectedAppId = identity.AppId;
-
-				ReportDetectedCodesignInfo ();
 			} else {
 				if (identity.SigningKey is not null) {
 					Log.LogError (MSBStrings.E0146, identity.BundleId, identity.SigningKey);

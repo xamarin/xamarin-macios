@@ -135,16 +135,23 @@ namespace Xamarin.Linker.Steps {
 					modified |= ProcessMethod (method);
 			}
 
-			// There are no Objective-C classes we need to keep from the platform assembly,
-			// so just skip in that case.
-			if (!is_product_assembly)
-				AddRequiredObjectiveCType (type);
+			AddRequiredObjectiveCType (type);
 
 			return modified;
 		}
 
 		void AddRequiredObjectiveCType (TypeDefinition type)
 		{
+			// The product assembly only has one type we may need to keep: XamarinSwiftFunctions
+			if (is_product_assembly) {
+				switch (type.Name) {
+				case "XamarinSwiftFunctions":
+					break;
+				default:
+					return;
+				}
+			}
+
 			var registerAttribute = DerivedLinkContext.StaticRegistrar?.GetRegisterAttribute (type);
 			if (registerAttribute is null)
 				return;

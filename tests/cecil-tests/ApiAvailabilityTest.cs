@@ -427,6 +427,7 @@ namespace Cecil.Tests {
 				case "SceneKit.SCNAnimationPlayer.PauseAnimation(Foundation.NSString)":
 				case "SceneKit.SCNAnimationPlayer.RemoveAnimation(Foundation.NSString, System.Runtime.InteropServices.NFloat)":
 				case "SceneKit.SCNAnimationPlayer.ResumeAnimation(Foundation.NSString)":
+				case "System.Boolean PdfKit.PdfView::EnableDataDetectors()": // added in tvOS 18.2, when it was already obsoleted on other platforms.
 					return true;
 				}
 				break;
