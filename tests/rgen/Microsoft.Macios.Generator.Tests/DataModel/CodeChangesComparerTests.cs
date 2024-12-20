@@ -650,6 +650,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -665,6 +666,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -735,6 +737,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -815,6 +818,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -830,6 +834,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -900,6 +905,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -912,6 +918,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -992,6 +999,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1062,6 +1070,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),

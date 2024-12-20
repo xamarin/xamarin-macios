@@ -300,6 +300,7 @@ public partial class MyClass {
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -343,6 +344,7 @@ public partial class MyClass {
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -387,6 +389,7 @@ public partial class MyClass {
 							type: "NS.MyClass",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -402,6 +405,7 @@ public partial class MyClass {
 							type: "NS.MyClass",
 							name: "SetSurname",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
