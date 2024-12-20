@@ -42,8 +42,10 @@ GENERATED_FILES_PATTERN = \
 	TrampolineTest.generated%cs \
 
 TESTGENERATOR=bin/Debug/testgenerator.dll
+$(TESTGENERATOR): export RUNTIMEIDENTIFIER=
+$(TESTGENERATOR): export RUNTIMEIDENTIFIERS=
 $(TESTGENERATOR): testgenerator.cs Makefile
-	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY)
+	$(Q) unset MSBUILD_EXE_PATH && $(DOTNET) build testgenerator.csproj $(DOTNET_BUILD_VERBOSITY) /bl:$@.binlog
 
 $(GENERATED_FILES_PATTERN): $(TESTGENERATOR)
 	$(Q) $(DOTNET) exec $<
