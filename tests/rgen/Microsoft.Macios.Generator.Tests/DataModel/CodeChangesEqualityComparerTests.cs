@@ -489,7 +489,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new Constructor ("MyClass", new(), [], [], []),
+				new Constructor ("MyClass", new (), [], [], []),
 				new ("MyClass",
 					symbolAvailability: new (),
 					attributes: [],
@@ -596,7 +596,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					parameters: [
 						new (0, "string", "name"),
 					]),
-				new ("MyClass", new(), [], [], []),
+				new ("MyClass", new (), [], [], []),
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
@@ -636,7 +636,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new ("MyClass", new(), [], [], []),
+				new ("MyClass", new (), [], [], []),
 				new ("MyClass",
 					symbolAvailability: new (),
 					attributes: [],

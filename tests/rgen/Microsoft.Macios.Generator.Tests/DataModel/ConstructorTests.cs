@@ -240,7 +240,7 @@ namespace NS {
 			var builder = SymbolAvailability.CreateBuilder ();
 			builder.Add (new SupportedOSPlatformData ("ios"));
 			builder.Add (new SupportedOSPlatformData ("tvos"));
-			
+
 			yield return [
 				availabilityPresent,
 				new Constructor (
@@ -255,7 +255,7 @@ namespace NS {
 					]
 				)
 			];
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()

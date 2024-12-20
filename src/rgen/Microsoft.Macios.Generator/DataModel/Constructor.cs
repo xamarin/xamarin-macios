@@ -15,12 +15,12 @@ readonly struct Constructor : IEquatable<Constructor> {
 	/// Type name that owns the constructor.
 	/// </summary>
 	public string Type { get; }
-	
+
 	/// <summary>
 	/// The platform availability of the enum value.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
-	
+
 	/// <summary>
 	/// Get the attributes added to the constructor.
 	/// </summary>
@@ -36,7 +36,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Constructor (string type, 
+	public Constructor (string type,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers,
@@ -90,7 +90,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;

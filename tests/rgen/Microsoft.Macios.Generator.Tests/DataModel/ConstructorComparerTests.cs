@@ -12,7 +12,7 @@ public class ConstructorComparerTests {
 	public void CompareDiffType ()
 	{
 		var x = new Constructor ("MyClass", new (), [], [], []);
-		var y = new Constructor ("MyClass2", new (),[], [], []);
+		var y = new Constructor ("MyClass2", new (), [], [], []);
 		Assert.Equal (String.Compare (x.Type, y.Type, StringComparison.Ordinal), comparer.Compare (x, y));
 	}
 

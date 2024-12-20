@@ -100,7 +100,7 @@ public class ConstructorsEqualityComparerTests {
 		xBuilder.Add (new SupportedOSPlatformData ("ios"));
 		xBuilder.Add (new SupportedOSPlatformData ("tvos"));
 		xBuilder.Add (new UnsupportedOSPlatformData ("macos"));
-		
+
 		var x = new Constructor ("MyClass",
 			symbolAvailability: xBuilder.ToImmutable (),
 			attributes: [],
@@ -108,11 +108,11 @@ public class ConstructorsEqualityComparerTests {
 			parameters: [
 				new (0, "string", "surname"),
 			]);
-		
+
 		var yBuilder = SymbolAvailability.CreateBuilder ();
 		yBuilder.Add (new SupportedOSPlatformData ("ios"));
 		yBuilder.Add (new UnsupportedOSPlatformData ("tvos"));
-		
+
 		var y = new Constructor ("MyClass",
 			symbolAvailability: yBuilder.ToImmutable (),
 			attributes: [],
@@ -126,11 +126,11 @@ public class ConstructorsEqualityComparerTests {
 	[Fact]
 	public void CompareSameConstructorsSameAvailability ()
 	{
-		
+
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
-		
+
 		var x = new Constructor ("MyClass",
 			symbolAvailability: builder.ToImmutable (),
 			attributes: [],
@@ -138,7 +138,7 @@ public class ConstructorsEqualityComparerTests {
 			parameters: [
 				new (0, "string", "surname"),
 			]);
-		
+
 		var y = new Constructor ("MyClass",
 			symbolAvailability: builder.ToImmutable (),
 			attributes: [],
@@ -147,6 +147,6 @@ public class ConstructorsEqualityComparerTests {
 				new (0, "string", "surname"),
 			]);
 		Assert.True (compare.Equals ([x], [y]));
-		
+
 	}
 }
