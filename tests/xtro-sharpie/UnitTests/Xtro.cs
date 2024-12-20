@@ -9,7 +9,7 @@ namespace Xamarin.Tests {
 		[Test]
 		public void RunTest ()
 		{
-			var dir = "/Users/rolf/work/maccore/xharness/xamarin-macios/tests/xtro-sharpie";
+			var dir = Path.Combine (Configuration.SourceRoot, "tests", "xtro-sharpie");
 			var args = new [] {
 				"-C", dir,
 				"report-dotnet/report.zip",
