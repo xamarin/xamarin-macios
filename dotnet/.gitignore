@@ -1,5 +1,4 @@
 tmpdir
-Workloads/Microsoft.NET.Sdk.*/LICENSE
 WorkloadManifest.json
 WorkloadManifest.targets
 nupkgs

@@ -16,9 +16,6 @@ namespace Xamarin.Tests {
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		static string mt_root;
-		static string ios_destdir;
-		static string mac_destdir;
 		public static string DotNetBclDir;
 		public static string DotNetCscCommand;
 		public static string DotNetExecutable;
@@ -85,14 +82,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string IOS_DESTDIR {
-			get { return ios_destdir; }
-		}
-
-		public static string MAC_DESTDIR {
-			get { return mac_destdir; }
-		}
-
 		// This is the location of an Xcode which is older than the recommended one.
 		public static string GetOldXcodeRoot (Version min_version = null)
 		{
@@ -128,14 +117,6 @@ namespace Xamarin.Tests {
 			});
 
 			return with_versions [0].Item2; // return the most recent Xcode older than the recommended one.
-		}
-
-		// This is /Library/Frameworks/Xamarin.iOS.framework/Versions/Current if running
-		// against a system XI, otherwise it's the <git checkout>/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current directory.
-		public static string MonoTouchRootDirectory {
-			get {
-				return mt_root;
-			}
 		}
 
 		static IEnumerable<string> FindConfigFiles (string name)
@@ -280,9 +261,6 @@ namespace Xamarin.Tests {
 		{
 			ParseConfigFiles ();
 
-			mt_root = GetVariable ("MONOTOUCH_PREFIX", "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current");
-			ios_destdir = GetVariable ("IOS_DESTDIR", null);
-			mac_destdir = GetVariable ("MAC_DESTDIR", null);
 			sdk_version = GetVariable ("IOS_SDK_VERSION", "8.0");
 			watchos_sdk_version = GetVariable ("WATCH_SDK_VERSION", "2.0");
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
@@ -308,13 +286,7 @@ namespace Xamarin.Tests {
 			mac_xcode_root = xcode_root;
 #endif
 
-			if (!string.IsNullOrEmpty (ios_destdir))
-				mt_root = Path.Combine (ios_destdir, mt_root.Substring (1));
-
 			Console.WriteLine ("Test configuration:");
-			Console.WriteLine ("  MONOTOUCH_PREFIX={0}", mt_root);
-			Console.WriteLine ("  IOS_DESTDIR={0}", ios_destdir);
-			Console.WriteLine ("  MAC_DESTDIR={0}", mac_destdir);
 			Console.WriteLine ("  SDK_VERSION={0}", sdk_version);
 			Console.WriteLine ("  XCODE_ROOT={0}", xcode_root);
 #if MONOMAC

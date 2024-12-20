@@ -5,7 +5,7 @@ using Foundation;
 
 namespace NativeDynamicLibraryReferencesApp {
 	public class Program {
-		[DllImport ("libtest.dylib")]
+		[DllImport ("libframework.dylib")]
 		static extern int theUltimateAnswer ();
 
 		static int Main (string [] args)

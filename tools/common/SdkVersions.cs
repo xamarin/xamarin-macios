@@ -14,11 +14,11 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "16.1";
-		public const string OSX = "15.1";
-		public const string iOS = "18.1";
-		public const string TVOS = "18.1";
-		public const string MacCatalyst = "18.1";
+		public const string Xcode = "16.2";
+		public const string OSX = "15.2";
+		public const string iOS = "18.2";
+		public const string TVOS = "18.2";
+		public const string MacCatalyst = "18.2";
 
 		public const string MinOSX = "12.0";
 		public const string MiniOS = "12.2";
@@ -36,21 +36,21 @@ namespace Xamarin {
 		public const string MiniOSSimulator = "15.0";
 		public const string MinTVOSSimulator = "15.0";
 
-		public const string MaxiOSSimulator = "18.1";
-		public const string MaxTVOSSimulator = "18.1";
+		public const string MaxiOSSimulator = "18.2";
+		public const string MaxTVOSSimulator = "18.2";
 
-		public const string MaxiOSDeploymentTarget = "18.1";
-		public const string MaxTVOSDeploymentTarget = "18.1";
+		public const string MaxiOSDeploymentTarget = "18.2";
+		public const string MaxTVOSDeploymentTarget = "18.2";
 
-		public const string TargetPlatformVersionExecutableiOS = "18.1";
-		public const string TargetPlatformVersionExecutabletvOS = "18.1";
-		public const string TargetPlatformVersionExecutablemacOS = "15.1";
-		public const string TargetPlatformVersionExecutableMacCatalyst = "18.1";
+		public const string TargetPlatformVersionExecutableiOS = "18.2";
+		public const string TargetPlatformVersionExecutabletvOS = "18.2";
+		public const string TargetPlatformVersionExecutablemacOS = "15.2";
+		public const string TargetPlatformVersionExecutableMacCatalyst = "18.2";
 
-		public const string TargetPlatformVersionLibraryiOS = "18.1";
-		public const string TargetPlatformVersionLibrarytvOS = "18.1";
-		public const string TargetPlatformVersionLibrarymacOS = "15.1";
-		public const string TargetPlatformVersionLibraryMacCatalyst = "18.1";
+		public const string TargetPlatformVersionLibraryiOS = "18.2";
+		public const string TargetPlatformVersionLibrarytvOS = "18.2";
+		public const string TargetPlatformVersionLibrarymacOS = "15.2";
+		public const string TargetPlatformVersionLibraryMacCatalyst = "18.2";
 
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }

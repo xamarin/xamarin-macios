@@ -63,8 +63,6 @@ steps:
   displayName: Set output variables
 
 - pwsh: |
-    Write-Host "##vso[task.setvariable variable=MAC_DESTDIR]/"
-    Write-Host "##vso[task.setvariable variable=IOS_DESTDIR]/"
     Write-Host "##vso[task.setvariable variable=TESTS_USE_SYSTEM]true"
   displayName: Set SDK destination dirs 
 

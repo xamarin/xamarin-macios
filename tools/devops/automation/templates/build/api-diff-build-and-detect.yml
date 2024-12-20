@@ -34,6 +34,7 @@ parameters:
 
 # build the source code (build.yml) and detect changes (the nested api-diff.yml)
 steps:
+
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
@@ -55,6 +56,7 @@ steps:
   env:
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken) # needed to checkout AzDo repo dependencies
 
 # publish the resulting artifact
 - task: PublishPipelineArtifact@1

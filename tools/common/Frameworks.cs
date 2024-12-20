@@ -669,7 +669,9 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Symbols", "Symbols", 17, 0 },
 					{ "NetworkExtension", "NetworkExtension", 17, 0 },
 					{ "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
-					{ "BrowserEngineKit", "BrowserEngineKit", 17, 4},
+					{ "BrowserEngineKit", "BrowserEngineKit", new Version (17, 4), NotAvailableInSimulator },
+
+					{ "PdfKit", "PDFKit", 18, 2 },
 				};
 			}
 			return tvos_frameworks;
@@ -751,9 +753,7 @@ public class Frameworks : Dictionary<string, Framework> {
 			catalyst_frameworks.Add ("AppKit", 13, 0);
 			catalyst_frameworks.Add ("ExecutionPolicy", 16, 0);
 			catalyst_frameworks.Add ("ServiceManagement", 16, 0);
-			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
-			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
-			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
+			catalyst_frameworks.Add ("ScreenCaptureKit", 18, 2);
 		}
 		return catalyst_frameworks;
 	}
