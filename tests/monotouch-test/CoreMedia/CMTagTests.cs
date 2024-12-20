@@ -109,7 +109,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.StereoInterpretationOrderReversed), "Invalid vs StereoInterpretationOrderReversed");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.ProjectionTypeRectangular), "Invalid vs ProjectionTypeRectangular");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.ProjectionTypeEquirectangular), "Invalid vs ProjectionTypeEquirectangular");
-				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
+				Assert.AreEqual (!TestRuntime.CheckXcodeVersion (16, 0), CMTag.Equals (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.ProjectionTypeFisheye), "Invalid vs ProjectionTypeFisheye");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.PackingTypeNone), "Invalid vs PackingTypeNone");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.Invalid, CMTag.PackingTypeSideBySide), "Invalid vs PackingTypeSideBySide");
@@ -126,7 +126,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (false, CMTag.Equals (CMTag.StereoInterpretationOrderReversed, CMTag.Invalid), "StereoInterpretationOrderReversed vs Invalid");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.ProjectionTypeRectangular, CMTag.Invalid), "ProjectionTypeRectangular vs Invalid");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.ProjectionTypeEquirectangular, CMTag.Invalid), "ProjectionTypeEquirectangular vs Invalid");
-				Assert.AreEqual (false, CMTag.Equals (CMTag.ProjectionTypeHalfEquirectangular, CMTag.Invalid), "ProjectionTypeHalfEquirectangular vs Invalid");
+				Assert.AreEqual (!TestRuntime.CheckXcodeVersion (16, 0), CMTag.Equals (CMTag.ProjectionTypeHalfEquirectangular, CMTag.Invalid), "ProjectionTypeHalfEquirectangular vs Invalid");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.ProjectionTypeFisheye, CMTag.Invalid), "ProjectionTypeFisheye vs Invalid");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.PackingTypeNone, CMTag.Invalid), "PackingTypeNone vs Invalid");
 				Assert.AreEqual (false, CMTag.Equals (CMTag.PackingTypeSideBySide, CMTag.Invalid), "PackingTypeSideBySide vs Invalid");
@@ -153,7 +153,11 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.StereoInterpretationOrderReversed, CMTag.StereoInterpretationOrderReversed), "StereoInterpretationOrderReversed");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeRectangular, CMTag.ProjectionTypeRectangular), "ProjectionTypeRectangular");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeEquirectangular, CMTag.ProjectionTypeEquirectangular), "ProjectionTypeEquirectangular");
-				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
+					Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
+				} else {
+					Assert.AreNotEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
+				}
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeFisheye, CMTag.ProjectionTypeFisheye), "ProjectionTypeFisheye");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.PackingTypeNone, CMTag.PackingTypeNone), "PackingTypeNone");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.PackingTypeSideBySide, CMTag.PackingTypeSideBySide), "PackingTypeSideBySide");
@@ -170,7 +174,11 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.StereoInterpretationOrderReversed), "Invalid vs StereoInterpretationOrderReversed");
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeRectangular), "Invalid vs ProjectionTypeRectangular");
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeEquirectangular), "Invalid vs ProjectionTypeEquirectangular");
-				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
+					Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
+				} else {
+					Assert.AreEqual (CFComparisonResult.Equal, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
+				}
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeFisheye), "Invalid vs ProjectionTypeFisheye");
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.PackingTypeNone), "Invalid vs PackingTypeNone");
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.PackingTypeSideBySide), "Invalid vs PackingTypeSideBySide");
@@ -187,7 +195,11 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.StereoInterpretationOrderReversed, CMTag.Invalid), "StereoInterpretationOrderReversed vs Invalid");
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.ProjectionTypeRectangular, CMTag.Invalid), "ProjectionTypeRectangular vs Invalid");
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.ProjectionTypeEquirectangular, CMTag.Invalid), "ProjectionTypeEquirectangular vs Invalid");
-				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.Invalid), "ProjectionTypeHalfEquirectangular vs Invalid");
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
+					Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.Invalid), "ProjectionTypeHalfEquirectangular vs Invalid");
+				} else {
+					Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.Invalid), "ProjectionTypeHalfEquirectangular vs Invalid");
+				}
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.ProjectionTypeFisheye, CMTag.Invalid), "ProjectionTypeFisheye vs Invalid");
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.PackingTypeNone, CMTag.Invalid), "PackingTypeNone vs Invalid");
 				Assert.AreEqual (CFComparisonResult.GreaterThan, CMTag.Compare (CMTag.PackingTypeSideBySide, CMTag.Invalid), "PackingTypeSideBySide vs Invalid");
@@ -233,7 +245,11 @@ namespace MonoTouchFixtures.CoreMedia {
 				AssertTag (CMTag.StereoInterpretationOrderReversed, CMTagCategory.StereoViewInterpretation, CMTagDataType.Flags, 1, true, false, 0, false, 0, true, 1, false, 0, "StereoInterpretationOrderReversed");
 				AssertTag (CMTag.ProjectionTypeRectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("rect"), true, false, 0, true, FourCC ("rect"), false, 0, false, 0, "ProjectionTypeRectangular");
 				AssertTag (CMTag.ProjectionTypeEquirectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("equi"), true, false, 0, true, FourCC ("equi"), false, 0, false, 0, "ProjectionTypeEquirectangular");
-				AssertTag (CMTag.ProjectionTypeHalfEquirectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("hequ"), true, false, 0, true, FourCC ("hequ"), false, 0, false, 0, "ProjectionTypeHalfEquirectangular");
+				if (TestRuntime.AssertXcodeVersion (16, 0)) {
+					AssertTag (CMTag.ProjectionTypeHalfEquirectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("hequ"), true, false, 0, true, FourCC ("hequ"), false, 0, false, 0, "ProjectionTypeHalfEquirectangular");
+				} else {
+					AssertTag (CMTag.ProjectionTypeHalfEquirectangular, CMTagCategory.Undefined, CMTagDataType.Invalid, 0, false, false, 0, false, 0, false, 0, false, 0, "Invalid");
+				}
 				AssertTag (CMTag.ProjectionTypeFisheye, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("fish"), true, false, 0, true, FourCC ("fish"), false, 0, false, 0, "ProjectionTypeFisheye");
 				AssertTag (CMTag.PackingTypeNone, CMTagCategory.PackingType, CMTagDataType.OSType, FourCC ("none"), true, false, 0, true, FourCC ("none"), false, 0, false, 0, "PackingTypeNone");
 				AssertTag (CMTag.PackingTypeSideBySide, CMTagCategory.PackingType, CMTagDataType.OSType, FourCC ("side"), true, false, 0, true, FourCC ("side"), false, 0, false, 0, "PackingTypeSideBySide");
@@ -260,7 +276,11 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual ("{category:'eyip' value:0x1 <flags>}", CMTag.StereoInterpretationOrderReversed.ToString (), "StereoInterpretationOrderReversed");
 				Assert.AreEqual ("{category:'proj' value:'rect' <OSType>}", CMTag.ProjectionTypeRectangular.ToString (), "ProjectionTypeRectangular");
 				Assert.AreEqual ("{category:'proj' value:'equi' <OSType>}", CMTag.ProjectionTypeEquirectangular.ToString (), "ProjectionTypeEquirectangular");
-				Assert.AreEqual ("{category:'proj' value:'hequ' <OSType>}", CMTag.ProjectionTypeHalfEquirectangular.ToString (), "ProjectionTypeHalfEquirectangular");
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
+					Assert.AreEqual ("{category:'proj' value:'hequ' <OSType>}", CMTag.ProjectionTypeHalfEquirectangular.ToString (), "ProjectionTypeHalfEquirectangular");
+				} else {
+					Assert.AreEqual ("{category:''{INVALID}", CMTag.ProjectionTypeHalfEquirectangular.ToString (), "ProjectionTypeHalfEquirectangular");
+				}
 				Assert.AreEqual ("{category:'proj' value:'fish' <OSType>}", CMTag.ProjectionTypeFisheye.ToString (), "ProjectionTypeFisheye");
 				Assert.AreEqual ("{category:'pack' value:'none' <OSType>}", CMTag.PackingTypeNone.ToString (), "PackingTypeNone");
 				Assert.AreEqual ("{category:'pack' value:'side' <OSType>}", CMTag.PackingTypeSideBySide.ToString (), "PackingTypeSideBySide");
