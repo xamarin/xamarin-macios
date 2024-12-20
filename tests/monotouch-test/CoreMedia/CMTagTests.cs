@@ -153,11 +153,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.StereoInterpretationOrderReversed, CMTag.StereoInterpretationOrderReversed), "StereoInterpretationOrderReversed");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeRectangular, CMTag.ProjectionTypeRectangular), "ProjectionTypeRectangular");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeEquirectangular, CMTag.ProjectionTypeEquirectangular), "ProjectionTypeEquirectangular");
-				if (TestRuntime.CheckXcodeVersion (16, 0)) {
-					Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
-				} else {
-					Assert.AreNotEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
-				}
+				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeHalfEquirectangular, CMTag.ProjectionTypeHalfEquirectangular), "ProjectionTypeHalfEquirectangular");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.ProjectionTypeFisheye, CMTag.ProjectionTypeFisheye), "ProjectionTypeFisheye");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.PackingTypeNone, CMTag.PackingTypeNone), "PackingTypeNone");
 				Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.PackingTypeSideBySide, CMTag.PackingTypeSideBySide), "PackingTypeSideBySide");
