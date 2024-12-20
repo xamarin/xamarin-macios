@@ -118,6 +118,14 @@ namespace Xamarin.MacDev.Tasks {
 			return ExecuteAsync (GetFullPathToTool (), args, sdkDevPath: SdkDevPath, environment: environment, showErrorIfFailure: true);
 		}
 
+		static bool TryGetScnAssetsPath (string file, out string scnassets)
+		{
+			scnassets = file;
+			while (scnassets.Length > 0 && Path.GetExtension (scnassets).ToLowerInvariant () != ".scnassets")
+				scnassets = Path.GetDirectoryName (scnassets);
+			return scnassets.Length > 0;
+		}
+
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
@@ -140,14 +148,8 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 
 				// get the .scnassets directory path
-				var scnassets = Path.GetDirectoryName (asset.ItemSpec);
-				while (scnassets.Length > 0 && Path.GetExtension (scnassets).ToLowerInvariant () != ".scnassets")
-					scnassets = Path.GetDirectoryName (scnassets);
-
-				if (scnassets.Length == 0)
+				if (!TryGetScnAssetsPath (asset.ItemSpec, out var scnassets))
 					continue;
-
-				asset.RemoveMetadata ("LogicalName");
 
 				var bundleName = BundleResource.GetLogicalName (this, asset);
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
@@ -158,6 +160,13 @@ namespace Xamarin.MacDev.Tasks {
 
 					// .. but we really want it to be for @scnassets, so set ItemSpec accordingly
 					scnassetsItem.ItemSpec = scnassets;
+
+					// .. and set LogicalName, the original one is for @asset
+					if (!TryGetScnAssetsPath (bundleName, out var logicalScnAssetsPath)) {
+						Log.LogError (null, null, null, asset.ItemSpec, MSBStrings.E7136 /* Unable to compute the path of the *.scnassets path from the item's LogicalName '{0}'. */ , bundleName);
+						continue;
+					}
+					scnassetsItem.SetMetadata ("LogicalName", logicalScnAssetsPath);
 
 					// .. and remove the @OriginalItemSpec which is for @asset
 					scnassetsItem.RemoveMetadata ("OriginalItemSpec");

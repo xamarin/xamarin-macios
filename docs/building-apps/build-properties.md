@@ -125,6 +125,31 @@ Only applicable to iOS and tvOS projects.
 
 See [CreatePackage](#createpackage) for macOS and Mac Catalyst projects.
 
+## BundleOriginalResources
+
+This property determines whether resources are compiled before being embedded
+into library projects, or if the original (uncompiled) version is embedded.
+
+Historically resources have been compiled before being embedded into library
+projects, but this requires having Xcode available, which has a few drawbacks:
+
+* It slows down remote builds on Windows.
+* It won't work when building locally on Windows, and neither on any other
+  platform except macOS.
+* Resources are compiled using the current available Xcode, which may not have
+  the same features as a potentially newer Xcode available when the library in
+  question is consumed.
+* It makes it impossible to have a whole-program view of all the resources
+  when building an app, which is necessary to detect clashing resources.
+
+As such, we've added supported for embedding the original resources into
+libraries. This will be opt-in in .NET 9, but opt-out starting in .NET 10.
+
+Default value: `false` in .NET 9, `true` in .NET 10+.
+
+Note: please file an issue if you find that you need to disable this feature,
+as it's possible we'll remove the option to disable it at some point.
+
 ## CodesignAllocate
 
 The path to the `codesign_allocate` tool.

@@ -707,17 +707,14 @@ namespace CoreMotion {
 		float PercentStrong { get; }
 	}
 
-	[NoMac]
 	[Watch (5, 0), NoTV, NoMac, NoiOS]
 	[NoMacCatalyst]
 	delegate void CMDyskineticSymptomResultHandler (CMDyskineticSymptomResult [] dyskineticSymptomResult, NSError error);
 
-	[NoMac]
 	[Watch (5, 0), NoTV, NoMac, NoiOS]
 	[NoMacCatalyst]
 	delegate void CMTremorResultHandler (CMTremorResult [] tremorResults, NSError error);
 
-	[NoMac]
 	[Watch (5, 0), NoTV, NoMac, NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
