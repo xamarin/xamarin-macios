@@ -406,6 +406,8 @@ namespace Xharness {
 					IsExecutableProject = false,
 					Name = projectInfo.Name,
 				};
+				if (projectInfo.Timeout is not null)
+					project.Timeout = projectInfo.Timeout.Value;
 				TestProjects.Add (project);
 			}
 		}
