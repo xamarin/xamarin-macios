@@ -393,7 +393,7 @@ namespace Xamarin.MacDev.Tasks {
 			InFile,
 			InCustomEntitlements,
 		}
-		
+
 		CompileEntitlements ValidateEntitlementsImpl (string validateEntitlements, int expectedErrorCount, EntitlementsMode entitlementsMode, string mobileProvision = "profile.mobileprovision", string apsEnvironmentValue = "production")
 		{
 			var task = CreateTask<CustomCompileEntitlements> ();
@@ -403,7 +403,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.BundleIdentifier = "com.xamarin.compileentitlementstasktest";
 			task.CompiledEntitlements = new TaskItem (Path.Combine (dir, "Entitlements.xcent"));
 			switch (entitlementsMode) {
-				case EntitlementsMode.InFile:
+			case EntitlementsMode.InFile:
 				var path = Path.Combine (dir, "Entitlements.plist");
 				File.WriteAllText (path, $"<plist version=\"1.0\"><dict><key>aps-environment</key><string>{apsEnvironmentValue}</string></dict></plist>");
 				task.Entitlements = path;

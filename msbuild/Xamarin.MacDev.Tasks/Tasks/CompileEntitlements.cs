@@ -620,7 +620,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		void LogEntitlementValidationFailure (bool onlyWarn, int code, string message, params object?[] args)
+		void LogEntitlementValidationFailure (bool onlyWarn, int code, string message, params object? [] args)
 		{
 			if (onlyWarn) {
 				Log.LogWarning (code, Entitlements, message, args);
