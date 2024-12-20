@@ -3245,7 +3245,7 @@ namespace Xamarin.Tests {
 			// ensure on an incremental build, we don't execute the _CompileNativeExecutable target again
 			rv = DotNet.AssertBuild (project_path, properties);
 			allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
-			Assert.That (allTargets, Does.Not.Contain ("_CompileNativeExecutable"), "Building target \"_CompileNativeExecutable\" completely");
+			Assert.That (allTargets, Does.Not.Contain ("_CompileNativeExecutable"), "Should NOT be building \"_CompileNativeExecutable\" completely again..but we are");
 			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
 				Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
 		}
