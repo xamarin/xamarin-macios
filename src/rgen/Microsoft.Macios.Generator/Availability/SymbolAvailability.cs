@@ -14,7 +14,7 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities = new ();
 
 	public SymbolAvailability () { }
-	
+
 	SymbolAvailability (Dictionary<ApplePlatform, PlatformAvailability?> platforms)
 	{
 		// copy the dict, do not assign

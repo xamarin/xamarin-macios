@@ -192,7 +192,7 @@ readonly struct CodeChanges {
 			}
 			var memberName = declaration.Identifier.ToFullString ().Trim ();
 			var attributes = declaration.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new(memberName, symbol.GetSupportedPlatforms (), attributes));
+			bucket.Add (new (memberName, symbol.GetSupportedPlatforms (), attributes));
 		}
 
 		EnumMembers = bucket.ToImmutable ();
