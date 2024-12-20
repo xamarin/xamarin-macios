@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				if (TestRuntime.CheckXcodeVersion (16, 0)) {
 					Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
 				} else {
-					Assert.AreEqual (CFComparisonResult.Equal, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
+					Assert.AreEqual (CFComparisonResult.EqualTo, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeHalfEquirectangular), "Invalid vs ProjectionTypeHalfEquirectangular");
 				}
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.ProjectionTypeFisheye), "Invalid vs ProjectionTypeFisheye");
 				Assert.AreEqual (CFComparisonResult.LessThan, CMTag.Compare (CMTag.Invalid, CMTag.PackingTypeNone), "Invalid vs PackingTypeNone");
@@ -245,7 +245,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				AssertTag (CMTag.StereoInterpretationOrderReversed, CMTagCategory.StereoViewInterpretation, CMTagDataType.Flags, 1, true, false, 0, false, 0, true, 1, false, 0, "StereoInterpretationOrderReversed");
 				AssertTag (CMTag.ProjectionTypeRectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("rect"), true, false, 0, true, FourCC ("rect"), false, 0, false, 0, "ProjectionTypeRectangular");
 				AssertTag (CMTag.ProjectionTypeEquirectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("equi"), true, false, 0, true, FourCC ("equi"), false, 0, false, 0, "ProjectionTypeEquirectangular");
-				if (TestRuntime.AssertXcodeVersion (16, 0)) {
+				if (TestRuntime.CheckXcodeVersion (16, 0)) {
 					AssertTag (CMTag.ProjectionTypeHalfEquirectangular, CMTagCategory.ProjectionType, CMTagDataType.OSType, FourCC ("hequ"), true, false, 0, true, FourCC ("hequ"), false, 0, false, 0, "ProjectionTypeHalfEquirectangular");
 				} else {
 					AssertTag (CMTag.ProjectionTypeHalfEquirectangular, CMTagCategory.Undefined, CMTagDataType.Invalid, 0, false, false, 0, false, 0, false, 0, false, 0, "Invalid");
