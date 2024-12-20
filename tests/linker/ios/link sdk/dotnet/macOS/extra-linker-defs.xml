@@ -1,0 +1,11 @@
+<linker>
+	<!-- see LinkExtraDefsTest unit tests -->
+	<assembly fullname="System.Private.CoreLib">
+		<type fullname="System.Security.PermissionSet" />
+	</assembly>
+	<assembly fullname="System.Net.Mail">
+		<type fullname="System.Net.Mime.ContentType" >
+			<method name="ParseValue" />
+		</type>
+	</assembly>
+</linker>

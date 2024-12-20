@@ -13,6 +13,16 @@
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
     <SingleArchReleaseBuild>true</SingleArchReleaseBuild>
+
+    <!-- trimmability warnings. The linker tests are here to verify what happens when code is trimmed, so some trimmer warnings are to be expected, when we assert unsupported behavior. -->
+    <NoWarn>$(NoWarn);IL2121;IL2026;IL2045;IL2057;IL2059;IL2070;IL2075;IL2080;IL2096</NoWarn>
+
+    <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
+    <NoWarn>$(NoWarn);CA1422</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />

@@ -1148,7 +1148,7 @@ namespace CoreLocation {
 		bool IsProducedByAccessory { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLUpdate {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Stationary' instead.")]

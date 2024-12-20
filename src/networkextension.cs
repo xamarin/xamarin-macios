@@ -2793,7 +2793,6 @@ namespace NetworkExtension {
 		NENetworkRule [] ExcludedNetworkRules { get; set; }
 	}
 
-	[NoTV]
 	[NoWatch, NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
