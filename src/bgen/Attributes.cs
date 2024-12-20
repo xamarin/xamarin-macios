@@ -1089,6 +1089,7 @@ public class UnavailableAttribute : AvailabilityBaseAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class TVAttribute : IntroducedAttribute {
 	public TVAttribute (byte major, byte minor)
 		: base (PlatformName.TvOS, (int) major, (int) minor)
@@ -1101,6 +1102,7 @@ public sealed class TVAttribute : IntroducedAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class WatchAttribute : IntroducedAttribute {
 	public WatchAttribute (byte major, byte minor)
 		: base (PlatformName.WatchOS, (int) major, (int) minor)
@@ -1113,6 +1115,7 @@ public sealed class WatchAttribute : IntroducedAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class MacCatalystAttribute : IntroducedAttribute {
 	public MacCatalystAttribute (byte major, byte minor)
 		: base (PlatformName.MacCatalyst, (int) major, (int) minor)
@@ -1125,6 +1128,7 @@ public sealed class MacCatalystAttribute : IntroducedAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoMacAttribute : UnavailableAttribute {
 	public NoMacAttribute ()
 		: base (PlatformName.MacOSX)
@@ -1132,6 +1136,7 @@ public sealed class NoMacAttribute : UnavailableAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoiOSAttribute : UnavailableAttribute {
 	public NoiOSAttribute ()
 		: base (PlatformName.iOS)
@@ -1139,6 +1144,7 @@ public sealed class NoiOSAttribute : UnavailableAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoWatchAttribute : UnavailableAttribute {
 	public NoWatchAttribute ()
 		: base (PlatformName.WatchOS)
@@ -1146,6 +1152,7 @@ public sealed class NoWatchAttribute : UnavailableAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoTVAttribute : UnavailableAttribute {
 	public NoTVAttribute ()
 		: base (PlatformName.TvOS)
@@ -1153,6 +1160,7 @@ public sealed class NoTVAttribute : UnavailableAttribute {
 	}
 }
 
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoMacCatalystAttribute : UnavailableAttribute {
 	public NoMacCatalystAttribute ()
 		: base (PlatformName.MacCatalyst)
