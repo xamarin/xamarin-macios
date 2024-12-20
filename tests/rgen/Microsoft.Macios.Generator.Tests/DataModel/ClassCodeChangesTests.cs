@@ -65,6 +65,7 @@ public partial class MyClass {
 					Constructors = [
 						new (
 							type: "NS.MyClass",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword)
@@ -104,6 +105,7 @@ public partial class MyClass {
 					Constructors = [
 						new (
 							type: "NS.MyClass",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword)
@@ -112,6 +114,7 @@ public partial class MyClass {
 						),
 						new (
 							type: "NS.MyClass",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword)

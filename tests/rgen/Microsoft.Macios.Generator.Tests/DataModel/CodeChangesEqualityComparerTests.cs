@@ -351,7 +351,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new ("MyClass", [], [], [])
+				new ("MyClass", new (), [], [], [])
 			],
 		};
 		Assert.False (equalityComparer.Equals (changes1, changes2));
@@ -397,7 +397,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new ("MyClass", [], [], [])
+				new ("MyClass", new (), [], [], [])
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
@@ -438,6 +438,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 			Constructors = [
 				new ("MyClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					parameters: [
@@ -488,8 +489,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new Constructor ("MyClass", [], [], []),
+				new Constructor ("MyClass", new(), [], [], []),
 				new ("MyClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					parameters: [
@@ -534,8 +536,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new Constructor ("MyClass", [], [], []),
+				new Constructor ("MyClass", new (), [], [], []),
 				new ("MyClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					parameters: [
@@ -587,12 +590,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 			Constructors = [
 				new ("MyClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					parameters: [
 						new (0, "string", "name"),
 					]),
-				new ("MyClass", [], [], []),
+				new ("MyClass", new(), [], [], []),
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
@@ -632,8 +636,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			],
 			Constructors = [
-				new ("MyClass", [], [], []),
+				new ("MyClass", new(), [], [], []),
 				new ("MyClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					parameters: [
