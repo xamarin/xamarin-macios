@@ -453,6 +453,7 @@ namespace CoreMedia {
 		[Field ("kCMTagProjectionTypeEquirectangular")]
 		CMTag ProjectionTypeEquirectangular { get; }
 
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
 		[Field ("kCMTagProjectionTypeHalfEquirectangular")]
 		CMTag ProjectionTypeHalfEquirectangular { get; }
 
