@@ -1362,7 +1362,11 @@ namespace MapKit {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst (13, 1)]
-	interface MKUserLocation : IMKAnnotation { // This is wrong. It should be MKAnnotation but we can't due to API compat. When you fix this remove hack in generator.cs to enable warning again
+#if XAMCORE_5_0
+	interface MKUserLocation : MKAnnotation {
+#else
+	interface MKUserLocation : IMKAnnotation { // This is wrong. It should be MKAnnotation but we can't due to API compat. When you fix this remove hack in generator.cs to enable warning again. In the meantime, we're stating that MKUserLocation implements the IMKAnnotation protocol by using a manual binding.
+#endif
 		[Export ("updating")]
 		bool Updating { [Bind ("isUpdating")] get; }
 
@@ -2018,8 +2022,7 @@ namespace MapKit {
 		nfloat StrokeEnd { get; set; }
 	}
 
-	[NoWatch]
-	[TV (14, 0), NoWatch, iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MKPolylineRenderer))]
 	partial interface MKGradientPolylineRenderer {
@@ -2094,7 +2097,6 @@ namespace MapKit {
 	}
 
 	[NoWatch]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MKLocalSearchCompleter {
@@ -2149,7 +2151,6 @@ namespace MapKit {
 	interface IMKLocalSearchCompleterDelegate { }
 
 	[NoWatch]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	[Model]
@@ -2162,7 +2163,6 @@ namespace MapKit {
 		void DidFail (MKLocalSearchCompleter completer, NSError error);
 	}
 
-	[NoWatch]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

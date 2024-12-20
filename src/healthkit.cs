@@ -1099,6 +1099,10 @@ namespace HealthKit {
 		[MacCatalyst (13, 1)]
 		[Export ("HeartRateEventThreshold")]
 		HKQuantity HeartRateEventThreshold { get; set; }
+
+		[MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("AppleFitnessPlusCatalogIdentifier")]
+		string AppleFitnessPlusCatalogIdentifier { get; set; }
 	}
 
 	/// <summary>Defines the keys in the <see cref="T:HealthKit.HKMetadata" /> key-value dictionary.</summary>
@@ -1386,6 +1390,10 @@ namespace HealthKit {
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 		[Field ("HKMetadataKeyWaterSalinity")]
 		NSString WaterSalinity { get; }
+
+		[MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Field ("HKMetadataKeyAppleFitnessPlusCatalogIdentifier")]
+		NSString AppleFitnessPlusCatalogIdentifier { get; }
 	}
 
 	/// <summary>Base class to <see cref="T:HealthKit.HKSample" />, which defines sampling data.</summary>

@@ -123,7 +123,11 @@ public class DocumentationManager {
 		var name = new StringBuilder ();
 
 		if (tr.IsGenericParameter) {
-			name.Append ('`');
+			if (tr.DeclaringMethod is not null) {
+				name.Append ("``");
+			} else {
+				name.Append ('`');
+			}
 			name.Append (tr.GenericParameterPosition);
 #if NET
 		} else if (tr.IsSZArray) {

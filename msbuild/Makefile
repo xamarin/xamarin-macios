@@ -14,11 +14,9 @@ BUILD_IOS=1
 endif
 
 #
-# To add a new MSBuild assembly, add the base name to the corresponding [IOS|MAC]_[BINDING]_TASK_ASSEMBLIES variable.
-#
 # New .targets and .props files are picked up automatically if they're in a directory with already
-# existing .targets or .props files. If .targets or .props are added in a new directory, add that
-# directory using a wildcard function to the corresponding [IOS|MAC]_TARGETS variable.
+# existing .targets or .props files. If .targets or .props are added in a new directory, consider
+# changing your mind and putting them with any existing .targets or .props files.
 #
 
 ##
@@ -27,8 +25,6 @@ endif
 
 MSBUILD_PRODUCTS             = 
 MSBUILD_DIRECTORIES          =
-MSBUILD_SYMLINKS             =
-MSBUILD_TASK_ASSEMBLIES      =
 
 ALL_SOURCES:= \
 	$(shell git ls-files | sed 's/ /\\ /g') \
@@ -41,17 +37,13 @@ CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0
 WINDOWSRUNTIMEIDENTIFIER = win
 
-##
-## XI definitions
-## 
+LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
+TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
+LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
 
-IOS_TARGETS =                                                      \
-	$(wildcard Xamarin.Shared/Xamarin.MonoTouch.*.targets) \
-	$(wildcard Xamarin.Shared/Xamarin.iOS.*.props)         \
-	$(wildcard Xamarin.Shared/Xamarin.iOS.*.targets)       \
-	$(wildcard Xamarin.Shared/Xamarin.Shared*.props)       \
-	$(wildcard Xamarin.Shared/Xamarin.Shared*.targets)       \
-	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
+##
+## iOS definitions
+## 
 
 IOS_WINDOWS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
@@ -59,361 +51,52 @@ IOS_WINDOWS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.props)       \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.targets)       \
 
-IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
-
-LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
-TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
-LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
-IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
+TASK_ASSEMBLIES = Xamarin.MacDev.Tasks $(LOCALIZATION_ASSEMBLIES)
 IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
 IOS_WINDOWS_DEPENDENCIES = Xamarin.iOS.Windows.Client iSign.Core ws2_32 System.Diagnostics.Tracer System.Formats.Asn1 System.Buffers System.Memory System.Numerics.Vectors System.Runtime.CompilerServices.Unsafe System.Security.Cryptography.ProtectedData System.Security.Cryptography.Pkcs Microsoft.Win32.Registry System.Security.AccessControl System.Security.Principal.Windows
 IOS_WINDOWS_MOBILEDEVICE_TOOLS = iMobileDevice-net bz2 getopt ideviceactivation idevicebackup idevicebackup2 idevicecrashreport idevicedate idevicedebug idevicedebugserverproxy idevicediagnostics ideviceenterrecovery ideviceimagemounter ideviceinfo ideviceinstaller idevicename idevicenotificationproxy idevicepair ideviceprovision idevicerestore idevicescreenshot idevicesyslog idevice_id imobiledevice-net-lighthouse imobiledevice ios_webkit_debug_proxy iproxy irecovery irecovery libcharset libcurl LIBEAY32 libiconv libusb-1.0 libusb0 libxml2 lzma pcre pcreposix plist plistutil plist_cmp plist_test pthreadVC3 readline SSLEAY32 usbmuxd usbmuxd vcruntime140 zip zlib1
 
-IOS_DIRECTORIES =                                                                                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/RedistList                                       \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS                                                           \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
-	$(foreach language,$(LOCALIZATION_LANGUAGES),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(language)) \
+PROPS_AND_TARGETS = \
+	$(wildcard Xamarin.Shared/*.props)   \
+	$(wildcard Xamarin.Shared/*.targets) \
+	$(wildcard Xamarin.ObjcBinding.Tasks/*.targets) \
 
-IOS_2_1_SYMLINKS = \
-	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/$(notdir $(target)))       \
-
-# these point to a file in /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
-IOS_X_I_SYMLINKS = \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/RedistList/FrameworkList.xml                                                                \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList/FrameworkList.xml                          \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS                                                                       \
-
-IOS_SYMLINKS = $(IOS_X_I_SYMLINKS) $(IOS_2_1_SYMLINKS)
-
-IOS_PRODUCTS =                                                                                                         \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml                                                       \
-	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
-	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
-	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
-	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).pdb)              \
-	$(foreach dll,$(TRANSLATED_ASSEMBLIES)        ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).resources.dll)    \
-	$(IOS_SYMLINKS)
-
-all-ios: $(IOS_PRODUCTS)
-symlinks-ios: $(IOS_SYMLINKS)
-
-ifdef BUILD_IOS
-MSBUILD_PRODUCTS += all-ios
-MSBUILD_SYMLINKS += symlinks-ios
-MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES) $(IOS_WINDOWS_TASK_ASSEMBLIES)
-MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
-endif
-
+MSBUILD_TASK_ASSEMBLIES += $(TASK_ASSEMBLIES)
 
 ##
-## MacCatalyst definitions
+## .NET targets ##
 ##
 
-MACCATALYST_TARGETS =                                                \
-	$(wildcard Xamarin.Shared/Xamarin.MacCatalyst.*.props)   \
-	$(wildcard Xamarin.Shared/Xamarin.MacCatalyst.*.targets) \
-	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
+DOTNET_SHARED_FILES = \
+	$(PROPS_AND_TARGETS) \
+	$(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb)
 
-MACCATALYST_DIRECTORIES = \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/RedistList                                       \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.MacCatalyst/v1.0/RedistList \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst                                                       \
+define InstallFiles
 
-MACCATALYST_SYMLINKS = \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/RedistList/FrameworkList.xml                                                                \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.MacCatalyst/v1.0/RedistList/FrameworkList.xml                          \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/MacCatalyst                                                                       \
-
-MACCATALYST_PRODUCTS += \
-	$(MACCATALYST_SYMLINKS) \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/FrameworkList.xml                                            \
-	$(foreach target,$(MACCATALYST_TARGETS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/$(notdir $(target))) \
-
-all-maccatalyst: $(MACCATALYST_PRODUCTS)
-symlinks-maccatalyst: $(MACCATALYST_SYMLINKS)
-
-ifdef INCLUDE_MACCATALYST
-MSBUILD_PRODUCTS += all-maccatalyst
-MSBUILD_DIRECTORIES += $(MACCATALYST_DIRECTORIES)
-MSBUILD_SYMLINKS += symlinks-maccatalyst
-endif
-
-##
-## Xamarin.TVOS definitions
-##
-
-TVOS_TARGETS =                                                \
-	$(wildcard Xamarin.Shared/Xamarin.TVOS.*.props)   \
-	$(wildcard Xamarin.Shared/Xamarin.TVOS.*.targets) \
-	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
-
-TVOS_DIRECTORIES =                                                                                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList                                       \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.TVOS/v1.0/RedistList \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS                                                       \
-
-# Xamarin.TVOS symlinks the entire $(MONOTOUCH_PREFIX)/lib/msbuild/TVOS directory to 
-# /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/TVOS instead of 
-# each separate file (like XI does).
-
-TVOS_SYMLINKS =                                                                                                                  \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList/FrameworkList.xml                                       \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.TVOS/v1.0/RedistList/FrameworkList.xml \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/TVOS                                              \
-
-TVOS_PRODUCTS =                                                                                                                \
-	$(TVOS_SYMLINKS)                                                                                                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/FrameworkList.xml                                                     \
-	$(foreach target,$(TVOS_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/$(notdir $(target))) \
-
-all-tvos: $(TVOS_PRODUCTS)
-symlinks-tvos: $(TVOS_SYMLINKS)
-
-ifdef INCLUDE_TVOS
-MSBUILD_PRODUCTS += all-tvos
-MSBUILD_DIRECTORIES += $(TVOS_DIRECTORIES)
-MSBUILD_SYMLINKS += symlinks-tvos
-endif
-
-##
-## XM definitions
-##
-
-MAC_TARGETS = \
-	$(wildcard Xamarin.Shared/Xamarin.Mac.*.props) \
-	$(wildcard Xamarin.Shared/Xamarin.Mac.*.targets) \
-	$(wildcard Xamarin.Shared/Xamarin.Shared*.props) \
-	$(wildcard Xamarin.Shared/Xamarin.Shared*.targets) \
-	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
-
-MAC_BINDING_TARGETS =
-
-MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES)
-
-MAC_DIRECTORIES =                                                                                           \
-	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
-	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/RedistList                              \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild                                                  \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList                                      \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/4.5                                                 \
-	$(foreach language,$(LOCALIZATION_LANGUAGES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(language)) \
-
-MAC_SYMLINKS =                                                                                                                                       \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/RedistList/FrameworkList.xml                                                     \
-	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList/FrameworkList.xml                        \
-	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac                                                                     \
-
-MAC_PRODUCTS =                                                                                                                 \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml                                                   \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList/FrameworkList.xml                                       \
-	$(foreach target,$(MAC_TARGETS)               ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
-	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
-	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
-	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).pdb)          \
-	$(MAC_SYMLINKS)                                                                                                            \
-	$(foreach dll,$(TRANSLATED_ASSEMBLIES)        ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).resources.dll)\
-
-all-mac: $(MAC_PRODUCTS)
-symlinks-mac: $(MAC_SYMLINKS)
-
-ifdef INCLUDE_MAC
-MSBUILD_PRODUCTS += all-mac
-MSBUILD_DIRECTORIES += $(MAC_DIRECTORIES)
-MSBUILD_SYMLINKS += symlinks-mac
-MSBUILD_TASK_ASSEMBLIES += $(MAC_TASK_ASSEMBLIES)
-endif
-
-##
-## Common definitions
-##
-
-##
-## XI ##
-##
-
-# Symlinks
-#
-# Everything in /Library/Frameworks/Mono.framework/External are links into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-# This makes it easy to switch XI, by just pointing /Library/Frameworks/Xamarin.iOS.framework/Versions/Current somewhere else
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList/FrameworkList.xml: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/$(notdir $@) $@
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
-	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS $@
-
-$(IOS_2_1_SYMLINKS): | $(IOS_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/$(notdir $@) $@
-
-# The actual content goes into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml: Xamarin.Shared/Xamarin.iOS-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS@' $< > $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/RedistList/FrameworkList.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml | $(IOS_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/$(notdir $@) $@ 
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.ObjcBinding.Tasks/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
-	$(Q) install -m 644 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.MacDev.Tasks/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
-	$(Q) install -m 644 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.Shared/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
-	$(Q) install -m 644 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.iOS.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS $(foreach language,$(LOCALIZATION_LANGUAGES),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(language))
-	$(Q) install -m 644 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
-	$(Q) install -m 644 $< $@
-
-##
-## MacCatalyst
-##
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.MacCatalyst/v1.0/RedistList/FrameworkList.xml: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.MacCatalyst/v1.0/RedistList
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/MacCatalyst/$(notdir $@) $@
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/MacCatalyst: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
-	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/MacCatalyst $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/FrameworkList.xml: Xamarin.Shared/Xamarin.MacCatalyst-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.MacCatalyst@' $< > $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/RedistList/FrameworkList.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/FrameworkList.xml | $(MACCATALYST_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/MacCatalyst/$(notdir $@) $@ 
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/%: Xamarin.Shared/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst
-	$(Q) install -m 644 $< $@
-
-##
-## Xamarin.TVOS
-##
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.TVOS/v1.0/RedistList/FrameworkList.xml: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.TVOS/v1.0/RedistList
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/TVOS/$(notdir $@) $@
-
-$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/TVOS: $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
-	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/TVOS $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/FrameworkList.xml: Xamarin.Shared/Xamarin.TVOS-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS@' $< > $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList/FrameworkList.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/FrameworkList.xml | $(TVOS_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/TVOS/$(notdir $@) $@ 
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/%: Xamarin.Shared/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS
-	$(Q) install -m 644 $< $@
-
-##
-## XM ##
-##
-
-# Symlinks
-#
-# Everything in /Library/Frameworks/Mono.framework/External are links into /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-# This makes it easy to switch XM, by just pointing /Library/Frameworks/Xamarin.Mac.framework/Versions/Current somewhere else
-
-$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac: $(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
-	$(Q) ln -Fhs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/msbuild $@
-
-$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList/FrameworkList.xml: | $(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList
-	$(Q) ln -fs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/msbuild/$(notdir $@) $@
-
-# The actual content goes into /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml: Xamarin.Shared/Xamarin.Mac-Mobile-FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac@' $< > $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/RedistList/FrameworkList.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml | $(MAC_DIRECTORIES)
-	$(Q) ln -fs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/msbuild/$(notdir $@) $@ 
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList/FrameworkList.xml: Xamarin.Shared/Xamarin.Mac-Full-FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5@' $< > $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Mac.Tasks/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
-	$(Q) install -m 644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Shared/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
-	$(Q) install -m 644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Mac.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild $(foreach language,$(LOCALIZATION_LANGUAGES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(language))
-	$(Q) install -m 644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
-	$(Q) install -m 644 $< $@
-##
-## net5 targets ##
-##
-
-# tvOS ships most of the iOS targets as well  (for now, we don't need all of these, so this is optimizable)
-DOTNET_SHARED_FILES = $(IOS_TARGETS) $(IOS_BINDING_TARGETS) $(foreach dll,$(IOS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb)
-DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
-DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
-DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
-DOTNET_MACCATALYST_FILES = $(MACCATALYST_TARGETS) FrameworkList.xml
-
-# iOS
-ifdef INCLUDE_IOS
 DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_IOS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_NUGET_SDK_NAME)/tools/msbuild/iOS/$(notdir $(target)))               \
+	$(foreach target,$(DOTNET_SHARED_FILES),$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/$(notdir $(target))) \
+	$(foreach dll,$(TRANSLATED_ASSEMBLIES),$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/$(dll).resources.dll) \
 
-endif
+DOTNET_DIRECTORIES_$(1) += \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild \
+	$(foreach locale,$(LOCALIZATION_LANGUAGES),$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/$(locale)) \
 
-# tvOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
-ifdef INCLUDE_TVOS
-DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/iOS/$(notdir $(target)))              \
-	$(foreach target,$(DOTNET_TVOS_FILES)         ,$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/tvOS/$(notdir $(target)))             \
+DOTNET_DIRECTORIES += $$(DOTNET_DIRECTORIES_$(1))
 
-endif
+$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/%: Xamarin.Shared/% | $(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild
+	$$(Q) install -m 644 $$< $$@
 
-# macOS
-ifdef INCLUDE_MAC
-DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_MACOS_FILES)        ,$(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/tools/msbuild/macOS/$(notdir $(target)))           \
+$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/%: Xamarin.MacDev.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $$(DOTNET_DIRECTORIES_$(1))
+	$$(Q) install -m 644 $$< $$@
 
-endif
+$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $$(DOTNET_DIRECTORIES_$(1))
+	$$(Q) install -m 644 $$< $$@
 
-# Mac Catalyst
-ifdef INCLUDE_MACCATALYST
-DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/iOS/$(notdir $(target)))              \
-	$(foreach target,$(DOTNET_MACCATALYST_FILES)  ,$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/MacCatalyst/$(notdir $(target)))      \
+$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/%: Xamarin.ObjcBinding.Tasks/% | $(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild
+	$$(Q) install -m 644 $$< $$@
+endef
 
-endif
-
-DOTNET_DIRECTORIES += \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET_SDK_NAME)/tools/msbuild/iOS \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/iOS \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/tvOS \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/tools/msbuild/macOS \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/iOS \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/MacCatalyst \
-
-$(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/tools/msbuild/macOS/%: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(IOS_NUGET_SDK_NAME)/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(TVOS_NUGET_SDK_NAME)/tools/msbuild/tvOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_SDK_NAME)/tools/msbuild/MacCatalyst/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallFiles,$(platform),$(shell echo $(platform) | tr 'a-z' 'A-Z'))))
 
 MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 
@@ -462,15 +145,10 @@ all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll $(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).pdb): .build-stamp
 $(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
 
-# Always remake the symlinks
-.PHONY: $(MSBUILD_SYMLINKS)
-
 # this is a directory-creating target.
-# we sort to remove duplicates, which can happen if MAC_DESTDIR and IOS_DESTDIR are the same (both create a '/Library/Frameworks/Mono.framework/External/xbuild/Xamarin' target)
-$(sort $(MSBUILD_DIRECTORIES)) build:
+# we sort to remove duplicates
+$(sort $(MSBUILD_DIRECTORIES)):
 	$(Q) mkdir -p $@
-
-install-symlinks: $(MSBUILD_SYMLINKS)
 
 install-local:: $(MSBUILD_PRODUCTS)
 
@@ -501,7 +179,3 @@ Versions.g.cs: Makefile $(TOP)/Make.config.inc
 	$(Q) mv $@.tmp $@
 
 dotnet:: $(DOTNET_TARGETS)
-
-# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
-# marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach file,$(MSBUILD_TASK_ASSEMBLIES),unbuild/$(file).dll) $(foreach file,$(MSBUILD_TASK_ASSEMBLIES),build/$(file).dll)

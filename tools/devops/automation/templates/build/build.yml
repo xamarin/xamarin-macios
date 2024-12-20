@@ -134,6 +134,8 @@ steps:
     name: resetDependencies
     displayName: 'Reset dependencies'
     timeoutInMinutes: 10
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken) # needed to checkout AzDo repo dependencies
 
   # We'll need these profiles to build the hot restart prebuilt app during the build
   # (it's built for device, and thus needs a certificate available so that the app can be signed).

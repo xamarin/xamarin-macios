@@ -5,9 +5,10 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class EventEqualityComparer : IEqualityComparer<ImmutableArray<Event>> {
+class EventEqualityComparer : EqualityComparer<ImmutableArray<Event>> {
 
-	public bool Equals (ImmutableArray<Event> x, ImmutableArray<Event> y)
+	/// <inheritdoc/>
+	public override bool Equals (ImmutableArray<Event> x, ImmutableArray<Event> y)
 	{
 		// properties are unique by their name, that means that we can build two dicts and comparethem
 		var xDictionary = Enumerable.ToDictionary (x, property => property.Name);
@@ -17,7 +18,8 @@ class EventEqualityComparer : IEqualityComparer<ImmutableArray<Event>> {
 		return comparer.Equals (xDictionary, yDictionary);
 	}
 
-	public int GetHashCode (ImmutableArray<Event> obj)
+	/// <inheritdoc/>
+	public override int GetHashCode (ImmutableArray<Event> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var property in obj) {

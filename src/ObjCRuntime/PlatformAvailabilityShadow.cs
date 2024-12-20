@@ -5,6 +5,7 @@ using PlatformName = ObjCRuntime.PlatformName;
 
 // These _must_ be in a less nested namespace than the copies they are shadowing in PlatformAvailability.cs
 // Since those are in ObjcRuntime these must be global
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if COREBUILD
 public
 #endif
@@ -44,6 +45,7 @@ sealed class MacAttribute : ObjCRuntime.IntroducedAttribute {
 	{
 	}
 }
+[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if COREBUILD
 public
 #endif

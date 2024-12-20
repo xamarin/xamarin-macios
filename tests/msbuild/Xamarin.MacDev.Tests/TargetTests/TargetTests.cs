@@ -274,6 +274,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void OptimizePngs_True ()
 		{
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 			MonoTouchProjectInstance.SetProperty ("OptimizePNGs", "True");
 			OptimizePngs_Core (true);
 		}
@@ -281,6 +282,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void OptimizePngs_False ()
 		{
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 			MonoTouchProjectInstance.SetProperty ("OptimizePNGs", "False");
 			OptimizePngs_Core (false);
 		}

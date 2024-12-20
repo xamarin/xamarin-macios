@@ -122,6 +122,8 @@ namespace UIKit {
 		[iOS (13, 0), NoTV]
 		[MacCatalyst (13, 1)]
 		Close,
+		[iOS (18, 2), NoTV, MacCatalyst (18, 2)]
+		WritingTools,
 	}
 
 	// NSUInteger -> UIControl.h

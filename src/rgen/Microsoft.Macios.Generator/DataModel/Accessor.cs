@@ -44,7 +44,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
-		var modifiersComparer = new ModifiersComparer ();
+		var modifiersComparer = new ModifiersEqualityComparer ();
 		return modifiersComparer.Equals (Modifiers, other.Modifiers);
 	}
 

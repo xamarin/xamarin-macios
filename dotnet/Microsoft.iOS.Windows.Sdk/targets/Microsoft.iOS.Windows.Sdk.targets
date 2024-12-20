@@ -4,15 +4,4 @@
   <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.Common.After.props" />
   <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.Common.After.targets" />
 
-  <!-- Note: The following pack files are not yet imported in .NET 6:
-
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.ObjCBinding.Common.After.props" />
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.ObjCBinding.Common.After.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.ObjCBinding.Common.Before.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.ObjCBinding.CSharp.After.props" />
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.ObjCBinding.CSharp.After.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.WatchApp.Common.After.targets" />
-
-  -->
-
 </Project>

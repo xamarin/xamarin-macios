@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class MethodsEqualityComparer : IEqualityComparer<ImmutableArray<Method>> {
+class MethodsEqualityComparer : EqualityComparer<ImmutableArray<Method>> {
 	/// <inheritdoc/>
-	public bool Equals (ImmutableArray<Method> x, ImmutableArray<Method> y)
+	public override bool Equals (ImmutableArray<Method> x, ImmutableArray<Method> y)
 	{
 		// to compare two lists, we need to do the following:
 		// 1. Group all the methods by return type + name + param count, this way we
@@ -27,7 +27,7 @@ class MethodsEqualityComparer : IEqualityComparer<ImmutableArray<Method>> {
 	}
 
 	/// <inheritdoc/>
-	public int GetHashCode (ImmutableArray<Method> obj)
+	public override int GetHashCode (ImmutableArray<Method> obj)
 	{
 		var hashCode = new HashCode ();
 		foreach (var ctr in obj) {
