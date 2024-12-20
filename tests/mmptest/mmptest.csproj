@@ -136,11 +136,6 @@
       <Link>Errors.resx</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\common\mac\remoting.config">
-      <Link>remoting.config</Link>
-    </EmbeddedResource>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />
 </Project>

@@ -7,6 +7,7 @@ using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 using System.Security;
 using System.Reactive.Linq;
+using Xamarin.Messaging.Ssh;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable

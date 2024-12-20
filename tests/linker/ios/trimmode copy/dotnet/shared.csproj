@@ -10,6 +10,10 @@
     <_TrimmerDefaultAction>copy</_TrimmerDefaultAction> <!-- https://github.com/dotnet/linker/issues/2981 -->
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\dont link</ThisTestDirectory>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />

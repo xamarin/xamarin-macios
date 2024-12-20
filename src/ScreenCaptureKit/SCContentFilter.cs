@@ -21,7 +21,7 @@ namespace ScreenCaptureKit {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos12.3")]
-	[UnsupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("maccatalyst18.2")]
 	public enum SCContentFilterOption {
 		/// <summary>The specified windows or applications are included in the filter.</summary>
 		Include,

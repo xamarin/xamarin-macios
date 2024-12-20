@@ -5,8 +5,9 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class PropertiesEqualityComparer : IEqualityComparer<ImmutableArray<Property>> {
-	public bool Equals (ImmutableArray<Property> x, ImmutableArray<Property> y)
+class PropertiesEqualityComparer : EqualityComparer<ImmutableArray<Property>> {
+	/// <inheritdoc/>
+	public override bool Equals (ImmutableArray<Property> x, ImmutableArray<Property> y)
 	{
 		// properties are unique by their name, that means that we can build two dicts and comparethem
 		var xDictionary = Enumerable.ToDictionary (x, property => property.Name);
@@ -16,7 +17,8 @@ class PropertiesEqualityComparer : IEqualityComparer<ImmutableArray<Property>> {
 		return comparer.Equals (xDictionary, yDictionary);
 	}
 
-	public int GetHashCode (ImmutableArray<Property> obj)
+	/// <inheritdoc/>
+	public override int GetHashCode (ImmutableArray<Property> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var property in obj) {

@@ -92,6 +92,10 @@ namespace PassKit {
 		[return: NullAllowed]
 		PKPass GetPass (string identifier, string serialNumber);
 
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("passesWithReaderIdentifier:")]
+		NSSet<PKSecureElementPass> GetPasses (string readerIdentifier);
+
 		[MacCatalyst (13, 1)]
 		[Export ("passesOfType:")]
 		PKPass [] GetPasses (PKPassType passType);
@@ -1352,17 +1356,17 @@ namespace PassKit {
 		[Export ("dismissWithCompletion:")]
 		void Dismiss ([NullAllowed] Action completion);
 
-		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoWatch, NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportsDisbursements")]
 		bool SupportsDisbursements ();
 
-		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoWatch, NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportsDisbursementsUsingNetworks:")]
 		bool SupportsDisbursements (string [] supportedNetworks);
 
-		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoWatch, NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportsDisbursementsUsingNetworks:capabilities:")]
 		bool SupportsDisbursements (string [] supportedNetworks, PKMerchantCapability capabilities);
