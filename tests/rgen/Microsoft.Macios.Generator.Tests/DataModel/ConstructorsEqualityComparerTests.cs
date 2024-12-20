@@ -124,7 +124,7 @@ public class ConstructorsEqualityComparerTests {
 	}
 
 	[Fact]
-	public void ComapreSameConstructorsSameAvailability ()
+	public void CompareSameConstructorsSameAvailability ()
 	{
 		
 		var builder = SymbolAvailability.CreateBuilder ();
