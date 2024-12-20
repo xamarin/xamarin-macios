@@ -930,7 +930,6 @@
 !missing-type! AVCaptureSynchronizedSampleBufferData not bound
 !missing-type! AVCaptureSystemPressureState not bound
 !missing-type! AVCaptureVideoDataOutput not bound
-!missing-type! AVContinuityDevice not bound
 !missing-type! AVFrameRateRange not bound
 !missing-type! AVMetadataBodyObject not bound
 !missing-type! AVMetadataCatBodyObject not bound
