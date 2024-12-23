@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
@@ -151,5 +153,14 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	public static bool operator != (SymbolAvailability left, SymbolAvailability right)
 	{
 		return !left.Equals (right);
+	}
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("[");
+		sb.AppendJoin (", ", availabilities.Values.Where (x => x is not null));
+		sb.Append ("]");
+		return sb.ToString ();
 	}
 }

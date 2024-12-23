@@ -35,8 +35,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], []),
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], []),
 					]
 				)
 			];
@@ -62,7 +62,7 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
+						new (AccessorKind.Add, new (), [], []),
 					]
 				)
 			];
@@ -88,8 +88,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], [
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]
@@ -124,8 +124,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], [
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]

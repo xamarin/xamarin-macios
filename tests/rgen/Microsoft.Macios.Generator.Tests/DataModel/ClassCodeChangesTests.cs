@@ -156,6 +156,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -164,8 +165,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						)
 					]
@@ -199,6 +200,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -207,8 +209,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (),[], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						)
 					]
@@ -243,6 +245,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -251,13 +254,14 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						),
 						new (
 							name: "Surname",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
 							],
@@ -266,8 +270,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						),
 					]
@@ -448,8 +452,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							])
 					],
 				}
@@ -488,8 +492,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							]
 						),
 						new (
@@ -500,8 +504,8 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							]
 						),
 					],

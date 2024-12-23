@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -14,8 +16,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffName ()
 	{
-		var x = new Property ("First", "string", [], [], []);
-		var y = new Property ("Second", "string", [], [], []);
+		var x = new Property ("First", "string", new (), [], [], []);
+		var y = new Property ("Second", "string", new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -26,8 +28,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Property ("First", "string", [], [], []);
-		var y = new Property ("First", "int", [], [], []);
+		var x = new Property ("First", "string", new (), [], [], []);
+		var y = new Property ("First", "int", new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -38,11 +40,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", "string", [
+		var x = new Property ("First", "string", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", "int", [
+		var y = new Property ("First", "int", new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -55,13 +57,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", "string", [
+		var x = new Property ("First", "string", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", "int", [
+		var y = new Property ("First", "int", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -77,22 +79,22 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", "string", [
+		var x = new Property ("First", "string", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		]);
-		var y = new Property ("First", "int", [
+		var y = new Property ("First", "int", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
 		]);
 
 		Assert.False (x.Equals (y));
@@ -104,23 +106,23 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", "string", [
+		var x = new Property ("First", "string", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		]);
-		var y = new Property ("First", "string", [
+		var y = new Property ("First", "string", new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		]);
 
 		Assert.True (x.Equals (y));
@@ -147,12 +149,13 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], [])
+						new (AccessorKind.Getter, new (), [], [])
 					])
 			];
 
@@ -172,13 +175,14 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
-						new (AccessorKind.Setter, [], [])
+						new (AccessorKind.Getter, new (), [], []),
+						new (AccessorKind.Setter, new (), [], [])
 					])
 			];
 
@@ -196,12 +200,13 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Getter, new (), [], []),
 					])
 			];
 
@@ -219,12 +224,13 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
+						new (AccessorKind.Getter, new (), [], []),
 					])
 			];
 
@@ -244,13 +250,14 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
-						new (AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, new (), [], []),
+						new (AccessorKind.Setter, new (), [], []),
 					])
 			];
 
@@ -271,13 +278,14 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
-						new (AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, new (), [], []),
+						new (AccessorKind.Setter, new (), [], []),
 					])
 			];
 
@@ -298,13 +306,14 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
-						new (AccessorKind.Setter, [], [
+						new (AccessorKind.Getter, new (), [], []),
+						new (AccessorKind.Setter, new (), [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						]),
 					])
@@ -325,11 +334,15 @@ public class TestClass {
 }
 ";
 
+			var propertyAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			propertyAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios"));
+			
 			yield return [
 				propertyWithAttribute,
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -337,8 +350,8 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [], []),
-						new (AccessorKind.Setter, [], []),
+						new (AccessorKind.Getter, new (), [], []),
+						new (AccessorKind.Setter, new (), [], []),
 					])
 			];
 
@@ -358,11 +371,15 @@ public class TestClass {
 }
 ";
 
+			var getterAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			var setterAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
 			yield return [
 				propertyGetterWithAttribute,
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -370,10 +387,10 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [
+						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new (AccessorKind.Setter, [], []),
+						new (AccessorKind.Setter, new (), [], []),
 					])
 			];
 
@@ -394,11 +411,17 @@ public class TestClass {
 }
 ";
 
+			getterAvailabilityBuilder.Clear ();
+			setterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+			setterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios18.0"));
+			
 			yield return [
 				propertyWithGetterAndSetterWithAttribute,
 				new Property (
 					name: "Name",
 					type: "string",
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -406,10 +429,10 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [
+						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new (AccessorKind.Setter, [
+						new (AccessorKind.Setter, setterAvailabilityBuilder.ToImmutable (), [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					])
@@ -436,12 +459,17 @@ namespace Test {
 	}
 }
 ";
+			getterAvailabilityBuilder.Clear ();
+			setterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+			setterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios18.0"));
 
 			yield return [
 				propertyWithCustomType,
 				new Property (
 					name: "Name",
 					type: "Utils.MyClass",
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -449,10 +477,10 @@ namespace Test {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, [
+						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new (AccessorKind.Setter, [
+						new (AccessorKind.Setter, setterAvailabilityBuilder.ToImmutable (), [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 						], []),
 					])
