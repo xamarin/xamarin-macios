@@ -209,7 +209,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (),[], []),
+								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
 						)

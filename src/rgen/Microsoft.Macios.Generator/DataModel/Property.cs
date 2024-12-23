@@ -125,7 +125,7 @@ readonly struct Property : IEquatable<Property> {
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new(kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
 					[.. accessorDeclaration.Modifiers]));
 			}
 
@@ -136,11 +136,11 @@ readonly struct Property : IEquatable<Property> {
 			// an expression body == a getter with no attrs or modifiers; that means that the accessor does not have
 			// extra availability, but the ones form the property
 			accessorCodeChanges = [
-				new(AccessorKind.Getter, propertySupportedPlatforms, [], [])
+				new (AccessorKind.Getter, propertySupportedPlatforms, [], [])
 			];
 		}
 
-		change = new(
+		change = new (
 			name: memberName,
 			type: type,
 			symbolAvailability: propertySupportedPlatforms,

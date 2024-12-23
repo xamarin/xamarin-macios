@@ -137,7 +137,7 @@ readonly partial struct PlatformAvailability {
 		{
 			return new PlatformAvailability (platform, supportedVersion, unsupported, obsoleted);
 		}
-		
+
 		/// <summary>
 		/// Clear all the versions that have been added to the platform availability.
 		/// </summary>

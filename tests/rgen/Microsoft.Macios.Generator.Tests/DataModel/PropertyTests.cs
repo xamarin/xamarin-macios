@@ -336,7 +336,7 @@ public class TestClass {
 
 			var propertyAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
 			propertyAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios"));
-			
+
 			yield return [
 				propertyWithAttribute,
 				new Property (
@@ -415,7 +415,7 @@ public class TestClass {
 			setterAvailabilityBuilder.Clear ();
 			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
 			setterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios18.0"));
-			
+
 			yield return [
 				propertyWithGetterAndSetterWithAttribute,
 				new Property (

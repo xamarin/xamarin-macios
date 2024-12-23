@@ -12,7 +12,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// The kind of accessor.
 	/// </summary>
 	public AccessorKind Kind { get; }
-	
+
 	/// <summary>
 	/// The platform availability of the enum value.
 	/// </summary>
@@ -51,7 +51,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;

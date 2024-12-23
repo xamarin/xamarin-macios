@@ -138,7 +138,7 @@ public class AccessorTests {
 		Assert.True (x == y);
 		Assert.False (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareSameKindSameAttrDiffAvailability ()
 	{
@@ -166,7 +166,7 @@ public class AccessorTests {
 		Assert.False (x == y);
 		Assert.True (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareSameKindSameAttrSameAvailability ()
 	{

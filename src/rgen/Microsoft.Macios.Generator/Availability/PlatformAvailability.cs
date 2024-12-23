@@ -170,7 +170,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		sb.Append ($"Platform: {Platform} ");
 		sb.Append ($"Supported: '{SupportedVersion?.ToString ()}' ");
 		sb.Append ("Unsupported: [");
-		sb.AppendJoin (", ", unsupported.Select (v => $"'{v.Key}': '{v.Value?.ToString () ?? "null" }'"));
+		sb.AppendJoin (", ", unsupported.Select (v => $"'{v.Key}': '{v.Value?.ToString () ?? "null"}'"));
 		sb.Append ("], Obsoleted: [");
 		sb.AppendJoin (", ", obsoleted.Select (v => $"'{v.Key}': ('{v.Value.Message?.ToString () ?? "null"}', '{v.Value.Url?.ToString () ?? "null"}')"));
 		sb.Append ("] }");

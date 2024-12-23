@@ -108,14 +108,14 @@ readonly struct Event : IEquatable<Event> {
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new(kind, accesorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+				accessorsBucket.Add (new (kind, accesorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
 					[.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
 		}
 
-		change = new(memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
+		change = new (memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
 		return true;
 	}
 
