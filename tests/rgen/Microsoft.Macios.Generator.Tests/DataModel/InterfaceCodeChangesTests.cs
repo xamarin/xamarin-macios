@@ -209,6 +209,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -252,6 +253,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -296,6 +298,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -311,6 +314,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetSurname",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
