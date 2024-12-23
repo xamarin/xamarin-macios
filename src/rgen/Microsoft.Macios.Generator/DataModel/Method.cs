@@ -16,17 +16,17 @@ readonly struct Method : IEquatable<Method> {
 	/// Type name that owns the constructor.
 	/// </summary>
 	public string Type { get; }
-	
+
 	/// <summary>
 	/// Method name.
 	/// </summary>
 	public string Name { get; }
-	
+
 	/// <summary>
 	/// Method return type.
 	/// </summary>
 	public string ReturnType { get; }
-	
+
 	/// <summary>
 	/// The platform availability of the eum value.
 	/// </summary>
@@ -47,7 +47,7 @@ readonly struct Method : IEquatable<Method> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, string returnType, 
+	public Method (string type, string name, string returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers,
@@ -109,7 +109,7 @@ readonly struct Method : IEquatable<Method> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
