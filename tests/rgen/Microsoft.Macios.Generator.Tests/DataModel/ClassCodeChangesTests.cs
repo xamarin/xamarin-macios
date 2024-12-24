@@ -451,6 +451,7 @@ public partial class MyClass {
 						new (
 							name: "Changed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -491,6 +492,7 @@ public partial class MyClass {
 						new (
 							name: "Changed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -503,6 +505,7 @@ public partial class MyClass {
 						new (
 							name: "Removed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),

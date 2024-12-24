@@ -24,6 +24,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -34,6 +35,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "SecondEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -46,6 +48,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -65,6 +68,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -77,6 +81,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "AVFoundation.AVVideo",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -96,6 +101,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -108,6 +114,7 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),

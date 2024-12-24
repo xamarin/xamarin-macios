@@ -330,6 +330,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -424,6 +425,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -432,6 +434,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -482,6 +485,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -491,6 +495,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -547,6 +552,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -596,6 +602,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
@@ -653,6 +660,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -661,6 +669,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -742,6 +751,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -751,6 +761,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -825,6 +836,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -833,6 +845,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -914,6 +927,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -923,6 +937,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -1010,6 +1025,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -1018,6 +1034,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -1083,6 +1100,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent2",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
@@ -1092,6 +1110,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [],
 					accessors: [
