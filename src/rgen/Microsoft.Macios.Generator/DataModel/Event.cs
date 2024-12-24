@@ -10,7 +10,6 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly struct Event : IEquatable<Event> {
-
 	/// <summary>
 	/// Name of the property.
 	/// </summary>
@@ -104,10 +103,13 @@ readonly struct Event : IEquatable<Event> {
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
-			foreach (var accessor in declaration.AccessorList.Accessors) {
-				var kind = accessor.Kind ().ToAccessorKind ();
-				var accessorAttributeChanges = accessor.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new (kind, accessorAttributeChanges, [.. accessor.Modifiers]));
+			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
+				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accesorSymbol)
+					continue;
+				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
+				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+				accessorsBucket.Add (new (kind, accesorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+					[.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -24,6 +25,11 @@ readonly struct Property : IEquatable<Property> {
 	public string Type { get; } = string.Empty;
 
 	/// <summary>
+	/// The platform availability of the enum value.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
+
+	/// <summary>
 	/// Get the attributes added to the member.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
@@ -38,11 +44,14 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
-	internal Property (string name, string type, ImmutableArray<AttributeCodeChange> attributes,
+	internal Property (string name, string type,
+		SymbolAvailability symbolAvailability,
+		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
 		Type = type;
+		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
 		Accessors = accessors;
@@ -56,6 +65,9 @@ readonly struct Property : IEquatable<Property> {
 			return false;
 		if (Type != other.Type)
 			return false;
+		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
@@ -100,36 +112,48 @@ readonly struct Property : IEquatable<Property> {
 			return false;
 		}
 
+		var propertySupportedPlatforms = propertySymbol.GetSupportedPlatforms ();
+
 		var type = propertySymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 		ImmutableArray<Accessor> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
-			foreach (var accessor in declaration.AccessorList.Accessors) {
-				var kind = accessor.Kind ().ToAccessorKind ();
-				var accessorAttributeChanges = accessor.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new (kind, accessorAttributeChanges, [.. accessor.Modifiers]));
+			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
+				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
+					continue;
+				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
+				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+					[.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
 		}
 
 		if (declaration.ExpressionBody is not null) {
-			// an expression body == a getter with no attrs or modifiers
+			// an expression body == a getter with no attrs or modifiers; that means that the accessor does not have
+			// extra availability, but the ones form the property
 			accessorCodeChanges = [
-				new (AccessorKind.Getter, [], [])
+				new (AccessorKind.Getter, propertySupportedPlatforms, [], [])
 			];
 		}
 
-		change = new (memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
+		change = new (
+			name: memberName,
+			type: type,
+			symbolAvailability: propertySupportedPlatforms,
+			attributes: attributes,
+			modifiers: [.. declaration.Modifiers],
+			accessors: accessorCodeChanges);
 		return true;
 	}
 
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, Attributes: [");
+		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, Supported Platforms: {SymbolAvailability}, Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

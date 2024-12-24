@@ -330,7 +330,7 @@ public class PlatformAvailabilityTests {
 	}
 
 	[Theory]
-	[InlineData (ApplePlatform.iOS, new [] { "12.0", "13.0", "13.1", "15.0", "16.0" }, "Unsupporte on iOS")]
+	[InlineData (ApplePlatform.iOS, new [] { "12.0", "13.0", "13.1", "15.0", "16.0" }, "Unsupported on iOS")]
 	[InlineData (ApplePlatform.MacOSX, new [] { "9.0", "10.0", "11.5", "14.0" }, "UseAppKit enum")]
 	[InlineData (ApplePlatform.TVOS, new [] { "8.0", "9.0", "12.0" }, "Not present in TVOS")]
 	[InlineData (ApplePlatform.MacCatalyst, new [] { "10.0", "11.0", "13.1" }, "Use the UIKit version instead")]
