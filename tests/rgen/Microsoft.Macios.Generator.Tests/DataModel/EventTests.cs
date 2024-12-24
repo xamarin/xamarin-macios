@@ -32,14 +32,14 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
-					symbolAvailability: new(),
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, new(), [], []),
-						new(AccessorKind.Remove, new(), [], []),
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], []),
 					]
 				)
 			];
@@ -60,13 +60,13 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
-					symbolAvailability: new(),
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, new(), [], []),
+						new (AccessorKind.Add, new (), [], []),
 					]
 				)
 			];
@@ -87,14 +87,14 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
-					symbolAvailability: new(),
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, new(), [], []),
-						new(AccessorKind.Remove, new(), [], [
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]
@@ -124,14 +124,14 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "Test.MyEventHandler",
-					symbolAvailability: new(),
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, new(), [], []),
-						new(AccessorKind.Remove, new(), [], [
+						new (AccessorKind.Add, new (), [], []),
+						new (AccessorKind.Remove, new (), [], [
 							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 						]),
 					]
@@ -160,13 +160,13 @@ public class TestClass {
 					type: "System.EventHandler",
 					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, new(), [], []),
+						new (AccessorKind.Add, new (), [], []),
 					]
 				)
 			];
@@ -201,17 +201,17 @@ public class TestClass {
 					type: "System.EventHandler",
 					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new(AccessorKind.Add, accessorAvailabilityBuilder.ToImmutable (), [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Add, accessorAvailabilityBuilder.ToImmutable (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
-						new(AccessorKind.Remove, accessorAvailabilityBuilder.ToImmutable (), [
-							new("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						new (AccessorKind.Remove, accessorAvailabilityBuilder.ToImmutable (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 						], []),
 					]
 				)
@@ -226,7 +226,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromEventDeclaration (ApplePlatform platform, string inputText, Event expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof(FromEventDeclaration),
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromEventDeclaration),
 			platform, inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);

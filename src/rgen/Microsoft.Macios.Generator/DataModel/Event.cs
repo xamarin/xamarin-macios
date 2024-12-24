@@ -63,7 +63,7 @@ readonly struct Event : IEquatable<Event> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
@@ -119,14 +119,14 @@ readonly struct Event : IEquatable<Event> {
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new(kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
 					[.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
 		}
 
-		change = new(memberName, type, eventSymbol.GetSupportedPlatforms (), attributes,
+		change = new (memberName, type, eventSymbol.GetSupportedPlatforms (), attributes,
 			[.. declaration.Modifiers], accessorCodeChanges);
 		return true;
 	}
