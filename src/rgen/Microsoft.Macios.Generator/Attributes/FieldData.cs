@@ -5,7 +5,7 @@ using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.Attributes;
 
-readonly struct FieldData<T> where T : Enum {
+readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 
 	public enum ParsingError {
 		None = 0,
@@ -18,7 +18,7 @@ readonly struct FieldData<T> where T : Enum {
 
 	public T? Flags { get; } = default;
 
-	FieldData (string symbolName, string? libraryName, T? flags)
+	internal FieldData (string symbolName, string? libraryName, T? flags)
 	{
 		SymbolName = symbolName;
 		LibraryName = libraryName;
@@ -67,7 +67,7 @@ readonly struct FieldData<T> where T : Enum {
 			}
 			break;
 		default:
-			// 0 should not be an option..
+			// 0 should not be an option.
 			return false;
 		}
 
@@ -93,5 +93,46 @@ readonly struct FieldData<T> where T : Enum {
 		}
 		data = new (symbolName, libraryName, flags);
 		return true;
+	}
+
+	/// <inheritdoc />
+	public bool Equals (FieldData<T> other)
+	{
+		if (SymbolName != other.SymbolName)
+			return false;
+		if (LibraryName != other.LibraryName)
+			return false;
+		if (Flags is not null && other.Flags is not null) {
+			return Flags.Equals(other.Flags);
+		}
+		return false;
+	}
+	
+	/// <inheritdoc />
+	public override bool Equals (object? obj)
+	{
+		return obj is FieldData<T> other && Equals (other);
+	}
+
+	/// <inheritdoc />
+	public override int GetHashCode ()
+	{
+		return HashCode.Combine (SymbolName, LibraryName, Flags);
+	}
+
+	public static bool operator == (FieldData<T> x, FieldData<T> y)
+	{
+		return x.Equals (y);
+	}
+
+	public static bool operator != (FieldData<T> x, FieldData<T> y)
+	{
+		return !(x == y);
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		return $"{{ SymbolName: '{SymbolName}' LibraryName: '{LibraryName ?? "null"}', Flags: '{Flags}' }}";
 	}
 }

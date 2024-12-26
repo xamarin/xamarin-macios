@@ -1,9 +1,5 @@
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
-using Xamarin.Tests;
-using Xamarin.Utils;
 using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
@@ -61,7 +57,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name");
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
-				new EnumMember ("name", new (), [])
+				new EnumMember ("name", new (), new (), [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -72,12 +68,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
-				new EnumMember ("name", new (), [])
+				new EnumMember ("name", new (), new (), [])
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name") {
 			EnumMembers = [
-				new EnumMember ("name2", new (), [])
+				new EnumMember ("name2", new (), new (), [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));

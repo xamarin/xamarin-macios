@@ -184,15 +184,19 @@ readonly struct CodeChanges {
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclarations = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
-		foreach (var declaration in enumValueDeclarations) {
-			if (Skip (declaration, semanticModel))
+		foreach (var enumValueDeclaration in enumValueDeclarations) {
+			if (Skip (enumValueDeclaration, semanticModel))
 				continue;
-			if (semanticModel.GetDeclaredSymbol (declaration) is not ISymbol symbol) {
+			if (semanticModel.GetDeclaredSymbol (enumValueDeclaration) is not IFieldSymbol enumValueSymbol) {
 				continue;
 			}
-			var memberName = declaration.Identifier.ToFullString ().Trim ();
-			var attributes = declaration.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new (memberName, symbol.GetSupportedPlatforms (), attributes));
+			var enumMember = new EnumMember (
+				name: enumValueDeclaration.Identifier.ToFullString ().Trim (),
+				fieldData: enumValueSymbol.GetFieldData (),
+				symbolAvailability: enumValueSymbol.GetSupportedPlatforms (),
+				attributes: enumValueDeclaration.GetAttributeCodeChanges (semanticModel)
+			);
+			bucket.Add (enumMember);
 		}
 
 		EnumMembers = bucket.ToImmutable ();

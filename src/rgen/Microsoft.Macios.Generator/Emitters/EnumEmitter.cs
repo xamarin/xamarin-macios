@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
-using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
 using ObjCBindings;
 

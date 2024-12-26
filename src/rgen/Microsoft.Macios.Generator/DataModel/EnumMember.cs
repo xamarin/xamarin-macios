@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Immutable;
-using System.Linq;
+using System.Text;
+using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -19,6 +21,8 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// The platform availability of the enum value.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
+	
+	public FieldData<EnumValue>? FieldData { get; }
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -29,12 +33,14 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
+	/// <param name="fieldData">The binding data attached to this enum value.</param>
 	/// <param name="symbolAvailability">The symbol availability of the member.</param>
 	/// <param name="attributes">The list of attribute changes in the member.</param>
-	public EnumMember (string name, SymbolAvailability symbolAvailability,
+	public EnumMember (string name, FieldData<EnumValue>? fieldData, SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
+		FieldData = fieldData;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 	}
@@ -43,7 +49,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
-	public EnumMember (string name) : this (name, new SymbolAvailability (), ImmutableArray<AttributeCodeChange>.Empty)
+	public EnumMember (string name) : this (name, null, new SymbolAvailability (), ImmutableArray<AttributeCodeChange>.Empty)
 	{
 	}
 
@@ -54,6 +60,9 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
+		if (FieldData != other.FieldData)
+			return false;
+		
 		var attrComparer = new AttributesEqualityComparer ();
 		return attrComparer.Equals (Attributes, other.Attributes);
 	}
@@ -78,5 +87,15 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	public static bool operator != (EnumMember x, EnumMember y)
 	{
 		return !(x == y);
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		var sb = new StringBuilder(
+			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldData: {FieldData} Attributes: [");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ("] }");
+		return sb.ToString ();
 	}
 }
