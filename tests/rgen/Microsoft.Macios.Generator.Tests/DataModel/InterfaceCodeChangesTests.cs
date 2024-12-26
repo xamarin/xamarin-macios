@@ -32,6 +32,8 @@ public partial interface IProtocol {
 				emptyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -56,6 +58,8 @@ public partial interface IProtocol {
 				singlePropertyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -100,6 +104,8 @@ public partial interface IProtocol {
 				multiPropertyInterfaceMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -145,6 +151,8 @@ public partial interface IProtocol {
 				multiPropertyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -203,6 +211,8 @@ public partial interface IProtocol {
 				singleMethodInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -247,6 +257,8 @@ public partial interface IProtocol {
 				multiMethodInterfaceMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -292,6 +304,8 @@ public partial interface IProtocol {
 				multiMethodInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -351,6 +365,8 @@ public partial interface IProtocol {
 				singleEventInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [
@@ -391,6 +407,8 @@ public partial interface IProtocol {
 				multiEventInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol"
 				) {
 					Attributes = [

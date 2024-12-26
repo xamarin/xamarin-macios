@@ -20,6 +20,16 @@ readonly struct CodeChanges {
 	public BindingType BindingType { get; } = BindingType.Unknown;
 
 	/// <summary>
+	/// The name of the named type that generated the code change.
+	/// </summary>
+	public string Name { get; }
+	
+	/// <summary>
+	/// The namespace that contains the named type that generated the code change.
+	/// </summary>
+	public ImmutableArray<string> Namespace { get; }
+	
+	/// <summary>
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
@@ -164,10 +174,14 @@ readonly struct CodeChanges {
 	/// Internal constructor added for testing purposes.
 	/// </summary>
 	/// <param name="bindingType">The type of binding for the given code changes.</param>
+	/// <param name="name">The name of the named type that created the code change.</param>
+	/// <param name="namespace">The namespace that contains the named type.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
-	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol)
+	internal CodeChanges (BindingType bindingType, string name, ImmutableArray<string> @namespace, string fullyQualifiedSymbol)
 	{
 		BindingType = bindingType;
+		Name = name;
+		Namespace = @namespace;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
 	}
 
@@ -178,6 +192,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
 	{
+		(Name, Namespace) = semanticModel.GetNameAndNamespace (enumDeclaration);
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -205,6 +220,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
+		(Name, Namespace) = semanticModel.GetNameAndNamespace (classDeclaration);
 		BindingType = BindingType.Class;
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -227,6 +243,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
+		(Name, Namespace) = semanticModel.GetNameAndNamespace (interfaceDeclaration);
 		BindingType = BindingType.Protocol;
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -261,8 +278,9 @@ readonly struct CodeChanges {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("Changes: {");
-		sb.Append ($"BindingType: {BindingType}, ");
-		sb.Append ($"FullyQualifiedSymbol: {FullyQualifiedSymbol}, ");
+		sb.Append ($"BindingType: {BindingType}, Name: {Name}, Namespace: [");
+		sb.AppendJoin (", ", Namespace);
+		sb.Append ($"], FullyQualifiedSymbol: {FullyQualifiedSymbol}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], EnumMembers: [");
