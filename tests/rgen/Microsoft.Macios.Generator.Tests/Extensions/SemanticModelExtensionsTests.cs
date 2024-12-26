@@ -22,7 +22,7 @@ namespace Test;
 public class Foo {
 }
 ";
-			ImmutableArray<string> ns = ["Test"];
+			ImmutableArray<string> ns = ImmutableArray.Create("Test");
 			yield return [filescopedNamespaceClass, "Foo", ns];
 
 			const string filescopedNamespaceNestedClass = @"
@@ -50,7 +50,7 @@ namespace Foo {
 	}
 }
 ";
-			ns = ["Foo", "Bar"];	
+			ns = ImmutableArray.Create("Foo", "Bar");
 			yield return [nestedNamespaces, "Test", ns];
 
 		}
