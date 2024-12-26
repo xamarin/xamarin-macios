@@ -9,7 +9,7 @@ public static class SemanticModelExtensions {
 	/// Returns the name and namespace of the symbol that has been declared in the passed base type declaration
 	/// syntax node.
 	/// </summary>
-	/// <param name="self">The current semantic mode.</param>
+	/// <param name="self">The current semantic model.</param>
 	/// <param name="declaration">The named type declaration syntaxt.</param>
 	/// <returns>A tuple containing the name and namespace of the type. If they could not be calculated they will
 	/// be set to be string.Empty.</returns>
