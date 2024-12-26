@@ -14,7 +14,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name2");
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
 	public void CompareDifferentNameSymbol ()
 	{
@@ -22,7 +22,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name1");
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
 	public void CompareDifferentNamespaceSymbol ()
 	{

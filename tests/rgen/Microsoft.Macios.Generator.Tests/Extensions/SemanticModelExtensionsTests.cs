@@ -10,19 +10,19 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.Extensions;
 
-public class SemanticModelExtensionsTests : BaseGeneratorTestClass{
+public class SemanticModelExtensionsTests : BaseGeneratorTestClass {
 
 	ListComparer<string> comparer = new ();
 	class TestDataGetNameAndNamespaceTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			
+
 			const string filescopedNamespaceClass = @"
 namespace Test;
 public class Foo {
 }
 ";
-			ImmutableArray<string> ns = ImmutableArray.Create("Test");
+			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
 			yield return [filescopedNamespaceClass, "Foo", ns];
 
 			const string filescopedNamespaceNestedClass = @"
@@ -40,7 +40,7 @@ namespace Test {
 	}
 }
 ";
-			
+
 			yield return [namespaceClass, "Foo", ns];
 
 			const string nestedNamespaces = @"
@@ -50,7 +50,7 @@ namespace Foo {
 	}
 }
 ";
-			ns = ImmutableArray.Create("Foo", "Bar");
+			ns = ImmutableArray.Create ("Foo", "Bar");
 			yield return [nestedNamespaces, "Test", ns];
 
 		}
@@ -70,10 +70,10 @@ namespace Foo {
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
 			.OfType<BaseTypeDeclarationSyntax> ()
-			.LastOrDefault();
+			.LastOrDefault ();
 		Assert.NotNull (declaration);
 		var (name, @namespace) = semanticModel.GetNameAndNamespace (declaration);
-		Assert.Equal(expectedName, name);
-		Assert.Equal(expectedNamespace, @namespace, comparer);
+		Assert.Equal (expectedName, name);
+		Assert.Equal (expectedNamespace, @namespace, comparer);
 	}
 }

@@ -10,8 +10,8 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1");;
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name2");;
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1"); ;
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name2"); ;
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
 

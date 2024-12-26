@@ -23,12 +23,12 @@ readonly struct CodeChanges {
 	/// The name of the named type that generated the code change.
 	/// </summary>
 	public string Name { get; }
-	
+
 	/// <summary>
 	/// The namespace that contains the named type that generated the code change.
 	/// </summary>
 	public ImmutableArray<string> Namespace { get; }
-	
+
 	/// <summary>
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
