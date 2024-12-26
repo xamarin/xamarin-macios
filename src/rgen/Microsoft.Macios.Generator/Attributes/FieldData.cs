@@ -103,11 +103,11 @@ readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 		if (LibraryName != other.LibraryName)
 			return false;
 		if (Flags is not null && other.Flags is not null) {
-			return Flags.Equals(other.Flags);
+			return Flags.Equals (other.Flags);
 		}
 		return false;
 	}
-	
+
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{

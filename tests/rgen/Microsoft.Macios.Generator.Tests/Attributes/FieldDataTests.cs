@@ -74,7 +74,7 @@ public class FieldDataTests {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToString))]
+	[ClassData (typeof (TestDataToString))]
 	void TestFieldDataToString (FieldData<EnumValue> x, string expected)
-		=> Assert.Equal(expected, x.ToString ());
+		=> Assert.Equal (expected, x.ToString ());
 }

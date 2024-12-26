@@ -21,7 +21,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// The platform availability of the enum value.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
-	
+
 	public FieldData<EnumValue>? FieldData { get; }
 
 	/// <summary>
@@ -62,7 +62,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 			return false;
 		if (FieldData != other.FieldData)
 			return false;
-		
+
 		var attrComparer = new AttributesEqualityComparer ();
 		return attrComparer.Equals (Attributes, other.Attributes);
 	}
@@ -92,7 +92,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder(
+		var sb = new StringBuilder (
 			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldData: {FieldData} Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("] }");

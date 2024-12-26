@@ -13,7 +13,7 @@ static class FieldSymbolExtensions {
 
 		// Get all the FieldAttribute, parse it and add the data to the result
 		if (!attributes.TryGetValue (AttributesNames.EnumFieldAttribute, out var fieldAttrDataList) ||
-		    fieldAttrDataList.Count != 1)
+			fieldAttrDataList.Count != 1)
 			return null;
 
 		var fieldAttrData = fieldAttrDataList [0];

@@ -81,7 +81,7 @@ public enum MyEnum {
 		Assert.Empty (fields);
 		Assert.Null (diagnostics);
 	}
-	
+
 	class TestDataTryGetEnumFieldsInvalidFields : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -145,7 +145,7 @@ public enum MyEnum {
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryGetEnumFieldsInvalidFields>]
 	public void TryGetEnumFieldsInvalidFields (ApplePlatform platform, string inputString)

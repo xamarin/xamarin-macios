@@ -30,7 +30,8 @@ public class EnumMembersEqualityComparerTests {
 		ImmutableArray<EnumMember> x = [new ("name", new (), new (), []), new ("name1")];
 		ImmutableArray<EnumMember> y = [new ("name", new (), new (), [
 			new ("AttrName")
-		]), new ("name1")];
+		]),
+			new ("name1")];
 		Assert.False (comparer.Equals (x, y));
 	}
 
@@ -56,5 +57,5 @@ public class EnumMembersEqualityComparerTests {
 		ImmutableArray<EnumMember> x = [new ("name", new ("x", "xLib", EnumValue.None), new SymbolAvailability (), []), new ("name1")];
 		ImmutableArray<EnumMember> y = [new ("name", new ("y", "xLib", EnumValue.None), new SymbolAvailability (), []), new ("name1")];
 		Assert.False (comparer.Equals (x, y));
-	} 
+	}
 }

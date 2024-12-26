@@ -136,38 +136,38 @@ public class EnumMemberCodeChangesTests {
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
 	}
-	
+
 	class TestDataToString : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			var simpleEnum = new EnumMember (
-				name: "EnumValue", 
+				name: "EnumValue",
 				fieldData: null,
-				symbolAvailability: new(), 
+				symbolAvailability: new (),
 				attributes: []);
 			yield return [simpleEnum, "{ Name: 'EnumValue' SymbolAvailability: [] FieldData:  Attributes: [] }"];
 
 			var fieldDataEnum = new EnumMember (
-				name: "EnumValue", 
+				name: "EnumValue",
 				fieldData: new ("x", "libName", EnumValue.None),
-				symbolAvailability: new(), 
+				symbolAvailability: new (),
 				attributes: []);
 			yield return [fieldDataEnum, "{ Name: 'EnumValue' SymbolAvailability: [] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'None' } Attributes: [] }"];
 
 			var builder = SymbolAvailability.CreateBuilder ();
-			builder.Add (new SupportedOSPlatformData("ios"));
-			
+			builder.Add (new SupportedOSPlatformData ("ios"));
+
 			var availabilityEnum = new EnumMember (
-				name: "EnumValue", 
+				name: "EnumValue",
 				fieldData: new ("x", "libName", EnumValue.None),
-				symbolAvailability: builder.ToImmutable (), 
+				symbolAvailability: builder.ToImmutable (),
 				attributes: []);
 			yield return [availabilityEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: iOS Supported: '0.0' Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'None' } Attributes: [] }"];
-			
-			var attrsEnum = new EnumMember(
-				name: "EnumValue", 
+
+			var attrsEnum = new EnumMember (
+				name: "EnumValue",
 				fieldData: new ("x", "libName", EnumValue.None),
-				symbolAvailability: builder.ToImmutable (), 
+				symbolAvailability: builder.ToImmutable (),
 				attributes: [
 					new ("Attribute1"),
 					new ("Attribute2"),
@@ -180,8 +180,8 @@ public class EnumMemberCodeChangesTests {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToString))]
+	[ClassData (typeof (TestDataToString))]
 	void TestFieldDataToString (EnumMember x, string expected)
-		=> Assert.Equal(expected, x.ToString ());
+		=> Assert.Equal (expected, x.ToString ());
 
 }

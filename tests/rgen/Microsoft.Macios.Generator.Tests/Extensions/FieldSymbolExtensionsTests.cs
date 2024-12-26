@@ -30,7 +30,7 @@ public enum MyEnum {
 	Last,
 }
 ";
-		
+
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
@@ -51,7 +51,7 @@ public enum MyEnum {
 	[AllSupportedPlatforms]
 	public void GetFieldDataPresentAttributeWithField (ApplePlatform platform)
 	{
-		
+
 		const string inputString = @"
 using ObjCBindings;
 
