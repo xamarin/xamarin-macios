@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -31,6 +33,7 @@ namespace NS {
 				emptyConstructor,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -55,6 +58,7 @@ namespace NS {
 				singleParameter,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -84,6 +88,7 @@ namespace NS {
 				multiParameter,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -114,6 +119,7 @@ namespace NS {
 				nullableParameter,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -147,6 +153,7 @@ namespace NS {
 				paramsCollectionParameter,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -176,6 +183,7 @@ namespace NS {
 				optionalParameter,
 				new Constructor (
 					type: "NS.TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -203,6 +211,7 @@ namespace NS {
 				genericParameter,
 				new Constructor (
 					type: "NS.TestClass<T>",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -212,6 +221,41 @@ namespace NS {
 					]
 				)
 			];
+
+			const string availabilityPresent = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace NS {
+	[SupportedOSPlatform (""ios"")]
+	[SupportedOSPlatform (""tvos"")]
+	public class TestClass {
+		string name;	
+		public TestClass (string? inName = null) {
+			name = inName ?? string.Empty;
+		}
+	}
+}
+";
+			var builder = SymbolAvailability.CreateBuilder ();
+			builder.Add (new SupportedOSPlatformData ("ios"));
+			builder.Add (new SupportedOSPlatformData ("tvos"));
+
+			yield return [
+				availabilityPresent,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: builder.ToImmutable (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+					]
+				)
+			];
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()

@@ -19,6 +19,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -29,6 +30,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "Test",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -45,6 +47,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -55,6 +58,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "int",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -71,6 +75,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -84,6 +89,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -102,6 +108,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -115,6 +122,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -134,6 +142,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -145,6 +154,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -158,6 +168,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -177,6 +188,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -190,6 +202,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -209,6 +222,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -220,6 +234,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -233,6 +248,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -244,6 +260,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -264,6 +281,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -275,6 +293,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -288,6 +307,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
@@ -299,6 +319,7 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [

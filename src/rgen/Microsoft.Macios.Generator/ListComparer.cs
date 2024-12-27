@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Macios.Generator;
 
-public class ListComparer<T> : EqualityComparer<List<T>> {
-	readonly IComparer<T> comparer;
+public class ListComparer<T> : EqualityComparer<IList<T>> {
+	readonly IComparer<T>? comparer;
 	readonly IEqualityComparer<T> valueComparer;
 
-	public ListComparer (IComparer<T> sortComparer, IEqualityComparer<T>? equalityComparer = null)
+	public ListComparer (IComparer<T>? sortComparer = null, IEqualityComparer<T>? equalityComparer = null)
 	{
-		comparer = sortComparer ?? throw new ArgumentNullException (nameof (sortComparer));
+		comparer = sortComparer;
 		valueComparer = equalityComparer ?? EqualityComparer<T>.Default;
 	}
 
 	/// <inheritdoc/>
-	public override bool Equals (List<T>? x, List<T>? y)
+	public override bool Equals (IList<T>? x, IList<T>? y)
 	{
 		// bases cases for null or diff size
 		if (x is null && y is null)
@@ -26,10 +27,12 @@ public class ListComparer<T> : EqualityComparer<List<T>> {
 
 		// make copies of the lists and sort them
 		var xSorted = x.ToArray ();
-		Array.Sort (xSorted, comparer);
+		if (comparer is not null)
+			Array.Sort (xSorted, comparer);
 
 		var ySorted = y.ToArray ();
-		Array.Sort (ySorted, comparer);
+		if (comparer is not null)
+			Array.Sort (ySorted, comparer);
 
 		for (var i = 0; i < xSorted.Length; i++) {
 			if (!valueComparer.Equals (xSorted [i], ySorted [i]))
@@ -39,7 +42,7 @@ public class ListComparer<T> : EqualityComparer<List<T>> {
 	}
 
 	/// <inheritdoc/>
-	public override int GetHashCode (List<T> obj)
+	public override int GetHashCode (IList<T> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var element in obj) {
