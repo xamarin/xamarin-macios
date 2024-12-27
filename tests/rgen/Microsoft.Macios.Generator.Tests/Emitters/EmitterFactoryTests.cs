@@ -17,7 +17,7 @@ public class EmitterFactoryTests : BaseGeneratorTestClass {
 	(CodeChanges Changes, RootBindingContext Context, SemanticModel SemanticModel, INamedTypeSymbol Symbol)
 		CreateSymbol<T> (ApplePlatform platform, string inputText) where T : BaseTypeDeclarationSyntax
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (EmitterFactoryTests), platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()

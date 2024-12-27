@@ -495,8 +495,7 @@ namespace Test {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromPropertyDeclaration (ApplePlatform platform, string inputText, Property expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromPropertyDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()
