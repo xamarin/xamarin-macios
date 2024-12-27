@@ -17,7 +17,7 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 		var enumField = codeChanges.EnumMembers [index];
 		if (enumField.FieldData is null)
 			return;
-		if (!context.TryComputeLibraryName (enumField.FieldData.Value.LibraryName, codeChanges.Namespace[^1],
+		if (!context.TryComputeLibraryName (enumField.FieldData.Value.LibraryName, codeChanges.Namespace [^1],
 				out string? libraryName, out string? libraryPath)) {
 			return;
 		}
@@ -38,9 +38,9 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 		// abort the code generation
 		var backingFields = new HashSet<string> ();
 		for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
-			if (codeChanges.EnumMembers[index].FieldData is null)
+			if (codeChanges.EnumMembers [index].FieldData is null)
 				continue;
-			if (!backingFields.Add (codeChanges.EnumMembers[index].FieldData!.Value.SymbolName)) {
+			if (!backingFields.Add (codeChanges.EnumMembers [index].FieldData!.Value.SymbolName)) {
 				return false;
 			}
 			classBlock.AppendLine ();
@@ -134,7 +134,7 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 		// in the old generator we had to copy over the enum, in this new approach, the only code
 		// we need to create is the extension class for the enum that is backed by fields
 		builder.AppendLine ();
-		builder.AppendLine ($"namespace {string.Join(".", codeChanges.Namespace)};");
+		builder.AppendLine ($"namespace {string.Join (".", codeChanges.Namespace)};");
 		builder.AppendLine ();
 
 		builder.AppendMemberAvailability (codeChanges.SymbolAvailability);
