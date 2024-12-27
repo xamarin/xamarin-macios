@@ -6,7 +6,7 @@ using Microsoft.Macios.Generator.Availability;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class SemanticModelExtensions {
-	
+
 	/// <summary>
 	/// Returns the name and namespace of the symbol that has been declared in the passed base type declaration
 	/// syntax node.

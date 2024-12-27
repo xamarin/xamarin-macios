@@ -29,12 +29,12 @@ readonly struct CodeChanges {
 	/// The namespace that contains the named type that generated the code change.
 	/// </summary>
 	public ImmutableArray<string> Namespace { get; }
-	
+
 	/// <summary>
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
-	
+
 	/// <summary>
 	/// The platform availability of the named type.
 	/// </summary>

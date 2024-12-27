@@ -20,7 +20,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentNameSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1", new());
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1", new ());
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name1", new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
@@ -1153,9 +1153,9 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
-	public void CompareSameMethodsDiffAvailability()
+	public void CompareSameMethodsDiffAvailability ()
 	{
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
@@ -1345,9 +1345,9 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
-	public void CompareSameMethodsSameAvailability()
+	public void CompareSameMethodsSameAvailability ()
 	{
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));

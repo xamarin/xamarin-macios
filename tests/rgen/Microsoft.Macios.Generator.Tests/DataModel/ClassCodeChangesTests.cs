@@ -19,10 +19,10 @@ public class ClassCodeChangesTests : BaseGeneratorTestClass {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			var builder = SymbolAvailability.CreateBuilder ();
-			builder.Add (new SupportedOSPlatformData("ios17.0"));
-			builder.Add (new SupportedOSPlatformData("tvos17.0"));
-			builder.Add (new UnsupportedOSPlatformData("macos"));
-			
+			builder.Add (new SupportedOSPlatformData ("ios17.0"));
+			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
+			builder.Add (new UnsupportedOSPlatformData ("macos"));
+
 			const string emptyClass = @"
 using Foundation;
 using ObjCRuntime;
@@ -49,7 +49,7 @@ public partial class MyClass {
 					]
 				}
 			];
-			
+
 			const string emptyClassAvailability = @"
 using System.Runtime.Versioning;
 using Foundation;
@@ -73,7 +73,7 @@ public partial class MyClass {
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
-					symbolAvailability: builder.ToImmutable () 
+					symbolAvailability: builder.ToImmutable ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute"),

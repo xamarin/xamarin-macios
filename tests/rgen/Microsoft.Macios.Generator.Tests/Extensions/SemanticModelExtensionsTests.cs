@@ -26,7 +26,7 @@ public class Foo {
 }
 ";
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable()];
+			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string filescopedNamespaceNestedClass = @"
 namespace Test;
@@ -35,7 +35,7 @@ public class Foo {
 	}	
 }
 ";
-			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable()];
+			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable ()];
 
 			const string namespaceClass = @"
 namespace Test {
@@ -44,7 +44,7 @@ namespace Test {
 }
 ";
 
-			yield return [namespaceClass, "Foo", ns, builder.ToImmutable()];
+			yield return [namespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string nestedNamespaces = @"
 namespace Foo {
@@ -54,21 +54,21 @@ namespace Foo {
 }
 ";
 			ns = ImmutableArray.Create ("Foo", "Bar");
-			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable()];
+			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable ()];
 
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	class TestDataGetNameAndNamespaceAndAvailabilityTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 
 			var builder = SymbolAvailability.CreateBuilder ();
-			builder.Add (new SupportedOSPlatformData("ios17.0"));
-			builder.Add (new SupportedOSPlatformData("tvos17.0"));
-			builder.Add (new UnsupportedOSPlatformData("macos"));
+			builder.Add (new SupportedOSPlatformData ("ios17.0"));
+			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
+			builder.Add (new UnsupportedOSPlatformData ("macos"));
 			const string filescopedNamespaceClass = @"
 using System.Runtime.Versioning;
 namespace Test;
@@ -80,7 +80,7 @@ public class Foo {
 }
 ";
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable()];
+			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string filescopedNamespaceNestedClass = @"
 using System.Runtime.Versioning;
@@ -94,7 +94,7 @@ public class Foo {
 	}	
 }
 ";
-			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable()];
+			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable ()];
 
 			const string namespaceClass = @"
 using System.Runtime.Versioning;
@@ -108,7 +108,7 @@ namespace Test {
 }
 ";
 
-			yield return [namespaceClass, "Foo", ns, builder.ToImmutable()];
+			yield return [namespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string nestedNamespaces = @"
 using System.Runtime.Versioning;
@@ -122,7 +122,7 @@ namespace Foo {
 }
 ";
 			ns = ImmutableArray.Create ("Foo", "Bar");
-			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable()];
+			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable ()];
 
 		}
 
@@ -132,7 +132,7 @@ namespace Foo {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceTests>]
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceAndAvailabilityTests>]
-	internal void GetNameAndNamespaceTests (ApplePlatform platform, string inputText, string expectedName, 
+	internal void GetNameAndNamespaceTests (ApplePlatform platform, string inputText, string expectedName,
 		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetNameAndNamespaceTests),
