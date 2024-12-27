@@ -124,8 +124,11 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 	{
 		diagnostics = null;
 		if (codeChanges.BindingType != BindingType.SmartEnum) {
-			// TODO: add new diagnostic here as an unexpected error
-			diagnostics = ImmutableArray<Diagnostic>.Empty;
+			diagnostics = [Diagnostic.Create (
+					Diagnostics
+						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+					null,
+					codeChanges.FullyQualifiedSymbol)];
 			return false;
 		}
 		// in the old generator we had to copy over the enum, in this new approach, the only code
