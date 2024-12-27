@@ -32,6 +32,8 @@ public partial class MyClass {
 				emptyClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -57,6 +59,8 @@ public partial class MyClass {
 				singleConstructorClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -97,6 +101,8 @@ public partial class MyClass {
 				multiConstructorClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -147,6 +153,8 @@ public partial class MyClass {
 				singlePropertyClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -191,6 +199,8 @@ public partial class MyClass {
 				multiPropertyClassMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -236,6 +246,8 @@ public partial class MyClass {
 				multiPropertyClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -294,6 +306,8 @@ public partial class MyClass {
 				singleMethodClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -338,6 +352,8 @@ public partial class MyClass {
 				multiMethodClassMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -383,6 +399,8 @@ public partial class MyClass {
 				multiMethodClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -442,6 +460,8 @@ public partial class MyClass {
 				singleEventClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
@@ -483,6 +503,8 @@ public partial class MyClass {
 				multiEventClass,
 				new CodeChanges (
 					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass"
 				) {
 					Attributes = [
