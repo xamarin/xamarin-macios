@@ -34,7 +34,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -60,7 +61,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -106,7 +108,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -153,7 +156,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -213,7 +217,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -259,7 +264,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -306,7 +312,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -367,7 +374,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -410,7 +418,8 @@ public partial interface IProtocol {
 					bindingType: BindingType.Protocol,
 					name: "IProtocol",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.IProtocol"
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")

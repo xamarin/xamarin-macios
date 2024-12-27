@@ -42,6 +42,8 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 			return false;
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
 			return false;
+		if (x.SymbolAvailability != y.SymbolAvailability)
+			return false;
 		if (x.BindingType != y.BindingType)
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)

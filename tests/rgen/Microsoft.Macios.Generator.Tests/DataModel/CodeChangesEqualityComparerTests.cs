@@ -10,24 +10,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1"); ;
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name2"); ;
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1", new ()); ;
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name2", new ()); ;
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentBindingType ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name");
-		var changes2 = new CodeChanges (BindingType.Unknown, "name", ["NS"], "NS.name");
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
+		var changes2 = new CodeChanges (BindingType.Unknown, "name", ["NS"], "NS.name", new ());
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentAttributesLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name");
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			Attributes = [
 				new AttributeCodeChange ("name", ["arg1", "arg2"])
 			]
@@ -38,12 +38,12 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributes ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			Attributes = [
 				new AttributeCodeChange ("name", ["arg1", "arg2"])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			Attributes = [
 				new AttributeCodeChange ("name2", ["arg1", "arg2"])
 			],
@@ -54,8 +54,8 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembersLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name");
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [
 				new EnumMember ("name", new (), new (), [])
 			],
@@ -66,12 +66,12 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembers ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [
 				new EnumMember ("name", new (), new (), [])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [
 				new EnumMember ("name2", new (), new (), [])
 			],
@@ -82,8 +82,8 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentPropertyLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") { EnumMembers = [], Properties = [] };
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) { EnumMembers = [], Properties = [] };
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -113,7 +113,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSamePropertiesDiffOrder ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -152,7 +152,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -197,7 +197,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentProperties ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -236,7 +236,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -281,7 +281,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentConstructorLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -321,7 +321,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 			Constructors = [],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -369,7 +369,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentConstructors ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -411,7 +411,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new ("MyClass", new (), [], [], [])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -465,7 +465,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameConstructors ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -514,7 +514,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -569,7 +569,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameConstructorsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -618,7 +618,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new ("MyClass", new (), [], [], []),
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (

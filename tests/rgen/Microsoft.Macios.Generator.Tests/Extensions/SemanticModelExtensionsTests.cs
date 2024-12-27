@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -17,13 +19,14 @@ public class SemanticModelExtensionsTests : BaseGeneratorTestClass {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 
+			var builder = SymbolAvailability.CreateBuilder ();
 			const string filescopedNamespaceClass = @"
 namespace Test;
 public class Foo {
 }
 ";
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			yield return [filescopedNamespaceClass, "Foo", ns];
+			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string filescopedNamespaceNestedClass = @"
 namespace Test;
@@ -32,7 +35,7 @@ public class Foo {
 	}	
 }
 ";
-			yield return [filescopedNamespaceNestedClass, "Bar", ns];
+			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable ()];
 
 			const string namespaceClass = @"
 namespace Test {
@@ -41,7 +44,7 @@ namespace Test {
 }
 ";
 
-			yield return [namespaceClass, "Foo", ns];
+			yield return [namespaceClass, "Foo", ns, builder.ToImmutable ()];
 
 			const string nestedNamespaces = @"
 namespace Foo {
@@ -51,7 +54,75 @@ namespace Foo {
 }
 ";
 			ns = ImmutableArray.Create ("Foo", "Bar");
-			yield return [nestedNamespaces, "Test", ns];
+			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable ()];
+
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	class TestDataGetNameAndNamespaceAndAvailabilityTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+
+			var builder = SymbolAvailability.CreateBuilder ();
+			builder.Add (new SupportedOSPlatformData ("ios17.0"));
+			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
+			builder.Add (new UnsupportedOSPlatformData ("macos"));
+			const string filescopedNamespaceClass = @"
+using System.Runtime.Versioning;
+namespace Test;
+
+[SupportedOSPlatform (""ios17.0"")]
+[SupportedOSPlatform (""tvos17.0"")]
+[UnsupportedOSPlatform (""macos"")]
+public class Foo {
+}
+";
+			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
+			yield return [filescopedNamespaceClass, "Foo", ns, builder.ToImmutable ()];
+
+			const string filescopedNamespaceNestedClass = @"
+using System.Runtime.Versioning;
+namespace Test;
+public class Foo {
+
+	[SupportedOSPlatform (""ios17.0"")]
+	[SupportedOSPlatform (""tvos17.0"")]
+	[UnsupportedOSPlatform (""macos"")]
+	public class Bar {
+	}	
+}
+";
+			yield return [filescopedNamespaceNestedClass, "Bar", ns, builder.ToImmutable ()];
+
+			const string namespaceClass = @"
+using System.Runtime.Versioning;
+namespace Test {
+
+	[SupportedOSPlatform (""ios17.0"")]
+	[SupportedOSPlatform (""tvos17.0"")]
+	[UnsupportedOSPlatform (""macos"")]
+	public class Foo {
+	}
+}
+";
+
+			yield return [namespaceClass, "Foo", ns, builder.ToImmutable ()];
+
+			const string nestedNamespaces = @"
+using System.Runtime.Versioning;
+namespace Foo {
+	namespace Bar {
+		[SupportedOSPlatform (""ios17.0"")]
+		[SupportedOSPlatform (""tvos17.0"")]
+		[UnsupportedOSPlatform (""macos"")]
+		public class Test {}
+	}
+}
+";
+			ns = ImmutableArray.Create ("Foo", "Bar");
+			yield return [nestedNamespaces, "Test", ns, builder.ToImmutable ()];
 
 		}
 
@@ -60,8 +131,9 @@ namespace Foo {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceTests>]
-	public void GetNameAndNamespaceTests (ApplePlatform platform, string inputText, string expectedName,
-		ImmutableArray<string> expectedNamespace)
+	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceAndAvailabilityTests>]
+	internal void GetNameAndNamespaceTests (ApplePlatform platform, string inputText, string expectedName,
+		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetNameAndNamespaceTests),
 			platform, inputText);
@@ -72,8 +144,9 @@ namespace Foo {
 			.OfType<BaseTypeDeclarationSyntax> ()
 			.LastOrDefault ();
 		Assert.NotNull (declaration);
-		var (name, @namespace) = semanticModel.GetNameAndNamespace (declaration);
+		var (name, @namespace, symbolAvailability) = semanticModel.GetSymbolData (declaration);
 		Assert.Equal (expectedName, name);
 		Assert.Equal (expectedNamespace, @namespace, comparer);
+		Assert.Equal (expectedAvailability, symbolAvailability);
 	}
 }
