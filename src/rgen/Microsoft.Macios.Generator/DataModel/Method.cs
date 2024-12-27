@@ -28,7 +28,7 @@ readonly struct Method : IEquatable<Method> {
 	public string ReturnType { get; }
 
 	/// <summary>
-	/// The platform availability of the eum value.
+	/// The platform availability of the method.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -16,6 +18,11 @@ public class ClassCodeChangesTests : BaseGeneratorTestClass {
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
+			var builder = SymbolAvailability.CreateBuilder ();
+			builder.Add (new SupportedOSPlatformData("ios17.0"));
+			builder.Add (new SupportedOSPlatformData("tvos17.0"));
+			builder.Add (new UnsupportedOSPlatformData("macos"));
+			
 			const string emptyClass = @"
 using Foundation;
 using ObjCRuntime;
@@ -34,10 +41,45 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					]
+				}
+			];
+			
+			const string emptyClassAvailability = @"
+using System.Runtime.Versioning;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+[SupportedOSPlatform (""ios17.0"")]
+[SupportedOSPlatform (""tvos17.0"")]
+[UnsupportedOSPlatform (""macos"")]
+public partial class MyClass {
+}
+";
+
+			yield return [
+				emptyClassAvailability,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: builder.ToImmutable () 
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute"),
+						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 					]
 				}
 			];
@@ -61,7 +103,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -103,7 +146,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -155,7 +199,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -201,7 +246,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -248,7 +294,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -308,7 +355,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -354,7 +402,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -401,7 +450,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -462,7 +512,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -505,7 +556,8 @@ public partial class MyClass {
 					bindingType: BindingType.Class,
 					name: "MyClass",
 					@namespace: ["NS"],
-					fullyQualifiedSymbol: "NS.MyClass"
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")

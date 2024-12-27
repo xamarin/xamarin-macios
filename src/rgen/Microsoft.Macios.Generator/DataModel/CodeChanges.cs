@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -28,11 +29,16 @@ readonly struct CodeChanges {
 	/// The namespace that contains the named type that generated the code change.
 	/// </summary>
 	public ImmutableArray<string> Namespace { get; }
-
+	
 	/// <summary>
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
+	
+	/// <summary>
+	/// The platform availability of the named type.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
 
 	/// <summary>
 	/// Changes to the attributes of the symbol.
@@ -177,12 +183,15 @@ readonly struct CodeChanges {
 	/// <param name="name">The name of the named type that created the code change.</param>
 	/// <param name="namespace">The namespace that contains the named type.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
-	internal CodeChanges (BindingType bindingType, string name, ImmutableArray<string> @namespace, string fullyQualifiedSymbol)
+	/// <param name="symbolAvailability">The platform availability of the named symbol.</param>
+	internal CodeChanges (BindingType bindingType, string name, ImmutableArray<string> @namespace,
+		string fullyQualifiedSymbol, SymbolAvailability symbolAvailability)
 	{
 		BindingType = bindingType;
 		Name = name;
 		Namespace = @namespace;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
+		SymbolAvailability = symbolAvailability;
 	}
 
 	/// <summary>
@@ -192,7 +201,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
 	{
-		(Name, Namespace) = semanticModel.GetNameAndNamespace (enumDeclaration);
+		(Name, Namespace, SymbolAvailability) = semanticModel.GetSymbolData (enumDeclaration);
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -220,7 +229,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
-		(Name, Namespace) = semanticModel.GetNameAndNamespace (classDeclaration);
+		(Name, Namespace, SymbolAvailability) = semanticModel.GetSymbolData (classDeclaration);
 		BindingType = BindingType.Class;
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -243,7 +252,7 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
-		(Name, Namespace) = semanticModel.GetNameAndNamespace (interfaceDeclaration);
+		(Name, Namespace, SymbolAvailability) = semanticModel.GetSymbolData (interfaceDeclaration);
 		BindingType = BindingType.Protocol;
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -278,9 +287,9 @@ readonly struct CodeChanges {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("Changes: {");
-		sb.Append ($"BindingType: {BindingType}, Name: {Name}, Namespace: [");
+		sb.Append ($"BindingType: '{BindingType}', Name: '{Name}', Namespace: [");
 		sb.AppendJoin (", ", Namespace);
-		sb.Append ($"], FullyQualifiedSymbol: {FullyQualifiedSymbol}, ");
+		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], EnumMembers: [");

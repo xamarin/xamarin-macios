@@ -25,7 +25,7 @@ readonly struct Property : IEquatable<Property> {
 	public string Type { get; } = string.Empty;
 
 	/// <summary>
-	/// The platform availability of the enum value.
+	/// The platform availability of the property.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
 

@@ -17,7 +17,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 	public string Type { get; }
 
 	/// <summary>
-	/// The platform availability of the enum value.
+	/// The platform availability of the constructor.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
 
