@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -30,6 +32,7 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -57,6 +60,7 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -83,6 +87,7 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -119,6 +124,7 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "Test.MyEventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -131,8 +137,86 @@ public class TestClass {
 					]
 				)
 			];
-		}
 
+			const string eventAvailability = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace Test;
+
+public class TestClass {
+
+	[SupportedOSPlatform (""ios17.0"")]
+	public event EventHandler MyEvent { add; }
+}
+";
+			var eventAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			eventAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+
+			yield return [
+				eventAvailability,
+				new Event (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Add, new (), [], []),
+					]
+				)
+			];
+
+			const string eventAccessorAvailability = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace Test;
+
+public class TestClass {
+
+	[SupportedOSPlatform (""ios"")]
+	public event EventHandler MyEvent { 
+		[SupportedOSPlatform (""ios17.0"")]
+		add; 
+		[SupportedOSPlatform (""ios17.0"")]
+		remove;}
+}
+";
+			eventAvailabilityBuilder.Clear ();
+			eventAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios"));
+
+			var accessorAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			accessorAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+
+
+			yield return [
+				eventAccessorAvailability,
+				new Event (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Add, accessorAvailabilityBuilder.ToImmutable (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Remove, accessorAvailabilityBuilder.ToImmutable (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+					]
+				)
+			];
+		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
 			=> GetEnumerator ();
