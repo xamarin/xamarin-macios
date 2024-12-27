@@ -39,6 +39,8 @@ public class NotEnum {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			const string emptyEnum = @"
+using ObjCBindings;
+
 namespace Test;
 public enum MyEnum {
 }
@@ -54,53 +56,6 @@ public enum MyEnum {
 }
 ";
 			yield return [missingFieldAttributes];
-
-
-			const string fieldWithQuotes = @"
-namespace Test;
-public enum MyEnum {
-	[Field<EnumValue> (""Field\""With\""Quotes"")]
-	First,
-}
-";
-			yield return [fieldWithQuotes];
-
-			const string leadingWithNumber = @"
-namespace Test;
-public enum MyEnum {
-	[Field<EnumValue> (""42Tries"")]
-	First,
-}
-";
-			yield return [leadingWithNumber];
-
-			const string fieldWithNewLines = @"
-namespace Test;
-public enum MyEnum {
-	[Field<EnumValue> (""With\nNew\nLine"")]
-	First,
-}
-";
-			yield return [fieldWithNewLines];
-
-			const string fieldWithKeyword = @"
-namespace Test;
-public enum MyEnum {
-	[Field<EnumValue> (""class"")]
-	First,
-}
-";
-			yield return [fieldWithKeyword];
-
-			const string fieldWithTabs = @"
-namespace Test;
-public enum MyEnum {
-	[Field<EnumValue> ("" \tSecondBackendField\t \n"")]
-	First,
-}
-";
-
-			yield return [fieldWithTabs];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -125,6 +80,90 @@ public enum MyEnum {
 		Assert.NotNull (fields);
 		Assert.Empty (fields);
 		Assert.Null (diagnostics);
+	}
+
+	class TestDataTryGetEnumFieldsInvalidFields : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+
+			const string fieldWithQuotes = @"
+using ObjCBindings;
+
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""Field\""With\""Quotes"")]
+	First,
+}
+";
+			yield return [fieldWithQuotes];
+
+			const string leadingWithNumber = @"
+using ObjCBindings;
+
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""42Tries"")]
+	First,
+}
+";
+			yield return [leadingWithNumber];
+
+			const string fieldWithNewLines = @"
+using ObjCBindings;
+
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""With\nNew\nLine"")]
+	First,
+}
+";
+			yield return [fieldWithNewLines];
+
+			const string fieldWithKeyword = @"
+using ObjCBindings;
+
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> (""class"")]
+	First,
+}
+";
+			yield return [fieldWithKeyword];
+
+			const string fieldWithTabs = @"
+using ObjCBindings;
+
+namespace Test;
+public enum MyEnum {
+	[Field<EnumValue> ("" \tSecondBackendField\t \n"")]
+	First,
+}
+";
+
+			yield return [fieldWithTabs];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataTryGetEnumFieldsInvalidFields>]
+	public void TryGetEnumFieldsInvalidFields (ApplePlatform platform, string inputString)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (nameof (TryGetEnumFieldsNotEnum), platform, inputString);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<BaseTypeDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		Assert.False (symbol.TryGetEnumFields (out var fields, out var diagnostics));
+		Assert.Null (fields);
+		Assert.NotNull (diagnostics);
+		Assert.Single (diagnostics);
 	}
 
 	[Theory]

@@ -73,7 +73,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name");
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
 			EnumMembers = [
-				new EnumMember ("name", new (), [])
+				new EnumMember ("name", new (), new (), [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -84,12 +84,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
 			EnumMembers = [
-				new EnumMember ("name", new (), [])
+				new EnumMember ("name", new (), new (), [])
 			],
 		};
 		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name") {
 			EnumMembers = [
-				new EnumMember ("name2", new (), [])
+				new EnumMember ("name2", new (), new (), [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
