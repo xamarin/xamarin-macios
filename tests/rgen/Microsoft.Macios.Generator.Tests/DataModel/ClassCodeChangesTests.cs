@@ -46,7 +46,8 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
-					]
+					],
+					UsingDirectives = new HashSet<string> {"Foundation", "ObjCRuntime", "ObjCBindings" },
 				}
 			];
 
@@ -80,7 +81,8 @@ public partial class MyClass {
 						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-					]
+					],
+					UsingDirectives = new HashSet<string> {"Foundation", "ObjCRuntime", "ObjCBindings", "System.Runtime.Versioning"},
 				}
 			];
 
@@ -109,6 +111,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Constructors = [
 						new (
 							type: "NS.MyClass",
@@ -152,6 +155,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Constructors = [
 						new (
 							type: "NS.MyClass",
@@ -205,6 +209,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -252,6 +257,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -300,6 +306,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -361,6 +368,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.MyClass",
@@ -408,6 +416,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.MyClass",
@@ -456,6 +465,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.MyClass",
@@ -518,6 +528,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Events = [
 						new (
 							name: "Changed",
@@ -562,6 +573,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Events = [
 						new (
 							name: "Changed",

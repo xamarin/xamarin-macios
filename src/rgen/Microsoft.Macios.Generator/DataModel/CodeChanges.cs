@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -44,6 +45,16 @@ readonly struct CodeChanges {
 	/// Changes to the attributes of the symbol.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
+	
+	readonly IReadOnlySet<string> usingDirectives = ImmutableHashSet<string>.Empty;
+
+	/// <summary>
+	/// The using directive added in the named type declaration.
+	/// </summary>
+	public IReadOnlySet<string> UsingDirectives {
+		get => usingDirectives; 
+		init => usingDirectives = value;
+	}
 
 	readonly ImmutableArray<EnumMember> enumMembers = [];
 
@@ -151,7 +162,7 @@ readonly struct CodeChanges {
 
 		return true;
 	}
-
+	
 	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
 
 	delegate bool TryCreateDelegate<in T, TR> (T declaration, SemanticModel semanticModel,
@@ -205,6 +216,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = enumDeclaration.SyntaxTree.CollectUsingStatements ();
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclarations = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
@@ -237,6 +249,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.Class;
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = classDeclaration.SyntaxTree.CollectUsingStatements ();
 
 		// use the generic method to get the members, we are using an out param to try an minimize the number of times
 		// the value types are copied
@@ -260,6 +273,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.Protocol;
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = interfaceDeclaration.SyntaxTree.CollectUsingStatements ();
 		// we do not init the constructors, we use the default empty array
 
 		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, semanticModel, Skip, Property.TryCreate,
@@ -296,6 +310,8 @@ readonly struct CodeChanges {
 		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
+		sb.Append ("], UsingDirectives: [");
+		sb.AppendJoin (", ", UsingDirectives);
 		sb.Append ("], EnumMembers: [");
 		sb.AppendJoin (", ", EnumMembers);
 		sb.Append ("], Constructors: [");

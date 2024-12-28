@@ -39,7 +39,8 @@ public partial interface IProtocol {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
-					]
+					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
 				}
 			];
 
@@ -67,6 +68,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -114,6 +116,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -162,6 +165,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Properties = [
 						new (
 							name: "Name",
@@ -223,6 +227,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -270,6 +275,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -318,6 +324,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -380,6 +387,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
 					Events = [
 						new (
 							name: "Changed",
@@ -424,6 +432,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
 					Events = [
 						new (
 							name: "Changed",
