@@ -169,7 +169,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		}
 
 		// add them sorted so that we have testeable generated code
-		foreach (var ns in usingDirectivesToKeep.OrderBy (s => s)) {
+		foreach (var ns in usingDirectivesToKeep) {
 			if (string.IsNullOrEmpty (ns))
 				continue;
 			sb.AppendLine ($"using {ns};");
