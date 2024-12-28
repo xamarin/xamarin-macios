@@ -31,7 +31,7 @@ public enum MyEnum {
 }
 ";
 
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -61,7 +61,7 @@ public enum MyEnum {
 	First,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -93,7 +93,7 @@ public enum MyEnum {
 	First,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -191,7 +191,7 @@ public enum MyEnum {
 	[AllSupportedPlatformsClassData<TestDataGetFieldDataPresentAttributeNotValid>]
 	public void GetFieldDataPresentAttributeNotValid (ApplePlatform platform, string inputString)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataPresentAttributeNotValid), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()

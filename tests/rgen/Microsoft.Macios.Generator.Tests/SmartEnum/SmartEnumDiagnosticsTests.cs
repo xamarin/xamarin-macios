@@ -79,7 +79,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 }";
 
 		// We need to create a compilation with the required source code.
-		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 
 		// Run generators and retrieve all results.
 		var runResult = RunGenerators (compilation);

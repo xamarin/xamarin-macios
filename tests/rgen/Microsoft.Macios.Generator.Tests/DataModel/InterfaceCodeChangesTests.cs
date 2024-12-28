@@ -464,7 +464,7 @@ public partial interface IProtocol {
 	void CodeChangesFromInterfaceDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (CodeChangesFromInterfaceDeclaration), platform, inputText);
+			CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()

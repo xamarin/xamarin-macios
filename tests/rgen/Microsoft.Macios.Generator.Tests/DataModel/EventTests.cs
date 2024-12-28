@@ -226,8 +226,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromEventDeclaration (ApplePlatform platform, string inputText, Event expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromEventDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

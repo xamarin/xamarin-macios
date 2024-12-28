@@ -268,8 +268,7 @@ namespace NS {
 	[AllSupportedPlatformsClassData<TestDataFromConstructorDeclaration>]
 	void FromConstructorDeclaration (ApplePlatform platform, string inputText, Constructor expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromConstructorDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

@@ -38,7 +38,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 }
 ";
 
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0002.Id).ToArray ();
@@ -126,7 +126,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[AllSupportedPlatforms (notValidIdentifierNewLines, "The\nValues")]
 	public async Task SmartEnumSymbolMustBeValidIdentifier (ApplePlatform platform, string inputText, string fieldValue)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0004.Id).ToArray ();
@@ -193,7 +193,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[AllSupportedPlatforms (appleFrameworkLibNamedParameter)]
 	public async Task SmartEnumAppleFrameworkNotLibrary (ApplePlatform platform, string inputText)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 
 		var analyzerDiagnotics = diagnostics
@@ -273,7 +273,7 @@ public enum CustomLibraryEnum {
 	[AllSupportedPlatforms (customLibraryEmptyLibraryNameParameter)]
 	public async Task SmartEnumThirdPartyLibrary (ApplePlatform platform, string inputText)
 	{
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0005.Id).ToArray ();
@@ -303,7 +303,7 @@ public enum CustomLibraryEnum {
 	High,
 }
 ";
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0002.Id).ToArray ();
@@ -341,7 +341,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	Shutdown,
 }";
 
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0003.Id).ToArray ();
@@ -368,7 +368,7 @@ public enum AVCaptureSystemPressureExampleLevel {
 	[Field<StringComparison> (""TheField"")]
 	Shutdown,
 }";
-		var (compilation, _) = CreateCompilation (nameof (SmartEnumsAnalyzerTests), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 		var diagnostics = await RunAnalyzer (new SmartEnumsAnalyzer (), compilation);
 		var analyzerDiagnotics = diagnostics
 			.Where (d => d.Id == SmartEnumsAnalyzer.RBI0007.Id).ToArray ();

@@ -135,8 +135,7 @@ namespace Foo {
 	internal void GetNameAndNamespaceTests (ApplePlatform platform, string inputText, string expectedName,
 		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetNameAndNamespaceTests),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

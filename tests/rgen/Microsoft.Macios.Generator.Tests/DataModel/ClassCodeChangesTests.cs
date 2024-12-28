@@ -601,8 +601,7 @@ public partial class MyClass {
 	[AllSupportedPlatformsClassData<TestDataCodeChangesFromClassDeclaration>]
 	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (CodeChangesFromClassDeclaration), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
