@@ -20,7 +20,7 @@ namespace NS {
 	}
 }
 ";
-			yield return [noUsingPresent, Array.Empty<string>()];
+			yield return [noUsingPresent, Array.Empty<string> ()];
 
 			const string singleUsing = @"
 using System;
@@ -30,7 +30,7 @@ namespace NS {
 	}
 }
 ";
-			yield return [singleUsing, new [] {"System" }];
+			yield return [singleUsing, new [] { "System" }];
 
 			const string unsortedUsingStatements = @"
 using System;
@@ -43,7 +43,7 @@ namespace NS {
 	}
 }
 ";
-			yield return [unsortedUsingStatements, new [] {"System", "AVFoundation", "ObjCRuntime", "System.Collections.Generic"}];
+			yield return [unsortedUsingStatements, new [] { "System", "AVFoundation", "ObjCRuntime", "System.Collections.Generic" }];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

@@ -45,14 +45,14 @@ readonly struct CodeChanges {
 	/// Changes to the attributes of the symbol.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
-	
+
 	readonly IReadOnlySet<string> usingDirectives = ImmutableHashSet<string>.Empty;
 
 	/// <summary>
 	/// The using directive added in the named type declaration.
 	/// </summary>
 	public IReadOnlySet<string> UsingDirectives {
-		get => usingDirectives; 
+		get => usingDirectives;
 		init => usingDirectives = value;
 	}
 
@@ -162,7 +162,7 @@ readonly struct CodeChanges {
 
 		return true;
 	}
-	
+
 	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
 
 	delegate bool TryCreateDelegate<in T, TR> (T declaration, SemanticModel semanticModel,

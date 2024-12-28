@@ -47,7 +47,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
-					UsingDirectives = new HashSet<string> {"Foundation", "ObjCRuntime", "ObjCBindings" },
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 				}
 			];
 
@@ -82,7 +82,7 @@ public partial class MyClass {
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 					],
-					UsingDirectives = new HashSet<string> {"Foundation", "ObjCRuntime", "ObjCBindings", "System.Runtime.Versioning"},
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings", "System.Runtime.Versioning" },
 				}
 			];
 
