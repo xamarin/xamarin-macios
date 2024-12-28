@@ -2,75 +2,70 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
-using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
-using Microsoft.Macios.Generator.Extensions;
-using ObjCBindings;
+using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-#pragma warning disable CS9113 // Parameter is unread. This class is work in progress
-class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
-#pragma warning restore CS9113 // Parameter is unread.
-	: ICodeEmitter {
+class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
 
-	public string SymbolNamespace => context.Namespace;
-	public string SymbolName => $"{context.SymbolName}Extensions";
+	public string GetSymbolName (in CodeChanges codeChanges) => $"{codeChanges.Name}Extensions";
 	public IEnumerable<string> UsingStatements => ["Foundation", "ObjCRuntime", "System"];
 
-	void Emit (TabbedStringBuilder classBlock, (IFieldSymbol Symbol, FieldData<EnumValue> FieldData) enumField, int index)
+	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
 	{
-		var typeNamespace = enumField.Symbol.ContainingType.ContainingNamespace.Name;
-		if (!context.RootBindingContext.TryComputeLibraryName (enumField.FieldData.LibraryName, typeNamespace,
+		var enumField = codeChanges.EnumMembers [index];
+		if (enumField.FieldData is null)
+			return;
+		if (!context.TryComputeLibraryName (enumField.FieldData.Value.LibraryName, codeChanges.Namespace [^1],
 				out string? libraryName, out string? libraryPath)) {
 			return;
 		}
 
-		// availability is the merge of the container plus whatever we added to the current members
-		var availability = enumField.Symbol.GetSupportedPlatforms ();
-
-		classBlock.AppendMemberAvailability (availability);
-		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
-		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.SymbolName}", true))
+		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
+		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.Value.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.Value.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
 			getterBlock.AppendLine (
-				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{enumField.FieldData.SymbolName}\", storage);");
+				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{enumField.FieldData.Value.SymbolName}\", storage);");
 		}
 	}
 
-	bool TryEmit (TabbedStringBuilder classBlock, ImmutableArray<(IFieldSymbol Symbol, FieldData<EnumValue> FieldData)> fields)
+	bool TryEmit (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
 	{
 		// keep track of the field symbols, they have to be unique, if we find a duplicate we return false and
 		// abort the code generation
 		var backingFields = new HashSet<string> ();
-		for (var index = 0; index < fields.Length; index++) {
-			if (!backingFields.Add (fields [index].FieldData.SymbolName)) {
+		for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
+			if (codeChanges.EnumMembers [index].FieldData is null)
+				continue;
+			if (!backingFields.Add (codeChanges.EnumMembers [index].FieldData!.Value.SymbolName)) {
 				return false;
 			}
-			var field = fields [index];
 			classBlock.AppendLine ();
-			Emit (classBlock, field, index);
+			EmitEnumFieldAtIndex (classBlock, codeChanges, index);
 		}
 		return true;
 	}
 
-	void Emit (TabbedStringBuilder classBlock, INamedTypeSymbol enumSymbol,
-		ImmutableArray<(IFieldSymbol Symbol, FieldData<EnumValue> FieldData)>? members)
+	void EmitExtensionMethods (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
 	{
-		if (members is null)
+		if (codeChanges.EnumMembers.Length == 0)
 			return;
 
 		// smart enum require 4 diff methods to be able to retrieve the values
 
 		// Get constant
-		using (var getConstantBlock = classBlock.CreateBlock ($"public static NSString? GetConstant (this {enumSymbol.Name} self)", true)) {
+		using (var getConstantBlock = classBlock.CreateBlock ($"public static NSString? GetConstant (this {codeChanges.Name} self)", true)) {
 			getConstantBlock.AppendLine ("IntPtr ptr = IntPtr.Zero;");
 			using (var switchBlock = getConstantBlock.CreateBlock ("switch ((int) self)", true)) {
-				for (var index = 0; index < members.Value.Length; index++) {
-					var (_, fieldData) = members.Value [index];
-					switchBlock.AppendLine ($"case {index}: // {fieldData.SymbolName}");
-					switchBlock.AppendLine ($"\tptr = {fieldData.SymbolName};");
+				for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
+					var enumMember = codeChanges.EnumMembers [index];
+					if (enumMember.FieldData is null)
+						continue;
+					switchBlock.AppendLine ($"case {index}: // {enumMember.FieldData.Value.SymbolName}");
+					switchBlock.AppendLine ($"\tptr = {enumMember.FieldData.Value.SymbolName};");
 					switchBlock.AppendLine ("\tbreak;");
 				}
 			}
@@ -80,12 +75,14 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 
 		classBlock.AppendLine ();
 		// Get value
-		using (var getValueBlock = classBlock.CreateBlock ($"public static {enumSymbol.Name} GetValue (NSString constant)", true)) {
+		using (var getValueBlock = classBlock.CreateBlock ($"public static {codeChanges.Name} GetValue (NSString constant)", true)) {
 			getValueBlock.AppendLine ("if (constant is null)");
 			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
-			foreach ((IFieldSymbol fieldSymbol, FieldData<EnumValue> fieldData) in members) {
-				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
-				getValueBlock.AppendLine ($"\treturn {enumSymbol.Name}.{fieldSymbol.Name};");
+			foreach (var enumMember in codeChanges.EnumMembers) {
+				if (enumMember.FieldData is null)
+					continue;
+				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({enumMember.FieldData.Value.SymbolName}))");
+				getValueBlock.AppendLine ($"\treturn {codeChanges.Name}.{enumMember.Name};");
 			}
 
 			getValueBlock.AppendLine (
@@ -95,7 +92,7 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 		classBlock.AppendLine ();
 		// To ConstantArray
 		classBlock.AppendRaw (
-@$"internal static NSString?[]? ToConstantArray (this {enumSymbol.Name}[]? values)
+@$"internal static NSString?[]? ToConstantArray (this {codeChanges.Name}[]? values)
 {{
 	if (values is null)
 		return null;
@@ -110,11 +107,11 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 		classBlock.AppendLine ();
 		// ToEnumArray
 		classBlock.AppendRaw (
-@$"internal static {enumSymbol.Name}[]? ToEnumArray (this NSString[]? values)
+@$"internal static {codeChanges.Name}[]? ToEnumArray (this NSString[]? values)
 {{
 	if (values is null)
 		return null;
-	var rv = new global::System.Collections.Generic.List<{enumSymbol.Name}> ();
+	var rv = new global::System.Collections.Generic.List<{codeChanges.Name}> ();
 	for (var i = 0; i < values.Length; i++) {{
 		var value = values [i];
 		rv.Add (GetValue (value));
@@ -123,36 +120,38 @@ class EnumEmitter (SymbolBindingContext context, TabbedStringBuilder builder)
 }}");
 	}
 
-	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryEmit (in CodeChanges codeChanges, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
-		if (!context.Symbol.TryGetEnumFields (out var members,
-				out diagnostics) || members.Value.Length == 0) {
-			// return true to indicate that we did generate code, even if it's empty, the analyzer will take care
-			// of the rest
-			return true;
+		if (codeChanges.BindingType != BindingType.SmartEnum) {
+			diagnostics = [Diagnostic.Create (
+					Diagnostics
+						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+					null,
+					codeChanges.FullyQualifiedSymbol)];
+			return false;
 		}
-		// in the old generator we had to copy over the enum, in this new approach the only code
+		// in the old generator we had to copy over the enum, in this new approach, the only code
 		// we need to create is the extension class for the enum that is backed by fields
 		builder.AppendLine ();
-		builder.AppendLine ($"namespace {context.Namespace};");
+		builder.AppendLine ($"namespace {string.Join (".", codeChanges.Namespace)};");
 		builder.AppendLine ();
 
-		builder.AppendMemberAvailability (context.SymbolAvailability);
+		builder.AppendMemberAvailability (codeChanges.SymbolAvailability);
 		builder.AppendGeneratedCodeAttribute ();
-		using (var classBlock = builder.CreateBlock ($"static public partial class {SymbolName}", true)) {
+		using (var classBlock = builder.CreateBlock ($"static public partial class {GetSymbolName (codeChanges)}", true)) {
 			classBlock.AppendLine ();
-			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{members.Value.Length}];");
+			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{codeChanges.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter
-			// will take care of generating the property. Do not order by name to keep the order of the enum
-			if (!TryEmit (classBlock, members.Value)) {
+			// will take care of generating the property. Do not order it by name to keep the order of the enum
+			if (!TryEmit (classBlock, codeChanges)) {
 				diagnostics = []; // empty diagnostics since it was a user error
 				return false;
 			}
 			classBlock.AppendLine ();
 
 			// emit the extension methods that will be used to get the values from the enum
-			Emit (classBlock, context.Symbol, members);
+			EmitExtensionMethods (classBlock, codeChanges);
 			classBlock.AppendLine ();
 		}
 
