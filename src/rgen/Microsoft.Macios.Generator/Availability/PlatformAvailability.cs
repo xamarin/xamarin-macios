@@ -167,8 +167,8 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("{ ");
-		sb.Append ($"Platform: {Platform} ");
-		sb.Append ($"Supported: '{SupportedVersion?.ToString ()}' ");
+		sb.Append ($"Platform: '{Platform}', ");
+		sb.Append ($"Supported: '{SupportedVersion?.ToString ()}', ");
 		sb.Append ("Unsupported: [");
 		sb.AppendJoin (", ", unsupported.Select (v => $"'{v.Key}': '{v.Value?.ToString () ?? "null"}'"));
 		sb.Append ("], Obsoleted: [");
