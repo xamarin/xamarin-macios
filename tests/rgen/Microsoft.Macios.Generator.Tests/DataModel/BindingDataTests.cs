@@ -42,15 +42,15 @@ public class BindingDataTests {
 		Assert.Equal (bindingTypeData.Flags, ((BindingTypeData<Protocol>) bindingData).Flags);
 		Assert.Equal (BindingType.Protocol, bindingData.BindingType);
 	}
-	
+
 	[Fact]
 	public void ConstructorBindingCategoryData ()
 	{
 		var bindingTypeData = new BindingTypeData<Category> ("BindingType");
-		BindingData bindingData = new BindingData(bindingTypeData);
-		Assert.Equal (bindingTypeData, (BindingTypeData<Category>)bindingData);
-		Assert.Equal (bindingTypeData.Name, ((BindingTypeData<Category>)bindingData).Name);
-		Assert.Equal (bindingTypeData.Flags, ((BindingTypeData<Category>)bindingData).Flags);
+		BindingData bindingData = new BindingData (bindingTypeData);
+		Assert.Equal (bindingTypeData, (BindingTypeData<Category>) bindingData);
+		Assert.Equal (bindingTypeData.Name, ((BindingTypeData<Category>) bindingData).Name);
+		Assert.Equal (bindingTypeData.Flags, ((BindingTypeData<Category>) bindingData).Flags);
 		Assert.Equal (BindingType.Category, bindingData.BindingType);
 	}
 
