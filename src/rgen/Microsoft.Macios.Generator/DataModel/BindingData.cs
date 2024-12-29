@@ -75,7 +75,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is BindingTypeData other && Equals (other);
+		return obj is BindingData other && Equals (other);
 	}
 
 	/// <inheritdoc />
