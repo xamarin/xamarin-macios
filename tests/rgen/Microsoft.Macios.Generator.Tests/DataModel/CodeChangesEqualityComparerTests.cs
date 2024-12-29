@@ -669,7 +669,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		Assert.True (equalityComparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
 	public void CompareSameDiffModifiers ()
 	{

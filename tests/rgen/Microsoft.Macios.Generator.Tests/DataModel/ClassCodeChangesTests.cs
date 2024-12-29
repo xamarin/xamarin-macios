@@ -53,7 +53,7 @@ public partial class MyClass {
 					]
 				}
 			];
-			
+
 			const string internalClass = @"
 using Foundation;
 using ObjCRuntime;
