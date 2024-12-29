@@ -38,7 +38,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 
 	public BindingData (BindingTypeData<ObjCBindings.Category> data)
 	{
-		bindingType = BindingType.Protocol;
+		bindingType = BindingType.Category;
 		categoryData = data;
 	}
 

@@ -42,6 +42,17 @@ public class BindingDataTests {
 		Assert.Equal (bindingTypeData.Flags, ((BindingTypeData<Protocol>) bindingData).Flags);
 		Assert.Equal (BindingType.Protocol, bindingData.BindingType);
 	}
+	
+	[Fact]
+	public void ConstructorBindingCategoryData ()
+	{
+		var bindingTypeData = new BindingTypeData<Category> ("BindingType");
+		BindingData bindingData = new BindingData(bindingTypeData);
+		Assert.Equal (bindingTypeData, (BindingTypeData<Category>)bindingData);
+		Assert.Equal (bindingTypeData.Name, ((BindingTypeData<Category>)bindingData).Name);
+		Assert.Equal (bindingTypeData.Flags, ((BindingTypeData<Category>)bindingData).Flags);
+		Assert.Equal (BindingType.Category, bindingData.BindingType);
+	}
 
 	[Fact]
 	public void EqualsDiffBindingType ()
@@ -184,7 +195,7 @@ public class BindingDataTests {
 
 			yield return [
 				new BindingData (new BindingTypeData<Category> ("Name")),
-				"{ BindingType: Protocol, BindingData: { Name: 'Name', Flags: 'Default' } }"
+				"{ BindingType: Category, BindingData: { Name: 'Name', Flags: 'Default' } }"
 			];
 		}
 
