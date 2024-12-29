@@ -1989,6 +1989,7 @@ SHARED_CORE_SOURCES = \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	ObjCBindings/BindingTypeAttribute.cs \
+	ObjCBindings/BindingTypeTag.cs \
 	ObjCBindings/ExportAttribute.cs \
 	ObjCBindings/ExportTag.cs \
 	ObjCBindings/FieldAttribute.cs \
