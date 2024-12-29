@@ -45,7 +45,7 @@ public class ExportDataTests {
 		Assert.Equal (expected, x == y);
 		Assert.Equal (!expected, x != y);
 	}
-	
+
 	class TestDataToString : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -76,7 +76,7 @@ public class ExportDataTests {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToString))]
+	[ClassData (typeof (TestDataToString))]
 	void TestFieldDataToString<T> (T @enum, ExportData<T> x, string expected) where T : Enum
 	{
 		Assert.NotNull (@enum);

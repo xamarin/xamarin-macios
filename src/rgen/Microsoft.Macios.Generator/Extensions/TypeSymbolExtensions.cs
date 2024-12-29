@@ -124,7 +124,7 @@ static class TypeSymbolExtensions {
 		}
 		return availability;
 	}
-	
+
 	/// <summary>
 	/// Retrieve the data of an export attribute on a symbol.
 	/// </summary>
@@ -156,5 +156,5 @@ static class TypeSymbolExtensions {
 			return exportData.Value;
 		return null;
 	}
-	
+
 }

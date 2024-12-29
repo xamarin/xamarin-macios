@@ -16,6 +16,6 @@ public class AttributesNamesTests {
 	public void GetFieldAttributeName<T> (T @enum, string? expectedName) where T : Enum
 	{
 		Assert.NotNull (@enum);
-		Assert.Equal (expectedName, AttributesNames.GetFieldAttributeName<T> ());	
+		Assert.Equal (expectedName, AttributesNames.GetFieldAttributeName<T> ());
 	}
 }

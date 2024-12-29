@@ -317,7 +317,7 @@ public class ParentClass{
 		var availability = symbol.GetSupportedPlatforms ();
 		Assert.Equal (availability, expectedAvailability);
 	}
-	
+
 	class TestDataGetExportData : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -332,7 +332,7 @@ public partial class MyClass {
 }
 ";
 			yield return [noAttrPropertyClass, Field.Default, null!];
-			
+
 			const string fieldPropertyClass = @"
 using ObjCBindings;
 
@@ -357,7 +357,7 @@ public partial class MyClass {
 }
 ";
 			yield return [singlePropertyClass, Property.Default, new ExportData<Property> ("name")];
-			
+
 			const string notificationPropertyClass = @"
 using ObjCBindings;
 
@@ -369,13 +369,14 @@ public partial class MyClass {
 	public partial string Name { get; set; } = string.Empty;
 }
 ";
-			yield return [notificationPropertyClass, Property.Default, 
+			yield return [notificationPropertyClass,
+				Property.Default,
 				new ExportData<Property> ("name", ArgumentSemantic.None, Property.Notification)];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
-	}	
-	
+	}
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetExportData>]
 	void GetExportData<T> (ApplePlatform platform, string inputText, T @enum, ExportData<T>? expectedData) where T : Enum

@@ -224,13 +224,13 @@ public partial class MyClass {
 								new (AccessorKind.Setter, new (), [], []),
 							]
 						) {
-							
+
 							ExportPropertyData = new ("name")
 						}
 					]
 				}
 			];
-			
+
 			const string notificationPropertyClass = @"
 using ObjCBindings;
 
@@ -272,13 +272,13 @@ public partial class MyClass {
 								new (AccessorKind.Setter, new (), [], []),
 							]
 						) {
-							
+
 							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
 						}
 					]
 				}
 			];
-			
+
 			const string fieldPropertyClass = @"
 using ObjCBindings;
 
@@ -321,8 +321,8 @@ public partial class MyClass {
 								new (AccessorKind.Setter, new (), [], []),
 							]
 						) {
-							
-							ExportFieldData= new ("CONSTANT")
+
+							ExportFieldData = new ("CONSTANT")
 						}
 					]
 				}

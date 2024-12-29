@@ -91,7 +91,7 @@ public partial interface IProtocol {
 					]
 				}
 			];
-			
+
 			const string notificationPropertyInterface = @"
 using ObjCBindings;
 

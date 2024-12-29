@@ -39,7 +39,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// True if the property represents a Objc field.
 	/// </summary>
-	public bool IsField => ExportFieldData != null;
+	public bool IsField => ExportFieldData is not null;
 
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
@@ -49,7 +49,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// True if the property represents a Objc property.
 	/// </summary>
-	public bool IsProperty => ExportPropertyData != null;
+	public bool IsProperty => ExportPropertyData is not null;
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -151,7 +151,7 @@ readonly struct Property : IEquatable<Property> {
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new(kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
 					[.. accessorDeclaration.Modifiers]));
 			}
 
@@ -162,18 +162,17 @@ readonly struct Property : IEquatable<Property> {
 			// an expression body == a getter with no attrs or modifiers; that means that the accessor does not have
 			// extra availability, but the ones form the property
 			accessorCodeChanges = [
-				new(AccessorKind.Getter, propertySupportedPlatforms, [], [])
+				new (AccessorKind.Getter, propertySupportedPlatforms, [], [])
 			];
 		}
 
-		change = new(
+		change = new (
 			name: memberName,
 			type: type,
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			accessors: accessorCodeChanges)
-		{
+			accessors: accessorCodeChanges) {
 			ExportFieldData = propertySymbol.GetExportData<Field> (),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};

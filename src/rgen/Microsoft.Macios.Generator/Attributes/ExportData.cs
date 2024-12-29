@@ -114,7 +114,7 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 			new (selector, argumentSemantic, flags) : new (selector, argumentSemantic);
 		return true;
 	}
-	
+
 	/// <inheritdoc />
 	public bool Equals (ExportData<T> other)
 	{
@@ -153,6 +153,6 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		return $"{{ Type: '{typeof(T).FullName}', Selector: '{Selector ?? "null"}', ArgumentSemantic: '{ArgumentSemantic}', Flags: '{Flags}' }}";
+		return $"{{ Type: '{typeof (T).FullName}', Selector: '{Selector ?? "null"}', ArgumentSemantic: '{ArgumentSemantic}', Flags: '{Flags}' }}";
 	}
 }
