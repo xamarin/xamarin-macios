@@ -2,7 +2,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
 /// Enum that represents the binding type needed for an class/interface/enum. This allows the code generator
-/// to differentiate between a code changes that has the exact same qualified name but different type.
+/// to differentiate between code changes that have the exact same qualified name but different type.
 /// </summary>
 enum BindingType : ulong {
 	/// <summary>
