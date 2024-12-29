@@ -46,6 +46,41 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					]
+				}
+			];
+			
+			const string internalClass = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+internal partial class MyClass {
+}
+";
+
+			yield return [
+				internalClass,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					]
 				}
 			];
@@ -80,6 +115,10 @@ public partial class MyClass {
 						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					]
 				}
 			];
@@ -108,6 +147,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Constructors = [
 						new (
@@ -151,6 +194,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Constructors = [
 						new (
@@ -205,6 +252,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -251,6 +302,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Properties = [
 						new (
@@ -299,6 +354,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Properties = [
 						new (
@@ -361,6 +420,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Methods = [
 						new (
 							type: "NS.MyClass",
@@ -407,6 +470,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Methods = [
 						new (
@@ -455,6 +522,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Methods = [
 						new (
@@ -518,6 +589,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Events = [
 						new (
 							name: "Changed",
@@ -561,6 +636,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Events = [
 						new (

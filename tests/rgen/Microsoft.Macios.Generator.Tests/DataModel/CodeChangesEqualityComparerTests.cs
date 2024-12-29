@@ -669,4 +669,117 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		Assert.True (equalityComparer.Equals (changes1, changes2));
 	}
+	
+	[Fact]
+	public void CompareSameDiffModifiers ()
+	{
+		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			],
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Surname",
+					type: "string",
+					symbolAvailability: new (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, new (), [], []),
+					]),
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					symbolAvailability: new (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+			],
+			Constructors = [
+				new ("MyClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [],
+					parameters: [
+						new (0, "string", "name"),
+					]),
+				new ("MyClass", new (), [], [], []),
+			],
+		};
+		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.StaticKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			],
+			EnumMembers = [],
+			Properties = [
+				new (
+					name: "Name",
+					type: "Utils.MyClass",
+					symbolAvailability: new (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+						], []),
+					]),
+				new (
+					name: "Surname",
+					type: "string",
+					symbolAvailability: new (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [
+							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+						], []),
+						new (AccessorKind.Setter, new (), [], []),
+					]),
+			],
+			Constructors = [
+				new ("MyClass", new (), [], [], []),
+				new ("MyClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [],
+					parameters: [
+						new (0, "string", "name"),
+					]),
+			],
+		};
+		Assert.False (equalityComparer.Equals (changes1, changes2));
+	}
 }

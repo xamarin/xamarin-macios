@@ -20,8 +20,9 @@ class ClassEmitter (RootBindingContext context, TabbedStringBuilder builder) : I
 		builder.AppendLine ();
 		diagnostics = null;
 		// add the namespace and the class declaration
+		var modifiers = $"{string.Join (' ', codeChanges.Modifiers)} ";
 		using (var namespaceBlock = builder.CreateBlock ($"namespace {codeChanges.Namespace [^1]}", true)) {
-			using (var classBlock = namespaceBlock.CreateBlock ($"public partial class {GetSymbolName (codeChanges)}", true)) {
+			using (var classBlock = namespaceBlock.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers)? string.Empty : modifiers)}class {GetSymbolName (codeChanges)}", true)) {
 				classBlock.AppendLine ("// TODO: add binding code here");
 			}
 		}

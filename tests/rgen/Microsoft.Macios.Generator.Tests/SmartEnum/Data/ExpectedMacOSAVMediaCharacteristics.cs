@@ -15,7 +15,7 @@ namespace AVFoundation;
 [SupportedOSPlatform ("tvos11.0")]
 [SupportedOSPlatform ("maccatalyst13.1")]
 [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-static public partial class AVMediaCharacteristicsExtensions
+static partial class AVMediaCharacteristicsExtensions
 {
 
 	static IntPtr[] values = new IntPtr [17];
