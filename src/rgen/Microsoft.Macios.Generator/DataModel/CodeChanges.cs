@@ -44,7 +44,7 @@ readonly struct CodeChanges {
 	/// Changes to the attributes of the symbol.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
-	
+
 	/// <summary>
 	/// Modifiers list.
 	/// </summary>

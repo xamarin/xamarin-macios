@@ -46,7 +46,7 @@ public partial interface IProtocol {
 					],
 				}
 			];
-			
+
 			const string internalInterface = @"
 using Foundation;
 using ObjCRuntime;

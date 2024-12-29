@@ -61,7 +61,7 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 		var modifiersComparer = new ModifiersEqualityComparer ();
 		if (!modifiersComparer.Equals (x.Modifiers, y.Modifiers))
 			return false;
-		
+
 		// compare the members
 		var memberComparer = new EnumMembersEqualityComparer ();
 		if (!memberComparer.Equals (x.EnumMembers, y.EnumMembers))
