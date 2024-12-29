@@ -139,7 +139,7 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 
 		builder.AppendMemberAvailability (codeChanges.SymbolAvailability);
 		builder.AppendGeneratedCodeAttribute ();
-		var modifiers = $"{string.Join (", ", codeChanges.Modifiers)} ";
+		var modifiers = $"{string.Join (' ', codeChanges.Modifiers)} ";
 		using (var classBlock = builder.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers)? string.Empty : modifiers)}static partial class {GetSymbolName (codeChanges)}", true)) {
 			classBlock.AppendLine ();
 			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{codeChanges.EnumMembers.Length}];");
