@@ -7,7 +7,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// This struct works as a union to store the possible BindingTypeData that can be present in the bindings.
 /// </summary>
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout (LayoutKind.Explicit)]
 readonly struct BindingData : IEquatable<BindingData> {
 	// make the struct smaller by making all wrapped structs be at index 0
 	[FieldOffset (0)] readonly BindingType bindingType;
@@ -15,7 +15,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 	[FieldOffset (8)] readonly BindingTypeData<ObjCBindings.Class> classData;
 	[FieldOffset (8)] readonly BindingTypeData<ObjCBindings.Protocol> protocolData;
 	[FieldOffset (8)] readonly BindingTypeData<ObjCBindings.Category> categoryData;
-	
+
 	public BindingType BindingType => bindingType;
 
 	public BindingData (BindingType type, BindingTypeData data)
@@ -27,7 +27,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 	public BindingData (BindingTypeData<ObjCBindings.Class> data)
 	{
 		bindingType = BindingType.Class;
-		classData = data;	
+		classData = data;
 	}
 
 	public BindingData (BindingTypeData<ObjCBindings.Protocol> data)
@@ -35,7 +35,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 		bindingType = BindingType.Protocol;
 		protocolData = data;
 	}
-	
+
 	public BindingData (BindingTypeData<ObjCBindings.Category> data)
 	{
 		bindingType = BindingType.Protocol;
@@ -46,11 +46,11 @@ readonly struct BindingData : IEquatable<BindingData> {
 	public static implicit operator BindingTypeData<ObjCBindings.Class> (BindingData data) => data.classData;
 	public static implicit operator BindingTypeData<ObjCBindings.Protocol> (BindingData data) => data.protocolData;
 	public static implicit operator BindingTypeData<ObjCBindings.Category> (BindingData data) => data.categoryData;
-	
-	public static implicit operator BindingData(BindingTypeData data) => new (BindingType.Unknown, data);
-	public static implicit operator BindingData(BindingTypeData<ObjCBindings.Class> data) => new (data);
-	public static implicit operator BindingData(BindingTypeData<ObjCBindings.Protocol> data) => new (data);
-	public static implicit operator BindingData(BindingTypeData<ObjCBindings.Category> data) => new (data);
+
+	public static implicit operator BindingData (BindingTypeData data) => new (BindingType.Unknown, data);
+	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Class> data) => new (data);
+	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Protocol> data) => new (data);
+	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Category> data) => new (data);
 
 	/// <inheritdoc />
 	public bool Equals (BindingData other)
@@ -58,16 +58,16 @@ readonly struct BindingData : IEquatable<BindingData> {
 		if (bindingType != other.bindingType)
 			return false;
 		switch (bindingType) {
-			case BindingType.Unknown:
-				return bindingTypeData == other.bindingTypeData;
-			case BindingType.SmartEnum:
-				return bindingTypeData == other.bindingTypeData;
-			case BindingType.Class:
-				return classData == other.classData;
-			case BindingType.Protocol:
-				return protocolData == other.protocolData;
-			case BindingType.Category:
-				return categoryData == other.categoryData;
+		case BindingType.Unknown:
+			return bindingTypeData == other.bindingTypeData;
+		case BindingType.SmartEnum:
+			return bindingTypeData == other.bindingTypeData;
+		case BindingType.Class:
+			return classData == other.classData;
+		case BindingType.Protocol:
+			return protocolData == other.protocolData;
+		case BindingType.Category:
+			return categoryData == other.categoryData;
 		}
 		return false;
 	}
@@ -99,8 +99,8 @@ readonly struct BindingData : IEquatable<BindingData> {
 
 	/// <inheritdoc />
 	public override string ToString () => bindingType switch {
-		BindingType.SmartEnum => $"{{ BindingType: {bindingType}, BindingData: {bindingTypeData} }}" ,
-		BindingType.Class => $"{{ BindingType: {bindingType}, BindingData: {classData} }}" ,
+		BindingType.SmartEnum => $"{{ BindingType: {bindingType}, BindingData: {bindingTypeData} }}",
+		BindingType.Class => $"{{ BindingType: {bindingType}, BindingData: {classData} }}",
 		BindingType.Protocol => $"{{ BindingType: {bindingType}, BindingData: {protocolData} }}",
 		BindingType.Category => $"{{ BindingType: {bindingType}, BindingData: {categoryData} }}",
 		_ => throw new NotImplementedException ()

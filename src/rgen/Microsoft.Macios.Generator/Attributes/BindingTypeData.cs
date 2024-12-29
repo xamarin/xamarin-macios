@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Generator.Attributes;
 
 readonly struct BindingTypeData : IEquatable<BindingTypeData> {
-	
+
 	/// <summary>
 	/// Original name of the ObjC class or protocol.
 	/// </summary>
@@ -36,12 +36,12 @@ readonly struct BindingTypeData : IEquatable<BindingTypeData> {
 			// 0 should not be an option..
 			return false;
 		}
-		
+
 		if (attributeData.NamedArguments.Length == 0) {
-			data = new(name);
+			data = new (name);
 			return true;
 		}
-		
+
 		foreach (var (paramName, value) in attributeData.NamedArguments) {
 			switch (paramName) {
 			case "Name":
@@ -52,8 +52,8 @@ readonly struct BindingTypeData : IEquatable<BindingTypeData> {
 				return false;
 			}
 		}
-		
-		data = new(name);
+
+		data = new (name);
 		return true;
 	}
 
@@ -90,12 +90,12 @@ readonly struct BindingTypeData : IEquatable<BindingTypeData> {
 }
 
 readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : Enum {
-	
+
 	/// <summary>
 	/// Original name of the ObjC class or protocol.
 	/// </summary>
-	public string? Name { get; }	
-	
+	public string? Name { get; }
+
 	/// <summary>
 	/// The configuration flags used on the exported class/interface.
 	/// </summary>
@@ -142,13 +142,13 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 		default:
 			return false;
 		}
-		
+
 		if (attributeData.NamedArguments.Length == 0) {
 			data = flags is not null ?
 				new (name, flags) : new (name);
 			return true;
 		}
-		
+
 		foreach (var (paramName, value) in attributeData.NamedArguments) {
 			switch (paramName) {
 			case "Name":
@@ -162,12 +162,12 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 				return false;
 			}
 		}
-		
+
 		data = flags is not null ?
 			new (name, flags) : new (name);
 		return true;
 	}
-	
+
 	/// <inheritdoc />
 	public bool Equals (BindingTypeData<T> other)
 	{

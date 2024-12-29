@@ -33,7 +33,7 @@ namespace ObjCBindings {
 		/// </summary>
 		Default = 0,
 	}
-	
+
 	/// <summary>
 	/// Flags to be used on protocol bindings.
 	/// </summary>
