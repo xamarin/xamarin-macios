@@ -306,7 +306,7 @@ readonly struct CodeChanges {
 		sb.AppendJoin (", ", Methods);
 		sb.Append ("], Events: [");
 		sb.AppendJoin (", ", Events);
-		sb.Append ('}');
+		sb.Append ("] }");
 		return sb.ToString ();
 	}
 }
