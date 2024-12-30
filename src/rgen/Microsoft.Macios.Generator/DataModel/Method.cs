@@ -81,6 +81,7 @@ readonly struct Method : IEquatable<Method> {
 				IsParams = parameter.IsParams,
 				IsThis = parameter.IsThis,
 				IsNullable = parameter.NullableAnnotation == NullableAnnotation.Annotated,
+				IsSmartEnum = parameter.Type.IsSmartEnum (),
 				DefaultValue = (parameter.HasExplicitDefaultValue) ? parameter.ExplicitDefaultValue?.ToString () : null,
 				ReferenceKind = parameter.RefKind.ToReferenceKind (),
 				Attributes = parameterDeclaration.GetAttributeCodeChanges (semanticModel),

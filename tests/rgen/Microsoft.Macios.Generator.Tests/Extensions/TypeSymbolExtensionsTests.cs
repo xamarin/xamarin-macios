@@ -314,4 +314,103 @@ public class ParentClass{
 		var availability = symbol.GetSupportedPlatforms ();
 		Assert.Equal (availability, expectedAvailability);
 	}
+	
+	class TestDataHasAttribute : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string supportedOS = @"
+using System;
+using System.Runtime.Versioning;
+
+namespace Test;
+
+[SupportedOSPlatform (""ios12.0"")]
+public class ParentClass{
+	public void Method(){}
+}
+";
+			yield return [supportedOS, AttributesNames.SupportedOSPlatformAttribute, true];
+			yield return [supportedOS, AttributesNames.UnsupportedOSPlatformAttribute, false];
+		}
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataHasAttribute>]
+	void HasAttributeTests (ApplePlatform platform, string inputText, string attrName, bool expected)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		var declaration = syntaxTrees[0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<BaseTypeDeclarationSyntax> ()
+			.LastOrDefault ();
+		Assert.NotNull (declaration);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		Assert.Equal (expected, symbol.HasAttribute (attrName));
+	}
+
+	class TestDataIsSmartEnum : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string classExample = @"
+using System;
+namespace Test;
+
+public class ClassExample {
+}";
+			yield return [classExample, false];
+			
+			const string interfaceExample = @"
+using System;
+namespace Test;
+
+public interface InterfaceExample {
+}";
+			
+			yield return [interfaceExample, false];
+			
+			const string enumExample = @"
+using System;
+namespace Test;
+
+public enum MyEnum {
+	None,
+}";
+			
+			yield return [enumExample, false];
+
+			const string smartEnumExample = @"
+using ObjCBindings;
+namespace Test;
+
+[BindingType]
+public enum MyEnum {
+	None,
+}";
+			
+			yield return [smartEnumExample, true];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataIsSmartEnum>]
+	void IsSmartEnumTests (ApplePlatform platform, string inputText, bool expected)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		var declaration = syntaxTrees[0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<BaseTypeDeclarationSyntax> ()
+			.LastOrDefault ();
+		Assert.NotNull (declaration);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		Assert.Equal (expected, symbol.IsSmartEnum ());
+	}
 }

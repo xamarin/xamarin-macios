@@ -23,6 +23,11 @@ readonly struct Property : IEquatable<Property> {
 	/// String representation of the property type.
 	/// </summary>
 	public string Type { get; } = string.Empty;
+	
+	/// <summary>
+	/// Returns if the parameter type is a smart enum.
+	/// </summary>
+	public bool IsSmartEnum { get; }
 
 	/// <summary>
 	/// The platform availability of the property.
@@ -45,12 +50,14 @@ readonly struct Property : IEquatable<Property> {
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
 	internal Property (string name, string type,
+		bool isSmartEnum,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
 		Type = type;
+		IsSmartEnum = isSmartEnum;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
@@ -64,6 +71,8 @@ readonly struct Property : IEquatable<Property> {
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
+			return false;
+		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
@@ -89,7 +98,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Name, Type, Attributes, Modifiers, Accessors);
+		return HashCode.Combine (Name, Type, IsSmartEnum, Attributes, Modifiers, Accessors);
 	}
 
 	public static bool operator == (Property left, Property right)
@@ -143,6 +152,7 @@ readonly struct Property : IEquatable<Property> {
 		change = new (
 			name: memberName,
 			type: type,
+			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
@@ -153,7 +163,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, Supported Platforms: {SymbolAvailability}, Attributes: [");
+		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

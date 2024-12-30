@@ -174,4 +174,39 @@ public class ConstructorComparerTests {
 		var parameterCompare = new ParameterComparer ();
 		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
 	}
+	
+	[Fact]
+	public void CompareDiffParametersSmartEnum ()
+	{
+		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (0, "MyEnum", "name") {
+					IsSmartEnum = true
+				},
+			]);
+		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (0, "MyEnum", "name") {
+					IsSmartEnum = false 
+				},
+			]);
+		var parameterCompare = new ParameterComparer ();
+		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
+	}
 }

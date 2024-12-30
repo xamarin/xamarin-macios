@@ -209,6 +209,108 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						)
+					]
+				}
+			];
+			
+			const string singlePropertySmartEnumClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public enum MyEnum {
+	None = 0,
+}
+
+[BindingType]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertySmartEnumClass,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isSmartEnum: true,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						)
+					]
+				}
+			];
+
+			const string singlePropertyEnumClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum {
+	None = 0,
+}
+
+[BindingType]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertyEnumClass,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -256,6 +358,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -304,6 +407,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -320,6 +424,7 @@ public partial class MyClass {
 						new (
 							name: "Surname",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])

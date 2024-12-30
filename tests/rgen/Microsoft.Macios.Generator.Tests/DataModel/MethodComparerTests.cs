@@ -288,4 +288,46 @@ public class MethodComparerTests {
 		var parameterCompare = new ParameterComparer ();
 		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
 	}
+	
+	[Fact]
+	public void CompareDiffParametersSmartEnum ()
+	{
+		var x = new Method (
+			type: "MyType",
+			name: "MyMethod",
+			returnType: "void",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (0, "MyEnum", "name") {
+					IsSmartEnum = true
+				},
+			]
+		);
+
+		var y = new Method (
+			type: "MyType",
+			name: "MyMethod",
+			returnType: "void",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (0, "MyEnum", "name") {
+					IsSmartEnum = false 
+				},
+			]
+		);
+		var parameterCompare = new ParameterComparer ();
+		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
+	}
 }

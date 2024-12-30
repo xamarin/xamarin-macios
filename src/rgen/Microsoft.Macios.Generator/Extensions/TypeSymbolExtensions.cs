@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -123,4 +124,28 @@ static class TypeSymbolExtensions {
 		}
 		return availability;
 	}
+	
+	public static bool HasAttribute (this ISymbol symbol, string attribute)
+	{
+		var boundAttributes = symbol.GetAttributes ();
+		if (boundAttributes.Length == 0) {
+			return false;
+		}
+		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (attrName == attribute) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static bool IsSmartEnum (this ITypeSymbol symbol)
+	{
+		// a type is a smart enum if its type is a enum one AND it was decorated with the
+		// binding type attribute
+		return symbol.TypeKind == TypeKind.Enum 
+		       && symbol.HasAttribute (AttributesNames.BindingAttribute);
+	}
+	
 }
