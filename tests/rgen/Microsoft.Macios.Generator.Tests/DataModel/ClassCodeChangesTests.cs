@@ -698,80 +698,80 @@ public partial class MyClass {
 	public void IsStaticPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		
+
 		Assert.False (changes.IsStatic);
-		
+
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ()) {
 			Modifiers = [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.StaticKeyword),
 			]
 		};
-		
+
 		Assert.True (changes.IsStatic);
 	}
-	
+
 	[Fact]
 	public void IsPartialPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		
+
 		Assert.False (changes.IsPartial);
-		
+
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ()) {
 			Modifiers = [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 			]
 		};
-		
+
 		Assert.True (changes.IsPartial);
 	}
-	
+
 	[Fact]
 	public void IsAbstractPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		
+
 		Assert.False (changes.IsAbstract);
-		
+
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum, 
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			bindingType: BindingType.SmartEnum,
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ()) {
 			Modifiers = [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.AbstractKeyword),
 			]
 		};
-		
+
 		Assert.True (changes.IsAbstract);
 	}
 }
