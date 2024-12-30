@@ -79,7 +79,7 @@ internal partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
-          UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)

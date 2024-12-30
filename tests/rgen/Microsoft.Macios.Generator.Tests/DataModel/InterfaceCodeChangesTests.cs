@@ -72,7 +72,7 @@ internal partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
-          UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
