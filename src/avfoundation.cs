@@ -17190,4 +17190,9 @@ namespace AVFoundation {
 		void RequestMicrophoneInjectionPermission (Action<AVAudioApplicationMicrophoneInjectionPermission> response);
 	}
 
+	[TV (17, 0), NoMacCatalyst, NoMac, NoiOS]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVContinuityDevice {
+	}
 }

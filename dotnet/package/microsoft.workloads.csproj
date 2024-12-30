@@ -9,5 +9,6 @@
   <ItemGroup>
     <!-- workload .nupkg contents should go in /data/ -->
     <Content Update="$(_packagePath)WorkloadManifest.*" PackagePath="data" />
+    <Content Update="$(_packagePath)WorkloadDependencies.json" PackagePath="data" />
   </ItemGroup>
 </Project>

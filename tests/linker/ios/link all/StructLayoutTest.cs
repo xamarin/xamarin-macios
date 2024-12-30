@@ -15,7 +15,9 @@ using NUnit.Framework;
 namespace LinkAll.Layout {
 
 	struct DefaultStruct {
+#pragma warning disable CS0649 // Field 'DefaultStruct.never_used' is never assigned to, and will always have its default value 0
 		public int never_used;
+#pragma warning restore CS0649
 		public int used;
 	}
 

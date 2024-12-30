@@ -21638,8 +21638,6 @@ namespace UIKit {
 	}
 
 	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
-	[NoWatch]
-	[NoWatch] // added in Xcode 7.1 / iOS 9.1 SDK
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIFocusUpdateContext))]
 	interface UICollectionViewFocusUpdateContext {
@@ -29446,7 +29444,7 @@ namespace UIKit {
 	interface UITraitAccessibilityContrast : UINSIntegerTraitDefinition {
 	}
 
-	[NoWatch, TV (17, 0), NoWatch, iOS (17, 0), MacCatalyst (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface UITraitUserInterfaceLevel : UINSIntegerTraitDefinition {
 	}

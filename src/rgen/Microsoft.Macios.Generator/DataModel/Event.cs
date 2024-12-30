@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly struct Event : IEquatable<Event> {
-
 	/// <summary>
 	/// Name of the property.
 	/// </summary>
@@ -20,6 +20,11 @@ readonly struct Event : IEquatable<Event> {
 	/// String representation of the event type.
 	/// </summary>
 	public string Type { get; } = string.Empty;
+
+	/// <summary>
+	/// The platform availability of the enum value.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -36,11 +41,13 @@ readonly struct Event : IEquatable<Event> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
-	internal Event (string name, string type, ImmutableArray<AttributeCodeChange> attributes,
+	internal Event (string name, string type, SymbolAvailability symbolAvailability,
+		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
 		Type = type;
+		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
 		Accessors = accessors;
@@ -54,6 +61,9 @@ readonly struct Event : IEquatable<Event> {
 			return false;
 		if (Type != other.Type)
 			return false;
+		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
@@ -104,23 +114,27 @@ readonly struct Event : IEquatable<Event> {
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
-			foreach (var accessor in declaration.AccessorList.Accessors) {
-				var kind = accessor.Kind ().ToAccessorKind ();
-				var accessorAttributeChanges = accessor.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new (kind, accessorAttributeChanges, [.. accessor.Modifiers]));
+			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
+				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
+					continue;
+				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
+				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
+					[.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
 		}
 
-		change = new (memberName, type, attributes, [.. declaration.Modifiers], accessorCodeChanges);
+		change = new (memberName, type, eventSymbol.GetSupportedPlatforms (), attributes,
+			[.. declaration.Modifiers], accessorCodeChanges);
 		return true;
 	}
 
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, Attributes: [");
+		var sb = new StringBuilder ($"Name: {Name}, Type: {Type},  Supported Platforms: {SymbolAvailability}, Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
