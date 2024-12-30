@@ -1,3 +1,4 @@
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -306,6 +307,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -353,6 +358,10 @@ public partial class MyClass {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Properties = [
 						new (
