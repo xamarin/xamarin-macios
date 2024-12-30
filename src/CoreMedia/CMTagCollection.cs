@@ -334,11 +334,12 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe extern static nint /* CMItemCount */ CMTagCollectionCountTagsWithFilterFunction (
 				IntPtr /* CMTagCollectionRef CM_NONNULL */ tagCollection,
-				delegate* unmanaged<CMTag, IntPtr, byte> filterApplier,
+				delegate* unmanaged<CMTag, IntPtr, nint /* should be 'byte', but the interpreter does the wrong thing: https://github.com/dotnet/runtime/issues/110649 */ > filterApplier,
 				IntPtr /* void * CM_NULLABLE */ context);
 
 		[UnmanagedCallersOnly]
-		static byte CMTagCollectionTagFilterFunction_Callback (CMTag tag, IntPtr context)
+		// Return type should be 'byte', but the interpreter does the wrong thing: https://github.com/dotnet/runtime/issues/110649 */
+		static nint CMTagCollectionTagFilterFunction_Callback (CMTag tag, IntPtr context)
 		{
 			var callback = (CMTagCollectionTagFilterFunction) GCHandle.FromIntPtr (context).Target!;
 			var rv = callback (tag);
@@ -365,7 +366,7 @@ namespace CoreMedia {
 				CMTag* /* CMTag * CM_NONNULL */ tagBuffer,
 				nint /* CMItemCount */ tagBufferCount,
 				nint* /* CMItemCount * CM_NULLABLE */ numberOfTagsCopied,
-				delegate* unmanaged<CMTag, IntPtr, byte> filter,
+				delegate* unmanaged<CMTag, IntPtr, nint /* should be 'byte', but the interpreter does the wrong thing: https://github.com/dotnet/runtime/issues/110649 */ > filter,
 				IntPtr /* void * CM_NULLABLE */ context);
 
 
@@ -471,7 +472,7 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe extern static CMTag /* CMTag */ CMTagCollectionApplyUntil (
 			IntPtr /* CMTagCollectionRef CM_NONNULL */ tagCollection,
-			delegate* unmanaged<CMTag, IntPtr, byte> /* CMTagCollectionTagFilterFunction */ applier,
+			delegate* unmanaged<CMTag, IntPtr, nint /* should be 'byte', but the interpreter does the wrong thing: https://github.com/dotnet/runtime/issues/110649 */ > /* CMTagCollectionTagFilterFunction */ applier,
 			IntPtr /* void * CM_NULLABLE */ context);
 
 		/// <summary>Iterate over all the tags in this tag collection, calling the provided callback function until the callback returns true.</summary>
