@@ -137,6 +137,17 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+#if __MACCATALYST__
+			case "AVPictureInPictureControllerContentSource":
+				switch (name) {
+				case "activeVideoCallSourceView":
+				case "activeVideoCallContentViewController":
+				case "initWithActiveVideoCallSourceView:contentViewController:":
+					// Headers and docs say these selectors are available in Mac Catalyst 15+, but introspection can only bind them in Mac Catalyst 16+.
+					return TestRuntime.CheckXcodeVersion (13, 0);
+				}
+				break;
+#endif
 			case "AVUrlAsset":
 				switch (name) {
 				// fails because it is in-lined via protocol AVContentKeyRecipient

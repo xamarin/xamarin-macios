@@ -62,7 +62,7 @@ namespace Foo {
 ";
 	T GetDeclaration<T> (ApplePlatform platform, string inputText) where T : BaseTypeDeclarationSyntax
 	{
-		var (_, sourceTrees) = CreateCompilation (nameof (BaseTypeDeclarationSyntaxExtensionsTests), platform, inputText);
+		var (_, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		var declaration = sourceTrees [0].GetRoot ()
 			.DescendantNodes ()

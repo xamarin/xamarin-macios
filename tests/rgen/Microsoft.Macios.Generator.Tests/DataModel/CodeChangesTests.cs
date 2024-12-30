@@ -63,8 +63,7 @@ enum AVMediaCharacteristics {
 	[AllSupportedPlatformsClassData<TestDataSkipEnumValueDeclaration>]
 	public void SkipEnumValueDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -159,8 +158,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataSkipPropertyDeclaration>]
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipPropertyDeclaration), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -226,7 +224,7 @@ public class TestClass {
 	public void SkipMethodDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipMethodDeclaration), platform, inputText);
+			CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()

@@ -53,7 +53,7 @@ public interface IInterface {
 ";
 		// create a compilation unit and get the diff syntax node, semantic model and expected attr result
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, attrsText, inputText);
+			CreateCompilation (platform, sources: [attrsText, inputText]);
 		Assert.Equal (2, sourceTrees.Length);
 		// get the declarations we want to work with and the semantic model
 		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();
@@ -119,7 +119,7 @@ public class TestClass {
 } 
 ";
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, inputText);
+			CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var declarations = sourceTrees [0].GetRoot ()
@@ -170,7 +170,7 @@ public class TestClass {
 ";
 		// create a compilation unit and get the diff syntax node, semantic model and expected attr result
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (MemberDeclarationSyntaxExtensionsTests), platform, attrsText, inputText);
+			CreateCompilation (platform, sources: [attrsText, inputText]);
 		Assert.Equal (2, sourceTrees.Length);
 		// get the declarations we want to work with and the semantic model
 		var nodes = sourceTrees [1].GetRoot ().DescendantNodes ().ToArray ();

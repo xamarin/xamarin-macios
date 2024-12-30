@@ -32,7 +32,10 @@ public partial interface IProtocol {
 				emptyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -56,7 +59,10 @@ public partial interface IProtocol {
 				singlePropertyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -65,6 +71,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -73,8 +80,8 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						)
 					]
@@ -99,7 +106,10 @@ public partial interface IProtocol {
 				multiPropertyInterfaceMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -108,6 +118,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -116,8 +127,8 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						)
 					]
@@ -143,7 +154,10 @@ public partial interface IProtocol {
 				multiPropertyInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -152,6 +166,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
 							],
@@ -160,13 +175,14 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						),
 						new (
 							name: "Surname",
 							type: "string",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
 							],
@@ -175,8 +191,8 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, [], []),
-								new (AccessorKind.Setter, [], []),
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
 							]
 						),
 					]
@@ -199,7 +215,10 @@ public partial interface IProtocol {
 				singleMethodInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -209,6 +228,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -242,7 +262,10 @@ public partial interface IProtocol {
 				multiMethodInterfaceMissingExport,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -252,6 +275,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -286,7 +310,10 @@ public partial interface IProtocol {
 				multiMethodInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -296,6 +323,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetName",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -311,6 +339,7 @@ public partial interface IProtocol {
 							type: "NS.IProtocol",
 							name: "SetSurname",
 							returnType: "void",
+							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
@@ -343,7 +372,10 @@ public partial interface IProtocol {
 				singleEventInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -352,13 +384,14 @@ public partial interface IProtocol {
 						new (
 							name: "Changed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							])
 					],
 				}
@@ -383,7 +416,10 @@ public partial interface IProtocol {
 				multiEventInterface,
 				new CodeChanges (
 					bindingType: BindingType.Protocol,
-					fullyQualifiedSymbol: "NS.IProtocol"
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
@@ -392,25 +428,27 @@ public partial interface IProtocol {
 						new (
 							name: "Changed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							]
 						),
 						new (
 							name: "Removed",
 							type: "System.EventHandler",
+							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, [], []),
-								new (AccessorKind.Remove, [], [])
+								new (AccessorKind.Add, new (), [], []),
+								new (AccessorKind.Remove, new (), [], [])
 							]
 						),
 					],
@@ -426,7 +464,7 @@ public partial interface IProtocol {
 	void CodeChangesFromInterfaceDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (CodeChangesFromInterfaceDeclaration), platform, inputText);
+			CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
