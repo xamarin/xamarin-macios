@@ -14,6 +14,7 @@
 		<PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
 		<PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
+		<PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>

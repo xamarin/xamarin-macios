@@ -5,7 +5,7 @@ namespace Xharness {
 
 	public static class TestTargetExtensions {
 
-		public static TestTarget [] GetAppRunnerTargets (this TestPlatform platform)
+		public static TestTarget [] GetTestTargetsForSimulator (this TestPlatform platform)
 		{
 			switch (platform) {
 			case TestPlatform.tvOS:
@@ -13,7 +13,7 @@ namespace Xharness {
 			case TestPlatform.iOS:
 				return new TestTarget [] { TestTarget.Simulator_iOS64 };
 			default:
-				throw new NotImplementedException (platform.ToString ());
+				return Array.Empty<TestTarget> ();
 			}
 		}
 

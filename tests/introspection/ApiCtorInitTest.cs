@@ -156,13 +156,6 @@ namespace Introspection {
 			switch (type.Namespace) {
 			case "SafetyKit":
 				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
-#if __IOS__
-			case "WatchKit":
-				return true; // WatchKit has been removed from iOS.
-#elif MONOMAC
-			case "QTKit":
-				return true; // QTKit has been removed from macos.
-#endif
 			}
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)

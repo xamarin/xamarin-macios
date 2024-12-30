@@ -345,7 +345,6 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "QuickLookThumbnailing", Version = "13.0" },
 					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
 					new { Framework = "CoreLocationUI", Version = "15.0" },
-					new { Framework = "Chip", Version = "15.0" },
 					new { Framework = "ThreadNetwork", Version = "15.0" },
 					new { Framework = "BackgroundAssets", Version = "16.0" },
 					new { Framework = "DeviceDiscoveryExtension", Version = "16.0" },

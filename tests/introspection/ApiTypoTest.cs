@@ -143,7 +143,6 @@ namespace Introspection {
 			"Cda", // acronym: Clinical Document Architecture
 			"Cdrom",
 			"Celu", // Continuously Differentiable Exponential Linear Unit (ML)
-			"Chip", // framework name
 			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
@@ -1044,11 +1043,6 @@ namespace Introspection {
 				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
 					break;
 #endif
-				case "ChipLibrary": // Chip is removed entirely beginning Xcode 14
-					if (!TestRuntime.CheckXcodeVersion (14, 0))
-						if (TestRuntime.IsDevice)
-							Assert.True (CheckLibrary (s), fi.Name);
-					break;
 #if !__MACOS__
 				case "CinematicLibrary":
 				case "ThreadNetworkLibrary":

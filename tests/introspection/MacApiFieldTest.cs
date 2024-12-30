@@ -52,9 +52,6 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
 					return true;
 				break;
-			case "MonoMac.QTKit": // QTKit has been removed from macOS
-			case "QTKit":
-				return true;
 			}
 			return false;
 		}
