@@ -5722,7 +5722,7 @@ public partial class Generator : IMemberGatherer {
 						is_direct_binding = false;
 						is_direct_binding_value = "false";
 					}
-					print ("[Register(\"{0}\", {1})]", register_name, is_direct_binding == false ? "false" : "true");
+					print ($"[Register(\"{register_name}\", {(is_direct_binding == false ? "false" : "true")}{(bta.IsStubClass ? ", IsStubClass = true" : string.Empty)})]");
 				}
 				if (is_abstract || need_abstract.ContainsKey (type)) {
 					// Don't mark [Abstract] classes as abstract in .NET, we might need to create instances of them at some point.
