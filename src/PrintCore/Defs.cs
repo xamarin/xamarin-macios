@@ -17,7 +17,6 @@ using ObjCRuntime;
 using Foundation;
 
 using PMObject = System.IntPtr;
-using OSStatus = System.Int32;
 using System.Runtime.Versioning;
 
 namespace PrintCore {

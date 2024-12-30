@@ -1,11 +1,15 @@
-namespace Xharness {
-	public enum TestPlatform {
-		None,
-		All,
+using System;
 
-		iOS,
-		tvOS,
-		MacCatalyst,
-		Mac,
+namespace Xharness {
+	[Flags]
+	public enum TestPlatform {
+		None = 0,
+
+		iOS = 1,
+		tvOS = 2,
+		MacCatalyst = 4,
+		Mac = 8,
+
+		All = iOS | tvOS | MacCatalyst | Mac,
 	}
 }

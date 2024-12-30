@@ -31,7 +31,6 @@ namespace Xharness.Jenkins.TestTasks {
 		#region Public vars
 
 		public Dictionary<string, string> Environment = new ();
-		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 		public List<Resource> Resources = new ();
@@ -136,6 +135,9 @@ namespace Xharness.Jenkins.TestTasks {
 				if (testName is not null)
 					return testName;
 
+				if (TestProject?.Name is not null)
+					return TestProject.Name;
+
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
 				if (rv is null)
 					return $"unknown test name ({GetType ().Name}";
@@ -218,9 +220,6 @@ namespace Xharness.Jenkins.TestTasks {
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.StateMask | TestExecutingResult.InProgress;
 
 			try {
-				if (Dependency is not null)
-					await Dependency ();
-
 				if (InitialTask is not null)
 					await InitialTask;
 

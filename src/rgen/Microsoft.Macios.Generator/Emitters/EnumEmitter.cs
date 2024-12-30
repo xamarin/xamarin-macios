@@ -139,7 +139,8 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 
 		builder.AppendMemberAvailability (codeChanges.SymbolAvailability);
 		builder.AppendGeneratedCodeAttribute ();
-		using (var classBlock = builder.CreateBlock ($"static public partial class {GetSymbolName (codeChanges)}", true)) {
+		var modifiers = $"{string.Join (' ', codeChanges.Modifiers)} ";
+		using (var classBlock = builder.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}static partial class {GetSymbolName (codeChanges)}", true)) {
 			classBlock.AppendLine ();
 			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{codeChanges.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter

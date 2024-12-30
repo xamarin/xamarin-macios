@@ -12,9 +12,9 @@ namespace Xharness.Jenkins.TestTasks {
 			get {
 				switch (Platform) {
 				case TestPlatform.Mac:
-					return "Mac [dotnet]";
+					return "macOS";
 				case TestPlatform.MacCatalyst:
-					return "Mac Catalyst [dotnet]";
+					return "Mac Catalyst";
 				default:
 					throw new NotImplementedException (Platform.ToString ());
 				}

@@ -41,6 +41,42 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+				}
+			];
+
+			const string internalInterface = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+internal partial interface IProtocol {
+}
+";
+
+			yield return [
+				internalInterface,
+				new CodeChanges (
+					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+          UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 				}
 			];
 
@@ -69,6 +105,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -117,6 +157,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -166,6 +210,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -228,6 +276,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -276,6 +328,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -325,6 +381,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Methods = [
 						new (
 							type: "NS.IProtocol",
@@ -388,6 +448,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Events = [
 						new (
 							name: "Changed",
@@ -433,6 +497,10 @@ public partial interface IProtocol {
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
 					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Events = [
 						new (
 							name: "Changed",

@@ -382,9 +382,20 @@ namespace Xamarin.Tests {
 			}
 
 			var rv = Execute (executable, out var output, out string magicWord, environment);
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
-			return output.ToString ();
+			var outputString = output.ToString ();
+			if (rv.ExitCode != 0) {
+				var msg = $"'{executable}' exited with exit code {rv}:" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			if (!outputString.Contains (magicWord)) {
+				var msg = $"'{executable}' exited with exit code {rv}, but did not contain the magic word '{magicWord}' ({outputString.Length}):" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			return outputString;
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord, Dictionary<string, string?>? environment = null)
