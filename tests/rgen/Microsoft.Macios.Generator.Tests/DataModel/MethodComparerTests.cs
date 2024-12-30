@@ -15,6 +15,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -24,6 +25,7 @@ public class MethodComparerTests {
 			type: "MyOtherType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -39,6 +41,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -48,6 +51,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyOtherMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -62,6 +66,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -71,6 +76,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "int",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -85,6 +91,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -97,6 +104,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -113,6 +121,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -124,6 +133,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -142,6 +152,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 				new ("SecondAttr", ["first"]),
@@ -156,6 +167,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -174,6 +186,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -187,6 +200,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("SecondAttr", ["first"]),
 			],
@@ -206,6 +220,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -221,6 +236,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -242,6 +258,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -257,6 +274,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],

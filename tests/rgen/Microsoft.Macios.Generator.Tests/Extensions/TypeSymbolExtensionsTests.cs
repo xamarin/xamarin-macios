@@ -78,8 +78,7 @@ public enum TestEnum {
 	public void GetAttributeDataPresent (ApplePlatform platform, string inputText, string attributesText,
 		HashSet<string> expectedAttributes)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
-			platform, inputText, attributesText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: [inputText, attributesText]);
 		Assert.Equal (2, syntaxTrees.Length);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()
@@ -175,8 +174,7 @@ public class ParentClass {
 	public void GetParentTests (ApplePlatform platform, string inputText,
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = getNode (syntaxTrees [0].GetRoot ());
@@ -306,8 +304,7 @@ public class ParentClass{
 		Func<SyntaxNode, MemberDeclarationSyntax?> getNode,
 		SymbolAvailability expectedAvailability)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetAttributeDataPresent),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = getNode (syntaxTrees [0].GetRoot ());
