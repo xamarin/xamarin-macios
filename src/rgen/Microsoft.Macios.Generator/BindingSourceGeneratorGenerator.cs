@@ -81,7 +81,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	}
 
 	static void GenerateCode (SourceProductionContext context, Compilation compilation,
-		ImmutableArray<(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes)> changesList)
+		in ImmutableArray<(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes)> changesList)
 	{
 		// The process is as follows, get all the changes we have received from the incremental generator,
 		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
@@ -91,24 +91,19 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// in the RootBindingContext to generate the library and trampoline code.
 		var rootContext = new RootBindingContext (compilation);
 		foreach (var (declaration, change) in changesList) {
-			var semanticModel = compilation.GetSemanticModel (declaration.SyntaxTree);
-			// This is a bug in the roslyn analyzer for roslyn generator https://github.com/dotnet/roslyn-analyzers/issues/7436
-#pragma warning disable RS1039
-			if (semanticModel.GetDeclaredSymbol (declaration) is not INamedTypeSymbol namedTypeSymbol)
-#pragma warning restore RS1039
-				continue;
-
 			// init sb and add the header
 			var sb = new TabbedStringBuilder (new ());
 			sb.WriteHeader ();
-			if (EmitterFactory.TryCreate (change, rootContext, semanticModel, namedTypeSymbol, sb, out var emitter)) {
+			if (EmitterFactory.TryCreate (change, rootContext, sb, out var emitter)) {
 				// write the using statements
 				CollectUsingStatements (declaration.SyntaxTree, sb, emitter);
 
-				if (emitter.TryEmit (out var diagnostics)) {
+				if (emitter.TryEmit (change, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
-					context.AddSource ($"{Path.Combine (emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
+					var namespacePath = Path.Combine (change.Namespace.ToArray ());
+					var fileName = emitter.GetSymbolName (change);
+					context.AddSource ($"{Path.Combine (namespacePath, fileName)}.g.cs",
 						SourceText.From (code, Encoding.UTF8));
 				} else {
 					// add to the diagnostics and continue to the next possible candidate
@@ -121,7 +116,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 					Diagnostics
 						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					declaration.GetLocation (),
-					namedTypeSymbol.ToDisplayString ().Trim ()));
+					change.FullyQualifiedSymbol));
 			}
 		}
 

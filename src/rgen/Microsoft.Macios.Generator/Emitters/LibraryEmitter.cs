@@ -5,12 +5,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
+using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
 class LibraryEmitter (
 	RootBindingContext context,
-	TabbedStringBuilder builder) : ICodeEmitter {
+	TabbedStringBuilder builder) {
 	public string SymbolNamespace => "ObjCRuntime";
 	public string SymbolName => "Libraries";
 	INamedTypeSymbol? LibrarySymbol { get; } = context.Compilation.GetTypeByMetadataName ("ObjCRuntime.Libraries");

@@ -41,8 +41,7 @@ namespace TestNamespace
 	public void CorrectUsingImports (ApplePlatform platform, string input, string expectedOutput)
 	{
 		// We need to create a compilation with the required source code.
-		var (compilation, _) = CreateCompilation (nameof (CorrectUsingImports),
-			platform, input);
+		var (compilation, _) = CreateCompilation (platform, sources: input);
 
 		// Run generators and retrieve all results.
 		var runResult = Driver.RunGenerators (compilation).GetRunResult ();

@@ -27,7 +27,8 @@ class ConstructorComparer : IComparer<Constructor> {
 		if (attributesLengthCompare != 0)
 			return attributesLengthCompare;
 
-		// sort by the attributes
+		// Sort by the attributes, this covers the need to sort by the os availability since that
+		// information comes from the attributes. There is no need to sort twice by the same data
 		var attributeComparer = new AttributeComparer ();
 		var xAttributes = x.Attributes.Order (attributeComparer).ToArray ();
 		var yAttributes = y.Attributes.Order (attributeComparer).ToArray ();

@@ -24,34 +24,37 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 			new (
 				name: "SecondProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 
@@ -65,24 +68,26 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 
@@ -96,24 +101,26 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
 				type: "string",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 
