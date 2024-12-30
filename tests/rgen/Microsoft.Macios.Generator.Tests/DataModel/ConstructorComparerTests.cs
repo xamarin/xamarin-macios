@@ -11,8 +11,8 @@ public class ConstructorComparerTests {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Constructor ("MyClass", [], [], []);
-		var y = new Constructor ("MyClass2", [], [], []);
+		var x = new Constructor ("MyClass", new (), [], [], []);
+		var y = new Constructor ("MyClass2", new (), [], [], []);
 		Assert.Equal (String.Compare (x.Type, y.Type, StringComparison.Ordinal), comparer.Compare (x, y));
 	}
 
@@ -21,12 +21,14 @@ public class ConstructorComparerTests {
 	{
 		var x = new Constructor ("MyClass",
 			attributes: [],
+			symbolAvailability: new (),
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -39,12 +41,14 @@ public class ConstructorComparerTests {
 	public void CompareDiffModifier ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -58,6 +62,7 @@ public class ConstructorComparerTests {
 	public void CompareAttrsDiffLength ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 				new ("SecondAttr", ["first"]),
@@ -68,6 +73,7 @@ public class ConstructorComparerTests {
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -83,6 +89,7 @@ public class ConstructorComparerTests {
 	public void CompareDiffAttrs ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -92,6 +99,7 @@ public class ConstructorComparerTests {
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("SecondAttr", ["first"]),
 			],
@@ -109,6 +117,7 @@ public class ConstructorComparerTests {
 	{
 
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -120,6 +129,7 @@ public class ConstructorComparerTests {
 				new (0, "string", "name"),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -138,6 +148,7 @@ public class ConstructorComparerTests {
 	public void CompareDiffParameters ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -149,6 +160,7 @@ public class ConstructorComparerTests {
 				new (0, "string", "name"),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],

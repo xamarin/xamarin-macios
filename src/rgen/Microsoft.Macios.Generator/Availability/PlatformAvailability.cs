@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
@@ -37,7 +39,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	readonly SortedDictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 	/// <summary>
-	/// Dictionary tath contains all the unsupported versions and their optional data.
+	/// The Dictionary which contains all the unsupported versions and their optional data.
 	/// </summary>
 	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
 
@@ -55,8 +57,8 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	{
 		Platform = platform;
 		SupportedVersion = supportedVersion;
-		unsupported = unsupportedVersions;
-		obsoleted = obsoletedVersions;
+		unsupported = new (unsupportedVersions);
+		obsoleted = new (obsoletedVersions);
 	}
 
 	/// <summary>
@@ -67,7 +69,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	{
 		Platform = other.Platform;
 		SupportedVersion = other.SupportedVersion;
-		// important, the default copy constructor of a record wont do this. It will use the same ref, not
+		// Important: the default copy constructor of a record won't do this. It will use the same ref, not
 		// something we want to do because it will mean that two records will modify the same collection
 		unsupported = new (other.unsupported);
 		obsoleted = new (other.obsoleted);
@@ -159,5 +161,19 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	public static bool operator != (PlatformAvailability left, PlatformAvailability right)
 	{
 		return !left.Equals (right);
+	}
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("{ ");
+		sb.Append ($"Platform: '{Platform}', ");
+		sb.Append ($"Supported: '{SupportedVersion?.ToString ()}', ");
+		sb.Append ("Unsupported: [");
+		sb.AppendJoin (", ", unsupported.Select (v => $"'{v.Key}': '{v.Value?.ToString () ?? "null"}'"));
+		sb.Append ("], Obsoleted: [");
+		sb.AppendJoin (", ", obsoleted.Select (v => $"'{v.Key}': ('{v.Value.Message?.ToString () ?? "null"}', '{v.Value.Url?.ToString () ?? "null"}')"));
+		sb.Append ("] }");
+		return sb.ToString ();
 	}
 }
