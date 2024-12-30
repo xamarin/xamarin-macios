@@ -2274,27 +2274,6 @@ namespace Registrar {
 					}
 				}
 				goto default;
-#if !NET || LEGACY_TOOLS
-			case "Chip":
-				switch (App.Platform) {
-				case ApplePlatform.iOS when App.SdkVersion.Major <= 15:
-				case ApplePlatform.TVOS when App.SdkVersion.Major <= 15:
-				case ApplePlatform.MacOSX when App.SdkVersion.Major <= 12:
-				case ApplePlatform.WatchOS when App.SdkVersion.Major <= 8:
-					h = "<CHIP/CHIP.h>";
-					break;
-				default:
-					// The framework has been renamed.
-					header.WriteLine ("@protocol CHIPDevicePairingDelegate <NSObject>");
-					header.WriteLine ("@end");
-					header.WriteLine ("@protocol CHIPKeypair <NSObject>");
-					header.WriteLine ("@end");
-					header.WriteLine ("@protocol CHIPPersistentStorageDelegate <NSObject>");
-					header.WriteLine ("@end");
-					break;
-				}
-				return;
-#endif
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
@@ -2357,12 +2336,6 @@ namespace Registrar {
 					}
 				}
 				goto default;
-#if !NET || LEGACY_TOOLS
-			case "QTKit":
-				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
-					return; // 10.12 removed the header files for QTKit
-				goto default;
-#endif
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
@@ -2370,20 +2343,6 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
-#if !NET || LEGACY_TOOLS
-			case "iAd":
-				if (App.SdkVersion.Major >= 13) {
-					// most of the framework has been obliterated from the headers
-					header.WriteLine ("@class ADBannerView;");
-					header.WriteLine ("@class ADInterstitialAd;");
-					header.WriteLine ("@protocol ADBannerViewDelegate <NSObject>");
-					header.WriteLine ("@end");
-					header.WriteLine ("@protocol ADInterstitialAdDelegate <NSObject>");
-					header.WriteLine ("@end");
-					return;
-				}
-				goto default;
-#endif
 			case "ThreadNetwork":
 				h = "<ThreadNetwork/THClient.h>";
 				break;
@@ -2819,9 +2778,6 @@ namespace Registrar {
 			return ns == nsToMatch;
 		}
 
-#if !NET || LEGACY_TOOLS
-		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
-#endif
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
@@ -2879,20 +2835,7 @@ namespace Registrar {
 						Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
 						continue; // Some types are not supported in the simulator.
 					}
-				} else {
-#if !NET || LEGACY_TOOLS
-					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
-						continue; // QTKit header was removed in 10.12 SDK
-#endif
 				}
-
-#if !NET || LEGACY_TOOLS
-				// Xcode 11 removed WatchKit for iOS!
-				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
-					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
-					continue;
-				}
-#endif
 
 				// Xcode 15 removed NewsstandKit
 				if (Driver.XcodeVersion.Major >= 15) {

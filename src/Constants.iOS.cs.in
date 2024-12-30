@@ -11,12 +11,6 @@ namespace ObjCRuntime {
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
 
-		// iOS 8.2
-#if !NET
-		// Apple removed the WatchKit framework from iOS
-		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
-#endif
-
 		// iOS 9
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
 
