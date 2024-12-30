@@ -19,7 +19,7 @@ public static class AttributesNames {
 
 	public static string? GetFieldAttributeName<T> () where T : Enum
 	{
-		// we cannot use a switch statement because typeof is not a constat value
+		// we cannot use a switch statement because typeof is not a constant value
 		var type = typeof (T);
 		if (type == typeof (ObjCBindings.Field)) {
 			return ExportFieldAttribute;
