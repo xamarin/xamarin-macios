@@ -8,19 +8,15 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using NUnit.Framework;
 
 using Foundation;
 using GameplayKit;
 
-#if NET
 using System.Numerics;
-#else
-using OpenTK;
-#endif
+
+#nullable enable
 
 namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]
@@ -30,8 +26,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void GKTriangleTest ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (8, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
+			TestRuntime.AssertNotInterpreter ("This test does not work in the interpreter: https://github.com/dotnet/runtime/issues/110644");
 
 			var max = new Vector2 (10, 10);
 			var min = new Vector2 (1, 1);
@@ -61,4 +56,3 @@ namespace MonoTouchFixtures.GamePlayKit {
 		}
 	}
 }
-#endif

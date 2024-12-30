@@ -25,13 +25,13 @@ namespace LinkSdk {
 #endif
 			try {
 				LoadCategories ().GetAwaiter ().GetResult ();
-			} catch (TaskCanceledException tce) {
+			} catch (TaskCanceledException) {
 				TestRuntime.IgnoreInCI ("Ignore any download timeouts");
 				throw;
 			} catch (HttpRequestException hre) {
 				TestRuntime.IgnoreInCIIfForbidden (hre); // Ignore any 403 errors.
 				throw;
-			} catch (IOException ie) {
+			} catch (IOException) {
 				/*
 				 *  LinkSdk.AsyncTests
 				 *  	[FAIL] Bug12221 : System.Net.Http.HttpRequestException : The SSL connection could not be established, see inner exception.

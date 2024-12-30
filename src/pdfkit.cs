@@ -2303,7 +2303,6 @@ namespace PdfKit {
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
-	[NoTV]
 	interface PdfViewAnnotationHitEventArgs {
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }

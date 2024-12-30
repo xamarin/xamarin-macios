@@ -210,6 +210,11 @@ namespace Introspection {
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -426,6 +431,11 @@ namespace Introspection {
 				case "UIHoverGestureRecognizer":
 				// Xcode 16.2 Conformance not in headers
 				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -645,6 +655,11 @@ namespace Introspection {
 					return true;
 				// Xcode 16.2 Conformance not in headers
 				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;

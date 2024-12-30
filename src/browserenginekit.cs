@@ -1195,7 +1195,7 @@ namespace BrowserEngineKit {
 	}
 
 	[BackingFieldType (typeof (ulong))]
-	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac, MacCatalyst (18, 0)]
+	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac]
 	public enum BEAccessibilityTrait : long {
 		[Field ("BEAccessibilityTraitMenuItem")]
 		MenuItem,
@@ -1214,7 +1214,7 @@ namespace BrowserEngineKit {
 	}
 
 	[BackingFieldType (typeof (uint))]
-	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac, MacCatalyst (18, 0)]
+	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac]
 	public enum BEAccessibilityNotification : long {
 		[Field ("BEAccessibilitySelectionChangedNotification")]
 		SelectionChanged,

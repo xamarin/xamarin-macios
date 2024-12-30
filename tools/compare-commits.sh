@@ -269,6 +269,15 @@ if test -z "$USE_EXISTING_BUILD"; then
 	mkdir -p "$OUTPUT_SRC_DIR"
 
 	cd "$OUTPUT_SRC_DIR"
+
+	echo "    ${BLUE}Getting ADR from existing clone to avoid having to setup auth to get it again...${CLEAR}"
+	FILE="$ROOT_DIR/adr-path.raw"
+	make print-variable-value-to-file VARIABLE=ADR_PATH FILE=$FILE -C "$ROOT_DIR/tools/devops"
+	ADR_PATH=$(cat "$FILE")
+	rm -f "$FILE"
+	cp -cr "$ADR_PATH" .
+
+	echo "    ${BLUE}Cloning xamarin-macios...${CLEAR}"
 	git clone https://github.com/xamarin/xamarin-macios --reference "$ROOT_DIR" 2>&1 | sed 's/^/        /'
 	cd xamarin-macios
 	git reset --hard "$BASE_HASH" 2>&1 | sed 's/^/        /'

@@ -19,11 +19,11 @@ public class AccessorsEqualityComparerTests {
 	public void CompareSameSizeDiffSizes ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
 		];
 
 		Assert.False (equalityComparer.Equals (x, y));
@@ -33,12 +33,12 @@ public class AccessorsEqualityComparerTests {
 	public void CompareSameSizeDiffAccessors ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Add, [], []),
-			new (AccessorKind.Remove, [], []),
+			new (AccessorKind.Add, new (), [], []),
+			new (AccessorKind.Remove, new (), [], []),
 		];
 
 		Assert.False (equalityComparer.Equals (x, y));
@@ -48,12 +48,12 @@ public class AccessorsEqualityComparerTests {
 	public void CompareTwoAccessorsDiffOrder ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Setter, [], []),
-			new (AccessorKind.Getter, [], []),
+			new (AccessorKind.Setter, new (), [], []),
+			new (AccessorKind.Getter, new (), [], []),
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));
@@ -63,13 +63,13 @@ public class AccessorsEqualityComparerTests {
 	public void CompareTwoAccessorsEqual ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		];
 
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (AccessorKind.Getter, new (), [], []),
+			new (AccessorKind.Setter, new (), [], []),
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));

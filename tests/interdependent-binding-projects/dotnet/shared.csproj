@@ -17,6 +17,20 @@
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+
+    <!--
+      warning CS0436: The type 'ApplePlatform' in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs' conflicts with the imported type 'ApplePlatform' in 'EmbeddedResources, Version=1.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065'. Using the type defined in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs'
+
+      We get the 'ApplePlatform' enum from two referenced projects, which causes a type resolution failure unless this project also has the type (in which case this project's type wins the type resolution) - but that triggers the CS0436 warning, so ignore it.
+    -->
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+
+    <!-- warning CS8002: Referenced assembly 'Touch.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name. -->
+    <NoWarn>$(NoWarn);CS8002</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />

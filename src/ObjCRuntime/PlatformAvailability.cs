@@ -511,6 +511,7 @@ namespace ObjCRuntime {
 		}
 	}
 
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
@@ -541,6 +542,7 @@ namespace ObjCRuntime {
 
 	}
 
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
