@@ -28,6 +28,10 @@ class TestConfiguration {
             $testPrefix = $config.testPrefix
             $testStage = $config.testStage ? $config.testStage : $config.testPrefix
 
+            if ($testPrefix -ne "simulator_tests") {
+                continue
+            }
+
             $vars = [ordered]@{}
             # set common variables
             $vars["LABEL"] = $label
