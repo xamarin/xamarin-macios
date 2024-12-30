@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -30,6 +32,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -54,6 +57,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -81,6 +85,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "NS.CustomType",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -105,6 +110,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -134,6 +140,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -161,6 +168,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "string",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -192,6 +200,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -229,6 +238,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -264,6 +274,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "void",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -287,6 +298,8 @@ namespace NS {
 	}
 }
 ";
+			var builder = SymbolAvailability.CreateBuilder ();
+			builder.Add (new SupportedOSPlatformData ("ios"));
 
 			yield return [
 				methodWithAttribute,
@@ -294,6 +307,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: "string",
+					symbolAvailability: builder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -329,6 +343,7 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: "bool",
+					symbolAvailability: new (),
 					attributes: [
 					],
 					modifiers: [
@@ -355,8 +370,7 @@ namespace NS {
 	[AllSupportedPlatformsClassData<TestDataFromMethodDeclaration>]
 	void FromMethodDeclaration (ApplePlatform platform, string inputText, Method expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromMethodDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

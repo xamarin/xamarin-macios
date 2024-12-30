@@ -24,34 +24,37 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 			new (
 				name: "SecondEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 
@@ -65,24 +68,26 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "AVFoundation.AVVideo",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 
@@ -96,24 +101,26 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (AccessorKind.Getter, new (), [], [])
 				]),
 		];
 

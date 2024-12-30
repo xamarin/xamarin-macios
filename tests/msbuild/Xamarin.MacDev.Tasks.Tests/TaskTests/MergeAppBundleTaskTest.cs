@@ -22,7 +22,6 @@ namespace Xamarin.MacDev.Tasks {
 				{ "MSBuildSDKsPath", null }, // Comes from MSBuild, and confuses 'dotnet build'
 			};
 
-			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 

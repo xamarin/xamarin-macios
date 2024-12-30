@@ -105,15 +105,15 @@ namespace Extrospection {
 			if (AttributeHelpers.HasAnyAdvice (item))
 				return;
 
-			if (!AttributeHelpers.HasAnyDeprecationForCurrentPlatform (item)) {
-				Log.On (framework).Add ($"!deprecated-attribute-missing! {itemName} missing a [Deprecated] attribute");
-				return;
-			}
-
 			// Don't version check us when Apple does __attribute__((availability(macos, introduced=10.0, deprecated=100000)));
 			// #define __API_TO_BE_DEPRECATED 100000
 			if (objcVersion.Major == 100000)
 				return;
+
+			if (!AttributeHelpers.HasAnyDeprecationForCurrentPlatform (item)) {
+				Log.On (framework).Add ($"!deprecated-attribute-missing! {itemName} missing a [Deprecated] attribute");
+				return;
+			}
 
 			// Some APIs have both a [Deprecated] and [Obsoleted]. Bias towards [Obsoleted].
 			Version managedVersion;

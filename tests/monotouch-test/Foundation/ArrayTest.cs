@@ -14,9 +14,7 @@ using ObjCRuntime;
 using Security;
 using NUnit.Framework;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
+#nullable enable
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -51,11 +49,7 @@ namespace MonoTouchFixtures.Foundation {
 		NSComparisonResult Comparator (NSObject obj1, NSObject obj2)
 		{
 			comparator_count++;
-#if NET
 			return (NSComparisonResult) (((long) (IntPtr) obj2.Handle - (long) (IntPtr) obj1.Handle));
-#else
-			return (NSComparisonResult) (long) ((nint) obj2.Handle - (nint) obj1.Handle);
-#endif
 		}
 
 		[Test]
@@ -87,6 +81,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Filter ()
 		{
+			TestRuntime.AssertNotInterpreter ("This test does not work in the interpreter: https://github.com/dotnet/runtime/issues/110649");
+
 			evaluator_count = 0;
 			using (var obj1 = new NSObject ())
 			using (var obj2 = new NSObject ())
