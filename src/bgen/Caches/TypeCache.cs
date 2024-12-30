@@ -112,6 +112,9 @@ public class TypeCache {
 	public Type? CMClock { get; }
 	public Type? CMFormatDescription { get; }
 	public Type? CMSampleBuffer { get; }
+	public Type? CMTag { get; }
+	public Type? CMTagCollection { get; }
+	public Type? CMTaggedBufferGroup { get; }
 	public Type? CMTime { get; }
 	public Type? CMTimebase { get; }
 	public Type? CMTimeMapping { get; }
@@ -274,6 +277,9 @@ public class TypeCache {
 			CMClock = ConditionalLookup (platformAssembly, "CoreMedia", "CMClock");
 			CMFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMFormatDescription");
 			CMSampleBuffer = ConditionalLookup (platformAssembly, "CoreMedia", "CMSampleBuffer");
+			CMTag = ConditionalLookup (platformAssembly, "CoreMedia", "CMTag");
+			CMTagCollection = ConditionalLookup (platformAssembly, "CoreMedia", "CMTagCollection");
+			CMTaggedBufferGroup = ConditionalLookup (platformAssembly, "CoreMedia", "CMTaggedBufferGroup");
 			CMTime = ConditionalLookup (platformAssembly, "CoreMedia", "CMTime");
 			CMTimebase = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimebase");
 			CMTimeMapping = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimeMapping");
