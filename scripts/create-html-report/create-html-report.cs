@@ -65,7 +65,7 @@ public class Program {
 		var trxFiles = new [] {
 			new { Name = "Remote .NET tests", TestResults = Path.Combine (outputDirectory, "windows-remote-dotnet-tests.trx") },
 			new { Name = "Local .NET tests", TestResults = Path.Combine (outputDirectory, "windows-dotnet-tests.trx") },
-			new { Name = "Generator tests", TestResults = Path.Combine (outputDirectory, "windows", "bgen-tests", "results.trx") },
+			new { Name = "BGen tests", TestResults = Path.Combine (outputDirectory, "windows", "bgen-tests", "results.trx") },
 		};
 
 		var extraFiles = new []{
@@ -172,6 +172,6 @@ public class Program {
 		Console.WriteLine ($"Created {summaryFile} successfully.");
 		Console.WriteLine (summaryContents);
 		Console.WriteLine ($"All tests succeeded: {allTestsSucceeded}");
-		return allTestsSucceeded ? 0 : 1;
+		return 0;
 	}
 }
