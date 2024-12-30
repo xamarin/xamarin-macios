@@ -7,9 +7,9 @@ using Microsoft.Macios.Generator.DataModel;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class SemanticModelExtensions {
-	
-	public static void GetSymbolData (ISymbol? symbol, 
-		out string name, 
+
+	public static void GetSymbolData (ISymbol? symbol,
+		out string name,
 		out ImmutableArray<string> namespaces,
 		out SymbolAvailability symbolAvailability)
 	{
@@ -40,10 +40,10 @@ static class SemanticModelExtensions {
 			bindingData = default;
 		else {
 			bindingData = bindingType switch {
-				BindingType.Category => new BindingData(symbol.GetBindingData<ObjCBindings.Category> ()),
-				BindingType.Class => new BindingData(symbol.GetBindingData<ObjCBindings.Class> ()),
-				BindingType.Protocol => new BindingData(symbol.GetBindingData<ObjCBindings.Protocol> ()),
-				BindingType.SmartEnum => new BindingData(BindingType.SmartEnum, symbol.GetBindingData ()),
+				BindingType.Category => new BindingData (symbol.GetBindingData<ObjCBindings.Category> ()),
+				BindingType.Class => new BindingData (symbol.GetBindingData<ObjCBindings.Class> ()),
+				BindingType.Protocol => new BindingData (symbol.GetBindingData<ObjCBindings.Protocol> ()),
+				BindingType.SmartEnum => new BindingData (BindingType.SmartEnum, symbol.GetBindingData ()),
 				_ => default,
 			};
 		}

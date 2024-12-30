@@ -22,14 +22,14 @@ static class AttributesNames {
 
 	public static string? GetBindingTypeAttributeName<T> () where T : Enum
 	{
-		var type = typeof(T);
-		if (type == typeof(ObjCBindings.Category)) {
+		var type = typeof (T);
+		if (type == typeof (ObjCBindings.Category)) {
 			return BindingCategoryAttribute;
 		}
-		if (type == typeof(ObjCBindings.Class)) {
+		if (type == typeof (ObjCBindings.Class)) {
 			return BindingClassAttribute;
 		}
-		if (type == typeof(ObjCBindings.Protocol)) {
+		if (type == typeof (ObjCBindings.Protocol)) {
 			return BindingProtocolAttribute;
 		}
 

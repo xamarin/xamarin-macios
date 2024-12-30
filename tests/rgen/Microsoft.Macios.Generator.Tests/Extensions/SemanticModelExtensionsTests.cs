@@ -166,7 +166,7 @@ namespace Foo {
 		{
 			var builder = SymbolAvailability.CreateBuilder ();
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			
+
 			const string classBindingType = @"
 using ObjCBindings;
 
@@ -176,9 +176,13 @@ namespace Test;
 public class Foo {
 }
 ";
-			yield return [BindingType.Class, classBindingType, "Foo", ns, builder.ToImmutable (), 
-				new BindingData(new BindingTypeData<Class> ())];
-			
+			yield return [BindingType.Class,
+				classBindingType,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Class> ())];
+
 			const string classBindingDisableConstructorsType = @"
 using ObjCBindings;
 
@@ -188,9 +192,13 @@ namespace Test;
 public class Foo {
 }
 ";
-			yield return [BindingType.Class, classBindingDisableConstructorsType, "Foo", ns, builder.ToImmutable (), 
-				new BindingData(new BindingTypeData<Class> (Class.DisableDefaultCtor))];
-			
+			yield return [BindingType.Class,
+				classBindingDisableConstructorsType,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Class> (Class.DisableDefaultCtor))];
+
 			const string classBindingName = @"
 using ObjCBindings;
 
@@ -200,9 +208,13 @@ namespace Test;
 public class Foo {
 }
 ";
-			yield return [BindingType.Class, classBindingName, "Foo", ns, builder.ToImmutable (), 
-				new BindingData(new BindingTypeData<Class> ("ObjcFoo"))];
-			
+			yield return [BindingType.Class,
+				classBindingName,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Class> ("ObjcFoo"))];
+
 			const string classBindingNameAndFlags = @"
 using ObjCBindings;
 
@@ -212,9 +224,13 @@ namespace Test;
 public class Foo {
 }
 ";
-			yield return [BindingType.Class, classBindingNameAndFlags, "Foo", ns, builder.ToImmutable (), 
-				new BindingData(new BindingTypeData<Class> ("ObjcFoo", Class.DisableDefaultCtor))];
-			
+			yield return [BindingType.Class,
+				classBindingNameAndFlags,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Class> ("ObjcFoo", Class.DisableDefaultCtor))];
+
 			const string categoryBindingType = @"
 using ObjCBindings;
 
@@ -224,9 +240,13 @@ namespace Test;
 public static class Foo {
 }
 ";
-			yield return [BindingType.Category, categoryBindingType, "Foo", ns, builder.ToImmutable (),
-				new BindingData(new BindingTypeData<Category> ())];
-			
+			yield return [BindingType.Category,
+				categoryBindingType,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Category> ())];
+
 			const string protocolBindingType = @"
 using ObjCBindings;
 
@@ -236,9 +256,13 @@ namespace Test;
 public interface IFoo {
 }
 ";
-			yield return [BindingType.Protocol, protocolBindingType, "IFoo", ns, builder.ToImmutable (), 
-				new BindingData(new BindingTypeData<Protocol> ())];
-			
+			yield return [BindingType.Protocol,
+				protocolBindingType,
+				"IFoo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (new BindingTypeData<Protocol> ())];
+
 			const string smartEnumBindingType = @"
 using ObjCBindings;
 
@@ -249,10 +273,14 @@ public enum Foo {
 	First,
 }
 ";
-			yield return [BindingType.SmartEnum, smartEnumBindingType, "Foo", ns, builder.ToImmutable (), 
-				new BindingData(BindingType.SmartEnum, new ())];
+			yield return [BindingType.SmartEnum,
+				smartEnumBindingType,
+				"Foo",
+				ns,
+				builder.ToImmutable (),
+				new BindingData (BindingType.SmartEnum, new ())];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -272,9 +300,9 @@ public enum Foo {
 			.LastOrDefault ();
 		Assert.NotNull (declaration);
 		semanticModel.GetSymbolData (declaration, bindingType,
-			out var name, 
-			out var @namespace, 
-			out var symbolAvailability, 
+			out var name,
+			out var @namespace,
+			out var symbolAvailability,
 			out var bindingData);
 		Assert.Equal (expectedName, name);
 		Assert.Equal (expectedNamespace, @namespace, comparer);

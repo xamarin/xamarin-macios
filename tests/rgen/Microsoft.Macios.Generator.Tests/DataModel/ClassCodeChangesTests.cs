@@ -40,7 +40,7 @@ public partial class MyClass {
 			yield return [
 				emptyClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -71,7 +71,7 @@ internal partial class MyClass {
 			yield return [
 				internalClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -106,7 +106,7 @@ public partial class MyClass {
 			yield return [
 				emptyClassAvailability,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -141,7 +141,7 @@ public partial class MyClass {
 			yield return [
 				singleConstructorClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -188,7 +188,7 @@ public partial class MyClass {
 			yield return [
 				multiConstructorClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -245,7 +245,7 @@ public partial class MyClass {
 			yield return [
 				singlePropertyClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -296,7 +296,7 @@ public partial class MyClass {
 			yield return [
 				multiPropertyClassMissingExport,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -348,7 +348,7 @@ public partial class MyClass {
 			yield return [
 				multiPropertyClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -413,7 +413,7 @@ public partial class MyClass {
 			yield return [
 				singleMethodClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -464,7 +464,7 @@ public partial class MyClass {
 			yield return [
 				multiMethodClassMissingExport,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -516,7 +516,7 @@ public partial class MyClass {
 			yield return [
 				multiMethodClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -582,7 +582,7 @@ public partial class MyClass {
 			yield return [
 				singleEventClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -630,7 +630,7 @@ public partial class MyClass {
 			yield return [
 				multiEventClass,
 				new CodeChanges (
-					bindingData:new (new BindingTypeData<Class> ()),
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",

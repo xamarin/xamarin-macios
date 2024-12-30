@@ -12,15 +12,15 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name1", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name1", 
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ()); ;
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name2", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name2", 
+			name: "name2",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name2",
 			symbolAvailability: new ()); ;
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
@@ -30,15 +30,15 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.SmartEnum, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
@@ -48,15 +48,15 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			Attributes = [
 				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
@@ -70,9 +70,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			Attributes = [
 				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
@@ -80,9 +80,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			Attributes = [
 				new AttributeCodeChange (name: "name2", arguments: ["arg1", "arg2"])
@@ -96,15 +96,15 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
@@ -118,9 +118,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
@@ -128,9 +128,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
@@ -144,17 +144,18 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
-				EnumMembers = [], Properties = []
+			EnumMembers = [],
+			Properties = []
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -187,9 +188,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -231,9 +232,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -281,9 +282,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -325,9 +326,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -375,9 +376,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -420,9 +421,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -473,9 +474,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -520,9 +521,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -579,9 +580,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -633,9 +634,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -693,9 +694,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -747,9 +748,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
@@ -807,9 +808,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	{
 		var changes1 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			Modifiers = [
 				SyntaxFactory.Token (kind: SyntaxKind.InternalKeyword),
@@ -865,9 +866,9 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
-			name: "name", 
-			@namespace: ["NS"], 
-			fullyQualifiedSymbol: "NS.name", 
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			Modifiers = [
 				SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),

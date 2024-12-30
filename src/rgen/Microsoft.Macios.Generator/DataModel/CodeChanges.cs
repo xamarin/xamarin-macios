@@ -43,7 +43,7 @@ readonly struct CodeChanges {
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
 
-	readonly SymbolAvailability availability = new();
+	readonly SymbolAvailability availability = new ();
 	/// <summary>
 	/// The platform availability of the named type.
 	/// </summary>

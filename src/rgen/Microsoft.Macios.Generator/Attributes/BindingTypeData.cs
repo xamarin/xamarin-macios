@@ -108,7 +108,7 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 	{
 		Name = name;
 	}
-	
+
 	public BindingTypeData (T? flags)
 	{
 		Name = null;
