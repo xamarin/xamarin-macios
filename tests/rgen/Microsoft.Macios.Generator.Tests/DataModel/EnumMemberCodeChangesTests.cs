@@ -162,7 +162,7 @@ public class EnumMemberCodeChangesTests {
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: builder.ToImmutable (),
 				attributes: []);
-			yield return [availabilityEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' } Attributes: [] }"];
+			yield return [availabilityEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'None' } Attributes: [] }"];
 
 			var attrsEnum = new EnumMember (
 				name: "EnumValue",
@@ -172,7 +172,7 @@ public class EnumMemberCodeChangesTests {
 					new ("Attribute1"),
 					new ("Attribute2"),
 				]);
-			yield return [attrsEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' } Attributes: [{ Name: Attribute1, Arguments: [] }, { Name: Attribute2, Arguments: [] }] }"];
+			yield return [attrsEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'None' } Attributes: [{ Name: Attribute1, Arguments: [] }, { Name: Attribute2, Arguments: [] }] }"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
