@@ -34,8 +34,15 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 		// - the members are the same
 		// - the attributes are the same
 
-		// this could be a massive or but that makes it less readable
+		// this could be a massive 'or' but that makes it less readable
+		if (x.Name != y.Name)
+			return false;
+		var namespaceComparer = new ListComparer<string> ();
+		if (!namespaceComparer.Equals (x.Namespace, y.Namespace))
+			return false;
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
+			return false;
+		if (x.SymbolAvailability != y.SymbolAvailability)
 			return false;
 		if (x.BindingType != y.BindingType)
 			return false;
