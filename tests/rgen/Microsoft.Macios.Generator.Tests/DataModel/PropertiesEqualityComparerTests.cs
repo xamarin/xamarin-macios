@@ -133,7 +133,7 @@ public class PropertiesEqualityComparerTests {
 
 		Assert.True (equalityComparer.Equals (x, y));
 	}
-	
+
 	[Fact]
 	public void CompareDiffSmartEnum ()
 	{

@@ -226,7 +226,7 @@ public partial class MyClass {
 					]
 				}
 			];
-			
+
 			const string singlePropertySmartEnumClass = @"
 using ObjCBindings;
 

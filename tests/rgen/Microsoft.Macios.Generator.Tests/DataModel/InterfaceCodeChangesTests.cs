@@ -88,7 +88,7 @@ public partial interface IProtocol {
 					]
 				}
 			];
-			
+
 			const string singlePropertySmartEnumInterface = @"
 using ObjCBindings;
 
@@ -139,7 +139,7 @@ public partial interface IProtocol {
 					]
 				}
 			];
-			
+
 			const string singlePropertyEnumInterface = @"
 using ObjCBindings;
 

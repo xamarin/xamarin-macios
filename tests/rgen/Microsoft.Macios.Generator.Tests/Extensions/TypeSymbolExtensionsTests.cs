@@ -314,7 +314,7 @@ public class ParentClass{
 		var availability = symbol.GetSupportedPlatforms ();
 		Assert.Equal (availability, expectedAvailability);
 	}
-	
+
 	class TestDataHasAttribute : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -342,7 +342,7 @@ public class ParentClass{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
-		var declaration = syntaxTrees[0].GetRoot ()
+		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
 			.OfType<BaseTypeDeclarationSyntax> ()
 			.LastOrDefault ();
@@ -362,16 +362,16 @@ namespace Test;
 public class ClassExample {
 }";
 			yield return [classExample, false];
-			
+
 			const string interfaceExample = @"
 using System;
 namespace Test;
 
 public interface InterfaceExample {
 }";
-			
+
 			yield return [interfaceExample, false];
-			
+
 			const string enumExample = @"
 using System;
 namespace Test;
@@ -379,7 +379,7 @@ namespace Test;
 public enum MyEnum {
 	None,
 }";
-			
+
 			yield return [enumExample, false];
 
 			const string smartEnumExample = @"
@@ -390,7 +390,7 @@ namespace Test;
 public enum MyEnum {
 	None,
 }";
-			
+
 			yield return [smartEnumExample, true];
 		}
 
@@ -404,7 +404,7 @@ public enum MyEnum {
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
-		var declaration = syntaxTrees[0].GetRoot ()
+		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
 			.OfType<BaseTypeDeclarationSyntax> ()
 			.LastOrDefault ();

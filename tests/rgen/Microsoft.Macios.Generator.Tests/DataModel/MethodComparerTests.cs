@@ -288,7 +288,7 @@ public class MethodComparerTests {
 		var parameterCompare = new ParameterComparer ();
 		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
 	}
-	
+
 	[Fact]
 	public void CompareDiffParametersSmartEnum ()
 	{
@@ -323,7 +323,7 @@ public class MethodComparerTests {
 			],
 			parameters: [
 				new (0, "MyEnum", "name") {
-					IsSmartEnum = false 
+					IsSmartEnum = false
 				},
 			]
 		);

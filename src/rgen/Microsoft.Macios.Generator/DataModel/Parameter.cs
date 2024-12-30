@@ -42,7 +42,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// True if the parameter is nullable.:w
 	/// </summary>
 	public bool IsNullable { get; init; }
-	
+
 	/// <summary>
 	/// Returns if the parameter type is a smart enum.
 	/// </summary>
