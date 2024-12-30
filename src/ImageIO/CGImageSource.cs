@@ -41,8 +41,6 @@ using CoreGraphics;
 using NativeHandle = System.IntPtr;
 #endif
 
-using OSStatus = System.Int32;
-
 namespace ImageIO {
 
 #if !COREBUILD

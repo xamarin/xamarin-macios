@@ -10,7 +10,6 @@ using Security;
 
 #nullable enable
 
-using OSStatus = System.Int32;
 using SecIdentityRef = System.IntPtr;
 using CFArrayRef = System.IntPtr;
 using NSDataRef = System.IntPtr;

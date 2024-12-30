@@ -17,7 +17,6 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using OSStatus = System.Int32;
 
 namespace CoreMedia {
 
