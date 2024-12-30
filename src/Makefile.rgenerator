@@ -20,8 +20,10 @@ $(ROSLYN_GENERATOR): Makefile.rgenerator $(ROSLYN_GENERATOR_FILES)
 	@mkdir -p $(dir $@)
 	$(Q) $(CP) -Rf $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/generator/publish/* $(dir $@)
 
-
-$(ROSLYN_ANALYZER): Makefile.rgenerator $(ROSLYN_ANALYZER_FILES)
+# Build the generator first, because both of these projects reference Microsoft.Macios.Binding.Common.csproj, and building both in parallel
+# will randomly run into issues with NuGet restoring packages for Microsoft.Macios.Binding.Common.csproj for both builds simulataneously,
+# which will fail randomly.
+$(ROSLYN_ANALYZER): Makefile.rgenerator $(ROSLYN_ANALYZER_FILES) $(ROSLYN_GENERATOR)
 	$(Q_DOTNET_BUILD) $(DOTNET) publish rgen/Microsoft.Macios.Bindings.Analyzer/Microsoft.Macios.Bindings.Analyzer.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/rgen/analyzer)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/analyzer/)/
 	@mkdir -p $(dir $@)
 	$(Q) $(CP) -Rf $(DOTNET_BUILD_DIR)/IDE/bin/common/rgen/analyzer/publish/* $(dir $@)
