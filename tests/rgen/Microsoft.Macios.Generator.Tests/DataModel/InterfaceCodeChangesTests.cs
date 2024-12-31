@@ -155,7 +155,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertySmartEnumInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -211,7 +211,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyEnumInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",

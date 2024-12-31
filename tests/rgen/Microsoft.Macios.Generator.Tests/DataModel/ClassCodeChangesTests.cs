@@ -304,7 +304,7 @@ public partial class MyClass {
 			yield return [
 				singlePropertySmartEnumClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -360,7 +360,7 @@ public partial class MyClass {
 			yield return [
 				singlePropertyEnumClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
