@@ -48,17 +48,17 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// True if the code changes are for a static symbol.
 	/// </summary>
-	public bool IsStatic { get; init; }
+	public bool IsStatic { get; private init; }
 
 	/// <summary>
 	/// True if the code changes are for a partial symbol.
 	/// </summary>
-	public bool IsPartial { get; init; }
+	public bool IsPartial { get; private init; }
 
 	/// <summary>
 	/// True if the code changes are for an abstract symbol.
 	/// </summary>
-	public bool IsAbstract { get; init; }
+	public bool IsAbstract { get; private init; }
 
 	readonly ImmutableArray<SyntaxToken> modifiers = [];
 	/// <summary>
