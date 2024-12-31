@@ -51,6 +51,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -82,6 +83,7 @@ internal partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -120,6 +122,7 @@ public partial class MyClass {
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings", "System.Runtime.Versioning" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -152,6 +155,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -199,6 +203,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -256,6 +261,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -308,6 +314,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -360,6 +367,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -415,6 +423,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -469,6 +478,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -538,6 +548,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -589,6 +600,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -641,6 +653,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -707,6 +720,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -755,6 +769,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)

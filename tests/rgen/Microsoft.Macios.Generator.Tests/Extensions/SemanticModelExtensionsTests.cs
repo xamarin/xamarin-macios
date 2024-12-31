@@ -17,7 +17,7 @@ namespace Microsoft.Macios.Generator.Tests.Extensions;
 
 public class SemanticModelExtensionsTests : BaseGeneratorTestClass {
 
-	ListComparer<string> comparer = new ();
+	CollectionComparer<string> comparer = new ();
 	class TestDataGetNameAndNamespaceTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
