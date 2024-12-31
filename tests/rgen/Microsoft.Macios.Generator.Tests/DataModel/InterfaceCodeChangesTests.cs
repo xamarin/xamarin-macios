@@ -118,6 +118,122 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string singlePropertySmartEnumInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public enum MyEnum {
+	First,
+}
+
+[BindingType<Protocol>]
+public partial interface IProtocol {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertySmartEnumInterface,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Protocol> ()),
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isSmartEnum: true,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string singlePropertyEnumInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum {
+	First,
+}
+
+[BindingType<Protocol>]
+public partial interface IProtocol {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertyEnumInterface,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Protocol> ()),
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -170,6 +286,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -224,6 +341,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -279,6 +397,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -297,6 +416,7 @@ public partial interface IProtocol {
 						new (
 							name: "Surname",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])

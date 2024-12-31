@@ -24,6 +24,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -35,6 +36,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "SecondProperty",
 				type: "string",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -48,6 +50,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -68,6 +71,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -81,6 +85,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -101,6 +106,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -113,6 +119,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
+				isSmartEnum: false,
 				type: "string",
 				symbolAvailability: new (),
 				attributes: [],
@@ -125,5 +132,40 @@ public class PropertiesEqualityComparerTests {
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));
+	}
+
+	[Fact]
+	public void CompareDiffSmartEnum ()
+	{
+		ImmutableArray<Property> x = [
+			new (
+				name: "FirstProperty",
+				type: "string",
+				isSmartEnum: false,
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [
+					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				],
+				accessors: [
+					new (AccessorKind.Getter, new (), [], [])
+				]),
+		];
+		ImmutableArray<Property> y = [
+			new (
+				name: "FirstProperty",
+				isSmartEnum: true,
+				type: "string",
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [
+					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				],
+				accessors: [
+					new (AccessorKind.Getter, new (), [], [])
+				]),
+		];
+
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 }
