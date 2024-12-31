@@ -2661,8 +2661,7 @@ namespace GameKit {
 #if !TVOS
 		, GKSavedGameListener
 #endif
-		, GKChallengeListener, GKInviteEventListener
-	{
+		, GKChallengeListener, GKInviteEventListener {
 	}
 
 	[MacCatalyst (13, 1)]

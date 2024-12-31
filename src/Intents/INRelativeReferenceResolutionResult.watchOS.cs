@@ -18,7 +18,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INRelativeReferenceResolutionResult", true)]
+	[Register ("INRelativeReferenceResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INRelativeReferenceResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }

@@ -18,7 +18,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INCarAirCirculationModeResolutionResult", true)]
+	[Register ("INCarAirCirculationModeResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarAirCirculationModeResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }

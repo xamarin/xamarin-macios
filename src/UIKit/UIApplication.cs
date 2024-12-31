@@ -31,8 +31,7 @@ namespace UIKit {
 	}
 
 	public partial class UIApplication
-	: UIResponder
-	{
+	: UIResponder {
 		static Thread? mainThread;
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;

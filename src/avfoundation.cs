@@ -1327,8 +1327,7 @@ namespace AVFoundation {
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface AVAudioMixing : AVAudioStereoMixing
-		, AVAudio3DMixing
-	{
+		, AVAudio3DMixing {
 
 		[MacCatalyst (13, 1)]
 #if NET
@@ -4922,8 +4921,7 @@ namespace AVFoundation {
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface AVUrlAsset
-		: AVContentKeyRecipient
-{
+		: AVContentKeyRecipient {
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }

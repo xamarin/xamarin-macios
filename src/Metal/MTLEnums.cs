@@ -816,11 +816,11 @@ namespace Metal {
 		Bool4 = 56,
 		[MacCatalyst (13, 1)]
 
-Texture = 58,
+		Texture = 58,
 		[MacCatalyst (13, 1)]
-Sampler = 59,
+		Sampler = 59,
 		[MacCatalyst (13, 1)]
-Pointer = 60,
+		Pointer = 60,
 		[MacCatalyst (13, 1)]
 
 		[NoMac, TV (14, 5)] R8Unorm = 62,

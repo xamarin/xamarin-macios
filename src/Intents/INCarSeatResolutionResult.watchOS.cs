@@ -18,7 +18,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INCarSeatResolutionResult", true)]
+	[Register ("INCarSeatResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarSeatResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }

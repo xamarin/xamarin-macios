@@ -4900,8 +4900,7 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	interface NSNull : NSSecureCoding, NSCopying
-	, CAAction
-	{
+	, CAAction {
 		[Export ("null"), Static]
 		[Internal]
 		NSNull _Null { get; }

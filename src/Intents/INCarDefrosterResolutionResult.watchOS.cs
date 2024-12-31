@@ -18,7 +18,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INCarDefrosterResolutionResult", true)]
+	[Register ("INCarDefrosterResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarDefrosterResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }

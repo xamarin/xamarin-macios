@@ -10052,8 +10052,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	interface UIImageView
-	: UIAccessibilityContentSizeCategoryImageAdjusting
-	{
+	: UIAccessibilityContentSizeCategoryImageAdjusting {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
 
@@ -16527,8 +16526,7 @@ namespace UIKit {
 #if !TVOS
 		, UILargeContentViewerItem, UIPopoverPresentationControllerSourceItem
 #endif
-		, CALayerDelegate
-	{
+		, CALayerDelegate {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
@@ -20880,8 +20878,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationAction
-		: NSCopying, NSMutableCopying, NSSecureCoding
-		{
+		: NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[MacCatalyst (13, 1)]
 		[Export ("identifier")]
