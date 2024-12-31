@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class ValidateNoStaticLibrariesTests : TestBase {
-		ValidateNoStaticLibraries CreateTask (string skipStaticLibraryValidation, params string[] paths)
+		ValidateNoStaticLibraries CreateTask (string skipStaticLibraryValidation, params string [] paths)
 		{
 			var task = CreateTask<ValidateNoStaticLibraries> ();
 			task.SkipStaticLibraryValidation = skipStaticLibraryValidation;
