@@ -1,3 +1,5 @@
+using System;
+
 namespace Microsoft.Macios.Generator;
 
 /// <summary>
@@ -14,5 +16,21 @@ public static class AttributesNames {
 	public const string SupportedOSPlatformAttribute = "System.Runtime.Versioning.SupportedOSPlatformAttribute";
 	public const string UnsupportedOSPlatformAttribute = "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
 	public const string ObsoletedOSPlatformAttribute = "System.Runtime.Versioning.ObsoletedOSPlatformAttribute";
+
+	public static string? GetFieldAttributeName<T> () where T : Enum
+	{
+		// we cannot use a switch statement because typeof is not a constant value
+		var type = typeof (T);
+		if (type == typeof (ObjCBindings.Field)) {
+			return ExportFieldAttribute;
+		}
+		if (type == typeof (ObjCBindings.Property)) {
+			return ExportPropertyAttribute;
+		}
+		if (type == typeof (ObjCBindings.Method)) {
+			return ExportMethodAttribute;
+		}
+		return null;
+	}
 
 }

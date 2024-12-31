@@ -1,3 +1,4 @@
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Property = ObjCBindings.Property;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -272,7 +275,115 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string notificationPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Export<Property> (""name"", Property.Notification)]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				notificationPropertyClass,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "string",
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+
+							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+						}
+					]
+				}
+			];
+
+			const string fieldPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Export<Field> (""CONSTANT"")]
+	public static partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				fieldPropertyClass,
+				new CodeChanges (
+					bindingType: BindingType.Class,
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "string",
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.StaticKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+
+							ExportFieldData = new ("CONSTANT")
+						}
 					]
 				}
 			];
@@ -323,7 +434,9 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -375,7 +488,9 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("name")
+						},
 						new (
 							name: "Surname",
 							type: "string",
@@ -391,7 +506,9 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("surname")
+						},
 					]
 				}
 			];
