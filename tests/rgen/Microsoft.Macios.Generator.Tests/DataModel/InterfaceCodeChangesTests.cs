@@ -148,7 +148,7 @@ public enum MyEnum {
 	First,
 }
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Property> (""name"")]
 	public partial MyEnum Name { get; set; }
@@ -165,8 +165,9 @@ public partial interface IProtocol {
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -204,7 +205,7 @@ public enum MyEnum {
 	First,
 }
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Property> (""name"")]
 	public partial MyEnum Name { get; set; }
@@ -221,8 +222,9 @@ public partial interface IProtocol {
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)

@@ -300,7 +300,7 @@ public enum MyEnum {
 	None = 0,
 }
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Property> (""name"")]
 	public partial MyEnum Name { get; set; }
@@ -317,8 +317,9 @@ public partial class MyClass {
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -356,7 +357,7 @@ public enum MyEnum {
 	None = 0,
 }
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Property> (""name"")]
 	public partial MyEnum Name { get; set; }
@@ -373,8 +374,9 @@ public partial class MyClass {
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
