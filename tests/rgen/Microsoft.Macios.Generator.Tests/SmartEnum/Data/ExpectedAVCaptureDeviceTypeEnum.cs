@@ -10,7 +10,7 @@ using System;
 namespace AVFoundation;
 
 [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-static public partial class AVCaptureDeviceTypeExtensions
+public static partial class AVCaptureDeviceTypeExtensions
 {
 
 	static IntPtr[] values = new IntPtr [11];

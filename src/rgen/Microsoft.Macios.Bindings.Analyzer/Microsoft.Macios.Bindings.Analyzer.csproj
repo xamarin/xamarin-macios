@@ -42,6 +42,9 @@
         <Compile Include="../Microsoft.Macios.Generator/Attributes/FieldData.cs" >
             <Link>Generator/Attributes/FieldData.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/ExportData.cs" >
+            <Link>Generator/Attributes/ExportData.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/AttributeParsingError.cs" >
             <Link>Generator/Attributes/AttributeParsingError.cs</Link>
         </Compile>

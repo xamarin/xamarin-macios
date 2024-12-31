@@ -15,8 +15,8 @@ public class FieldDataTests {
 		const string xSymbolName = "x";
 		const string ySymbolName = "y";
 		const string libraryName = "library";
-		var x = new FieldData<EnumValue> (xSymbolName, libraryName, EnumValue.None);
-		var y = new FieldData<EnumValue> (ySymbolName, libraryName, EnumValue.None);
+		var x = new FieldData<EnumValue> (xSymbolName, libraryName, EnumValue.Default);
+		var y = new FieldData<EnumValue> (ySymbolName, libraryName, EnumValue.Default);
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
 		Assert.False (x == y);
@@ -32,8 +32,8 @@ public class FieldDataTests {
 	public void TestFieldDataEqualsDiffLibraryName (string? xLibName, string? yLibName, bool expected)
 	{
 		const string symbolName = "symbol";
-		var x = new FieldData<EnumValue> (symbolName, xLibName, EnumValue.None);
-		var y = new FieldData<EnumValue> (symbolName, yLibName, EnumValue.None);
+		var x = new FieldData<EnumValue> (symbolName, xLibName, EnumValue.Default);
+		var y = new FieldData<EnumValue> (symbolName, yLibName, EnumValue.Default);
 		Assert.Equal (expected, x.Equals (y));
 		Assert.Equal (expected, y.Equals (x));
 		Assert.Equal (expected, x == y);
@@ -60,12 +60,12 @@ public class FieldDataTests {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
-				new FieldData<EnumValue> ("symbol", null, EnumValue.None),
-				"{ SymbolName: 'symbol' LibraryName: 'null', Flags: 'None' }"
+				new FieldData<EnumValue> ("symbol", null, EnumValue.Default),
+				"{ SymbolName: 'symbol' LibraryName: 'null', Flags: 'Default' }"
 			];
 			yield return [
-				new FieldData<EnumValue> ("symbol", "lib", EnumValue.None),
-				"{ SymbolName: 'symbol' LibraryName: 'lib', Flags: 'None' }"
+				new FieldData<EnumValue> ("symbol", "lib", EnumValue.Default),
+				"{ SymbolName: 'symbol' LibraryName: 'lib', Flags: 'Default' }"
 			];
 		}
 

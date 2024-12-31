@@ -40,7 +40,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-using OSStatus = System.Int32;
 using AudioFileStreamID = System.IntPtr;
 using System.Runtime.Versioning;
 

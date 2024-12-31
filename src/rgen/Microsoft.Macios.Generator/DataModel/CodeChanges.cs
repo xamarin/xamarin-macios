@@ -45,6 +45,35 @@ readonly struct CodeChanges {
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
+	/// <summary>
+	/// True if the code changes are for a static symbol.
+	/// </summary>
+	public bool IsStatic { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for a partial symbol.
+	/// </summary>
+	public bool IsPartial { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for an abstract symbol.
+	/// </summary>
+	public bool IsAbstract { get; private init; }
+
+	readonly ImmutableArray<SyntaxToken> modifiers = [];
+	/// <summary>
+	/// Modifiers list.
+	/// </summary>
+	public ImmutableArray<SyntaxToken> Modifiers {
+		get => modifiers;
+		init {
+			modifiers = value;
+			IsStatic = value.Any (m => m.IsKind (SyntaxKind.StaticKeyword));
+			IsPartial = value.Any (m => m.IsKind (SyntaxKind.PartialKeyword));
+			IsAbstract = value.Any (m => m.IsKind (SyntaxKind.AbstractKeyword));
+		}
+	}
+
 	readonly ImmutableArray<EnumMember> enumMembers = [];
 
 	/// <summary>
@@ -205,6 +234,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.SmartEnum;
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
+		Modifiers = [.. enumDeclaration.Modifiers];
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclarations = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
@@ -237,6 +267,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.Class;
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
+		Modifiers = [.. classDeclaration.Modifiers];
 
 		// use the generic method to get the members, we are using an out param to try an minimize the number of times
 		// the value types are copied
@@ -260,6 +291,7 @@ readonly struct CodeChanges {
 		BindingType = BindingType.Protocol;
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
+		Modifiers = [.. interfaceDeclaration.Modifiers];
 		// we do not init the constructors, we use the default empty array
 
 		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, semanticModel, Skip, Property.TryCreate,
@@ -296,6 +328,8 @@ readonly struct CodeChanges {
 		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
+		sb.Append ("], Modifiers: [");
+		sb.AppendJoin (", ", Modifiers);
 		sb.Append ("], EnumMembers: [");
 		sb.AppendJoin (", ", EnumMembers);
 		sb.Append ("], Constructors: [");
@@ -306,7 +340,7 @@ readonly struct CodeChanges {
 		sb.AppendJoin (", ", Methods);
 		sb.Append ("], Events: [");
 		sb.AppendJoin (", ", Events);
-		sb.Append ('}');
+		sb.Append ("] }");
 		return sb.ToString ();
 	}
 }

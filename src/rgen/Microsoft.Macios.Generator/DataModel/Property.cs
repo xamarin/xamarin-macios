@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
+using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -33,6 +35,26 @@ readonly struct Property : IEquatable<Property> {
 	/// The platform availability of the property.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
+
+	/// <summary>
+	/// The data of the field attribute used to mark the value as a field binding. 
+	/// </summary>
+	public ExportData<Field>? ExportFieldData { get; init; }
+
+	/// <summary>
+	/// True if the property represents a Objc field.
+	/// </summary>
+	public bool IsField => ExportFieldData is not null;
+
+	/// <summary>
+	/// The data of the field attribute used to mark the value as a property binding. 
+	/// </summary>
+	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
+
+	/// <summary>
+	/// True if the property represents a Objc property.
+	/// </summary>
+	public bool IsProperty => ExportPropertyData is not null;
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -75,6 +97,10 @@ readonly struct Property : IEquatable<Property> {
 		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+		if (ExportFieldData != other.ExportFieldData)
+			return false;
+		if (ExportPropertyData != other.ExportPropertyData)
 			return false;
 
 		var attrsComparer = new AttributesEqualityComparer ();
@@ -156,14 +182,18 @@ readonly struct Property : IEquatable<Property> {
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			accessors: accessorCodeChanges);
+			accessors: accessorCodeChanges) {
+			ExportFieldData = propertySymbol.GetExportData<Field> (),
+			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
+		};
 		return true;
 	}
 
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"Name: {Name}, Type: {Type}, IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, Attributes: [");
+		var sb = new StringBuilder (
+			$"Name: '{Name}', Type: '{Type}', IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

@@ -14,16 +14,11 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-
-#if NET
-using OSStatus = System.IntPtr;
-#else
-using OSStatus = System.nint;
-#endif
 
 #if !COREBUILD
 using AudioToolbox;
@@ -137,6 +132,19 @@ namespace CoreMedia {
 			OSStatus status;
 			return CreateWithNewTiming (original, timing, out status);
 		}
+
+#if !XAMCORE_5_0
+		// OSStatus was incorrectly defined as IntPtr in this file, so providing this overload to keep compatibility,
+		// while at the same time highly discourage using this overload.
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[OverloadResolutionPriorityAttribute (-1)]
+		public static CMSampleBuffer? CreateWithNewTiming (CMSampleBuffer original, CMSampleTimingInfo []? timing, out nint status)
+		{
+			var rv = CreateWithNewTiming (original, timing, out var actualStatus);
+			status = (nint) actualStatus;
+			return rv;
+		}
+#endif // XAMCORE_5_0
 
 		public unsafe static CMSampleBuffer? CreateWithNewTiming (CMSampleBuffer original, CMSampleTimingInfo []? timing, out OSStatus status)
 		{
@@ -491,6 +499,19 @@ namespace CoreMedia {
 			OSStatus status;
 			return GetSampleTimingInfo (out status);
 		}
+
+#if !XAMCORE_5_0
+		// OSStatus was incorrectly defined as IntPtr in this file, so providing this overload to keep compatibility,
+		// while at the same time highly discourage using this overload.
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[OverloadResolutionPriorityAttribute (-1)]
+		public CMSampleTimingInfo []? GetSampleTimingInfo (out nint status)
+		{
+			var rv = GetSampleTimingInfo (out OSStatus actualStatus);
+			status = actualStatus;
+			return rv;
+		}
+#endif // XAMCORE_5_0
 
 		public unsafe CMSampleTimingInfo []? GetSampleTimingInfo (out OSStatus status)
 		{
