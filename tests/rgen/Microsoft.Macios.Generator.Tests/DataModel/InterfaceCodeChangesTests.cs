@@ -161,6 +161,7 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)

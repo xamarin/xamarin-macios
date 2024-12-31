@@ -314,6 +314,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -366,6 +367,7 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
