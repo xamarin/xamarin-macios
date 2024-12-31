@@ -416,7 +416,7 @@ public enum MyEnum {
 		Assert.NotNull (symbol);
 		Assert.Equal (expected, symbol.IsSmartEnum ());
 	}
-  
+
 	class TestDataGetExportData : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
