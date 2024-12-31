@@ -1,12 +1,17 @@
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCBindings;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Property = ObjCBindings.Property;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -23,7 +28,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 }
 ";
@@ -31,14 +36,14 @@ public partial interface IProtocol {
 			yield return [
 				emptyInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
 					Modifiers = [
@@ -55,7 +60,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 internal partial interface IProtocol {
 }
 ";
@@ -63,14 +68,14 @@ internal partial interface IProtocol {
 			yield return [
 				internalInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "Foundation", "ObjCBindings", "ObjCRuntime" },
 					Modifiers = [
@@ -85,7 +90,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -95,14 +100,14 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -125,7 +130,60 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string notificationPropertyInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Property> (""name"", Property.Notification)]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				notificationPropertyInterface,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Protocol> ()),
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "string",
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+						}
 					]
 				}
 			];
@@ -135,7 +193,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -147,14 +205,14 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterfaceMissingExport,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -177,7 +235,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -187,7 +247,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -200,14 +260,14 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -230,7 +290,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("name")
+						},
 						new (
 							name: "Surname",
 							type: "string",
@@ -246,7 +308,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("surname")
+						},
 					]
 				}
 			];
@@ -256,24 +320,24 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 }
 ";
 
 			yield return [
 				singleMethodInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -294,7 +358,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 					]
@@ -306,10 +370,10 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 
 	public void SetSurname (string inSurname) {}
 }
@@ -318,14 +382,14 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterfaceMissingExport,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -346,7 +410,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 					]
@@ -359,10 +423,10 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 
 	[Export<Method> (""withSurname:"")]
 	public partial void SetSurname (string inSurname);
@@ -371,14 +435,14 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
@@ -399,7 +463,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 						new (
@@ -428,7 +492,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 
 	public event EventHandler Changed { add; remove; }
@@ -438,14 +502,14 @@ public partial interface IProtocol {
 			yield return [
 				singleEventInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
 					Modifiers = [
@@ -475,7 +539,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Protocol>]
 public partial interface IProtocol {
 
 	public event EventHandler Changed { add; remove; }
@@ -487,14 +551,14 @@ public partial interface IProtocol {
 			yield return [
 				multiEventInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
 					],
 					UsingDirectives = new HashSet<string> { "System", "ObjCBindings" },
 					Modifiers = [

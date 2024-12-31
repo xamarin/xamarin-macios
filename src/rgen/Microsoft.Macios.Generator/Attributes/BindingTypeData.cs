@@ -29,6 +29,9 @@ readonly struct BindingTypeData : IEquatable<BindingTypeData> {
 		var count = attributeData.ConstructorArguments.Length;
 		string? name;
 		switch (count) {
+		case 0:
+			name = null;
+			break;
 		case 1:
 			name = (string?) attributeData.ConstructorArguments [0].Value!;
 			break;
@@ -104,6 +107,12 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 	public BindingTypeData (string? name)
 	{
 		Name = name;
+	}
+
+	public BindingTypeData (T? flags)
+	{
+		Name = null;
+		Flags = flags;
 	}
 
 	public BindingTypeData (string? name, T? flags)

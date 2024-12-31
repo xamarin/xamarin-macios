@@ -2,24 +2,18 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class SemanticModelExtensions {
 
-	/// <summary>
-	/// Returns the name and namespace of the symbol that has been declared in the passed base type declaration
-	/// syntax node.
-	/// </summary>
-	/// <param name="self">The current semantic model.</param>
-	/// <param name="declaration">The named type declaration syntaxt.</param>
-	/// <returns>A tuple containing the name and namespace of the type. If they could not be calculated, they will
-	/// be set to be string.Empty.</returns>
-	public static (string Name, ImmutableArray<string> Namespace, SymbolAvailability SymbolAvailability) GetSymbolData (this SemanticModel self,
-		BaseTypeDeclarationSyntax declaration)
+	public static void GetSymbolData (ISymbol? symbol,
+		out string name,
+		out ImmutableArray<string> namespaces,
+		out SymbolAvailability symbolAvailability)
 	{
-		var symbol = self.GetDeclaredSymbol (declaration);
-		var name = symbol?.Name ?? string.Empty;
+		name = symbol?.Name ?? string.Empty;
 		var bucket = ImmutableArray.CreateBuilder<string> ();
 		var ns = symbol?.ContainingNamespace;
 		while (ns is not null) {
@@ -28,7 +22,31 @@ static class SemanticModelExtensions {
 				bucket.Insert (0, ns.Name);
 			ns = ns.ContainingNamespace;
 		}
-		var availability = symbol?.GetSupportedPlatforms () ?? new SymbolAvailability ();
-		return (name, bucket.ToImmutableArray (), availability);
+
+		symbolAvailability = symbol?.GetSupportedPlatforms () ?? new SymbolAvailability ();
+		namespaces = bucket.ToImmutableArray ();
 	}
+
+	public static void GetSymbolData (this SemanticModel self, BaseTypeDeclarationSyntax declaration,
+		BindingType bindingType,
+		out string name,
+		out ImmutableArray<string> namespaces,
+		out SymbolAvailability symbolAvailability,
+		out BindingData bindingData)
+	{
+		var symbol = self.GetDeclaredSymbol (declaration);
+		GetSymbolData (symbol, out name, out namespaces, out symbolAvailability);
+		if (symbol is null)
+			bindingData = default;
+		else {
+			bindingData = bindingType switch {
+				BindingType.Category => new BindingData (symbol.GetBindingData<ObjCBindings.Category> ()),
+				BindingType.Class => new BindingData (symbol.GetBindingData<ObjCBindings.Class> ()),
+				BindingType.Protocol => new BindingData (symbol.GetBindingData<ObjCBindings.Protocol> ()),
+				BindingType.SmartEnum => new BindingData (BindingType.SmartEnum, symbol.GetBindingData ()),
+				_ => default,
+			};
+		}
+	}
+
 }

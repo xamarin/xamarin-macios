@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -123,4 +124,78 @@ static class TypeSymbolExtensions {
 		}
 		return availability;
 	}
+
+	public static BindingTypeData GetBindingData (this ISymbol symbol)
+	{
+		var boundAttributes = symbol.GetAttributes ();
+		if (boundAttributes.Length == 0) {
+			// no attrs in the symbol, therefore the symbol is supported in all platforms
+			return default;
+		}
+		// we are looking for the basic BindingAttribute attr
+		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (string.IsNullOrEmpty (attrName) || attrName != AttributesNames.BindingAttribute)
+				continue;
+			if (BindingTypeData.TryParse (attributeData, out var bindingData)) {
+				return bindingData.Value;
+			}
+		}
+
+		return default;
+	}
+
+	public static BindingTypeData<T> GetBindingData<T> (this ISymbol symbol) where T : Enum
+	{
+		var boundAttributes = symbol.GetAttributes ();
+		if (boundAttributes.Length == 0) {
+			// no attrs in the symbol, therefore the symbol is supported in all platforms
+			return default;
+		}
+
+		var targetAttrName = AttributesNames.GetBindingTypeAttributeName<T> ();
+		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (string.IsNullOrEmpty (attrName) || attrName != targetAttrName)
+				continue;
+			if (BindingTypeData<T>.TryParse (attributeData, out var bindingData)) {
+				return bindingData.Value;
+			}
+		}
+
+		return default;
+	}
+
+	/// <summary>
+	/// Retrieve the data of an export attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
+	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
+	/// <remarks>If the passed enum is unknown or not supproted as an enum for the export attribute, null will be
+	/// returned.</remarks>
+	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
+	{
+		var attributes = symbol.GetAttributeData ();
+		if (attributes.Count == 0)
+			return null;
+
+		// retrieve the name of the attribute based on the flag
+		var attrName = AttributesNames.GetFieldAttributeName<T> ();
+		if (attrName is null)
+			return null;
+		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
+			exportAttrDataList.Count != 1)
+			return null;
+
+		var exportAttrData = exportAttrDataList [0];
+		var fieldSyntax = exportAttrData.ApplicationSyntaxReference?.GetSyntax ();
+		if (fieldSyntax is null)
+			return null;
+
+		if (ExportData<T>.TryParse (exportAttrData, out var exportData))
+			return exportData.Value;
+		return null;
+	}
+
 }
