@@ -276,7 +276,9 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -310,6 +312,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -327,7 +333,9 @@ public partial class MyClass {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -360,6 +368,10 @@ public partial class MyClass {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -378,7 +390,6 @@ public partial class MyClass {
 								new (AccessorKind.Setter, new (), [], []),
 							]
 						) {
-
 							ExportPropertyData = new ("name")
 						}
 					]
@@ -417,6 +428,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -469,6 +481,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])

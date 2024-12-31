@@ -126,7 +126,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -160,6 +162,10 @@ public partial interface IProtocol {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
 					Properties = [
 						new (
 							name: "Name",
@@ -177,7 +183,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -209,6 +217,10 @@ public partial interface IProtocol {
 				) {
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Properties = [
 						new (
@@ -266,6 +278,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
