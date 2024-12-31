@@ -47,6 +47,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// True if the parameter type is bittable.
 	/// </summary>
 	public bool IsBlittable { get; }
+  
+	/// <summary>
+	/// Returns if the parameter type is a smart enum.
+	/// </summary>
+	public bool IsSmartEnum { get; init; }
 
 	/// <summary>
 	/// Optional default value.
@@ -89,6 +94,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (IsNullable != other.IsNullable)
 			return false;
 		if (IsBlittable != other.IsBlittable)
+      return false;
+		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
 		if (DefaultValue != other.DefaultValue)
 			return false;
@@ -115,6 +122,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsParams);
 		hashCode.Add (IsThis);
 		hashCode.Add (IsNullable);
+		hashCode.Add (IsSmartEnum);
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
 		return hashCode.ToHashCode ();
@@ -143,6 +151,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"IsParams {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
+		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
 		sb.Append ($"ReferenceKind: {ReferenceKind} }}");
 		return sb.ToString ();

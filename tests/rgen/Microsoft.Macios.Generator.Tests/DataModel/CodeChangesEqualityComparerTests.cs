@@ -163,6 +163,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -199,6 +200,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -216,6 +218,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -245,6 +248,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -264,6 +268,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -297,6 +302,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -314,6 +320,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -343,6 +350,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -362,6 +370,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -395,6 +404,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -412,6 +422,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -442,6 +453,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -461,6 +473,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -497,6 +510,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -514,6 +528,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -546,6 +561,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -565,6 +581,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -607,6 +624,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -624,6 +642,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -663,6 +682,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -682,6 +702,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -725,6 +746,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -742,6 +764,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -781,6 +804,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -800,6 +824,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -847,6 +872,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -864,6 +890,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -908,6 +935,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Name",
 					type: "Utils.MyClass",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -927,6 +955,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					name: "Surname",
 					type: "string",
 					isBlittable: false,
+					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
