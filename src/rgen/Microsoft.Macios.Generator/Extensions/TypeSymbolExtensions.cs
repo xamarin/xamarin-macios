@@ -149,6 +149,47 @@ static class TypeSymbolExtensions {
 			   && symbol.HasAttribute (AttributesNames.BindingAttribute);
 	}
 
+	public static BindingTypeData GetBindingData (this ISymbol symbol)
+	{
+		var boundAttributes = symbol.GetAttributes ();
+		if (boundAttributes.Length == 0) {
+			// no attrs in the symbol, therefore the symbol is supported in all platforms
+			return default;
+		}
+		// we are looking for the basic BindingAttribute attr
+		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (string.IsNullOrEmpty (attrName) || attrName != AttributesNames.BindingAttribute)
+				continue;
+			if (BindingTypeData.TryParse (attributeData, out var bindingData)) {
+				return bindingData.Value;
+			}
+		}
+
+		return default;
+	}
+
+	public static BindingTypeData<T> GetBindingData<T> (this ISymbol symbol) where T : Enum
+	{
+		var boundAttributes = symbol.GetAttributes ();
+		if (boundAttributes.Length == 0) {
+			// no attrs in the symbol, therefore the symbol is supported in all platforms
+			return default;
+		}
+
+		var targetAttrName = AttributesNames.GetBindingTypeAttributeName<T> ();
+		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (string.IsNullOrEmpty (attrName) || attrName != targetAttrName)
+				continue;
+			if (BindingTypeData<T>.TryParse (attributeData, out var bindingData)) {
+				return bindingData.Value;
+			}
+		}
+
+		return default;
+	}
+
 	/// <summary>
 	/// Retrieve the data of an export attribute on a symbol.
 	/// </summary>

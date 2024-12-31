@@ -12,42 +12,92 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1", new ());
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name2", new ());
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name2",
+			symbolAvailability: new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentNameSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS"], "NS.name1", new ());
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name2", ["NS"], "NS.name1", new ());
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name2",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentNamespaceSymbol ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS1"], "NS.name1", new ());
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name1", ["NS2"], "NS.name1", new ());
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS1"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS2"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentBindingType ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
-		var changes2 = new CodeChanges (BindingType.Unknown, "name", ["NS"], "NS.name", new ());
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.Protocol, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
 
 	[Fact]
 	public void CompareDifferentAttributesLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			Attributes = [
-				new AttributeCodeChange ("name", ["arg1", "arg2"])
+				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
 			]
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -56,14 +106,24 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributes ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			Attributes = [
-				new AttributeCodeChange ("name", ["arg1", "arg2"])
+				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			Attributes = [
-				new AttributeCodeChange ("name2", ["arg1", "arg2"])
+				new AttributeCodeChange (name: "name2", arguments: ["arg1", "arg2"])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -72,10 +132,20 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembersLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ());
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ());
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember ("name", new (), new (), [])
+				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -84,14 +154,24 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembers ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember ("name", new (), new (), [])
+				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
 			],
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember ("name2", new (), new (), [])
+				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -100,11 +180,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentPropertyLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = []
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -135,7 +225,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSamePropertiesDiffOrder ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"], fullyQualifiedSymbol: "NS.name", symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -176,7 +269,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -223,7 +321,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentProperties ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -264,7 +367,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -311,7 +419,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentEventsLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -363,7 +476,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -410,7 +528,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameEventsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -472,7 +595,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -541,7 +669,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentEvents ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -593,7 +726,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -653,7 +791,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMethodsLength ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -746,7 +889,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -833,7 +981,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameMethodsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -926,7 +1079,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1026,7 +1184,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMethods ()
 	{
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1103,7 +1266,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				),
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1193,7 +1361,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", builder.ToImmutable ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: builder.ToImmutable ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1286,7 +1459,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", new ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1389,7 +1567,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
-		var changes1 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", builder.ToImmutable ()) {
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: builder.ToImmutable ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
@@ -1482,7 +1665,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (BindingType.SmartEnum, "name", ["NS"], "NS.name", builder.ToImmutable ()) {
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name",
+			symbolAvailability: builder.ToImmutable ()) {
 			EnumMembers = [],
 			Properties = [
 				new (

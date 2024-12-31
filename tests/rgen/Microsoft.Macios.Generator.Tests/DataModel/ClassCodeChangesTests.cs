@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCBindings;
 using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -33,7 +34,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 }
 ";
@@ -41,14 +42,14 @@ public partial class MyClass {
 			yield return [
 				emptyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -64,7 +65,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 internal partial class MyClass {
 }
 ";
@@ -72,14 +73,14 @@ internal partial class MyClass {
 			yield return [
 				internalClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
@@ -96,7 +97,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 [SupportedOSPlatform (""ios17.0"")]
 [SupportedOSPlatform (""tvos17.0"")]
 [UnsupportedOSPlatform (""macos"")]
@@ -107,14 +108,14 @@ public partial class MyClass {
 			yield return [
 				emptyClassAvailability,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: builder.ToImmutable ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute"),
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>"),
 						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
@@ -131,7 +132,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	string name = string.Empty;
 
@@ -142,14 +143,14 @@ public partial class MyClass {
 			yield return [
 				singleConstructorClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -174,14 +175,14 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	string name = string.Empty;
 
 	public MyClass () {}
 
-	public MyClass(string inName) {
-		name = inName;
+	public MyClass(string name) {
+		name = name;
 	}
 }
 ";
@@ -189,14 +190,14 @@ public partial class MyClass {
 			yield return [
 				multiConstructorClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -223,7 +224,7 @@ public partial class MyClass {
 								new (
 									position: 0,
 									type: "string",
-									name: "inName"
+									name: "name"
 								)
 							]
 						),
@@ -236,7 +237,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -246,14 +247,14 @@ public partial class MyClass {
 			yield return [
 				singlePropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -411,7 +412,7 @@ public partial class MyClass {
 			yield return [
 				notificationPropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -464,7 +465,7 @@ public partial class MyClass {
 			yield return [
 				fieldPropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -508,7 +509,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -520,14 +521,14 @@ public partial class MyClass {
 			yield return [
 				multiPropertyClassMissingExport,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -562,7 +563,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Property> (""name"")]
 	public partial string Name { get; set; } = string.Empty;
@@ -575,14 +576,14 @@ public partial class MyClass {
 			yield return [
 				multiPropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -636,24 +637,24 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 }
 ";
 
 			yield return [
 				singleMethodClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -673,7 +674,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 					]
@@ -685,10 +686,10 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 
 	public void SetSurname (string inSurname) {}
 }
@@ -697,14 +698,14 @@ public partial class MyClass {
 			yield return [
 				multiMethodClassMissingExport,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -724,7 +725,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 					]
@@ -737,10 +738,10 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 	[Export<Method> (""withName:"")]
-	public partial void SetName (string inName);
+	public partial void SetName (string name);
 
 	[Export<Method> (""withSurname:"")]
 	public partial void SetSurname (string inSurname);
@@ -749,14 +750,14 @@ public partial class MyClass {
 			yield return [
 				multiMethodClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -776,7 +777,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inName")
+								new (0, "string", "name")
 							]
 						),
 						new (
@@ -805,7 +806,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 
 	public event EventHandler Changed { add; remove; }
@@ -815,14 +816,14 @@ public partial class MyClass {
 			yield return [
 				singleEventClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -851,7 +852,7 @@ using ObjCBindings;
 
 namespace NS;
 
-[BindingType]
+[BindingType<Class>]
 public partial class MyClass {
 
 	public event EventHandler Changed { add; remove; }
@@ -863,14 +864,14 @@ public partial class MyClass {
 			yield return [
 				multiEventClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
 					Attributes = [
-						new ("ObjCBindings.BindingTypeAttribute")
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -933,7 +934,7 @@ public partial class MyClass {
 	public void IsStaticPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -942,7 +943,7 @@ public partial class MyClass {
 		Assert.False (changes.IsStatic);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -960,7 +961,7 @@ public partial class MyClass {
 	public void IsPartialPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -969,7 +970,7 @@ public partial class MyClass {
 		Assert.False (changes.IsPartial);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -987,7 +988,7 @@ public partial class MyClass {
 	public void IsAbstractPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -996,7 +997,7 @@ public partial class MyClass {
 		Assert.False (changes.IsAbstract);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
