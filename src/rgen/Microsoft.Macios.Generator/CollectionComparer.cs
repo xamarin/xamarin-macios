@@ -4,18 +4,18 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator;
 
-public class ListComparer<T> : EqualityComparer<IList<T>> {
+public class CollectionComparer<T> : EqualityComparer<IReadOnlyCollection<T>> {
 	readonly IComparer<T>? comparer;
 	readonly IEqualityComparer<T> valueComparer;
 
-	public ListComparer (IComparer<T>? sortComparer = null, IEqualityComparer<T>? equalityComparer = null)
+	public CollectionComparer (IComparer<T>? sortComparer = null, IEqualityComparer<T>? equalityComparer = null)
 	{
 		comparer = sortComparer;
 		valueComparer = equalityComparer ?? EqualityComparer<T>.Default;
 	}
 
 	/// <inheritdoc/>
-	public override bool Equals (IList<T>? x, IList<T>? y)
+	public override bool Equals (IReadOnlyCollection<T>? x, IReadOnlyCollection<T>? y)
 	{
 		// bases cases for null or diff size
 		if (x is null && y is null)
@@ -42,7 +42,7 @@ public class ListComparer<T> : EqualityComparer<IList<T>> {
 	}
 
 	/// <inheritdoc/>
-	public override int GetHashCode (IList<T> obj)
+	public override int GetHashCode (IReadOnlyCollection<T> obj)
 	{
 		var hash = new HashCode ();
 		foreach (var element in obj) {

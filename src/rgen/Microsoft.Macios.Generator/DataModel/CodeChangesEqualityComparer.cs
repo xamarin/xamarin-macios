@@ -1,24 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.DataModel;
-
-class DeclarationCodeChangesEqualityComparer : EqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
-	Changes)> {
-	readonly CodeChangesEqualityComparer comparer = new ();
-
-	/// <inheritdoc/>
-	public override bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
-		(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) y)
-	{
-		return comparer.Equals (x.Changes, y.Changes);
-	}
-
-	/// <inheritdoc/>
-	public override int GetHashCode ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) obj)
-		=> comparer.GetHashCode (obj.Changes);
-}
 
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
@@ -37,7 +20,8 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 		// this could be a massive 'or' but that makes it less readable
 		if (x.Name != y.Name)
 			return false;
-		var namespaceComparer = new ListComparer<string> ();
+		// order matters in the namespaces, therefore, use a comparer that does not reorder the collections
+		var namespaceComparer = new CollectionComparer<string> ();
 		if (!namespaceComparer.Equals (x.Namespace, y.Namespace))
 			return false;
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
@@ -47,6 +31,10 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 		if (x.BindingType != y.BindingType)
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
+			return false;
+		// order does not matter in the using directives, use a comparer that sortes them
+		var usingDirectivesComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
+		if (!usingDirectivesComparer.Equals (x.UsingDirectives, y.UsingDirectives))
 			return false;
 		if (x.EnumMembers.Length != y.EnumMembers.Length)
 			return false;
