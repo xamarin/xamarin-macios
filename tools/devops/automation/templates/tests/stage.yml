@@ -88,7 +88,6 @@ stages:
 
   jobs:
   - job: "tests"
-    condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     displayName: 'T:' 
     timeoutInMinutes: 180
     variables:
@@ -112,7 +111,10 @@ stages:
         clean: all
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
-    condition: eq($(TEST_STAGE),"simulator_tests")
+    condition: and(
+                ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),
+                eq($(TEST_STAGE),"simulator_tests")
+              )
     steps:
 
     - bash: |
