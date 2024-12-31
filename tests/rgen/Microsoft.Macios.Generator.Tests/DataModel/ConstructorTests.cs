@@ -196,7 +196,8 @@ namespace NS {
 					],
 					parameters: [
 						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
-							IsNullable = true, IsOptional = true,
+							IsNullable = true,
+							IsOptional = true,
 						},
 					]
 				)
@@ -226,7 +227,7 @@ namespace NS {
 					],
 					parameters: [
 						new (position: 0, type: "T?", name: "inName", isBlittable: false) {
-							IsOptional = true, 
+							IsOptional = true,
 							IsNullable = true,
 						},
 					]
@@ -263,7 +264,7 @@ namespace NS {
 					],
 					parameters: [
 						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
-							IsNullable = true, 
+							IsNullable = true,
 							IsOptional = true,
 						},
 					]

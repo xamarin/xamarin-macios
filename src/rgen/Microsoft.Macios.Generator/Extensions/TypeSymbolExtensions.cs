@@ -239,11 +239,11 @@ static class TypeSymbolExtensions {
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
 				var layoutAttribute = symbol.GetAttributes ()
-					.FirstOrDefault (attr => attr.AttributeClass?.ToString () == typeof(StructLayoutAttribute).FullName);
+					.FirstOrDefault (attr => attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
 
-				if (layoutAttribute != null) {
+				if (layoutAttribute is not null) {
 					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
-					if (layoutKind == LayoutKind.Auto) { 
+					if (layoutKind == LayoutKind.Auto) {
 						return false;
 					}
 				} else {

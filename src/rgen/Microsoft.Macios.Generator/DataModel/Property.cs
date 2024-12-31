@@ -25,7 +25,7 @@ readonly struct Property : IEquatable<Property> {
 	/// String representation of the property type.
 	/// </summary>
 	public string Type { get; } = string.Empty;
-	
+
 	/// <summary>
 	/// Returns if the property type is bittable.
 	/// </summary>

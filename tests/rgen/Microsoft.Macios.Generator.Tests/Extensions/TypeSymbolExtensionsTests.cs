@@ -69,7 +69,7 @@ public enum TestEnum {
 	Second,
 }
 ";
-			HashSet<string> enumAttrs = new();
+			HashSet<string> enumAttrs = new ();
 			yield return [enumText, attributesText, enumAttrs];
 		}
 
@@ -415,7 +415,7 @@ public partial class MyClass {
 }
 ";
 			yield return [byteProperty, true];
-			
+
 			const string otherByteProperty = @"
 using System;
 using ObjCBindings;
@@ -428,7 +428,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherByteProperty, true];
-			
+
 			const string sbyteProperty = @"
 using System;
 using ObjCBindings;
@@ -441,7 +441,7 @@ public partial class MyClass {
 }
 ";
 			yield return [sbyteProperty, true];
-			
+
 			const string otherSByteProperty = @"
 using System;
 using ObjCBindings;
@@ -454,7 +454,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherSByteProperty, true];
-			
+
 			const string intProperty = @"
 using System;
 using ObjCBindings;
@@ -467,7 +467,7 @@ public partial class MyClass {
 }
 ";
 			yield return [intProperty, true];
-			
+
 			const string int16Property = @"
 using System;
 using ObjCBindings;
@@ -480,7 +480,7 @@ public partial class MyClass {
 }
 ";
 			yield return [int16Property, true];
-			
+
 			const string shortProperty = @"
 using System;
 using ObjCBindings;
@@ -493,7 +493,7 @@ public partial class MyClass {
 }
 ";
 			yield return [shortProperty, true];
-			
+
 			const string uint16Property = @"
 using System;
 using ObjCBindings;
@@ -506,7 +506,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uint16Property, true];
-			
+
 			const string ushortProperty = @"
 using System;
 using ObjCBindings;
@@ -519,7 +519,7 @@ public partial class MyClass {
 }
 ";
 			yield return [ushortProperty, true];
-			
+
 			const string int32Property = @"
 using System;
 using ObjCBindings;
@@ -532,7 +532,7 @@ public partial class MyClass {
 }
 ";
 			yield return [int32Property, true];
-			
+
 			const string uint32Property = @"
 using System;
 using ObjCBindings;
@@ -545,7 +545,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uint32Property, true];
-			
+
 			const string uintProperty = @"
 using System;
 using ObjCBindings;
@@ -558,7 +558,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uintProperty, true];
-			
+
 			const string int64Property = @"
 using System;
 using ObjCBindings;
@@ -571,7 +571,7 @@ public partial class MyClass {
 }
 ";
 			yield return [int64Property, true];
-			
+
 			const string longProperty = @"
 using System;
 using ObjCBindings;
@@ -584,7 +584,7 @@ public partial class MyClass {
 }
 ";
 			yield return [longProperty, true];
-			
+
 			const string uint64Property = @"
 using System;
 using ObjCBindings;
@@ -597,7 +597,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uint64Property, true];
-			
+
 			const string ulongProperty = @"
 using System;
 using ObjCBindings;
@@ -610,7 +610,7 @@ public partial class MyClass {
 }
 ";
 			yield return [ulongProperty, true];
-			
+
 			const string intPtrProperty = @"
 using System;
 using ObjCBindings;
@@ -623,7 +623,7 @@ public partial class MyClass {
 }
 ";
 			yield return [intPtrProperty, true];
-			
+
 			const string uintPtrProperty = @"
 using System;
 using ObjCBindings;
@@ -636,7 +636,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uintPtrProperty, true];
-			
+
 			const string singleProperty = @"
 using System;
 using ObjCBindings;
@@ -649,7 +649,7 @@ public partial class MyClass {
 }
 ";
 			yield return [singleProperty, true];
-			
+
 			const string floatProperty = @"
 using System;
 using ObjCBindings;
@@ -662,7 +662,7 @@ public partial class MyClass {
 }
 ";
 			yield return [floatProperty, true];
-			
+
 			const string doubleProperty = @"
 using System;
 using ObjCBindings;
@@ -675,7 +675,7 @@ public partial class MyClass {
 }
 ";
 			yield return [doubleProperty, true];
-			
+
 			const string otherDoubleProperty = @"
 using System;
 using ObjCBindings;
@@ -688,7 +688,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherDoubleProperty, true];
-			
+
 			const string decimalProperty = @"
 using System;
 using ObjCBindings;
@@ -701,7 +701,7 @@ public partial class MyClass {
 }
 ";
 			yield return [decimalProperty, false];
-			
+
 			const string charProperty = @"
 using System;
 using ObjCBindings;
@@ -714,7 +714,7 @@ public partial class MyClass {
 }
 ";
 			yield return [charProperty, false];
-			
+
 			const string otherCharProperty = @"
 using System;
 using ObjCBindings;
@@ -727,7 +727,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherCharProperty, false];
-			
+
 			const string stringProperty = @"
 using System;
 using ObjCBindings;
@@ -740,7 +740,7 @@ public partial class MyClass {
 }
 ";
 			yield return [stringProperty, false];
-			
+
 			const string otherStringProperty = @"
 using System;
 using ObjCBindings;
@@ -753,12 +753,12 @@ public partial class MyClass {
 }
 ";
 			yield return [otherStringProperty, false];
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	class TestDataIsBlittableStructs : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -777,7 +777,7 @@ public partial class MyClass {
 }
 ";
 			yield return [emptyStructNoLayout, false];
-			
+
 			const string emptyStructExplicitLayout = @"
 using System;
 using System.Runtime.InteropServices;
@@ -794,7 +794,7 @@ public partial class MyClass {
 }
 ";
 			yield return [emptyStructExplicitLayout, true];
-			
+
 			const string emptyStructSequentialLayout = @"
 using System;
 using System.Runtime.InteropServices;
@@ -811,7 +811,7 @@ public partial class MyClass {
 }
 ";
 			yield return [emptyStructSequentialLayout, true];
-			
+
 			const string emptyStructAutoLayout = @"
 using System;
 using System.Runtime.InteropServices;
@@ -828,7 +828,7 @@ public partial class MyClass {
 }
 ";
 			yield return [emptyStructAutoLayout, false];
-			
+
 			const string structBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -848,7 +848,7 @@ public partial class MyClass {
 }
 ";
 			yield return [structBlittableContent, true];
-			
+
 			const string structNonBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -868,7 +868,7 @@ public partial class MyClass {
 }
 ";
 			yield return [structNonBlittableContent, false];
-			
+
 			const string nestedStructBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -895,7 +895,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nestedStructBlittableContent, true];
-			
+
 			const string nestedStructNoBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -1072,7 +1072,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uint32Property, true];
-			
+
 			const string uintProperty = @"
 using System;
 using ObjCBindings;
@@ -1085,7 +1085,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uintProperty, true];
-			
+
 			const string int64Property = @"
 using System;
 using ObjCBindings;
@@ -1098,7 +1098,7 @@ public partial class MyClass {
 }
 ";
 			yield return [int64Property, true];
-			
+
 			const string longProperty = @"
 using System;
 using ObjCBindings;
@@ -1111,7 +1111,7 @@ public partial class MyClass {
 }
 ";
 			yield return [longProperty, true];
-			
+
 			const string uint64Property = @"
 using System;
 using ObjCBindings;
@@ -1124,7 +1124,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uint64Property, true];
-			
+
 			const string ulongProperty = @"
 using System;
 using ObjCBindings;
@@ -1137,7 +1137,7 @@ public partial class MyClass {
 }
 ";
 			yield return [ulongProperty, true];
-			
+
 			const string intPtrProperty = @"
 using System;
 using ObjCBindings;
@@ -1150,7 +1150,7 @@ public partial class MyClass {
 }
 ";
 			yield return [intPtrProperty, true];
-			
+
 			const string uintPtrProperty = @"
 using System;
 using ObjCBindings;
@@ -1163,7 +1163,7 @@ public partial class MyClass {
 }
 ";
 			yield return [uintPtrProperty, true];
-			
+
 			const string singleProperty = @"
 using System;
 using ObjCBindings;
@@ -1176,7 +1176,7 @@ public partial class MyClass {
 }
 ";
 			yield return [singleProperty, true];
-			
+
 			const string floatProperty = @"
 using System;
 using ObjCBindings;
@@ -1189,7 +1189,7 @@ public partial class MyClass {
 }
 ";
 			yield return [floatProperty, true];
-			
+
 			const string doubleProperty = @"
 using System;
 using ObjCBindings;
@@ -1202,7 +1202,7 @@ public partial class MyClass {
 }
 ";
 			yield return [doubleProperty, true];
-			
+
 			const string otherDoubleProperty = @"
 using System;
 using ObjCBindings;
@@ -1215,7 +1215,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherDoubleProperty, true];
-			
+
 			const string decimalProperty = @"
 using System;
 using ObjCBindings;
@@ -1228,7 +1228,7 @@ public partial class MyClass {
 }
 ";
 			yield return [decimalProperty, false];
-			
+
 			const string charProperty = @"
 using System;
 using ObjCBindings;
@@ -1241,7 +1241,7 @@ public partial class MyClass {
 }
 ";
 			yield return [charProperty, false];
-			
+
 			const string otherCharProperty = @"
 using System;
 using ObjCBindings;
@@ -1254,7 +1254,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherCharProperty, false];
-			
+
 			const string stringProperty = @"
 using System;
 using ObjCBindings;
@@ -1267,7 +1267,7 @@ public partial class MyClass {
 }
 ";
 			yield return [stringProperty, false];
-			
+
 			const string otherStringProperty = @"
 using System;
 using ObjCBindings;
@@ -1280,7 +1280,7 @@ public partial class MyClass {
 }
 ";
 			yield return [otherStringProperty, false];
-			
+
 			const string structNonBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -1300,7 +1300,7 @@ public partial class MyClass {
 }
 ";
 			yield return [structNonBlittableContent, false];
-			
+
 			const string nestedStructBlittableContent = @"
 using System;
 using System.Runtime.InteropServices;
@@ -1329,7 +1329,7 @@ public partial class MyClass {
 			yield return [nestedStructBlittableContent, true];
 
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -1352,5 +1352,5 @@ public partial class MyClass {
 		Assert.NotNull (symbol);
 		Assert.Equal (expectedResult, symbol.Type.IsBlittable ());
 	}
-	
+
 }
