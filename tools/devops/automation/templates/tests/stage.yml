@@ -112,6 +112,7 @@ stages:
         clean: all
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
+    condition: eq($(TEST_STAGE),"simulator_tests")
     steps:
 
     - bash: |
