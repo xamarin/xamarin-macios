@@ -200,6 +200,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -233,6 +234,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -249,6 +251,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -277,6 +280,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -295,6 +299,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -327,6 +332,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -343,6 +349,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -371,6 +378,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -389,6 +397,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -421,6 +430,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -437,6 +447,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -476,6 +487,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -494,6 +506,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -526,6 +539,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -542,6 +556,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -591,6 +606,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -609,6 +625,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -663,6 +680,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -679,6 +697,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -718,6 +737,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -736,6 +756,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -781,6 +802,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -797,6 +819,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -845,7 +868,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -861,7 +884,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				)
 			]
@@ -877,6 +900,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -895,6 +919,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -941,7 +966,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -967,6 +992,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -983,6 +1009,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1031,7 +1058,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1047,7 +1074,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				)
 			]
@@ -1063,6 +1090,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1081,6 +1109,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1127,7 +1156,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				),
 				new (
@@ -1140,7 +1169,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1166,6 +1195,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1182,6 +1212,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1230,7 +1261,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false),
 					]
 				),
 			]
@@ -1246,6 +1277,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1264,6 +1296,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1310,7 +1343,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1339,6 +1372,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1355,6 +1389,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1403,7 +1438,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1419,7 +1454,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				)
 			]
@@ -1435,6 +1470,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1453,6 +1489,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1499,7 +1536,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				),
 				new (
@@ -1512,7 +1549,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1541,6 +1578,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1557,6 +1595,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1605,7 +1644,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -1621,7 +1660,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				)
 			]
@@ -1637,6 +1676,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1655,6 +1695,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1701,7 +1742,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
 					]
 				),
 				new (
@@ -1714,7 +1755,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},

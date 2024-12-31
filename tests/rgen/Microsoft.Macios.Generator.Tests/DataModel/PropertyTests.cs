@@ -16,8 +16,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffName ()
 	{
-		var x = new Property ("First", "string", new (), [], [], []);
-		var y = new Property ("Second", "string", new (), [], [], []);
+		var x = new Property ("First", "string", false, new (), [], [], []);
+		var y = new Property ("Second", "string", false, new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -28,8 +28,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Property ("First", "string", new (), [], [], []);
-		var y = new Property ("First", "int", new (), [], [], []);
+		var x = new Property ("First", "string", false, new (), [], [], []);
+		var y = new Property ("First", "int", false, new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -40,11 +40,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", "string", new (), [
+		var x = new Property ("First", "string", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", "int", new (), [
+		var y = new Property ("First", "int", false, new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -57,13 +57,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", "string", new (), [
+		var x = new Property ("First", "string", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", "int", new (), [
+		var y = new Property ("First", "int", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -79,7 +79,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", "string", new (), [
+		var x = new Property ("First", "string", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -88,7 +88,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 			new (AccessorKind.Getter, new (), [], []),
 			new (AccessorKind.Setter, new (), [], []),
 		]);
-		var y = new Property ("First", "int", new (), [
+		var y = new Property ("First", "int", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -106,7 +106,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", "string", new (), [
+		var x = new Property ("First", "string", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -115,7 +115,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 			new (AccessorKind.Getter, new (), [], []),
 			new (AccessorKind.Setter, new (), [], []),
 		]);
-		var y = new Property ("First", "string", new (), [
+		var y = new Property ("First", "string", false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -149,6 +149,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -175,6 +176,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -200,6 +202,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -224,6 +227,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -250,6 +254,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -278,6 +283,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -306,6 +312,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -342,6 +349,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -379,6 +387,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -421,6 +430,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -469,6 +479,7 @@ namespace Test {
 				new Property (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),

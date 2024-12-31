@@ -228,7 +228,7 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]
 		);
 
@@ -244,8 +244,8 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
-				new (1, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]
 		);
 		Assert.Equal (x.Parameters.Length.CompareTo (y.Parameters.Length), comparer.Compare (x, y));
@@ -266,7 +266,7 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]
 		);
 
@@ -282,7 +282,7 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (1, "string", "surname"),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]
 		);
 		var parameterCompare = new ParameterComparer ();

@@ -115,6 +115,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -166,6 +167,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -219,6 +221,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -273,6 +276,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -291,6 +295,7 @@ public partial interface IProtocol {
 						new (
 							name: "Surname",
 							type: "string",
+							isBlittable: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -352,7 +357,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 					]
@@ -403,7 +408,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 					]
@@ -455,7 +460,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 						new (
@@ -471,7 +476,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inSurname")
+								new (position: 0, type: "string", name: "inSurname", isBlittable: false),
 							]
 						),
 					]

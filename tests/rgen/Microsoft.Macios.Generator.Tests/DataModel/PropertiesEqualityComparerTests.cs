@@ -24,6 +24,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -35,6 +36,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "SecondProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -48,6 +50,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -68,6 +71,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -81,6 +85,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "AVFoundation.AVVideo",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -101,6 +106,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -114,6 +120,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [

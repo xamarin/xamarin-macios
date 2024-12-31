@@ -79,8 +79,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -93,7 +93,7 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
+					new (position: 0, type: "string", name: "name", isBlittable: false),
 				]
 			)
 		];
@@ -112,8 +112,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -126,8 +126,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -146,8 +146,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
@@ -158,8 +158,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -172,8 +172,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -192,8 +192,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -206,8 +206,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -226,8 +226,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
@@ -238,8 +238,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -252,8 +252,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
@@ -264,8 +264,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -285,8 +285,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
@@ -297,8 +297,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -311,8 +311,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			),
 			new (
@@ -323,8 +323,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 		];

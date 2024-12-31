@@ -116,7 +116,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "input")
+						new (position: 0, type: "string", name: "input", isBlittable: false),
 					]
 				)
 			];
@@ -146,7 +146,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.CustomType", "input")
+						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false),
 					]
 				)
 			];
@@ -174,8 +174,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "input"),
-						new (1, "string?", "second") {
+						new (position: 0, type: "string", name: "input", isBlittable: false),
+						new (position: 1, type: "string?", name: "second", isBlittable: false) {
 							IsNullable = true,
 						}
 					]
@@ -206,7 +206,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -244,7 +244,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.MyStruct", "data") {
+						new (position: 0, type: "NS.MyStruct", name: "data", isBlittable: false) {
 							ReferenceKind = ReferenceKind.In,
 						},
 					]
@@ -280,7 +280,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "NS.MyStruct", "data") {
+						new (position: 0, type: "NS.MyStruct", name: "data", isBlittable: false) {
 							ReferenceKind = ReferenceKind.Ref,
 						},
 					]
@@ -315,8 +315,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "input"),
-						new (1, "string?", "second") {
+						new (position: 0, type: "string", name: "input", isBlittable: false),
+						new (position: 1, type: "string?", name: "second", isBlittable: false) {
 							IsNullable = true,
 						}
 					]
@@ -350,11 +350,11 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (position: 0, type: "string?", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 							Attributes = [
-								new ("System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", ["true"])
+								new (name: "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", arguments: ["true"])
 							],
 						},
 					]

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -198,4 +200,68 @@ static class TypeSymbolExtensions {
 		return null;
 	}
 
+	/// <summary>
+	/// Returns if a type is blittable or not.
+	/// </summary>
+	/// <param name="symbol"></param>
+	/// <returns></returns>
+	/// <seealso cref="https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types"/>
+	public static bool IsBlittable (this ITypeSymbol symbol)
+	{
+		while (true) {
+			// per the documentation, the following system types are bittable
+			switch (symbol.SpecialType) {
+			case SpecialType.System_Byte:
+			case SpecialType.System_SByte:
+			case SpecialType.System_Int16:
+			case SpecialType.System_UInt16:
+			case SpecialType.System_Int32:
+			case SpecialType.System_UInt32:
+			case SpecialType.System_Int64:
+			case SpecialType.System_UInt64:
+			case SpecialType.System_Single:
+			case SpecialType.System_Double:
+			case SpecialType.System_IntPtr:
+			case SpecialType.System_UIntPtr:
+				return true;
+			case SpecialType.System_Array:
+				// if we are dealing with an array, an array of bittable args is bittable
+				symbol = symbol.ContainingType;
+				continue;
+			}
+
+			if (symbol is IArrayTypeSymbol arrayTypeSymbol) {
+				symbol = arrayTypeSymbol.ElementType;
+				continue;
+			}
+
+			// if we are dealing with a structure, we have to check the layout type and all its childre
+			if (symbol.TypeKind == TypeKind.Struct) {
+				// Check for StructLayout attribute with LayoutKind.Sequential
+				var layoutAttribute = symbol.GetAttributes ()
+					.FirstOrDefault (attr => attr.AttributeClass?.ToString () == typeof(StructLayoutAttribute).FullName);
+
+				if (layoutAttribute != null) {
+					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
+					if (layoutKind == LayoutKind.Auto) { 
+						return false;
+					}
+				} else {
+					return false;
+				}
+
+				// Recursively check all fields of the struct
+				foreach (var member in symbol.GetMembers ().OfType<IFieldSymbol> ()) {
+					if (!member.Type.IsBlittable ()) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			// any other types are not blittable
+			return false;
+		}
+	}
 }

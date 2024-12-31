@@ -63,7 +63,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		foreach (var parameter in constructor.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
 			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
-				parameter.Name) {
+				parameter.Name, parameter.Type.IsBlittable ()) {
 				IsOptional = parameter.IsOptional,
 				IsParams = parameter.IsParams,
 				IsThis = parameter.IsThis,

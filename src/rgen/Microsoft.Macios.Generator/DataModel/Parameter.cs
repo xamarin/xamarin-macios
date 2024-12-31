@@ -42,6 +42,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// True if the parameter is nullable.:w
 	/// </summary>
 	public bool IsNullable { get; init; }
+	
+	/// <summary>
+	/// True if the parameter type is bittable.
+	/// </summary>
+	public bool IsBlittable { get; }
 
 	/// <summary>
 	/// Optional default value.
@@ -58,11 +63,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
-	public Parameter (int position, string type, string name)
+	public Parameter (int position, string type, string name, bool isBlittable)
 	{
 		Position = position;
 		Type = type;
 		Name = name;
+		IsBlittable = isBlittable;
 	}
 
 	/// <inheritdoc/>
@@ -81,6 +87,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (IsThis != other.IsThis)
 			return false;
 		if (IsNullable != other.IsNullable)
+			return false;
+		if (IsBlittable != other.IsBlittable)
 			return false;
 		if (DefaultValue != other.DefaultValue)
 			return false;

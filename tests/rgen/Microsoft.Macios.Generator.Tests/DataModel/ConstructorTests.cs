@@ -64,7 +64,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
+						new (position: 0, type: "string", name: "inName", isBlittable: false),
 					]
 				)
 			];
@@ -94,8 +94,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
-						new (1, "int", "inAge"),
+						new (position: 0, type: "string", name: "inName", isBlittable: false),
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 					]
 				)
 			];
@@ -125,8 +125,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
+						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 					]
 				)
 			];
@@ -159,9 +161,13 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string[]", "inSurnames") { IsParams = true, },
+						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string[]", name: "inSurnames", isBlittable: false) {
+							IsParams = true,
+						},
 					]
 				)
 			];
@@ -189,7 +195,9 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
+							IsNullable = true, IsOptional = true,
+						},
 					]
 				)
 			];
@@ -217,7 +225,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "T?", "inName") { IsOptional = true, IsNullable = true, },
+						new (position: 0, type: "T?", name: "inName", isBlittable: false) {
+							IsOptional = true, 
+							IsNullable = true,
+						},
 					]
 				)
 			];
@@ -251,7 +262,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (position: 0, type: "string?", name: "inName", isBlittable: false) {
+							IsNullable = true, 
+							IsOptional = true,
+						},
 					]
 				)
 			];
