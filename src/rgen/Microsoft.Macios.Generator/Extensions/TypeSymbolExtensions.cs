@@ -209,7 +209,7 @@ static class TypeSymbolExtensions {
 	public static bool IsBlittable (this ITypeSymbol symbol)
 	{
 		while (true) {
-			// per the documentation, the following system types are bittable
+			// per the documentation, the following system types are blittable
 			switch (symbol.SpecialType) {
 			case SpecialType.System_Byte:
 			case SpecialType.System_SByte:
@@ -225,7 +225,7 @@ static class TypeSymbolExtensions {
 			case SpecialType.System_UIntPtr:
 				return true;
 			case SpecialType.System_Array:
-				// if we are dealing with an array, an array of bittable args is bittable
+				// if we are dealing with an array, an array of blittable elements is blittable
 				symbol = symbol.ContainingType;
 				continue;
 			}
