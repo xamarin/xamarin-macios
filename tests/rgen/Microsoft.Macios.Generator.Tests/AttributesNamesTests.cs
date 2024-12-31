@@ -18,7 +18,7 @@ public class AttributesNamesTests {
 		Assert.NotNull (@enum);
 		Assert.Equal (expectedName, AttributesNames.GetFieldAttributeName<T> ());
 	}
-	
+
 	[Theory]
 	[InlineData (StringComparison.Ordinal, null)]
 	[InlineData (EnumValue.Default, null)]
