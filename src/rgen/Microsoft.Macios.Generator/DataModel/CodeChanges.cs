@@ -46,9 +46,33 @@ readonly struct CodeChanges {
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
 	/// <summary>
+	/// True if the code changes are for a static symbol.
+	/// </summary>
+	public bool IsStatic { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for a partial symbol.
+	/// </summary>
+	public bool IsPartial { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for an abstract symbol.
+	/// </summary>
+	public bool IsAbstract { get; private init; }
+
+	readonly ImmutableArray<SyntaxToken> modifiers = [];
+	/// <summary>
 	/// Modifiers list.
 	/// </summary>
-	public ImmutableArray<SyntaxToken> Modifiers { get; init; } = [];
+	public ImmutableArray<SyntaxToken> Modifiers {
+		get => modifiers;
+		init {
+			modifiers = value;
+			IsStatic = value.Any (m => m.IsKind (SyntaxKind.StaticKeyword));
+			IsPartial = value.Any (m => m.IsKind (SyntaxKind.PartialKeyword));
+			IsAbstract = value.Any (m => m.IsKind (SyntaxKind.AbstractKeyword));
+		}
+	}
 
 	readonly ImmutableArray<EnumMember> enumMembers = [];
 
