@@ -20,6 +20,7 @@ static class AttributesNames {
 	public const string UnsupportedOSPlatformAttribute = "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
 	public const string ObsoletedOSPlatformAttribute = "System.Runtime.Versioning.ObsoletedOSPlatformAttribute";
 
+
 	public static string? GetBindingTypeAttributeName<T> () where T : Enum
 	{
 		var type = typeof (T);
@@ -35,4 +36,21 @@ static class AttributesNames {
 
 		return null;
 	}
+
+	public static string? GetFieldAttributeName<T> () where T : Enum
+	{
+		// we cannot use a switch statement because typeof is not a constant value
+		var type = typeof (T);
+		if (type == typeof (ObjCBindings.Field)) {
+			return ExportFieldAttribute;
+		}
+		if (type == typeof (ObjCBindings.Property)) {
+			return ExportPropertyAttribute;
+		}
+		if (type == typeof (ObjCBindings.Method)) {
+			return ExportMethodAttribute;
+		}
+		return null;
+	}
+
 }

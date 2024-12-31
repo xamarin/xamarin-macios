@@ -1,5 +1,4 @@
 #pragma warning disable APL0003
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +7,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using ObjCBindings;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Property = ObjCBindings.Property;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -126,7 +127,60 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string notificationPropertyInterface = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial interface IProtocol {
+	[Export<Property> (""name"", Property.Notification)]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				notificationPropertyInterface,
+				new CodeChanges (
+					bindingType: BindingType.Protocol,
+					name: "IProtocol",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.IProtocol",
+					symbolAvailability: new ()
+				) {
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute")
+					],
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "string",
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (AccessorKind.Getter, new (), [], []),
+								new (AccessorKind.Setter, new (), [], []),
+							]
+						) {
+							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+						}
 					]
 				}
 			];
@@ -177,7 +231,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						)
+						) {
+							ExportPropertyData = new ("name")
+						}
 					]
 				}
 			];
@@ -229,7 +285,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("name")
+						},
 						new (
 							name: "Surname",
 							type: "string",
@@ -245,7 +303,9 @@ public partial interface IProtocol {
 								new (AccessorKind.Getter, new (), [], []),
 								new (AccessorKind.Setter, new (), [], []),
 							]
-						),
+						) {
+							ExportPropertyData = new ("surname")
+						},
 					]
 				}
 			];

@@ -1,3 +1,4 @@
+#pragma warning disable APL0003
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
+using ObjCBindings;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -313,5 +316,84 @@ public class ParentClass{
 		Assert.NotNull (symbol);
 		var availability = symbol.GetSupportedPlatforms ();
 		Assert.Equal (availability, expectedAvailability);
+	}
+
+	class TestDataGetExportData : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string noAttrPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	public static partial string Name { get; set; } = string.Empty;
+}
+";
+			yield return [noAttrPropertyClass, Field.Default, null!];
+
+			const string fieldPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Export<Field> (""CONSTANT"")]
+	public static partial string Name { get; set; } = string.Empty;
+}
+";
+			yield return [fieldPropertyClass, Field.Default, new ExportData<Field> ("CONSTANT")];
+			const string singlePropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+			yield return [singlePropertyClass, Property.Default, new ExportData<Property> ("name")];
+
+			const string notificationPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Export<Property> (""name"", Property.Notification)]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+			yield return [notificationPropertyClass,
+				Property.Default,
+				new ExportData<Property> ("name", ArgumentSemantic.None, Property.Notification)];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataGetExportData>]
+	void GetExportData<T> (ApplePlatform platform, string inputText, T @enum, ExportData<T>? expectedData) where T : Enum
+	{
+		Assert.NotNull (@enum);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<PropertyDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		Assert.NotNull (semanticModel);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		var exportData = symbol.GetExportData<T> ();
+		Assert.Equal (expectedData, exportData);
 	}
 }
