@@ -299,7 +299,7 @@ public partial class MyClass {
 			yield return [
 				notificationPropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -351,7 +351,7 @@ public partial class MyClass {
 			yield return [
 				fieldPropertyClass,
 				new CodeChanges (
-					bindingType: BindingType.Class,
+					bindingData: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.MyClass",
@@ -816,7 +816,7 @@ public partial class MyClass {
 	public void IsStaticPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -825,7 +825,7 @@ public partial class MyClass {
 		Assert.False (changes.IsStatic);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -843,7 +843,7 @@ public partial class MyClass {
 	public void IsPartialPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -852,7 +852,7 @@ public partial class MyClass {
 		Assert.False (changes.IsPartial);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -870,7 +870,7 @@ public partial class MyClass {
 	public void IsAbstractPropertyTest ()
 	{
 		var changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -879,7 +879,7 @@ public partial class MyClass {
 		Assert.False (changes.IsAbstract);
 
 		changes = new CodeChanges (
-			bindingType: BindingType.SmartEnum,
+			bindingData: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",

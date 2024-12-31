@@ -149,7 +149,7 @@ public partial interface IProtocol {
 			yield return [
 				notificationPropertyInterface,
 				new CodeChanges (
-					bindingType: BindingType.Protocol,
+					bindingData: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
