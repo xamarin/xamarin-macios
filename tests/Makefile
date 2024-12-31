@@ -200,7 +200,6 @@ package-test-libraries.zip:
 	$(Q_GEN) rm -f "$@" "$@.tmp"
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/test-libraries
 	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
-	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
 	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/bindings-test/*.generated.cs' | zip -9r --symlinks $(abspath $@).tmp -@
 	$(Q) mv "$@".tmp "$@"
 
