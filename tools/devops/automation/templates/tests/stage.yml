@@ -113,7 +113,7 @@ stages:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
     condition: and(
                 ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),
-                eq($(TEST_STAGE),"simulator_tests")
+                eq($[variables.TEST_STAGE],"simulator_tests")
               )
     steps:
 
