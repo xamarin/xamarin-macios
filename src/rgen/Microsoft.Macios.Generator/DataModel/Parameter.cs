@@ -47,7 +47,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// True if the parameter type is bittable.
 	/// </summary>
 	public bool IsBlittable { get; }
-  
+
 	/// <summary>
 	/// Returns if the parameter type is a smart enum.
 	/// </summary>

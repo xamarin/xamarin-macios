@@ -236,7 +236,7 @@ public partial interface IProtocol {
 							name: "Name",
 							type: "NS.MyEnum",
 							isSmartEnum: false,
-              isBlittable: true,
+			  isBlittable: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
