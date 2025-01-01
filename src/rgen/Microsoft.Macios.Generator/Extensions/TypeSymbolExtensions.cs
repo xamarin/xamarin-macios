@@ -264,7 +264,7 @@ static class TypeSymbolExtensions {
 				continue;
 			}
 
-			// if we are dealing with a structure, we have to check the layout type and all its childre
+			// if we are dealing with a structure, we have to check the layout type and all its children
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
 				var layoutAttribute = symbol.GetAttributes ()
