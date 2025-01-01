@@ -148,6 +148,7 @@ public class PropertiesEqualityComparerTests {
 			new (
 				name: "FirstProperty",
 				type: "string",
+				isBlittable: false,
 				isSmartEnum: false,
 				symbolAvailability: new (),
 				attributes: [],
@@ -161,8 +162,9 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				isSmartEnum: true,
 				type: "string",
+				isBlittable: false,
+				isSmartEnum: true,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [

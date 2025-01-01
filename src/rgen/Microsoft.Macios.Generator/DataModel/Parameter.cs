@@ -94,7 +94,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (IsNullable != other.IsNullable)
 			return false;
 		if (IsBlittable != other.IsBlittable)
-      return false;
+			return false;
 		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
 		if (DefaultValue != other.DefaultValue)
@@ -151,6 +151,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"IsParams {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
+		sb.Append ($": {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
 		sb.Append ($"ReferenceKind: {ReferenceKind} }}");

@@ -188,7 +188,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "MyEnum", "name") {
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
 					IsSmartEnum = true
 				},
 			]);
@@ -202,7 +202,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "MyEnum", "name") {
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
 					IsSmartEnum = false
 				},
 			]);

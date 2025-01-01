@@ -177,7 +177,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
-              isBlittable: true,
+							isBlittable: true,
 							isSmartEnum: true,
 							symbolAvailability: new (),
 							attributes: [

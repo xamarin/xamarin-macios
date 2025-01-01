@@ -203,7 +203,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

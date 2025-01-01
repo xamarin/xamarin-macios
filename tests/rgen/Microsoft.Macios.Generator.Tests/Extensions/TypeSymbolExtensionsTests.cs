@@ -1432,10 +1432,189 @@ public partial class MyClass {
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
+	class TestDataIsBlittableEnums: IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string defaultBackedEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [defaultBackedEnum, true];
+			
+			const string byteEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : byte {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [byteEnum, true];
+			
+			const string sbyteEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : sbyte {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [sbyteEnum, true];
+			
+			const string shortEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : short {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [shortEnum, true];
+			
+			const string ushortEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : ushort {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [ushortEnum, true];
+			
+			const string intEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : int {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [intEnum, true];
+			
+			const string uintEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : uint {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [uintEnum, true];
+			
+			const string longEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : long {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [longEnum, true];
+			
+			const string ulongEnum = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : ulong {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [ulongEnum, true];
+			
+		}
+		
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataIsBlittablePrimitiveType>]
 	[AllSupportedPlatformsClassData<TestDataIsBlittableStructs>]
-	[AllSupportedPlatformsClassData<TestDataIsBlittableArrays>]
+	[AllSupportedPlatformsClassData<TestDataIsBlittableEnums>]
 	void IsBlittable (ApplePlatform platform, string inputText, bool expectedResult)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);

@@ -330,6 +330,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: true,
 							symbolAvailability: new (),
 							attributes: [
@@ -387,6 +388,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [

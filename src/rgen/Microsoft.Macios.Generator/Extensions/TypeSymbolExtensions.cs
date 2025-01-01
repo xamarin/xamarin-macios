@@ -258,6 +258,12 @@ static class TypeSymbolExtensions {
 				continue;
 			}
 
+			if (symbol.TypeKind == TypeKind.Enum && symbol is INamedTypeSymbol enumSymbol) {
+				// an enum is blittable based on its backing field
+				symbol = enumSymbol.EnumUnderlyingType!;
+				continue;
+			}
+
 			// if we are dealing with a structure, we have to check the layout type and all its childre
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
