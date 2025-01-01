@@ -1,7 +1,6 @@
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Emitters;
 using Xamarin.Tests;
@@ -11,10 +10,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Emitters;
 
 public class EmitterFactoryTests : BaseGeneratorTestClass {
-	TabbedStringBuilder sb = new (new ());
-
-	(CodeChanges Changes, RootBindingContext Context)
-		CreateSymbol<T> (ApplePlatform platform, string inputText) where T : BaseTypeDeclarationSyntax
+	CodeChanges CreateSymbol<T> (ApplePlatform platform, string inputText) where T : BaseTypeDeclarationSyntax
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
@@ -24,13 +20,12 @@ public class EmitterFactoryTests : BaseGeneratorTestClass {
 			.FirstOrDefault ();
 		Assert.NotNull (declaration);
 
-		var rootContext = new RootBindingContext (compilation);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
 		var changes = CodeChanges.FromDeclaration (declaration, semanticModel);
 		Assert.NotNull (changes);
-		return (changes.Value, rootContext);
+		return changes.Value;
 	}
 
 	[Theory]
@@ -46,9 +41,11 @@ public enum TestEnum {
 	Three
 }
 ";
-		var (changes, rootContext) = CreateSymbol<EnumDeclarationSyntax> (platform, inputText);
-		Assert.True (EmitterFactory.TryCreate (changes, rootContext, sb, out var emitter));
+		var changes = CreateSymbol<EnumDeclarationSyntax> (platform, inputText);
+		Assert.True (EmitterFactory.TryCreate (changes, out var emitter));
 		Assert.IsType<EnumEmitter> (emitter);
+		Assert.True (EmitterFactory.TryCreate (changes, out var secondEmitter));
+		Assert.Same (emitter, secondEmitter);
 	}
 
 	[Theory]
@@ -61,9 +58,11 @@ namespace Test;
 public class TestClass {
 }
 ";
-		var (changes, rootContext) = CreateSymbol<ClassDeclarationSyntax> (platform, inputText);
-		Assert.True (EmitterFactory.TryCreate (changes, rootContext, sb, out var emitter));
+		var changes  = CreateSymbol<ClassDeclarationSyntax> (platform, inputText);
+		Assert.True (EmitterFactory.TryCreate (changes, out var emitter));
 		Assert.IsType<ClassEmitter> (emitter);
+		Assert.True (EmitterFactory.TryCreate (changes, out var secondEmitter));
+		Assert.Same (emitter, secondEmitter);
 	}
 
 	[Theory]
@@ -76,8 +75,10 @@ namespace Test;
 public interface ITestInterface {
 }
 ";
-		var (changes, rootContext) = CreateSymbol<InterfaceDeclarationSyntax> (platform, inputText);
-		Assert.True (EmitterFactory.TryCreate (changes, rootContext, sb, out var emitter));
+		var changes = CreateSymbol<InterfaceDeclarationSyntax> (platform, inputText);
+		Assert.True (EmitterFactory.TryCreate (changes, out var emitter));
 		Assert.IsType<InterfaceEmitter> (emitter);
+		Assert.True (EmitterFactory.TryCreate (changes, out var secondEmitter));
+		Assert.Same (emitter, secondEmitter);
 	}
 }

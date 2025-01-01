@@ -7,7 +7,7 @@ using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-class InterfaceEmitter : ICodeEmitter {
+class CategoryEmitter : ICodeEmitter {
 	public string GetSymbolName (in CodeChanges codeChanges) => string.Empty;
 	public IEnumerable<string> UsingStatements => [];
 	public bool TryEmit (in BindingContext bindingContext, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
