@@ -44,7 +44,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public bool IsNullable { get; init; }
 
 	/// <summary>
-	/// True if the parameter type is bittable.
+	/// True if the parameter type is blittable.
 	/// </summary>
 	public bool IsBlittable { get; }
 
