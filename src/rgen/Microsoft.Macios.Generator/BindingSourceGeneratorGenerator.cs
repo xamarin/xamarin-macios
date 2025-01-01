@@ -96,7 +96,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			if (EmitterFactory.TryCreate (change, out var emitter)) {
 				// write the using statements
 				CollectUsingStatements (change, sb, emitter);
-				
+
 				var bindingContext = new BindingContext (rootContext, sb, change);
 				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code

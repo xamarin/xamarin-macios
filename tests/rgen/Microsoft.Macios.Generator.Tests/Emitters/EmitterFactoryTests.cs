@@ -58,7 +58,7 @@ namespace Test;
 public class TestClass {
 }
 ";
-		var changes  = CreateSymbol<ClassDeclarationSyntax> (platform, inputText);
+		var changes = CreateSymbol<ClassDeclarationSyntax> (platform, inputText);
 		Assert.True (EmitterFactory.TryCreate (changes, out var emitter));
 		Assert.IsType<ClassEmitter> (emitter);
 		Assert.True (EmitterFactory.TryCreate (changes, out var secondEmitter));

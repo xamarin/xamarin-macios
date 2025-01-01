@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// </summary>
 static class EmitterFactory {
 
-	static readonly Dictionary<BindingType, ICodeEmitter> emitters = new() {
+	static readonly Dictionary<BindingType, ICodeEmitter> emitters = new () {
 		{ BindingType.Class, new ClassEmitter () },
 		{ BindingType.SmartEnum, new EnumEmitter () },
 		{ BindingType.Protocol, new InterfaceEmitter () },
