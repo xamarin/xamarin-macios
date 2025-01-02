@@ -4,6 +4,6 @@ using ObjCBindings;
 
 namespace TestNamespace;
 
-[BindingType<Class> (Flags=Class.DisableDefaultCtor)]
+[BindingType<Class> (Flags = Class.DisableDefaultCtor)]
 public partial class AVAudioPcmBuffer {
 }
