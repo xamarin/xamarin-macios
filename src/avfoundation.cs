@@ -1603,7 +1603,7 @@ namespace AVFoundation {
 		bool SetMutedSpeechActivityEventListener ([NullAllowed] AVAudioInputNodeMutedSpeechEventListener listenerAction);
 
 #if !TVOS
-		[NoTV, Mac (14, 0), iOS (17, 0)]
+		[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("voiceProcessingOtherAudioDuckingConfiguration", ArgumentSemantic.Assign)]
 		AVAudioVoiceProcessingOtherAudioDuckingConfiguration VoiceProcessingOtherAudioDuckingConfiguration { get; set; }
 #endif
@@ -8960,6 +8960,7 @@ namespace AVFoundation {
 		CNCompositionInfo AddTracks (CNAssetInfo assetInfo, int preferredStartingTrackID);
 
 		// From the AVMutableCompositionCompositionLevelEditing (AVMutableComposition) category
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("insertTimeRange:ofAsset:atTime:completionHandler:")]
 		[Async]
 		void Insert (CMTimeRange timeRange, AVAsset asset, CMTime startTime, AVMutableCompositionInsertHandler completionHandler);
@@ -13066,7 +13067,7 @@ namespace AVFoundation {
 		AVCaptureDevice CompanionDeskViewCamera { get; }
 
 		// From the AVCaptureDeviceVideoZoom (AVCaptureDevice) category
-		[TV (17, 0), MacCatalyst (14, 0), Mac (14, 0), iOS (18, 0)]
+		[TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (18, 0)]
 		[Export ("displayVideoZoomFactorMultiplier")]
 		nfloat DisplayVideoZoomFactorMultiplier { get; }
 
@@ -15650,6 +15651,7 @@ namespace AVFoundation {
 
 		// from the AVSampleBufferDisplayLayerRenderer (AVSampleBufferDisplayLayer) category
 		[Export ("sampleBufferRenderer")]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 		AVSampleBufferVideoRenderer SampleBufferRenderer { get; }
 
 	}
@@ -16341,7 +16343,7 @@ namespace AVFoundation {
 		[Export ("stop")]
 		void Stop ();
 
-		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("createAndAppendTrack")]
 		AVMusicTrack CreateAndAppendTrack ();
 
@@ -18454,7 +18456,7 @@ namespace AVFoundation {
 		CMStereoViewComponents StereoViewComponents { get; }
 	}
 
-	[NoTV, Mac (14, 0), iOS (17, 0)]
+	[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAssetWriterInputTaggedPixelBufferGroupAdaptor {

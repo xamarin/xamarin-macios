@@ -18,6 +18,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void NSRangeCtor ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			var range = new NSRange (1, 2);
 			nint byteOffset = 314;
 			Assert.Multiple (() => {
@@ -51,6 +53,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void StringCtor ()
 		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+
 			var range = new NSRange (0, 0);
 			var value = "hello world";
 			nint byteOffset = 314;

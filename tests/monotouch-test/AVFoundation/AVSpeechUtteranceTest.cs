@@ -32,6 +32,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void StringOptionCtor_Ssml ()
 		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
 			var ssml = $"""<speak>Hello World</speak>""";
 			using var utterance = new AVSpeechUtterance (ssml, AVSpeechUtteranceInitializationOption.SsmlRepresentation);
 			Assert.AreEqual (utterance.SpeechString, "Hello World", "SpeechString");
