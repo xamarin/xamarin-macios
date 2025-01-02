@@ -9,7 +9,7 @@ using ParameterDataModel = Microsoft.Macios.Generator.DataModel.Parameter;
 namespace Microsoft.Macios.Generator.Formatters;
 
 static class ParameterFormatter {
-	
+
 	public static ParameterListSyntax GetParameterList (this in ImmutableArray<Parameter> parameters)
 	{
 		if (parameters.Length == 0)
@@ -41,7 +41,7 @@ static class ParameterFormatter {
 				.WithRankSpecifiers (SingletonList (
 					ArrayRankSpecifier (
 						SingletonSeparatedList<ExpressionSyntax> (OmittedArraySizeExpression ()))));
-			return parameter.IsNullable 
+			return parameter.IsNullable
 				? NullableType (arrayType)
 				: arrayType;
 		}
@@ -57,10 +57,10 @@ static class ParameterFormatter {
 		// modifiers come from two situations, we have the params keyword or not. We cannot have params + a ref modifier
 		// so we build them based on that. If you call WithModifiers twice, you will me stepping on the previous collection
 		// it won't be a merge
-		var modifiers = parameter.IsParams 
-			? TokenList(Token(SyntaxKind.ParamsKeyword)) 
+		var modifiers = parameter.IsParams
+			? TokenList (Token (SyntaxKind.ParamsKeyword))
 			: parameter.ReferenceKind.ToTokens ();
-		
+
 		// we are going to be ignoring the default value, the reason for it is that the partiam method implementation
 		// can ignore it. The following c# code is valid:
 		//
@@ -82,9 +82,9 @@ static class ParameterFormatter {
 		// {
 		//    public partial void TestMethod(MyStruct[]? values)
 		//    {
-        //
-        //    }
-        // }
+		//
+		//    }
+		// }
 		var syntax = Parameter (Identifier (parameter.Name))
 			.WithModifiers (modifiers)
 			.WithType (parameter.GetIdentifierSyntax ());
