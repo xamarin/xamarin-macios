@@ -564,10 +564,12 @@ function New-ParallelTestsResults {
         foreach ($testConfig in $suite.TestConfigurations | Sort-Object -Property Title) {
             $title = $testConfig.Title
             $testResult = $null
-            Write-Host "`tProcessing config $title"
+            Write-Host "`tProcessing config $title:"
+            Write-Host "$testConfig"
             if ($tests.Contains($label)) {
-                Write-Host "`t`tFound results for label: $label"
                 $testInfo = $tests[$label]
+                Write-Host "`t`tFound results for label '$label':"
+                Write-Host "$testInfo"
                 if ($testInfo.Contains($title)) {
                     $testResult = $testInfo[$title]
                     Write-Host "`t`tFound results for title '$title': $testResult"

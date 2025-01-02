@@ -4,18 +4,21 @@ class TestConfiguration {
     [string[]] $enabledPlatforms
     [string] $testsLabels
     [string] $statusContext
+    [string] $stageFilter
 
     TestConfiguration (
         [object] $testConfigurations,
         [object] $supportedPlatforms,
         [string[]] $enabledPlatforms,
         [string] $testsLabels,
-        [string] $statusContext) {
+        [string] $statusContext,
+        [string] $stageFilter) {
         $this.testConfigurations = $testConfigurations
         $this.supportedPlatforms = $supportedPlatforms
         $this.enabledPlatforms = $enabledPlatforms
         $this.testsLabels = $testsLabels
         $this.statusContext = $statusContext
+        $this.stageFilter = $stageFilter
     }
 
     [string] Create() {
@@ -28,11 +31,23 @@ class TestConfiguration {
             $testPrefix = $config.testPrefix
             $testStage = $config.testStage ? $config.testStage : $config.testPrefix
 
+            if ($this.stageFilter) {
+                if ($testStage -eq $this.stageFilter) {
+                    Write-Host "Test $label with testStage '$testStage' is included, because stage filter is '$this.stageFilter'"
+                } else {
+                    Write-Host "Test $label with testStage '$testStage' is skipped, because stage filter is '$this.stageFilter'"
+                    continue
+                }
+            } else {
+                Write-Host "Test $label with testStage '$testStage' is included, because there's no stage filter set"
+            }
+
             $vars = [ordered]@{}
             # set common variables
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
             $vars["TEST_STAGE"] = $testStage
+
             if ($splitByPlatforms -eq "True") {
                 if ($enabledPlatformsForConfig.Length -eq 0) {
                     Write-Host "No enabled platforms, skipping $label"
@@ -108,13 +123,17 @@ function Get-TestConfiguration {
         $TestsLabels,
 
         [string]
-        $StatusContext
+        $StatusContext,
+
+        [string]
+        [AllowEmptyString()]
+        $StageFilter
     )
 
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
     $arrEnabledPlatforms = -split $EnabledPlatforms | Where { $_ }
-    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext)
+    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $StageFilter)
     return $config.Create()
 }
 

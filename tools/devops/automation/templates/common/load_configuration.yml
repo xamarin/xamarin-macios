@@ -88,6 +88,16 @@ steps:
     name: test_matrix
     displayName: 'Create tests strategy matrix'
 
+  - pwsh: |
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1
+      # load the configuration files and set the required variables to be used in the later stages
+      $configPath = Get-ChildItem -Path "$(Pipeline.Workspace)/macios/build-configuration/configuration.json" -Recurse -Force
+      $config = Import-BuildConfiguration -ConfigFile $configPath
+      $testMatrix = $config.SIMULATOR_TEST_MATRIX
+      Write-Host "##vso[task.setvariable variable=SIMULATOR_TEST_MATRIX;isOutput=true]$testMatrix"
+    name: test_matrix
+    displayName: 'Create sim tests strategy matrix'
+
   # upload config to be consumed later
   - ${{ if eq(parameters.uploadArtifacts, true) }}:
       - ${{ if eq(parameters.use1ES, true) }}:
