@@ -172,7 +172,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ("Attributes: ");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ($" IsOptional: {IsOptional}, ");
-		sb.Append ($"IsParams {IsParams}, ");
+		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
