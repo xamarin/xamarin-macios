@@ -120,6 +120,154 @@ namespace NS {
 					]
 				)
 			];
+			
+			const string singleArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				singleArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "input") {
+							IsArray = true
+						}
+					]
+				)
+			];
+			
+			const string nullableSingleArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[]? input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				nullableSingleArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "input") {
+							IsArray = true,
+							IsNullable = true,
+						}
+					]
+				)
+			];
+			
+			const string singleArrayNullableParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string?[] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				singleArrayNullableParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "input") {
+							IsArray = true,
+							IsNullable = false,
+						}
+					]
+				)
+			];
+			
+			const string nullableSingleArrayNullableParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string?[]? input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				nullableSingleArrayNullableParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string?", "input") {
+							IsArray = true,
+							IsNullable = true,
+						}
+					]
+				)
+			];
+			
+			const string twoDimensionArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[][] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				twoDimensionArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string[]", "input") {
+							IsArray = true
+						}
+					]
+				)
+			];
 
 			const string customTypeParameter = @"
 using System;
@@ -175,7 +323,7 @@ namespace NS {
 					],
 					parameters: [
 						new (0, "string", "input"),
-						new (1, "string?", "second") {
+						new (1, "string", "second") {
 							IsNullable = true,
 						}
 					]
@@ -206,7 +354,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (0, "string", "example") {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -316,7 +464,7 @@ namespace NS {
 					],
 					parameters: [
 						new (0, "string", "input"),
-						new (1, "string?", "second") {
+						new (1, "string", "second") {
 							IsNullable = true,
 						}
 					]
@@ -350,7 +498,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "example") {
+						new (0, "string", "example") {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 							Attributes = [

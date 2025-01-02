@@ -125,7 +125,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
+						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
 					]
 				)
@@ -159,9 +159,184 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
+						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string[]", "inSurnames") { IsParams = true, },
+						new (2, "string", "inSurnames") { IsParams = true, IsArray = true},
+					]
+				)
+			];
+			
+			const string arrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				arrayParameter,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string", "inSurnames") { IsParams = false, IsArray = true},
+					]
+				)
+			];
+			
+			const string nullableArrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[]? inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				nullableArrayParameter,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string", "inSurnames") { IsNullable = true, IsArray = true},
+					]
+				)
+			];
+			
+			const string arrayOfNullableParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string?[] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				arrayOfNullableParameter,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string?", "inSurnames") { IsNullable = false, IsArray = true},
+					]
+				)
+			];
+			
+			const string nullableArrayOfNullableParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string?[]? inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				nullableArrayOfNullableParameter,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string?", "inSurnames") { IsNullable = true, IsArray = true},
+					]
+				)
+			];
+			
+			const string twoDimensionalArrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[][] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				twoDimensionalArrayParameter,
+				new Constructor (
+					type: "NS.TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, "string", "inName") { IsNullable = true, },
+						new (1, "int", "inAge"),
+						new (2, "string[]", "inSurnames") { IsParams = false, IsArray = true},
 					]
 				)
 			];
@@ -189,7 +364,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (0, "string", "inName") { IsNullable = true, IsOptional = true, },
 					]
 				)
 			];
@@ -217,7 +392,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "T?", "inName") { IsOptional = true, IsNullable = true, },
+						new (0, "T", "inName") { IsOptional = true, IsNullable = true, },
 					]
 				)
 			];
@@ -251,7 +426,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (0, "string", "inName") { IsNullable = true, IsOptional = true, },
 					]
 				)
 			];
