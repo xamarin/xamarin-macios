@@ -1,6 +1,5 @@
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.CodeAnalysis;
-using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
@@ -9,15 +8,13 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// Returns the emitter that is related to the provided declaration type.
 /// </summary>
 static class EmitterFactory {
-	public static bool TryCreate (CodeChanges changes, RootBindingContext context, TabbedStringBuilder builder,
-		[NotNullWhen (true)] out ICodeEmitter? emitter)
-	{
-		emitter = changes.BindingType switch {
-			BindingType.Class => new ClassEmitter (context, builder),
-			BindingType.SmartEnum => new EnumEmitter (context, builder),
-			BindingType.Protocol => new InterfaceEmitter (context, builder),
-			_ => null
-		};
-		return emitter is not null;
-	}
+
+	static readonly Dictionary<BindingType, ICodeEmitter> emitters = new () {
+		{ BindingType.Class, new ClassEmitter () },
+		{ BindingType.SmartEnum, new EnumEmitter () },
+		{ BindingType.Protocol, new InterfaceEmitter () },
+		{ BindingType.Category, new CategoryEmitter () },
+	};
+	public static bool TryCreate (CodeChanges changes, [NotNullWhen (true)] out ICodeEmitter? emitter)
+		=> emitters.TryGetValue (changes.BindingType, out emitter);
 }
