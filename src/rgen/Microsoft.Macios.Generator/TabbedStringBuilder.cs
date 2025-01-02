@@ -284,6 +284,14 @@ class TabbedStringBuilder : IDisposable {
 	}
 
 	/// <summary>
+	/// Clear the content of the internal string builder.
+	/// </summary>
+	public void Clear ()
+	{
+		sb.Clear ();
+	}
+
+	/// <summary>
 	/// Does not really dispose anything, it just closes the current block.
 	/// </summary>
 	public void Dispose ()
