@@ -10,7 +10,7 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 	/// <inheritdoc />
 	public override bool Equals (CodeChanges x, CodeChanges y)
 	{
-		
+
 		// order does not matter in the using directives, use a comparer that sorts them
 		var ignoreOrderComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
 		// things that mean a code change is the same:

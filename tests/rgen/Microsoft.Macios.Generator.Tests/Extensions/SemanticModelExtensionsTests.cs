@@ -36,13 +36,13 @@ public class Foo {
 ";
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
 			yield return [
-				BindingType.Class, 
-				filescopedNamespaceClass, 
-				"Foo", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				filescopedNamespaceClass,
+				"Foo",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string filescopedNamespaceNestedClass = @"
@@ -57,13 +57,13 @@ public class Foo {
 }
 ";
 			yield return [
-				BindingType.Class, 
-				filescopedNamespaceNestedClass, 
-				"Bar", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				filescopedNamespaceNestedClass,
+				"Bar",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string namespaceClass = @"
@@ -78,13 +78,13 @@ namespace Test {
 ";
 
 			yield return [
-				BindingType.Class, 
-				namespaceClass, 
-				"Foo", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				namespaceClass,
+				"Foo",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string nestedNamespaces = @"
@@ -99,13 +99,13 @@ namespace Foo {
 ";
 			ns = ImmutableArray.Create ("Foo", "Bar");
 			yield return [
-				BindingType.Class, 
-				nestedNamespaces, 
-				"Test", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				nestedNamespaces,
+				"Test",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 		}
@@ -137,12 +137,12 @@ public class Foo {
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
 			yield return [
 				BindingType.Class,
-				filescopedNamespaceClass, 
-				"Foo", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				filescopedNamespaceClass,
+				"Foo",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string filescopedNamespaceNestedClass = @"
@@ -162,13 +162,13 @@ public class Foo {
 }
 ";
 			yield return [
-				BindingType.Class, 
-				filescopedNamespaceNestedClass, 
-				"Bar", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				filescopedNamespaceNestedClass,
+				"Bar",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string namespaceClass = @"
@@ -187,13 +187,13 @@ namespace Test {
 ";
 
 			yield return [
-				BindingType.Class, 
-				namespaceClass, 
-				"Foo", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				namespaceClass,
+				"Foo",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 			const string nestedNamespaces = @"
@@ -213,13 +213,13 @@ namespace Foo {
 ";
 			ns = ImmutableArray.Create ("Foo", "Bar");
 			yield return [
-				BindingType.Class, 
-				nestedNamespaces, 
-				"Test", 
-				"object", 
-				ImmutableArray<string>.Empty, 
-				ns, 
-				builder.ToImmutable (), 
+				BindingType.Class,
+				nestedNamespaces,
+				"Test",
+				"object",
+				ImmutableArray<string>.Empty,
+				ns,
+				builder.ToImmutable (),
 				bindingData];
 
 		}
@@ -232,7 +232,7 @@ namespace Foo {
 		{
 			var builder = SymbolAvailability.CreateBuilder ();
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			
+
 			const string classBindingType = @"
 using ObjCBindings;
 
@@ -359,12 +359,12 @@ public enum Foo {
 				ns,
 				builder.ToImmutable (),
 				new BindingData (BindingType.SmartEnum, new ())];
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	class TestDataGetNameAndNamespaceInheritanceTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -372,7 +372,7 @@ public enum Foo {
 			var protocolBindingData = new BindingData (new BindingTypeData<Protocol> ());
 			var builder = SymbolAvailability.CreateBuilder ();
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
-			
+
 			const string classBindingNoBase = @"
 using Foundation;
 using ObjCBindings;
@@ -416,7 +416,7 @@ public class Foo : IFoo {
 				builder.ToImmutable (),
 				classBindingData
 			];
-			
+
 			const string classBindingNoBaseAndSeveralInterface = @"
 using Foundation;
 using ObjCBindings;
@@ -462,7 +462,7 @@ public class Foo : NSObject {
 				builder.ToImmutable (),
 				classBindingData
 			];
-			
+
 			const string classBindingWithBaseInterface = @"
 using Foundation;
 using ObjCBindings;
@@ -485,7 +485,7 @@ public class Foo : NSObject, IFoo {
 				builder.ToImmutable (),
 				classBindingData
 			];
-			
+
 			const string classBindingWithBaseSeveralInterface = @"
 using Foundation;
 using ObjCBindings;
@@ -510,7 +510,7 @@ public class Foo : NSObject, IFoo, IBar {
 				builder.ToImmutable (),
 				classBindingData
 			];
-			
+
 			const string interfaceBinding = @"
 using Foundation;
 using ObjCBindings;
@@ -529,9 +529,9 @@ public interface IFoo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				protocolBindingData	
+				protocolBindingData
 			];
-			
+
 			const string interfaceWithBaseBinding = @"
 using Foundation;
 using ObjCBindings;
@@ -552,9 +552,9 @@ public interface IFoo : IBar {
 				ImmutableArray.Create ("Test.IBar"),
 				ns,
 				builder.ToImmutable (),
-				protocolBindingData	
+				protocolBindingData
 			];
-			
+
 			const string interfaceWithSeveralBaseBinding = @"
 using Foundation;
 using ObjCBindings;
@@ -576,9 +576,9 @@ public interface IFoo : IBar, IBaz {
 				ImmutableArray.Create ("Test.IBar", "Test.IBaz"),
 				ns,
 				builder.ToImmutable (),
-				protocolBindingData	
+				protocolBindingData
 			];
-			
+
 			const string interfaceWithBaseListGenericBinding = @"
 using System.Collections.Generic;
 using Foundation;
@@ -599,7 +599,7 @@ public interface IFoo : IList<string> {
 				ImmutableArray.Create ("System.Collections.Generic.IList<string>"),
 				ns,
 				builder.ToImmutable (),
-				protocolBindingData	
+				protocolBindingData
 			];
 		}
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -610,7 +610,7 @@ public interface IFoo : IList<string> {
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceAndAvailabilityTests>]
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceDiffBindingType>]
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceInheritanceTests>]
-	internal void GetNameAndNamespaceTests (ApplePlatform platform, BindingType bindingType, 
+	internal void GetNameAndNamespaceTests (ApplePlatform platform, BindingType bindingType,
 		string inputText, string expectedName, string? expectedBaseClass, ImmutableArray<string> expectedInterfaces,
 		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability, BindingData expectedData)
 	{
@@ -623,7 +623,7 @@ public interface IFoo : IList<string> {
 			.LastOrDefault ();
 		Assert.NotNull (declaration);
 		semanticModel.GetSymbolData (
-			declaration: declaration, 
+			declaration: declaration,
 			bindingType: bindingType,
 			name: out var name,
 			baseClass: out var baseClass,

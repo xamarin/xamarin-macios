@@ -28,10 +28,10 @@ static class SemanticModelExtensions {
 		}
 
 		if (symbol is INamedTypeSymbol namedTypeSymbol) {
-			baseClass = namedTypeSymbol.BaseType?.ToDisplayString ().Trim();
+			baseClass = namedTypeSymbol.BaseType?.ToDisplayString ().Trim ();
 			interfacesBucket = ImmutableArray.CreateBuilder<string> ();
 			foreach (var symbolInterface in namedTypeSymbol.Interfaces) {
-				interfacesBucket.Add (symbolInterface.ToDisplayString ().Trim ());	
+				interfacesBucket.Add (symbolInterface.ToDisplayString ().Trim ());
 			}
 		}
 		symbolAvailability = symbol?.GetSupportedPlatforms () ?? new SymbolAvailability ();

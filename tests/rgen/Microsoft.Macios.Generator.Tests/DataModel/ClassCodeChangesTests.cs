@@ -61,7 +61,7 @@ public partial class MyClass {
 					]
 				}
 			];
-			
+
 			const string emptyClassWithBase = @"
 using Foundation;
 using ObjCRuntime;
@@ -95,7 +95,7 @@ public partial class MyClass : NSObject {
 					]
 				}
 			];
-			
+
 			const string emptyClassWithBaseWithInterface = @"
 using Foundation;
 using ObjCRuntime;
