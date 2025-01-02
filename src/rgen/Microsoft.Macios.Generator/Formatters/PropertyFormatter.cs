@@ -16,11 +16,11 @@ static class PropertyFormatter {
 	{
 		if (property is null)
 			return null;
-		
-		var compilationUnit = CompilationUnit ().WithMembers ( 
+
+		var compilationUnit = CompilationUnit ().WithMembers (
 			SingletonList<MemberDeclarationSyntax> (
 				PropertyDeclaration (
-						type: IdentifierName (property.Value.Type), 
+						type: IdentifierName (property.Value.Type),
 						identifier: Identifier (property.Value.Name))
 					.WithModifiers (TokenList (property.Value.Modifiers)))).NormalizeWhitespace ();
 		return compilationUnit;

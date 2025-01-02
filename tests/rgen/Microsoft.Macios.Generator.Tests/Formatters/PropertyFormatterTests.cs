@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Formatters;
 
 public class PropertyFormatterTests : BaseGeneratorTestClass {
-	
+
 	class TestDataToDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -25,7 +25,7 @@ public partial class MyClass {
 }
 ";
 			yield return [stringProperty, "public string Property"];
-			
+
 			const string nullableStringProperty = @"
 using System;
 using ObjCBindings;
@@ -36,8 +36,8 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableStringProperty, "public string? Property"];
-			
-			
+
+
 			const string internalStringProperty = @"
 using System;
 using ObjCBindings;
@@ -47,7 +47,7 @@ public partial class MyClass {
 	internal string Property { get; set; }
 }
 ";
-			yield return [internalStringProperty , "internal string Property"];
+			yield return [internalStringProperty, "internal string Property"];
 
 			const string partialStringProperty = @"
 using System;
@@ -59,7 +59,7 @@ public partial class MyClass {
 }
 ";
 			yield return [partialStringProperty, "public partial string Property"];
-			
+
 			const string nullableStructProperty = @"
 using System;
 using ObjCBindings;
@@ -76,7 +76,7 @@ public partial class MyClass {
 ";
 			yield return [nullableStructProperty, "public partial NS.MyStruct? Property"];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -93,10 +93,10 @@ public partial class MyClass {
 		Assert.NotNull (declaration);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		Assert.NotNull (semanticModel);
-		Assert.True(Property.TryCreate (declaration, semanticModel, out var property));
-		Assert.NotNull(property);
-		var propertyDeclaration= property.ToDeclaration ();
+		Assert.True (Property.TryCreate (declaration, semanticModel, out var property));
+		Assert.NotNull (property);
+		var propertyDeclaration = property.ToDeclaration ();
 		Assert.NotNull (propertyDeclaration);
-		Assert.Equal(expectedDeclaration, propertyDeclaration.ToString ());
+		Assert.Equal (expectedDeclaration, propertyDeclaration.ToString ());
 	}
 }

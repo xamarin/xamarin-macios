@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Formatters;
 
 public class MethodFormatterTests : BaseGeneratorTestClass {
-	
+
 	class TestDataToDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -25,7 +25,7 @@ public partial class MyClass {
 }
 ";
 			yield return [voidMethod, "public partial void TestMethod ()"];
-			
+
 			const string noSpaceParamsMethod = @"
 using System;
 using ObjCBindings;
@@ -36,7 +36,7 @@ public partial class MyClass {
 }
 ";
 			yield return [noSpaceParamsMethod, "public partial void TestMethod ()"];
-			
+
 			const string singleParamMethod = @"
 using System;
 using ObjCBindings;
@@ -47,7 +47,7 @@ public partial class MyClass {
 }
 ";
 			yield return [singleParamMethod, "public partial void TestMethod (string myParam)"];
-			
+
 			const string severalParamMethod = @"
 using System;
 using ObjCBindings;
@@ -58,7 +58,7 @@ public partial class MyClass {
 }
 ";
 			yield return [severalParamMethod, "public partial void TestMethod (string myParam, int myParamInt)"];
-			
+
 			const string nullableParamMethod = @"
 using System;
 using ObjCBindings;
@@ -69,7 +69,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableParamMethod, "public partial void TestMethod (string? myParam)"];
-			
+
 			const string nullableReturnTypeMethod = @"
 using System;
 using ObjCBindings;
@@ -80,7 +80,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableReturnTypeMethod, "public partial string? TestMethod (string? myParam)"];
-			
+
 			const string customReturnMethod = @"
 using System;
 using ObjCBindings;
@@ -97,7 +97,7 @@ public partial class MyClass {
 }
 ";
 			yield return [customReturnMethod, "public partial NS.MyStruct TestMethod (string? myParam)"];
-			
+
 			const string nullableCustomReturnMethod = @"
 using System;
 using ObjCBindings;
@@ -114,7 +114,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableCustomReturnMethod, "public partial NS.MyStruct? TestMethod (string? myParam)"];
-			
+
 			const string customParamMethod = @"
 using System;
 using ObjCBindings;
@@ -131,7 +131,7 @@ public partial class MyClass {
 }
 ";
 			yield return [customParamMethod, "public partial void TestMethod (NS.MyStruct myParam)"];
-			
+
 			const string nullableCustomParamMethod = @"
 using System;
 using ObjCBindings;
@@ -148,7 +148,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableCustomParamMethod, "public partial void TestMethod (NS.MyStruct? myParam)"];
-			
+
 			const string refCustomParamMethod = @"
 using System;
 using ObjCBindings;
@@ -165,7 +165,7 @@ public partial class MyClass {
 }
 ";
 			yield return [refCustomParamMethod, "public partial void TestMethod (ref NS.MyStruct myParam)"];
-			
+
 			const string outCustomParamMethod = @"
 using System;
 using ObjCBindings;
@@ -182,7 +182,7 @@ public partial class MyClass {
 }
 ";
 			yield return [outCustomParamMethod, "public partial void TestMethod (out NS.MyStruct myParam)"];
-			
+
 			const string inCustomParamMethod = @"
 using System;
 using ObjCBindings;
@@ -199,7 +199,7 @@ public partial class MyClass {
 }
 ";
 			yield return [inCustomParamMethod, "public partial void TestMethod (in NS.MyStruct myParam)"];
-			
+
 			const string refReadonlyCustomParamMethod = @"
 using System;
 using ObjCBindings;
@@ -216,7 +216,7 @@ public partial class MyClass {
 }
 ";
 			yield return [refReadonlyCustomParamMethod, "public partial void TestMethod (ref readonly NS.MyStruct myParam)"];
-			
+
 			const string arrayParamMethod = @"
 using System;
 using ObjCBindings;
@@ -232,9 +232,9 @@ public partial class MyClass {
 	public partial void TestMethod(MyStruct[] myParam);
 }
 ";
-			
+
 			yield return [arrayParamMethod, "public partial void TestMethod (NS.MyStruct[] myParam)"];
-			
+
 			const string nullableArrayParamMethod = @"
 using System;
 using ObjCBindings;
@@ -250,9 +250,9 @@ public partial class MyClass {
 	public partial void TestMethod(MyStruct[]? myParam);
 }
 ";
-			
+
 			yield return [nullableArrayParamMethod, "public partial void TestMethod (NS.MyStruct[]? myParam)"];
-			
+
 			const string genericParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -264,9 +264,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<string> myParam);
 }
 ";
-			
+
 			yield return [genericParamMethod, "public partial void TestMethod (System.Collections.Generic.List<string> myParam)"];
-			
+
 			const string genericCustomParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -283,9 +283,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<MyStruct> myParam);
 }
 ";
-			
+
 			yield return [genericCustomParamMethod, "public partial void TestMethod (System.Collections.Generic.List<NS.MyStruct> myParam)"];
-			
+
 			const string nullableGenericParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -297,9 +297,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<string>? myParam);
 }
 ";
-			
+
 			yield return [nullableGenericParamMethod, "public partial void TestMethod (System.Collections.Generic.List<string>? myParam)"];
-			
+
 			const string nullableGenericCustomParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -316,9 +316,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<MyStruct>? myParam);
 }
 ";
-			
+
 			yield return [nullableGenericCustomParamMethod, "public partial void TestMethod (System.Collections.Generic.List<NS.MyStruct>? myParam)"];
-			
+
 			const string nullableNullableGenericParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -330,9 +330,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<string?>? myParam);
 }
 ";
-			
+
 			yield return [nullableNullableGenericParamMethod, "public partial void TestMethod (System.Collections.Generic.List<string?>? myParam)"];
-			
+
 			const string nullableNullableGenericCustomParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -349,9 +349,9 @@ public partial class MyClass {
 	public partial void TestMethod(List<MyStruct?>? myParam);
 }
 ";
-			
+
 			yield return [nullableNullableGenericCustomParamMethod, "public partial void TestMethod (System.Collections.Generic.List<NS.MyStruct?>? myParam)"];
-			
+
 			const string genericDictParamMethod = @"
 using System;
 using System.Collections.Generic;
@@ -363,9 +363,9 @@ public partial class MyClass {
 	public partial void TestMethod(Dictionary<string, string> myParam);
 }
 ";
-			
+
 			yield return [genericDictParamMethod, "public partial void TestMethod (System.Collections.Generic.Dictionary<string, string> myParam)"];
-			
+
 			const string genericReturnMethod = @"
 using System;
 using System.Collections.Generic;
@@ -377,9 +377,9 @@ public partial class MyClass {
 	public partial List<string> TestMethod();
 }
 ";
-			
+
 			yield return [genericReturnMethod, "public partial System.Collections.Generic.List<string> TestMethod ()"];
-			
+
 			const string genericCustomReturnMethod = @"
 using System;
 using System.Collections.Generic;
@@ -396,9 +396,9 @@ public partial class MyClass {
 	public partial List<MyStruct> TestMethod();
 }
 ";
-			
+
 			yield return [genericCustomReturnMethod, "public partial System.Collections.Generic.List<NS.MyStruct> TestMethod ()"];
-			
+
 			const string nullableGenericReturnMethod = @"
 using System;
 using System.Collections.Generic;
@@ -410,9 +410,9 @@ public partial class MyClass {
 	public partial List<string>? TestMethod();
 }
 ";
-			
+
 			yield return [nullableGenericReturnMethod, "public partial System.Collections.Generic.List<string>? TestMethod ()"];
-			
+
 			const string nullableNullableGenericReturnMethod = @"
 using System;
 using System.Collections.Generic;
@@ -424,7 +424,7 @@ public partial class MyClass {
 	public partial List<string?>? TestMethod();
 }
 ";
-			
+
 			yield return [nullableNullableGenericReturnMethod, "public partial System.Collections.Generic.List<string?>? TestMethod ()"];
 
 			const string paramsMethod = @"
@@ -438,11 +438,11 @@ public partial class MyClass {
 	public partial void TestMethod(params string[] data);
 }
 ";
-			
+
 			yield return [paramsMethod, "public partial void TestMethod (params string[] data)"];
-			
+
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -459,10 +459,10 @@ public partial class MyClass {
 		Assert.NotNull (declaration);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		Assert.NotNull (semanticModel);
-		Assert.True(Method.TryCreate (declaration, semanticModel, out var method));
-		Assert.NotNull(method);
-		var methodDeclaration= method.ToDeclaration ();
+		Assert.True (Method.TryCreate (declaration, semanticModel, out var method));
+		Assert.NotNull (method);
+		var methodDeclaration = method.ToDeclaration ();
 		Assert.NotNull (methodDeclaration);
-		Assert.Equal(expectedDeclaration, methodDeclaration.ToString());
+		Assert.Equal (expectedDeclaration, methodDeclaration.ToString ());
 	}
 }

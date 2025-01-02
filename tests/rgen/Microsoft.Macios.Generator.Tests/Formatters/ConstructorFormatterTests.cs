@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Formatters;
 
 public class ConstructorFormatterTests : BaseGeneratorTestClass {
-	
+
 	class TestDataToDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -25,7 +25,7 @@ public partial class MyClass {
 }
 ";
 			yield return [emptyConstructor, "public MyClass ()"];
-			
+
 			const string genericConstructor = @"
 using System;
 using ObjCBindings;
@@ -36,7 +36,7 @@ public partial class MyClass<T> where T : Enum {
 }
 ";
 			yield return [genericConstructor, "public MyClass ()"];
-			
+
 			const string noSpaceParamsMethod = @"
 using System;
 using ObjCBindings;
@@ -47,7 +47,7 @@ public partial class MyClass {
 }
 ";
 			yield return [noSpaceParamsMethod, "public MyClass ()"];
-			
+
 			const string singleParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -58,7 +58,7 @@ public partial class MyClass {
 }
 ";
 			yield return [singleParamConstructor, "public MyClass (string myParam)"];
-			
+
 			const string severalParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -69,7 +69,7 @@ public partial class MyClass {
 }
 ";
 			yield return [severalParamConstructor, "public MyClass (string myParam, int myParamInt)"];
-			
+
 			const string nullableParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -80,7 +80,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableParamConstructor, "public MyClass (string? myParam)"];
-			
+
 			const string customParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -97,7 +97,7 @@ public partial class MyClass {
 }
 ";
 			yield return [customParamConstructor, "public MyClass (NS.MyStruct myParam)"];
-			
+
 			const string nullableCustomParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -114,7 +114,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nullableCustomParamConstructor, "public MyClass (NS.MyStruct? myParam)"];
-			
+
 			const string refCustomParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -131,7 +131,7 @@ public partial class MyClass {
 }
 ";
 			yield return [refCustomParamConstructor, "public MyClass (ref NS.MyStruct myParam)"];
-			
+
 			const string inCustomParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -148,7 +148,7 @@ public partial class MyClass {
 }
 ";
 			yield return [inCustomParamConstructor, "public MyClass (in NS.MyStruct myParam)"];
-			
+
 			const string refReadonlyCustomParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -165,7 +165,7 @@ public partial class MyClass {
 }
 ";
 			yield return [refReadonlyCustomParamConstructor, "public MyClass (ref readonly NS.MyStruct myParam)"];
-			
+
 			const string arrayParamConbstructor = @"
 using System;
 using ObjCBindings;
@@ -181,9 +181,9 @@ public partial class MyClass {
 	public MyClass(MyStruct[] myParam);
 }
 ";
-			
+
 			yield return [arrayParamConbstructor, "public MyClass (NS.MyStruct[] myParam)"];
-			
+
 			const string nullableArrayParamConstructor = @"
 using System;
 using ObjCBindings;
@@ -199,9 +199,9 @@ public partial class MyClass {
 	public MyClass(MyStruct[]? myParam);
 }
 ";
-			
+
 			yield return [nullableArrayParamConstructor, "public MyClass (NS.MyStruct[]? myParam)"];
-			
+
 			const string genericParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -213,9 +213,9 @@ public partial class MyClass {
 	public MyClass(List<string> myParam);
 }
 ";
-			
+
 			yield return [genericParamConstructor, "public MyClass (System.Collections.Generic.List<string> myParam)"];
-			
+
 			const string genericCustomParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -232,9 +232,9 @@ public partial class MyClass {
 	public MyClass(List<MyStruct> myParam);
 }
 ";
-			
+
 			yield return [genericCustomParamConstructor, "public MyClass (System.Collections.Generic.List<NS.MyStruct> myParam)"];
-			
+
 			const string nullableGenericParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -246,9 +246,9 @@ public partial class MyClass {
 	public MyClass(List<string>? myParam);
 }
 ";
-			
+
 			yield return [nullableGenericParamConstructor, "public MyClass (System.Collections.Generic.List<string>? myParam)"];
-			
+
 			const string nullableGenericCustomParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -265,9 +265,9 @@ public partial class MyClass {
 	public MyClass(List<MyStruct>? myParam);
 }
 ";
-			
+
 			yield return [nullableGenericCustomParamConstructor, "public MyClass (System.Collections.Generic.List<NS.MyStruct>? myParam)"];
-			
+
 			const string nullableNullableGenericParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -279,9 +279,9 @@ public partial class MyClass {
 	public MyClass (List<string?>? myParam);
 }
 ";
-			
+
 			yield return [nullableNullableGenericParamConstructor, "public MyClass (System.Collections.Generic.List<string?>? myParam)"];
-			
+
 			const string nullableNullableGenericCustomParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -298,10 +298,10 @@ public partial class MyClass {
 	public MyClass (List<MyStruct?>? myParam);
 }
 ";
-			
+
 			yield return [nullableNullableGenericCustomParamConstructor, "public MyClass (System.Collections.Generic.List<NS.MyStruct?>? myParam)"];
-			
-			
+
+
 			const string genericDictParamConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -313,9 +313,9 @@ public partial class MyClass {
 	public MyClass (Dictionary<string, string> myParam);
 }
 ";
-			
+
 			yield return [genericDictParamConstructor, "public MyClass (System.Collections.Generic.Dictionary<string, string> myParam)"];
-			
+
 			const string paramsConstructor = @"
 using System;
 using System.Collections.Generic;
@@ -327,11 +327,11 @@ public partial class MyClass {
 	public MyClass(params string[] data);
 }
 ";
-			
+
 			yield return [paramsConstructor, "public MyClass (params string[] data)"];
-			
+
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -348,10 +348,10 @@ public partial class MyClass {
 		Assert.NotNull (declaration);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		Assert.NotNull (semanticModel);
-		Assert.True(Constructor.TryCreate (declaration, semanticModel, out var constructor));
-		Assert.NotNull(constructor);
-		var constructorDeclaration= constructor.ToDeclaration ();
+		Assert.True (Constructor.TryCreate (declaration, semanticModel, out var constructor));
+		Assert.NotNull (constructor);
+		var constructorDeclaration = constructor.ToDeclaration ();
 		Assert.NotNull (constructorDeclaration);
-		Assert.Equal(expectedDeclaration, constructorDeclaration.ToString());
+		Assert.Equal (expectedDeclaration, constructorDeclaration.ToString ());
 	}
 }

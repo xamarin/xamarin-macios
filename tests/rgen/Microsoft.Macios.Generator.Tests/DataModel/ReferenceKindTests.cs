@@ -10,7 +10,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class ReferenceKindTests {
-	
+
 	[Theory]
 	[InlineData (RefKind.Ref, ReferenceKind.Ref)]
 	[InlineData (RefKind.Out, ReferenceKind.Out)]
@@ -18,7 +18,7 @@ public class ReferenceKindTests {
 	[InlineData (RefKind.RefReadOnlyParameter, ReferenceKind.RefReadOnlyParameter)]
 	[InlineData ((RefKind) 100, ReferenceKind.None)]
 	void ToReferenceKind (RefKind refKind, ReferenceKind expected)
-		=> Assert.Equal(expected, refKind.ToReferenceKind ());
+		=> Assert.Equal (expected, refKind.ToReferenceKind ());
 
 
 	class TestDataToTokens : IEnumerable<object []> {
@@ -32,16 +32,16 @@ public class ReferenceKindTests {
 				new SyntaxTokenList (Token (SyntaxKind.RefKeyword), Token (SyntaxKind.ReadOnlyKeyword))
 			];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToTokens))]
+	[ClassData (typeof (TestDataToTokens))]
 	void ToTokens (ReferenceKind referenceKind, SyntaxTokenList expected)
 	{
 		var comparer = new CollectionComparer<SyntaxToken> ();
-		Assert.Equal(expected, referenceKind.ToTokens (), comparer);
+		Assert.Equal (expected, referenceKind.ToTokens (), comparer);
 	}
-		
+
 }
