@@ -26,7 +26,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ());
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
 	public void CompareDifferentBase ()
 	{
@@ -35,8 +35,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
-			symbolAvailability: new ()) 
-		{
+			symbolAvailability: new ()) {
 			Base = "Base1"
 		};
 		var changes2 = new CodeChanges (
@@ -44,13 +43,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
-			symbolAvailability: new ())
-		{
+			symbolAvailability: new ()) {
 			Base = "Base2"
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
 	}
-	
+
 	[Fact]
 	public void CompareDifferentInterface ()
 	{
@@ -59,17 +57,15 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
-			symbolAvailability: new ()) 
-		{
-			Interfaces= ["IBase1"]
+			symbolAvailability: new ()) {
+			Interfaces = ["IBase1"]
 		};
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
-			symbolAvailability: new ())
-		{
+			symbolAvailability: new ()) {
 			Interfaces = ["IBase1", "IBase2"],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));

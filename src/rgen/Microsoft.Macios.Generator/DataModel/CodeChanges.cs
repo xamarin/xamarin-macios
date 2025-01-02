@@ -38,7 +38,7 @@ readonly struct CodeChanges {
 	/// The namespace that contains the named type that generated the code change.
 	/// </summary>
 	public ImmutableArray<string> Namespace => namespaces;
-	
+
 	readonly ImmutableArray<string> interfaces = ImmutableArray<string>.Empty;
 	/// <summary>
 	/// The list of interfaces implemented by the class/interface.
@@ -52,7 +52,7 @@ readonly struct CodeChanges {
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
-	
+
 	readonly string? baseClass = null;
 
 	/// <summary>
@@ -61,7 +61,7 @@ readonly struct CodeChanges {
 	public string? Base {
 		get => baseClass;
 		init => baseClass = value;
-		
+
 	}
 
 	readonly SymbolAvailability availability = new ();
@@ -271,13 +271,13 @@ readonly struct CodeChanges {
 	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
 	{
 		semanticModel.GetSymbolData (
-			declaration: enumDeclaration, 
-			bindingType: BindingType.SmartEnum, 
-			name: out name, 
-			baseClass: out baseClass, 
-			interfaces: out interfaces, 
-			namespaces: out namespaces, 
-			symbolAvailability: out availability, 
+			declaration: enumDeclaration,
+			bindingType: BindingType.SmartEnum,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
 			bindingData: out bindingData);
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -312,13 +312,13 @@ readonly struct CodeChanges {
 	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
 		semanticModel.GetSymbolData (
-			declaration: classDeclaration, 
-			bindingType: BindingType.Class, 
-			name: out name, 
-			baseClass: out baseClass, 
-			interfaces: out interfaces, 
-			namespaces: out namespaces, 
-			symbolAvailability: out availability, 
+			declaration: classDeclaration,
+			bindingType: BindingType.Class,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
 			bindingData: out bindingData);
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
@@ -344,13 +344,13 @@ readonly struct CodeChanges {
 	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
 		semanticModel.GetSymbolData (
-			declaration: interfaceDeclaration, 
-			bindingType: BindingType.Protocol, 
-			name: out name, 
-			baseClass: out baseClass, 
-			interfaces: out interfaces, 
-			namespaces: out namespaces, 
-			symbolAvailability: out availability, 
+			declaration: interfaceDeclaration,
+			bindingType: BindingType.Protocol,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
 			bindingData: out bindingData);
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
