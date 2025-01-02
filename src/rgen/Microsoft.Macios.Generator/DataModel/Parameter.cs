@@ -51,7 +51,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// Returns if the parameter type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; init; }
-	
+
 	/// <summary>
 	/// Returns if the parameter is an array type.
 	/// </summary>
@@ -82,10 +82,10 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{
-		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol 
+		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
-			: symbol.Type.ToDisplayString ().Trim('?', '[', ']');
-		parameter = new(symbol.Ordinal, type, symbol.Name) {
+			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
+		parameter = new (symbol.Ordinal, type, symbol.Name) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
 			IsThis = symbol.IsThis,

@@ -161,11 +161,11 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsParams = true, IsArray = true},
+						new (2, "string", "inSurnames") { IsParams = true, IsArray = true },
 					]
 				)
 			];
-			
+
 			const string arrayParameter = @"
 using System;
 
@@ -196,11 +196,11 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsParams = false, IsArray = true},
+						new (2, "string", "inSurnames") { IsParams = false, IsArray = true },
 					]
 				)
 			];
-			
+
 			const string nullableArrayParameter = @"
 using System;
 
@@ -231,11 +231,11 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsNullable = true, IsArray = true},
+						new (2, "string", "inSurnames") { IsNullable = true, IsArray = true },
 					]
 				)
 			];
-			
+
 			const string arrayOfNullableParameter = @"
 using System;
 
@@ -266,11 +266,11 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string?", "inSurnames") { IsNullable = false, IsArray = true},
+						new (2, "string?", "inSurnames") { IsNullable = false, IsArray = true },
 					]
 				)
 			];
-			
+
 			const string nullableArrayOfNullableParameter = @"
 using System;
 
@@ -301,11 +301,11 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string?", "inSurnames") { IsNullable = true, IsArray = true},
+						new (2, "string?", "inSurnames") { IsNullable = true, IsArray = true },
 					]
 				)
 			];
-			
+
 			const string twoDimensionalArrayParameter = @"
 using System;
 
@@ -336,7 +336,7 @@ namespace NS {
 					parameters: [
 						new (0, "string", "inName") { IsNullable = true, },
 						new (1, "int", "inAge"),
-						new (2, "string[]", "inSurnames") { IsParams = false, IsArray = true},
+						new (2, "string[]", "inSurnames") { IsParams = false, IsArray = true },
 					]
 				)
 			];
