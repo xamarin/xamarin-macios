@@ -1426,6 +1426,27 @@ public partial class MyClass {
 }
 ";
 			yield return [nestedStructBlittableContent, true];
+			
+			const string blittableWithNonInstanceContent = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct MyStruct {
+	public static string Data = ""test"";
+	int a;
+	double b;
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyStruct[] Property { get; set; }
+}
+";
+			yield return [blittableWithNonInstanceContent, true];
 
 		}
 
