@@ -7,22 +7,20 @@ using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-#pragma warning disable CS9113 // Parameter is unread. This class is work in progress
-class ClassEmitter (RootBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
-#pragma warning restore CS9113 // Parameter is unread.
+class ClassEmitter : ICodeEmitter {
 	public string GetSymbolName (in CodeChanges codeChanges) => codeChanges.Name;
 
 	public IEnumerable<string> UsingStatements => [];
 
-	public bool TryEmit (in CodeChanges codeChanges, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryEmit (in BindingContext bindingContext, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 
-		builder.AppendLine ();
+		bindingContext.Builder.AppendLine ();
 		diagnostics = null;
 		// add the namespace and the class declaration
-		var modifiers = $"{string.Join (' ', codeChanges.Modifiers)} ";
-		using (var namespaceBlock = builder.CreateBlock ($"namespace {codeChanges.Namespace [^1]}", true)) {
-			using (var classBlock = namespaceBlock.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}class {GetSymbolName (codeChanges)}", true)) {
+		var modifiers = $"{string.Join (' ', bindingContext.Changes.Modifiers)} ";
+		using (var namespaceBlock = bindingContext.Builder.CreateBlock ($"namespace {bindingContext.Changes.Namespace [^1]}", true)) {
+			using (var classBlock = namespaceBlock.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}class {GetSymbolName (bindingContext.Changes)}", true)) {
 				classBlock.AppendLine ("// TODO: add binding code here");
 			}
 		}

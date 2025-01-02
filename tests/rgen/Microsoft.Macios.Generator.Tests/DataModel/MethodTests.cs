@@ -121,6 +121,154 @@ namespace NS {
 				)
 			];
 
+			const string singleArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				singleArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: "string", name: "input", isBlittable: false) {
+							IsArray = true
+						}
+					]
+				)
+			];
+
+			const string nullableSingleArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[]? input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				nullableSingleArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: "string", name: "input", isBlittable: false) {
+							IsArray = true,
+							IsNullable = true,
+						}
+					]
+				)
+			];
+
+			const string singleArrayNullableParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string?[] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				singleArrayNullableParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: "string?", name: "input", isBlittable: false) {
+							IsArray = true,
+							IsNullable = false,
+						}
+					]
+				)
+			];
+
+			const string nullableSingleArrayNullableParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string?[]? input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				nullableSingleArrayNullableParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: "string?", name: "input", isBlittable: false) {
+							IsArray = true,
+							IsNullable = true,
+						}
+					]
+				)
+			];
+
+			const string twoDimensionArrayParameterMethod = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public string MyMethod (string[][] input) => $""{input}_test"";
+	}
+}
+";
+
+			yield return [
+				twoDimensionArrayParameterMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "string",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: "string[]", name: "input", isBlittable: false) {
+							IsArray = true
+						}
+					]
+				)
+			];
+
 			const string customTypeParameter = @"
 using System;
 
@@ -175,7 +323,7 @@ namespace NS {
 					],
 					parameters: [
 						new (position: 0, type: "string", name: "input", isBlittable: false),
-						new (position: 1, type: "string?", name: "second", isBlittable: false) {
+						new (position: 1, type: "string", name: "second", isBlittable: false) {
 							IsNullable = true,
 						}
 					]
@@ -206,7 +354,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
+						new (position: 0, type: "string", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 						},
@@ -316,7 +464,7 @@ namespace NS {
 					],
 					parameters: [
 						new (position: 0, type: "string", name: "input", isBlittable: false),
-						new (position: 1, type: "string?", name: "second", isBlittable: false) {
+						new (position: 1, type: "string", name: "second", isBlittable: false) {
 							IsNullable = true,
 						}
 					]
@@ -350,7 +498,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
+						new (position: 0, type: "string", name: "example", isBlittable: false) {
 							IsNullable = true,
 							ReferenceKind = ReferenceKind.Out,
 							Attributes = [

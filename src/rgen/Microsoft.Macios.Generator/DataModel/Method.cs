@@ -75,17 +75,9 @@ readonly struct Method : IEquatable<Method> {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
-				parameter.Name, parameter.Type.IsBlittable ()) {
-				IsOptional = parameter.IsOptional,
-				IsParams = parameter.IsParams,
-				IsThis = parameter.IsThis,
-				IsNullable = parameter.NullableAnnotation == NullableAnnotation.Annotated,
-				IsSmartEnum = parameter.Type.IsSmartEnum (),
-				DefaultValue = (parameter.HasExplicitDefaultValue) ? parameter.ExplicitDefaultValue?.ToString () : null,
-				ReferenceKind = parameter.RefKind.ToReferenceKind (),
-				Attributes = parameterDeclaration.GetAttributeCodeChanges (semanticModel),
-			});
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+				continue;
+			parametersBucket.Add (parameterChange.Value);
 		}
 
 		change = new (

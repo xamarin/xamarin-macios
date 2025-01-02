@@ -93,11 +93,12 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			// init sb and add the header
 			var sb = new TabbedStringBuilder (new ());
 			sb.WriteHeader ();
-			if (EmitterFactory.TryCreate (change, rootContext, sb, out var emitter)) {
+			if (EmitterFactory.TryCreate (change, out var emitter)) {
 				// write the using statements
 				CollectUsingStatements (change, sb, emitter);
 
-				if (emitter.TryEmit (change, out var diagnostics)) {
+				var bindingContext = new BindingContext (rootContext, sb, change);
+				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
 					var namespacePath = Path.Combine (change.Namespace.ToArray ());
