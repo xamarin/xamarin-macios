@@ -91,7 +91,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
-		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable()) {
+		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
 			IsThis = symbol.IsThis,

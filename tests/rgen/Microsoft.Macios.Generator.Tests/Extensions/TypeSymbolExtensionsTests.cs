@@ -1426,7 +1426,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nestedStructBlittableContent, true];
-			
+
 			const string blittableWithNonInstanceContent = @"
 using System;
 using System.Runtime.InteropServices;

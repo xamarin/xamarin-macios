@@ -206,7 +206,7 @@ namespace NS {
 						},
 						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
-							IsParams = false, 
+							IsParams = false,
 							IsArray = true
 						},
 					]
@@ -246,7 +246,7 @@ namespace NS {
 						},
 						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
-							IsNullable = true, 
+							IsNullable = true,
 							IsArray = true
 						},
 					]
@@ -286,7 +286,8 @@ namespace NS {
 						},
 						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 						new (position: 2, type: "string?", name: "inSurnames", isBlittable: false) {
-							IsNullable = false, IsArray = true
+							IsNullable = false,
+							IsArray = true
 						},
 					]
 				)
@@ -325,7 +326,7 @@ namespace NS {
 						},
 						new (1, "int", "inAge", true),
 						new (2, "string?", "inSurnames", false) {
-							IsNullable = true, 
+							IsNullable = true,
 							IsArray = true
 						},
 					]
@@ -365,7 +366,7 @@ namespace NS {
 						},
 						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 						new (position: 2, type: "string[]", name: "inSurnames", isBlittable: false) {
-							IsParams = false, 
+							IsParams = false,
 							IsArray = true
 						},
 					]
