@@ -1,9 +1,9 @@
 {
   "sdk": {
-    "version": "10.0.100-alpha.1.24630.11"
+    "version": "10.0.100-alpha.1.25051.1"
   },
   "tools": {
-    "dotnet": "10.0.100-alpha.1.24630.11"
+    "dotnet": "10.0.100-alpha.1.25051.1"
   },
   "msbuild-sdks": {
     "Microsoft.DotNet.Arcade.Sdk": ""
