@@ -75,7 +75,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	internal Parameter (int position, string type, string name)
 	{
 		Position = position;
-		Type = type.Trim ('?', ' '); // do not keep the ? token since we will have a property for it
+		Type = type;
 		Name = name;
 	}
 
