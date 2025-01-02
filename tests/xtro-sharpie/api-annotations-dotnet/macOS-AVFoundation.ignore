@@ -39,6 +39,11 @@
 !extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1970168948 for AVAudioSessionRecordPermission.Undetermined is available for the current platform while the value in the native header is not
+!unknown-field! AVAudioSessionInterruptionNotification bound
+!unknown-field! AVAudioSessionInterruptionOptionKey bound
+!unknown-field! AVAudioSessionInterruptionTypeKey bound
+!unknown-field! AVAudioSessionMediaServicesWereLostNotification bound
+!unknown-field! AVAudioSessionMediaServicesWereResetNotification bound
 
 # isEqual: is already exposed from NSObject, no need to expose again
 !missing-selector! AVCaptionRegion::isEqual: not bound

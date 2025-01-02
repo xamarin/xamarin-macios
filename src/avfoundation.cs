@@ -2437,7 +2437,9 @@ namespace AVFoundation {
 		[Export ("setInputGain:error:")]
 		bool SetInputGain (float /* defined as 'float' */ gain, out NSError outError);
 
+#if XAMCORE_5_0
 		[NoMac]
+#endif
 		[Field ("AVAudioSessionInterruptionNotification")]
 		[Notification (typeof (AVAudioSessionInterruptionEventArgs))]
 		NSString InterruptionNotification { get; }
@@ -2448,12 +2450,16 @@ namespace AVFoundation {
 		[Notification (typeof (AVAudioSessionRouteChangeEventArgs))]
 		NSString RouteChangeNotification { get; }
 
+#if XAMCORE_5_0
 		[NoMac]
+#endif
 		[Field ("AVAudioSessionMediaServicesWereResetNotification")]
 		[Notification]
 		NSString MediaServicesWereResetNotification { get; }
 
+#if XAMCORE_5_0
 		[NoMac]
+#endif
 		[Notification, Field ("AVAudioSessionMediaServicesWereLostNotification")]
 		NSString MediaServicesWereLostNotification { get; }
 
@@ -2997,11 +3003,15 @@ namespace AVFoundation {
 
 	[MacCatalyst (13, 1)]
 	interface AVAudioSessionInterruptionEventArgs {
+#if XAMCORE_5_0
 		[NoMac]
+#endif
 		[Export ("AVAudioSessionInterruptionTypeKey")]
 		AVAudioSessionInterruptionType InterruptionType { get; }
 
+#if XAMCORE_5_0
 		[NoMac]
+#endif
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 
@@ -18382,7 +18392,7 @@ namespace AVFoundation {
 		[Static]
 		[Export ("requestRecordPermissionWithCompletionHandler:")]
 		[Async]
-		void RequestRecordPermission (AVPermissionGranted response);
+		void RequestRecordPermission (Action<bool> response);
 
 		[NoTV, NoMac, MacCatalyst (18, 2), iOS (18, 2)]
 		[Export ("microphoneInjectionPermission")]

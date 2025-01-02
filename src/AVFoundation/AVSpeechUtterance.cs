@@ -24,9 +24,9 @@ namespace AVFoundation {
 
 	public partial class AVSpeechUtterance {
 		/// <summary>Create a new <see cref="AVSpeechUtterance" /> instance for the specified string.</summary>
-		/// <param name="string">The text to speak.</param>
-		public AVSpeechUtterance (string @string)
-			: this (@string, AVSpeechUtteranceInitializationOption.PlainText)
+		/// <param name="speechString">The text to speak.</param>
+		public AVSpeechUtterance (string speechString)
+			: this (speechString, AVSpeechUtteranceInitializationOption.PlainText)
 		{
 		}
 
