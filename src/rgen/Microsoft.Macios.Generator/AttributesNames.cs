@@ -19,6 +19,13 @@ static class AttributesNames {
 	public const string SupportedOSPlatformAttribute = "System.Runtime.Versioning.SupportedOSPlatformAttribute";
 	public const string UnsupportedOSPlatformAttribute = "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
 	public const string ObsoletedOSPlatformAttribute = "System.Runtime.Versioning.ObsoletedOSPlatformAttribute";
+	
+	public static readonly string[] BindingTypes = [
+		BindingAttribute,
+		BindingCategoryAttribute,
+		BindingClassAttribute,
+		BindingProtocolAttribute 
+	];
 
 
 	public static string? GetBindingTypeAttributeName<T> () where T : Enum
