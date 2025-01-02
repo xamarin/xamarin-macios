@@ -55,6 +55,7 @@ steps:
   env:
     TESTS_LABEL: ${{ parameters.label }}
     TESTS_PLATFORM: ${{ parameters.testPlatform }}
+    LABEL_WITH_PLATFORM: ${{ parameters.labelWithPlatform }}
 
 - pwsh: |
     Write-Host "##vso[task.setvariable variable=TESTS_USE_SYSTEM]true"

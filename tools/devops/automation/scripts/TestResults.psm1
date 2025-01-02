@@ -526,11 +526,12 @@ function New-ParallelTestsResults {
         foreach ($name in $outputs.Keys) {
             if ($name.EndsWith(".TESTS_LABEL")) {
                 $label = $outputs[$name]
-                $title = $name.Substring(0, $name.IndexOf('.'))
-                $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Sort-Object | Select-Object -Last 1
-                $botKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_BOT") }
-                $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
-                $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
+                $jobName = $name.Substring(0, $name.IndexOf('.'))
+                $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Sort-Object | Select-Object -Last 1
+                $botKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_BOT") }
+                $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
+                $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
+                $title = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "LABEL_WITH_PLATFORM") }
                 Write-Host "Keys: Label=$label Title=$title Status=$statusKey Bot=$botKey Platform=$platformKey Attempt=$attemptKey"
                 $status =  if ($statusKey -eq $null) { "NotFound"} else { $outputs[$statusKey] }
                 $bot = if ($botKey -eq $null) { "NotFound" } else { $outputs[$botKey] }
@@ -565,11 +566,11 @@ function New-ParallelTestsResults {
             $title = $testConfig.Title
             $testResult = $null
             Write-Host "`tProcessing config '$title':"
-            Write-Host "$testConfig"
+            $testConfig | Out-String
             if ($tests.Contains($label)) {
                 $testInfo = $tests[$label]
                 Write-Host "`t`tFound results for label '$label':"
-                Write-Host "$testInfo"
+                $testInfo | Out-String
                 if ($testInfo.Contains($title)) {
                     $testResult = $testInfo[$title]
                     Write-Host "`t`tFound results for title '$title': $testResult"
