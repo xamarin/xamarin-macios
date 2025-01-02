@@ -6,11 +6,9 @@ using UIKit;
 using UserNotifications;
 using UserNotificationsUI;
 
-namespace NotificationContentExtension
-{
+namespace NotificationContentExtension {
 	[Register ("NotificationViewController")]
-	public class NotificationViewController : UIViewController, IUNNotificationContentExtension
-	{
+	public class NotificationViewController : UIViewController, IUNNotificationContentExtension {
 		const int LabelHeight = 88;
 		UILabel? notificationLabel;
 
@@ -22,14 +20,13 @@ namespace NotificationContentExtension
 
 		public override void ViewDidLoad ()
 		{
-			base.ViewDidLoad();
+			base.ViewDidLoad ();
 
 			// Do any required initialization here
 
 			View.BackgroundColor = UIColor.Clear;
 
-			notificationLabel = new UILabel ()
-			{
+			notificationLabel = new UILabel () {
 				TranslatesAutoresizingMaskIntoConstraints = false,
 				Lines = 0,
 				TextAlignment = UITextAlignment.Center,

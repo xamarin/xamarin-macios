@@ -5,11 +5,9 @@ using ObjCRuntime;
 using UIKit;
 using UserNotifications;
 
-namespace NotificationServiceExtension
-{
+namespace NotificationServiceExtension {
 	[Register ("NotificationServiceClass")]
-	public class NotificationServiceClass : UNNotificationServiceExtension
-	{
+	public class NotificationServiceClass : UNNotificationServiceExtension {
 		protected NotificationServiceClass (NativeHandle handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic,
