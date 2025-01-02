@@ -10,6 +10,9 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 	/// <inheritdoc />
 	public override bool Equals (CodeChanges x, CodeChanges y)
 	{
+		
+		// order does not matter in the using directives, use a comparer that sorts them
+		var ignoreOrderComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
 		// things that mean a code change is the same:
 		// - the fully qualified symbol is the same
 		// - the binding type is the same
@@ -26,15 +29,17 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 			return false;
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
 			return false;
+		if (x.Base != y.Base)
+			return false;
+		if (!ignoreOrderComparer.Equals (x.Interfaces, y.Interfaces))
+			return false;
 		if (x.SymbolAvailability != y.SymbolAvailability)
 			return false;
 		if (x.BindingType != y.BindingType)
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
 			return false;
-		// order does not matter in the using directives, use a comparer that sortes them
-		var usingDirectivesComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
-		if (!usingDirectivesComparer.Equals (x.UsingDirectives, y.UsingDirectives))
+		if (!ignoreOrderComparer.Equals (x.UsingDirectives, y.UsingDirectives))
 			return false;
 		if (x.EnumMembers.Length != y.EnumMembers.Length)
 			return false;
