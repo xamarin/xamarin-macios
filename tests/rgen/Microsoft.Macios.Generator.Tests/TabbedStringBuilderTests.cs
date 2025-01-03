@@ -315,4 +315,15 @@ Because we are using a raw string  we expected:
 		var result = block.ToString ();
 		Assert.Equal (expectedString, result);
 	}
+
+	[Fact]
+	public void ClearTests ()
+	{
+		var block = new TabbedStringBuilder (sb);
+		var line = "My Line";
+		block.Append (line);
+		Assert.Equal (line, block.ToString ());
+		block.Clear ();
+		Assert.Equal (string.Empty, block.ToString ());
+	}
 }

@@ -28,6 +28,50 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	}
 
 	[Fact]
+	public void CompareDifferentBase ()
+	{
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ()) {
+			Base = "Base1"
+		};
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ()) {
+			Base = "Base2"
+		};
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Fact]
+	public void CompareDifferentInterface ()
+	{
+		var changes1 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ()) {
+			Interfaces = ["IBase1"]
+		};
+		var changes2 = new CodeChanges (
+			bindingData: new (BindingType.SmartEnum, new ()),
+			name: "name1",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.name1",
+			symbolAvailability: new ()) {
+			Interfaces = ["IBase1", "IBase2"],
+		};
+		Assert.False (comparer.Equals (changes1, changes2));
+	}
+
+	[Fact]
 	public void CompareDifferentNameSymbol ()
 	{
 		var changes1 = new CodeChanges (
