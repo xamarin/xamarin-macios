@@ -32,7 +32,7 @@ namespace NS {
 			yield return [
 				emptyConstructor,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -57,7 +57,7 @@ namespace NS {
 			yield return [
 				singleParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -87,7 +87,7 @@ namespace NS {
 			yield return [
 				multiParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -118,7 +118,7 @@ namespace NS {
 			yield return [
 				nullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -152,7 +152,7 @@ namespace NS {
 			yield return [
 				paramsCollectionParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -187,7 +187,7 @@ namespace NS {
 			yield return [
 				arrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -222,7 +222,7 @@ namespace NS {
 			yield return [
 				nullableArrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -257,7 +257,7 @@ namespace NS {
 			yield return [
 				arrayOfNullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -292,7 +292,7 @@ namespace NS {
 			yield return [
 				nullableArrayOfNullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -327,7 +327,7 @@ namespace NS {
 			yield return [
 				twoDimensionalArrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -357,7 +357,7 @@ namespace NS {
 			yield return [
 				optionalParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -385,7 +385,7 @@ namespace NS {
 			yield return [
 				genericParameter,
 				new Constructor (
-					type: "NS.TestClass<T>",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -419,7 +419,7 @@ namespace NS {
 			yield return [
 				availabilityPresent,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: builder.ToImmutable (),
 					attributes: [],
 					modifiers: [

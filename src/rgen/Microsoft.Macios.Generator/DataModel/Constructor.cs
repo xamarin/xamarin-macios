@@ -68,7 +68,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		}
 
 		change = new (
-			type: constructor.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
+			type: constructor.ContainingSymbol.Name, // we DO NOT want the full name
 			symbolAvailability: constructor.GetSupportedPlatforms (),
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
