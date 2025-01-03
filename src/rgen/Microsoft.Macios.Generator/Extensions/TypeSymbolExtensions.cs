@@ -282,7 +282,7 @@ static class TypeSymbolExtensions {
 				// Recursively check all fields of the struct
 				var instanceFields = symbol.GetMembers ()
 					.OfType<IFieldSymbol> ()
-					.Where (field => !field.IsStatic); 
+					.Where (field => !field.IsStatic);
 				foreach (var member in instanceFields) {
 					if (!member.Type.IsBlittable ()) {
 						return false;
