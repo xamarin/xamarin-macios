@@ -15,8 +15,8 @@ class ClassEmitter : ICodeEmitter {
 	public string GetSymbolName (in CodeChanges codeChanges) => codeChanges.Name;
 
 	public IEnumerable<string> UsingStatements => [
-		"System", 
-		"System.Drawing", 
+		"System",
+		"System.Drawing",
 		"System.Diagnostics",
 		"System.ComponentModel",
 		"System.Threading.Tasks",
@@ -49,7 +49,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 		classBlock.AppendGeneratedCodeAttribute ();
 		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
 		classBlock.AppendLine ($"protected {bindingContext.Changes.Name} (NSObjectFlag t) : base (t) {{}}");
-		
+
 		classBlock.AppendLine ();
 		classBlock.AppendGeneratedCodeAttribute ();
 		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
@@ -67,18 +67,18 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 					bindingContext.Changes.FullyQualifiedSymbol)];
 			return false;
 		}
-		
+
 		// namespace declaration
 		bindingContext.Builder.AppendLine ();
 		bindingContext.Builder.AppendLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
 		bindingContext.Builder.AppendLine ();
-		
+
 		// register the class only if we are not dealing with a static class
 		var bindingData = (BindingTypeData<Class>) bindingContext.Changes.BindingData;
 		// registration depends on the class name. If the binding data contains a name, we use that one, else
 		// we use the name of the class
 		var registrationName = bindingData.Name ?? bindingContext.Changes.Name;
-		
+
 		if (!bindingContext.Changes.IsStatic) {
 			bindingContext.Builder.AppendLine ($"[Register (\"{registrationName}\", true)]");
 		}
@@ -95,7 +95,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 					classBlock: classBlock, 
 					disableDefaultCtor: bindingData.Flags.HasFlag (Class.DisableDefaultCtor));
 			}
-			
+
 			classBlock.AppendLine ("// TODO: add binding code here");
 		}
 		return true;

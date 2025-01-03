@@ -65,7 +65,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
 		// check if we do have the binding attr, else there nothing to retrieve
-		bool isBindingType = declarationSyntax.HasAtLeastOneAttribute(context.SemanticModel, AttributesNames.BindingTypes);
+		bool isBindingType = declarationSyntax.HasAtLeastOneAttribute (context.SemanticModel, AttributesNames.BindingTypes);
 
 		if (!isBindingType) {
 			// return empty data + false

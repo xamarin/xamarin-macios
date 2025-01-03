@@ -7,7 +7,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Classes;
 
 public class ClassGenerationTests : BaseGeneratorTestClass {
-	
+
 	public class TestDataGenerator : BaseTestDataGenerator, IEnumerable<object []> {
 		readonly List<(ApplePlatform Platform, string ClassName, string BindingFile, string OutputFile, string? LibraryText)> _data = new ()
 		{
@@ -40,10 +40,10 @@ public class ClassGenerationTests : BaseGeneratorTestClass {
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[ClassData (typeof (TestDataGenerator))]
 	public void GenerationTests (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 		=> CompareGeneratedCode (platform, className, inputFileName, inputText, outputFileName, expectedOutputText, expectedLibraryText);
-	
+
 }
