@@ -102,6 +102,25 @@ namespace ObjCRuntime {
 		{
 			if (TryGetMapEntry (assemblyName, out var rv))
 				return rv;
+
+#if TRACE
+			Runtime.NSLog ($"RegistrarHelper.GetMapEntry ({assemblyName}) => failed to find entry, will ensure module constructors are called for all loaded assemblies.");
+#endif
+			// An assembly is only registered if we've (tried to) execute code from it, which is not guaranteed to
+			// happen before we get here (in particular for app extensions, which don't have a managed Main method).
+			// So here we loop over all the assemblies in the current domain, make sure the module constructor
+			// has been called for all of them, and then we try again.
+			var assemblies = AppDomain.CurrentDomain.GetAssemblies ();
+			foreach (var asm in assemblies)
+				RuntimeHelpers.RunModuleConstructor (asm.ManifestModule.ModuleHandle);
+
+			if (TryGetMapEntry (assemblyName, out rv))
+				return rv;
+
+#if TRACE
+			Runtime.NSLog ($"RegistrarHelper.GetMapEntry ({assemblyName}) => failed to find entry for the second time.");
+#endif
+
 			throw ErrorHelper.CreateError (8055, Errors.MX8055 /* Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}' */, assemblyName);
 		}
 
