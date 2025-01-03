@@ -61,7 +61,7 @@ static class ParameterFormatter {
 			? TokenList (Token (SyntaxKind.ParamsKeyword))
 			: parameter.ReferenceKind.ToTokens ();
 
-		// we are going to be ignoring the default value, the reason for it is that the partiam method implementation
+		// we are going to be ignoring the default value, the reason for it is that the partial method implementation
 		// can ignore it. The following c# code is valid:
 		//
 		// TestPartial1.cs:
