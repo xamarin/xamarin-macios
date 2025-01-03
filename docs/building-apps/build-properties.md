@@ -467,6 +467,40 @@ Default: automatically detected according to the default version shipped with th
 
 See also [MtouchSdkVersion](#mtouchsdkversion).
 
+## MarshalManagedExceptionMode
+
+Choose how managed exceptions are handled when encountering a native frame
+during stack unwinding while processing the managed exception.
+
+Valid values:
+
+* `default`: Currently, this is `throwobjectivecexception`.
+* `unwindnativecode`: This is not available when using the CoreCLR runtime.
+* `throwobjectivecexception`: Catch the managed exception, and convert it into an Objective-C exception.
+* `abort`: Abort the process.
+* `disable`: Disable intercepting any managed exceptions. For MonoVM this is equivalent to `unwindnativecode`, for CoreCLR this is equivalent to `abort`.
+
+For more information see the article about [Exception marshaling](todo)
+
+See also [MarshalObjectiveCExceptionMode](#marshalobjectivecexceptionmode)
+
+## MarshalObjectiveCExceptionMode
+
+Choose how Objective-C exceptions are handled when encountering a managed frame
+during stack unwinding while processing the Objective-C exception.
+
+Valid values:
+
+* `default`: Currently, this is `throwmanagedexception`.
+* `unwindmanagedcode`: This is not available when using the CoreCLR runtime.
+* `throwmanagedexception`:  Catch the Objective-C exception, and convert it into a managed exception.
+* `abort`: Abort the process.
+* `disable`: Disable intercepting any Objective-C exceptions.
+
+For more information see the article about [Exception marshaling](todo)
+
+See also [MarshalManagedExceptionMode](#marshalmanagedexceptionmode)
+
 ## MdimportPath
 
 The full path to the `mdimport` tool.

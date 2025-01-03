@@ -2183,9 +2183,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_ParseBundlerArguments">
+		<!-- support the old underscored variant as well -->
+		<PropertyGroup>
+			<MarshalManagedExceptionMode Condition="'$(MarshalManagedExceptionMode)' == ''">$(_MarshalManagedExceptionMode)</MarshalManagedExceptionMode>
+			<MarshalObjectiveCExceptionMode Condition="'$(MarshalObjectiveCExceptionMode)' == ''">$(_MarshalObjectiveCExceptionMode)</MarshalObjectiveCExceptionMode>
+		</PropertyGroup>
+
 		<ParseBundlerArguments
 			Aot="@(_AotArguments)"
 			ExtraArgs="$(AppBundleExtraOptions)"
+			MarshalManagedExceptionMode="$(MarshalManagedExceptionMode)"
+			MarshalObjectiveCExceptionMode="$(MarshalObjectiveCExceptionMode)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
@@ -2197,8 +2205,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="CustomLinkFlags" ItemName="_CustomLinkFlags" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
-			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
-			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
+			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="MarshalManagedExceptionMode" />
+			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="NoSymbolStrip"/>
 			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
 			<Output TaskParameter="NoWarn" PropertyName="_BundlerNoWarn" />

@@ -100,32 +100,42 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
-		[TestCase ("--marshal-managed-exceptions", "")]
-		[TestCase ("--marshal-managed-exceptions:", "")]
-		[TestCase ("--marshal-managed-exceptions:default", "default")]
-		[TestCase ("--marshal-managed-exceptions default", "default")]
-		[TestCase ("--marshal-managed-exceptions:dummy", "dummy")]
-		[TestCase ("-marshal-managed-exceptions:dummy", "dummy")]
-		[TestCase ("/marshal-managed-exceptions:dummy", "dummy")]
-		public void MarshalManagedExceptionMode (string input, string output)
+		[TestCase ("--marshal-managed-exceptions", "", null)]
+		[TestCase ("--marshal-managed-exceptions:", "", null)]
+		[TestCase ("--marshal-managed-exceptions:default", "default", null)]
+		[TestCase ("--marshal-managed-exceptions default", "default", null)]
+		[TestCase ("--marshal-managed-exceptions:dummy", "dummy", null)]
+		[TestCase ("-marshal-managed-exceptions:dummy", "dummy", null)]
+		[TestCase ("/marshal-managed-exceptions:dummy", "dummy", null)]
+		[TestCase ("/marshal-managed-exceptions:dummy", "dummy", "existing")]
+		[TestCase ("--marshal-managed-exceptions", "", "existing")]
+		[TestCase ("--marshal-managed-exceptions:", "", "existing")]
+		[TestCase ("--marshal-objectivec-exceptions:", "existing", "existing")]
+		public void MarshalManagedExceptionMode (string input, string output, string existingValue)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.MarshalManagedExceptionMode = existingValue;
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.MarshalManagedExceptionMode, output);
 		}
 
 		[Test]
-		[TestCase ("--marshal-objectivec-exceptions", "")]
-		[TestCase ("--marshal-objectivec-exceptions:", "")]
-		[TestCase ("--marshal-objectivec-exceptions:default", "default")]
-		[TestCase ("--marshal-objectivec-exceptions default", "default")]
-		[TestCase ("--marshal-objectivec-exceptions:dummy", "dummy")]
-		[TestCase ("-marshal-objectivec-exceptions:dummy", "dummy")]
-		[TestCase ("/marshal-objectivec-exceptions:dummy", "dummy")]
-		public void MarshalObjetiveCExceptionMode (string input, string output)
+		[TestCase ("--marshal-objectivec-exceptions", "", null)]
+		[TestCase ("--marshal-objectivec-exceptions:", "", null)]
+		[TestCase ("--marshal-objectivec-exceptions:default", "default", null)]
+		[TestCase ("--marshal-objectivec-exceptions default", "default", null)]
+		[TestCase ("--marshal-objectivec-exceptions:dummy", "dummy", null)]
+		[TestCase ("-marshal-objectivec-exceptions:dummy", "dummy", null)]
+		[TestCase ("/marshal-objectivec-exceptions:dummy", "dummy", null)]
+		[TestCase ("/marshal-objectivec-exceptions:dummy", "dummy", "existing")]
+		[TestCase ("--marshal-objectivec-exceptions", "", "existing")]
+		[TestCase ("--marshal-objectivec-exceptions:", "", "existing")]
+		[TestCase ("--marshal-managed-exceptions:", "existing", "existing")]
+		public void MarshalObjetiveCExceptionMode (string input, string output, string existingValue)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.MarshalObjectiveCExceptionMode = existingValue;
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.MarshalObjectiveCExceptionMode, output);
