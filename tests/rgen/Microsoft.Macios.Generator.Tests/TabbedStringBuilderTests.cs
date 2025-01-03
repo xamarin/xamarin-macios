@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -162,15 +163,31 @@ Because we are using a raw string  we expected:
 	}
 
 	[Theory]
+	[InlineData (EditorBrowsableState.Advanced , 0, "")]
+	[InlineData (EditorBrowsableState.Never, 1, "\t")]
+	[InlineData (EditorBrowsableState.Always, 5, "\t\t\t\t\t")]
+	public void AppendEditorBrowsableAttributeTest (EditorBrowsableState state, uint tabCount, string expectedTabs)
+	{
+		var expected = $"{expectedTabs}[EditorBrowsable (EditorBrowsableState.{state})]\n";
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			block.AppendEditorBrowsableAttribute (state);
+			result = block.ToString ();
+		}
+
+		Assert.Equal (expected, result);
+	}
+
+	[Theory]
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendEditorBrowsableAttributeTest (uint tabCount, string expectedTabs)
+	public void AppendDesignatedInitializer (uint tabCount, string expectedTabs)
 	{
-		var expected = $"{expectedTabs}[EditorBrowsable (EditorBrowsableState.Never)]\n";
+		var expected = $"{expectedTabs}[DesignatedInitializer]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendEditorBrowsableAttribute ();
+			block.AppendDesignatedInitializer ();
 			result = block.ToString ();
 		}
 

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
@@ -228,9 +229,16 @@ class TabbedStringBuilder : IDisposable {
 	/// Append a EditorBrowsable attribute. Added for convenience.
 	/// </summary>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendEditorBrowsableAttribute ()
+	public TabbedStringBuilder AppendEditorBrowsableAttribute (EditorBrowsableState state)
 	{
-		const string attr = "[EditorBrowsable (EditorBrowsableState.Never)]";
+		string attr = $"[EditorBrowsable (EditorBrowsableState.{state})]";
+		AppendLine (attr);
+		return this;
+	}
+
+	public TabbedStringBuilder AppendDesignatedInitializer ()
+	{
+		const string attr = "[DesignatedInitializer]";
 		AppendLine (attr);
 		return this;
 	}

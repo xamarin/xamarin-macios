@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
@@ -26,11 +27,13 @@ class ClassEmitter : ICodeEmitter {
 	];
 	
 		
-	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedStringBuilder classBlock)
+	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedStringBuilder classBlock, bool disableDefaultCtor)
 	{
-		classBlock.AppendGeneratedCodeAttribute ();
-		classBlock.AppendEditorBrowsableAttribute ();
-		classBlock.AppendRaw (
+
+		if (!disableDefaultCtor) {
+			classBlock.AppendGeneratedCodeAttribute ();
+			classBlock.AppendDesignatedInitializer ();
+			classBlock.AppendRaw (
 $@"[Export (""init"")]
 public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 {{
@@ -41,13 +44,15 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 }}
 ");
 		classBlock.AppendLine ();
+		}
+
 		classBlock.AppendGeneratedCodeAttribute ();
-		classBlock.AppendEditorBrowsableAttribute ();
+		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
 		classBlock.AppendLine ($"protected {bindingContext.Changes.Name} (NSObjectFlag t) : base (t) {{}}");
 		
 		classBlock.AppendLine ();
 		classBlock.AppendGeneratedCodeAttribute ();
-		classBlock.AppendEditorBrowsableAttribute ();
+		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
 		classBlock.AppendLine ($"protected internal {bindingContext.Changes.Name} (NativeHandle handle) : base (handle) {{}}");
 	}
 
@@ -86,9 +91,9 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 				classBlock.AppendLine ("public override NativeHandle ClassHandle => class_ptr;");
 				classBlock.AppendLine ();
 
-				if (!bindingData.Flags.HasFlag (Class.DisableDefaultCtor)) {
-					EmitDefaultConstructors (bindingContext, classBlock);
-				}
+				EmitDefaultConstructors (bindingContext: bindingContext, 
+					classBlock: classBlock, 
+					disableDefaultCtor: bindingData.Flags.HasFlag (Class.DisableDefaultCtor));
 			}
 			
 			classBlock.AppendLine ("// TODO: add binding code here");

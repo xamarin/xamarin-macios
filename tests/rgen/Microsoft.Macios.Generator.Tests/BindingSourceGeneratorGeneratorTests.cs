@@ -46,6 +46,13 @@ public partial class AVAudioPcmBuffer
 
 	public override NativeHandle ClassHandle => class_ptr;
 
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	protected AVAudioPcmBuffer (NSObjectFlag t) : base (t) {}
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	protected internal AVAudioPcmBuffer (NativeHandle handle) : base (handle) {}
 	// TODO: add binding code here
 }
 ";
