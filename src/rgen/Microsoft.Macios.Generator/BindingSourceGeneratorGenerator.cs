@@ -89,9 +89,10 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var rootContext = new RootBindingContext (compilation);
+		var sb = new TabbedStringBuilder (new ());
 		foreach (var change in changesList) {
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new ());
+			sb.Clear ();
 			sb.WriteHeader ();
 			if (EmitterFactory.TryCreate (change, out var emitter)) {
 				// write the using statements
