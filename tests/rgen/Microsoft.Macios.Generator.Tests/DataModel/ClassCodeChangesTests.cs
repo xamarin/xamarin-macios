@@ -162,7 +162,7 @@ public partial class MyClass {
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -210,7 +210,7 @@ public partial class MyClass {
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -219,7 +219,7 @@ public partial class MyClass {
 							parameters: []
 						),
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
