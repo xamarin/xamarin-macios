@@ -25,7 +25,7 @@ namespace ObjCRuntime {
 #if !XAMCORE_5_0
 		/// <summary>Creates a new <see cref="MarshalObjectiveCExceptionEventArgs" /> instance.</summary>
 #pragma warning disable CS8618 // Non-nullable property 'Exception' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-		public MarshalObjectiveCExceptionEventArgs () {}
+		public MarshalObjectiveCExceptionEventArgs () { }
 #pragma warning restore CS8618
 #endif
 
@@ -58,7 +58,7 @@ namespace ObjCRuntime {
 #if !XAMCORE_5_0
 		/// <summary>Creates a new <see cref="MarshalManagedExceptionEventArgs" /> instance.</summary>
 #pragma warning disable CS8618 // Non-nullable property 'Exception' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.
-		public MarshalManagedExceptionEventArgs () {}
+		public MarshalManagedExceptionEventArgs () { }
 #pragma warning restore CS8618
 #endif
 
