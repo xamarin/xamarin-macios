@@ -163,7 +163,7 @@ Because we are using a raw string  we expected:
 	}
 
 	[Theory]
-	[InlineData (EditorBrowsableState.Advanced , 0, "")]
+	[InlineData (EditorBrowsableState.Advanced, 0, "")]
 	[InlineData (EditorBrowsableState.Never, 1, "\t")]
 	[InlineData (EditorBrowsableState.Always, 5, "\t\t\t\t\t")]
 	public void AppendEditorBrowsableAttributeTest (EditorBrowsableState state, uint tabCount, string expectedTabs)

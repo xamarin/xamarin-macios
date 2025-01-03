@@ -25,8 +25,8 @@ class ClassEmitter : ICodeEmitter {
 		"System.Diagnostics.CodeAnalysis",
 		"ObjCRuntime",
 	];
-	
-		
+
+
 	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedStringBuilder classBlock, bool disableDefaultCtor)
 	{
 
@@ -43,7 +43,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 		InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.Selector.GetHandle (""init"")), ""init"");
 }}
 ");
-		classBlock.AppendLine ();
+			classBlock.AppendLine ();
 		}
 
 		classBlock.AppendGeneratedCodeAttribute ();
@@ -91,8 +91,8 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 				classBlock.AppendLine ("public override NativeHandle ClassHandle => class_ptr;");
 				classBlock.AppendLine ();
 
-				EmitDefaultConstructors (bindingContext: bindingContext, 
-					classBlock: classBlock, 
+				EmitDefaultConstructors (bindingContext: bindingContext,
+					classBlock: classBlock,
 					disableDefaultCtor: bindingData.Flags.HasFlag (Class.DisableDefaultCtor));
 			}
 
