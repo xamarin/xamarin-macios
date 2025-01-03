@@ -1,6 +1,7 @@
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -48,6 +49,78 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					]
+				}
+			];
+
+			const string emptyClassWithBase = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass : NSObject {
+}
+";
+
+			yield return [
+				emptyClassWithBase,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "Foundation.NSObject",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					]
+				}
+			];
+
+			const string emptyClassWithBaseWithInterface = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+public interface IMyInterface {}
+
+[BindingType<Class>]
+public partial class MyClass : NSObject, IMyInterface {
+}
+";
+
+			yield return [
+				emptyClassWithBaseWithInterface,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "Foundation.NSObject",
+					Interfaces = ["NS.IMyInterface"],
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -80,6 +153,8 @@ internal partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -116,6 +191,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: builder.ToImmutable ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>"),
 						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
@@ -152,6 +229,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -162,7 +241,7 @@ public partial class MyClass {
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -200,6 +279,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -210,7 +291,7 @@ public partial class MyClass {
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -219,7 +300,7 @@ public partial class MyClass {
 							parameters: []
 						),
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -259,6 +340,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -318,6 +401,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -376,6 +461,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -430,6 +517,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
@@ -485,6 +574,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
@@ -543,6 +634,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -600,6 +693,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -674,6 +769,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -726,6 +823,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -779,6 +878,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -846,6 +947,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
@@ -895,6 +998,8 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
