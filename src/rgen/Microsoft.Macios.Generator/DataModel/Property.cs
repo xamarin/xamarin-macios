@@ -15,7 +15,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly struct that represent the changes that a user has made in a property.
 /// </summary>
-readonly struct Property : IEquatable<Property> {
+readonly partial struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Name of the property.
 	/// </summary>
