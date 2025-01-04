@@ -128,8 +128,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -186,8 +198,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -243,8 +267,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -296,8 +332,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
@@ -351,8 +399,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -407,8 +467,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -426,8 +498,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("surname")
@@ -647,8 +731,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								)
 							])
 					],
 				}
@@ -696,8 +792,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								)
 							]
 						),
 						new (
@@ -709,8 +817,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove, 
+									symbolAvailability: new (), 
+									exportPropertyData: null, 
+									attributes: [], 
+									modifiers: []
+								)
 							]
 						),
 					],

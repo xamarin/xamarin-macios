@@ -30,7 +30,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 			new (
 				name: "SecondEvent",
@@ -41,7 +47,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
@@ -54,7 +66,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 
@@ -74,7 +92,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
@@ -87,7 +111,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 
@@ -107,7 +137,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
@@ -120,7 +156,13 @@ public class EventEqualityComparerTests {
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter, 
+						symbolAvailability: new (), 
+						exportPropertyData: null, 
+						attributes: [], 
+						modifiers: []
+					)
 				]),
 		];
 
