@@ -39,16 +39,16 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]
@@ -78,10 +78,10 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]
@@ -111,17 +111,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 							]
@@ -160,17 +160,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
 							exportPropertyData: null,
-							attributes: [], 
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
 							]
@@ -209,9 +209,9 @@ public class TestClass {
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Add
-							, symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							, symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]
@@ -255,21 +255,21 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]

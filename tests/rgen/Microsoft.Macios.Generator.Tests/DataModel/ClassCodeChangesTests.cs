@@ -366,17 +366,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -439,17 +439,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -511,17 +511,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -579,17 +579,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -649,17 +649,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -720,17 +720,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -791,17 +791,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -823,17 +823,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Getter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Setter, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 							]
@@ -1064,17 +1064,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Add, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Remove, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								)
 							])
@@ -1127,17 +1127,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Add, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Remove, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								)
 							]
@@ -1152,17 +1152,17 @@ public partial class MyClass {
 							],
 							accessors: [
 								new (
-									accessorKind: AccessorKind.Add, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								),
 								new (
-									accessorKind: AccessorKind.Remove, 
-									symbolAvailability: new (), 
-									exportPropertyData: null, 
-									attributes: [], 
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
 									modifiers: []
 								)
 							]

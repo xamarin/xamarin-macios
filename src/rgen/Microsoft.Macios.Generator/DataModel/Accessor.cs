@@ -18,7 +18,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// The platform availability of the enum value.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
 	/// </summary>
@@ -42,8 +42,8 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// <param name="exportPropertyData">The data of the export attribute found in the accessor.</param>
 	/// <param name="attributes">The list of attributes attached to the accessor.</param>
 	/// <param name="modifiers">The list of visibility modifiers of the accessor.</param>
-	public Accessor (AccessorKind accessorKind, 
-		SymbolAvailability symbolAvailability, 
+	public Accessor (AccessorKind accessorKind,
+		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Property>? exportPropertyData,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers)

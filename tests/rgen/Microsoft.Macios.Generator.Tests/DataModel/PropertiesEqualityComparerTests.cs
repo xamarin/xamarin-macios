@@ -33,10 +33,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -52,10 +52,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -73,10 +73,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -101,10 +101,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -122,10 +122,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -150,10 +150,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -171,10 +171,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -199,10 +199,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),
@@ -220,10 +220,10 @@ public class PropertiesEqualityComparerTests {
 				],
 				accessors: [
 					new (
-						accessorKind: AccessorKind.Getter, 
-						symbolAvailability: new (), 
-						exportPropertyData: null, 
-						attributes: [], 
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
 						modifiers: []
 					)
 				]),

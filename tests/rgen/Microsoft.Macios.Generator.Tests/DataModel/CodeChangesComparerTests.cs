@@ -255,18 +255,18 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
 							],
@@ -302,19 +302,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -332,21 +332,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -374,21 +374,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -406,19 +406,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -452,19 +452,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -482,21 +482,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -524,20 +524,20 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 							], modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -555,19 +555,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -601,19 +601,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -631,21 +631,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -659,10 +659,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []),
 					]),
 			]
@@ -689,21 +689,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -721,19 +721,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -767,19 +767,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -797,21 +797,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -825,10 +825,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []),
 					]),
 				new (
@@ -839,17 +839,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -877,21 +877,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -909,19 +909,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -935,17 +935,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -957,10 +957,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -995,19 +995,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1025,21 +1025,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1053,10 +1053,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []),
 					]),
 			]
@@ -1083,21 +1083,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1115,19 +1115,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1143,10 +1143,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1180,19 +1180,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1210,21 +1210,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1238,10 +1238,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1253,17 +1253,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1322,21 +1322,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1354,19 +1354,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1380,16 +1380,16 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1401,10 +1401,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1457,19 +1457,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1487,21 +1487,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1515,10 +1515,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1530,17 +1530,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1599,21 +1599,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1631,19 +1631,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1657,17 +1657,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1679,10 +1679,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1748,19 +1748,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1778,21 +1778,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1806,10 +1806,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1821,17 +1821,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1874,21 +1874,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -1906,19 +1906,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1932,17 +1932,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -1954,10 +1954,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2013,19 +2013,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2043,21 +2043,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -2071,10 +2071,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2086,17 +2086,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2155,21 +2155,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -2187,12 +2187,12 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], modifiers: []),
+							], modifiers: []),
 						new (AccessorKind.Setter, new (), null, [], []),
 					]),
 			],
@@ -2205,17 +2205,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2227,10 +2227,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2299,19 +2299,19 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2329,21 +2329,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -2357,10 +2357,10 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2372,17 +2372,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2441,21 +2441,21 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					]),
@@ -2473,18 +2473,18 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 							], modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2498,17 +2498,17 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					modifiers: [],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Remove, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),
@@ -2521,9 +2521,9 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Add,
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					]),

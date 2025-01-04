@@ -120,9 +120,9 @@ readonly struct Event : IEquatable<Event> {
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
 				accessorsBucket.Add (new (
-					accessorKind: kind, 
-					symbolAvailability: accessorSymbol.GetSupportedPlatforms (), 
-					exportPropertyData: null, 
+					accessorKind: kind,
+					symbolAvailability: accessorSymbol.GetSupportedPlatforms (),
+					exportPropertyData: null,
 					attributes: accessorAttributeChanges,
 					modifiers: [.. accessorDeclaration.Modifiers]));
 			}

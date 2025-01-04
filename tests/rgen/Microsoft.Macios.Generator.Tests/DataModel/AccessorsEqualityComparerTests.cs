@@ -20,24 +20,24 @@ public class AccessorsEqualityComparerTests {
 	{
 		ImmutableArray<Accessor> x = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 
@@ -49,30 +49,30 @@ public class AccessorsEqualityComparerTests {
 	{
 		ImmutableArray<Accessor> x = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
 			new (
-				accessorKind: AccessorKind.Add, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Add,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Remove, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Remove,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 
@@ -84,30 +84,30 @@ public class AccessorsEqualityComparerTests {
 	{
 		ImmutableArray<Accessor> x = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 
@@ -119,31 +119,31 @@ public class AccessorsEqualityComparerTests {
 	{
 		ImmutableArray<Accessor> x = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 
 		ImmutableArray<Accessor> y = [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []),
 		];
 

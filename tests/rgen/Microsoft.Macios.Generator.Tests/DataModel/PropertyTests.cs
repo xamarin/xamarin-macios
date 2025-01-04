@@ -87,17 +87,17 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -108,10 +108,10 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -121,7 +121,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.False (x == y);
 		Assert.True (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
@@ -132,10 +132,10 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: new ("name"), 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: new ("name"),
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -146,10 +146,10 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: new ("surname"), 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: new ("surname"),
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -170,17 +170,17 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -191,17 +191,17 @@ public class PropertyTests : BaseGeneratorTestClass {
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
 			new (
-				accessorKind: AccessorKind.Getter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 			new (
-				accessorKind: AccessorKind.Setter, 
-				symbolAvailability: new (), 
-				exportPropertyData: null, 
-				attributes: [], 
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
 				modifiers: []
 			),
 		]);
@@ -243,18 +243,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						)
-					]) 
-				{
-					ExportPropertyData= new ("name"),
+					]) {
+					ExportPropertyData = new ("name"),
 				},
 			];
-			
+
 			const string automaticGetterExportData = @"
 using System;
 using ObjCBindings;
@@ -286,16 +285,15 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData:  new ("myName"),
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("myName"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
-							], 
+							],
 							modifiers: []
 						)
-					]) 
-				{
+					]) {
 					ExportPropertyData = new ("name"),
 				},
 			];
@@ -329,25 +327,24 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						)
-					]) 
-				{
+					]) {
 					ExportPropertyData = new ("name"),
 				},
 			];
-			
+
 			const string automaticGetterSetterExportData = @"
 using System;
 using ObjCBindings;
@@ -382,25 +379,24 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: new ("myName"), 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("myName"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: new ("setMyName"), 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("setMyName"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["setMyName"]),
-							], 
+							],
 							modifiers: []
 						)
-					]) 
-				{
+					]) {
 					ExportPropertyData = new ("name"),
 				},
 			];
@@ -428,10 +424,10 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -460,10 +456,10 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -494,17 +490,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
 							exportPropertyData: null,
-							attributes: [], 
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -536,17 +532,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -578,17 +574,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 							]
@@ -632,17 +628,17 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -685,19 +681,19 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: getterAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: new (), 
-							exportPropertyData: null, 
-							attributes: [], 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
 							modifiers: []
 						),
 					])
@@ -743,21 +739,21 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: getterAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: setterAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					])
@@ -806,21 +802,21 @@ namespace Test {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: getterAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-							], 
+							],
 							modifiers: []
 						),
 						new (
-							accessorKind: AccessorKind.Setter, 
-							symbolAvailability: setterAvailabilityBuilder.ToImmutable (), 
-							exportPropertyData: null, 
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
 							attributes: [
 								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-							], 
+							],
 							modifiers: []
 						),
 					])
