@@ -48,6 +48,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public bool IsNullable { get; init; }
 
 	/// <summary>
+	/// True if the parameter type is blittable.
+	/// </summary>
+	public bool IsBlittable { get; }
+
+	/// <summary>
 	/// Returns if the parameter type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; init; }
@@ -72,11 +77,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
-	internal Parameter (int position, string type, string name)
+	public Parameter (int position, string type, string name, bool isBlittable)
 	{
 		Position = position;
 		Type = type;
 		Name = name;
+		IsBlittable = isBlittable;
 	}
 
 	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
@@ -85,7 +91,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
-		parameter = new (symbol.Ordinal, type, symbol.Name) {
+		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
 			IsThis = symbol.IsThis,
@@ -115,6 +121,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (IsThis != other.IsThis)
 			return false;
 		if (IsNullable != other.IsNullable)
+			return false;
+		if (IsBlittable != other.IsBlittable)
 			return false;
 		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
@@ -175,6 +183,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
+		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
