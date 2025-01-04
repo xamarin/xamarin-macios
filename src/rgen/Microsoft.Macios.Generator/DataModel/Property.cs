@@ -27,6 +27,11 @@ readonly struct Property : IEquatable<Property> {
 	public string Type { get; } = string.Empty;
 
 	/// <summary>
+	/// Returns if the property type is bittable.
+	/// </summary>
+	public bool IsBlittable { get; }
+
+	/// <summary>
 	/// Returns if the parameter type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; }
@@ -74,6 +79,7 @@ readonly struct Property : IEquatable<Property> {
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
 	internal Property (string name, string type,
+		bool isBlittable,
 		bool isSmartEnum,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
@@ -81,6 +87,7 @@ readonly struct Property : IEquatable<Property> {
 	{
 		Name = name;
 		Type = type;
+		IsBlittable = isBlittable;
 		IsSmartEnum = isSmartEnum;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
@@ -95,6 +102,8 @@ readonly struct Property : IEquatable<Property> {
 		if (Name != other.Name)
 			return false;
 		if (Type != other.Type)
+			return false;
+		if (IsBlittable != other.IsBlittable)
 			return false;
 		if (IsSmartEnum != other.IsSmartEnum)
 			return false;
@@ -189,6 +198,7 @@ readonly struct Property : IEquatable<Property> {
 		change = new (
 			name: memberName,
 			type: type,
+			isBlittable: propertySymbol.Type.IsBlittable (),
 			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
@@ -204,7 +214,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

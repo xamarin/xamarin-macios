@@ -118,6 +118,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -188,6 +189,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: true,
 							symbolAvailability: new (),
 							attributes: [
@@ -258,6 +260,7 @@ public partial interface IProtocol {
 							name: "Name",
 							type: "NS.MyEnum",
 							isSmartEnum: false,
+			  isBlittable: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -322,6 +325,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -389,6 +393,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -457,6 +462,7 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -488,6 +494,7 @@ public partial interface IProtocol {
 						new (
 							name: "Surname",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -563,7 +570,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 					]
@@ -615,7 +622,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 					]
@@ -668,7 +675,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false),
 							]
 						),
 						new (
@@ -684,7 +691,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inSurname")
+								new (position: 0, type: "string", name: "inSurname", isBlittable: false),
 							]
 						),
 					]

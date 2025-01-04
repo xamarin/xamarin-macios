@@ -310,7 +310,8 @@ public partial class MyClass {
 								new (
 									position: 0,
 									type: "string",
-									name: "name"
+									name: "name",
+									isBlittable: false
 								)
 							]
 						),
@@ -353,6 +354,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -425,6 +427,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: true,
 							symbolAvailability: new (),
 							attributes: [
@@ -496,6 +499,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -563,6 +567,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -631,6 +636,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -702,6 +708,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -772,6 +779,7 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -803,6 +811,7 @@ public partial class MyClass {
 						new (
 							name: "Surname",
 							type: "string",
+							isBlittable: false,
 							isSmartEnum: false,
 							symbolAvailability: new (),
 							attributes: [
@@ -880,7 +889,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 					]
@@ -934,7 +943,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 					]
@@ -989,7 +998,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 						new (
@@ -1005,7 +1014,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inSurname")
+								new (position: 0, type: "string", name: "inSurname", isBlittable: false)
 							]
 						),
 					]

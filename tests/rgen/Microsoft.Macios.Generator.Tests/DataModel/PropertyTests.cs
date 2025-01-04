@@ -17,8 +17,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffName ()
 	{
-		var x = new Property ("First", "string", false, new (), [], [], []);
-		var y = new Property ("Second", "string", false, new (), [], [], []);
+		var x = new Property ("First", "string", false, false, new (), [], [], []);
+		var y = new Property ("Second", "string", false, false, new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -29,8 +29,8 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Property ("First", "string", false, new (), [], [], []);
-		var y = new Property ("First", "int", false, new (), [], [], []);
+		var x = new Property ("First", "string", false, false, new (), [], [], []);
+		var y = new Property ("First", "int", false, false, new (), [], [], []);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -41,11 +41,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", "string", false, new (), [
+		var x = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", "int", false, new (), [
+		var y = new Property ("First", "int", false, false, new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -58,13 +58,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", "string", false, new (), [
+		var x = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", "int", false, new (), [
+		var y = new Property ("First", "int", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -80,7 +80,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", "string", false, new (), [
+		var x = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -101,7 +101,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, new (), [
+		var y = new Property ("First", "int", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -125,7 +125,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
-		var x = new Property ("First", "string", false, new (), [
+		var x = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -139,7 +139,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, new (), [
+		var y = new Property ("First", "int", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -163,7 +163,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", "string", false, new (), [
+		var x = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -184,7 +184,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "string", false, new (), [
+		var y = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -232,6 +232,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -274,6 +275,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -316,6 +318,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -368,6 +371,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -415,6 +419,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [],
@@ -446,6 +451,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [],
@@ -479,6 +485,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [],
@@ -520,6 +527,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [],
@@ -561,6 +569,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [],
@@ -612,6 +621,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
@@ -664,6 +674,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
@@ -721,6 +732,7 @@ public class TestClass {
 				new Property (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
@@ -783,6 +795,7 @@ namespace Test {
 				new Property (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [

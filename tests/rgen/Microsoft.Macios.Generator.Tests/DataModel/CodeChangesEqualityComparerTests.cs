@@ -162,6 +162,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -210,6 +211,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -239,6 +241,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -280,6 +283,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -311,6 +315,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -356,6 +361,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -385,6 +391,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -426,6 +433,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -457,6 +465,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -502,6 +511,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -531,6 +541,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -573,6 +584,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -604,6 +616,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -652,6 +665,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -681,6 +695,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -725,6 +740,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -756,6 +772,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -789,7 +806,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					])
 			],
 		};
@@ -810,6 +827,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -839,6 +857,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -875,7 +894,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					])
 			],
 		};
@@ -890,6 +909,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -921,6 +941,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -955,7 +976,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					])
 			],
 		};
@@ -976,6 +997,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1005,6 +1027,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1040,7 +1063,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					]),
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
@@ -1056,6 +1079,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1086,6 +1110,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1120,7 +1145,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					]),
 			],
 		};
@@ -1145,6 +1170,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1174,6 +1200,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1209,7 +1236,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					]),
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
@@ -1230,6 +1257,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Name",
 					type: "Utils.MyClass",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1261,6 +1289,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (
 					name: "Surname",
 					type: "string",
+					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
 					attributes: [
@@ -1295,7 +1324,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (0, "string", "name"),
+						new (position: 0, type: "string", name: "name", isBlittable: false),
 					]),
 			],
 		};
