@@ -32,9 +32,14 @@ readonly struct Property : IEquatable<Property> {
 	public bool IsBlittable { get; }
 
 	/// <summary>
-	/// Returns if the parameter type is a smart enum.
+	/// Returns if the property type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; }
+	
+	/// <summary>
+	/// Returns if the property type is a reference type.
+	/// </summary>
+	public bool IsReferenceType { get; }
 
 	/// <summary>
 	/// The platform availability of the property.
@@ -79,6 +84,7 @@ readonly struct Property : IEquatable<Property> {
 	internal Property (string name, string type,
 		bool isBlittable,
 		bool isSmartEnum,
+		bool isReferenceType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
@@ -87,6 +93,7 @@ readonly struct Property : IEquatable<Property> {
 		Type = type;
 		IsBlittable = isBlittable;
 		IsSmartEnum = isSmartEnum;
+		IsReferenceType = isReferenceType;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
@@ -104,6 +111,8 @@ readonly struct Property : IEquatable<Property> {
 		if (IsBlittable != other.IsBlittable)
 			return false;
 		if (IsSmartEnum != other.IsSmartEnum)
+			return false;
+		if (IsReferenceType != other.IsReferenceType)
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
@@ -184,11 +193,12 @@ readonly struct Property : IEquatable<Property> {
 			];
 		}
 
-		change = new (
+		change = new(
 			name: memberName,
 			type: type,
 			isBlittable: propertySymbol.Type.IsBlittable (),
 			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
+			isReferenceType: propertySymbol.Type.IsReferenceType,
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
@@ -203,7 +213,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, IsReferenceType: {IsReferenceType} Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

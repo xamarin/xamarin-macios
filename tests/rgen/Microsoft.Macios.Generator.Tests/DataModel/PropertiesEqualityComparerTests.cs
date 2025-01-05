@@ -26,6 +26,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -39,6 +40,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -54,6 +56,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -76,6 +79,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -91,6 +95,7 @@ public class PropertiesEqualityComparerTests {
 				type: "AVFoundation.AVVideo",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -113,6 +118,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -128,6 +134,7 @@ public class PropertiesEqualityComparerTests {
 				isSmartEnum: false,
 				type: "string",
 				isBlittable: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -150,6 +157,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -165,6 +173,7 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: true,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
