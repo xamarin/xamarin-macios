@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
+using Microsoft.Macios.Generator.Formatters;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -139,8 +140,9 @@ class EnumEmitter : ICodeEmitter {
 
 		bindingContext.Builder.AppendMemberAvailability (bindingContext.Changes.SymbolAvailability);
 		bindingContext.Builder.AppendGeneratedCodeAttribute ();
-		var modifiers = $"{string.Join (' ', bindingContext.Changes.Modifiers)} ";
-		using (var classBlock = bindingContext.Builder.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}static partial class {GetSymbolName (bindingContext.Changes)}", true)) {
+		var extensionClassDeclaration =
+			bindingContext.Changes.ToSmartEnumExtensionDeclaration (GetSymbolName (bindingContext.Changes));
+		using (var classBlock = bindingContext.Builder.CreateBlock (extensionClassDeclaration.ToString (), true)) {
 			classBlock.AppendLine ();
 			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{bindingContext.Changes.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter
