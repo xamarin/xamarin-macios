@@ -35,7 +35,7 @@ readonly struct Property : IEquatable<Property> {
 	/// Returns if the property type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; }
-	
+
 	/// <summary>
 	/// Returns if the property type is a reference type.
 	/// </summary>
@@ -193,7 +193,7 @@ readonly struct Property : IEquatable<Property> {
 			];
 		}
 
-		change = new(
+		change = new (
 			name: memberName,
 			type: type,
 			isBlittable: propertySymbol.Type.IsBlittable (),

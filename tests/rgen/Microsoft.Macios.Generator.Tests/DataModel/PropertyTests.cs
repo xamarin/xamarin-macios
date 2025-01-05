@@ -17,25 +17,25 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareDiffName ()
 	{
 		var x = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: true, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 		var y = new Property (
-			name: "Second", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: true, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "Second",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 
@@ -49,25 +49,25 @@ public class PropertyTests : BaseGeneratorTestClass {
 	public void CompareDiffType ()
 	{
 		var x = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 		var y = new Property (
-			name: "First", 
-			type: "int", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "int",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 
@@ -76,30 +76,30 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.False (x == y);
 		Assert.True (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareDiffIsReferenceType ()
 	{
 		var x = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 		var y = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: true, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 
@@ -108,30 +108,30 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.False (x == y);
 		Assert.True (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareDiffIsBlittableType ()
 	{
 		var x = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 		var y = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: true, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: true,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 
@@ -140,30 +140,30 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.False (x == y);
 		Assert.True (x != y);
 	}
-	
+
 	[Fact]
 	public void CompareDiffIsSmartEnum ()
 	{
 		var x = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 		var y = new Property (
-			name: "First", 
-			type: "string", 
-			isBlittable: false, 
-			isSmartEnum: true, 
-			isReferenceType: false, 
-			symbolAvailability: new (), 
-			attributes: [], 
-			modifiers: [], 
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: true,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
 			accessors: []
 		);
 
@@ -297,7 +297,7 @@ public class TestClass {
 						new (AccessorKind.Getter, new (), [], [])
 					])
 			];
-			
+
 			const string valueTypeProperty = @"
 using System;
 
@@ -325,7 +325,7 @@ public class TestClass {
 						new (AccessorKind.Getter, new (), [], [])
 					])
 			];
-			
+
 			const string automaticGetterSetter = @"
 using System;
 
