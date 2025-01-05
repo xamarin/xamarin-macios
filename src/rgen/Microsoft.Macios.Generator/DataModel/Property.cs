@@ -20,7 +20,7 @@ readonly struct Property : IEquatable<Property> {
 	/// Name of the property.
 	/// </summary>
 	public string Name { get; } = string.Empty;
-	
+
 	public string BackingField { get; private init; }
 
 	/// <summary>
