@@ -33,7 +33,7 @@ public enum AVCaptureDeviceType {
 }
 ";
 			yield return [publicSmartEnum, "AVCaptureDeviceTypeExtensions", "public static partial class AVCaptureDeviceTypeExtensions"];
-			
+
 			const string internalSmartEnum = @"
 using System;
 using Foundation;
@@ -51,13 +51,13 @@ internal enum AVCaptureDeviceType {
 	BuiltInWideAngleCamera,
 }
 ";
-			
+
 			yield return [internalSmartEnum, "AVCaptureDeviceTypeExtensions", "internal static partial class AVCaptureDeviceTypeExtensions"];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataToExtensionDeclaration>]
 	public void ToDeclarationTests (ApplePlatform platform, string inputText, string className, string expectedDeclaration)
@@ -71,7 +71,7 @@ internal enum AVCaptureDeviceType {
 		Assert.NotNull (declaration);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		Assert.NotNull (semanticModel);
-		var changes = CodeChanges.FromDeclaration(declaration, semanticModel);
+		var changes = CodeChanges.FromDeclaration (declaration, semanticModel);
 		Assert.NotNull (changes);
 		var classDeclaration = changes.ToSmartEnumExtensionDeclaration (className);
 		Assert.NotNull (classDeclaration);
