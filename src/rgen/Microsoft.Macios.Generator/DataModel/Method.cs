@@ -89,7 +89,7 @@ readonly struct Method : IEquatable<Method> {
 			parametersBucket.Add (parameterChange.Value);
 		}
 
-		// DO NOT USE default if null, the reason is that it will se the ArgumentSemantics to be value 0, when
+		// DO NOT USE default if null, the reason is that it will set the ArgumentSemantics to be value 0, when
 		// none is value 1. The reason for that is that the default of an enum is 0, that was a mistake 
 		// in the old binding code.
 		var exportData = method.GetExportData<ObjCBindings.Method> ()
