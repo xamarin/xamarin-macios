@@ -51,7 +51,7 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
-	
+
 	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (Field.Notification);
 
 	/// <summary>
@@ -64,7 +64,7 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	[MemberNotNullWhen (true, nameof (ExportPropertyData))]
 	public bool IsProperty => ExportPropertyData is not null;
-	
+
 	/// <summary>
 	/// Get the attributes added to the member.
 	/// </summary>

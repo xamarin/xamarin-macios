@@ -15,7 +15,7 @@ namespace ObjCBindings {
 		/// Use the default values.
 		/// </summary>
 		Default = 0,
-		
+
 		/// <summary>
 		/// Field represents a notification in ObjC.
 		/// </summary>

@@ -143,37 +143,37 @@ public class PropertyTests : BaseGeneratorTestClass {
 			type: "string",
 			isBlittable: false,
 			isSmartEnum: false,
-			symbolAvailability: new(), attributes: [
-				new("Attr1"),
-				new("Attr2"),
+			symbolAvailability: new (), attributes: [
+				new ("Attr1"),
+				new ("Attr2"),
 			], modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 			], accessors: [
-				new(AccessorKind.Getter, new(), [], []),
-				new(AccessorKind.Setter, new(), [], []),
+				new (AccessorKind.Getter, new (), [], []),
+				new (AccessorKind.Setter, new (), [], []),
 			]
 		) {
-			ExportFieldData	= null
+			ExportFieldData = null
 		};
-		
+
 		Assert.False (x.IsNotification);
-		
+
 		x = new Property (
 			name: "First",
 			type: "string",
 			isBlittable: false,
 			isSmartEnum: false,
-			symbolAvailability: new(), attributes: [
-				new("Attr1"),
-				new("Attr2"),
+			symbolAvailability: new (), attributes: [
+				new ("Attr1"),
+				new ("Attr2"),
 			], modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 			], accessors: [
-				new(AccessorKind.Getter, new(), [], []),
-				new(AccessorKind.Setter, new(), [], []),
+				new (AccessorKind.Getter, new (), [], []),
+				new (AccessorKind.Setter, new (), [], []),
 			]
 		) {
-			ExportFieldData	= new ExportData<Field> ("name", ArgumentSemantic.None, Field.Notification)
+			ExportFieldData = new ExportData<Field> ("name", ArgumentSemantic.None, Field.Notification)
 		};
 	}
 
@@ -206,7 +206,7 @@ public class TestClass {
 						new (AccessorKind.Getter, new (), [], [])
 					])
 			];
-			
+
 			const string notificationProperty = @"
 using System;
 using ObjCBindings;
@@ -236,8 +236,8 @@ public class TestClass {
 					accessors: [
 						new (AccessorKind.Getter, new (), [], [])
 					]) {
-						ExportFieldData	= new ("name", ArgumentSemantic.None, Field.Notification)
-					}
+					ExportFieldData = new ("name", ArgumentSemantic.None, Field.Notification)
+				}
 			];
 
 			const string automaticGetterSetter = @"
