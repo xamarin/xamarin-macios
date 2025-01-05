@@ -1,3 +1,4 @@
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCBindings;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Property = Microsoft.Macios.Generator.DataModel.Property;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -131,6 +135,48 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.False (x != y);
 	}
 
+	[Fact]
+	public void IsNotification ()
+	{
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			symbolAvailability: new(), attributes: [
+				new("Attr1"),
+				new("Attr2"),
+			], modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword)
+			], accessors: [
+				new(AccessorKind.Getter, new(), [], []),
+				new(AccessorKind.Setter, new(), [], []),
+			]
+		) {
+			ExportFieldData	= null
+		};
+		
+		Assert.False (x.IsNotification);
+		
+		x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			symbolAvailability: new(), attributes: [
+				new("Attr1"),
+				new("Attr2"),
+			], modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword)
+			], accessors: [
+				new(AccessorKind.Getter, new(), [], []),
+				new(AccessorKind.Setter, new(), [], []),
+			]
+		) {
+			ExportFieldData	= new ExportData<Field> ("name", ArgumentSemantic.None, Field.Notification)
+		};
+	}
+
 	class TestDataFromPropertyDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -159,6 +205,39 @@ public class TestClass {
 					accessors: [
 						new (AccessorKind.Getter, new (), [], [])
 					])
+			];
+			
+			const string notificationProperty = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Field>(""name"", Flags = Field.Notification)]
+	public string Name { get; }
+}
+";
+			yield return [
+				notificationProperty,
+				new Property (
+					name: "Name",
+					type: "string",
+					isBlittable: false,
+					isSmartEnum: false,
+					symbolAvailability: new (),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["name", "ObjCBindings.Field.Notification"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [], [])
+					]) {
+						ExportFieldData	= new ("name", ArgumentSemantic.None, Field.Notification)
+					}
 			];
 
 			const string automaticGetterSetter = @"
