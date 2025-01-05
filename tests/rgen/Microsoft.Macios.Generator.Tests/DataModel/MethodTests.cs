@@ -41,7 +41,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string voidMethodNoParamsExportData = @"
 using System;
 using ObjCBindings;

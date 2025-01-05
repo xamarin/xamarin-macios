@@ -40,7 +40,7 @@ public class MethodEqualityComparerTests {
 		];
 		Assert.False (equalityComparer.Equals (x, y));
 	}
-	
+
 	[Fact]
 	public void CompareSingleElementDifferentExportData ()
 	{

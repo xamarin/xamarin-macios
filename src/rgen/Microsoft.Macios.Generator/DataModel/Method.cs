@@ -92,8 +92,8 @@ readonly struct Method : IEquatable<Method> {
 		// DO NOT USE default if null, the reason is that it will se the ArgumentSemantics to be value 0, when
 		// none is value 1. The reason for that is that the default of an enum is 0, that was a mistake 
 		// in the old binding code.
-		var exportData = method.GetExportData<ObjCBindings.Method> () 
-		                 ?? new (null, ArgumentSemantic.None, ObjCBindings.Method.Default);
+		var exportData = method.GetExportData<ObjCBindings.Method> ()
+						 ?? new (null, ArgumentSemantic.None, ObjCBindings.Method.Default);
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
