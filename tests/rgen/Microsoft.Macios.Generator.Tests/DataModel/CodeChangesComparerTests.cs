@@ -930,6 +930,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -946,6 +947,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1030,6 +1032,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1124,6 +1127,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1140,6 +1144,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1224,6 +1229,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1237,6 +1243,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1331,6 +1338,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1415,6 +1423,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1512,6 +1521,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1528,6 +1538,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1612,6 +1623,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1625,6 +1637,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1722,6 +1735,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1738,6 +1752,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1822,6 +1837,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -1835,6 +1851,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),

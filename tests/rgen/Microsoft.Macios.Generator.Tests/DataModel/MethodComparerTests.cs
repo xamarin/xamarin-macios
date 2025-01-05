@@ -16,6 +16,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -26,6 +27,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -42,6 +44,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -52,6 +55,7 @@ public class MethodComparerTests {
 			name: "MyOtherMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -67,6 +71,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -77,6 +82,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "int",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -92,6 +98,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -105,6 +112,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -122,6 +130,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -134,6 +143,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -153,6 +163,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 				new ("SecondAttr", ["first"]),
@@ -168,6 +179,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -187,6 +199,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -201,6 +214,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("SecondAttr", ["first"]),
 			],
@@ -221,6 +235,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -237,6 +252,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -259,6 +275,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -275,6 +292,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -297,6 +315,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -315,6 +334,7 @@ public class MethodComparerTests {
 			name: "MyMethod",
 			returnType: "void",
 			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
