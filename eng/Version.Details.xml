@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-alpha.1.25053.4">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-alpha.1.25055.4">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>b52ec46968ca189575d0c17a0e286bf2742862b1</Sha>
+      <Sha>ce859ca440fd427efa1db8615c75870575ad50d9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -18,9 +18,9 @@
       <Sha>efdd29953304f1fc494bb45c5785d37961c4a14b</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="10.0.0-alpha.2.24627.1" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="10.0.0-alpha.2.25054.1" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>ad57bd06853f24e06bfe2672a2053fd7193dc17b</Sha>
+      <Sha>1a23df0f96175d51940aec9306db3460d484da4d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.0-alpha.1.24628.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
