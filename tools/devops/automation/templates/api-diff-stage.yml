@@ -51,7 +51,6 @@ stages:
           agentPoolPRUrl: $(PRBuildPoolUrl)
           agentPoolCI: $(CIBuildPool)
           agentPoolCIUrl: $(CIBuildPoolUrl)
-          templateBranch: 'dev/mcumming/enable-resourcetrigger-agentpoolselector'
 
   - job: configure
     displayName: 'Configure build'
