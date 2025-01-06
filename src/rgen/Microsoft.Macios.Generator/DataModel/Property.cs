@@ -21,6 +21,8 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public string Name { get; } = string.Empty;
 
+	public string BackingField { get; private init; }
+
 	/// <summary>
 	/// String representation of the property type.
 	/// </summary>
@@ -86,6 +88,7 @@ readonly struct Property : IEquatable<Property> {
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
+		BackingField = $"_{Name}";
 		Type = type;
 		IsBlittable = isBlittable;
 		IsSmartEnum = isSmartEnum;

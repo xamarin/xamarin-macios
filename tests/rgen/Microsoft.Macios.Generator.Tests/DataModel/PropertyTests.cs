@@ -14,6 +14,26 @@ using Property = Microsoft.Macios.Generator.DataModel.Property;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class PropertyTests : BaseGeneratorTestClass {
+
+	[Theory]
+	[InlineData ("Name")]
+	[InlineData ("Surname")]
+	[InlineData ("Date")]
+	public void BackingFieldTests (string propertyName)
+	{
+		var property = new Property (
+			name: propertyName,
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		Assert.Equal ($"_{propertyName}", property.BackingField);
+	}
+
 	[Fact]
 	public void CompareDiffName ()
 	{
