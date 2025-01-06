@@ -17,7 +17,7 @@ static class SmartEnumFormatter {
 	public static CompilationUnitSyntax ToSmartEnumExtensionDeclaration (this in CodeChanges smartEnumChange,
 		string extensionClassName)
 	{
-		// add to a set to make sure we do no duplicate them and make sure static and partial arepresent 
+		// add to a set to make sure we do no duplicate them and make sure static and partial are present 
 		var modifiers = new HashSet<SyntaxToken> (smartEnumChange.Modifiers) {
 			Token (SyntaxKind.StaticKeyword), Token (SyntaxKind.PartialKeyword),
 		};
