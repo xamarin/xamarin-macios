@@ -40,7 +40,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string intMethodNoParams = @"
 using System;
 
@@ -56,11 +56,11 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int", 
-						isNullable: false, 
-						isBlittable: true, 
-						isSmartEnum: false, 
-						isArray: false, 
+						type: "int",
+						isNullable: false,
+						isBlittable: true,
+						isSmartEnum: false,
+						isArray: false,
 						isReferenceType: false
 					),
 					symbolAvailability: new (),
@@ -72,7 +72,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string nullableIntMethodNoParams = @"
 using System;
 
@@ -88,11 +88,11 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int", 
-						isNullable: true, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: false, 
+						type: "int",
+						isNullable: true,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
 						isReferenceType: false
 					),
 					symbolAvailability: new (),
@@ -104,7 +104,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string intArrayMethodNoParams = @"
 using System;
 
@@ -120,12 +120,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int", 
-						isNullable: false, 
-						isBlittable: true, 
-						isSmartEnum: false, 
-						isArray: true, 
-						isReferenceType: true 
+						type: "int",
+						isNullable: false,
+						isBlittable: true,
+						isSmartEnum: false,
+						isArray: true,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -136,7 +136,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string nullableIntArrayMethodNoParams = @"
 using System;
 
@@ -152,12 +152,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int", 
-						isNullable: true, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: true, 
-						isReferenceType: true 
+						type: "int",
+						isNullable: true,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: true,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -168,7 +168,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string intNullArrayMethodNoParams = @"
 using System;
 
@@ -184,12 +184,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int?", 
-						isNullable: false, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: true, 
-						isReferenceType: true 
+						type: "int?",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: true,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -200,7 +200,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string int2DArrayMethodNoParams = @"
 using System;
 
@@ -216,12 +216,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "int[]", 
-						isNullable: false, 
-						isBlittable: true, 
-						isSmartEnum: false, 
-						isArray: true, 
-						isReferenceType: true 
+						type: "int[]",
+						isNullable: false,
+						isBlittable: true,
+						isSmartEnum: false,
+						isArray: true,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -232,7 +232,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string stringMethodNoParams = @"
 using System;
 
@@ -248,12 +248,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "string", 
-						isNullable: false, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: false, 
-						isReferenceType: true 
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -264,7 +264,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string customClassMethodNoParams = @"
 using System;
 
@@ -282,12 +282,12 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "NS.ReturnClass", 
-						isNullable: false, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: false, 
-						isReferenceType: true 
+						type: "NS.ReturnClass",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
 					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
@@ -298,7 +298,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string customStructMethodNoParams = @"
 using System;
 
@@ -316,11 +316,11 @@ namespace NS {
 					type: "NS.MyClass",
 					name: "MyMethod",
 					returnType: new (
-						type: "NS.ReturnClass", 
-						isNullable: false, 
-						isBlittable: false, 
-						isSmartEnum: false, 
-						isArray: false, 
+						type: "NS.ReturnClass",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
 						isReferenceType: false
 					),
 					symbolAvailability: new (),
@@ -333,10 +333,10 @@ namespace NS {
 				)
 			];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataFromMethodDeclaration>]
 	void FromMethodDeclaration (ApplePlatform platform, string inputText, Method expected)

@@ -20,20 +20,20 @@ public class MethodReturnTypeComparerTests {
 	public void CompareDiffNullable ()
 	{
 		var x = new MethodReturnType (
-			type: "void", 
-			isNullable: true, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: true,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
-		
+
 		var y = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
 		Assert.Equal (x.IsNullable.CompareTo (y.IsNullable), compare.Compare (x, y));
@@ -43,20 +43,20 @@ public class MethodReturnTypeComparerTests {
 	public void CompareDiffBlittable ()
 	{
 		var x = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: true, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: true,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
-		
+
 		var y = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
 		Assert.Equal (x.IsBlittable.CompareTo (y.IsBlittable), compare.Compare (x, y));
@@ -66,20 +66,20 @@ public class MethodReturnTypeComparerTests {
 	public void CompareDiffSmartEnum ()
 	{
 		var x = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: true, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: true,
+			isArray: false,
 			isReferenceType: false
 		);
-		
+
 		var y = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
 		Assert.Equal (x.IsSmartEnum.CompareTo (y.IsSmartEnum), compare.Compare (x, y));
@@ -89,20 +89,20 @@ public class MethodReturnTypeComparerTests {
 	public void CompareDiffIsArray ()
 	{
 		var x = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: true, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: true,
 			isReferenceType: false
 		);
-		
+
 		var y = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
 		Assert.Equal (x.IsArray.CompareTo (y.IsArray), compare.Compare (x, y));
@@ -112,20 +112,20 @@ public class MethodReturnTypeComparerTests {
 	public void CompareDiffIsReference ()
 	{
 		var x = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
-			isReferenceType: true 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
+			isReferenceType: true
 		);
-		
+
 		var y = new MethodReturnType (
-			type: "void", 
-			isNullable: false, 
-			isBlittable: false, 
-			isSmartEnum: false, 
-			isArray: false, 
+			type: "void",
+			isNullable: false,
+			isBlittable: false,
+			isSmartEnum: false,
+			isArray: false,
 			isReferenceType: false
 		);
 		Assert.Equal (x.IsReferenceType.CompareTo (y.IsReferenceType), compare.Compare (x, y));

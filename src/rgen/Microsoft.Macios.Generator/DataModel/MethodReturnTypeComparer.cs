@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Microsoft.Macios.Generator.DataModel;
 
 class MethodReturnTypeComparer : IComparer<MethodReturnType> {
-	
+
 	/// <inheritdoc/>
 	public int Compare (MethodReturnType x, MethodReturnType y)
 	{
@@ -28,5 +28,5 @@ class MethodReturnTypeComparer : IComparer<MethodReturnType> {
 			return isReferenceTypeComparison;
 		return x.IsVoid.CompareTo (y.IsVoid);
 	}
-	
+
 }

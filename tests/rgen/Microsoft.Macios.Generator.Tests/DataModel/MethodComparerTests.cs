@@ -81,11 +81,11 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: new (
-				type: "int", 
-				isNullable: false, 
-				isBlittable: false, 
-				isSmartEnum: false, 
-				isArray: true, 
+				type: "int",
+				isNullable: false,
+				isBlittable: false,
+				isSmartEnum: false,
+				isArray: true,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),

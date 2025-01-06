@@ -24,7 +24,7 @@ static class MethodFormatter {
 			? NullableType (IdentifierName (returnType.Type))
 			: IdentifierName (returnType.Type);
 	}
-	
+
 	public static CompilationUnitSyntax? ToDeclaration (this in Method? method)
 	{
 		if (method is null)

@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Readonly structure that represents a change in a method return type.
 /// </summary>
 readonly struct MethodReturnType : IEquatable<MethodReturnType> {
-	
+
 	/// <summary>
 	/// Type of the parameter.
 	/// </summary>
@@ -50,7 +50,7 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 		Type = type;
 		IsVoid = type == "void";
 	}
-	
+
 	internal MethodReturnType (string type, bool isNullable, bool isBlittable, bool isSmartEnum, bool isArray,
 		bool isReferenceType) : this (type)
 	{
@@ -60,8 +60,8 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 		IsArray = isArray;
 		IsReferenceType = isReferenceType;
 	}
-	
-	internal MethodReturnType (ITypeSymbol symbol) : 
+
+	internal MethodReturnType (ITypeSymbol symbol) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
@@ -104,9 +104,9 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Type, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);		
+		return HashCode.Combine (Type, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
 	}
-	
+
 	public static bool operator == (MethodReturnType left, MethodReturnType right)
 	{
 		return left.Equals (right);
