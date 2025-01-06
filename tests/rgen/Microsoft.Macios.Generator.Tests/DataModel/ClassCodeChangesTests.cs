@@ -783,7 +783,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -838,7 +838,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -894,7 +894,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -911,7 +911,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetSurname",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withSurname:"),
 							attributes: [
