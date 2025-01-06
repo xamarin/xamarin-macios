@@ -9,6 +9,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Property = Microsoft.Macios.Generator.DataModel.Property;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -85,8 +86,20 @@ public class PropertyTests : BaseGeneratorTestClass {
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, new (), [], []),
-			new (AccessorKind.Setter, new (), [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
 		]);
 		var y = new Property ("First", "int", false, false, new (), [
 			new ("Attr1"),
@@ -94,7 +107,51 @@ public class PropertyTests : BaseGeneratorTestClass {
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, new (), [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
+		]);
+
+		Assert.False (x.Equals (y));
+		Assert.False (y.Equals (x));
+		Assert.False (x == y);
+		Assert.True (x != y);
+	}
+
+	[Fact]
+	public void CompareDiffAccessorsExportData ()
+	{
+		var x = new Property ("First", "string", false, false, new (), [
+			new ("Attr1"),
+			new ("Attr2"),
+		], [
+			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
+		], [
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: new ("name"),
+				attributes: [],
+				modifiers: []
+			),
+		]);
+		var y = new Property ("First", "int", false, false, new (), [
+			new ("Attr1"),
+			new ("Attr2"),
+		], [
+			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
+		], [
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: new ("surname"),
+				attributes: [],
+				modifiers: []
+			),
 		]);
 
 		Assert.False (x.Equals (y));
@@ -112,8 +169,20 @@ public class PropertyTests : BaseGeneratorTestClass {
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, new (), [], []),
-			new (AccessorKind.Setter, new (), [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
 		]);
 		var y = new Property ("First", "string", false, false, new (), [
 			new ("Attr1"),
@@ -121,8 +190,20 @@ public class PropertyTests : BaseGeneratorTestClass {
 		], [
 			SyntaxFactory.Token (SyntaxKind.PublicKeyword)
 		], [
-			new (AccessorKind.Getter, new (), [], []),
-			new (AccessorKind.Setter, new (), [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []
+			),
 		]);
 
 		Assert.True (x.Equals (y));
@@ -136,11 +217,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 		{
 			const string automaticGetter = @"
 using System;
+using ObjCBindings;
 
 namespace Test;
 
 public class TestClass {
 
+	[Export<Property>(""name"")]
 	public string Name { get; }
 }
 ";
@@ -152,22 +235,78 @@ public class TestClass {
 					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
-					attributes: [],
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], [])
-					])
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]) {
+					ExportPropertyData = new ("name"),
+				},
 			];
 
-			const string automaticGetterSetter = @"
+			const string automaticGetterExportData = @"
 using System;
+using ObjCBindings;
 
 namespace Test;
 
 public class TestClass {
 
+	[Export<Property>(""name"")]
+	public string Name { 
+		[Export<Property>(""myName"")]
+		get; 
+	}
+}
+";
+			yield return [
+				automaticGetterExportData,
+				new Property (
+					name: "Name",
+					type: "string",
+					isBlittable: false,
+					isSmartEnum: false,
+					symbolAvailability: new (),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("myName"),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
+							],
+							modifiers: []
+						)
+					]) {
+					ExportPropertyData = new ("name"),
+				},
+			];
+
+			const string automaticGetterSetter = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
 	internal string Name { get; set; }
 }
 ";
@@ -180,14 +319,86 @@ public class TestClass {
 					isBlittable: false,
 					isSmartEnum: false,
 					symbolAvailability: new (),
-					attributes: [],
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
-						new (AccessorKind.Setter, new (), [], [])
-					])
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]) {
+					ExportPropertyData = new ("name"),
+				},
+			];
+
+			const string automaticGetterSetterExportData = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	internal string Name { 
+		[Export<Property>(""myName"")]
+		get; 
+		[Export<Property>(""setMyName"")]
+		set; 
+	}
+}
+";
+
+			yield return [
+				automaticGetterSetterExportData,
+				new Property (
+					name: "Name",
+					type: "string",
+					isBlittable: false,
+					isSmartEnum: false,
+					symbolAvailability: new (),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("myName"),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: new ("setMyName"),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["setMyName"]),
+							],
+							modifiers: []
+						)
+					]) {
+					ExportPropertyData = new ("name"),
+				},
 			];
 
 			const string manualGetter = @"
@@ -212,7 +423,13 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
@@ -238,7 +455,13 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
@@ -266,8 +489,20 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
@@ -296,8 +531,20 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
@@ -326,15 +573,29 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
-						new (AccessorKind.Setter, new (), [], [
-							SyntaxFactory.Token (SyntaxKind.InternalKeyword),
-						]),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+							]
+						),
 					])
 			];
 
 			const string propertyWithAttribute = @"
 using System.Runtime.Versioning;
+using ObjCBindings;
+
 namespace Test;
 
 public class TestClass {
@@ -366,13 +627,27 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
 			const string propertyGetterWithAttribute = @"
 using System.Runtime.Versioning;
+using ObjCBindings;
+
 namespace Test;
 
 public class TestClass {
@@ -405,15 +680,29 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					])
 			];
 
 			const string propertyWithGetterAndSetterWithAttribute = @"
 using System.Runtime.Versioning;
+using ObjCBindings;
+
 namespace Test;
 
 public class TestClass {
@@ -449,17 +738,30 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, setterAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					])
 			];
 
 			const string propertyWithCustomType = @"
 using System.Runtime.Versioning;
+using ObjCBindings;
 
 namespace Utils {
 	public class MyClass {}
@@ -499,12 +801,24 @@ namespace Test {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, getterAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, setterAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					])
 			];
 		}
