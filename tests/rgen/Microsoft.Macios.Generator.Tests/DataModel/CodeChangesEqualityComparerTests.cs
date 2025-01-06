@@ -15,13 +15,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
-			symbolAvailability: new ()); ;
+			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
 			bindingData: new (BindingType.Protocol, new ()),
 			name: "name2",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name2",
-			symbolAvailability: new ()); ;
+			symbolAvailability: new ());
 		Assert.False (equalityComparer.Equals (changes1, changes2));
 	}
 
@@ -172,12 +172,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					])
 			]
 		};
@@ -209,10 +221,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -227,12 +251,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			]
 		};
@@ -257,12 +293,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -277,10 +325,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			]
 		};
@@ -311,10 +371,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -329,12 +401,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			]
 		};
@@ -359,12 +443,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -379,10 +475,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			]
 		};
@@ -413,10 +521,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -431,12 +551,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [],
@@ -462,12 +594,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -482,10 +626,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -519,10 +675,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+							),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -537,12 +705,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -570,12 +750,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -590,10 +782,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -633,10 +837,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -651,12 +867,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -691,12 +919,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -711,10 +951,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -755,10 +1007,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -773,12 +1037,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -813,12 +1089,23 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []),
 					]),
 				new (
 					name: "Surname",
@@ -833,10 +1120,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -881,10 +1180,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Name",
@@ -899,12 +1210,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
@@ -944,12 +1267,24 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+							],
+							modifiers: []
+						),
 					]),
 				new (
 					name: "Surname",
@@ -964,10 +1299,22 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Setter, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]),
 			],
 			Constructors = [
