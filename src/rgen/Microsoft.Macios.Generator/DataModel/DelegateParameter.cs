@@ -11,7 +11,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// than Parameter since some of the extra fields make no sense in delegates.
 /// </summary>
 readonly struct DelegateParameter : IEquatable<DelegateParameter> {
-	
+
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>
@@ -66,7 +66,7 @@ readonly struct DelegateParameter : IEquatable<DelegateParameter> {
 	/// The reference type used.
 	/// </summary>
 	public ReferenceKind ReferenceKind { get; init; }
-	
+
 	public DelegateParameter (int position, string type, string name, bool isBlittable)
 	{
 		Position = position;
@@ -74,14 +74,14 @@ readonly struct DelegateParameter : IEquatable<DelegateParameter> {
 		Name = name;
 		IsBlittable = isBlittable;
 	}
-	
-	public static bool TryCreate (IParameterSymbol symbol, 
+
+	public static bool TryCreate (IParameterSymbol symbol,
 		[NotNullWhen (true)] out DelegateParameter? parameter)
 	{
 		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
-		
+
 		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
@@ -93,7 +93,7 @@ readonly struct DelegateParameter : IEquatable<DelegateParameter> {
 		};
 		return true;
 	}
-	
+
 	/// <inheritdoc/>
 	public bool Equals (DelegateParameter other)
 	{
@@ -167,7 +167,7 @@ readonly struct DelegateParameter : IEquatable<DelegateParameter> {
 		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind} "); 
+		sb.Append ($"ReferenceKind: {ReferenceKind} ");
 		return sb.ToString ();
 	}
 }

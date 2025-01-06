@@ -10,7 +10,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Readonly structure that describes a delegate callback passed as a parameter.
 /// </summary>
 readonly struct DelegateInfo : IEquatable<DelegateInfo> {
-	
+
 	/// <summary>
 	/// Type name that owns the method.
 	/// </summary>
@@ -38,7 +38,7 @@ readonly struct DelegateInfo : IEquatable<DelegateInfo> {
 		ReturnType = returnType;
 		Parameters = parameters;
 	}
-	
+
 	public static bool TryCreate (IMethodSymbol method, [NotNullWhen (true)] out DelegateInfo? change)
 	{
 		var parametersBucket = ImmutableArray.CreateBuilder<DelegateParameter> ();
@@ -49,14 +49,14 @@ readonly struct DelegateInfo : IEquatable<DelegateInfo> {
 			parametersBucket.Add (parameterChange.Value);
 		}
 
-		change = new(
+		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
 			returnType: method.ReturnType.ToDisplayString ().Trim (),
 			parameters: parametersBucket.ToImmutableArray ());
 		return true;
 	}
-	
+
 	/// <inheritdoc/>
 	public bool Equals (DelegateInfo other)
 	{
@@ -76,7 +76,7 @@ readonly struct DelegateInfo : IEquatable<DelegateInfo> {
 	{
 		return obj is DelegateInfo other && Equals (other);
 	}
-	
+
 	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
@@ -91,7 +91,7 @@ readonly struct DelegateInfo : IEquatable<DelegateInfo> {
 
 		return hashCode.ToHashCode ();
 	}
-	
+
 	public static bool operator == (DelegateInfo left, DelegateInfo right)
 	{
 		return left.Equals (right);
@@ -101,7 +101,7 @@ readonly struct DelegateInfo : IEquatable<DelegateInfo> {
 	{
 		return !left.Equals (right);
 	}
-	
+
 	/// <inheritdoc/>
 	public override string ToString ()
 	{

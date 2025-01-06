@@ -441,7 +441,7 @@ public partial class MyClass {
 
 			yield return [paramsMethod, "public partial void TestMethod (params string[] data)"];
 
-			
+
 			const string actionNoParam = @"
 using System;
 
@@ -452,7 +452,7 @@ namespace NS {
 }
 ";
 			yield return [actionNoParam, "public partial void TestMethod (System.Action cb)"];
-			
+
 			const string actionSingleParam = @"
 using System;
 
@@ -463,7 +463,7 @@ namespace NS {
 }
 ";
 			yield return [actionSingleParam, "public partial void TestMethod (System.Action<string> cb)"];
-			
+
 			const string actionSingleNullableParam = @"
 using System;
 
@@ -474,7 +474,7 @@ namespace NS {
 }
 ";
 			yield return [actionSingleNullableParam, "public partial void TestMethod (System.Action<string?> cb)"];
-			
+
 			const string actionMultiParam = @"
 using System;
 
@@ -485,7 +485,7 @@ namespace NS {
 }
 ";
 			yield return [actionMultiParam, "public partial void TestMethod (System.Action<string, string> cb)"];
-			
+
 			const string funcSingleParam = @"
 using System;
 
@@ -496,7 +496,7 @@ namespace NS {
 }
 ";
 			yield return [funcSingleParam, "public partial void TestMethod (System.Func<string, string> cb)"];
-			
+
 			const string customDelegate = @"
 using System;
 

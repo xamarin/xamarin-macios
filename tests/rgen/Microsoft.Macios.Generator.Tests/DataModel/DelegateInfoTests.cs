@@ -11,11 +11,11 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class DelegateInfoTests : BaseGeneratorTestClass {
-	
+
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			
+
 			const string actionNoParam = @"
 using System;
 
@@ -40,22 +40,22 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Action", 
-							name: "cb", 
+							position: 0,
+							type: "System.Action",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Action", 
-								name: "Invoke", 
-								returnType: "void", 
+								type: "System.Action",
+								name: "Invoke",
+								returnType: "void",
 								parameters: []
-							) 
+							)
 						}
 					]
-				) 
+				)
 			];
-			
+
 			const string actionSingleParam = @"
 using System;
 
@@ -80,26 +80,26 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Action<string>", 
-							name: "cb", 
+							position: 0,
+							type: "System.Action<string>",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Action<string>", 
-								name: "Invoke", 
-								returnType: "void", 
+								type: "System.Action<string>",
+								name: "Invoke",
+								returnType: "void",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "obj", 
+										position: 0,
+										type: "string",
+										name: "obj",
 										isBlittable: false
 									),
-								]) 
+								])
 						}
 					]
-				) 
+				)
 			];
 
 			const string actionSingleNullableParam = @"
@@ -126,30 +126,30 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Action<string?>", 
-							name: "cb", 
+							position: 0,
+							type: "System.Action<string?>",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Action<string?>", 
-								name: "Invoke", 
-								returnType: "void", 
+								type: "System.Action<string?>",
+								name: "Invoke",
+								returnType: "void",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "obj", 
+										position: 0,
+										type: "string",
+										name: "obj",
 										isBlittable: false
 									) {
 										IsNullable = true
 									},
-								]) 
+								])
 						}
 					]
-				) 
+				)
 			];
-			
+
 			const string actionMultiParam = @"
 using System;
 
@@ -174,34 +174,34 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Action<string, string>", 
-							name: "cb", 
+							position: 0,
+							type: "System.Action<string, string>",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Action<string, string>", 
-								name: "Invoke", 
-								returnType: "void", 
+								type: "System.Action<string, string>",
+								name: "Invoke",
+								returnType: "void",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "arg1", 
+										position: 0,
+										type: "string",
+										name: "arg1",
 										isBlittable: false
-									), 
+									),
 									new (
-										position: 1, 
-										type: "string", 
-										name: "arg2", 
+										position: 1,
+										type: "string",
+										name: "arg2",
 										isBlittable: false
-									), 
-								]) 
+									),
+								])
 						}
 					]
-				) 
+				)
 			];
-			
+
 			const string funcSingleParam = @"
 using System;
 
@@ -226,28 +226,28 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Func<string, string>", 
-							name: "cb", 
+							position: 0,
+							type: "System.Func<string, string>",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Func<string, string>", 
-								name: "Invoke", 
-								returnType: "string", 
+								type: "System.Func<string, string>",
+								name: "Invoke",
+								returnType: "string",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "arg", 
+										position: 0,
+										type: "string",
+										name: "arg",
 										isBlittable: false
-									), 
-								]) 
+									),
+								])
 						}
 					]
-				) 
+				)
 			];
-			
+
 			const string funcMultiParam = @"
 using System;
 
@@ -272,34 +272,34 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "System.Func<string, string, string>", 
-							name: "cb", 
+							position: 0,
+							type: "System.Func<string, string, string>",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "System.Func<string, string, string>", 
-								name: "Invoke", 
-								returnType: "string", 
+								type: "System.Func<string, string, string>",
+								name: "Invoke",
+								returnType: "string",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "arg1", 
+										position: 0,
+										type: "string",
+										name: "arg1",
 										isBlittable: false
-									), 
+									),
 									new (
-										position: 1, 
-										type: "string", 
-										name: "arg2", 
+										position: 1,
+										type: "string",
+										name: "arg2",
 										isBlittable: false
-									), 
-								]) 
+									),
+								])
 						}
 					]
-				) 
+				)
 			];
-			
+
 			const string customDelegate = @"
 using System;
 
@@ -326,43 +326,43 @@ namespace NS {
 					],
 					parameters: [
 						new (
-							position: 0, 
-							type: "NS.MyClass.Callback", 
-							name: "cb", 
+							position: 0,
+							type: "NS.MyClass.Callback",
+							name: "cb",
 							isBlittable: false
 						) {
 							Delegate = new (
-								type: "NS.MyClass.Callback", 
-								name: "Invoke", 
-								returnType: "int?", 
+								type: "NS.MyClass.Callback",
+								name: "Invoke",
+								returnType: "int?",
 								parameters: [
 									new (
-										position: 0, 
-										type: "string", 
-										name: "name", 
+										position: 0,
+										type: "string",
+										name: "name",
 										isBlittable: false
-									), 
+									),
 									new (
-										position: 1, 
-										type: "string", 
-										name: "middleName", 
+										position: 1,
+										type: "string",
+										name: "middleName",
 										isBlittable: false
 									) {
 										IsNullable = true
-									}, 
+									},
 									new (
-										position: 2, 
-										type: "string", 
-										name: "surname", 
+										position: 2,
+										type: "string",
+										name: "surname",
 										isBlittable: false
 									) {
 										IsParams = true,
 										IsArray = true,
-									}, 
-								]) 
+									},
+								])
 						}
 					]
-				) 
+				)
 			];
 		}
 

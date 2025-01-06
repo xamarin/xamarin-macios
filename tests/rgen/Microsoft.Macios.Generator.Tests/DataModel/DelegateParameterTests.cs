@@ -13,9 +13,9 @@ public class DelegateParameterTests {
 			// diff pos
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -27,9 +27,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 1, 
-					type: "string", 
-					name: "arg1", 
+					position: 1,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -41,13 +41,13 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff type
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -59,9 +59,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "int", 
-					name: "arg1", 
+					position: 0,
+					type: "int",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -73,13 +73,13 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff name
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -91,9 +91,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg2", 
+					position: 0,
+					type: "string",
+					name: "arg2",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -105,14 +105,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff blittable 
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: true 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: true
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -123,9 +123,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -137,14 +137,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff optional
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = true,
 					IsParams = false,
@@ -155,9 +155,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -169,14 +169,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff is params
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = true,
@@ -187,9 +187,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -201,14 +201,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff is this
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -219,9 +219,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -233,14 +233,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff is nullable
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -251,9 +251,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -265,14 +265,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff is smart enum
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -283,9 +283,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -297,14 +297,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff is array
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -315,9 +315,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -329,14 +329,14 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.None,
 				},
 			];
-			
+
 			// diff ref type
 			yield return [
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
-					isBlittable: false 
+					position: 0,
+					type: "string",
+					name: "arg1",
+					isBlittable: false
 				) {
 					IsOptional = false,
 					IsParams = false,
@@ -347,9 +347,9 @@ public class DelegateParameterTests {
 					ReferenceKind = ReferenceKind.In,
 				},
 				new DelegateParameter (
-					position: 0, 
-					type: "string", 
-					name: "arg1", 
+					position: 0,
+					type: "string",
+					name: "arg1",
 					isBlittable: false
 				) {
 					IsOptional = false,
@@ -362,12 +362,12 @@ public class DelegateParameterTests {
 				},
 			];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
 	[Theory]
-	[ClassData(typeof(TestDataEquals))]
+	[ClassData (typeof (TestDataEquals))]
 	void CompareDiffPosition (DelegateParameter x, DelegateParameter y)
 	{
 		Assert.False (x.Equals (y));

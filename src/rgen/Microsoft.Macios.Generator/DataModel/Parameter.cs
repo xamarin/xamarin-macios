@@ -76,12 +76,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// If the parameter is a delegate. The method information of the invoke.
 	/// </summary>
 	public DelegateInfo? Delegate { get; init; } = null;
-	
+
 	/// <summary>
 	/// True if the parameter is a delegate.
 	/// </summary>
 	//[MemberNotNullWhen (true, nameof (DelegateMethod))]
-	public bool IsDelegate => Delegate != null;
+	public bool IsDelegate => Delegate is not null;
 
 	/// <summary>
 	/// List of attributes attached to the parameter.
@@ -95,7 +95,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		Name = name;
 		IsBlittable = isBlittable;
 	}
-	
+
 	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{
@@ -104,10 +104,10 @@ readonly struct Parameter : IEquatable<Parameter> {
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
 		DelegateInfo? delegateInfo = null;
 		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
-		    && namedTypeSymbol.DelegateInvokeMethod is not null) {
+			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
 			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
 		}
-		
+
 		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
@@ -208,7 +208,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind}, "); 
+		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
 		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
 		return sb.ToString ();
 	}
