@@ -356,6 +356,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -365,8 +366,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -417,6 +430,7 @@ public partial class MyClass {
 							type: "NS.MyEnum",
 							isBlittable: true,
 							isSmartEnum: true,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -426,8 +440,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -477,6 +503,7 @@ public partial class MyClass {
 							type: "NS.MyEnum",
 							isBlittable: true,
 							isSmartEnum: false,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -486,8 +513,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -533,6 +572,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -542,8 +582,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 
@@ -590,6 +642,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
@@ -600,8 +653,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 
@@ -650,6 +715,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -659,8 +725,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -709,6 +787,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -718,8 +797,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -729,6 +820,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -738,8 +830,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("surname")
@@ -785,6 +889,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -839,6 +944,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -894,6 +1000,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -910,6 +1017,7 @@ public partial class MyClass {
 							name: "SetSurname",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withSurname:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
@@ -967,8 +1075,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							])
 					],
 				}
@@ -1018,8 +1138,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 						new (
@@ -1031,8 +1163,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 					],

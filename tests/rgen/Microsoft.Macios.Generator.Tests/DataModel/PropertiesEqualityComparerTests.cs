@@ -26,26 +26,40 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 			new (
 				name: "SecondProperty",
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
@@ -54,13 +68,20 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -76,13 +97,20 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
@@ -91,13 +119,20 @@ public class PropertiesEqualityComparerTests {
 				type: "AVFoundation.AVVideo",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -113,13 +148,20 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
@@ -128,13 +170,20 @@ public class PropertiesEqualityComparerTests {
 				isSmartEnum: false,
 				type: "string",
 				isBlittable: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -150,13 +199,20 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: false,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
@@ -165,13 +221,20 @@ public class PropertiesEqualityComparerTests {
 				type: "string",
 				isBlittable: false,
 				isSmartEnum: true,
+				isReferenceType: false,
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, new (), [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
