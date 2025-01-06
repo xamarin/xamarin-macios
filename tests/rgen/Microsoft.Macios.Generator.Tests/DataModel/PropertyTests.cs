@@ -401,10 +401,10 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Getter, 
-							symbolAvailability: new (), 
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
 							exportPropertyData: null,
-							attributes: [], 
+							attributes: [],
 							modifiers: []
 						)
 					]
