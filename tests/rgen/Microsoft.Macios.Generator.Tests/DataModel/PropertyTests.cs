@@ -14,11 +14,51 @@ using Property = Microsoft.Macios.Generator.DataModel.Property;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class PropertyTests : BaseGeneratorTestClass {
+
+	[Theory]
+	[InlineData ("Name")]
+	[InlineData ("Surname")]
+	[InlineData ("Date")]
+	public void BackingFieldTests (string propertyName)
+	{
+		var property = new Property (
+			name: propertyName,
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		Assert.Equal ($"_{propertyName}", property.BackingField);
+	}
+
 	[Fact]
 	public void CompareDiffName ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [], [], []);
-		var y = new Property ("Second", "string", false, false, new (), [], [], []);
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		var y = new Property (
+			name: "Second",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -29,8 +69,124 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [], [], []);
-		var y = new Property ("First", "int", false, false, new (), [], [], []);
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		var y = new Property (
+			name: "First",
+			type: "int",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+
+		Assert.False (x.Equals (y));
+		Assert.False (y.Equals (x));
+		Assert.False (x == y);
+		Assert.True (x != y);
+	}
+
+	[Fact]
+	public void CompareDiffIsReferenceType ()
+	{
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		var y = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: true,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+
+		Assert.False (x.Equals (y));
+		Assert.False (y.Equals (x));
+		Assert.False (x == y);
+		Assert.True (x != y);
+	}
+
+	[Fact]
+	public void CompareDiffIsBlittableType ()
+	{
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		var y = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: true,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+
+		Assert.False (x.Equals (y));
+		Assert.False (y.Equals (x));
+		Assert.False (x == y);
+		Assert.True (x != y);
+	}
+
+	[Fact]
+	public void CompareDiffIsSmartEnum ()
+	{
+		var x = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: false,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
+		var y = new Property (
+			name: "First",
+			type: "string",
+			isBlittable: false,
+			isSmartEnum: true,
+			isReferenceType: false,
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		);
 
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
@@ -41,11 +197,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", "int", false, false, new (), [
+		var y = new Property ("First", "int", false, false, false, new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -58,13 +214,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", "int", false, false, new (), [
+		var y = new Property ("First", "int", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -80,7 +236,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -101,7 +257,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, false, new (), [
+		var y = new Property ("First", "int", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -163,7 +319,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -184,7 +340,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "string", false, false, new (), [
+		var y = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -234,6 +390,35 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (AccessorKind.Getter, new (), [], [])
+					])
+			];
+
+			const string valueTypeProperty = @"
+using System;
+
+namespace Test;
+
+public class TestClass {
+
+	public int Name { get; }
+}
+";
+			yield return [
+				valueTypeProperty,
+				new Property (
+					name: "Name",
+					type: "int",
+					isBlittable: true,
+					isSmartEnum: false,
+					isReferenceType: false,
 					symbolAvailability: new (),
 					attributes: [
 						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
@@ -318,6 +503,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [
 						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
@@ -417,6 +603,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -449,6 +636,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -483,6 +671,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -525,6 +714,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -567,6 +757,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -619,6 +810,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -672,6 +864,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -730,6 +923,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -793,6 +987,7 @@ namespace Test {
 					type: "Utils.MyClass",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),

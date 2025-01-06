@@ -356,6 +356,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -429,6 +430,7 @@ public partial class MyClass {
 							type: "NS.MyEnum",
 							isBlittable: true,
 							isSmartEnum: true,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -501,6 +503,7 @@ public partial class MyClass {
 							type: "NS.MyEnum",
 							isBlittable: true,
 							isSmartEnum: false,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -569,6 +572,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -638,6 +642,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
@@ -710,6 +715,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -781,6 +787,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -813,6 +820,7 @@ public partial class MyClass {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])

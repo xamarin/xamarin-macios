@@ -120,6 +120,7 @@ public partial interface IProtocol {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -191,6 +192,7 @@ public partial interface IProtocol {
 							type: "NS.MyEnum",
 							isBlittable: true,
 							isSmartEnum: true,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -259,8 +261,9 @@ public partial interface IProtocol {
 						new (
 							name: "Name",
 							type: "NS.MyEnum",
+							isBlittable: true,
 							isSmartEnum: false,
-			  isBlittable: true,
+							isReferenceType: false,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -327,6 +330,7 @@ public partial interface IProtocol {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -395,6 +399,7 @@ public partial interface IProtocol {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -464,6 +469,7 @@ public partial interface IProtocol {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -496,6 +502,7 @@ public partial interface IProtocol {
 							type: "string",
 							isBlittable: false,
 							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
