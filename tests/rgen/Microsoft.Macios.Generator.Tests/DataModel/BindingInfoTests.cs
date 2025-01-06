@@ -219,12 +219,12 @@ public class BindingInfoTests {
 			(BindingTypeData<Protocol>) new BindingInfo (new BindingTypeData<Category> ("name")));
 		Assert.Throws<InvalidCastException> (() =>
 			(BindingTypeData<Category>) new BindingInfo (new BindingTypeData<Class> ("name")));
-		
+
 		var classBinding = new BindingTypeData<Class> ("Name");
 		Assert.Equal (classBinding, (BindingTypeData<Class>) new BindingInfo (classBinding));
 		var protocolBinding = new BindingTypeData<Protocol> ("Name");
-		Assert.Equal (protocolBinding, (BindingTypeData<Protocol>) new BindingInfo (protocolBinding));	
+		Assert.Equal (protocolBinding, (BindingTypeData<Protocol>) new BindingInfo (protocolBinding));
 		var categoryBinding = new BindingTypeData<Category> ("Name");
-		Assert.Equal (categoryBinding, (BindingTypeData<Category>)new BindingInfo (categoryBinding));
+		Assert.Equal (categoryBinding, (BindingTypeData<Category>) new BindingInfo (categoryBinding));
 	}
 }
