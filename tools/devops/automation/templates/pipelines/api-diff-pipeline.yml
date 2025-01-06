@@ -41,7 +41,7 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/mcumming/enable-resourcetrigger-agentpoolselector
     endpoint: xamarin
 
   - repository: maccore
