@@ -129,8 +129,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -188,8 +200,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -246,8 +270,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -300,8 +336,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
@@ -356,8 +404,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -413,8 +473,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -433,8 +505,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("surname")
@@ -478,6 +562,7 @@ public partial interface IProtocol {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -530,6 +615,7 @@ public partial interface IProtocol {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -583,6 +669,7 @@ public partial interface IProtocol {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -599,6 +686,7 @@ public partial interface IProtocol {
 							name: "SetSurname",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withSurname:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
@@ -654,8 +742,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							])
 					],
 				}
@@ -703,8 +803,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 						new (
@@ -716,8 +828,20 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 					],

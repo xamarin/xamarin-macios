@@ -33,7 +33,38 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				)
+			];
+
+			const string voidMethodNoParamsExportData = @"
+using System;
+using ObjCBindings;
+
+namespace NS {
+	public class MyClass {
+		[Export<Method>(""myMethod"")]
+		public void MyMethod () {}
+	}
+}
+";
+
+			yield return [
+				voidMethodNoParamsExportData,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: "void",
+					symbolAvailability: new (),
+					exportMethodData: new ("myMethod"),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["myMethod"]),
+					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
@@ -58,6 +89,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -86,6 +118,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "NS.CustomType",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -111,6 +144,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -138,6 +172,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -167,6 +202,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -197,6 +233,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -227,6 +264,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -257,6 +295,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -289,6 +328,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -317,6 +357,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -349,6 +390,7 @@ namespace NS {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -387,6 +429,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -423,6 +466,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "void",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -456,6 +500,7 @@ namespace NS {
 					name: "MyMethod",
 					returnType: "string",
 					symbolAvailability: builder.ToImmutable (),
+					exportMethodData: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
 					],
@@ -492,6 +537,7 @@ namespace NS {
 					name: "TryGetString",
 					returnType: "bool",
 					symbolAvailability: new (),
+					exportMethodData: new (),
 					attributes: [
 					],
 					modifiers: [
