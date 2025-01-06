@@ -31,7 +31,7 @@ public enum MyEnum {
 }
 ";
 
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -61,7 +61,7 @@ public enum MyEnum {
 	First,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -77,7 +77,7 @@ public enum MyEnum {
 		Assert.NotNull (fieldData);
 		Assert.Equal ("First", fieldData.Value.SymbolName);
 		Assert.Null (fieldData.Value.LibraryName);
-		Assert.Equal (EnumValue.None, fieldData.Value.Flags);
+		Assert.Equal (EnumValue.Default, fieldData.Value.Flags);
 	}
 
 	[Theory]
@@ -93,7 +93,7 @@ public enum MyEnum {
 	First,
 }
 ";
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataMissingAttribute), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()
@@ -109,7 +109,7 @@ public enum MyEnum {
 		Assert.NotNull (fieldData);
 		Assert.Equal ("First", fieldData.Value.SymbolName);
 		Assert.Equal ("Lib", fieldData.Value.LibraryName);
-		Assert.Equal (EnumValue.None, fieldData.Value.Flags);
+		Assert.Equal (EnumValue.Default, fieldData.Value.Flags);
 	}
 
 	class TestDataGetFieldDataPresentAttributeNotValid : IEnumerable<object []> {
@@ -191,7 +191,7 @@ public enum MyEnum {
 	[AllSupportedPlatformsClassData<TestDataGetFieldDataPresentAttributeNotValid>]
 	public void GetFieldDataPresentAttributeNotValid (ApplePlatform platform, string inputString)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (GetFieldDataPresentAttributeNotValid), platform, inputString);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputString);
 		Assert.Single (syntaxTrees);
 		var declaration = syntaxTrees [0].GetRoot ()
 			.DescendantNodes ()

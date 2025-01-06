@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,87 +7,65 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	class RunDeviceTasksFactory {
-
-		public Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
+	class RunDeviceTasksFactory : TaskFactory {
+		public RunDeviceTasksFactory (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		: base (jenkins, processManager, testVariationsFactory)
 		{
+		}
+
+		public override Task<IEnumerable<AppleTestTask>> CreateTasksAsync ()
+		{
+			var jenkins = this.Jenkins;
+			var processManager = this.ProcessManager;
+			var testVariationsFactory = this.TestVariationsFactory;
+
 			var rv = new List<RunDeviceTask> ();
-			var projectTasks = new List<RunDeviceTask> ();
 
-			foreach (var project in jenkins.Harness.IOSTestProjects) {
+			foreach (var project in jenkins.Harness.TestProjects) {
 				if (!project.IsExecutableProject)
-					continue;
-
-				if (project.SkipDeviceVariations)
 					continue;
 
 				bool ignored = project.Ignore ?? !jenkins.TestSelection.IsEnabled (PlatformLabel.Device);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
-				if (project.IsDotNetProject)
-					ignored = true;
 
-				projectTasks.Clear ();
-
-				bool createiOS;
-				bool createtvOS;
-
-				if (project.GenerateVariations) {
-					createiOS = !project.SkipiOSVariation;
-					createtvOS = !project.SkiptvOSVariation;
-				} else {
-					createiOS = project.TestPlatform == TestPlatform.iOS;
-					createtvOS = project.TestPlatform == TestPlatform.tvOS;
+				IEnumerable<IHardwareDevice> candidates;
+				switch (project.TestPlatform) {
+				case TestPlatform.iOS:
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS);
+					candidates = jenkins.Devices.Connected64BitIOS;
+					break;
+				case TestPlatform.tvOS:
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);
+					candidates = jenkins.Devices.ConnectedTV;
+					break;
+				default:
+					continue;
 				}
 
-				if (createiOS) {
-					var build64 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS,
-						TestName = project.Name,
-					};
-					build64.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: jenkins,
-						devices: jenkins.Devices,
-						buildTask: build64,
-						processManager: processManager,
-						tunnelBore: jenkins.TunnelBore,
-						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS) });
-				}
+				var buildTask = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
+					ProjectConfiguration = "Debug",
+					ProjectPlatform = "iPhone",
+					Platform = project.TestPlatform,
+					TestName = project.Name,
+				};
+				buildTask.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
+				var runTask = new RunDeviceTask (
+					jenkins: jenkins,
+					devices: jenkins.Devices,
+					buildTask: buildTask,
+					processManager: processManager,
+					tunnelBore: jenkins.TunnelBore,
+					errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
+					useTcpTunnel: jenkins.Harness.UseTcpTunnel,
+					candidates: candidates) {
+					Ignored = ignored,
+				};
 
-				if (createtvOS) {
-					var tvOSProject = project.GenerateVariations ? project.AsTvOSProject () : project;
-					var buildTV = new MSBuildTask (jenkins: jenkins, testProject: tvOSProject, processManager: processManager) {
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.tvOS,
-						TestName = project.Name,
-					};
-					buildTV.CloneTestProject (jenkins.MainLog, processManager, tvOSProject, HarnessConfiguration.RootDirectory);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: jenkins,
-						devices: jenkins.Devices,
-						buildTask: buildTV,
-						processManager: processManager,
-						tunnelBore: jenkins.TunnelBore,
-						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS) });
-				}
-
-				foreach (var task in projectTasks) {
-					task.TimeoutMultiplier = project.TimeoutMultiplier;
-					task.BuildOnly |= project.BuildOnly;
-					task.Ignored |= ignored;
-				}
-				rv.AddRange (projectTasks);
+				rv.Add (runTask);
 			}
 
-			return Task.FromResult<IEnumerable<ITestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
+			return Task.FromResult<IEnumerable<AppleTestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
 				=> new RunDeviceTask (
 					jenkins: jenkins,
 					devices: jenkins.Devices,

@@ -51,7 +51,6 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
-			case "Chip":
 			case "MetalFX":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":

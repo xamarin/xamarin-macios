@@ -28,6 +28,8 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
+
 using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
@@ -46,7 +48,7 @@ namespace Foundation {
 		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
 		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
 		/// <param name="error">The error if an error occurred.</param>
-		public static NSAttributedString? Create (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error)
+		public static NSAttributedString? Create (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError? error)
 		{
 			var rv = new NSAttributedString (NSObjectFlag.Empty);
 			rv.InitializeHandle (rv._InitWithUrl (url, options, out resultDocumentAttributes, out error), string.Empty, false);
@@ -62,9 +64,26 @@ namespace Foundation {
 		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
 		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
 		/// <param name="error">The error if an error occurred.</param>
-		public static NSAttributedString? Create (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error)
+		public static NSAttributedString? Create (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError? error)
 		{
 			return Create (url, options.Dictionary, out resultDocumentAttributes, out error);
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="url">A url to the document to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSUrl url, NSAttributedStringDocumentAttributes options, out NSError? error)
+		{
+			return Create (url, options.Dictionary, out var _, out error);
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="url">A url to the document to load.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSUrl url, out NSError? error)
+		{
+			return Create (url, new NSDictionary (), out var _, out error);
 		}
 
 		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
@@ -72,7 +91,7 @@ namespace Foundation {
 		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
 		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
 		/// <param name="error">The error if an error occurred.</param>
-		public static NSAttributedString? Create (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error)
+		public static NSAttributedString? Create (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError? error)
 		{
 			var rv = new NSAttributedString (NSObjectFlag.Empty);
 			rv.InitializeHandle (rv._InitWithData (data, options, out resultDocumentAttributes, out error), string.Empty, false);
@@ -88,33 +107,114 @@ namespace Foundation {
 		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
 		/// <param name="resultDocumentAttributes">Upon return, a dictionary of document-specific keys.</param>
 		/// <param name="error">The error if an error occurred.</param>
-		public static NSAttributedString? Create (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error)
+		public static NSAttributedString? Create (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError? error)
 		{
 			return Create (data, options.Dictionary, out resultDocumentAttributes, out error);
 		}
 
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="data">The data to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSData data, NSAttributedStringDocumentAttributes options, out NSError? error)
+		{
+			return Create (data, options.Dictionary, out var _, out error);
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" />.</summary>
+		/// <param name="data">The data to load.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSData data, out NSError? error)
+		{
+			return Create (data, new NSDictionary (), out var _, out error);
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" /> from a markdown file.</summary>
+		/// <param name="markdownFile">The url of the file to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="baseUrl">The base url to use when resolving markdown urls.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSUrl markdownFile, NSAttributedStringMarkdownParsingOptions? options, NSUrl? baseUrl, out NSError? error)
+		{
+			var rv = new NSAttributedString (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithContentsOfMarkdownFile (markdownFile, options, baseUrl, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" /> from markdown data.</summary>
+		/// <param name="markdown">The markdown data to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="baseUrl">The base url to use when resolving markdown urls.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (NSData markdown, NSAttributedStringMarkdownParsingOptions? options, NSUrl? baseUrl, out NSError? error)
+		{
+			var rv = new NSAttributedString (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithMarkdown (markdown, options, baseUrl, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="NSAttributedString" /> from a string with markdown.</summary>
+		/// <param name="markdownString">The markdown string to load.</param>
+		/// <param name="options">A dictionary of attributes that specifies how to interpret the document contents.</param>
+		/// <param name="baseUrl">The base url to use when resolving markdown urls.</param>
+		/// <param name="error">The error if an error occurred.</param>
+		public static NSAttributedString? Create (string markdownString, NSAttributedStringMarkdownParsingOptions? options, NSUrl? baseUrl, out NSError? error)
+		{
+			var rv = new NSAttributedString (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithMarkdownString (markdownString, options, baseUrl, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
 #if __MACOS__ || XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
 		: this (url, documentAttributes, out var _, out error) {}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
 		: this (data, documentAttributes, out var _, out error) {}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, out NSError error)
 		: this (url, new NSDictionary (), out var _, out error) {}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, out NSError error)
 		: this (data, new NSDictionary (), out var _, out error) {}
 #else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
 		: this (url, documentAttributes, out var _, ref error) { }
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
 		: this (data, documentAttributes, out var _, ref error) { }
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, ref NSError error)
 		: this (url, new NSDictionary (), out var _, ref error) { }
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, ref NSError error)
 		: this (data, new NSDictionary (), out var _, ref error) { }
 #endif

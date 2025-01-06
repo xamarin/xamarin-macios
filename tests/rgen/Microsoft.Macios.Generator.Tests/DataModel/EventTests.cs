@@ -38,8 +38,19 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, new (), [], []),
-						new (AccessorKind.Remove, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -66,7 +77,13 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -93,10 +110,22 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, new (), [], []),
-						new (AccessorKind.Remove, new (), [], [
-							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
-						]),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
+							]
+						),
 					]
 				)
 			];
@@ -130,10 +159,22 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, new (), [], []),
-						new (AccessorKind.Remove, new (), [], [
-							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
-						]),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
+							]
+						),
 					]
 				)
 			];
@@ -166,7 +207,13 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, new (), [], []),
+						new (
+							accessorKind: AccessorKind.Add
+							, symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -207,12 +254,24 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, accessorAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
-						new (AccessorKind.Remove, accessorAvailabilityBuilder.ToImmutable (), [
-							new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
-						], []),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -226,8 +285,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromEventDeclaration (ApplePlatform platform, string inputText, Event expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromEventDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

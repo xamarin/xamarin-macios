@@ -58,6 +58,13 @@ namespace CoreVideo {
 		{
 		}
 
+		internal static CVPixelBuffer? Create (NativeHandle handle, bool owns)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+			return new CVPixelBuffer (handle, owns);
+		}
+
 		static IntPtr Create (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary? pixelBufferAttributes)
 		{
 			if (width <= 0)

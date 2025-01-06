@@ -26,12 +26,6 @@ namespace Xamarin.Mac.Tests {
 
 			// No bindings for any of these yet
 			switch (libraryName) {
-#if !NET
-			case "QTKitLibrary": // no ARM64 version present
-				if (Runtime.IsARM64CallingConvention)
-					return LoadStatus.Acceptable;
-				break;
-#endif
 			case "CryptoTokenKitLibrary":
 			case "FinderSyncLibrary":
 			case "HypervisorLibrary":
