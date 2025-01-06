@@ -93,6 +93,13 @@ namespace CoreFoundation {
 			return new CFArray (Create (values), true);
 		}
 
+		internal static CFArray? FromNullableNativeObjects (params INativeObject []? values)
+		{
+			if (values is null)
+				return null;
+			return new CFArray (Create (values), true);
+		}
+
 		public nint Count {
 			get { return GetCount (GetCheckedHandle ()); }
 		}

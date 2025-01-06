@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -5,6 +6,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -17,17 +19,100 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Represents the type of binding that the code changes are for.
 	/// </summary>
-	public BindingType BindingType { get; } = BindingType.Unknown;
+	public BindingType BindingType => BindingData.BindingType;
+
+	readonly BindingData bindingData = default;
+	/// <summary>
+	/// Represents the binding data that will be used to generate the code.
+	/// </summary>
+	public BindingData BindingData => bindingData;
+
+	readonly string name = string.Empty;
+	/// <summary>
+	/// The name of the named type that generated the code change.
+	/// </summary>
+	public string Name => name;
+
+	readonly ImmutableArray<string> namespaces = ImmutableArray<string>.Empty;
+	/// <summary>
+	/// The namespace that contains the named type that generated the code change.
+	/// </summary>
+	public ImmutableArray<string> Namespace => namespaces;
+
+	readonly ImmutableArray<string> interfaces = ImmutableArray<string>.Empty;
+	/// <summary>
+	/// The list of interfaces implemented by the class/interface.
+	/// </summary>
+	public ImmutableArray<string> Interfaces {
+		get => interfaces;
+		init => interfaces = value;
+	}
 
 	/// <summary>
 	/// Fully qualified name of the symbol that the code changes are for.
 	/// </summary>
 	public string FullyQualifiedSymbol { get; }
 
+	readonly string? baseClass = null;
+
+	/// <summary>
+	/// The fully qualified name of an interface/class base.
+	/// </summary>
+	public string? Base {
+		get => baseClass;
+		init => baseClass = value;
+
+	}
+
+	readonly SymbolAvailability availability = new ();
+	/// <summary>
+	/// The platform availability of the named type.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability => availability;
+
 	/// <summary>
 	/// Changes to the attributes of the symbol.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
+
+	readonly IReadOnlySet<string> usingDirectives = ImmutableHashSet<string>.Empty;
+
+	/// <summary>
+	/// The using directive added in the named type declaration.
+	/// </summary>
+	public IReadOnlySet<string> UsingDirectives {
+		get => usingDirectives;
+		init => usingDirectives = value;
+	}
+
+	/// <summary>
+	/// True if the code changes are for a static symbol.
+	/// </summary>
+	public bool IsStatic { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for a partial symbol.
+	/// </summary>
+	public bool IsPartial { get; private init; }
+
+	/// <summary>
+	/// True if the code changes are for an abstract symbol.
+	/// </summary>
+	public bool IsAbstract { get; private init; }
+
+	readonly ImmutableArray<SyntaxToken> modifiers = [];
+	/// <summary>
+	/// Modifiers list.
+	/// </summary>
+	public ImmutableArray<SyntaxToken> Modifiers {
+		get => modifiers;
+		init {
+			modifiers = value;
+			IsStatic = value.Any (m => m.IsKind (SyntaxKind.StaticKeyword));
+			IsPartial = value.Any (m => m.IsKind (SyntaxKind.PartialKeyword));
+			IsAbstract = value.Any (m => m.IsKind (SyntaxKind.AbstractKeyword));
+		}
+	}
 
 	readonly ImmutableArray<EnumMember> enumMembers = [];
 
@@ -163,12 +248,19 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Internal constructor added for testing purposes.
 	/// </summary>
-	/// <param name="bindingType">The type of binding for the given code changes.</param>
+	/// <param name="bindingData">The binding data of binding for the given code changes.</param>
+	/// <param name="name">The name of the named type that created the code change.</param>
+	/// <param name="namespace">The namespace that contains the named type.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
-	internal CodeChanges (BindingType bindingType, string fullyQualifiedSymbol)
+	/// <param name="symbolAvailability">The platform availability of the named symbol.</param>
+	internal CodeChanges (BindingData bindingData, string name, ImmutableArray<string> @namespace,
+		string fullyQualifiedSymbol, SymbolAvailability symbolAvailability)
 	{
-		BindingType = bindingType;
+		this.bindingData = bindingData;
+		this.name = name;
+		this.namespaces = @namespace;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
+		this.availability = symbolAvailability;
 	}
 
 	/// <summary>
@@ -178,18 +270,35 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
 	{
-		BindingType = BindingType.SmartEnum;
+		semanticModel.GetSymbolData (
+			declaration: enumDeclaration,
+			bindingType: BindingType.SmartEnum,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
+			bindingData: out bindingData);
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = enumDeclaration.SyntaxTree.CollectUsingStatements ();
+		Modifiers = [.. enumDeclaration.Modifiers];
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
-		var enumValueDeclaration = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
-		foreach (var val in enumValueDeclaration) {
-			if (Skip (val, semanticModel))
+		var enumValueDeclarations = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
+		foreach (var enumValueDeclaration in enumValueDeclarations) {
+			if (Skip (enumValueDeclaration, semanticModel))
 				continue;
-			var memberName = val.Identifier.ToFullString ().Trim ();
-			var attributes = val.GetAttributeCodeChanges (semanticModel);
-			bucket.Add (new (memberName, attributes));
+			if (semanticModel.GetDeclaredSymbol (enumValueDeclaration) is not IFieldSymbol enumValueSymbol) {
+				continue;
+			}
+			var enumMember = new EnumMember (
+				name: enumValueDeclaration.Identifier.ToFullString ().Trim (),
+				fieldData: enumValueSymbol.GetFieldData (),
+				symbolAvailability: enumValueSymbol.GetSupportedPlatforms (),
+				attributes: enumValueDeclaration.GetAttributeCodeChanges (semanticModel)
+			);
+			bucket.Add (enumMember);
 		}
 
 		EnumMembers = bucket.ToImmutable ();
@@ -202,9 +311,19 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
 	{
-		BindingType = BindingType.Class;
+		semanticModel.GetSymbolData (
+			declaration: classDeclaration,
+			bindingType: BindingType.Class,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
+			bindingData: out bindingData);
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = classDeclaration.SyntaxTree.CollectUsingStatements ();
+		Modifiers = [.. classDeclaration.Modifiers];
 
 		// use the generic method to get the members, we are using an out param to try an minimize the number of times
 		// the value types are copied
@@ -224,9 +343,19 @@ readonly struct CodeChanges {
 	/// <param name="semanticModel">The semantic model of the compilation.</param>
 	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
 	{
-		BindingType = BindingType.Protocol;
+		semanticModel.GetSymbolData (
+			declaration: interfaceDeclaration,
+			bindingType: BindingType.Protocol,
+			name: out name,
+			baseClass: out baseClass,
+			interfaces: out interfaces,
+			namespaces: out namespaces,
+			symbolAvailability: out availability,
+			bindingData: out bindingData);
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
+		UsingDirectives = interfaceDeclaration.SyntaxTree.CollectUsingStatements ();
+		Modifiers = [.. interfaceDeclaration.Modifiers];
 		// we do not init the constructors, we use the default empty array
 
 		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, semanticModel, Skip, Property.TryCreate,
@@ -258,10 +387,17 @@ readonly struct CodeChanges {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("Changes: {");
-		sb.Append ($"BindingType: {BindingType}, ");
-		sb.Append ($"FullyQualifiedSymbol: {FullyQualifiedSymbol}, ");
-		sb.Append ("Attributes: [");
+		sb.Append ($"BindingData: '{BindingData}', Name: '{Name}', Namespace: [");
+		sb.AppendJoin (", ", Namespace);
+		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', Base: '{Base ?? "null"}', SymbolAvailability: {SymbolAvailability}, ");
+		sb.Append ("Interfaces: [");
+		sb.AppendJoin (", ", Interfaces);
+		sb.Append ("], Attributes: [");
 		sb.AppendJoin (", ", Attributes);
+		sb.Append ("], UsingDirectives: [");
+		sb.AppendJoin (", ", UsingDirectives);
+		sb.Append ("], Modifiers: [");
+		sb.AppendJoin (", ", Modifiers);
 		sb.Append ("], EnumMembers: [");
 		sb.AppendJoin (", ", EnumMembers);
 		sb.Append ("], Constructors: [");
@@ -272,7 +408,7 @@ readonly struct CodeChanges {
 		sb.AppendJoin (", ", Methods);
 		sb.Append ("], Events: [");
 		sb.AppendJoin (", ", Events);
-		sb.Append ('}');
+		sb.Append ("] }");
 		return sb.ToString ();
 	}
 }

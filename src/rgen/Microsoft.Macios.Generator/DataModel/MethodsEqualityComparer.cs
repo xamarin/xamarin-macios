@@ -22,7 +22,7 @@ class MethodsEqualityComparer : EqualityComparer<ImmutableArray<Method>> {
 		// diff methods
 		var dictionaryComparer =
 			new DictionaryComparer<(string ReturnType, string Name, int ParameterCount), List<Method>> (
-				new ListComparer<Method> (new MethodComparer ()));
+				new CollectionComparer<Method> (new MethodComparer ()));
 		return dictionaryComparer.Equals (xMethods, yMethods);
 	}
 

@@ -5,29 +5,67 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Extensions;
+using ObjCRuntime;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly struct Method : IEquatable<Method> {
 
+	/// <summary>
+	/// Type name that owns the constructor.
+	/// </summary>
 	public string Type { get; }
+
+	/// <summary>
+	/// Method name.
+	/// </summary>
 	public string Name { get; }
+
+	/// <summary>
+	/// Method return type.
+	/// </summary>
 	public string ReturnType { get; }
 
+	/// <summary>
+	/// The platform availability of the method.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
+
+	/// <summary>
+	/// The data of the export attribute used to mark the value as a property binding. 
+	/// </summary>
+	public ExportData<ObjCBindings.Method> ExportMethodData { get; }
+
+	/// <summary>
+	/// Get the attributes added to the constructor.
+	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
+	/// <summary>
+	/// Modifiers list.
+	/// </summary>
 	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
 
+	/// <summary>
+	/// Parameters list.
+	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, string returnType, ImmutableArray<AttributeCodeChange> attributes,
+	public Method (string type, string name, string returnType,
+		SymbolAvailability symbolAvailability,
+		ExportData<ObjCBindings.Method> exportMethodData,
+		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers,
 		ImmutableArray<Parameter> parameters)
 	{
 		Type = type;
 		Name = name;
 		ReturnType = returnType;
+		SymbolAvailability = symbolAvailability;
+		ExportMethodData = exportMethodData;
 		Attributes = attributes;
 		Modifiers = modifiers;
 		Parameters = parameters;
@@ -46,22 +84,22 @@ readonly struct Method : IEquatable<Method> {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
-				parameter.Name) {
-				IsOptional = parameter.IsOptional,
-				IsParams = parameter.IsParams,
-				IsThis = parameter.IsThis,
-				IsNullable = parameter.NullableAnnotation == NullableAnnotation.Annotated,
-				DefaultValue = (parameter.HasExplicitDefaultValue) ? parameter.ExplicitDefaultValue?.ToString () : null,
-				ReferenceKind = parameter.RefKind.ToReferenceKind (),
-				Attributes = parameterDeclaration.GetAttributeCodeChanges (semanticModel),
-			});
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+				continue;
+			parametersBucket.Add (parameterChange.Value);
 		}
 
+		// DO NOT USE default if null, the reason is that it will set the ArgumentSemantics to be value 0, when
+		// none is value 1. The reason for that is that the default of an enum is 0, that was a mistake 
+		// in the old binding code.
+		var exportData = method.GetExportData<ObjCBindings.Method> ()
+						 ?? new (null, ArgumentSemantic.None, ObjCBindings.Method.Default);
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
 			returnType: method.ReturnType.ToDisplayString ().Trim (),
+			symbolAvailability: method.GetSupportedPlatforms (),
+			exportMethodData: exportData,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			parameters: parametersBucket.ToImmutableArray ());
@@ -77,6 +115,11 @@ readonly struct Method : IEquatable<Method> {
 			return false;
 		if (ReturnType != other.ReturnType)
 			return false;
+		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+		if (ExportMethodData != other.ExportMethodData)
+			return false;
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
@@ -132,6 +175,8 @@ readonly struct Method : IEquatable<Method> {
 		var sb = new StringBuilder ($"{{ Method: Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
 		sb.Append ($"ReturnType: {ReturnType}, ");
+		sb.Append ($"SymbolAvailability: {SymbolAvailability}, ");
+		sb.Append ($"ExportMethodData: {ExportMethodData}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], Modifiers: [");

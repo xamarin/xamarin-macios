@@ -308,6 +308,8 @@ namespace Extrospection {
 			// `Ok = 0` and `Success = 0` are often added to errors enums
 			case "Ok":
 			case "Success":
+				if (typeName.EndsWith ("Error", StringComparison.Ordinal))
+					return true;
 				if (typeName.EndsWith ("ErrorCode", StringComparison.Ordinal))
 					return true;
 				if (typeName.EndsWith ("Status", StringComparison.Ordinal))

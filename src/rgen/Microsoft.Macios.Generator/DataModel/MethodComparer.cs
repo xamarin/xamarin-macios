@@ -34,7 +34,8 @@ class MethodComparer : IComparer<Method> {
 		if (attributesLengthCompare != 0)
 			return attributesLengthCompare;
 
-		// sort by the attributes
+		// sort by the attributes, this allows us not to do a compare against the platform availability
+		// since that is generated via the attrs
 		var attributeComparer = new AttributeComparer ();
 		var xAttributes = x.Attributes.Order (attributeComparer).ToArray ();
 		var yAttributes = y.Attributes.Order (attributeComparer).ToArray ();

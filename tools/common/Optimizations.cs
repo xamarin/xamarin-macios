@@ -262,10 +262,10 @@ namespace Xamarin.Bundler {
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic;
 			}
 
-			// We will register protocols if the static registrar is enabled and loading assemblies is not possible
+			// We will register protocols if the static registrar is enabled
 			if (!RegisterProtocols.HasValue) {
 				if (app.Platform != ApplePlatform.MacOSX || app.XamarinRuntime == XamarinRuntime.NativeAOT) {
-					RegisterProtocols = (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic) && !app.UseInterpreter;
+					RegisterProtocols = (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic);
 				} else {
 					RegisterProtocols = false;
 				}

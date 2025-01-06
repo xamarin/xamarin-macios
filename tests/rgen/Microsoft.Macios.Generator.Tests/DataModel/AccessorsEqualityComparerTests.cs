@@ -19,11 +19,26 @@ public class AccessorsEqualityComparerTests {
 	public void CompareSameSizeDiffSizes ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Getter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 
 		Assert.False (equalityComparer.Equals (x, y));
@@ -33,12 +48,32 @@ public class AccessorsEqualityComparerTests {
 	public void CompareSameSizeDiffAccessors ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Add, [], []),
-			new (AccessorKind.Remove, [], []),
+			new (
+				accessorKind: AccessorKind.Add,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Remove,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 
 		Assert.False (equalityComparer.Equals (x, y));
@@ -48,12 +83,32 @@ public class AccessorsEqualityComparerTests {
 	public void CompareTwoAccessorsDiffOrder ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Setter, [], []),
-			new (AccessorKind.Getter, [], []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));
@@ -63,13 +118,33 @@ public class AccessorsEqualityComparerTests {
 	public void CompareTwoAccessorsEqual ()
 	{
 		ImmutableArray<Accessor> x = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 
 		ImmutableArray<Accessor> y = [
-			new (AccessorKind.Getter, [], []),
-			new (AccessorKind.Setter, [], []),
+			new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
+			new (
+				accessorKind: AccessorKind.Setter,
+				symbolAvailability: new (),
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: []),
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));

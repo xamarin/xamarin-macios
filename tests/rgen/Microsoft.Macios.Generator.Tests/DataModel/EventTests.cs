@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -30,13 +32,25 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], []),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -57,12 +71,19 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
 					]
 				)
 			];
@@ -83,15 +104,28 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "System.EventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], [
-							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
-						]),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
+							]
+						),
 					]
 				)
 			];
@@ -119,20 +153,129 @@ public class TestClass {
 				new Event (
 					name: "MyEvent",
 					type: "Test.MyEventHandler",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Add, [], []),
-						new (AccessorKind.Remove, [], [
-							SyntaxFactory.Token (SyntaxKind.InternalKeyword)
-						]),
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.InternalKeyword)
+							]
+						),
+					]
+				)
+			];
+
+			const string eventAvailability = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace Test;
+
+public class TestClass {
+
+	[SupportedOSPlatform (""ios17.0"")]
+	public event EventHandler MyEvent { add; }
+}
+";
+			var eventAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			eventAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+
+			yield return [
+				eventAvailability,
+				new Event (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Add
+							, symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					]
+				)
+			];
+
+			const string eventAccessorAvailability = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace Test;
+
+public class TestClass {
+
+	[SupportedOSPlatform (""ios"")]
+	public event EventHandler MyEvent { 
+		[SupportedOSPlatform (""ios17.0"")]
+		add; 
+		[SupportedOSPlatform (""ios17.0"")]
+		remove;}
+}
+";
+			eventAvailabilityBuilder.Clear ();
+			eventAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios"));
+
+			var accessorAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
+			accessorAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+
+
+			yield return [
+				eventAccessorAvailability,
+				new Event (
+					name: "MyEvent",
+					type: "System.EventHandler",
+					symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Remove,
+							symbolAvailability: accessorAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+							],
+							modifiers: []
+						),
 					]
 				)
 			];
 		}
-
 
 		IEnumerator IEnumerable.GetEnumerator ()
 			=> GetEnumerator ();
@@ -142,8 +285,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataFromPropertyDeclaration>]
 	void FromEventDeclaration (ApplePlatform platform, string inputText, Event expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromEventDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

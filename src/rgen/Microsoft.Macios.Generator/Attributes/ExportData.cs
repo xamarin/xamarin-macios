@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator.Attributes;
 /// Represents the data found in an ExportAttribute&lt;T&gt; 
 /// </summary>
 /// <typeparam name="T">The configuration flags used on the exported element.</typeparam>
-readonly struct ExportData<T> where T : Enum {
+readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 
 	/// <summary>
 	/// The exported native selector.
@@ -62,7 +62,7 @@ readonly struct ExportData<T> where T : Enum {
 		T? flags = default;
 		switch (count) {
 		case 1:
-			data = new ((string?) attributeData.ConstructorArguments [0].Value!);
+			selector = (string?) attributeData.ConstructorArguments [0].Value!;
 			break;
 		case 2:
 			// there are two possible cases in this situation.
@@ -78,7 +78,7 @@ readonly struct ExportData<T> where T : Enum {
 			}
 			break;
 		case 3:
-			selector = (string?) attributeData.ConstructorArguments [9].Value!;
+			selector = (string?) attributeData.ConstructorArguments [0].Value!;
 			argumentSemantic = (ArgumentSemantic) attributeData.ConstructorArguments [1].Value!;
 			flags = (T) attributeData.ConstructorArguments [2].Value!;
 			break;
@@ -113,5 +113,46 @@ readonly struct ExportData<T> where T : Enum {
 		data = flags is not null ?
 			new (selector, argumentSemantic, flags) : new (selector, argumentSemantic);
 		return true;
+	}
+
+	/// <inheritdoc />
+	public bool Equals (ExportData<T> other)
+	{
+		if (Selector != other.Selector)
+			return false;
+		if (ArgumentSemantic != other.ArgumentSemantic)
+			return false;
+		if (Flags is not null && other.Flags is not null) {
+			return Flags.Equals (other.Flags);
+		}
+		return false;
+	}
+
+	/// <inheritdoc />
+	public override bool Equals (object? obj)
+	{
+		return obj is ExportData<T> other && Equals (other);
+	}
+
+	/// <inheritdoc />
+	public override int GetHashCode ()
+	{
+		return HashCode.Combine (Selector, Flags);
+	}
+
+	public static bool operator == (ExportData<T> x, ExportData<T> y)
+	{
+		return x.Equals (y);
+	}
+
+	public static bool operator != (ExportData<T> x, ExportData<T> y)
+	{
+		return !(x == y);
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		return $"{{ Type: '{typeof (T).FullName}', Selector: '{Selector ?? "null"}', ArgumentSemantic: '{ArgumentSemantic}', Flags: '{Flags}' }}";
 	}
 }
