@@ -441,6 +441,74 @@ public partial class MyClass {
 
 			yield return [paramsMethod, "public partial void TestMethod (params string[] data)"];
 
+			
+			const string actionNoParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action cb) {}
+	}
+}
+";
+			yield return [actionNoParam, "public partial void TestMethod (System.Action cb)"];
+			
+			const string actionSingleParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string> cb) {}
+	}
+}
+";
+			yield return [actionSingleParam, "public partial void TestMethod (System.Action<string> cb)"];
+			
+			const string actionSingleNullableParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string?> cb) {}
+	}
+}
+";
+			yield return [actionSingleNullableParam, "public partial void TestMethod (System.Action<string?> cb)"];
+			
+			const string actionMultiParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string, string> cb) {}
+	}
+}
+";
+			yield return [actionMultiParam, "public partial void TestMethod (System.Action<string, string> cb)"];
+			
+			const string funcSingleParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Func<string, string> cb) {}
+	}
+}
+";
+			yield return [funcSingleParam, "public partial void TestMethod (System.Func<string, string> cb)"];
+			
+			const string customDelegate = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public delegate int? Callback(string name, string? middleName, params string[] surname);
+
+		public partial void TestMethod (Callback cb) {}
+	}
+}
+";
+			yield return [customDelegate, "public partial void TestMethod (NS.MyClass.Callback cb)"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
