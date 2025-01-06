@@ -167,7 +167,7 @@ readonly struct DelegateParameter : IEquatable<DelegateParameter> {
 		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind}, "); 
+		sb.Append ($"ReferenceKind: {ReferenceKind} "); 
 		return sb.ToString ();
 	}
 }
