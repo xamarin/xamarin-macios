@@ -16,7 +16,7 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 	public string Type { get; }
 
 	/// <summary>
-	/// True if the parameter is nullable.:w
+	/// True if the parameter is nullable.
 	/// </summary>
 	public bool IsNullable { get; }
 
