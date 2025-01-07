@@ -626,7 +626,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.IsNotNull (serverCertificate, "Server certificate is null");
 				Assert.IsNull (ex, "Exception wasn't expected.");
 				Assert.IsNotNull (result, "Result was null");
-				Assert.IsTrue (result.IsSuccessStatusCode, "Status code was not success");
+				Assert.IsTrue (result.IsSuccessStatusCode, $"Status code was not success: {result.StatusCode}");
 			}
 		}
 
