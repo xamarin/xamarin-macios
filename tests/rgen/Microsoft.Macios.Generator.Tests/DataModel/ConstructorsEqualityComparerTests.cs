@@ -1,3 +1,5 @@
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
 
@@ -14,17 +16,19 @@ public class ConstructorsEqualityComparerTests {
 	public void CompareSingleElementDiffParameterCount ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -33,16 +37,18 @@ public class ConstructorsEqualityComparerTests {
 	public void CompareSingleElementSameParameterCountDifferentParams ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -51,16 +57,18 @@ public class ConstructorsEqualityComparerTests {
 	public void CompareDifferentConstructorCount ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x, y], [y]));
 	}
@@ -69,17 +77,76 @@ public class ConstructorsEqualityComparerTests {
 	public void CompareSameConstructorsDifferentOrder ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.True (compare.Equals ([x, y], [y, x]));
+	}
+
+	[Fact]
+	public void CompareSameConstructorsDifferentAvailability ()
+	{
+		var xBuilder = SymbolAvailability.CreateBuilder ();
+		xBuilder.Add (new SupportedOSPlatformData ("ios"));
+		xBuilder.Add (new SupportedOSPlatformData ("tvos"));
+		xBuilder.Add (new UnsupportedOSPlatformData ("macos"));
+
+		var x = new Constructor ("MyClass",
+			symbolAvailability: xBuilder.ToImmutable (),
+			attributes: [],
+			modifiers: [],
+			parameters: [
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
+			]);
+
+		var yBuilder = SymbolAvailability.CreateBuilder ();
+		yBuilder.Add (new SupportedOSPlatformData ("ios"));
+		yBuilder.Add (new UnsupportedOSPlatformData ("tvos"));
+
+		var y = new Constructor ("MyClass",
+			symbolAvailability: yBuilder.ToImmutable (),
+			attributes: [],
+			modifiers: [],
+			parameters: [
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+			]);
+		Assert.False (compare.Equals ([x], [y]));
+	}
+
+	[Fact]
+	public void CompareSameConstructorsSameAvailability ()
+	{
+
+		var builder = SymbolAvailability.CreateBuilder ();
+		builder.Add (new SupportedOSPlatformData ("ios"));
+		builder.Add (new SupportedOSPlatformData ("tvos"));
+
+		var x = new Constructor ("MyClass",
+			symbolAvailability: builder.ToImmutable (),
+			attributes: [],
+			modifiers: [],
+			parameters: [
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
+			]);
+
+		var y = new Constructor ("MyClass",
+			symbolAvailability: builder.ToImmutable (),
+			attributes: [],
+			modifiers: [],
+			parameters: [
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
+			]);
+		Assert.True (compare.Equals ([x], [y]));
+
 	}
 }

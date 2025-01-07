@@ -9,6 +9,7 @@ namespace ObjCBindings {
 	/// Flags to be used on methods that will generate constructors in the binding class.
 	/// </summary>
 	[Flags]
+	[Experimental ("APL0003")]
 	public enum Constructor : Int64 {
 		/// <summary>
 		/// Use the default values.
@@ -25,6 +26,7 @@ namespace ObjCBindings {
 	/// Flgs to be used in general bound methods.
 	/// </summary>
 	[Flags]
+	[Experimental ("APL0003")]
 	public enum Method : Int64 {
 		/// <summary>
 		/// Use the default values.
@@ -53,6 +55,7 @@ namespace ObjCBindings {
 	/// Flags to be used on properties.
 	/// </summary>
 	[Flags]
+	[Experimental ("APL0003")]
 	public enum Property : Int64 {
 		/// <summary>
 		/// Use the default values.

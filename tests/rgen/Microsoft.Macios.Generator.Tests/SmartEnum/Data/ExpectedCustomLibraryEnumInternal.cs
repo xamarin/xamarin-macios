@@ -11,7 +11,7 @@ using System.Runtime.Versioning;
 namespace CustomLibrary;
 
 [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-static public partial class CustomLibraryEnumInternalExtensions
+public static partial class CustomLibraryEnumInternalExtensions
 {
 
 	static IntPtr[] values = new IntPtr [3];

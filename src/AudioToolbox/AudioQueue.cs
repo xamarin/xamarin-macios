@@ -41,7 +41,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-using OSStatus = System.Int32;
 using AudioQueueParameterValue = System.Single;
 using AudioQueueRef = System.IntPtr;
 using AudioQueueTimelineRef = System.IntPtr;

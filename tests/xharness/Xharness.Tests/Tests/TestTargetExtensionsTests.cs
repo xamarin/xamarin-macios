@@ -11,7 +11,7 @@ namespace Xharness.Tests.Tests {
 		[TestCase (TestPlatform.tvOS, new [] { TestTarget.Simulator_tvOS })]
 		public void GetAppRunnerTargetsTest (TestPlatform platform, TestTarget [] expectedTargets)
 		{
-			var targets = platform.GetAppRunnerTargets ();
+			var targets = platform.GetTestTargetsForSimulator ();
 			Assert.AreEqual (expectedTargets.Length, targets.Length);
 			foreach (var t in expectedTargets) {
 				Assert.Contains (t, targets);

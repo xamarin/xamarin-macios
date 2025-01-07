@@ -15,6 +15,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -24,6 +26,8 @@ public class MethodComparerTests {
 			type: "MyOtherType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -39,6 +43,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -48,6 +54,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyOtherMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -62,6 +70,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -71,6 +81,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "int",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
@@ -85,6 +97,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -97,6 +111,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -113,6 +129,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
@@ -124,6 +142,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -142,6 +162,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 				new ("SecondAttr", ["first"]),
@@ -156,6 +178,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -174,6 +198,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -187,6 +213,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("SecondAttr", ["first"]),
 			],
@@ -206,6 +234,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -213,7 +243,7 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]
 		);
 
@@ -221,6 +251,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -228,8 +260,8 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
-				new (1, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]
 		);
 		Assert.Equal (x.Parameters.Length.CompareTo (y.Parameters.Length), comparer.Compare (x, y));
@@ -242,6 +274,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -249,7 +283,7 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]
 		);
 
@@ -257,6 +291,8 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -264,7 +300,51 @@ public class MethodComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (1, "string", "surname"),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
+			]
+		);
+		var parameterCompare = new ParameterComparer ();
+		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
+	}
+
+	[Fact]
+	public void CompareDiffParametersSmartEnum ()
+	{
+		var x = new Method (
+			type: "MyType",
+			name: "MyMethod",
+			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
+					IsSmartEnum = true
+				},
+			]
+		);
+
+		var y = new Method (
+			type: "MyType",
+			name: "MyMethod",
+			returnType: "void",
+			symbolAvailability: new (),
+			exportMethodData: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
+					IsSmartEnum = false
+				},
 			]
 		);
 		var parameterCompare = new ParameterComparer ();

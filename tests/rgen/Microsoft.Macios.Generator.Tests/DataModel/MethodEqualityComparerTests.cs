@@ -19,6 +19,8 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -29,6 +31,38 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "Test",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
+				attributes: [],
+				modifiers: [],
+				parameters: []
+			)
+		];
+		Assert.False (equalityComparer.Equals (x, y));
+	}
+
+	[Fact]
+	public void CompareSingleElementDifferentExportData ()
+	{
+		ImmutableArray<Method> x = [
+			new (
+				type: "MyTypeName",
+				name: "MyMethod",
+				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new ("myMethod"),
+				attributes: [],
+				modifiers: [],
+				parameters: []
+			)
+		];
+		ImmutableArray<Method> y = [
+			new (
+				type: "MyTypeName",
+				name: "MyMethod",
+				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new ("objcMethod"),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -45,6 +79,8 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -55,6 +91,8 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "int",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: []
@@ -71,11 +109,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -84,10 +124,12 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
+					new (position: 0, type: "string", name: "name", isBlittable: false),
 				]
 			)
 		];
@@ -102,11 +144,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -115,11 +159,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -134,22 +180,26 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -158,11 +208,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -177,11 +229,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "string",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -190,11 +244,13 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -209,22 +265,26 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -233,22 +293,26 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -264,22 +328,26 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			)
 		];
@@ -288,22 +356,26 @@ public class MethodEqualityComparerTests {
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "int", "name"),
-					new (1, "int", "surname")
+					new (position: 0, type: "int", name: "name", isBlittable: false),
+					new (position: 1, type: "int", name: "surname", isBlittable: false),
 				]
 			),
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
 				returnType: "void",
+				symbolAvailability: new (),
+				exportMethodData: new (),
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (0, "string", "name"),
-					new (1, "string", "surname")
+					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 1, type: "string", name: "surname", isBlittable: false),
 				]
 			),
 		];

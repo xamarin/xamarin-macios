@@ -159,9 +159,6 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
 					{ "ServiceManagement", 10, 6 },
-#if !NET
-					{ "QTKit", 10, 6 },
-#endif
 					{ "QuickLookUI", "Quartz", 10, 6, "QuickLookUI" },
 
 					{ "MediaToolbox", 10, 9 },
@@ -266,9 +263,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "AdServices", "AdServices", 11,1 },
 
-#if !NET
-					{ "Chip", "CHIP", 12, 0 },
-#endif
 					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 12, 0 },
 					{ "MailKit", "MailKit", 12, 0 },
 					{ "MetricKit", 12, 0 },
@@ -345,9 +339,6 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "CoreMedia", "CoreMedia", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
 				{ "CoreTelephony", "CoreTelephony", 4 },
-#if !NET
-				{ "iAd", "iAd", 4 },
-#endif
 				{ "QuickLook", "QuickLook", 4 },
 				{ "ImageIO", "ImageIO", 4 },
 				{ "CoreText", "CoreText", 4 },
@@ -457,9 +448,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
-#if !NET
-				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-#endif
 				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "OSLog", "OSLog", 15,0 },
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
@@ -549,9 +537,6 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
-#if !NET
-				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-#endif
 				{ "CoreMidi", "CoreMIDI", 8,0 },
 				{ "CryptoTokenKit", "CryptoTokenKit", 8, 0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
@@ -655,9 +640,6 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
 
-#if !NET
-					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-#endif
 					{ "DeviceDiscoveryUI", "DeviceDiscoveryUI", 16,0 },
 					{ "OSLog", "OSLog", 15,0 },
 					{ "CoreMidi", "CoreMIDI", 15,0 },
@@ -732,10 +714,6 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "AssetsLibrary":
 				case "CarPlay":
 				case "Cinematic":
-#if !NET
-				case "iAd":
-				case "CHIP":
-#endif
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;
@@ -829,18 +807,6 @@ public class Frameworks : Dictionary<string, Framework> {
 		}
 
 		switch (app.Platform) {
-#if !NET
-		// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
-		case ApplePlatform.iOS when framework.Name == "CHIP":
-		case ApplePlatform.TVOS when framework.Name == "CHIP":
-		case ApplePlatform.MacOSX when framework.Name == "CHIP":
-		case ApplePlatform.WatchOS when framework.Name == "CHIP":
-			if (Driver.XcodeVersion.Major >= 14) {
-				Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+.", framework.Name);
-				return false;
-			}
-			break;
-#endif
 		case ApplePlatform.iOS:
 			switch (framework.Name) {
 			case "GameKit":
@@ -862,20 +828,6 @@ public class Frameworks : Dictionary<string, Framework> {
 		case ApplePlatform.MacCatalyst:
 			break; // Include all frameworks by default
 		case ApplePlatform.MacOSX:
-#if !NET
-			switch (framework.Name) {
-			case "QTKit":
-#if MMP
-				if (Driver.LinkProhibitedFrameworks) {
-					ErrorHelper.Warning (5221, Errors.MM5221, framework.Name);
-				} else {
-					ErrorHelper.Warning (5220, Errors.MM5220, framework.Name);
-					return false;
-				}
-#endif
-				return true;
-			}
-#endif // !NET
 			return true;
 		default:
 			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, app.Platform, app.GetProductName ());
