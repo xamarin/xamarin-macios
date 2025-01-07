@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -9,7 +10,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public class CollectBundleResources : XamarinTask, ICancelableTask {
+	public class CollectBundleResources : XamarinTask, ICancelableTask, IHasProjectDir, IHasResourcePrefix {
 		#region Inputs
 
 		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
@@ -30,6 +31,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
+
+		public ITaskItem [] UnpackedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -64,41 +67,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		bool ExecuteImpl ()
 		{
-			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var bundleResources = new List<ITaskItem> ();
 
 			foreach (var item in BundleResources) {
-				// Skip anything with the PublishFolderType metadata, these are copied directly to the ResolvedFileToPublish item group instead.
-				var publishFolderType = item.GetMetadata ("PublishFolderType");
-				if (!string.IsNullOrEmpty (publishFolderType))
+				if (!TryCreateItemWithLogicalName (this, item, out var bundleResource))
 					continue;
-
-				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
-				// We need a physical path here, ignore the Link element
-				var path = item.GetMetadata ("FullPath");
-
-				if (!File.Exists (path)) {
-					Log.LogError (MSBStrings.E0099, logicalName, path);
-					continue;
-				}
-
-				if (logicalName.StartsWith (".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0100, logicalName);
-					continue;
-				}
-
-				if (logicalName == "Info.plist") {
-					Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0101);
-					continue;
-				}
-
-				if (BundleResource.IsIllegalName (logicalName, out var illegal)) {
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
-					continue;
-				}
-
-				var bundleResource = new TaskItem (item);
-				bundleResource.SetMetadata ("LogicalName", logicalName);
 
 				bool optimize = false;
 
@@ -122,9 +95,49 @@ namespace Xamarin.MacDev.Tasks {
 				bundleResources.Add (bundleResource);
 			}
 
+			bundleResources.AddRange (UnpackedResources);
+
 			BundleResourcesWithLogicalNames = bundleResources.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public static bool TryCreateItemWithLogicalName<T> (T task, ITaskItem item, [NotNullWhen (true)] out TaskItem? itemWithLogicalName) where T : Task, IHasProjectDir, IHasResourcePrefix, IHasSessionId
+		{
+			itemWithLogicalName = null;
+
+			// Skip anything with the PublishFolderType metadata, these are copied directly to the ResolvedFileToPublish item group instead.
+			var publishFolderType = item.GetMetadata ("PublishFolderType");
+			if (!string.IsNullOrEmpty (publishFolderType))
+				return false;
+
+			var logicalName = BundleResource.GetLogicalName (task, item);
+			// We need a physical path here, ignore the Link element
+			var path = item.GetMetadata ("FullPath");
+
+			if (!File.Exists (path)) {
+				task.Log.LogError (MSBStrings.E0099, logicalName, path);
+				return false;
+			}
+
+			if (logicalName.StartsWith (".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+				task.Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0100, logicalName);
+				return false;
+			}
+
+			if (logicalName == "Info.plist") {
+				task.Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0101);
+				return false;
+			}
+
+			if (BundleResource.IsIllegalName (logicalName, out var illegal)) {
+				task.Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
+				return false;
+			}
+
+			itemWithLogicalName = new TaskItem (item);
+			itemWithLogicalName.SetMetadata ("LogicalName", logicalName);
+			return true;
 		}
 
 		public void Cancel ()

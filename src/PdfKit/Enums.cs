@@ -32,11 +32,12 @@ using ObjCRuntime;
 
 #nullable enable
 
-#if MONOMAC || IOS
+#if MONOMAC || IOS || TVOS
 
 namespace PdfKit {
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfActionNamedName : long {
 		None         = 0,
 		NextPage     = 1,
@@ -53,6 +54,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfWidgetControlType : long {
 		Unknown    = -1,
 		PushButton  = 0,
@@ -61,6 +63,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfLineStyle : long {
 		None        = 0,
 		Square      = 1,
@@ -71,6 +74,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfMarkupType : long {
 		Highlight = 0,
 		StrikeOut = 1,
@@ -79,6 +83,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfTextAnnotationIconType : long {
 		Comment      = 0,
 		Key          = 1,
@@ -90,6 +95,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfBorderStyle : long {
 		Solid     = 0,
 		Dashed    = 1,
@@ -98,12 +104,9 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-#if NET
 	/// <summary>Enumerates print scaling behaviors.</summary>
 	[NoiOS]
-#elif IOS
-	[Obsolete (Constants.UnavailableOniOS)]
-#endif
+	[NoTV]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
@@ -113,6 +116,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfDocumentPermissions : long {
 		None  = 0,
 		User  = 1,
@@ -120,6 +124,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfDisplayBox : long {
 		Media = 0,
 		Crop  = 1,
@@ -129,6 +134,7 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfDisplayMode : long {
 		SinglePage           = 0,
 		SinglePageContinuous = 1,
@@ -138,6 +144,7 @@ namespace PdfKit {
 
 	[Flags]
 	[Native]
+	[TV (18, 2)]
 	public enum PdfAreaOfInterest : long {
 		NoArea         = 0,
 		PageArea       = 1 << 0,
@@ -154,12 +161,14 @@ namespace PdfKit {
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfDisplayDirection : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfInterpolationQuality : long {
 		None = 0,
 		Low = 1,
@@ -168,12 +177,14 @@ namespace PdfKit {
 
 	[NoMac]
 	[Native]
+	[TV (18, 2)]
 	public enum PdfThumbnailLayoutMode : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
 	[Native]
+	[TV (18, 2)]
 	public enum PdfWidgetCellState : long {
 		Mixed = -1,
 		Off = 0,

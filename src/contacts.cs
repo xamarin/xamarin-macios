@@ -161,12 +161,6 @@ namespace Contacts {
 		[Field ("CNContactPropertyNotFetchedExceptionName")]
 		NSString PropertyNotFetchedExceptionName { get; }
 
-#if !XAMCORE_3_0
-		// now exposed with the corresponding CNErrorCode enum
-		[Field ("CNErrorDomain")]
-		NSString ErrorDomain { get; }
-#endif
-
 		// CNContact_PredicatesExtension - they should be in a [Category] but it makes
 		// [Static] API hard (and ugly) to use since they become extension methods (and
 		// do not look static anymore.

@@ -580,32 +580,20 @@ namespace HomeKit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:targetValue:")]
-#if XAMCORE_3_0
 		NativeHandle Constructor (HMCharacteristic characteristic, INSCopying targetValue);
-#else
-		NativeHandle Constructor (HMCharacteristic characteristic, NSObject targetValue);
-#endif
 
 		[Export ("characteristic", ArgumentSemantic.Retain)]
 		HMCharacteristic Characteristic { get; }
 
 		[Export ("targetValue", ArgumentSemantic.Copy)]
-#if XAMCORE_3_0
 		INSCopying TargetValue { get; }
-#else
-		NSObject TargetValue { get; }
-#endif
 
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTargetValue:completionHandler:")]
-#if XAMCORE_3_0
 		void UpdateTargetValue (INSCopying targetValue, Action<NSError> completion);
-#else
-		void UpdateTargetValue (NSObject targetValue, Action<NSError> completion);
-#endif
 	}
 
 	[MacCatalyst (14, 0)]
@@ -843,6 +831,10 @@ namespace HomeKit {
 		[TV (16, 1), iOS (16, 1), MacCatalyst (16, 1), Watch (9, 1)]
 		[Export ("matterControllerXPCConnectBlock", ArgumentSemantic.Strong)]
 		Func<NSXpcConnection> MatterControllerXPCConnectBlock { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("matterStartupParametersXPCConnectBlock", ArgumentSemantic.Strong)]
+		Func<NSXpcConnection> MatterStartupParametersXPCConnectHandler { get; }
 
 		// constants
 

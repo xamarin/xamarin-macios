@@ -31,7 +31,6 @@ namespace Xharness.Jenkins.TestTasks {
 		#region Public vars
 
 		public Dictionary<string, string> Environment = new ();
-		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 		public List<Resource> Resources = new ();
@@ -136,26 +135,18 @@ namespace Xharness.Jenkins.TestTasks {
 				if (testName is not null)
 					return testName;
 
+				if (TestProject?.Name is not null)
+					return TestProject.Name;
+
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
 				if (rv is null)
 					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return rv;
-				case TestPlatform.Mac_Modern:
-					return rv;//.Substring (0, rv.Length - "-unified".Length);
-				case TestPlatform.Mac_Full:
-					return rv.Substring (0, rv.Length - "-full".Length);
-				case TestPlatform.Mac_System:
-					return rv.Substring (0, rv.Length - "-system".Length);
 				default:
-					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) return rv.Substring (0, rv.Length - 8);
-					else if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
+					if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 5);
-					} else if (rv.EndsWith ("-unified", StringComparison.Ordinal)) {
-						return rv.Substring (0, rv.Length - 8);
-					} else if (rv.EndsWith ("-today", StringComparison.Ordinal)) {
-						return rv.Substring (0, rv.Length - 6);
 					} else {
 						return rv;
 					}
@@ -229,9 +220,6 @@ namespace Xharness.Jenkins.TestTasks {
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.StateMask | TestExecutingResult.InProgress;
 
 			try {
-				if (Dependency is not null)
-					await Dependency ();
-
 				if (InitialTask is not null)
 					await InitialTask;
 

@@ -1,22 +1,15 @@
+using System;
+
 namespace Xharness {
+	[Flags]
 	public enum TestPlatform {
-		None,
-		All,
+		None = 0,
 
-		iOS,
-		iOS_Unified,
-		iOS_Unified32,
-		iOS_Unified64,
-		iOS_TodayExtension64,
-		tvOS,
-		watchOS,
-		watchOS_32,
-		watchOS_64_32,
-		MacCatalyst,
+		iOS = 1,
+		tvOS = 2,
+		MacCatalyst = 4,
+		Mac = 8,
 
-		Mac,
-		Mac_Modern,
-		Mac_Full,
-		Mac_System,
+		All = iOS | tvOS | MacCatalyst | Mac,
 	}
 }

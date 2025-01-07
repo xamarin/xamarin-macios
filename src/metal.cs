@@ -5137,7 +5137,6 @@ namespace Metal {
 		[Export ("setIntersectionFunctionTable:atIndex:")]
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint index);
 
-		[iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 		[Abstract (GenerateExtensionMethod = true)]
 		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 		[Export ("setIntersectionFunctionTables:withRange:")]

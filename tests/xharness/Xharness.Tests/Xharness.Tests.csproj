@@ -16,9 +16,6 @@
     <Compile Include="Tests\TestTargetExtensionsTests.cs" />
     <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
     <Compile Include="Jenkins\MarkdownReportWriterTests.cs" />
-    <Compile Include="Tests\MacFlavorsExtensionsTests.cs" />
-    <Compile Include="Jenkins\MakeTestTaskEnumerableTests.cs" />
-    <Compile Include="Jenkins\NUnitTestTasksEnumerableTests.cs" />
     <Compile Include="Jenkins\JenkinsDeviceLoadterTests.cs" />
     <Compile Include="Jenkins\ResourceManagerTests.cs" />
     <Compile Include="Jenkins\PeriodicCommandTests.cs" />
@@ -60,5 +57,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
   </ItemGroup>
 </Project>

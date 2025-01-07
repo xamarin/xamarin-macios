@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<DefineConstants>$(DefineConstants);NET;TESTS</DefineConstants>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="nunit" Version="3.12.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+		<PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
+		<PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
+		<PackageReference Include="System.Text.Json" Version="5.0.2" />
+		<PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\common\Configuration.cs">
+			<Link>external\Configuration.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\ConfigurationNUnit.cs">
+			<Link>external\ConfigurationNUnit.cs</Link>
+		</Compile>
+		<Compile Include="..\..\mtouch\Cache.cs">
+			<Link>external\Cache.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+			<Link>external\ApplePlatform.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\Execution.cs">
+			<Link>external\Execution.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\ExecutionHelper.cs">
+			<Link>external\ExecutionHelper.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\SdkVersions.cs">
+			<Link>external\SdkVersions.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\StringUtils.cs">
+			<Link>external\StringUtils.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\TargetFramework.cs">
+			<Link>external\TargetFramework.cs</Link>
+		</Compile>
+	</ItemGroup>
+</Project>

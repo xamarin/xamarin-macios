@@ -60,6 +60,7 @@ namespace Xamarin.Linker {
 
 			CreateRegistrarType (info);
 
+			abr.SaveCurrentAssembly ();
 			abr.ClearCurrentAssembly ();
 		}
 

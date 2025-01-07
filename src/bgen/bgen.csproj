@@ -9,6 +9,7 @@
     <DefineConstants Condition="'$(XAMMACIOS_DEBUGGER)' != ''">$(DefineConstants);XAMMACIOS_DEBUGGER</DefineConstants>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <Nullable>enable</Nullable>
+    <NoWarn>APL0003</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\ObjCBindings\BindingTypeAttribute.cs">
+      <Link>BindingTypeAttribute.cs</Link>
+    </Compile>
     <None Include="$(RepositoryPath)\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>

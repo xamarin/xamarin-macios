@@ -324,12 +324,7 @@ namespace MediaPlayer {
 #else
 	[BaseType (typeof (NSObject))]
 #endif
-#if XAMCORE_3_0 || !IOS || NET
 	interface MPMediaItemCollection : NSSecureCoding {
-#else
-	// part of the bug is that we inlined MPMediaEntity needlessly
-	interface MPMediaItemCollection : MPMediaEntity, NSSecureCoding {
-#endif
 		[Static]
 		[Export ("collectionWithItems:")]
 		MPMediaItemCollection FromItems (MPMediaItem [] items);

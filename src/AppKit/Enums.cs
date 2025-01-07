@@ -219,15 +219,6 @@ namespace AppKit {
 	#endregion
 
 	#region NSFileWrapper
-#if !XAMCORE_3_0
-	[NoMacCatalyst]
-	[Flags]
-	[Native]
-	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
-	public enum NSFileWrapperReadingOptions : ulong {
-		Immediate = 1, WithoutMapping = 2
-	}
-#endif
 	#endregion
 
 	#region NSParagraphStyle

@@ -113,12 +113,6 @@ namespace ExternalAccessory {
 		[Notification (typeof (EAAccessoryEventArgs))]
 		NSString DidDisconnectNotification { get; }
 
-#if !XAMCORE_3_0 && !MONOMAC
-		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[Field ("EABluetoothAccessoryPickerErrorDomain")]
-		NSString BluetoothAccessoryPickerErrorDomain { get; }
-#endif
-
 		// [Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoMacCatalyst] // selector does not respond
 		[NoMac]

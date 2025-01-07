@@ -1,5 +1,6 @@
 TOP=../../..
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 # These frameworks are used by the test nugets (which are then used in the BundleStructure test)
 NAMES+=FrameworksInRuntimesNativeDirectory1 FrameworksInRuntimesNativeDirectory2
@@ -19,20 +20,18 @@ XPCSERVICES=XpcServiceE CompressedXpcServiceF XpcServiceG CompressedXpcServiceH
 # a few lookup tables, because the data we have is not always in the format we need it
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions shared.c -Wall -framework Foundation -lz
-iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK)
-iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(DEVICE_SDK)
-tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(SIMULATORTV_SDK)
-tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK)
-maccatalyst_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) $(MACCATALYST_COMMON_CFLAGS)
+iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(iossimulator_SDK)
+iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(ios_SDK)
+tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(tvossimulator_SDK)
+tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(tvos_SDK)
+maccatalyst_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) $(maccatalyst_CFLAGS)
 mac_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk
 
-maccatalyst-x64_DYLIB_FLAGS=$(MACCATALYST_X86_64_CFLAGS)
-maccatalyst-arm64_DYLIB_FLAGS=$(MACCATALYST_ARM64_CFLAGS)
+maccatalyst-x64_DYLIB_FLAGS=$(maccatalyst-x64_CFLAGS)
+maccatalyst-arm64_DYLIB_FLAGS=$(maccatalyst-arm64_CFLAGS)
 
 iossimulator-x64_ARCHITECTURES=x86_64
 iossimulator-arm64_ARCHITECTURES=arm64
-iossimulator-x86_ARCHITECTURES=i386
-ios-arm_ARCHITECTURES=armv7 armv7s
 ios-arm64_ARCHITECTURES=arm64
 tvossimulator-x64_ARCHITECTURES=x86_64
 tvossimulator-arm64_ARCHITECTURES=arm64
@@ -50,13 +49,8 @@ maccatalyst_INFO_PLIST_INFIX=/Versions/A/Resources
 maccatalyst_BINARY_INFIX=/Versions/A
 
 # For XCFrameworks, we have to lipo some of the RID-specific frameworks together (the ones with multiple RIDs below)
-ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
-iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x86 iossimulator-x64  iossimulator-arm64
-iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm ios-arm64
-else
 iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x64 iossimulator-arm64
 iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm64
-endif
 tvsimulator_XC_RUNTIMEIDENTIFIERS=tvossimulator-x64 tvossimulator-arm64
 tvos_XC_RUNTIMEIDENTIFIERS=tvos-arm64
 mac_XC_RUNTIMEIDENTIFIERS=osx-x64 osx-arm64
@@ -95,7 +89,7 @@ all-local:: $$($(3)_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
-	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
+	$$(call Q_2,CC,    [$(3)]) $$(CLANG) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
 
 .libs/$(3)/$(1).framework$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).framework$($(2)_BINARY_INFIX)
@@ -180,12 +174,6 @@ endef
 # 3: platform as used by xcframework
 $(foreach name,$(NAMES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach xcplatform,$(DOTNET_$(platform)_SDK_PLATFORMS),$(eval $(call XCTemplate,$(name),$(platform),$(xcplatform))))))
 
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach xcplatform,$(DOTNET_$(platform)_SDK_PLATFORMS),.libs/$(xcplatform))):
-	$(Q) mkdir -p $@
-
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),.libs/$(rid))):
-	$(Q) mkdir -p $@
-
 define XCFrameworkTemplate
 .libs/$(1).xcframework.stamp: $$($(1)_XCTARGETS) Makefile
 	$$(Q) rm -rf .libs/$(1).xcframework
@@ -200,9 +188,7 @@ ZIPPED_TARGETS += .libs/$(1).xcframework.zip
 all-local:: .libs/$(1).xcframework.stamp
 endef
 
-ifdef ENABLE_DOTNET
 $(foreach name,$(NAMES),$(eval $(call XCFrameworkTemplate,$(name))))
-endif
 
 zip: $(ZIPPED_TARGETS)
 all-local:: $(ZIPPED_TARGETS)
@@ -234,7 +220,7 @@ all-local:: $$($(3)_PLUGIN_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
-	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
+	$$(call Q_2,CC,    [$(3)]) $$(CLANG) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
 
 .libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX)

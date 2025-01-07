@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
 		<RuntimeIdentifier>osx-x64</RuntimeIdentifier>
-		<FatName>macos-fat</FatName>
 	</PropertyGroup>
 	<Import Project="..\shared.csproj" />
 </Project>

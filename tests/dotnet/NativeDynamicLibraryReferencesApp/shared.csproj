@@ -11,7 +11,7 @@
 	<Import Project="../../common/shared-dotnet.csproj" />
 
 	<ItemGroup>
-		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\libtest.dylib" Kind="Dynamic" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(NativeLibName)\libframework.dylib" Kind="Dynamic" />
 	</ItemGroup>
 
 	<ItemGroup>

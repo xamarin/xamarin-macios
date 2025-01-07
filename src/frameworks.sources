@@ -1,11 +1,10 @@
 #
 # The source files used to build the platform assemblies:
 # 
-# Xamarin.iOS: monotouch.dll and Xamarin.iOS.dll
-# Xamarin.Mac: XamMac.dll and Xamarin.Mac.dll
-# Xamarin.WatchOS: Xamarin.WatchOS.dll
-# Xamarin.TVOS: Xamarin.TVOS.dll
-# Xamarin.MacCatalyst: Xamarin.MacCatalyst.dll
+# Microsoft.iOS.dll
+# Microsoft.macOS.dll
+# Microsoft.tvOS.dll
+# Microsoft.MacCatalyst.dll
 #
 # First we build an assembly that contains the bare-bones code required
 # to compile the bindings. This is core.dll, and the source code is listed
@@ -33,6 +32,7 @@ ACCELERATE_SOURCES = \
 # Accessibility
 
 ACCESSIBILITY_SOURCES = \
+	Accessibility/AXFeatureOverrideSessionError.cs \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
 	Accessibility/AXPrefers.cs \
@@ -203,7 +203,6 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioFormatAvailability.cs \
 	AudioToolbox/AudioQueue.cs \
 	AudioToolbox/AudioServices.cs \
-	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioToolbox.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
@@ -277,18 +276,14 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVContentKeyResponse.cs \
 	AVFoundation/AVDepthData.cs \
-	AVFoundation/AVFragmentedAsset.cs \
-	AVFoundation/AVFragmentedAssetTrack.cs \
 	AVFoundation/AVLayerVideoGravity.cs \
 	AVFoundation/AVMetadataItemFilter.cs \
 	AVFoundation/AVMetadataMachineReadableCodeObject.cs \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
-	AVFoundation/AVPlayer.cs \
 	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
-	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVSampleBufferExtensions.cs \
 	AVFoundation/AVSampleCursor.cs \
 	AVFoundation/AVSpeechSynthesizer.cs \
@@ -296,6 +291,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
+	AVFoundation/AVCaptureReactionType.rgen.cs \
 
 # AVKit
 
@@ -348,11 +344,6 @@ CARPLAY_SOURCES = \
 	CarPlay/CPCompat.cs \
 	CarPlay/CPNavigationAlert.cs \
 	CarPlay/CPMessageListItem.cs \
-
-# Chip
-
-CHIP_SOURCES = \
-	Chip/ChipCompat.cs \
 
 # ClassKit
 
@@ -418,7 +409,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactFetchRequest.cs \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
-	Contacts/CNObsolete.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -486,6 +476,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFArray.cs \
 	CoreFoundation/CFBoolean.cs \
 	CoreFoundation/CFBundle.cs \
+	CoreFoundation/CFComparisonResult.cs \
 	CoreFoundation/CFData.cs \
 	CoreFoundation/CFDataBuffer.cs \
 	CoreFoundation/CFDictionary.cs \
@@ -607,6 +598,9 @@ COREMEDIA_CORE_SOURCES = \
 	CoreMedia/CMFormatDescription.cs \
 	CoreMedia/CMSampleBuffer.cs \
 	CoreMedia/CMSync.cs \
+	CoreMedia/CMTag.cs \
+	CoreMedia/CMTagCollection.cs \
+	CoreMedia/CMTaggedBufferGroup.cs \
 	CoreMedia/CMTextMarkupAttributes.cs \
 	CoreMedia/CMTime.cs \
 	CoreMedia/CoreMedia.cs \
@@ -647,7 +641,6 @@ COREMOTION_CORE_SOURCES = \
 	CoreMotion/Defs.cs \
 
 COREMOTION_SOURCES = \
-	CoreMotion/CMCompat.cs \
 	CoreMotion/Extras.cs \
 	CoreMotion/CMSensorDataList.cs \
 
@@ -860,7 +853,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDictionary.cs \
 	Foundation/NSDictionary_2.cs \
 	Foundation/NSDirectoryEnumerator.cs \
-	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExceptionError.cs \
@@ -1017,7 +1009,6 @@ HEALTHKIT_SOURCES = \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
-	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
 	HealthKit/HKSupportFunctions.cs \
 	HealthKit/HKUnit.cs \
@@ -1038,14 +1029,6 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
 	HomeKit/HMService.cs \
-
-# iAd
-
-IAD_API_SOURCES = \
-	iAd/iAd.cs \
-
-IAD_SOURCES = \
-	iAd/ADCompat.cs \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
@@ -1163,7 +1146,6 @@ MAPKIT_CORE_SOURCES = \
 MAPKIT_SOURCES = \
 	MapKit/MKAddressFilter.cs \
 	MapKit/MKCompat.cs \
-	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
@@ -1175,6 +1157,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
+	MapKit/MKUserLocation.cs \
 
 # MediaAccessibility
 
@@ -1204,9 +1187,7 @@ MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMediaItem.cs \
 	MediaPlayer/MPMediaItemArtwork.cs \
 	MediaPlayer/MPMediaQuery.cs \
-	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
-	MediaPlayer/MPPlayableContentDelegate.cs \
 	MediaPlayer/MPRemoteCommandCenter.cs \
 	MediaPlayer/MPSkipIntervalCommand.cs \
 	MediaPlayer/MPVolumeSettings.cs \
@@ -1353,7 +1334,6 @@ MULTIPEERCONNECTIVITY_API_SOURCES = \
 	MultipeerConnectivity/Enums.cs \
 
 MULTIPEERCONNECTIVITY_SOURCES = \
-	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
 # Natural Language
@@ -1381,6 +1361,7 @@ NETWORK_CORE_SOURCES = \
 	Network/NWEndpoint.cs			\
 	Network/NWInterface.cs			\
 	Network/NWParameters.cs			\
+	Network/NWProxyConfig.cs	    \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
@@ -1403,7 +1384,6 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
-	Network/NWProxyConfig.cs	\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
 	Network/NWPrivacyContext.cs		\
@@ -1578,11 +1558,6 @@ PRINTCORE_SOURCES = \
 # PushToTalk
 PUSHTOTALK_SOURCES = \
 	PushToTalk/Compat.cs \
-	
-# QTKit
-
-QTKIT_SOURCES = \
-	QTKit/QTCompat.cs \
 
 # QuickLook
 
@@ -1632,7 +1607,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/Constructors.cs \
 	SceneKit/SCNAnimatable.cs \
 	SceneKit/SCNCompat.cs \
-	SceneKit/SCNGeometry.cs \
 	SceneKit/SCNGeometrySource.cs \
 	SceneKit/SCNJavaScript.cs \
 	SceneKit/SCNNode.cs \
@@ -1642,7 +1616,6 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
-	SceneKit/SCNSceneRenderer.cs \
 	SceneKit/SCNSceneSource.cs \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
@@ -1718,7 +1691,6 @@ SOCIAL_API_SOURCES = \
 	Social/Enums.cs \
 
 SOCIAL_SOURCES = \
-	Social/SLCompat.cs \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
 
@@ -1733,11 +1705,9 @@ SPRITEKIT_API_SOURCES = \
 	SpriteKit/Enums.cs \
 
 SPRITEKIT_SOURCES = \
-	SpriteKit/ObsoleteCompat.cs \
 	SpriteKit/SKAction.cs \
 	SpriteKit/SKKeyframeSequence.cs \
 	SpriteKit/SKNode.cs \
-	SpriteKit/SKFieldNode.cs \
 	SpriteKit/SKShapeNode.cs \
 	SpriteKit/SKUniform.cs \
 	SpriteKit/SKVideoNode.cs \
@@ -1759,7 +1729,7 @@ STOREKIT_SOURCES = \
 	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
-	StoreKit/SKPaymentTransactionObserver.cs \
+	StoreKit/SwiftAPI.cs \
 
 # SystemConfiguration
 
@@ -1790,9 +1760,6 @@ TVSERVICES_CORE_SOURCES = \
 TWITTER_CORE_SOURCES = \
 	Twitter/Enums.cs \
 
-TWITTER_SOURCES = \
-	Twitter/TWCompat.cs \
-
 # UIKit
 
 UIKIT_API_SOURCES = \
@@ -1802,7 +1769,6 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIFontDescriptor.cs \
     UIKit/UIGuidedAccessRestriction.cs \
     UIKit/UIOffset.cs \
-    UIKit/UIPrintInteractionController.cs \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
     XKit/Types.cs \
@@ -1816,8 +1782,6 @@ UIKIT_SOURCES = \
 	UIKit/UIAccessibility.cs \
 	UIKit/UIAccessibilityCustomAction.cs \
 	UIKit/UIActionSheet.cs \
-	UIKit/UIActivityItemProvider.cs \
-	UIKit/UIActivityViewController.cs \
 	UIKit/UIAlertView.cs \
 	UIKit/UIAppearance.cs \
 	UIKit/UIApplication.cs \
@@ -1829,15 +1793,12 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionView.cs \
 	UIKit/UICollectionViewLayout.cs \
 	UIKit/UICollectionViewLayoutAttributes.cs \
-	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
 	UIKit/UIConfigurationColorTransformer.cs \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentBrowserViewController.cs \
-	UIKit/UIDocumentMenuViewController.cs \
-	UIKit/UIDocumentPickerViewController.cs \
 	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
@@ -1860,7 +1821,7 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
-	UIKit/UIPrint.cs \
+	UIKit/UIPresentationController.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
@@ -1868,9 +1829,6 @@ UIKIT_SOURCES = \
 	UIKit/UISearchController.cs \
 	UIKit/UISearchDisplayController.cs \
 	UIKit/UISegmentedControl.cs \
-	UIKit/UISimpleTextPrintFormatter.cs \
-	UIKit/UIStoryboardPopoverSegue.cs \
-	UIKit/UIStoryboardSegue.cs \
 	UIKit/UIStringDrawing.cs \
 	UIKit/UITableView.cs \
 	UIKit/UITableViewCell.cs \
@@ -1887,6 +1845,7 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+	UIKit/UIWindowScene.cs \
 
 # UserNotifications
 
@@ -1946,41 +1905,6 @@ VISION_SOURCES = \
 WATCHCONNECTIVITY_API_SOURCES = \
 	WatchConnectivity/WCEnums.cs \
 
-# WatchKit
-
-WATCHKIT_API_SOURCES = \
-    WatchKit/WKDefs.cs \
-
-WATCHKIT_CORE_SOURCES = \
-	WatchKit/WKInterfaceController.cs \
-
-WATCHKIT_SOURCES = \
-	WatchKit/WKAccessibility.cs \
-	WatchKit/WKInterfaceDevice.cs \
-	WatchKit/iOS/WKAccessibility.cs \
-	WatchKit/iOS/WKAccessibilityImageRegion.cs \
-	WatchKit/iOS/WKErrorCode.cs \
-	WatchKit/iOS/WKImageAnimatable.cs \
-	WatchKit/iOS/WKInterfaceButton.cs \
-	WatchKit/iOS/WKInterfaceController.cs \
-	WatchKit/iOS/WKInterfaceDate.cs \
-	WatchKit/iOS/WKInterfaceDevice.cs \
-	WatchKit/iOS/WKInterfaceGroup.cs \
-	WatchKit/iOS/WKInterfaceImage.cs \
-	WatchKit/iOS/WKInterfaceLabel.cs \
-	WatchKit/iOS/WKInterfaceMap.cs \
-	WatchKit/iOS/WKInterfaceMapPinColor.cs \
-	WatchKit/iOS/WKInterfaceObject.cs \
-	WatchKit/iOS/WKInterfaceSeparator.cs \
-	WatchKit/iOS/WKInterfaceSlider.cs \
-	WatchKit/iOS/WKInterfaceSwitch.cs \
-	WatchKit/iOS/WKInterfaceTable.cs \
-	WatchKit/iOS/WKInterfaceTimer.cs \
-	WatchKit/iOS/WKMenuItemIcon.cs \
-	WatchKit/iOS/WKTextInputMode.cs \
-	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
-	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
-
 # WebKit
 
 WEBKIT_API_SOURCES = \
@@ -2012,6 +1936,12 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
+	ObjCBindings/BindingTypeAttribute.cs \
+	ObjCBindings/BindingTypeTag.cs \
+	ObjCBindings/ExportAttribute.cs \
+	ObjCBindings/ExportTag.cs \
+	ObjCBindings/FieldAttribute.cs \
+	ObjCBindings/FieldTag.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
@@ -2089,7 +2019,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/RuntimeException.cs \
 	ObjCRuntime/RuntimeOptions.cs \
 	ObjCRuntime/Selector.mac.cs \
-	ObjCRuntime/SelectorMarshaler.cs \
 	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TrampolineBlockBase.cs \
@@ -2149,7 +2078,6 @@ MACOS_FRAMEWORKS =          \
 	BrowserEngineKit        \
 	CallKit \
 	CFNetwork               \
-	Chip                    \
 	Cinematic              \
 	ClassKit                \
 	CloudKit                \
@@ -2218,7 +2146,6 @@ MACOS_FRAMEWORKS =          \
 	PhotosUI				\
 	PrintCore		\
 	PushKit			\
-	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
 	QuickLookThumbnailing	\
@@ -2270,7 +2197,6 @@ IOS_FRAMEWORKS =         \
 	CallKit \
 	CarPlay \
 	CFNetwork \
-	Chip \
 	Cinematic \
 	ClassKit \
 	CloudKit \
@@ -2363,39 +2289,7 @@ IOS_FRAMEWORKS =         \
 	Vision \
 	VisionKit \
 	WatchConnectivity \
-	WatchKit \
 	WebKit \
-	iAd \
-
-WATCHOS_FRAMEWORKS =        \
-	$(COMMON_FRAMEWORKS)    \
-	CallKit                 \
-	Chip                    \
-	ClockKit                \
-	CloudKit                \
-	Contacts                \
-	CoreGraphics            \
-	CoreLocation            \
-	CoreMotion              \
-	CoreText                \
-	EventKit                \
-	HealthKit               \
-	HomeKit                 \
-	ImageIO                 \
-	Intents                 \
-	LocalAuthentication     \
-	MapKit                  \
-	MediaPlayer             \
-	MobileCoreServices      \
-	NearbyInteraction       \
-	PassKit                 \
-	PushKit			\
-	SafetyKit               \
-	Security                \
-	UIKit XKit              \
-	UserNotifications       \
-	WatchConnectivity       \
-	WatchKit                \
 
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
@@ -2407,7 +2301,6 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	BrowserEngineKit        \
 	CFNetwork               \
-	Chip                    \
 	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
@@ -2442,6 +2335,7 @@ TVOS_FRAMEWORKS =           \
 	MultipeerConnectivity   \
 	NetworkExtension        \
 	OpenGLES                \
+	PdfKit                  \
 	Phase                   \
 	Photos                  \
 	PhotosUI                \
@@ -2543,6 +2437,7 @@ MACCATALYST_FRAMEWORKS = \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenCaptureKit \
 	ScreenTime \
 	Security \
 	SensitiveContentAnalysis \
@@ -2562,26 +2457,6 @@ MACCATALYST_FRAMEWORKS = \
 	VisionKit \
 	WebKit \
 
-# List frameworks that have been removed in .NET
-
-# Chip is intentionally removed from .NET because the API
-# is not final and it keeps breaking on every new Xcode release.
-
-DOTNET_REMOVED_IOS_FRAMEWORKS = \
-	Chip \
-	iAd \
-	WatchKit \
-
-DOTNET_REMOVED_MACOS_FRAMEWORKS = \
-	Chip \
-	QTKit \
-
-DOTNET_REMOVED_TVOS_FRAMEWORKS = \
-	Chip \
-
-DOTNET_REMOVED_MACCATALYST_FRAMEWORKS = \
-	Chip \
-
 #
 # Compute the SOURCES variables.
 #
@@ -2595,11 +2470,6 @@ MACOS_DOTNET_CORE_SOURCES    := $(sort $(foreach framework,$(shell echo $(MACOS_
 MACOS_DOTNET_API_SOURCES     := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))    $(SHARED_API_SOURCES))
 MACOS_DOTNET_APIS            := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                $(MACOS_DOTNET_API_SOURCES))
 MACOS_DOTNET_SOURCES         := $(sort $(foreach framework,$(shell echo $(MACOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))        $(SHARED_SOURCES) $(MACOS_DOTNET_CORE_SOURCES))
-
-WATCHOS_DOTNET_CORE_SOURCES  := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES))
-WATCHOS_DOTNET_API_SOURCES   := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES))
-WATCHOS_DOTNET_APIS          := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(WATCHOS_DOTNET_API_SOURCES))
-WATCHOS_DOTNET_SOURCES       := $(sort $(foreach framework,$(shell echo $(WATCHOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(WATCHOS_DOTNET_CORE_SOURCES))
 
 TVOS_DOTNET_CORE_SOURCES     := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES))    $(SHARED_CORE_SOURCES))
 TVOS_DOTNET_API_SOURCES      := $(sort $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))     $(SHARED_API_SOURCES))
@@ -2620,11 +2490,6 @@ MACOS_CORE_SOURCES       := $(MACOS_DOTNET_CORE_SOURCES)
 MACOS_API_SOURCES        := $(MACOS_DOTNET_API_SOURCES)
 MACOS_APIS               := $(MACOS_DOTNET_APIS)
 MACOS_SOURCES            := $(MACOS_DOTNET_SOURCES)
-
-WATCHOS_CORE_SOURCES     := $(WATCHOS_DOTNET_CORE_SOURCES)
-WATCHOS_API_SOURCES      := $(WATCHOS_DOTNET_API_SOURCES)
-WATCHOS_APIS             := $(WATCHOS_DOTNET_APIS)
-WATCHOS_SOURCES          := $(WATCHOS_DOTNET_SOURCES)
 
 TVOS_CORE_SOURCES        := $(TVOS_DOTNET_CORE_SOURCES)
 TVOS_API_SOURCES         := $(TVOS_DOTNET_API_SOURCES)

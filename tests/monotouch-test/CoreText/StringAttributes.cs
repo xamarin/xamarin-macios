@@ -68,8 +68,11 @@ namespace MonoTouchFixtures.CoreText {
 
 			// Calling sa.SetBaselineInfo makes the CTLine ctor crash (https://github.com/xamarin/maccore/issues/2947)
 			// so don't do that here.
-			// sa.SetBaselineInfo (CTBaselineClass.Roman, 13);
-			// sa.SetBaselineInfo (CTBaselineClass.IdeographicHigh, 3);
+			if (TestRuntime.CheckXcodeVersion (16, 2)) {
+				// Crash was fixed in Xcode 16.2
+				sa.SetBaselineInfo (CTBaselineClass.Roman, 13);
+				sa.SetBaselineInfo (CTBaselineClass.IdeographicHigh, 3);
+			}
 			sa.SetWritingDirection (CTWritingDirection.LeftToRight);
 
 			if (TestRuntime.CheckXcodeVersion (11, 0))

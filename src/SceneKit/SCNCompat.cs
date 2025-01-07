@@ -42,13 +42,6 @@ namespace SceneKit {
 		}
 #endif // !NET
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'TimingFunction2' property.")]
-		public virtual void SetTimingFunction (Action<float> timingFunction)
-		{
-			TimingFunction = timingFunction;
-		}
-#endif // !XAMCORE_3_0
 	}
 #if TVOS && !NET
 	partial class SCNMaterialProperty {

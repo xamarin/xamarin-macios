@@ -18,6 +18,8 @@ rm -rf ~/remote_build_testing
 
 # Kill any existing brokers and builders
 ps auxww || true
-pkill -f Broker.exe || true
-pkill -f Build.exe || true
+pkill -6 -f Broker.exe || true
+pkill -6 -f Build.exe || true
+pkill -6 -f Broker.dll || true
+pkill -6 -f Build.dll || true
 ps auxww || true

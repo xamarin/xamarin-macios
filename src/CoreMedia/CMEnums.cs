@@ -30,6 +30,8 @@ namespace CoreMedia {
 		TimeCode = 1953325924, // 'tmcd'
 							   // note: the 4CC was obsoleted, i.e. Metadata is a new 4CC
 		Metadata = 0x6D657461, // 'meta'
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		TaggedBufferGroup = ('t' << 24) + ('b' << 16) + ('g' << 8) + 'r', // 'tbgr',
 	}
 
 	// FourCharCode -> CMFormatDescription.h

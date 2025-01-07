@@ -41,7 +41,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
 #if !NET

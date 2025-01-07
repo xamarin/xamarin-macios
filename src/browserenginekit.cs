@@ -7,6 +7,7 @@ using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+using UniformTypeIdentifiers;
 #if MONOMAC
 using AppKit;
 #else
@@ -234,6 +235,11 @@ namespace BrowserEngineKit {
 		[Async]
 		void Create (Action interruptionHandler, BEWebContentProcessCreateCallback completion);
 
+		[Static]
+		[Export ("webContentProcessWithBundleID:interruptionHandler:completion:")]
+		[Async]
+		void Create (string bundleId, Action interruptionHandler, BEWebContentProcessCreateCallback completion);
+
 		[Export ("invalidate")]
 		void Invalidate ();
 
@@ -269,6 +275,11 @@ namespace BrowserEngineKit {
 		[Async]
 		void Create (Action interruptionHandler, BENetworkingProcessCreateCallback completion);
 
+		[iOS (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
+		[Static]
+		[Export ("networkProcessWithBundleID:interruptionHandler:completion:")]
+		void Create (string bundleId, Action interruptionHandler, BENetworkingProcessCreateCallback completion);
+
 		[Export ("invalidate")]
 		void Invalidate ();
 
@@ -300,6 +311,11 @@ namespace BrowserEngineKit {
 		[Export ("renderingProcessWithInterruptionHandler:completion:")]
 		[Async]
 		void Create (Action interruptionHandler, BERenderingProcessCreateCallback completion);
+
+		[Static]
+		[Export ("renderingProcessWithBundleID:interruptionHandler:completion:")]
+		[Async]
+		void Create (string bundleId, Action interruptionHandler, BERenderingProcessCreateCallback completion);
 
 		[Export ("invalidate")]
 		void Invalidate ();
@@ -1164,10 +1180,22 @@ namespace BrowserEngineKit {
 
 		[Export ("browserAccessibilityDeleteTextAtCursor:")]
 		void BrowserAccessibilityDeleteTextAtCursor (nint numberOfCharacters);
+
+		[iOS (18, 2), TV (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("accessibilityLineEndPositionFromCurrentSelection")]
+		nint GetAccessibilityLineEndPositionFromCurrentSelection ();
+
+		[iOS (18, 2), TV (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("accessibilityLineStartPositionFromCurrentSelection")]
+		nint GetAccessibilityLineStartPositionFromCurrentSelection ();
+
+		[iOS (18, 2), TV (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("accessibilityLineRangeForPosition:")]
+		NSRange GetAccessibilityLineRangeForPosition (nint position);
 	}
 
 	[BackingFieldType (typeof (ulong))]
-	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac, MacCatalyst (18, 0)]
+	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac]
 	public enum BEAccessibilityTrait : long {
 		[Field ("BEAccessibilityTraitMenuItem")]
 		MenuItem,
@@ -1186,13 +1214,142 @@ namespace BrowserEngineKit {
 	}
 
 	[BackingFieldType (typeof (uint))]
-	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac, MacCatalyst (18, 0)]
+	[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoMac]
 	public enum BEAccessibilityNotification : long {
 		[Field ("BEAccessibilitySelectionChangedNotification")]
 		SelectionChanged,
 
 		[Field ("BEAccessibilityValueChangedNotification")]
 		Changed,
+	}
+
+	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (NSObject))]
+	interface BEAccessibilityTextMarker : NSCopying, NSSecureCoding
+	{
+	}
+
+	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (NSObject))]
+	interface BEAccessibilityTextMarkerRange : NSCopying, NSSecureCoding
+	{
+		[Export ("startMarker", ArgumentSemantic.Strong)]
+		BEAccessibilityTextMarker StartMarker { get; set; }
+
+		[Export ("endMarker", ArgumentSemantic.Strong)]
+		BEAccessibilityTextMarker EndMarker { get; set; }
+	}
+
+	[iOS (18, 2), TV (18, 2), Mac (15, 2), MacCatalyst (18, 2)]
+	[Protocol (BackwardsCompatibleCodeGeneration = false)]
+	interface BEAccessibilityTextMarkerSupport
+	{
+		[Abstract]
+		[Export ("accessibilityBoundsForTextMarkerRange:")]
+		CGRect GetAccessibilityBounds (BEAccessibilityTextMarkerRange range);
+
+		[Abstract]
+		[Export ("accessibilityContentForTextMarkerRange:")]
+		[return: NullAllowed]
+		string GetAccessibilityContent (BEAccessibilityTextMarkerRange range);
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("accessibilityTextMarkerRangeForCurrentSelection")]
+		BEAccessibilityTextMarkerRange GetAccessibilityTextMarkerRangeForCurrentSelection ();
+
+		[Abstract]
+		[Export ("accessibilityTextMarkerRange")]
+		BEAccessibilityTextMarkerRange GetAccessibilityTextMarkerRange ();
+
+		[Abstract]
+		[Export ("accessibilityNextTextMarker:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityNextTextMarker (BEAccessibilityTextMarker marker);
+
+		[Abstract]
+		[Export ("accessibilityPreviousTextMarker:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityPreviousTextMarker (BEAccessibilityTextMarker marker);
+
+		[Abstract]
+		[Export ("accessibilityLineEndMarkerForMarker:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityLineEndMarker (BEAccessibilityTextMarker marker);
+
+		[Abstract]
+		[Export ("accessibilityLineStartMarkerForMarker:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityLineStartMarker (BEAccessibilityTextMarker marker);
+
+		[Abstract]
+		[Export ("accessibilityMarkerForPoint:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityMarker (CGPoint point);
+
+		[Abstract]
+		[Export ("accessibilityTextMarkerForPosition:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarker GetAccessibilityTextMarker (nint position);
+
+		[Abstract]
+		[Export ("accessibilityTextMarkerRangeForRange:")]
+		[return: NullAllowed]
+		BEAccessibilityTextMarkerRange GetAccessibilityTextMarker (NSRange range);
+
+		[Abstract]
+		[Export ("accessibilityRangeForTextMarkerRange:")]
+		NSRange GetAccessibilityRange (BEAccessibilityTextMarkerRange range);
+	}
+
+	[NoTV, NoMac, iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface BEDownloadMonitorLocation
+	{
+		[Export ("url")]
+		NSUrl Url { get; }
+
+		[Export ("bookmarkData")]
+		NSData BookmarkData { get; }
+	}
+
+	delegate void BEDownloadMonitorUseDownloadsFolderCallback ([NullAllowed] BEDownloadMonitorLocation finalLocation);
+	delegate void BEDownloadMonitorBeginMonitoringCallback ([NullAllowed] BEDownloadMonitorLocation placeholderLocation, [NullAllowed] NSError error);
+	delegate void BEDownloadMonitorResumeMonitoringCallback ([NullAllowed] NSError error);
+
+	[NoTV, NoMac, iOS (18, 2), MacCatalyst (18, 2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface BEDownloadMonitor
+	{
+		[Export ("initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:")]
+		NativeHandle Constructor (NSUrl sourceUrl, NSUrl destinationUrl, NSProgress observedProgress, NSData liveActivityAccessToken);
+
+		[Export ("useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:")]
+		void UseDownloadsFolder ([NullAllowed] UTType placehodlerType, BEDownloadMonitorUseDownloadsFolderCallback finalFileCreatedHandler);
+
+		[Async]
+		[Export ("beginMonitoring:")]
+		void BeginMonitoring (BEDownloadMonitorBeginMonitoringCallback completion);
+
+		[Async]
+		[Export ("resumeMonitoring:completionHandler:")]
+		void ResumeMonitoring (NSUrl url, BEDownloadMonitorResumeMonitoringCallback completionHandler);
+
+		[Export ("identifier")]
+		NSUuid Identifier { get; }
+
+		[Export ("sourceURL")]
+		NSUrl SourceUrl { get; }
+
+		[Export ("destinationURL")]
+		NSUrl DestinationUrl { get; }
+
+		[Static]
+		[return: NullAllowed]
+		[Export ("createAccessToken")]
+		NSData CreateAccessToken ();
 	}
 }
 #endif

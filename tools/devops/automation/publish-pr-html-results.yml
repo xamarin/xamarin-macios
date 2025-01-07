@@ -39,7 +39,7 @@ resources:
   # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
   pipelines:
   - pipeline: macios
-    source: xamarin-macios
+    source: $(BUILD_REPOSITORY_TITLE)
 
 variables:
 - group: xamops-azdev-secrets

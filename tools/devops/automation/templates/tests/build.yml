@@ -97,25 +97,21 @@ steps:
 # 2. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-
-    if ( -not (Test-HDFreeSpace -Size 20)) {
-      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host $Env:AGENT_MACHINENAME."
-      Stop-Pipeline
-    }
+    Assert-HDFreeSpace -Size 20
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
 # be more than enough, else the above script would have stopped the pipeline
 - bash: |
     set -x
     set -e
-    cd xamarin-macios
+    cd "$BUILD_REPOSITORY_TITLE"
     TEST_PLATFORM=$(echo "${{ parameters.testPlatform }}" | tr '[:upper:]' '[:lower:]')
     ARGS=(--enable-xamarin)
     if test -n "$TEST_PLATFORM"; then
@@ -155,6 +151,12 @@ steps:
 
 # use a diff step depending if we have been trigger by a pipeline of by a PR/Commit
 - ${{ if or(contains(variables['Build.Reason'], 'ResourceTrigger'), contains(variables['Build.Reason'], 'BuildCompletion'), contains(variables['Build.DefinitionName'], 'xamarin-macios-ci-tests'), contains(variables['Build.DefinitionName'], 'xamarin-macios-pr-tests')) }}:
+  - bash: |
+      ls -la "$PIPELINE_WORKSPACE/macios" || true
+      rm -Rf "$PIPELINE_WORKSPACE/macios"
+    displayName: "Remove previously downloaded artifacts"
+    condition: always()
+
   - download: macios
     displayName: Download WorkloadRollback.json
     artifact: WorkloadRollback
@@ -168,8 +170,8 @@ steps:
     artifact: package-test-libraries
 
   - pwsh: |
-      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force
-    displayName: 'Display downloads'
+      Get-ChildItem -Path "$(Pipeline.Workspace)/macios" -Recurse -Force | Format-Table -AutoSize | Out-String -Width 1000
+    displayName: 'List downloaded macios artifacts'
     timeoutInMinutes: 5
 
   # the default location when downloading is $(Pipeline.Workspace)/<pipeline resource identifier>/<artifact name>
@@ -204,12 +206,12 @@ steps:
 
 # print the downloads to make our life easier on debug
 - pwsh: |
-    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force
-  displayName: 'Display downloads'
+    Get-ChildItem -Path $(Build.SourcesDirectory)/artifacts -Recurse -Force | Format-Table -AutoSize | Out-String -Width 1000
+  displayName: 'List downloaded artifacts'
   timeoutInMinutes: 5
 
 - bash: |
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provisioning
+    make -C $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/ provisioning
   displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
@@ -223,7 +225,7 @@ steps:
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision dependencies'
   inputs:
-    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
+    provisioning_script: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
@@ -238,7 +240,7 @@ steps:
     fi
     ARGS+=(--ignore-shellcheck)
     ARGS+=(--ignore-yamllint)
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh "${ARGS[@]}"
+    $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/system-dependencies.sh "${ARGS[@]}"
   displayName: 'Provision simulators'
   timeoutInMinutes: 250
   env:

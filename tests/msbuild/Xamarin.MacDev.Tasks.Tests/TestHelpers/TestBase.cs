@@ -67,8 +67,9 @@ namespace Xamarin.MacDev.Tasks {
 			var rv = task.Execute ();
 			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
 				string messages = string.Empty;
-				if (Engine.Logger.ErrorEvents.Count > 0) {
-					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
+				var allEvents = Engine.Logger.AllEvents.ToArray ();
+				if (allEvents.Any ()) {
+					messages = "\n\t" + string.Join ("\n\t", allEvents.Select ((v) => v.AsString ()).ToArray ());
 				}
 				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTask-ErrorCount" + messages);
 			}

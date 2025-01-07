@@ -57,6 +57,9 @@
     <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\tests\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
@@ -132,11 +135,6 @@
     <None Include="..\..\tools\mtouch\Errors.resx">
       <Link>Errors.resx</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\common\mac\remoting.config">
-      <Link>remoting.config</Link>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />

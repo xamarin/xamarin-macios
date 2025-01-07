@@ -96,4 +96,17 @@ We've tentatively set .NET 11 as the release when we'll stop marking FSKit as pr
 
 The diagnostic id for FSKit is APL0002.
 
+## StoreKit.AppStore.RequestReview (APL0004)
+
+The
+[AppStore.RequestReview](https://developer.apple.com/documentation/storekit/appstore/3954432-requestreview/)
+method is Swift API we've bound manually, and as such it's marked as experimental until .NET 10.
+
 [1]: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.codeanalysis.experimentalattribute?view=net-8.0
+
+## Rgen (APL0003)
+
+Rgen is the new Roslyn codegenerator based binding tool. The tool is underdevelopment and its API is open to change until
+a stable release is announced.
+
+The diagnostic id for Rgen is APL0003.

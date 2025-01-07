@@ -56,7 +56,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_OR_GREATER_DEFINES:=$(foreach version,$(shell seq 6 $(firstword $(subst ., ,$(subst net,,$(DOTNET_TFM))))),/define:NET$(version)_0_OR_GREATER)
-DOTNET_FLAGS=/warnaserror+ /noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
+DOTNET_FLAGS=/warnaserror+ /noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
 
 ifeq ($(XCODE_IS_STABLE),true)
 DOTNET_FLAGS+=/define:XCODE_IS_STABLE
@@ -76,7 +76,6 @@ DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dl
 NULLABILITY_WARNINGS=nullable
 GENERATOR_WARNASERROR=-warnaserror:
 IOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
-WATCH_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 TVOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 MACOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 MACCATALYST_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
@@ -103,13 +102,15 @@ DOTNET_WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX)
 DOTNET_CORE_WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX),$(BGEN_WARNINGS_TO_FIX)
 
 include ./Makefile.generator
+include ./Makefile.rgenerator
 include ./generator-diff.mk
 
 SHARED_RESX = $(TOP)/tools/mtouch/Errors.resx
 SHARED_DESIGNER_CS = $(DOTNET_BUILD_DIR)/common/Errors.Designer.cs
 
-$(SHARED_DESIGNER_CS): $(SHARED_RESX) | $(DOTNET_BUILD_DIR)/common
-	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
+include $(TOP)/scripts/generate-errors/fragment.mk
+$(SHARED_DESIGNER_CS): $(SHARED_RESX) $(GENERATE_ERRORS) | $(DOTNET_BUILD_DIR)/common
+	$(Q_GEN) $(GENERATE_ERRORS_EXEC) $(SHARED_RESX) $(SHARED_DESIGNER_CS)
 
 DOTNET_TARGETS_DIRS += $(DOTNET_BUILD_DIR)/common
 
@@ -232,10 +233,10 @@ $(MACOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC
 # tvOS
 #
 
-TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:XAMCORE_3_0 -d:__TVOS__ -d:SYSTEM_NET_HTTP
+TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:__TVOS__ -d:SYSTEM_NET_HTTP
 
 TVOS_CORE_DEFINES=$(TVOS_DEFINES) -d:COREBUILD
-TVOS_GENERATOR_FLAGS = -d:TVOS -d:XAMCORE_3_0 -inline-selectors
+TVOS_GENERATOR_FLAGS = -d:TVOS -inline-selectors
 
 TVOS_DOTNET_EXTRA_CORE_SOURCES = \
 	$(TVOS_DOTNET_BUILD_DIR)/Constants.cs    \
@@ -339,6 +340,8 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $
 
 ### .NET ###
 
+include $(TOP)/scripts/generate-sourcelink-json/fragment.mk
+
 define BuildDotNetIntermediateAssembly
 $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.sources $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) \
@@ -355,7 +358,7 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
 	$$(Q_DOTNET_GEN) $$< @$($(2)_DOTNET_BUILD_DIR)/$(3).rsp
 
-$($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $($(2)_DOTNET_BUILD_DIR)
+$($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator Makefile.rgenerator frameworks.sources $(ROSLYN_GENERATOR) $(ROSLYN_ANALYZER) $(DOTNET_COMPILER) | $($(2)_DOTNET_BUILD_DIR)
 	$(Q) echo \
 		$($(2)_GENERATOR_FLAGS) \
 		$(DOTNET_GENERATOR_FLAGS) \
@@ -387,8 +390,8 @@ dotnet-gen:: dotnet-gen-$(3)
 $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $($(2)_DOTNET_BUILD_DIR)
 	$$(call Q_PROF_GEN,$(3)) sed < $$< > $$@ 's|@PRODUCT_NAME@|Microsoft.$(1)|g;'
 
-$($(2)_DOTNET_BUILD_DIR)/SourceLink.json: $($(2)_DOTNET_BUILD_DIR)
-	$$(Q) $(TOP)/src/generate-sourcelink-json.csharp "$(PACKAGE_HEAD_REV)" "$(abspath $(TOP)/src)" "$$@"
+$($(2)_DOTNET_BUILD_DIR)/SourceLink.json: $($(2)_DOTNET_BUILD_DIR) $(GENERATE_SOURCELINK_JSON)
+	$$(Q) $(GENERATE_SOURCELINK_JSON_EXEC) "$(PACKAGE_HEAD_REV)" "$(abspath $(TOP)/src)" "$$@"
 
 $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources $($(2)_DOTNET_SOURCES) $(TOP)/src/generate-embed-files.sh
 	$$(Q) $(TOP)/src/generate-embed-files.sh $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources "$($(2)_DOTNET_SOURCES)" > $$@.tmp
@@ -405,7 +408,7 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $
 
 $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll build/.build-adr-stamp | $($(2)_DOTNET_BUILD_DIR)/doc
 ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) run -C $(MACCORE_PATH)/tools/apple-doc-reader ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
+	$(Q) $(MAKE) run -C $(ADR_PATH) ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
 else
 	$$(Q) $$(CP) $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $$@
 endif
@@ -413,8 +416,8 @@ endef
 
 build/.build-adr-stamp:
 ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) build -C $(MACCORE_PATH)/tools/apple-doc-reader
-	$(Q) $(MAKE) create -C $(MACCORE_PATH)/tools/apple-doc-reader
+	$(Q) $(MAKE) build -C $(ADR_PATH)
+	$(Q) $(MAKE) create -C $(ADR_PATH)
 endif
 	$(Q) touch $@
 
@@ -450,10 +453,16 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 
-$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
+$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) $$(ROSLYN_GENERATOR) $$(ROSLYN_ANALYZER) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
 	$$(call Q_PROF_CSC,dotnet/$(4)-bit) \
 		$(DOTNET_CSC)  \
 		$(DOTNET_FLAGS) \
+		/analyzer:$(ROSLYN_GENERATOR_COMMON) \
+		/analyzer:$(ROSLYN_GENERATOR) \
+		/analyzer:$(ROSLYN_ANALYZER) \
+		/generatedfilesout:$($(2)_DOTNET_BUILD_DIR)/generated-sources \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_GENERATOR),) \
+		$$(if $(V),/reportanalyzer:$(ROSLYN_ANALYZER),) \
 		-unsafe \
 		-optimize \
 		$$(ARGS_$(1)) \
@@ -574,7 +583,6 @@ MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
 		\
 		-e 's/@MIN_IOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_IOS_SDK_VERSION))/g' \
 		-e 's/@MIN_MACOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACOS_SDK_VERSION))/g' \
-		-e 's/@MIN_WATCHOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_WATCHOS_SDK_VERSION))/g' \
 		-e 's/@MIN_TVOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_TVOS_SDK_VERSION))/g' \
 		-e 's/@MIN_MACCATALYST_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACCATALYST_SDK_VERSION))/g' \
 		$< > $@

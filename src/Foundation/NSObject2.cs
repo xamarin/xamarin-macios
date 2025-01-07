@@ -344,14 +344,6 @@ namespace Foundation {
 #endif
 		}
 
-#if !XAMCORE_3_0
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public static bool IsNewRefcountEnabled ()
-		{
-			return true;
-		}
-#endif
-
 		/*
 		Register the current object with the toggleref machinery if the following conditions are met:
 		-The new refcounting is enabled; and
@@ -577,12 +569,17 @@ namespace Foundation {
 			return false;
 		}
 
+		/// <summary>Calls the 'release' selector on this object.</summary>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void DangerousRelease ()
 		{
 			DangerousRelease (handle);
 		}
 
+		/// <summary>Calls the 'release' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to release.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		internal static void DangerousRelease (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -594,6 +591,10 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'retain' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to retain.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		internal static void DangerousRetain (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -605,6 +606,9 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'autorelease' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to autorelease.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
 		internal static void DangerousAutorelease (NativeHandle handle)
 		{
 #if MONOMAC
@@ -614,25 +618,21 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'retain' selector on this object.</summary>
+		/// <returns>This object.</returns>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousRetain ()
 		{
-#if MONOMAC
-			Messaging.void_objc_msgSend (handle, Selector.RetainHandle);
-#else
-			Messaging.void_objc_msgSend (handle, Selector.GetHandle (Selector.Retain));
-#endif
+			DangerousRetain (handle);
 			return this;
 		}
 
+		/// <summary>Calls the 'autorelease' selector on this object.</summary>
+		/// <returns>This object.</returns>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousAutorelease ()
 		{
-#if MONOMAC
-			Messaging.void_objc_msgSend (handle, Selector.AutoreleaseHandle);
-#else
-			Messaging.void_objc_msgSend (handle, Selector.GetHandle (Selector.Autorelease));
-#endif
+			DangerousAutorelease (handle);
 			return this;
 		}
 
@@ -673,19 +673,25 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void InitializeHandle (NativeHandle handle)
 		{
-			InitializeHandle (handle, "init*");
+			InitializeHandle (handle, "init*", Class.ThrowOnInitFailure);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void InitializeHandle (NativeHandle handle, string initSelector)
 		{
-			if (this.handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+			InitializeHandle (handle, initSelector, Class.ThrowOnInitFailure);
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		internal void InitializeHandle (NativeHandle handle, string initSelector, bool throwOnInitFailure)
+		{
+			if (this.handle == NativeHandle.Zero && throwOnInitFailure) {
 				if (ClassHandle == NativeHandle.Zero)
 					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
 				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
-			if (handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+			if (handle == NativeHandle.Zero && throwOnInitFailure) {
 				Handle = NativeHandle.Zero; // We'll crash if we don't do this.
 				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': the native '{initSelector}' method returned nil.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
@@ -705,47 +711,6 @@ namespace Foundation {
 			}
 			return false;
 		}
-
-#if !XAMCORE_3_0
-		private IntPtr GetObjCIvar (string name)
-		{
-			IntPtr native;
-
-			object_getInstanceVariable (handle, name, out native);
-
-			return native;
-		}
-
-		[Obsolete ("Do not use; this API does not properly retain/release existing/new values, so leaks and/or crashes may occur.")]
-		public NSObject GetNativeField (string name)
-		{
-			IntPtr field = GetObjCIvar (name);
-
-			if (field == IntPtr.Zero)
-				return null;
-			return Runtime.GetNSObject (field);
-		}
-
-		private void SetObjCIvar (string name, IntPtr value)
-		{
-			object_setInstanceVariable (handle, name, value);
-		}
-
-		[Obsolete ("Do not use; this API does not properly retain/release existing/new values, so leaks and/or crashes may occur.")]
-		public void SetNativeField (string name, NSObject value)
-		{
-			if (value is null)
-				SetObjCIvar (name, IntPtr.Zero);
-			else
-				SetObjCIvar (name, value.Handle);
-		}
-
-		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		extern static void object_getInstanceVariable (IntPtr obj, string name, out IntPtr val);
-
-		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		extern static void object_setInstanceVariable (IntPtr obj, string name, IntPtr val);
-#endif // !XAMCORE_3_0
 
 		private void InvokeOnMainThread (Selector sel, NSObject obj, bool wait)
 		{

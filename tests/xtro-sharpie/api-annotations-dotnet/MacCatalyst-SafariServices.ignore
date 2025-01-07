@@ -1,2 +1,5 @@
 ## for compatibility we have extra code that return `false` if `url` is `null`
 !extra-null-allowed! 'System.Boolean SafariServices.SSReadingList::SupportsUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
+
+## this member references a framework which isn't available on Mac Catalyst
+!missing-protocol-member! SFAddToHomeScreenActivityItem::getWebAppManifestWithCompletionHandler: not found

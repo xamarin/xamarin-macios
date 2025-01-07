@@ -37,7 +37,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
 namespace AudioToolbox {

@@ -18,6 +18,7 @@ ifeq ($(OUTPUT_DIR),)
 OUTPUT_DIR=output
 endif
 
+API_TOOLS_PATH=$(TOP)/tools/api-tools
 MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/$(DOTNET_TFM)/mono-api-info.dll
 MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/$(DOTNET_TFM)/mono-api-html.dll
 
@@ -208,6 +209,3 @@ $(APIDIFF_DIR)/references/current/Microsoft.$(1).xml: $(DOTNET_DESTDIR)/$($(1)_N
 update-current-refs:: $(APIDIFF_DIR)/references/current/Microsoft.$(1).xml
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call GenerateCurrentReferenceXml,$(platform))))
-
-merger.exe: merger.cs
-	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo
