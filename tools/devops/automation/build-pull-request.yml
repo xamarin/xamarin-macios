@@ -17,15 +17,6 @@ parameters:
   type: string
   default: 'Sonoma'
 
-- name: pool
-  type: string
-  displayName: Bot pool to use
-  default: automatic
-  values:
-  - pr
-  - ci
-  - automatic
-
 - name: runGovernanceTests
   displayName: Run Governance Checks
   type: boolean
@@ -158,7 +149,10 @@ variables:
   value: false
 
 
-trigger: none
+trigger:
+  branches:
+    include:
+    - refs/heads/dev/*
 
 pr:
   autoCancel: true
@@ -218,7 +212,7 @@ extends:
         macOSName: ${{ parameters.macOSName }}
         isPR: true
         provisionatorChannel: ${{ parameters.provisionatorChannel }}
-        pool: ${{ parameters.pool }}
+        pool: $(PRBuildPool)
         runGovernanceTests: ${{ parameters.runGovernanceTests }}
         forceInsertion: ${{ parameters.forceInsertion }}
         pushNugets: false
