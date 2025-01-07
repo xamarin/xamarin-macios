@@ -1,8 +1,8 @@
 import Foundation
 
 @objc(SwiftTestClass)
-@available(iOS 15, tvOS 15, macOS 12, macCatalyst 12, watchOS 8, *)
-public class SwiftTestClass : NSObject {
+@available(iOS 15, tvOS 15, macOS 12, macCatalyst 12, *)
+open class SwiftTestClass : NSObject {
     @objc
     public func SayHello() -> String {
         return "Hello from Swift"

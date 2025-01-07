@@ -89,10 +89,6 @@ namespace CoreImage {
 	}
 
 	public partial class CISampler {
-#if !XAMCORE_3_0 && MONOMAC
-		[Obsolete ("This default constructor does not provide a valid instance")]
-		public CISampler () {}
-#endif
 		public CISampler FromImage (CIImage sourceImage, CISamplerOptions? options)
 		{
 			if (options is null)

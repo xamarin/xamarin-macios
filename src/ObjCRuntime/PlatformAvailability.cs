@@ -12,7 +12,7 @@
 //
 // Copyright 2013-2014 Xamarin Inc.
 
-#if COREBUILD || (!XAMCORE_3_0 && !NET)
+#if COREBUILD
 
 using System;
 using System.Globalization;
@@ -511,6 +511,7 @@ namespace ObjCRuntime {
 		}
 	}
 
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif
@@ -541,6 +542,7 @@ namespace ObjCRuntime {
 
 	}
 
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 #if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 #endif

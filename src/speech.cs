@@ -61,6 +61,7 @@ namespace Speech {
 		AudioReadFailed = 2,
 		UndefinedTemplateClassName = 7,
 		MalformedSupplementalModel = 8,
+		Timeout = 10,
 	}
 
 	/// <summary>Abstract base class for speech recognition requests (see <see cref="T:Speech.SFSpeechAudioBufferRecognitionRequest" /> and <see cref="T:Speech.SFSpeechUrlRecognitionRequest" />).</summary>

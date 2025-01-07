@@ -1,7 +1,3 @@
-[submodule "external/macios-binaries"]
-    path = external/macios-binaries
-    url = ../../xamarin/macios-binaries
-    branch = main
 [submodule "external/Touch.Unit"]
     path = external/Touch.Unit
     url = ../../xamarin/Touch.Unit.git
@@ -14,7 +10,3 @@
     path = external/MonoTouch.Dialog
     url = ../../xamarin/MonoTouch.Dialog
     branch = dotnet
-[submodule "api-tools"]
-    path = external/api-tools
-    url = ../../xamarin/api-tools
-    branch = main

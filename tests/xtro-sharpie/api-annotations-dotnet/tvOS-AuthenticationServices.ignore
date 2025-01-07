@@ -1,0 +1,3 @@
+# This is an error enum, so we include all values from all platforms, even if the value doesn't exist on that platform.
+!extra-enum-value! Managed value 1007 for ASAuthorizationError.CredentialImport not found in native headers
+!extra-enum-value! Managed value 1008 for ASAuthorizationError.CredentialExport not found in native headers

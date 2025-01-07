@@ -16,14 +16,15 @@ namespace Xharness.Jenkins {
 
 		public Task RunAsync (Jenkins jenkins, HtmlReportWriter htmlReportWriter)
 		{
-			var server = new HttpListener ();
+			HttpListener server;
 
 			// Try and find an unused port
 			int attemptsLeft = 50;
 			int port = 51234; // Try this port first, to try to not vary between runs just because.
 			Random r = new Random ((int) DateTime.Now.Ticks);
-			while (attemptsLeft-- > 0) {
+			do {
 				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
+				server = new HttpListener ();
 				server.Prefixes.Clear ();
 				server.Prefixes.Add ("http://*:" + newPort + "/");
 				try {
@@ -34,7 +35,7 @@ namespace Xharness.Jenkins {
 					jenkins.MainLog.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
 					port = 0;
 				}
-			}
+			} while (attemptsLeft-- > 0);
 			jenkins.MainLog.WriteLine ($"Created server on localhost:{port}");
 
 			var tcs = new TaskCompletionSource<bool> ();
@@ -153,10 +154,6 @@ namespace Xharness.Jenkins {
 									case "?all-ios":
 										switch (task.Platform) {
 										case TestPlatform.iOS:
-										case TestPlatform.iOS_TodayExtension64:
-										case TestPlatform.iOS_Unified:
-										case TestPlatform.iOS_Unified32:
-										case TestPlatform.iOS_Unified64:
 											is_match = true;
 											break;
 										default:
@@ -176,25 +173,9 @@ namespace Xharness.Jenkins {
 											break;
 										}
 										break;
-									case "?all-watchos":
-										switch (task.Platform) {
-										case TestPlatform.watchOS:
-										case TestPlatform.watchOS_32:
-										case TestPlatform.watchOS_64_32:
-											is_match = true;
-											break;
-										default:
-											if (task.Platform.ToString ().StartsWith ("watchOS", StringComparison.Ordinal))
-												throw new NotImplementedException ();
-											break;
-										}
-										break;
 									case "?all-mac":
 										switch (task.Platform) {
 										case TestPlatform.Mac:
-										case TestPlatform.Mac_Modern:
-										case TestPlatform.Mac_Full:
-										case TestPlatform.Mac_System:
 											is_match = true;
 											break;
 										default:

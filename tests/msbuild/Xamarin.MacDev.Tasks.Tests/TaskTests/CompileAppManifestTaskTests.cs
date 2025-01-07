@@ -78,6 +78,36 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
+		[TestCase (false, "14.0")]
+		[TestCase (true, "13.0")]
+		public void MultipleMinimumOSVersions_Overwrite (bool overwrite, string expectedMinimumOSVersion)
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+
+			var mainPath = Path.Combine (dir, "Info.plist");
+			var main = new PDictionary ();
+			main.SetMinimumOSVersion ("14.0");
+			main.Save (mainPath);
+
+			var partialPath = Path.Combine (dir, "PartialAppManifest.plist");
+			var partial = new PDictionary ();
+			partial.SetMinimumOSVersion ("13.0");
+			partial.Save (partialPath);
+
+			task.AppManifest = new TaskItem (mainPath);
+			var partialAppManifest = new TaskItem (partialPath);
+			partialAppManifest.SetMetadata ("Overwrite", overwrite ? "true" : "false");
+			task.PartialAppManifests = new [] { partialAppManifest };
+			task.SupportedOSPlatformVersion = "14.0";
+
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest!.ItemSpec)!;
+			Assert.AreEqual (expectedMinimumOSVersion, plist.GetMinimumOSVersion (), "MinimumOSVersion");
+		}
+
+		[Test]
 		public void ErrorWithMismatchedInfoPlistMinimumOSVersion ()
 		{
 			var dir = Cache.CreateTemporaryDirectory ();

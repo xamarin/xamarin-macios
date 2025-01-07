@@ -15,6 +15,7 @@
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
+    <PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +48,9 @@
     </Compile>
     <Compile Include="..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>

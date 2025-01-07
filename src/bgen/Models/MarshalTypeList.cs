@@ -10,8 +10,8 @@ public class MarshalTypeList : List<MarshalType> {
 
 	public void Load (TypeCache typeCache, Frameworks frameworks)
 	{
-		Add (new MarshalType (typeCache.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
-		Add (new MarshalType (typeCache.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
+		Add (new MarshalType (typeCache.NSObject, create: "Runtime.GetNSObject (", closingCreate: ", %OWNS%)!"));
+		Add (new MarshalType (typeCache.Selector, create: "Selector.FromHandle (", closingCreate: ", %OWNS%)!"));
 		Add (new MarshalType (typeCache.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 		if (typeCache.MusicSequence is not null)
 			Add (new MarshalType (typeCache.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
@@ -42,15 +42,15 @@ public class MarshalTypeList : List<MarshalType> {
 			Add (typeCache.CVImageBuffer);
 		}
 		if (frameworks.HaveMediaToolbox)
-			Add (new MarshalType (typeCache.MTAudioProcessingTap!, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
+			Add (new MarshalType (typeCache.MTAudioProcessingTap!, create: "MediaToolbox.MTAudioProcessingTap.FromHandle (", closingCreate: ", %OWNS%)!"));
 		if (frameworks.HaveAddressBook) {
 			Add (typeCache.ABAddressBook);
-			Add (new MarshalType (typeCache.ABPerson!, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
-			Add (new MarshalType (typeCache.ABRecord!, create: "ABRecord.FromHandle (", closingCreate: ")!"));
+			Add (new MarshalType (typeCache.ABPerson!, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ", %OWNS%)!"));
+			Add (new MarshalType (typeCache.ABRecord!, create: "ABRecord.FromHandle (", closingCreate: ", %OWNS%)!"));
 		}
 		if (frameworks.HaveCoreVideo) {
 			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
-			Add (new MarshalType (typeCache.CVPixelBuffer!, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
+			Add (new MarshalType (typeCache.CVPixelBuffer!, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", %OWNS%)!"));
 		}
 		Add (typeCache.CGLayer);
 		if (frameworks.HaveCoreMedia)
@@ -63,9 +63,11 @@ public class MarshalTypeList : List<MarshalType> {
 		if (frameworks.HaveAudioUnit)
 			Add (typeCache.AudioComponent);
 		if (frameworks.HaveCoreMedia) {
-			Add (new MarshalType (typeCache.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ")!"));
+			Add (new MarshalType (typeCache.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ", %OWNS%)!"));
 			Add (typeCache.CMAudioFormatDescription);
 			Add (typeCache.CMVideoFormatDescription);
+			Add (typeCache.CMTaggedBufferGroup);
+			Add (typeCache.CMTagCollection);
 		}
 		if (frameworks.HaveAudioUnit)
 			Add (typeCache.AudioUnit);
@@ -77,7 +79,7 @@ public class MarshalTypeList : List<MarshalType> {
 		Add (typeCache.SecProtocolOptions);
 		Add (typeCache.SecProtocolMetadata);
 		Add (typeCache.SecAccessControl);
-		Add (new MarshalType (typeCache.AudioBuffers, create: "new global::AudioToolbox.AudioBuffers (", closingCreate: ", false)"));
+		Add (new MarshalType (typeCache.AudioBuffers, create: "new global::AudioToolbox.AudioBuffers (", closingCreate: ", %OWNS%)"));
 		if (frameworks.HaveAudioUnit) {
 			Add (typeCache.AURenderEventEnumerator);
 		}

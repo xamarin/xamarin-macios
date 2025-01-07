@@ -96,7 +96,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-#if NET
 		[Test]
 		public void SwiftTest ()
 		{
@@ -125,6 +124,13 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ("fish", asyncResult, "DoSomethingComplexAsync");
 			Assert.IsTrue (done, "Done 2");
 		}
-#endif
+
+		[Test]
+		public void SwiftTestClass2 ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			using var obj = new SwiftTestClass2 ();
+			Assert.AreEqual ("Hello from Swift 2", obj.SayHello2 (), "Hello");
+		}
 	}
 }

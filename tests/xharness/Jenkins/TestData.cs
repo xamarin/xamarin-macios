@@ -15,13 +15,12 @@ namespace Xharness.Jenkins {
 		public string Undefines;
 		public bool? Ignored;
 		public bool EnableSGenConc;
-		public bool UseThumb;
 		public bool UseLlvm;
 		public bool? UseMonoRuntime;
 		public IEnumerable<IDevice> Candidates;
-		public string XamMacArch;
 		public string RuntimeIdentifier;
 		public string Registrar;
 		public bool PublishAot; // NativeAOT
+		public string TestVariation;
 	}
 }

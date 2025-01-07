@@ -354,37 +354,57 @@ namespace Foundation {
 		[Export ("enumerateAttribute:inRange:options:usingBlock:")]
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithURL:options:documentAttributes:error:")]
-#if !(__MACOS__ || XAMCORE_5_0)
+#if !__MACOS__
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #else
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
+		[Internal]
+		[Sealed]
+		[Export ("initWithURL:options:documentAttributes:error:")]
+		NativeHandle _InitWithUrl (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Export ("initWithData:options:documentAttributes:error:")]
-#if XAMCORE_5_0
-		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-#elif __MACOS__
+#if __MACOS__
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
 #else
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Internal]
+		[Sealed]
+		[Export ("initWithData:options:documentAttributes:error:")]
+		NativeHandle _InitWithData (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if __MACOS__
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
-#if __MACOS__ || XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
+#if !XAMCORE_5_0
+#if __MACOS__
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
 		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
+#endif // !XAMCORE_5_0
 
 		[NoiOS]
 		[NoMacCatalyst]
@@ -768,17 +788,44 @@ namespace Foundation {
 		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
 		NativeHandle Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
 
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
+		NativeHandle _InitWithContentsOfMarkdownFile (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithMarkdown:options:baseURL:error:")]
 		NativeHandle Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
 
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithMarkdown:options:baseURL:error:")]
+		NativeHandle _InitWithMarkdown (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithMarkdownString:options:baseURL:error:")]
 		NativeHandle Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+#endif
+
+		[Internal]
+		[Sealed]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("initWithMarkdownString:options:baseURL:error:")]
+		NativeHandle _InitWithMarkdownString (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
 
 		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("attributedStringByInflectingString")]
@@ -1047,7 +1094,6 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL - `init` now marked as NS_UNAVAILABLE
 	[DisableDefaultCtor]
 	interface NSCalendar : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -4622,28 +4668,6 @@ namespace Foundation {
 		[Field ("CarPlayErrorDomain", "CarPlay")]
 		NSString CarPlayErrorDomain { get; }
 
-#if !XAMCORE_3_0
-		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[NoMac, NoTV, NoWatch]
-		[MacCatalyst (13, 1)]
-		[Field ("EABluetoothAccessoryPickerErrorDomain", "ExternalAccessory")]
-		NSString EABluetoothAccessoryPickerErrorDomain { get; }
-
-		// now exposed with the corresponding MKErrorCode enum
-		[NoMac]
-		[NoWatch]
-		[MacCatalyst (13, 1)]
-		[Field ("MKErrorDomain", "MapKit")]
-		NSString MapKitErrorDomain { get; }
-
-		// now exposed with the corresponding WKErrorCode enum
-		[NoMac, NoTV]
-		[Unavailable (PlatformName.iOS)]
-		[MacCatalyst (13, 1)]
-		[Field ("WatchKitErrorDomain", "WatchKit")]
-		NSString WatchKitErrorDomain { get; }
-#endif
-
 		[Field ("NSUnderlyingErrorKey")]
 		NSString UnderlyingErrorKey { get; }
 
@@ -4727,6 +4751,16 @@ namespace Foundation {
 		// we're also missing other NSURLError* fields (which we should add)
 		[Field ("NSURLErrorBackgroundTaskCancelledReasonKey")]
 		NSString NSUrlErrorBackgroundTaskCancelledReasonKey { get; }
+#endif
+
+#if IOS && !MACCATALYST
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultRetryAvailabilityDateErrorKey { get; }
+
+		[iOS (18, 2), NoMacCatalyst, NoTV, NoMac]
+		[Field ("UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey", "UIKit")]
+		NSString UIApplicationCategoryDefaultStatusLastProvidedDateErrorKey { get; }
 #endif
 	}
 
@@ -5223,8 +5257,6 @@ namespace Foundation {
 #endif
 
 	[BaseType (typeof (NSObject))]
-	// 'init' returns NIL so it's not usable evenif it does not throw an ObjC exception
-	// funnily it was "added" in iOS 7 and header files says "do not invoke; not a valid initializer for this class"
 	[DisableDefaultCtor]
 	interface NSLocale : NSSecureCoding, NSCopying {
 		[Static]
@@ -7718,14 +7750,7 @@ namespace Foundation {
 
 	}
 
-#if NET
-	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
-#elif XAMCORE_3_0
-	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
-#else
-	delegate void NSUrlSessionPendingTasks (NSUrlSessionDataTask [] dataTasks, NSUrlSessionUploadTask [] uploadTasks, NSUrlSessionDownloadTask [] downloadTasks);
-	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask [] downloadTasks);
-#endif
+	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask [] downloadTasks);
 	delegate void NSUrlSessionAllPendingTasks (NSUrlSessionTask [] tasks);
 	delegate void NSUrlSessionResponse (NSData data, NSUrlResponse response, NSError error);
 	delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
@@ -7798,19 +7823,10 @@ namespace Foundation {
 		[Async]
 		void Flush (Action completionHandler);
 
-#if !XAMCORE_3_0
-		// broken version that we must keep for XAMCORE_3_0 binary compatibility
-		// but that we do not have to expose on tvOS and watchOS, forcing people to use the correct API
-		[Obsolete ("Use GetTasks2 instead. This method may throw spurious InvalidCastExceptions, in particular for backgrounded tasks.")]
+		// Fixed version (breaking change) only for NET
 		[Export ("getTasksWithCompletionHandler:")]
 		[Async (ResultTypeName = "NSUrlSessionActiveTasks")]
 		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#elif NET
-		// Fixed version (breaking change) only for NET
-		[Export ("getTasksWithCompletionHandler:")]
-		[Async (ResultTypeName="NSUrlSessionActiveTasks")]
-		void GetTasks (NSUrlSessionPendingTasks completionHandler);
-#endif
 
 #if !NET
 		// Workaround, not needed for NET+
@@ -8790,6 +8806,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8999,6 +9019,10 @@ namespace Foundation {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("allowsPersistentDNS")]
 		bool AllowsPersistentDns { get; set; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("cookiePartitionIdentifier", ArgumentSemantic.Copy), NullAllowed]
+		string CookiePartitionIdentifier { get; set; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLResponse")]
@@ -10699,6 +10723,10 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sameSitePolicy")]
 		NSString SameSitePolicy { get; }
+
+		[TV (18, 2), iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Field ("NSHTTPCookieSetByJavaScript")]
+		NSString KeySetByJavaScript { get; }
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSHTTPCookieStorage")]
@@ -10783,9 +10811,7 @@ namespace Foundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-#if MONOMAC
-	[DisableDefaultCtor] // An uncaught exception was raised: -[__NSCFDictionary removeObjectForKey:]: attempt to remove nil key
-#endif
+	[DisableDefaultCtor]
 	partial interface NSBundle {
 		[Export ("mainBundle")]
 		[Static]
@@ -15003,7 +15029,7 @@ namespace Foundation {
 		bool ContainsDate (NSDate date);
 	}
 
-	[DisableDefaultCtor] // -init should never be called on NSUnit!
+	[DisableDefaultCtor]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSUnit : NSCopying, NSSecureCoding {
@@ -15606,16 +15632,6 @@ namespace Foundation {
 		[Sealed]
 		[Export ("initRecordDescriptor")]
 		IntPtr _InitRecordDescriptor ();
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initListDescriptor")]
-		NSObject InitListDescriptor ();
-
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initRecordDescriptor")]
-		NSObject InitRecordDescriptor ();
-#endif
 
 		/*[Export ("aeDesc")]
 		const AEDesc AeDesc ();

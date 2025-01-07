@@ -35,31 +35,6 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.Fail ();
 		}
 
-		// [TestCase (false)] MISSING_TEST - Project reference only 
-		[TestCase (true)]
-		public void FrameworksEmbeddedProperly (bool useProjectReference)
-		{
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
-			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
-
-			// TODO - Checked in projects are project reference only...
-			Assert.True (useProjectReference);
-
-			var bindingApp = SetupProjectPaths ("MyiOSAppWithBinding");
-
-			BuildProjectNoEmbedding (bindingApp);
-
-			string libPath = Path.Combine (bindingApp.ProjectBinPath, "MyiOSFrameworkBinding.dll");
-			Assert.True (File.Exists (libPath), $"Did not find expected library: {libPath}");
-
-			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", libPath }, out string monoDisResults);
-			Assert.AreEqual (0, returnValue);
-			Assert.IsFalse (monoDisResults.Contains ("XTest.framework"), $"Binding Library contained embedded resource: {monoDisResults}");
-
-			string finalFrameworkPath = Path.Combine (bindingApp.AppBundlePath, "Frameworks/XTest.framework/XTest");
-			Assert.True (File.Exists (finalFrameworkPath), $"{finalFrameworkPath} file was not part of bundle?");
-		}
-
 		[TestCase (true)]
 		// [TestCase (false)] MISSING_TEST - Framework only tests
 		public void ShouldNotUnnecessarilyRebuildBindingProject (bool framework)
@@ -101,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 			ClearMessages ();
 
 			// Touching native library should
-			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework/XTest"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "XTest.framework", "XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}

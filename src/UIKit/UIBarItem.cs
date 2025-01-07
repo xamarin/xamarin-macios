@@ -13,22 +13,14 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
-#if XAMCORE_3_0
 using TextAttributes = UIKit.UIStringAttributes;
-#else
-using TextAttributes = UIKit.UITextAttributes;
-#endif
 
 namespace UIKit {
 	public partial class UIBarItem {
 
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
-#if XAMCORE_3_0
 			var dict = attributes?.Dictionary;
-#else
-			using var dict = attributes?.ToDictionary ();
-#endif
 			_SetTitleTextAttributes (dict, state);
 		}
 
@@ -44,11 +36,7 @@ namespace UIKit {
 			{
 				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
-#if XAMCORE_3_0
 				var dict = attributes.Dictionary;
-#else
-				using var dict = attributes.ToDictionary ();
-#endif
 				_SetTitleTextAttributes (dict, state);
 			}
 

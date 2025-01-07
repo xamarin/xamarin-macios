@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator", "Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj", "{8E9CF45D-E836-447E-9290-03A9CACE2704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator.Sample", "Microsoft.Macios.Generator.Sample\Microsoft.Macios.Generator.Sample.csproj", "{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.Analyzer", "Microsoft.Macios.Bindings.Analyzer\Microsoft.Macios.Bindings.Analyzer.csproj", "{27A7CBB0-A30D-4A08-A475-6D2DFD94C634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.Analyzer.Sample", "Microsoft.Macios.Bindings.Analyzer.Sample\Microsoft.Macios.Bindings.Analyzer.Sample.csproj", "{65649B5A-9C23-4AA8-A687-82319EF4FA7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Generator.Tests", "..\..\tests\rgen\Microsoft.Macios.Generator.Tests\Microsoft.Macios.Generator.Tests.csproj", "{CD222ACD-A54F-49D9-81CA-6D795CC31195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.Analyzer.Tests", "..\..\tests\rgen\Microsoft.Macios.Bindings.Analyzer.Tests\Microsoft.Macios.Bindings.Analyzer.Tests.csproj", "{1AC4A248-CC98-4392-8690-4E2CAF6E194B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Binding.Common", "Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj", "{536758BC-2A88-4B79-ABB1-6B39494A5FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Transformer", "Microsoft.Macios.Transformer\Microsoft.Macios.Transformer.csproj", "{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Transformer.Tests", "..\..\tests\rgen\Microsoft.Macios.Transformer.Tests\Microsoft.Macios.Transformer.Tests.csproj", "{BE23E467-7971-4439-BEE8-220B77F40027}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.CodeFixers", "Microsoft.Macios.Bindings.CodeFixers\Microsoft.Macios.Bindings.CodeFixers.csproj", "{4986D2E4-89B0-43A3-9879-93ED236C265D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Macios.Bindings.CodeFixers.Tests", "..\..\tests\rgen\Microsoft.Macios.Bindings.CodeFixers.Tests\Microsoft.Macios.Bindings.CodeFixers.Tests.csproj", "{E7928D64-8E45-40BF-B393-732FF20D35E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E9CF45D-E836-447E-9290-03A9CACE2704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E9CF45D-E836-447E-9290-03A9CACE2704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E9CF45D-E836-447E-9290-03A9CACE2704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E9CF45D-E836-447E-9290-03A9CACE2704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0A1FDC-350F-47E2-AA9D-A6F32793C130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A7CBB0-A30D-4A08-A475-6D2DFD94C634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A7CBB0-A30D-4A08-A475-6D2DFD94C634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A7CBB0-A30D-4A08-A475-6D2DFD94C634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A7CBB0-A30D-4A08-A475-6D2DFD94C634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65649B5A-9C23-4AA8-A687-82319EF4FA7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65649B5A-9C23-4AA8-A687-82319EF4FA7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65649B5A-9C23-4AA8-A687-82319EF4FA7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65649B5A-9C23-4AA8-A687-82319EF4FA7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD222ACD-A54F-49D9-81CA-6D795CC31195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD222ACD-A54F-49D9-81CA-6D795CC31195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD222ACD-A54F-49D9-81CA-6D795CC31195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD222ACD-A54F-49D9-81CA-6D795CC31195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC4A248-CC98-4392-8690-4E2CAF6E194B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{536758BC-2A88-4B79-ABB1-6B39494A5FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D05D2AAA-71C9-49C9-B344-2F8C251E60DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE23E467-7971-4439-BEE8-220B77F40027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4986D2E4-89B0-43A3-9879-93ED236C265D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7928D64-8E45-40BF-B393-732FF20D35E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

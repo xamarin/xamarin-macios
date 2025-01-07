@@ -41,7 +41,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-using OSStatus = System.Int32;
 using AudioQueueParameterValue = System.Single;
 using AudioQueueRef = System.IntPtr;
 using AudioQueueTimelineRef = System.IntPtr;
@@ -1184,15 +1183,6 @@ namespace AudioToolbox {
 				return GetInt (AudioQueueProperty.DecodeBufferSizeFrames);
 			}
 		}
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'AudioStreamDescription' instead.")]
-		public AudioStreamBasicDescription AudioStreamPacketDescription {
-			get {
-				return AudioStreamDescription;
-			}
-		}
-#endif
 
 		public AudioStreamBasicDescription AudioStreamDescription {
 			get {

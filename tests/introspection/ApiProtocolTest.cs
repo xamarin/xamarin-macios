@@ -34,6 +34,9 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			if (MemberHasEditorBrowsableNever (type))
+				return true;
+
 			switch (type.Namespace) {
 			// Xcode 15:
 			case "MetalFX":
@@ -49,12 +52,6 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
-#if !NET
-			case "MTLCounter":
-			case "MTLCounterSampleBuffer":
-			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for .NET.
-#endif
 			case "MPSImageLaplacianPyramid":
 			case "MPSImageLaplacianPyramidSubtract":
 			case "MPSImageLaplacianPyramidAdd":
@@ -213,6 +210,11 @@ namespace Introspection {
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -427,6 +429,13 @@ namespace Introspection {
 				case "UISwipeGestureRecognizer":
 				case "UIScreenEdgePanGestureRecognizer":
 				case "UIHoverGestureRecognizer":
+				// Xcode 16.2 Conformance not in headers
+				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -644,6 +653,14 @@ namespace Introspection {
 					return true;
 				case "FSResource": // header says yes, runtime says no
 					return true;
+				// Xcode 16.2 Conformance not in headers
+				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -727,10 +744,6 @@ namespace Introspection {
 					return true;
 				break;
 #endif
-			case "NSExtensionRequestHandling":
-				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
-					return true;
-				break;
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;

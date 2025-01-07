@@ -66,15 +66,14 @@ namespace AudioUnit {
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
-		[NoWatch]
-		[MacCatalyst (13, 1)]
 		MidiOutputBufferFull = -66753,
-		[NoWatch]
-		[MacCatalyst (13, 1)]
+		RenderTimeout = -66745,
 		InvalidParameterValue = -66743,
-		[NoWatch]
-		[MacCatalyst (13, 1)]
 		ExtensionNotFound = -66744,
+		InvalidFilePath = -66742,
+		MissingKey = -66741,
+		ComponentManagerNotSupported = -66740,
+		MultipleVoiceProcessors = -66635,
 	}
 
 	/// <summary>Enumerates status values returned by <see cref="M:AudioUnit.AudioUnit.AudioOutputUnitPublish(AudioUnit.AudioComponentDescription,System.String,System.UInt32)" />.</summary>
@@ -83,6 +82,7 @@ namespace AudioUnit {
 		DuplicateDescription = -66752,
 		UnsupportedType = -66751,
 		TooManyInstances = -66750,
+		InstanceTimedOut = -66754,
 		InstanceInvalidated = -66749,
 		NotPermitted = -66748,
 		InitializationTimedOut = -66747,
@@ -260,12 +260,8 @@ namespace AudioUnit {
 		Main = 0, // 0
 	}
 
-#if XAMCORE_3_0
 	/// <summary>An enumeration whose values specify a kind of <see cref="T:AudioUnit.AudioUnit" />.</summary>
 	[Internal]
-#else
-	[Obsolete ("Please use the strongly typed properties instead.")]
-#endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
 								   // Audio Unit Properties
 		ClassInfo = 0,

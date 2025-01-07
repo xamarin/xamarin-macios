@@ -206,6 +206,19 @@ namespace HealthKit {
 		NearlyEveryDay,
 	}
 
+	[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+	[Native]
+	public enum HKAudiogramConductionType : long {
+		Air = 0,
+	}
+
+	[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+	[Native]
+	public enum HKAudiogramSensitivityTestSide : long {
+		Left = 0,
+		Right = 1,
+	}
+
 #if NET
 	/// <summary>The completion handler for <see cref="M:HealthKit.HKAnchoredObjectQuery.#ctor(HealthKit.HKSampleType,Foundation.NSPredicate,System.nuint,System.nuint,HealthKit.HKAnchoredObjectResultHandler2)" />.</summary>
 	/// <summary>Completion handler for anchored object queries.</summary>
@@ -1086,6 +1099,10 @@ namespace HealthKit {
 		[MacCatalyst (13, 1)]
 		[Export ("HeartRateEventThreshold")]
 		HKQuantity HeartRateEventThreshold { get; set; }
+
+		[MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Export ("AppleFitnessPlusCatalogIdentifier")]
+		string AppleFitnessPlusCatalogIdentifier { get; set; }
 	}
 
 	/// <summary>Defines the keys in the <see cref="T:HealthKit.HKMetadata" /> key-value dictionary.</summary>
@@ -1373,6 +1390,10 @@ namespace HealthKit {
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 		[Field ("HKMetadataKeyWaterSalinity")]
 		NSString WaterSalinity { get; }
+
+		[MacCatalyst (18, 2), Mac (15, 2), iOS (18, 2)]
+		[Field ("HKMetadataKeyAppleFitnessPlusCatalogIdentifier")]
+		NSString AppleFitnessPlusCatalogIdentifier { get; }
 	}
 
 	/// <summary>Base class to <see cref="T:HealthKit.HKSample" />, which defines sampling data.</summary>
@@ -4540,16 +4561,38 @@ namespace HealthKit {
 		[Export ("frequency", ArgumentSemantic.Copy)]
 		HKQuantity Frequency { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1)]
+		[Deprecated (PlatformName.MacOSX, 15, 1)]
+		[Deprecated (PlatformName.WatchOS, 11, 1)]
 		[NullAllowed, Export ("leftEarSensitivity", ArgumentSemantic.Copy)]
 		HKQuantity LeftEarSensitivity { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1)]
+		[Deprecated (PlatformName.MacOSX, 15, 1)]
+		[Deprecated (PlatformName.WatchOS, 11, 1)]
 		[NullAllowed, Export ("rightEarSensitivity", ArgumentSemantic.Copy)]
 		HKQuantity RightEarSensitivity { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use the 'HKAudiogramSensitivityTest' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use the 'HKAudiogramSensitivityTest' overload instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 1, message: "Use the 'HKAudiogramSensitivityTest' overload instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use the 'HKAudiogramSensitivityTest' overload instead.")]
 		[Static]
 		[Export ("sensitivityPointWithFrequency:leftEarSensitivity:rightEarSensitivity:error:")]
 		[return: NullAllowed]
 		HKAudiogramSensitivityPoint GetSensitivityPoint (HKQuantity frequency, [NullAllowed] HKQuantity leftEarSensitivity, [NullAllowed] HKQuantity rightEarSensitivity, [NullAllowed] out NSError error);
+
+		[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+		[Static]
+		[Export ("sensitivityPointWithFrequency:tests:error:")]
+		[return: NullAllowed]
+		HKAudiogramSensitivityPoint GetSensitivityPoint (HKQuantity frequency, HKAudiogramSensitivityTest [] tests, [NullAllowed] out NSError error);
+
+		[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+		[Export ("tests", ArgumentSemantic.Copy)]
+		HKAudiogramSensitivityTest [] Tests { get; }
 	}
 
 	[Watch (6, 0), iOS (13, 0), Mac (13, 0)]
@@ -4560,9 +4603,18 @@ namespace HealthKit {
 		[Export ("sensitivityPoints", ArgumentSemantic.Copy)]
 		HKAudiogramSensitivityPoint [] SensitivityPoints { get; }
 
+		[Deprecated (PlatformName.iOS, 18, 1, message: "Use the 'HKDevice' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 18, 1, message: "Use the 'HKDevice' overload instead.")]
+		[Deprecated (PlatformName.MacOSX, 15, 1, message: "Use the 'HKDevice' overload instead.")]
+		[Deprecated (PlatformName.WatchOS, 11, 1, message: "Use the 'HKDevice' overload instead.")]
 		[Static]
 		[Export ("audiogramSampleWithSensitivityPoints:startDate:endDate:metadata:")]
 		HKAudiogramSample GetAudiogramSample (HKAudiogramSensitivityPoint [] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+
+		[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+		[Static]
+		[Export ("audiogramSampleWithSensitivityPoints:startDate:endDate:device:metadata:")]
+		HKAudiogramSample GetAudiogramSample (HKAudiogramSensitivityPoint [] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
 	[Watch (6, 0), iOS (13, 0), Mac (13, 0)]
@@ -5324,6 +5376,47 @@ namespace HealthKit {
 	public enum HKAppleSleepingBreathingDisturbancesClassification : long {
 		NotElevated,
 		Elevated,
+	}
+
+	[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKAudiogramSensitivityPointClampingRange : NSSecureCoding, NSCopying {
+
+		[NullAllowed, Export ("lowerBound", ArgumentSemantic.Copy)]
+		HKQuantity LowerBound { get; }
+
+		[NullAllowed, Export ("upperBound", ArgumentSemantic.Copy)]
+		HKQuantity UpperBound { get; }
+
+		[Static]
+		[Export ("clampingRangeWithLowerBound:upperBound:error:")]
+		[return: NullAllowed]
+		HKAudiogramSensitivityPointClampingRange Create ([NullAllowed][BindAs (typeof (double?))] NSNumber lowerBound, [NullAllowed][BindAs (typeof (double?))] NSNumber upperBound, [NullAllowed] out NSError error);
+	}
+
+	[Watch (11, 1), MacCatalyst (18, 1), Mac (15, 1), iOS (18, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKAudiogramSensitivityTest : NSSecureCoding, NSCopying {
+
+		[Export ("sensitivity", ArgumentSemantic.Copy)]
+		HKQuantity Sensitivity { get; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		HKAudiogramConductionType Type { get; }
+
+		[Export ("masked")]
+		bool Masked { get; }
+
+		[Export ("side", ArgumentSemantic.Assign)]
+		HKAudiogramSensitivityTestSide Side { get; }
+
+		[NullAllowed, Export ("clampingRange", ArgumentSemantic.Copy)]
+		HKAudiogramSensitivityPointClampingRange ClampingRange { get; }
+
+		[Export ("initWithSensitivity:type:masked:side:clampingRange:error:")]
+		NativeHandle Constructor (HKQuantity sensitivity, HKAudiogramConductionType type, bool masked, HKAudiogramSensitivityTestSide side, [NullAllowed] HKAudiogramSensitivityPointClampingRange clampingRange, [NullAllowed] out NSError error);
 	}
 
 }

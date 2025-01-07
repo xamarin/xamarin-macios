@@ -1,4 +1,0 @@
-## `VideoCallSupport` category introspection failures on MacCatalyst 15
-!missing-selector! AVPictureInPictureControllerContentSource::activeVideoCallContentViewController not bound
-!missing-selector! AVPictureInPictureControllerContentSource::activeVideoCallSourceView not bound
-!missing-selector! AVPictureInPictureControllerContentSource::initWithActiveVideoCallSourceView:contentViewController: not bound

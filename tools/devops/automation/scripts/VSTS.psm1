@@ -447,11 +447,6 @@ class BuildConfiguration {
 
         $this.StoreParentBuildVariables($configuration)
 
-        # store if dotnet has been enabled
-        $variableName = "ENABLE_DOTNET"
-        $variableValue = [Environment]::GetEnvironmentVariable($variableName)
-        $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
         $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
         foreach ($platform in $dotnetPlatforms) {
@@ -483,24 +478,7 @@ class BuildConfiguration {
             }
         }
 
-        # store all the variables needed when classic xamarin has been enabled
-        $configuration | Add-Member -NotePropertyName "INCLUDE_XAMARIN_LEGACY" -NotePropertyValue $Env:INCLUDE_XAMARIN_LEGACY
-
-        # if xamarin legacy has been included, check if we need to include the xamarin sdk for each of the platforms, otherewise it will be
-        # false for all
-        $xamarinPlatforms = @("ios", "macos", "tvos", "watchos", "maccatalyst")
-        if ($configuration.INCLUDE_XAMARIN_LEGACY -eq "true") {
-            foreach ($platform in $xamarinPlatforms) {
-                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
-                $variableValue = [Environment]::GetEnvironmentVariable("$variableName")
-                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
-            }
-        } else {
-            foreach ($platform in $xamarinPlatforms) {
-                $variableName = "INCLUDE_LEGACY_$($platform.ToUpper())"
-                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue "false"
-            }
-        }
+        $xamarinPlatforms = @("ios", "macos", "tvos", "maccatalyst")
 
         # add all the include platforms as well as the nuget os version
         foreach ($platform in $xamarinPlatforms) {
@@ -886,7 +864,155 @@ function Edit-BuildConfiguration {
     return $buildConfiguration.Update($ConfigKey, $ConfigValue, $ConfigFile)
 }
 
+function Find-AzureDevOpsWorkItemWithTitle {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string]
+        $Title,
 
+        [string]
+        $WorkItemType = 'Bug',
+
+        [string]
+        $AreaPath = 'DevDiv\VS Client - Runtime SDKs\iOS and Mac'
+    )
+
+    $headers = Get-AuthHeader -AccessToken $Env:ACCESSTOKEN
+
+    $url = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/wit/wiql?api-version=7.1"
+    $escapedTitle = $Title.Replace("'", "''")
+    $payload = @{
+        "query" = "Select [System.Id] FROM WorkItems WHERE [System.State] = 'Active' AND [System.Title] = '$escapedTitle' AND [System.WorkItemType] = '$WorkItemType' AND [System.AreaPath] UNDER '$AreaPath'"
+    }
+    $body = ConvertTo-Json $payload -Depth 100
+
+    try {
+        Write-Host "Uri: $url"
+        Write-Host "Body:"
+        $body | Out-String | Write-Host
+
+        $response = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' -Body $body
+
+        Write-Host "Response:"
+        $response | Out-String | Write-Host
+
+        $itemCount = $response.workItems.count
+        if ($itemCount -eq 0) {
+            Write-Host "No work items found with the given criteria"
+            return 0
+        }
+
+        $workItemId = $response.workItems[0].id
+        Write-Host "Found $itemCount work items with the given criteria, returning id: $workItemId"
+        return $workItemId
+    } catch {
+        Write-Host "Failed to find work item: $_"
+    }
+    return 0
+}
+
+function New-AzureDevOpsWorkItem {
+    param
+    (
+        [Parameter(Mandatory)]
+        [string]
+        $Message,
+
+        [Parameter(Mandatory)]
+        [string]
+        $Title,
+
+        [string]
+        $WorkItemType = 'Bug',
+
+        [string]
+        $AreaPath = 'DevDiv\VS Client - Runtime SDKs\iOS and Mac'
+    )
+
+    $headers = Get-AuthHeader -AccessToken $Env:ACCESSTOKEN
+
+    $payload = @(
+        @{
+            "op" = "add"
+            "path" = "/fields/System.Title"
+            "from" = $null
+            "value" = $Title
+        }
+        @{
+            "op" = "add"
+            "path" = "/fields/System.AreaPath"
+            "from" = $null
+            "value" = $AreaPath
+        }
+        @{
+            "op" = "add"
+            "path" = "/fields/Microsoft.VSTS.TCM.ReproSteps"
+            "from" = $null
+            "value" = $Message
+        }
+    )
+
+    $body = ConvertTo-Json $payload -Depth 100
+
+    $url = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/wit/workitems/`$$($WorkItemType)?api-version=7.1"
+    try {
+        Write-Host "Creating DevOps $WorkItemType with Title=$Title and AreaPath=$AreaPath"
+        Write-Host "Uri: $url"
+        Write-Host "Body:"
+        $body | Out-String | Write-Host
+        $response = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json-patch+json' -Body $body
+        Write-Host "Response = $response"
+        $workItemId = $response.id
+        $workItemUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_workitems/edit/$workItemId"
+        Write-Host "Work Item Url: $workItemUrl"
+        return $workItemUrl
+    } catch {
+        Write-Host "Failed to create work item:"
+        $_ | Out-String | Write-Host
+        return ""
+    }
+}
+
+function New-AzureDevOpsWorkItemComment {
+    param
+    (
+        [Parameter(Mandatory)]
+        [int]
+        $WorkItemId,
+
+        [Parameter(Mandatory)]
+        [string]
+        $Comment
+    )
+
+    $headers = Get-AuthHeader -AccessToken $Env:ACCESSTOKEN
+
+    $payload =
+        @{
+            "text" = $Comment
+        }
+
+    $body = ConvertTo-Json $payload -Depth 100
+
+    $url = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/wit/workItems/$WorkItemId/comments?api-version=7.1-preview.4"
+    try {
+        Write-Host "Uri: $url"
+        Write-Host "Headers:"
+        $headers
+        Write-Host "Body:"
+        $body
+        $response = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' -Body $body
+        Write-Host "Response:"
+        $response
+        $workItemUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_workitems/edit/$workItemId"
+        return $workItemUrl
+    } catch {
+        Write-Host "Failed to add comment to work item:"
+        $_ | Out-String | Write-Host
+        return ""
+    }
+}
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
@@ -896,3 +1022,7 @@ Export-ModuleMember -Function New-BuildConfiguration
 Export-ModuleMember -Function Import-BuildConfiguration
 Export-ModuleMember -Function Edit-BuildConfiguration
 Export-ModuleMember -Function Get-YamlPreview
+Export-ModuleMember -Function New-AzureDevOpsWorkItem
+Export-ModuleMember -Function New-AzureDevOpsWorkItemComment
+Export-ModuleMember -Function Find-AzureDevOpsWorkItemWithTitle
+

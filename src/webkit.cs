@@ -27,6 +27,7 @@ using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 using JavaScriptCore;
+using Network;
 using Security;
 
 #if MONOMAC
@@ -1216,15 +1217,6 @@ namespace WebKit {
 		[Export ("preventDefault")]
 		void PreventDefault ();
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initEvent:canBubbleArg:cancelableArg:")]
-		void InitEvent (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
-#endif
-
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initEvent:canBubbleArg:cancelableArg:")]
 		NativeHandle Constructor (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 	}
@@ -1237,14 +1229,6 @@ namespace WebKit {
 	[BaseType (typeof (DomEvent), Name = "DOMOverflowEvent")]
 	[DisableDefaultCtor]
 	partial interface DomOverflowEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
-		void InitEvent (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
 		NativeHandle Constructor (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 
@@ -1278,14 +1262,6 @@ namespace WebKit {
 	[BaseType (typeof (DomEvent), Name = "DOMUIEvent")]
 	[DisableDefaultCtor]
 	partial interface DomUIEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 
@@ -1319,25 +1295,9 @@ namespace WebKit {
 	[BaseType (typeof (DomUIEvent), Name = "DOMKeyboardEvent")]
 	[DisableDefaultCtor]
 	partial interface DomKeyboardEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
-
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
-#endif
-
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
@@ -1377,14 +1337,6 @@ namespace WebKit {
 	[BaseType (typeof (DomUIEvent), Name = "DOMMouseEvent")]
 	[DisableDefaultCtor]
 	partial interface DomMouseEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
 		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
 
@@ -1442,14 +1394,6 @@ namespace WebKit {
 	[BaseType (typeof (DomMouseEvent), Name = "DOMWheelEvent")]
 	[DisableDefaultCtor]
 	partial interface DomWheelEvent {
-#if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead.")]
-		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
-		void InitEvent (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
-#endif
-#if !XAMCORE_3_0
-		[Sealed] // Just to avoid the duplicate selector error
-#endif
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
 		NativeHandle Constructor (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 
@@ -5032,6 +4976,10 @@ namespace WebKit {
 		[Async]
 		[Export ("fetchAllDataStoreIdentifiers:")]
 		void FetchAllDataStoreIdentifiers (Action<NSArray<NSUuid>> completionHandler);
+
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("proxyConfigurations", ArgumentSemantic.Copy), NullAllowed]
+		NWProxyConfig [] ProxyConfigurations { get; set; }
 	}
 
 	[NoiOS, NoWatch, NoTV]
@@ -5620,7 +5568,7 @@ namespace WebKit {
 		[Export ("stopLoading:")]
 		void StopLoading ([NullAllowed] NSObject sender);
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("writingToolsActive")]
 		bool WritingToolsActive { [Bind ("isWritingToolsActive")] get; }
 	}
@@ -5747,11 +5695,11 @@ namespace WebKit {
 		[Export ("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
 		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("supportsAdaptiveImageGlyph")]
 		bool SupportsAdaptiveImageGlyph { get; set; }
 
-		[Mac (15, 0), NoiOS, MacCatalyst (18, 0)]
+		[Mac (15, 0), iOS (18, 2), MacCatalyst (18, 0)]
 		[Export ("writingToolsBehavior")]
 #if MONOMAC
 		NSWritingToolsBehavior WritingToolsBehavior { get; set; }
@@ -5887,6 +5835,10 @@ namespace WebKit {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 		[Export ("lockdownModeEnabled")]
 		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("preferredHTTPSNavigationPolicy", ArgumentSemantic.Assign)]
+		WKWebpagePreferencesUpgradeToHttpsPolicy PreferredHttpsNavigationPolicy { get; set; }
 	}
 
 	[NoMac]
@@ -5991,6 +5943,8 @@ namespace WebKit {
 
 	interface IWKDownloadDelegate { }
 
+	delegate void WKDownloadDelegateDecidePlaceholderPolicyCallback (WKDownloadPlaceholderPolicy policy, [NullAllowed] NSUrl url);
+
 	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]
 #if NET
@@ -6016,6 +5970,18 @@ namespace WebKit {
 
 		[Export ("download:didFailWithError:resumeData:")]
 		void DidFail (WKDownload download, NSError error, [NullAllowed] NSData resumeData);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:decidePlaceholderPolicy:")]
+		void DecidePlaceholderPolicy (WKDownload download, WKDownloadDelegateDecidePlaceholderPolicyCallback completionHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:didReceivePlaceholderURL:completionHandler:")]
+		void DidReceivePlaceholderUrl (WKDownload download, NSUrl url, Action completionHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+		[Export ("download:didReceiveFinalURL:")]
+		void DidReceiveFinalUrl (WKDownload download, NSUrl url);
 	}
 
 	[iOS (14, 5)]
@@ -6040,5 +6006,30 @@ namespace WebKit {
 		[Async]
 		[Export ("cancel:")]
 		void Cancel ([NullAllowed] Action<NSData> completionHandler);
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("userInitiated")]
+		bool UserInitiated { [Bind ("isUserInitiated")] get; }
+
+		[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("originatingFrame")]
+		WKFrameInfo OriginatingFrame { get; }
+
+	}
+
+	[iOS (18, 2), MacCatalyst (18, 2), Mac (15, 2)]
+	[Native]
+	public enum WKDownloadPlaceholderPolicy : long {
+		Disable,
+		Enable,
+	}
+
+	[Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+	[Native ("WKWebpagePreferencesUpgradeToHTTPSPolicy")]
+	public enum WKWebpagePreferencesUpgradeToHttpsPolicy : long {
+		KeepAsRequested,
+		AutomaticFallbackToHttp,
+		UserMediatedFallbackToHttp,
+		ErrorOnFailure,
 	}
 }

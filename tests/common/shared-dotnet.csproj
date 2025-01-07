@@ -6,7 +6,7 @@
 	<!-- Logic for iOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-ios'))">
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>ios-fat</NativeLibName>
+		<NativeLibName>iossimulator</NativeLibName>
 		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
 		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
@@ -18,7 +18,7 @@
 	<!-- Logic for tvOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>tvos-fat</NativeLibName>
+		<NativeLibName>tvossimulator</NativeLibName>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
 		<!-- Determine whether we're building for the simulator (not device nor desktop) -->
 		<_IsSimulatorBuild Condition="'$(RuntimeIdentifier)$(RuntimeIdentifiers)' == '' Or $(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('tvossimulator'))">true</_IsSimulatorBuild>
@@ -29,7 +29,7 @@
 	<!-- Logic for macOS -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
 		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
-		<NativeLibName>macos-fat</NativeLibName>
+		<NativeLibName>macos</NativeLibName>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
 		<RuntimeIdentifiers Condition="'$(UniversalBuild)' == 'true'">osx-x64;osx-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">osx-x64</RuntimeIdentifiers>
@@ -38,7 +38,7 @@
 	<!-- Logic for Mac Catalyst -->
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>maccatalyst-fat</NativeLibName>
+		<NativeLibName>maccatalyst</NativeLibName>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
 		<RuntimeIdentifiers Condition="'$(UniversalBuild)' == 'true'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">maccatalyst-x64</RuntimeIdentifiers>
@@ -54,9 +54,6 @@
 
 		<!-- Always use the latest C# version everywhere -->
 		<LangVersion>latest</LangVersion>
-
-		<!-- XAMCORE_3_0 is always defined for .NET -->
-		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
 
 		<!-- Don't show warnings about platform availability -->
 		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
@@ -99,6 +96,7 @@
 
 	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)/test-variations.csproj" />
 
 	<Import Project="$(GeneratedProjectFile)" Condition="'$(GeneratedProjectFile)' != ''" />
 
@@ -120,8 +118,7 @@
 		<Zip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
+			ZipPath="$(ZipPath)"
 			Recursive="true"
 			Symlinks="true"
 			Sources="$(DirectoryToCompress)"

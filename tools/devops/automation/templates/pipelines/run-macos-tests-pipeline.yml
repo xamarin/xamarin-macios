@@ -63,6 +63,20 @@ parameters:
           "Agent.HasDevices -equals False",
           "Agent.IsPaired -equals False"
         ]
+      },
+      {
+        stageName: 'mac_15_arm64',
+        displayName: 'arm64 - Mac Sequoia (15)',
+        macPool: 'VSEng-VSMac-Xamarin-Shared',
+        useImage: false,
+        statusContext: 'arm64 - Mac Sequoia (15)',
+        demands: [
+          "Agent.OS -equals Darwin",
+          "macOS.Name -equals Sequoia",
+          "macOS.Architecture -equals arm64",
+          "Agent.HasDevices -equals False",
+          "Agent.IsPaired -equals False"
+        ]
       }]
 
   - name: pool
@@ -195,6 +209,11 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
+    - repository: macios-adr
+      type: git
+      name: macios-adr
+      ref: refs/heads/main
+
 variables:
   - template: ../variables/common.yml
   - name: DisablePipelineConfigDetector
@@ -238,7 +257,7 @@ stages:
               commit: ${{ parameters.commit }}
               testConfigurations: ${{ parameters.testConfigurations }}
               supportedPlatforms: ${{ parameters.supportedPlatforms }}
-              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+              testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-mac-tests,run-maccatalyst-tests,run-system-permission-tests'
               statusContext: 'VSTS: simulator tests' 
               uploadArtifacts: true
 

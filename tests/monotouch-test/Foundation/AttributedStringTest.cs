@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+
 using NUnit.Framework;
 using Foundation;
 #if MONOMAC
@@ -133,6 +135,120 @@ namespace MonoTouchFixtures.Foundation {
 			using (var s = new NSAttributedString ("string", (NSDictionary) null)) {
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero));
 			}
+		}
+
+		[Test]
+		public void Create_Url_Error ()
+		{
+			{
+				using var obj = NSAttributedString.Create (new NSUrl (""), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNull (obj, "IsNull");
+				Assert.IsNotNull (e, "Error");
+			}
+
+			{
+				using var obj = NSAttributedString.Create (new NSUrl (""), new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNull (obj, "IsNull 2");
+				Assert.IsNotNull (e, "Error 2");
+			}
+		}
+
+		[Test]
+		public void Create_Markdown_Url_Error ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (new NSUrl (""), markdownOptions, null, out var e);
+			Assert.IsNull (obj, "IsNull");
+			Assert.IsNotNull (e, "Error");
+		}
+
+
+		[Test]
+		public void Create_Url ()
+		{
+			var textFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
+			var textUrl = NSUrl.CreateFileUrl (textFile);
+			{
+				using var obj = NSAttributedString.Create (textUrl, new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNull (e, "Error");
+				Assert.IsNotNull (obj, "IsNull");
+			}
+			{
+				using var obj = NSAttributedString.Create (textUrl, new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNull (e, "Error 2");
+				Assert.IsNotNull (obj, "IsNull 2");
+			}
+		}
+
+		[Test]
+		public void Create_Markdown_Url ()
+		{
+			var textFile = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
+			var textUrl = NSUrl.CreateFileUrl (textFile);
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (textUrl, markdownOptions, null, out var e);
+			Assert.IsNull (e, "Error");
+			Assert.IsNotNull (obj, "IsNull");
+		}
+
+		[Test]
+		public void Create_Data_Error ()
+		{
+			var attributes = new NSAttributedStringDocumentAttributes ();
+			attributes.DocumentType = NSDocumentType.RTF;
+			{
+				using var obj = NSAttributedString.Create (NSData.FromArray (new byte [42]), attributes, out var rda, out var e);
+				Assert.IsNull (obj, "IsNull");
+				Assert.IsNotNull (e, "Error");
+			}
+			{
+				using var obj = NSAttributedString.Create (NSData.FromArray (new byte [42]), attributes, out var e);
+				Assert.IsNull (obj, "IsNull 2");
+				Assert.IsNotNull (e, "Error 2");
+			}
+		}
+
+		[Test]
+		public void Create_Markdown_Data_Error ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (NSData.FromArray (new byte [] { (byte) '[', (byte) '!', (byte) '"', (byte) '$', (byte) '%', (byte) '&', (byte) '/', (byte) '(', (byte) ')', (byte) '=', (byte) '?', (byte) '¿', (byte) '^', (byte) '*', (byte) '¨', (byte) '´', (byte) '}', (byte) '\\' }), markdownOptions, null, out var e);
+			Assert.IsNull (obj, "IsNull");
+			Assert.IsNotNull (e, "Error");
+		}
+
+		[Test]
+		public void Create_Data ()
+		{
+			{
+				using var obj = NSAttributedString.Create (new NSData (), new NSAttributedStringDocumentAttributes (), out var rda, out var e);
+				Assert.IsNotNull (obj, "IsNull");
+				Assert.IsNull (e, "Error");
+			}
+			{
+				using var obj = NSAttributedString.Create (new NSData (), new NSAttributedStringDocumentAttributes (), out var e);
+				Assert.IsNotNull (obj, "IsNull 2");
+				Assert.IsNull (e, "Error 2");
+			}
+		}
+
+		[Test]
+		public void Create_Markdown_Data ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create (new NSData (), markdownOptions, null, out var e);
+			Assert.IsNotNull (obj, "IsNull");
+			Assert.IsNull (e, "Error");
+		}
+
+
+		[Test]
+		public void Create_Markdown_String ()
+		{
+			using var markdownOptions = new NSAttributedStringMarkdownParsingOptions ();
+			using var obj = NSAttributedString.Create ("#markdown", markdownOptions, null, out var e);
+			Assert.IsNotNull (obj, "IsNull");
+			Assert.IsNull (e, "Error");
 		}
 
 #if !__WATCHOS__

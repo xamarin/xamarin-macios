@@ -60,12 +60,6 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 			BuildLog = buildLog;
 			(TestExecutingResult ExecutionResult, KnownIssue KnownFailure) result = (TestExecutingResult.NotStarted, (KnownIssue) null);
-			var restoreResult = await RestoreNugetsAsync (buildLog, resource);
-			if ((restoreResult & TestExecutingResult.Failed) == TestExecutingResult.Failed) {
-				BuildLog.WriteLine ($"Failed to restore nugets: {restoreResult}");
-				result.ExecutionResult = restoreResult;
-				return result;
-			}
 
 			using (var xbuild = new Process ()) {
 				xbuild.StartInfo.FileName = msbuildPath ();

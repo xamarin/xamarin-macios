@@ -1,5 +1,8 @@
 #if !WATCH
 using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -51,14 +54,42 @@ namespace CoreVideo {
 
 		static IntPtr Create (IMTLDevice device, NSDictionary? attributes)
 		{
-			IntPtr handle;
-			CVReturn res;
-			unsafe {
-				res = CVMetalBufferCacheCreate (IntPtr.Zero, attributes.GetHandle (), device.GetNonNullHandle (nameof (device)), &handle);
-			}
-			if (res != CVReturn.Success)
+			if (!TryCreateHandle (device, attributes, out IntPtr handle, out var res))
 				throw new Exception ($"Could not create CVMetalBufferCache, CVMetalBufferCacheCreate returned: {res}");
 			return handle;
+		}
+
+		/// <summary>Try to create a new <see cref="CVMetalBufferCache" /> instance.</summary>
+		/// <param name="device">The Metal device to create the <see cref="CVMetalBufferCache" /> instance for.</param>
+		/// <param name="attributes">An optional dictionary of attributes to apply to the cache.</param>
+		/// <param name="metalBufferCache">The new <see cref="CVMetalBufferCache" /> instance, if successful, null otherwise.</param>
+		/// <param name="status">An error code if failed, or <see cref="CVReturn.Success" /> if successful.</param>
+		/// <returns>True if successful, otherwise false.</returns>
+		public static bool TryCreate (IMTLDevice device, NSDictionary? attributes, [NotNullWhen (true)] out CVMetalBufferCache? metalBufferCache, out CVReturn status)
+		{
+			var rv = TryCreateHandle (device, attributes, out IntPtr handle, out status);
+			if (rv) {
+				metalBufferCache = new CVMetalBufferCache (handle, true);
+			} else {
+				metalBufferCache = null;
+			}
+			return rv;
+		}
+
+		/// <summary>Try to create a new <see cref="CVMetalBufferCache" /> instance.</summary>
+		/// <param name="device">The Metal device to create the <see cref="CVMetalBufferCache" /> instance for.</param>
+		/// <param name="attributes">An optional dictionary of attributes to apply to the cache.</param>
+		/// <param name="handle">The pointer to the new <see cref="CVMetalBufferCache" /> instance, if successful.</param>
+		/// <param name="status">An error code if failed, or <see cref="CVReturn.Success" /> if successful.</param>
+		/// <returns>True if successful, otherwise false.</returns>
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static bool TryCreateHandle (IMTLDevice device, NSDictionary? attributes, out IntPtr handle, out CVReturn status)
+		{
+			handle = IntPtr.Zero;
+			unsafe {
+				status = CVMetalBufferCacheCreate (IntPtr.Zero, attributes.GetHandle (), device.GetNonNullHandle (nameof (device)), (IntPtr*) Unsafe.AsPointer<IntPtr> (ref handle));
+			}
+			return status == CVReturn.Success;
 		}
 
 		/// <summary>Create a new <see cref="CVMetalBufferCache" /> instance.</summary>

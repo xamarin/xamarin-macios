@@ -765,9 +765,9 @@ function New-GitHubComment {
         # calcualte the change ID which is the PR number 
         $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
         $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/issues/$changeId/comments"
+        $url = "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/issues/$changeId/comments"
     } else {
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_SOURCEVERSION/comments"
+        $url = "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/commits/$Env:BUILD_SOURCEVERSION/comments"
     }
 
     # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we
@@ -822,7 +822,7 @@ function Get-GitHubPRInfo {
         }
     }
 
-    $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
+    $url = "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/pulls/$ChangeId"
 
     $headers = @{
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
