@@ -24,7 +24,7 @@ namespace NotificationContentExtension {
 
 			// Do any required initialization here
 
-			View.BackgroundColor = UIColor.Clear;
+			View!.BackgroundColor = UIColor.Clear;
 
 			notificationLabel = new UILabel () {
 				TranslatesAutoresizingMaskIntoConstraints = false,
