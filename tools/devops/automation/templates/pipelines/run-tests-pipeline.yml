@@ -19,11 +19,6 @@ parameters:
   - name: pool
     type: string
     displayName: Bot pool to use
-    default: automatic
-    values:
-      - pr
-      - ci
-      - automatic
 
   - name: runTests
     displayName: Run Simulator Tests

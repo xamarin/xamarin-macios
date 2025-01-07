@@ -16,15 +16,6 @@ parameters:
     type: string
     default: 'Sonoma'
 
-  - name: pool
-    type: string
-    displayName: Bot pool to use
-    default: automatic
-    values:
-      - pr
-      - ci
-      - automatic
-
   - name: runGovernanceTests
     displayName: Run Governance Checks
     type: boolean
@@ -233,7 +224,7 @@ extends:
           macOSName: ${{ parameters.macOSName }}
           isPR: false
           provisionatorChannel: ${{ parameters.provisionatorChannel }}
-          pool: ${{ parameters.pool }}
+          pool: $(CIBuildPool)
           runGovernanceTests: ${{ parameters.runGovernanceTests }}
           forceInsertion: ${{ parameters.forceInsertion }}
           pushNugets: ${{ parameters.pushNugets }}
