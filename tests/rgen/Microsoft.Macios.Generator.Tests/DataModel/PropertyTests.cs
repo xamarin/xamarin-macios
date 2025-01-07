@@ -282,7 +282,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
-		var x = new Property ("First", "string", false, false, false,  new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
