@@ -6,11 +6,6 @@ parameters:
 
   - name: pool
     type: string
-    default: automatic
-    values:
-      - pr
-      - ci
-      - automatic
 
   - name: runGovernanceTests
     type: boolean
