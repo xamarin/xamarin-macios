@@ -7,17 +7,22 @@
 if test -z "${BUILD_SOURCESDIRECTORY:-}"; then
   BUILD_SOURCESDIRECTORY="$(git rev-parse --show-toplevel)/.."
 fi
+# If BUILD_REPOSITORY_TITLE is not set, it's likely we're executing locally.
+# In which case we can figure out where we are from the current git checkout
+if test -z "${BUILD_REPOSITORY_TITLE:-}"; then
+  BUILD_REPOSITORY_TITLE="$(basename "$(git remote get-url --push origin)")"
+fi
 # Don't assume we're in the right directory (makes it easier to run the script
 # locally).
-cd "$BUILD_SOURCESDIRECTORY/xamarin-macios"
+cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
 
 WORKLOAD_DST="$BUILD_SOURCESDIRECTORY/WorkloadRollback.json"
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
 DOTNET_PLATFORMS=${var#*=}
 echo "Dotnet platforms are '$DOTNET_PLATFORMS'"
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=MACIOS_MANIFEST_VERSION_BAND)
+var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=MACIOS_MANIFEST_VERSION_BAND)
 MACIOS_MANIFEST_VERSION_BAND=${var#*=}
 
 echo "{" > "$WORKLOAD_DST"
@@ -25,7 +30,7 @@ for platform in $DOTNET_PLATFORMS; do
     CURRENT_UPPER=$(echo "$platform" | tr "[:lower:]" "[:upper:]")
     CURRENT_LOWER=$(echo "$platform" | tr "[:upper:]" "[:lower:]")
 
-    var=$(make -C "$BUILD_SOURCESDIRECTORY"/xamarin-macios/tools/devops print-variable "VARIABLE=${CURRENT_UPPER}_NUGET_VERSION_FULL")
+    var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable "VARIABLE=${CURRENT_UPPER}_NUGET_VERSION_FULL")
     NUGET_VERSION_FULL=${var#*=}
     NUGET_VERSION_FULL=$(echo "$NUGET_VERSION_FULL" | cut -d "+" -f1)
 

@@ -5,8 +5,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using System.IO;
 using System.Xml;
 
-using Xharness.Targets;
-
 #nullable enable
 
 namespace Xharness {
@@ -56,9 +54,7 @@ namespace Xharness {
 			if (!Directory.Exists (appPath))
 				throw new DirectoryNotFoundException ($"The app bundle directory `{appPath}` does not exist");
 
-			var launchAppPath = target.ToRunMode () == RunMode.WatchOS
-				? Directory.GetDirectories (Path.Combine (appPath, "Watch"), "*.app") [0]
-				: appPath;
+			var launchAppPath = appPath;
 
 			return new AppBundleInformation (
 				appName,

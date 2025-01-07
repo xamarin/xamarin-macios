@@ -194,8 +194,14 @@ namespace CoreLocation {
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'AccuracyBestForNavigation' instead.")]
 		[Field ("kCLLocationAccuracyBestForNavigation")]
 		double AccurracyBestForNavigation { get; }
+#endif
+
+		[Field ("kCLLocationAccuracyBestForNavigation")]
+		double AccuracyBestForNavigation { get; }
 
 		[Field ("kCLLocationAccuracyBest")]
 		double AccuracyBest { get; }
@@ -1142,7 +1148,7 @@ namespace CoreLocation {
 		bool IsProducedByAccessory { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLUpdate {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'Stationary' instead.")]

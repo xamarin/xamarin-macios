@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>CompressedNativeXCFrameworkReferencesApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.compressednativexcframeworkreferencesapp</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+
+		<UseIntepreter>true</UseIntepreter> <!-- speed up the test -->
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<NativeReference Include="..\..\..\test-libraries\.libs\XTest.xcframework.zip" Kind="Framework" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\XStaticArTest.xcframework.zip" Kind="Static" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\XStaticObjectTest.xcframework.zip" Kind="Static" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

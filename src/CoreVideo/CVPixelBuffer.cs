@@ -58,6 +58,13 @@ namespace CoreVideo {
 		{
 		}
 
+		internal static CVPixelBuffer? Create (NativeHandle handle, bool owns)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+			return new CVPixelBuffer (handle, owns);
+		}
+
 		static IntPtr Create (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary? pixelBufferAttributes)
 		{
 			if (width <= 0)
@@ -499,14 +506,6 @@ namespace CoreVideo {
 		extern static CVReturn CVPixelBufferLockBaseAddress (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer, CVPixelBufferLock lockFlags);
 
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'Lock (CVPixelBufferLock)' instead.")]
-		public CVReturn Lock (CVOptionFlags lockFlags)
-		{
-			return CVPixelBufferLockBaseAddress (Handle, (CVPixelBufferLock) lockFlags);
-		}
-#endif
-
 		public CVReturn Lock (CVPixelBufferLock lockFlags)
 		{
 			return CVPixelBufferLockBaseAddress (Handle, lockFlags);
@@ -515,14 +514,6 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVPixelBufferUnlockBaseAddress (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer, CVPixelBufferLock unlockFlags);
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'Unlock (CVPixelBufferLock)'.")]
-		public CVReturn Unlock (CVOptionFlags unlockFlags)
-		{
-			return CVPixelBufferUnlockBaseAddress (Handle, (CVPixelBufferLock) unlockFlags);
-		}
-#endif
 
 		public CVReturn Unlock (CVPixelBufferLock unlockFlags)
 		{

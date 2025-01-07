@@ -508,12 +508,6 @@ namespace CloudKit {
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface CKErrorFields {
-#if !XAMCORE_3_0
-		// now exposed with the corresponding CKErrorCode enum
-		[Field ("CKErrorDomain")]
-		NSString ErrorDomain { get; }
-#endif
-
 		[Field ("CKPartialErrorsByItemIDKey")]
 		NSString PartialErrorsByItemIdKey { get; }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -71,6 +72,119 @@ namespace Xamarin.Utils {
 			}
 		}
 
+		/// <summary>This works like <see cref="AbsoluteToRelative" />, except that it works as it executing on Windows on all platforms.</summary>
+		/// <param name="absoluteBaseDirectory">The directory the return value should be relative to. Must be an absolute path.</param>
+		/// <param name="absolutePath">The path whose relative value should be computed. Must be an absolute path.</param>
+		public static string AbsoluteToRelativeWindows (string? absoluteBaseDirectory, string absolutePath)
+		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				// If we're already executing on Windows, we don't need our special implementation.
+				return AbsoluteToRelative (absoluteBaseDirectory, absolutePath);
+			}
+
+			// If there's no base directory, then return the input path.
+			if (string.IsNullOrEmpty (absoluteBaseDirectory))
+				return absolutePath;
+
+			if (!IsWindowsPathRooted (absolutePath, out var absoluteDriveLetter, out var absoluteUnrooted)) {
+				// We can't make 'absolutePath' an absolute path if it's already not, because we need the current directory for that, which we don't have.
+				throw new ArgumentOutOfRangeException (nameof (absolutePath), "Must be an absolute path", absolutePath);
+			}
+
+			if (!IsWindowsPathRooted (absoluteBaseDirectory, out var baseDirectoryDriveLetter, out var baseDirectoryUnrooted)) {
+				// We can't make 'absoluteBaseDirectory' an absolute path if it's already not, because we need the current directory for that, which we don't have.
+				throw new ArgumentOutOfRangeException (nameof (absoluteBaseDirectory), "Must be an absolute path", absoluteBaseDirectory);
+			}
+
+			// If the paths are on different drives, return the input path, since there's no relative path between them.
+			if (absoluteDriveLetter != baseDirectoryDriveLetter)
+				return absolutePath;
+
+			// Convert to mac-style paths, and reuse the existing AbsoluteToRelative implementation
+			var macRelative = AbsoluteToRelative (baseDirectoryUnrooted.Replace ('\\', '/'), absoluteUnrooted.Replace ('\\', '/'));
+			// Convert the result back to windows-style paths
+			return macRelative.Replace ('/', '\\');
+		}
+
+		/// <summary>This works like Path.Combine, except that it works as it executing on Windows on all platforms.</summary>
+		public static string PathCombineWindows (string pathA, string pathB)
+		{
+			// If B is a rooted path, return it directly
+			if (IsWindowsPathRooted (pathB, out var _, out var _))
+				return pathB;
+
+			var path = pathA + "\\" + pathB;
+			path = path.Replace ('/', '\\'); // canonicalize (the forward slash is a valid directory separator on Windows)
+
+			// Strip the root, if there is a root
+			var isRooted = IsWindowsPathRooted (path, out var rootLetter, out var unrootedPath);
+
+			// Evaluate '..' and '.'
+			var segments = new List<string> (unrootedPath.Split ('\\'));
+			var idx = 0;
+			while (idx < segments.Count) {
+				if (segments [idx] == ".") {
+					segments.RemoveAt (idx);
+					continue;
+				}
+				if (segments [idx] == "..") {
+					if (idx > 0) {
+						segments.RemoveAt (idx);
+						segments.RemoveAt (idx - 1);
+					} else {
+						idx++;
+					}
+					continue;
+				}
+				idx++;
+			}
+
+			var canonicalizedUnrootedPath = string.Join ("\\", segments);
+			if (isRooted)
+				return rootLetter + "\\" + canonicalizedUnrootedPath;
+			return canonicalizedUnrootedPath;
+		}
+
+		/// <summary>Checks if <paramref name="path" /> is a rooted Windows path.</summary>
+		static bool IsWindowsPathRooted (string? path, [NotNullWhen (true)] out string? root, out string unrootedPath)
+		{
+			root = null;
+			unrootedPath = path ?? string.Empty;
+
+#if NET
+			if (string.IsNullOrEmpty (path))
+#else
+			if (path is null || string.IsNullOrEmpty (path))
+#endif
+			{
+				return false;
+			}
+
+			if (path [0] == Path.DirectorySeparatorChar || path [0] == Path.AltDirectorySeparatorChar) {
+				root = path [0].ToString ();
+				unrootedPath = path.Substring (1);
+				return true;
+			}
+
+			if (path.Length < 2)
+				return false;
+
+			if (IsValidWindowsDriveLetter (path [0]) && path [1] == ':') {
+				root = path.Substring (0, 2);
+				unrootedPath = path.Substring (2);
+				return true;
+			}
+
+			return false;
+		}
+
+		static bool IsValidWindowsDriveLetter (char c)
+		{
+			return (c >= 'a' && c <= 'z') ||
+				   (c >= 'A' && c <= 'Z');
+		}
+
+		// Path.GetRelative doesn't exist on the net4.7.2 (which we need to target), so implement our own.
 		public static string AbsoluteToRelative (string? baseDirectory, string absolute)
 		{
 			if (string.IsNullOrEmpty (baseDirectory))

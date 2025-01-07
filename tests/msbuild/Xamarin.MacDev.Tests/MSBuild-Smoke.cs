@@ -154,7 +154,7 @@ namespace Xamarin.MMP.Tests {
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			RunMSBuildTest (tmpDir => {
-				var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
+				var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libframework.dylib"));
 				string itemGroup = $"<ItemGroup><NativeReference Include=\"{dylib}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup });
 				var testResults = TI.BuildProject (projectPath);
@@ -191,7 +191,7 @@ namespace Xamarin.MMP.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
-			var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
+			var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libframework.dylib"));
 			string nativeRefItemGroup = $"<ItemGroup><NativeReference Include = \"{dylib}\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
 
 			RunMSBuildTest (tmpDir => {

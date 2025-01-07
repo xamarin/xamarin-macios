@@ -34,9 +34,9 @@
       <Link>libframework.h</Link>
     </None>
     <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XTest.framework" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedObjectTest.framework" />
-    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedARTest.framework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XTest.framework\XTest" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedObjectTest.framework\XSharedObjectTest" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedARTest.framework\XSharedARTest" />
 
     <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XStaticArTest.framework">
       <Kind>Framework</Kind>

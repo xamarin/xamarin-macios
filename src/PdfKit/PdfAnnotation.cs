@@ -19,12 +19,10 @@ using ObjCRuntime;
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-#endif
+		[SupportedOSPlatform ("tvos18.2")]
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
 			if (value is null)
@@ -33,12 +31,10 @@ namespace PdfKit {
 			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-#endif
+		[SupportedOSPlatform ("tvos18.2")]
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
 			var nstr = CFString.CreateNative (str);
@@ -49,33 +45,24 @@ namespace PdfKit {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-#endif
+		[SupportedOSPlatform ("tvos18.2")]
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true)!;
 		}
 
 		public PdfAnnotationKey AnnotationType {
-#if NET
 			get { return PdfAnnotationKeyExtensions.GetValue (Type!); }
 			set { Type = value.GetConstant ()!; }
-#else
-			get { return PdfAnnotationKeyExtensions.GetValue ((NSString) Type); }
-			set { Type = value.GetConstant (); }
-#endif
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-#endif
+		[SupportedOSPlatform ("tvos18.2")]
 		public CGPoint [] QuadrilateralPoints {
 			get {
 				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) => {

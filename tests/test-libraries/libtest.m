@@ -166,7 +166,7 @@ x_get_matrix_float4x3 (id self, const char *sel,
 	*r2c2 = rv.columns[2][2];
 	*r2c3 = rv.columns[3][2];
 }
-#if !TARGET_OS_WATCH
+
 void
 x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self, NSTimeInterval time,
 		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
@@ -256,7 +256,6 @@ x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time,
 	*r3c2 = rv.columns[2][3];
 	*r3c3 = rv.columns[3][3];
 }
-#endif // !TARGET_OS_WATCH
 
 SCNMatrix4
 x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz)

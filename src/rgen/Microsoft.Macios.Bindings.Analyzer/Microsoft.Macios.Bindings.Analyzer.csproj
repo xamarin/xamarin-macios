@@ -1,0 +1,106 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+        <RootNamespace>Microsoft.Macios.Bindings.Analyzer</RootNamespace>
+        <AssemblyName>Microsoft.Macios.Bindings.Analyzer</AssemblyName>
+        <Version>0.1.0</Version>
+        <!-- There is a bug in the roslyn analyzer for roslyn analyzers.... -->
+        <NoWarn>RS2007;RS1041;RS1038;APL0003</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Microsoft.Macios.Bindings.Analyzer.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="../Microsoft.Macios.Generator/AttributesNames.cs" >
+            <Link>Generator/AttributesNames.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/DictionaryComparer.cs" >
+            <Link>Generator/DictionaryComparer.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/FieldData.cs" >
+            <Link>Generator/Attributes/FieldData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/ExportData.cs" >
+            <Link>Generator/Attributes/ExportData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/AttributeParsingError.cs" >
+            <Link>Generator/Attributes/AttributeParsingError.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/BindingTypeData.cs" >
+            <Link>Generator/Attributes/BindingTypeData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/ObsoletedOSPlatformData.cs" >
+            <Link>Generator/Attributes/ObsoletedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/SupportedOSPlatformData.cs" >
+            <Link>Generator/Attributes/SupportedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/UnsupportedOSPlatformData.cs" >
+            <Link>Generator/Attributes/UnsupportedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
+            <Link>Generator/Extensions/CompilationExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.cs" >
+            <Link>Generator/Extensions/TypeSymbolExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypedConstantExtensions.cs" >
+            <Link>Generator/Extensions/TypedConstantExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs" >
+            <Link>Generator/Extensions/StringExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/PlatformAvailability.cs" >
+            <Link>Generator/Availability/PlatformAvailability.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/PlatformAvailabilityBuilder.cs" >
+            <Link>Generator/Availability/PlatformAvailabilityBuilder.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/SymbolAvailability.cs" >
+            <Link>Generator/Availability/SymbolAvailability.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/SymbolAvailabilityBuilder.cs" >
+            <Link>Generator/Availability/SymbolAvailabilityBuilder.cs</Link>
+        </Compile>
+        <Compile Update="Resources.Designer.cs">
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" PrivateAssets="all" />
+        <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

@@ -1205,16 +1205,14 @@ namespace SpriteKit {
 		[Static, Export ("shapeNodeWithEllipseOfSize:")]
 		SKShapeNode FromEllipse (CGSize size);
 
-#if XAMCORE_3_0 // Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
+		// Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
 		[Internal]
-#endif
 		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithPoints:count:")]
 		SKShapeNode FromPoints (ref CGPoint points, nuint numPoints);
 
-#if XAMCORE_3_0 // Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
+		// Hide this ugly api fixes https://bugzilla.xamarin.com/show_bug.cgi?id=39706
 		[Internal]
-#endif
 		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithSplinePoints:count:")]
 		SKShapeNode FromSplinePoints (ref CGPoint points, nuint numPoints);
@@ -1533,9 +1531,7 @@ namespace SpriteKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
-#if XAMCORE_3_0
 	[DisableDefaultCtor]
-#endif
 #if MONOMAC
 	partial interface SKView : NSSecureCoding {
 #else

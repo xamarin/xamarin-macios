@@ -28,7 +28,6 @@ namespace Xharness {
 			return target.Platform switch {
 				TestTarget.Simulator_iOS64 => GetiOSDeviceType (Version.Parse (target.OSVersion!)),
 				TestTarget.Simulator_tvOS => "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
-				TestTarget.Simulator_watchOS => GetWatchOSDeviceType (Version.Parse (target.OSVersion!)),
 				_ => throw new Exception (string.Format ("Invalid simulator target: {0}", target))
 			};
 		}
@@ -47,25 +46,10 @@ namespace Xharness {
 			return "com.apple.CoreSimulator.SimDeviceType.iPhone-14";
 		}
 
-		string GetWatchOSDeviceType (Version watchOSVersion)
-		{
-			if (watchOSVersion.Major < 7)
-				return "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-38mm";
-			if (watchOSVersion.Major < 8)
-				return "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-40mm";
-			return "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-7-41mm";
-		}
-
 		public override void GetCompanionRuntimeAndDeviceType (TestTargetOs target, bool minVersion, out string? companionRuntime, out string? companionDeviceType)
 		{
 			companionRuntime = null;
 			companionDeviceType = null;
-
-			if (target.Platform == TestTarget.Simulator_watchOS) {
-				var companionVersion = minVersion ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.MaxWatchOSCompanionSimulator;
-				companionRuntime = "com.apple.CoreSimulator.SimRuntime.iOS-" + companionVersion.Replace ('.', '-');
-				companionDeviceType = GetiOSDeviceType (Version.Parse (companionVersion));
-			}
 		}
 	}
 }

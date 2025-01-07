@@ -10,7 +10,6 @@
 !missing-enum! __CFByteOrder not bound
 !missing-enum! CFCalendarUnit not bound
 !missing-enum! CFCharacterSetPredefinedSet not bound
-!missing-enum! CFComparisonResult not bound
 !missing-enum! CFDataSearchFlags not bound
 !missing-enum! CFDateFormatterStyle not bound
 !missing-enum! CFFileSecurityClearOptions not bound

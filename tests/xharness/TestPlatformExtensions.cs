@@ -8,17 +8,9 @@ namespace Xharness {
 		{
 			switch (platform) {
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_TodayExtension64:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
 				return "iOS " + Xamarin.SdkVersions.MiniOSSimulator;
 			case TestPlatform.tvOS:
 				return "tvOS " + Xamarin.SdkVersions.MinTVOSSimulator;
-			case TestPlatform.watchOS:
-			case TestPlatform.watchOS_32:
-			case TestPlatform.watchOS_64_32:
-				return "watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator;
 			default:
 				throw new NotImplementedException (platform.ToString ());
 			}
@@ -28,9 +20,6 @@ namespace Xharness {
 		{
 			switch (platform) {
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Modern:
-			case TestPlatform.Mac_Full:
-			case TestPlatform.Mac_System:
 				return true;
 			default:
 				return false;
@@ -41,10 +30,6 @@ namespace Xharness {
 		{
 			switch (platform) {
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_TodayExtension64:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
 				return true;
 			default:
 				return false;
@@ -56,23 +41,12 @@ namespace Xharness {
 		{
 			switch (platform) {
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_Unified:
-			case TestPlatform.iOS_Unified32:
-			case TestPlatform.iOS_Unified64:
-			case TestPlatform.iOS_TodayExtension64:
 				return "iOS";
 			case TestPlatform.tvOS:
 				return "tvOS";
-			case TestPlatform.watchOS:
-			case TestPlatform.watchOS_32:
-			case TestPlatform.watchOS_64_32:
-				return "watchOS";
 			case TestPlatform.MacCatalyst:
 				return "MacCatalyst";
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Modern:
-			case TestPlatform.Mac_Full:
-			case TestPlatform.Mac_System:
 				return "macOS";
 			default:
 				return null;

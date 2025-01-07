@@ -3,7 +3,7 @@
   <PropertyGroup>
     <_PlatformName>iOS</_PlatformName>
     <!-- Used by Microsoft.iOS.Windows.Sdk -->
-    <CoreiOSSdkDirectory>$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\</CoreiOSSdkDirectory>
+    <CoreiOSSdkDirectory>$(MSBuildThisFileDirectory)..\tools\msbuild\</CoreiOSSdkDirectory>
   </PropertyGroup>
 
   <Import Project="Xamarin.Shared.Sdk.props" Condition="'$(_IsWorkloadEol)' != 'true'" />

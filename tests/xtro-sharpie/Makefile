@@ -41,13 +41,8 @@ XTRO_SHARPIE_EXEC=$(MONO) --debug $(XTRO_SHARPIE)
 
 build: $(XTRO_SHARPIE) $(XTRO_REPORT) $(XTRO_SANITY)
 
-.stamp-build: export SHARPIE:=$(SHARPIE)
-.stamp-build: $(wildcard *.cs) pch-info.proj $(XTRO_REPORT) $(XTRO_SANITY) $(XTRO_SHARPIE)
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.csproj /r /bl:$@.binlog
-	$(Q) touch $@
-
 $(XTRO_SHARPIE): $(wildcard xtro-sharpie/*.cs) $(wildcard xtro-sharpie/*.csproj) pch-info.proj $(XTRO_REPORT)
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie/xtro-sharpie.csproj /r /bl:$@.binlog
+	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-sharpie/xtro-sharpie.csproj /bl:xtro-sharpie.binlog $(DOTNET_BUILD_VERBOSITY)
 
 $(XTRO_REPORT): $(wildcard xtro-report/*.cs) $(wildcard xtro-report/*.csproj) xtro-sharpie/Filter.cs Makefile
 	$(Q_GEN) unset MSBUILD_EXE_PATH && $(DOTNET) build xtro-report/xtro-report.csproj /bl:xtro-report.binlog $(DOTNET_BUILD_VERBOSITY)
@@ -183,12 +178,13 @@ endif
 
 gen-all: gen-ios gen-tvos gen-macos gen-maccatalyst
 
-dotnet-wrench:
-	$(MAKE) -j8 dotnet-classify
-
 report-dotnet/index.html: $(XTRO_REPORT) .stamp-dotnet-classify
 	$(Q) rm -rf report-dotnet
 	$(Q_GEN) $(XTRO_REPORT_EXEC) $(DOTNET_ANNOTATIONS_DIR) report-dotnet
+
+report-dotnet/report.zip: report-dotnet/index.html
+	$(Q) rm -f "$@"
+	$(Q) cd report-dotnet && zip -r9 report.zip . -x report.zip
 
 dotnet-report: report-dotnet/index.html
 
@@ -197,9 +193,9 @@ report-short:
 
 define DotNetClassify
 .stamp-dotnet-classify-$(1): $(XTRO_SHARPIE) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	$(Q) rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
-	$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
-	$(Q) touch $$@
+	$$(Q) rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
+	$$(Q_GEN) $(XTRO_SHARPIE_EXEC) --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$$(Q) touch $$@
 
 dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
 DOTNET_CLASSIFY += .stamp-dotnet-classify-$(1)
@@ -234,3 +230,6 @@ $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj xtro-sharpie/Filter.cs)
 
 unclassified2todo: $(U2TODO)
 	cd $(DOTNET_ANNOTATIONS_DIR) && $(DOTNET) exec $(abspath $(U2TODO))
+
+run-tests run-unit-tests:
+	$(Q) $(MAKE) -C UnitTests $@

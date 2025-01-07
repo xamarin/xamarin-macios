@@ -69,15 +69,6 @@ namespace Foundation {
 		{
 			return LocalizedDescription;
 		}
-
-#if __IOS__ && !NET
-		[Obsolete (Constants.WatchKitRemoved)]
-		public static NSString WatchKitErrorDomain {
-			get {
-				throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
-			}
-		}
-#endif // __IOS__
 #endif
 	}
 }

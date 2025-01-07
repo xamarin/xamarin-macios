@@ -35,6 +35,7 @@ public class TypeCache {
 	/* fundamental */
 	public Type NSObject { get; }
 	public Type INativeObject { get; }
+	public Type NativeObject { get; }
 
 	/* objcruntime */
 	public Type BlockLiteral { get; }
@@ -111,6 +112,9 @@ public class TypeCache {
 	public Type? CMClock { get; }
 	public Type? CMFormatDescription { get; }
 	public Type? CMSampleBuffer { get; }
+	public Type? CMTag { get; }
+	public Type? CMTagCollection { get; }
+	public Type? CMTaggedBufferGroup { get; }
 	public Type? CMTime { get; }
 	public Type? CMTimebase { get; }
 	public Type? CMTimeMapping { get; }
@@ -135,6 +139,7 @@ public class TypeCache {
 	public Type NWEndpoint { get; }
 	public Type NWInterface { get; }
 	public Type NWParameters { get; }
+	public Type NWProxyConfig { get; }
 
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
@@ -194,6 +199,7 @@ public class TypeCache {
 		/* fundamental */
 		NSObject = Lookup (platformAssembly, "Foundation", "NSObject");
 		INativeObject = Lookup (platformAssembly, "ObjCRuntime", "INativeObject");
+		NativeObject = Lookup (platformAssembly, "CoreFoundation", "NativeObject");
 
 		/* objcruntime */
 		BlockLiteral = Lookup (platformAssembly, "ObjCRuntime", "BlockLiteral");
@@ -271,6 +277,9 @@ public class TypeCache {
 			CMClock = ConditionalLookup (platformAssembly, "CoreMedia", "CMClock");
 			CMFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMFormatDescription");
 			CMSampleBuffer = ConditionalLookup (platformAssembly, "CoreMedia", "CMSampleBuffer");
+			CMTag = ConditionalLookup (platformAssembly, "CoreMedia", "CMTag");
+			CMTagCollection = ConditionalLookup (platformAssembly, "CoreMedia", "CMTagCollection");
+			CMTaggedBufferGroup = ConditionalLookup (platformAssembly, "CoreMedia", "CMTaggedBufferGroup");
 			CMTime = ConditionalLookup (platformAssembly, "CoreMedia", "CMTime");
 			CMTimebase = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimebase");
 			CMTimeMapping = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimeMapping");
@@ -297,6 +306,7 @@ public class TypeCache {
 		NWEndpoint = Lookup (platformAssembly, "Network", "NWEndpoint");
 		NWInterface = Lookup (platformAssembly, "Network", "NWInterface");
 		NWParameters = Lookup (platformAssembly, "Network", "NWParameters");
+		NWProxyConfig = Lookup (platformAssembly, "Network", "NWProxyConfig");
 
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);

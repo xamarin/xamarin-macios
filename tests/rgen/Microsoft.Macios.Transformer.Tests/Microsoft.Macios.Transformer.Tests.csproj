@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\rgen\Microsoft.Macios.Transformer\Microsoft.Macios.Transformer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\common\Configuration.cs" >
+        <Link>external\Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ConfigurationXUnit.cs" >
+        <Link>external\ConfigurationXUnit.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Profile.cs">
+        <Link>external\Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ExecutionHelper.cs">
+        <Link>external\ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+        <Link>external\ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\TargetFramework.cs">
+        <Link>external\TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\StringUtils.cs">
+        <Link>external\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\Execution.cs">
+        <Link>external\Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+        <Link>external\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\mtouch\Cache.cs">
+        <Link>external\Cache.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

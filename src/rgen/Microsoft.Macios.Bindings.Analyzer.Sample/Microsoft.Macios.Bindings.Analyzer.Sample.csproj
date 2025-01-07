@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+        <Nullable>enable</Nullable>
+        <NoWarn>APL0003</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" OutputItemType="Analyzer"  />
+        <ProjectReference Include="..\Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\Microsoft.Macios.Bindings.Analyzer\Microsoft.Macios.Bindings.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCBindings\BindingTypeAttribute.cs" >
+            <Link>external\BindginTypeAttribute.cs</Link>
+        </Compile>
+        <Compile Include="..\..\..\src\bgen\Attributes.cs" >
+            <Link>external\Attributes.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>

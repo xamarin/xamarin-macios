@@ -65,13 +65,13 @@ steps:
       HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
   - bash: |
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provisioning
+      make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops provisioning
     displayName: 'Generate provisionator files.'
 
   - task: xamops.azdevex.provisionator-task.provisionator@2
     displayName: 'Provision Products & Frameworks'
     inputs:
-      provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
+      provisioning_script: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/build-provisioning.csx
       provisioning_extra_args: '-vvvv'
       github_token: ${{ parameters.gitHubToken }}
     timeoutInMinutes: 250
@@ -86,15 +86,15 @@ steps:
     displayName: "Parse PR labels"
     timeoutInMinutes: 5
     inputs:
-      filePath: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/parse_pr_labels.ps1
-      arguments: -XamarinTop "$(Build.SourcesDirectory)/xamarin-macios/" -BuildReason "$(Build.Reason)"
+      filePath: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/parse_pr_labels.ps1
+      arguments: -XamarinTop "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/" -BuildReason "$(Build.Reason)"
 
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
       - task: PowerShell@2
         displayName: Setup Private Feeds Credentials
         inputs:
-          filePath: $(System.DefaultWorkingDirectory)/xamarin-macios/eng/common/SetupNugetSources.ps1
-          arguments: -ConfigFile $(System.DefaultWorkingDirectory)/xamarin-macios/NuGet.config -Password $Env:Token
+          filePath: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/eng/common/SetupNugetSources.ps1
+          arguments: -ConfigFile $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/NuGet.config -Password $Env:Token
         env:
           Token: $(dn-bot-dnceng-artifact-feeds-rw)
 
@@ -108,14 +108,14 @@ steps:
         displayName: "Configure install extra args"
         timeoutInMinutes: 5
 
-  - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-build.sh
+  - bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/configure-build.sh
     env:
       ${{ if eq(parameters.isPR, true) }}:
         IsPR: 'True'
       ${{ else }}:
         IsPR: 'False'
     displayName: "Configure build"
-    workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+    workingDirectory: "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)"
     timeoutInMinutes: 5
 
   - bash: |
@@ -123,17 +123,19 @@ steps:
       set -e
       cat configure.inc
     displayName: "Print configuration"
-    workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+    workingDirectory: "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)"
     timeoutInMinutes: 5
 
   # Make sure we have the right maccore hash checked out before we try to add
   # the provisioning profiles.
   - bash: |
       set -ex
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+      time make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/ reset
     name: resetDependencies
     displayName: 'Reset dependencies'
     timeoutInMinutes: 10
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken) # needed to checkout AzDo repo dependencies
 
   # We'll need these profiles to build the hot restart prebuilt app during the build
   # (it's built for device, and thus needs a certificate available so that the app can be signed).
@@ -158,9 +160,9 @@ steps:
     displayName: 'Clear Xcode cache'
 
   # Actual build of the project
-  - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
+  - bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-macios.sh
     name: build
-    workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+    workingDirectory: "$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)"
     displayName: 'Build'
     timeoutInMinutes: 180
     env:
@@ -176,14 +178,23 @@ steps:
       keyringPass: ${{ parameters.keyringPass }}
       use1ES: ${{ parameters.use1ES }}
 
-  # if we failed, write a comment and set the pipeline to failure. In this case, we do not want to hide the fact that we failed but we also want
-  # to write a comment.
+  # report the result of the build.
   - pwsh: |
-      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
       $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
-      $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'", "build")
-    condition: failed()
-    displayName: 'Report build failure'
+      $commentMessage = [System.Text.StringBuilder]::new()
+      if (("$Env:AGENT_JOBSTATUS" -eq "Succeeded") -or ("$Env:AGENT_JOBSTATUS" -eq "SucceededWithIssues")) {
+        $commentTitle = "Build passed ($(System.JobDisplayName))"
+        $commentIcon = ":white_check_mark:"
+        $commentMessage.AppendLine("")
+      } else {
+        $commentTitle = "Build failed ($(System.JobDisplayName))"
+        $commentIcon = ":fire:"
+        $commentMessage.AppendLine("Build failed for the job '$(System.JobDisplayName)' (with job status '$Env:AGENT_JOBSTATUS')")
+      }
+      $githubComments.NewCommentFromMessage($commentTitle, $commentIcon, $commentMessage.ToString(), "build $(System.JobDisplayName)")
+    condition: always()
+    displayName: 'Report build result'
     env:
       ${{ if eq(parameters.repositoryAlias, 'self') }}:
         COMMENT_HASH: $(fix_commit.GIT_HASH)
@@ -191,7 +202,7 @@ steps:
         COMMENT_HASH: $(Build.SourceVersion)
 
   # Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
-  - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  - bash: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
     displayName: 'Collect and upload crash reports'
     condition: always()  # who knows when crash reports can end up being useful
     continueOnError: true

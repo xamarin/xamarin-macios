@@ -14,11 +14,15 @@
 		<PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
 		<PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
+		<PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="..\..\common\Configuration.cs">
 			<Link>external\Configuration.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\ConfigurationNUnit.cs">
+			<Link>external\ConfigurationNUnit.cs</Link>
 		</Compile>
 		<Compile Include="..\..\common\DotNet.cs">
 			<Link>external\DotNet.cs</Link>

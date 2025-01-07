@@ -22,9 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 				{ "MSBuildSDKsPath", null }, // Comes from MSBuild, and confuses 'dotnet build'
 			};
 
-			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
-			if (Configuration.include_dotnet)
-				RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
+			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
 		static void RunMake (string directory, Dictionary<string, string> environment = null)
@@ -94,9 +92,9 @@ namespace Xamarin.MacDev.Tasks {
 		public void TestLipoExecutable ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
-			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
-			var fileB = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.x86_64.dylib");
-			var bundles = CreateAppBundles (fileA, fileB, "libtest.dylib");
+			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "osx-arm64", "libframework.dylib");
+			var fileB = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "osx-x64", "libframework.dylib");
+			var bundles = CreateAppBundles (fileA, fileB, "libframework.dylib");
 
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");
 			var task = CreateTask (outputBundle, bundles);
@@ -106,7 +104,7 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual (1, Directory.GetFileSystemEntries (outputBundle).Length, "Files in bundle");
 
 			// The resulting dylib should contain 2 architectures.
-			var fatLibrary = Path.Combine (outputBundle, "libtest.dylib");
+			var fatLibrary = Path.Combine (outputBundle, "libframework.dylib");
 			Assert.That (fatLibrary, Does.Exist, "Existence");
 			var machO = MachO.Read (fatLibrary).ToArray ();
 			Assert.AreEqual (2, machO.Length, "Architecture Count");
@@ -259,7 +257,7 @@ namespace Xamarin.MacDev.Tasks {
 		public void TestSingleInput ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
-			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
+			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "osx-arm64", "libframework.dylib");
 			var bundle = CreateAppBundle (Path.GetDirectoryName (fileA), Path.GetFileName (fileA));
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");
 			var task = CreateTask (outputBundle, bundle);
@@ -269,7 +267,7 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual (1, Directory.GetFileSystemEntries (outputBundle).Length, "Files in bundle");
 
 			// The resulting dylib should contain 1 architecture.
-			var nonFatBinary = Path.Combine (outputBundle, "libtest.arm64.dylib");
+			var nonFatBinary = Path.Combine (outputBundle, "libframework.dylib");
 			Assert.That (nonFatBinary, Does.Exist, "Existence");
 			var machO = MachO.Read (nonFatBinary).ToArray ();
 			Assert.AreEqual (1, machO.Length, "Architecture Count");

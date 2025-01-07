@@ -15,9 +15,6 @@ namespace Xamarin.Linker {
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
 		public const string AVRouting = nameof (AVRouting);
-#if !NET
-		public const string Chip = nameof (Chip);
-#endif
 		public const string Cinematic = nameof (Cinematic);
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
@@ -70,9 +67,6 @@ namespace Xamarin.Linker {
 		public const string Photos = nameof (Photos);
 		public const string PhotosUI = nameof (PhotosUI);
 		public const string PrintCore = nameof (PrintCore);
-#if !NET
-		public const string QTKit = nameof (QTKit);
-#endif
 		public const string QuartzComposer = nameof (QuartzComposer);
 		public const string Registrar = nameof (Registrar);
 		public const string SceneKit = nameof (SceneKit);
@@ -97,7 +91,7 @@ namespace Xamarin.Linker {
 		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
 			return
-#if NET
+#if NET && !LEGACY_TOOLS
 				link_context.LinkerConfiguration.Context.Resolve (type)
 #else
 				type.Resolve ()
@@ -112,7 +106,7 @@ namespace Xamarin.Linker {
 				return link_context.CachedIsNSObject.Contains (type);
 
 			return type.Inherits (Namespaces.Foundation, "NSObject"
-#if NET
+#if NET && !LEGACY_TOOLS
 				, link_context.LinkerConfiguration.Context
 #endif
 			);

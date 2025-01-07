@@ -513,6 +513,7 @@ namespace MediaExtension {
 	[NoWatch, NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
 	[Static]
 	interface MEVideoDecoderFields {
+		[Notification]
 		[Field ("MEVideoDecoderReadyForMoreMediaDataDidChangeNotification")]
 		NSString ReadyForMoreMediaDataDidChangeNotification { get; }
 	}
@@ -759,9 +760,11 @@ namespace MediaExtension {
 	[Static]
 	interface MERawProcessorFields
 	{
+		[Notification]
 		[Field ("MERAWProcessorValuesDidChangeNotification")]
 		NSString ValuesDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("MERAWProcessorReadyForMoreMediaDataDidChangeNotification")]
 		NSString ReadyForMoreMediaDataDidChangeNotification { get; }
 	}

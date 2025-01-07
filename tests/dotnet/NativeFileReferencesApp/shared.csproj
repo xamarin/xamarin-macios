@@ -11,8 +11,8 @@
 	<Import Project="../../common/shared-dotnet.csproj" />
 
 	<ItemGroup>
-		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\libtest.a" Kind="Static" />
-		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\libtest2.a" Kind="Static" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(NativeLibName)\libtest.a" Kind="Static" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(NativeLibName)\libtest2.a" Kind="Static" />
 	</ItemGroup>
 
 	<ItemGroup>

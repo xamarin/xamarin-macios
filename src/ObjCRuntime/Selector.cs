@@ -129,6 +129,15 @@ namespace ObjCRuntime {
 			return new Selector (sel, false);
 		}
 
+		/// <summary>Creates a managed Selector instance from a native selector.</summary>
+		/// <param name="selector">The native selector handle.</param>
+		/// <param name="owns">Whether the caller owns the native selector handle or not.</param>
+		/// <remarks>It's not possible to free a selector, so the <paramref name="owns" /> parameter is ignored.</remarks>
+		public static Selector? FromHandle (NativeHandle selector, bool owns)
+		{
+			return FromHandle (selector);
+		}
+
 		public static Selector Register (NativeHandle handle)
 		{
 			return new Selector (handle);
