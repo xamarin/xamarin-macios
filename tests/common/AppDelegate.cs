@@ -12,6 +12,9 @@ using MonoTouch.NUnit.UI;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 [Register ("AppDelegate")]
 public partial class AppDelegate : UIApplicationDelegate {
 	public static TouchRunner Runner { get; set; }

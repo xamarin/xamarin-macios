@@ -6,12 +6,7 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-all-local:: regression run
-
-regression::
-ifneq ($(SKIP_REGRESSION), 1)
-	$(MAKE) -C ../mmp-regression/
-endif
+all-local:: run
 
 # example command to run a single test:
 #     make run TEST_FIXTURE=-test=Xamarin.MMP.Tests.MMPTests.AOT_SmokeTest
@@ -37,8 +32,8 @@ run: build
 	@[[ ! -e .failed-stamp ]]
 
 build:
-	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore ../tests-mac.sln
-	$(SYSTEM_XIBUILD) -- mmptest.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) $(SYSTEM_MSBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore ../tests-mac.sln
+	$(SYSTEM_MSBUILD) mmptest.csproj $(XBUILD_VERBOSITY)
 
 clean-local::
 	@rm -rf ./obj

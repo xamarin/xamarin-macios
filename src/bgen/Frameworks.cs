@@ -22,9 +22,6 @@ public partial class Frameworks {
 		case PlatformName.iOS:
 			frameworks = iosframeworks;
 			break;
-		case PlatformName.WatchOS:
-			frameworks = watchosframeworks;
-			break;
 		case PlatformName.TvOS:
 			frameworks = tvosframeworks;
 			break;

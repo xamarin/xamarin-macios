@@ -18,21 +18,15 @@ using Xharness.Jenkins.TestTasks;
 namespace Xharness {
 	public class TestProject {
 		XmlDocument? xml;
-		bool generate_variations = true;
 
 		public TestPlatform TestPlatform;
 		public TestLabel Label;
 		public string Path;
-		public string? SolutionPath;
 		public string? Name;
 		public bool IsExecutableProject;
-		public bool IsNUnitProject;
-		public bool IsDotNetProject;
 		public string []? Configurations;
-		public Func<Task>? Dependency;
 		public string? FailureMessage;
-		public bool RestoreNugetsInProject = true;
-		public double TimeoutMultiplier = 1;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 		public bool? Ignore;
 
 		public IEnumerable<TestProject>? ProjectReferences;
@@ -44,7 +38,20 @@ namespace Xharness {
 			IsExecutableProject = isExecutableProject;
 		}
 
-		public virtual bool GenerateVariations { get => generate_variations; set => generate_variations = value; }
+		bool? is_nunit_test_project;
+		public bool IsNUnitTestProject {
+			get {
+				if (!is_nunit_test_project.HasValue) {
+					if (string.IsNullOrEmpty (Path)) {
+						is_nunit_test_project = false;
+					} else {
+						is_nunit_test_project = File.ReadAllLines (Path).Any (v => v.Contains ("<PackageReference", StringComparison.Ordinal) && v.Contains ("\"nunit\"", StringComparison.OrdinalIgnoreCase));
+					}
+				}
+
+				return is_nunit_test_project.Value;
+			}
+		}
 
 		public XmlDocument Xml {
 			get {
@@ -66,10 +73,7 @@ namespace Xharness {
 			rv.Label = Label;
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
-			rv.IsDotNetProject = IsDotNetProject;
-			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
-			rv.TimeoutMultiplier = TimeoutMultiplier;
 			rv.Ignore = Ignore;
 			rv.TestPlatform = TestPlatform;
 			return rv;
@@ -108,66 +112,53 @@ namespace Xharness {
 			if (rootTestsDirectoryNode is not null)
 				rootTestsDirectoryNode.InnerText = rootDirectory;
 
-			if (doc.IsDotNetProject ()) {
-				if (test.ProjectPlatform == "iPhone") {
-					switch (test.Platform) {
-					case TestPlatform.iOS:
-					case TestPlatform.iOS_Unified:
-					case TestPlatform.iOS_Unified64:
-					case TestPlatform.iOS_TodayExtension64:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm64");
-						break;
-					case TestPlatform.iOS_Unified32:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm");
-						break;
-					case TestPlatform.tvOS:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "tvos-arm64");
-						break;
-					case TestPlatform.watchOS:
-					case TestPlatform.watchOS_32:
-					case TestPlatform.watchOS_64_32:
-						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "watchos-arm");
-						break;
-					}
+			if (test.ProjectPlatform == "iPhone") {
+				switch (test.Platform) {
+				case TestPlatform.iOS:
+					doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm64");
+					break;
+				case TestPlatform.tvOS:
+					doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "tvos-arm64");
+					break;
 				}
+			}
 
-				if (doc.GetEnableDefaultItems () != false) {
-					// Many types of files below the csproj directory are included by default,
-					// which means that we have to include them manually in the cloned csproj,
-					// because the cloned project is stored in a very different directory.
-					var test_dir = System.IO.Path.GetDirectoryName (original_path)!;
+			if (doc.GetEnableDefaultItems () != false) {
+				// Many types of files below the csproj directory are included by default,
+				// which means that we have to include them manually in the cloned csproj,
+				// because the cloned project is stored in a very different directory.
+				var test_dir = System.IO.Path.GetDirectoryName (original_path)!;
 
-					var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
-					foreach (var file in files) {
-						var ext = System.IO.Path.GetExtension (file);
-						var full_path = System.IO.Path.Combine (test_dir, file);
-						var windows_file = full_path.Replace ('/', '\\');
+				var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
+				foreach (var file in files) {
+					var ext = System.IO.Path.GetExtension (file);
+					var full_path = System.IO.Path.Combine (test_dir, file);
+					var windows_file = full_path.Replace ('/', '\\');
 
-						if (file.Contains (".xcasset")) {
-							doc.AddTopLevelInclude ("ImageAsset", file, windows_file, true);
-							continue;
-						}
+					if (file.Contains (".xcasset")) {
+						doc.AddTopLevelInclude ("ImageAsset", file, windows_file, true);
+						continue;
+					}
 
-						switch (ext.ToLowerInvariant ()) {
-						case ".cs":
-							doc.AddTopLevelInclude ("Compile", file, windows_file, true);
-							break;
-						case ".plist":
-							doc.AddTopLevelInclude ("None", file, windows_file, true);
-							break;
-						case ".storyboard":
-							doc.AddTopLevelInclude ("InterfaceDefinition", file, windows_file, true);
-							break;
-						case ".gitignore":
-						case ".csproj":
-						case ".fsproj":
-						case ".props": // Directory.Build.props
-						case "": // Makefile
-							break; // ignore these files
-						default:
-							Console.WriteLine ($"Unknown file: {file} (extension: {ext}). There might be a default inclusion behavior for this file.");
-							break;
-						}
+					switch (ext.ToLowerInvariant ()) {
+					case ".cs":
+						doc.AddTopLevelInclude ("Compile", file, windows_file, true);
+						break;
+					case ".plist":
+						doc.AddTopLevelInclude ("None", file, windows_file, true);
+						break;
+					case ".storyboard":
+						doc.AddTopLevelInclude ("InterfaceDefinition", file, windows_file, true);
+						break;
+					case ".gitignore":
+					case ".csproj":
+					case ".fsproj":
+					case ".props": // Directory.Build.props
+					case "": // Makefile
+						break; // ignore these files
+					default:
+						Console.WriteLine ($"Unknown file: {file} (extension: {ext}). There might be a default inclusion behavior for this file.");
+						break;
 					}
 				}
 			}

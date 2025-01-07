@@ -37,15 +37,12 @@ IFS=$'\n'
 cd ..
 
 # Start formatting!
-dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
 dotnet format whitespace "$SRC_DIR/tests/cecil-tests/cecil-tests.csproj"
 dotnet format whitespace "$SRC_DIR/tests/dotnet/UnitTests/DotNetUnitTests.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Messaging/Xamarin.Messaging.Build/Xamarin.Messaging.Build.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj"
-dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.Mac.Tasks/Xamarin.Mac.Tasks.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.MacDev.Tasks/Xamarin.MacDev.Tasks.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.iOS.Tasks.Windows/Xamarin.iOS.Tasks.Windows.csproj"
-dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.iOS.Tasks/Xamarin.iOS.Tasks.csproj"
 dotnet format whitespace "$SRC_DIR/src/bgen/bgen.csproj"
 dotnet format whitespace "$SRC_DIR/tools/dotnet-linker/dotnet-linker.csproj"
 dotnet format whitespace "$SRC_DIR/tools/mmp/mmp.csproj"
@@ -56,8 +53,6 @@ dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/iOS/introspection.
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/MacCatalyst/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/macOS/introspection.csproj"
 dotnet format whitespace "$SRC_DIR/tests/introspection/dotnet/tvOS/introspection.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/iOS/introspection-ios.csproj"
-dotnet format whitespace "$SRC_DIR/tests/introspection/Mac/introspection-mac.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/iOS/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/MacCatalyst/monotouch-test.csproj"
 dotnet format whitespace "$SRC_DIR/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj"
@@ -67,6 +62,8 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2ignore/u2ignore.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2todo/u2todo.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-report/xtro-report.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.csproj"
+dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-html/mono-api-html.csproj"
+dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-info/mono-api-info.csproj"
 dotnet format whitespace --folder "$SRC_DIR"
 
 for file in "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/*/.template.config/localize/*.json "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/.template.config/localize/*.json; do

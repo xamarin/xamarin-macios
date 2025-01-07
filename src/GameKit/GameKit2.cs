@@ -196,17 +196,6 @@ namespace GameKit {
 #endif
 
 	public partial class GKVoiceChat {
-
-#if !XAMCORE_3_0
-		[Obsolete ("Use 'SetMute (bool, string)' method.")]
-		public virtual void SetMute (bool isMuted, GKPlayer player)
-		{
-			if (player is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (player));
-
-			SetMute (isMuted, player.PlayerID);
-		}
-#endif
 	}
 
 	public partial class GKTurnBasedExchange {
@@ -234,12 +223,5 @@ namespace GameKit {
 	}
 
 	public partial class GKMatch {
-#if !XAMCORE_3_0
-		// Compatbility with the broken API, it is deprecated, so that is good.
-		public virtual bool SendData (NSData data, string [] players, GKMatchSendDataMode mode, NSError error)
-		{
-			return SendData (data, players, mode, out error);
-		}
-#endif
 	}
 }

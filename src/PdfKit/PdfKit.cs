@@ -31,7 +31,7 @@ namespace PdfKit {
 		}
 	}
 
-#if !IOS
+#if !IOS && !__TVOS__
 	partial class PdfAnnotationMarkup {
 		public CGPoint []? QuadrilateralPoints {
 			get {
@@ -55,5 +55,5 @@ namespace PdfKit {
 			}
 		}
 	}
-#endif // !IOS
+#endif // !IOS && !__TVOS__
 }

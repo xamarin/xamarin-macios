@@ -1,11 +1,11 @@
-Import-Module "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1"
+Import-Module "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/MaciosCI.psd1"
 
 # Zip up all the binlogs into one file
 Invoke-SshCommand `
   -RemoteHost "$Env:MAC_AGENT_IP" `
   -RemoteUserName "$Env:MAC_AGENT_USER" `
   -- `
-  "$Env:MAC_AGENT_BUILD_SOURCESDIRECTORY/xamarin-macios/tests/dotnet/Windows/collect-binlogs.sh"
+  "$Env:MAC_AGENT_BUILD_SOURCESDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tests/dotnet/Windows/collect-binlogs.sh"
 
 New-Item -Path "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name "windows-binlogs" -ItemType "directory"
 New-Item -Path "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY\windows-binlogs" -Name "windows-remote-logs.zip" -ItemType "file" -Value "zip"

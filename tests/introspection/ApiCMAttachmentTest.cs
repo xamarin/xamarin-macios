@@ -1,5 +1,3 @@
-#if !__WATCHOS__
-
 using System;
 using System.Drawing;
 using System.IO;
@@ -15,11 +13,7 @@ using CoreMedia;
 using CoreFoundation;
 using CoreGraphics;
 using CoreText;
-#if NET
 using CFNetwork;
-#else
-using CoreServices;
-#endif
 using CoreVideo;
 using Foundation;
 using ImageIO;
@@ -31,9 +25,10 @@ using VideoToolbox;
 using UIKit;
 using Network;
 
-#if NET
 using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
-#endif
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Introspection {
 
@@ -145,12 +140,7 @@ namespace Introspection {
 				nativeObj = obj;
 			}
 
-#if NET
-			public NativeHandle Handle
-#else
-			public IntPtr Handle
-#endif
-			{
+			public NativeHandle Handle {
 				get { return nativeObj.Handle; }
 			}
 		}
@@ -419,11 +409,7 @@ namespace Introspection {
 					return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 				}
 			case "SecTrust":
-#if NET
 				X509Certificate x = X509CertificateLoader.LoadCertificate (mail_google_com);
-#else
-				X509Certificate x = new X509Certificate (mail_google_com);
-#endif
 				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 					return new SecTrust (x, policy);
 			case "SslContext":
@@ -475,6 +461,10 @@ namespace Introspection {
 				return CMClock.HostTimeClock;
 			case "CMTimebase":
 				return new CMTimebase (CMClock.HostTimeClock);
+			case "CMTagCollection":
+				return CMTagCollection.Create ();
+			case "CMTaggedBufferGroup":
+				return CMTaggedBufferGroup.Create (new CMTagCollection [0], new CMSampleBuffer [0], out var _);
 			case "CVPixelBufferPool":
 				return new CVPixelBufferPool (
 					new CVPixelBufferPoolSettings (),
@@ -487,11 +477,7 @@ namespace Introspection {
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate2 (new SecCertificate (cdata));
 			case "SecTrust2":
-#if NET
 				X509Certificate x2 = X509CertificateLoader.LoadCertificate (mail_google_com);
-#else
-				X509Certificate x2 = new X509Certificate (mail_google_com);
-#endif
 				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 					return new SecTrust2 (new SecTrust (x2, policy));
 			case "SecIdentity2":
@@ -616,5 +602,3 @@ namespace Introspection {
 		}
 	}
 }
-
-#endif // !__WATCHOS__

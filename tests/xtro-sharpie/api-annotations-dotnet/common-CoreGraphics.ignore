@@ -95,3 +95,6 @@
 !missing-pinvoke! CGSizeEqualToSize is not bound
 !missing-pinvoke! CGErrorSetCallback is not bound
 !missing-pinvoke! CGConvertColorDataWithFormat is not bound
+!missing-field! kCGUseLegacyHDREcosystem not bound
+!missing-pinvoke! CGColorConversionInfoConvertData is not bound
+!missing-pinvoke! CGColorConversionInfoCreateForToneMapping is not bound

@@ -15,14 +15,12 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Xharness.Targets;
 
 using Xamarin.Utils;
 
 namespace Xharness {
 	public enum HarnessAction {
 		None,
-		Configure,
 		Run,
 		Install,
 		Uninstall,
@@ -30,12 +28,11 @@ namespace Xharness {
 	}
 
 	public class HarnessConfiguration {
-		public bool AutoConf { get; set; }
 		public string BuildConfiguration { get; set; } = "Debug";
 		public bool DryRun { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public bool? IncludeSystemPermissionTests { get; set; }
-		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
+		public List<TestProject> TestProjects { get; set; } = new List<TestProject> ();
 		public string JenkinsConfiguration { get; set; }
 		public HashSet<string> Labels { get; set; } = new HashSet<string> ();
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -48,8 +45,6 @@ namespace Xharness {
 		public double TimeoutInMinutes { get; set; } = 15;
 		public bool UseSystemXamarinIOSMac { get; set; }
 		public int Verbosity { get; set; }
-		public string WatchOSAppTemplate { get; set; }
-		public string WatchOSContainerTemplate { get; set; }
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
 
 		// This is the maccore/tests directory.
@@ -142,8 +137,6 @@ namespace Xharness {
 		public ITunnelBore TunnelBore { get; }
 		public AppBundleLocator AppBundleLocator { get; }
 
-		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
-
 		string sdkRoot;
 		string SdkRoot {
 			get => sdkRoot;
@@ -156,9 +149,6 @@ namespace Xharness {
 		bool TryGetMlaunchDotnetPath (out string value)
 		{
 			value = null;
-
-			if (!ENABLE_DOTNET)
-				return false;
 
 			ApplePlatform platform;
 			if (INCLUDE_IOS) {
@@ -185,9 +175,6 @@ namespace Xharness {
 				if (TryGetMlaunchDotnetPath (out var mlaunch))
 					return mlaunch;
 
-				if (INCLUDE_XAMARIN_LEGACY && (INCLUDE_IOS || INCLUDE_TVOS || INCLUDE_WATCH))
-					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
-
 				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 			}
 		}
@@ -207,31 +194,15 @@ namespace Xharness {
 			return result;
 		}
 
-		public List<iOSTestProject> IOSTestProjects { get; }
-		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
+		public List<TestProject> TestProjects { get; } = new ();
 
-		// Configure
 		readonly bool useSystemXamarinIOSMac; // if the system XI/XM should be used, or the locally build XI/XM.
-		readonly bool autoConf;
 
-		public string WatchOSContainerTemplate { get; private set; }
-		public string WatchOSAppTemplate { get; private set; }
-		public string WatchOSExtensionTemplate { get; private set; }
-		public string TodayContainerTemplate { get; private set; }
-		public string TodayExtensionTemplate { get; private set; }
-		public string MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
-		public string TVOS_MONO_PATH { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; }
 		public bool INCLUDE_TVOS { get; }
-		public bool INCLUDE_WATCH { get; }
 		public bool INCLUDE_MAC { get; }
 		public bool INCLUDE_MACCATALYST { get; }
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
-		public string MAC_DESTDIR { get; }
-		public string IOS_DESTDIR { get; }
-		public bool ENABLE_DOTNET { get; }
-		public bool INCLUDE_XAMARIN_LEGACY { get; }
-		public string SYSTEM_MONO { get; set; }
 		public string DOTNET_DIR { get; set; }
 		public string DOTNET_TFM { get; set; }
 
@@ -262,11 +233,10 @@ namespace Xharness {
 			if (configuration is null)
 				throw new ArgumentNullException (nameof (configuration));
 
-			autoConf = configuration.AutoConf;
 			buildConfiguration = configuration.BuildConfiguration ?? throw new ArgumentNullException (nameof (configuration));
 			DryRun = configuration.DryRun;
 			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
-			IOSTestProjects = configuration.IOSTestProjects;
+			TestProjects = configuration.TestProjects;
 			JenkinsConfiguration = configuration.JenkinsConfiguration;
 			LogDirectory = configuration.LogDirectory ?? throw new ArgumentNullException (nameof (configuration.LogDirectory));
 			MarkdownSummaryPath = configuration.MarkdownSummaryPath;
@@ -279,8 +249,6 @@ namespace Xharness {
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("TESTS_USE_SYSTEM")))
 				useSystemXamarinIOSMac = true;
 			Verbosity = configuration.Verbosity;
-			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
-			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
 			XmlJargon = configuration.XmlJargon;
 
 			if (configuration.Labels is not null)
@@ -294,27 +262,19 @@ namespace Xharness {
 			config = ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 
-			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
-			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = IsVariableSet (nameof (INCLUDE_IOS));
 			INCLUDE_TVOS = IsVariableSet (nameof (INCLUDE_TVOS));
 			JENKINS_RESULTS_DIRECTORY = GetVariable (nameof (JENKINS_RESULTS_DIRECTORY));
-			INCLUDE_WATCH = IsVariableSet (nameof (INCLUDE_WATCH));
 			INCLUDE_MAC = IsVariableSet (nameof (INCLUDE_MAC));
 			INCLUDE_MACCATALYST = IsVariableSet (nameof (INCLUDE_MACCATALYST));
-			MAC_DESTDIR = GetVariable (nameof (MAC_DESTDIR));
-			IOS_DESTDIR = GetVariable (nameof (IOS_DESTDIR));
-			ENABLE_DOTNET = IsVariableSet (nameof (ENABLE_DOTNET));
-			SYSTEM_MONO = GetVariable (nameof (SYSTEM_MONO));
 			DOTNET_DIR = GetVariable (nameof (DOTNET_DIR));
-			INCLUDE_XAMARIN_LEGACY = IsVariableSet (nameof (INCLUDE_XAMARIN_LEGACY));
 			DOTNET_TFM = GetVariable (nameof (DOTNET_TFM));
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = GetVariable ("XCODE_DEVELOPER_ROOT", configuration.SdkRoot);
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
 			TunnelBore = new TunnelBore (processManager);
 		}
 
@@ -328,9 +288,6 @@ namespace Xharness {
 			switch (platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Full:
-			case TestPlatform.Mac_Modern:
-			case TestPlatform.Mac_System:
 				// On macOS we can't edit the TCC database easily
 				// (it requires adding the mac has to be using MDM: https://carlashley.com/2018/09/28/tcc-round-up/)
 				// So by default ignore any tests that would pop up permission dialogs in CI.
@@ -362,244 +319,222 @@ namespace Xharness {
 			} while (true);
 		}
 
-		void AutoConfigureDotNet ()
+		void PopulateTests ()
+		{
+			PopulatePlatformSpecificProjects ();
+			PopulateUnitTestProjects ();
+		}
+
+		void PopulateUnitTestProjects ()
+		{
+			var projectInfos = new [] {
+				new {
+					Label = TestLabel.Msbuild,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")),
+					Name = "MSBuild tasks tests",
+					Timeout = (TimeSpan?) TimeSpan.FromMinutes (60),
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Msbuild,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")),
+					Name = "MSBuild integration tests",
+					Timeout = (TimeSpan?) TimeSpan.FromMinutes (120),
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Cecil,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj")),
+					Name = "Cecil-based tests",
+					Timeout = (TimeSpan?) TimeSpan.FromMinutes (10),
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Generator,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj")),
+					Name = "BGen tests",
+					Timeout = (TimeSpan?) null,
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Generator,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory,  "rgen", "Microsoft.Macios.Generator.Tests", "Microsoft.Macios.Generator.Tests.csproj")),
+					Name = "Roslyn Generator tests",
+					Timeout = (TimeSpan?) null,
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Generator,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory,  "rgen", "Microsoft.Macios.Bindings.Analyzer.Tests", "Microsoft.Macios.Bindings.Analyzer.Tests.csproj")),
+					Name = "Roslyn Analyzer tests",
+					Timeout = (TimeSpan?) null,
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Generator,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory,  "rgen",  "Microsoft.Macios.Transformer.Tests", "Microsoft.Macios.Transformer.Tests.csproj")),
+					Name = "Roslyn Transformer tests",
+					Timeout = (TimeSpan?) null,
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.Generator,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory,  "rgen",  "Microsoft.Macios.Bindings.CodeFixers.Tests", "Microsoft.Macios.Bindings.CodeFixers.Tests.csproj")),
+					Name = "Roslyn Codefixers tests",
+					Timeout = (TimeSpan?) null,
+					Filter = "",
+				},
+				new {
+					Label = TestLabel.DotnetTest,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")),
+					Name = "DotNet tests",
+					Timeout = (TimeSpan?) TimeSpan.FromHours (6),
+					Filter = "Category!=Windows",
+				},
+				new {
+					Label = TestLabel.Xtro,
+					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie", "UnitTests", "UnitTests.csproj")),
+					Name = "Xtro",
+					Timeout = (TimeSpan?) TimeSpan.FromMinutes (15),
+					Filter = "",
+				},
+			};
+
+			foreach (var projectInfo in projectInfos) {
+				var project = new TestProject (projectInfo.Label, projectInfo.ProjectPath) {
+					TestPlatform = TestPlatform.All,
+					IsExecutableProject = false,
+					Name = projectInfo.Name,
+				};
+				if (projectInfo.Timeout is not null)
+					project.Timeout = projectInfo.Timeout.Value;
+				TestProjects.Add (project);
+			}
+		}
+
+		void PopulatePlatformSpecificProjects ()
 		{
 			string [] noConfigurations = null;
 			var debugAndRelease = new string [] { "Debug", "Release" };
 
-			var projects = new [] {
-				new { Label = TestLabel.Introspection ,ProjectPath = "introspection", IsFSharp = false, Configurations = noConfigurations, },
-				new { Label = TestLabel.Monotouch, ProjectPath = "monotouch-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { Label = TestLabel.Linker, ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { Label = TestLabel.Fsharp, ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
-				new { Label = TestLabel.Framework, ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { Label = TestLabel.InterdependentBindingProjects, ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },
-				new { Label = TestLabel.Xcframework, ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
+			var projectInfos = new [] {
+				new {
+					Label = TestLabel.Introspection,
+					Platforms = TestPlatform.All,
+					ProjectPath = "introspection",
+					IsFSharp = false,
+					Configurations = noConfigurations,
+				},
+				new {
+					Label = TestLabel.Monotouch,
+					Platforms = TestPlatform.All,
+					ProjectPath = "monotouch-test",
+					IsFSharp = false,
+					Configurations = noConfigurations,
+				},
+				new {
+					Label = TestLabel.Linker,
+					Platforms = TestPlatform.All,
+					ProjectPath = Path.Combine ("linker", "ios", "dont link"),
+					IsFSharp = false,
+					Configurations = debugAndRelease,
+				},
+				new {
+					Label = TestLabel.Linker,
+					Platforms = TestPlatform.All,
+					ProjectPath = Path.Combine ("linker", "ios", "link sdk"),
+					IsFSharp = false,
+					Configurations = debugAndRelease,
+				},
+				new {
+					Label = TestLabel.Linker,
+					Platforms = TestPlatform.All,
+					ProjectPath = Path.Combine ("linker", "ios", "link all"),
+					IsFSharp = false,
+					Configurations = debugAndRelease,
+				},
+				new {
+					Label = TestLabel.Linker,
+					Platforms = TestPlatform.All,
+					ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"),
+					IsFSharp = false,
+					Configurations = debugAndRelease,
+				},
+				new {
+					Label = TestLabel.Linker,
+					Platforms = TestPlatform.All,
+					ProjectPath = Path.Combine ("linker", "ios", "trimmode link"),
+					IsFSharp = false,
+					Configurations = debugAndRelease,
+				},
+				new {
+					Label = TestLabel.Fsharp,
+					Platforms = TestPlatform.All,
+					ProjectPath = "fsharp",
+					IsFSharp = true,
+					Configurations = noConfigurations,
+				},
+				new {
+					Label = TestLabel.Framework,
+					Platforms = TestPlatform.Mac | TestPlatform.MacCatalyst,
+					ProjectPath = "framework-test",
+					IsFSharp = false,
+					Configurations = noConfigurations,
+				},
+				new {
+					Label = TestLabel.InterdependentBindingProjects,
+					Platforms = TestPlatform.All,
+					ProjectPath = "interdependent-binding-projects",
+					IsFSharp = false,
+					Configurations = noConfigurations,
+				},
+				new {
+					Label = TestLabel.Xcframework,
+					Platforms = TestPlatform.All,
+					ProjectPath = "xcframework-test",
+					IsFSharp = false,
+					Configurations = noConfigurations,
+				},
 			};
 
-			var iOSSkip = new TestLabel [] {
-				TestLabel.Framework,
-			};
-			var tvOSSkip = new TestLabel [] {
-				TestLabel.Framework,
-			};
-			var macOSSkip = new TestLabel [] {
-			};
-			var macCatalystSkip = new TestLabel [] {
-			};
-
-			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
-			bool? dotnetIgnored = ENABLE_DOTNET ? null : (bool?) true;
-			foreach (var projectInfo in projects) {
+			foreach (var projectInfo in projectInfos) {
 				var projectPath = projectInfo.ProjectPath;
 				var projectName = Path.GetFileName (projectPath);
 				var projExtension = projectInfo.IsFSharp ? ".fsproj" : ".csproj";
+				var platforms = projectInfo.Platforms;
 
-				if (!iOSSkip.Contains (projectInfo.Label)) {
-					IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
+				if (platforms.HasFlag (TestPlatform.iOS)) {
+					TestProjects.Add (new TestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
 						Name = projectName,
-						IsDotNetProject = true,
-						SkipiOSVariation = false,
-						SkiptvOSVariation = true,
-						SkipwatchOSVariation = true,
-						SkipTodayExtensionVariation = true,
-						SkipDeviceVariations = false,
-						TestPlatform = TestPlatform.iOS_Unified,
-						Ignore = dotnetIgnored,
+						TestPlatform = TestPlatform.iOS,
 						Configurations = projectInfo.Configurations,
 					});
 				}
 
-				if (!tvOSSkip.Contains (projectInfo.Label)) {
-					IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
+				if (platforms.HasFlag (TestPlatform.tvOS)) {
+					TestProjects.Add (new TestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
 						Name = projectName,
-						IsDotNetProject = true,
-						SkipiOSVariation = true,
-						SkiptvOSVariation = true,
-						SkipwatchOSVariation = true,
-						SkipTodayExtensionVariation = true,
-						SkipDeviceVariations = false,
-						GenerateVariations = false,
 						TestPlatform = TestPlatform.tvOS,
-						Ignore = dotnetIgnored,
 						Configurations = projectInfo.Configurations,
 					});
 				}
 
-				if (!macOSSkip.Contains (projectInfo.Label)) {
-					MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
+				if (platforms.HasFlag (TestPlatform.Mac)) {
+					TestProjects.Add (new TestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
 						Name = projectName,
-						IsDotNetProject = true,
-						TargetFrameworkFlavors = MacFlavors.DotNet,
-						Platform = "AnyCPU",
-						Ignore = dotnetIgnored,
 						TestPlatform = TestPlatform.Mac,
 						Configurations = projectInfo.Configurations,
 					});
 				}
 
-				if (!macCatalystSkip.Contains (projectInfo.Label)) {
-					MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
+				if (platforms.HasFlag (TestPlatform.MacCatalyst)) {
+					TestProjects.Add (new TestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
 						Name = projectName,
-						IsDotNetProject = true,
-						TargetFrameworkFlavors = MacFlavors.MacCatalyst,
-						Platform = "AnyCPU",
-						Ignore = dotnetIgnored,
 						TestPlatform = TestPlatform.MacCatalyst,
 						Configurations = projectInfo.Configurations,
 					});
 				}
 			}
-		}
-
-		int AutoConfigureMac (bool generate_projects)
-		{
-			int rv = 0;
-
-			var test_suites = new [] {
-				new { Label = TestLabel.Linker, Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
-			};
-			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (p.Label, Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
-					Name = p.Name,
-					TargetFrameworkFlavors = p.Flavors,
-				});
-			}
-
-			MacTestProjects.Add (new MacTestProject (TestLabel.Introspection, Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
-			MacTestProjects.Add (new MacTestProject (TestLabel.Framework, Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "macOS", "framework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "framework-test" });
-			MacTestProjects.Add (new MacTestProject (TestLabel.Xcframework, Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "macOS", "xcframework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "xcframework-test" });
-
-			var hard_coded_test_suites = new [] {
-				new { Label = TestLabel.Mmp, Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
-				new { Label = TestLabel.Xammac, Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU", Flavors = MacFlavors.Modern, },
-				new { Label = TestLabel.Linker, Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
-				new { Label = TestLabel.Linker, Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
-			};
-			foreach (var p in hard_coded_test_suites) {
-				MacTestProjects.Add (new MacTestProject (p.Label, Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
-					Name = p.Name,
-					IsNUnitProject = p.IsNUnit,
-					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
-					Configurations = p.Configurations,
-					Platform = p.Platform,
-					Ignore = !INCLUDE_XAMARIN_LEGACY,
-				});
-			}
-
-
-			// All test projects should be either Modern projects or NUnit/console executables at this point.
-			// If we need to generate Full/System variations, we do that here.
-			var unified_targets = new List<MacTarget> ();
-
-			Action<MacTarget, string, bool, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject, bool skip_generation) => {
-				target.TemplateProjectPath = file;
-				target.Harness = this;
-				target.IsNUnitProject = isNUnitProject;
-				if (!generate_projects || skip_generation)
-					target.ShouldSkipProjectGeneration = true;
-				target.Execute ();
-			};
-
-			foreach (var proj in MacTestProjects) {
-				var target = new MacTarget (MacFlavors.Modern);
-				configureTarget (target, proj.Path, proj.IsNUnitProject, true);
-				unified_targets.Add (target);
-			}
-
-			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations).ToArray ()) {
-				var file = proj.Path;
-				if (!File.Exists (file)) {
-					Console.WriteLine ($"Can't find the project file {file}.");
-					rv = 1;
-					continue;
-				}
-
-				// Generate variations if requested
-				if (proj.GenerateFull) {
-					var target = new MacTarget (MacFlavors.Full);
-					configureTarget (target, file, proj.IsNUnitProject, false);
-					unified_targets.Add (target);
-
-					var cloned_project = (MacTestProject) proj.Clone ();
-					cloned_project.TargetFrameworkFlavors = MacFlavors.Full;
-					cloned_project.Path = target.ProjectPath;
-					MacTestProjects.Add (cloned_project);
-				}
-
-				if (proj.GenerateSystem) {
-					var target = new MacTarget (MacFlavors.System);
-					configureTarget (target, file, proj.IsNUnitProject, false);
-					unified_targets.Add (target);
-
-					var cloned_project = (MacTestProject) proj.Clone ();
-					cloned_project.TargetFrameworkFlavors = MacFlavors.System;
-					cloned_project.Path = target.ProjectPath;
-					MacTestProjects.Add (cloned_project);
-				}
-
-				// We're done generating now
-				// Re-use the existing TestProject instance instead of creating a new one.
-				proj.TargetFrameworkFlavors = MacFlavors.Modern; // the default/template flavor is 'Modern'
-			}
-
-			return rv;
-		}
-
-		void AutoConfigureIOS ()
-		{
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2" };
-			var fsharp_test_suites = new string [] { "fsharp" };
-			var fsharp_library_projects = new string [] { "fsharplibrary" };
-
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Monotouch, Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
-				Name = "monotouch-test",
-			});
-
-			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.Fsharp, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
-			foreach (var p in library_projects)
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.LibraryProjects, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
-			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.Fsharp, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
-
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.BindingFramework, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj")), false) {
-				Name = "bindings-framework-test",
-			});
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.BindingsXcframework, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj")), false) {
-				Name = "bindings-xcframework-test",
-			});
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Framework, Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
-				Name = "framework-test",
-			});
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Xcframework, Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
-				Name = "xcframework-test",
-			});
-
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Binding, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
-
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.InterdependentBindingProjects, Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
-				Configurations = new string [] { "Debug", "Release" },
-			});
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) {
-				Configurations = new string [] { "Debug", "Release" },
-			});
-			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
-				Configurations = new string [] { "Debug", "Release" },
-			});
-
-			// add all the tests that are using the precompiled mono assemblies
-			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
-			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
-			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchExtension"));
-
-			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
-			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
 		}
 
 		// Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -648,97 +583,11 @@ namespace Xharness {
 			}
 		}
 
-		int Configure ()
-		{
-			var rv = AutoConfigureMac (true);
-			if (rv != 0)
-				return rv;
-			return ConfigureIOS ();
-		}
-
-		// At startup we:
-		// * Load a list of well-known test projects IOSTestProjects/MacTestProjects. This happens in AutoConfigureIOS/AutoConfigureMac.
-		//   Example projects:
-		//     * introspection
-		//     * dont link, link all, link sdk
-		// * Each of these test projects can used to generate other platform variations (tvOS, watchOS, macOS full, etc),
-		//   if the the TestProject.GenerateVariations property is true.
-
-		int ConfigureIOS ()
-		{
-			var rv = 0;
-			var unified_targets = new List<UnifiedTarget> ();
-			var tvos_targets = new List<TVOSTarget> ();
-			var watchos_targets = new List<WatchOSTarget> ();
-			var today_targets = new List<TodayExtensionTarget> ();
-
-			if (autoConf)
-				AutoConfigureIOS ();
-
-			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {
-				var file = proj.Path;
-
-				if (!File.Exists (file)) {
-					Console.WriteLine ($"Can't find the project file {file}.");
-					rv = 1;
-					continue;
-				}
-
-				if (!proj.SkipwatchOSVariation) {
-					var watchos = new WatchOSTarget () {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-					};
-					watchos.Execute ();
-					watchos_targets.Add (watchos);
-				}
-
-				if (!proj.SkiptvOSVariation) {
-					var tvos = new TVOSTarget () {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-					};
-					tvos.Execute ();
-					tvos_targets.Add (tvos);
-				}
-
-				if (!proj.SkipiOSVariation) {
-					var unified = new UnifiedTarget () {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-						ShouldSkipProjectGeneration = proj.IsDotNetProject,
-					};
-					unified.Execute ();
-					unified_targets.Add (unified);
-
-					if (!proj.SkipTodayExtensionVariation) {
-						var today = new TodayExtensionTarget {
-							TemplateProjectPath = file,
-							Harness = this,
-							TestProject = proj,
-							ShouldSkipProjectGeneration = proj.IsDotNetProject,
-						};
-						today.Execute ();
-						today_targets.Add (today);
-					}
-				}
-			}
-
-			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos", DevicePlatform.watchOS);
-			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos", DevicePlatform.tvOS);
-			SolutionGenerator.CreateSolution (this, today_targets, "today", DevicePlatform.iOS);
-
-			return rv;
-		}
-
 		int Install ()
 		{
 			HarnessLog ??= GetAdHocLog ();
 
-			foreach (var project in IOSTestProjects) {
+			foreach (var project in TestProjects) {
 				var runner = CreateAppRunner (project);
 				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
 					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
@@ -753,7 +602,7 @@ namespace Xharness {
 		{
 			HarnessLog ??= GetAdHocLog ();
 
-			foreach (var project in IOSTestProjects) {
+			foreach (var project in TestProjects) {
 				var runner = CreateAppRunner (project);
 				var rv = runner.UninstallAsync ().Result;
 				if (!rv.Succeeded)
@@ -766,7 +615,7 @@ namespace Xharness {
 		{
 			HarnessLog ??= GetAdHocLog ();
 
-			foreach (var project in IOSTestProjects) {
+			foreach (var project in TestProjects) {
 				var runner = CreateAppRunner (project);
 				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
@@ -825,8 +674,6 @@ namespace Xharness {
 		public int Execute ()
 		{
 			switch (Action) {
-			case HarnessAction.Configure:
-				return Configure ();
 			case HarnessAction.Run:
 				return Run ();
 			case HarnessAction.Install:
@@ -842,11 +689,7 @@ namespace Xharness {
 
 		int Jenkins ()
 		{
-			if (autoConf) {
-				AutoConfigureDotNet ();
-				AutoConfigureIOS ();
-				AutoConfigureMac (false);
-			}
+			PopulateTests ();
 
 			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, TunnelBore);
 			return jenkins.Run ();
@@ -868,16 +711,6 @@ namespace Xharness {
 					File.WriteAllText (path, updated);
 					Log (1, "Updated {0}", path);
 				}
-			}
-		}
-
-		bool? disable_watchos_on_wrench;
-
-		public bool DisableWatchOSOnWrench {
-			get {
-				if (!disable_watchos_on_wrench.HasValue)
-					disable_watchos_on_wrench = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_WATCH_ON_WRENCH"));
-				return disable_watchos_on_wrench.Value;
 			}
 		}
 

@@ -574,6 +574,10 @@ namespace UniformTypeIdentifiers {
 		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("UTTypeLinkPresentationMetadata")]
 		UTType LinkPresentationMetadata { get; }
+
+		[TV (18, 2), Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Field ("UTTypeJPEGXL")]
+		UTType JpegXl { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

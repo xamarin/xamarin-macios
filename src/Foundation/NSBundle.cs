@@ -1,43 +1,32 @@
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Collections;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Foundation {
 	public partial class NSBundle : NSObject {
-
-#if !NET
-		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public virtual string LocalizedString (string key, string value, string table)
+		public NSString GetLocalizedString (string key, string? value = null, string? table = null)
 		{
-			return (string) GetLocalizedString ((NSString) key, (NSString) value, (NSString) table);
-		}
-
-		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string comment)
-		{
-			return LocalizedString (key, "", "");
-		}
-
-		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string val, string table, string comment)
-		{
-			return LocalizedString (key, val, table);
-		}
-#endif
-		public NSString GetLocalizedString (string key, string value = null, string table = null)
-		{
-			return GetLocalizedString ((NSString) key, (NSString) value, (NSString) table);
+			return GetLocalizedString ((NSString) key, (NSString?) value, (NSString?) table);
 		}
 
 		public string [] PathsForResources (string fileExtension)
 		{
 			return PathsForResources (fileExtension, null);
 		}
+
+#if !MONOMAC && !XAMCORE_5_0
+		[Obsolete ("Do not use this constructor, it does not work as expected.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public NSBundle ()
+			: base (NSObjectFlag.Empty)
+		{
+		}
+#endif // !MONOMAC && !XAMCORE_5_0
 	}
 }

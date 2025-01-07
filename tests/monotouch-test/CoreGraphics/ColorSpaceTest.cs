@@ -37,14 +37,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "Unknown-GetColorTable");
 		}
 
-#if !XAMCORE_3_0
-		[Test]
-		public void Null ()
-		{
-			CheckUnknown (CGColorSpace.Null);
-		}
-#endif
-
 		[Test]
 		public void CreateDeviceGray ()
 		{

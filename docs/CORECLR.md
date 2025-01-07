@@ -15,7 +15,7 @@
     ```shell
     cd ~/work/xamarin-macios
     make git-clean-all # Must start from a clean state when switching between downloaded and custom built dotnet/runtime.
-    ./configure --custom-dotnet=$HOME/work/runtime --enable-dotnet
+    ./configure --custom-dotnet=$HOME/work/runtime
     ```
 
 3. Build dotnet/runtime using our script that builds everything we need:

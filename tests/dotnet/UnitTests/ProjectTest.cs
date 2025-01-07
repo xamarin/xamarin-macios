@@ -427,7 +427,7 @@ namespace Xamarin.Tests {
 				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
 				Assert.That (appPath, Does.Not.Exist, "There is an .app");
 				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
+				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform)), Does.Not.Exist, "Platform assembly is in the bundle");
 				break;
 			case ApplePlatform.MacCatalyst:
 				break;
@@ -503,19 +503,19 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x84", true)] // it's x86, not x84
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.iOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.iOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.iOS, "tvos-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.TVOS, "tvos-x64", false)] // valid RID in a previous preview (and common mistake)
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm", true)] // we don't support this
 		[TestCase (ApplePlatform.TVOS, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.TVOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "iossimulator-x64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacOSX, "osx-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacOSX, "macos-arm64", true)] // it's osx, not macos
 		[TestCase (ApplePlatform.MacOSX, "helloworld", true)] // random text
 		[TestCase (ApplePlatform.MacOSX, "ios-arm64", false)] // valid RID for another platform
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46", true)] // it's x64, not x46
 		[TestCase (ApplePlatform.MacCatalyst, "helloworld", true)] // random text
-		[TestCase (ApplePlatform.MacCatalyst, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "ios-arm64", false)] // valid RID for another platform
 		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier, bool notRecognized)
 		{
 			var project = "MySimpleApp";
@@ -788,6 +788,304 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.iOS, null)]
+		public void LibraryWithResourcesOnWindows (ApplePlatform platform, bool? bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			// This should all execute locally on Windows when BundleOriginalResources=true
+			LibraryWithResources (platform, anyLibraryResources: bundleOriginalResources == true, bundleOriginalResources: bundleOriginalResources);
+		}
+
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		public void LibraryWithResourcesOnRemoteWindows (ApplePlatform platform, bool? bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			// This should all execute locally on Windows when BundleOriginalResources=true, but either should work
+			LibraryWithResources (platform, bundleOriginalResources);
+		}
+
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.iOS, null)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.TVOS, null)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.MacCatalyst, null)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacOSX, null)]
+		public void LibraryWithResources (ApplePlatform platform, bool? bundleOriginalResources, bool anyLibraryResources = true)
+		{
+			var project = "LibraryWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var actualBundleOriginalResources = bundleOriginalResources ?? Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major >= 10;
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			if (bundleOriginalResources.HasValue)
+				properties ["BundleOriginalResources"] = bundleOriginalResources.Value ? "true" : "false";
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			// https://github.com/xamarin/xamarin-macios/issues/15031
+			if (actualBundleOriginalResources) {
+				Assert.That (allTargets, Does.Not.Contain ("_CompileAppManifest"), "Didn't execute '_CompileAppManifest'");
+				Assert.That (allTargets, Does.Not.Contain ("_DetectSdkLocations"), "Didn't execute '_DetectSdkLocations'");
+				Assert.That (allTargets, Does.Not.Contain ("_SayHello"), "Didn't execute '_SayHello'");
+			} else {
+				Assert.That (allTargets, Does.Contain ("_CompileAppManifest"), "Did execute '_CompileAppManifest'");
+				Assert.That (allTargets, Does.Contain ("_DetectSdkLocations"), "Did execute '_DetectSdkLocations'");
+				if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
+					Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
+			}
+
+			var lines = BinLog.PrintToLines (rv.BinLogPath);
+			// Find the resulting binding assembly from the build log
+			var assemblies = FilterToAssembly (lines, project);
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			using var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			var actualResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
+
+			string [] expectedResources;
+
+			if (anyLibraryResources) {
+				var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
+				if (actualBundleOriginalResources) {
+					expectedResources = new string [] {
+						$"__{platformPrefix}_content_A.ttc",
+						$"__{platformPrefix}_content_B.otf",
+						$"__{platformPrefix}_content_C.ttf",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0001.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0002.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0003.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0004.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0005.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0006.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0007.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0008.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0009.png",
+						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0010.png",
+						$"__{platformPrefix}_item_BundleResource_A.ttc",
+						$"__{platformPrefix}_item_BundleResource_B.otf",
+						$"__{platformPrefix}_item_BundleResource_C.ttf",
+						$"__{platformPrefix}_item_Collada_scene.dae",
+						$"__{platformPrefix}_item_CoreMLModel_SqueezeNet.mlmodel",
+						$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sContents.json",
+						$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sContents.json",
+						$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon16.png",
+						$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon32.png",
+						$"__{platformPrefix}_item_ImageAsset_Images.xcassets_sImage.imageset_sIcon64.png",
+						$"__{platformPrefix}_item_InterfaceDefinition_Main.storyboard",
+						$"__{platformPrefix}_item_PartialAppManifest_shared.plist",
+						$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_sscene.scn",
+						$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_stexture.png",
+						$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_slinkedArt.scnassets_sscene.scn",
+						$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_slinkedArt.scnassets_stexture.png",
+					};
+				} else {
+					var expectedList = new List<string> ();
+					expectedList.Add ($"__{platformPrefix}_content_A.ttc");
+					expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_sArcher__Attack.plist");
+					expectedList.Add ($"__{platformPrefix}_content_art.scnassets_sscene.scn");
+					expectedList.Add ($"__{platformPrefix}_content_art.scnassets_stexture.png");
+					expectedList.Add ($"__{platformPrefix}_content_Assets.car");
+					expectedList.Add ($"__{platformPrefix}_content_B.otf");
+					expectedList.Add ($"__{platformPrefix}_content_C.ttf");
+					expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_sscene.scn");
+					expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_stexture.png");
+					expectedList.Add ($"__{platformPrefix}_content_scene.dae");
+					switch (platform) {
+					case ApplePlatform.iOS:
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
+						break;
+					case ApplePlatform.TVOS:
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
+						break;
+					case ApplePlatform.MacCatalyst:
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
+						break;
+					case ApplePlatform.MacOSX:
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sMainMenu.nib");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sNSWindowController-B8D-0N-5wS.nib");
+						expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
+						break;
+					}
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sanalytics_scoremldata.bin");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_scoremldata.bin");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smetadata.json");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.net");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.shape");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.weights");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel_scoremldata.bin");
+					expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sneural__network__optionals_scoremldata.bin");
+					expectedResources = expectedList.ToArray ();
+				}
+			} else {
+				expectedResources = new string [0];
+			}
+			CollectionAssert.AreEquivalent (expectedResources, actualResources, "Resources");
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", false)]
+		public void AppWithLibraryWithResourcesReference (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources)
+		{
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, bundleOriginalResources, false, false);
+		}
+
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		public void AppWithLibraryWithResourcesReferenceOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, bundleOriginalResources, true, false);
+		}
+
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		public void AppWithLibraryWithResourcesReferenceWithHotRestart (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, bundleOriginalResources, false, isUsingHotRestart: true);
+		}
+
+		void AppWithLibraryWithResourcesReferenceImpl (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources, bool remoteWindows, bool isUsingHotRestart)
+		{
+			var project = "AppWithLibraryWithResourcesReference";
+			var config = bundleOriginalResources ? "DebugOriginal" : "DebugCompiled";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var library_project = GetProjectPath ("LibraryWithResources", platform: platform);
+			Clean (library_project);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: config);
+			Clean (project_path);
+
+			Dictionary<string, string>? extraProperties = null;
+			string? tmpdir;
+			string? hotRestartOutputDir = null;
+			string? hotRestartAppBundlePath = null;
+			if (isUsingHotRestart) {
+				tmpdir = Cache.CreateTemporaryDirectory ();
+				extraProperties = GetHotRestartProperties (tmpdir, out hotRestartOutputDir, out hotRestartAppBundlePath);
+			}
+
+			var properties = GetDefaultProperties (runtimeIdentifiers, extraProperties);
+			properties ["Configuration"] = config;
+			properties ["BundleOriginalResources"] = bundleOriginalResources ? "true" : "false";
+			if (remoteWindows) {
+				// Copy the app bundle to Windows so that we can inspect the results.
+				properties ["CopyAppBundleToWindows"] = "true";
+			}
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var appBundleInfo = new AppBundleInfo (platform, appPath, project_path, remoteWindows, runtimeIdentifiers, config, isUsingHotRestart, hotRestartOutputDir, hotRestartAppBundlePath);
+			var appBundleContents = appBundleInfo.GetAppBundleFiles (true).ToHashSet ();
+
+			appBundleInfo.DumpAppBundleContents ();
+
+			Assert.Multiple (() => {
+				var resourcesDirectory = GetResourcesDirectory (platform, "");
+
+				var fontDirectory = resourcesDirectory;
+				var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+				var fontBFile = Path.Combine (fontDirectory, "B.otf");
+				var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+				Assert.That (appBundleContents, Does.Contain (fontAFile), "A.ttc existence");
+				Assert.That (appBundleContents, Does.Contain (fontBFile), "B.otf existence");
+				Assert.That (appBundleContents, Does.Contain (fontCFile), "C.ttf existence");
+
+				var atlasTexture = Path.Combine (resourcesDirectory, "Archer_Attack.atlasc", "Archer_Attack.plist");
+				AssertExistsOrUsingHotRestart (atlasTexture, "AtlasTexture - Archer_Attack");
+
+				var scnAssetsDir = Path.Combine (resourcesDirectory, "art.scnassets");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "scene.scn"), "scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "texture.png"), "texture.png");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "Assets.car"), "Assets.car");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "scene.scn"), "DirWithResources/linkedArt.scnassets/scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "texture.png"), "DirWithResources/linkedArt.scnassets/texture.png");
+
+				var mainStoryboard = Path.Combine (resourcesDirectory, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (mainStoryboard, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (Path.Combine (mainStoryboard, "Info.plist"), "Main.storyboardc/Info.plist");
+
+				var colladaScene = Path.Combine (resourcesDirectory, "scene.dae");
+				AssertExistsOrUsingHotRestart (colladaScene, "Collada - scene.dae");
+
+				var mlModel = Path.Combine (resourcesDirectory, "SqueezeNet.mlmodelc");
+				AssertExistsOrUsingHotRestart (mlModel, "CoreMLModel");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics"), "CoreMLModel/analytics");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics", "coremldata.bin"), "CoreMLModel/analytics/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "coremldata.bin"), "CoreMLModel/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "metadata.json"), "CoreMLModel/metadata.json");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model"), "CoreMLModel/model");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.net"), "CoreMLModel/model.espresso.net");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.shape"), "CoreMLModel/model.espresso.shape");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.weights"), "CoreMLModel/model.espresso.weights");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model", "coremldata.bin"), "CoreMLModel/model/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals"), "CoreMLModel/neural_network_optionals");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals", "coremldata.bin"), "CoreMLModel/neural_network_optionals/coremldata.bin");
+
+				if (bundleOriginalResources) {
+					var infoPlist = appBundleInfo.GetFile (GetInfoPListPath (platform, ""));
+					var appManifest = PDictionary.FromByteArray (infoPlist, out var _)!;
+					Assert.AreEqual ("Here I am", appManifest.GetString ("LibraryWithResources").Value, "Partial plist entry");
+				}
+			});
+
+			void AssertExistsOrUsingHotRestart (string path, string message)
+			{
+				var exists = appBundleContents.Contains (path);
+				if (exists ^ isUsingHotRestart)
+					return;
+				Assert.Fail ($"Expected either hot restart to be enabled ({isUsingHotRestart}) or the file '{path}' to be in the app bundle ({exists}): {message}");
+			}
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
@@ -859,16 +1157,6 @@ namespace Xamarin.Tests {
 
 				if (rx == "bindings-framework-test") {
 					foreach (var lib in new string [] { "XStaticArTest", "XStaticObjectTest" }) {
-						addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-						addHere.AddRange (new string [] {
-							$"{lib}.xcframework/watchos-arm64_32_armv7k",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework",
-							$"{lib}.xcframework/watchos-arm64_32_armv7k/{lib}.framework/{lib}",
-							$"{lib}.xcframework/watchos-x86_64-simulator",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework",
-							$"{lib}.xcframework/watchos-x86_64-simulator/{lib}.framework/{lib}",
-						});
-
 						addHere = Configuration.include_tvos ? mustHaveContents : mayHaveContents;
 						addHere.AddRange (new string [] {
 							$"{lib}.xcframework/tvos-arm64",
@@ -967,18 +1255,6 @@ namespace Xamarin.Tests {
 					"XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest",
 				});
 
-				addHere = Configuration.include_watchos ? mustHaveContents : mayHaveContents;
-				addHere.AddRange (new string [] {
-					"XTest.xcframework/watchos-arm64_32_armv7k",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-arm64_32_armv7k/XTest.framework/XTest",
-					"XTest.xcframework/watchos-x86_64-simulator",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/Info.plist",
-					"XTest.xcframework/watchos-x86_64-simulator/XTest.framework/XTest",
-				});
-
 				var missing = mustHaveContents.ToHashSet ().Except (zipContents);
 				Assert.That (missing, Is.Empty, "No missing files");
 
@@ -1020,13 +1296,13 @@ namespace Xamarin.Tests {
 				Where (v => {
 					if (v.Length < 10)
 						return false;
-					if (v [0] != '/')
+					if (v [0] != '/' && !(char.IsAsciiLetter (v [0]) && v [1] == ':'))
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!(v.Contains ("/bin/", StringComparison.Ordinal) || v.Contains ("\\bin\\", StringComparison.Ordinal)))
 						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					if (v.Contains ("/ref/", StringComparison.Ordinal) || v.Contains ("\\ref\\", StringComparison.Ordinal))
 						return false; // Skip reference assemblies
 					return true;
 				});
@@ -1191,7 +1467,19 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 
-			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+			// We want RuntimeIdentifier(s) so to be specified in a file, otherwise they're applied to the library
+			// project as well, and that might not be valid.
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (properties.ContainsKey ("RuntimeIdentifiers")) {
+				properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+				properties.Remove ("RuntimeIdentifiers");
+			}
+			if (properties.ContainsKey ("RuntimeIdentifier")) {
+				properties ["file:RuntimeIdentifier"] = properties ["RuntimeIdentifier"];
+				properties.Remove ("RuntimeIdentifier");
+			}
+
+			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
@@ -1647,9 +1935,9 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 
-			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
-			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
+			AssertThatDylibExistsAndIsReidentified (appPath, "libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libframework.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
@@ -1672,6 +1960,30 @@ namespace Xamarin.Tests {
 			if (CanExecute (platform, runtimeIdentifiers)) {
 				var output = ExecuteWithMagicWordAndAssert (appExecutable);
 				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void CompressedXCFrameworkInBindingProjectApp (ApplePlatform platform)
+		{
+			var project = "CompressedXCFrameworkInBindingProjectApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			if (CanExecute (platform, properties)) {
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 
@@ -2304,10 +2616,19 @@ namespace Xamarin.Tests {
 			"/usr/lib/libicucore.A.dylib",
 			"/usr/lib/swift/libswiftCore.dylib",
 			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
 			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDataDetection.dylib",
 			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFileProvider.dylib",
 			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
 			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUIKit.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
 		];
 
 		static string [] expectedFrameworks_iOS_Full = [
@@ -2385,6 +2706,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension",
 			"/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
 			"/System/Library/Frameworks/OSLog.framework/OSLog",
+			"/System/Library/Frameworks/PDFKit.framework/PDFKit",
 			"/System/Library/Frameworks/PHASE.framework/PHASE",
 			"/System/Library/Frameworks/Photos.framework/Photos",
 			"/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
@@ -2417,10 +2739,16 @@ namespace Xamarin.Tests {
 			"/usr/lib/libz.1.dylib",
 			"/usr/lib/swift/libswiftCore.dylib",
 			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
 			"/usr/lib/swift/libswiftDarwin.dylib",
 			"/usr/lib/swift/libswiftDispatch.dylib",
 			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
 			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUIKit.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
 		];
 
 		static string [] expectedFrameworks_tvOS_Full = [
@@ -2585,6 +2913,20 @@ namespace Xamarin.Tests {
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
+			"/usr/lib/swift/libswiftCore.dylib",
+			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
+			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFoundation.dylib",
+			"/usr/lib/swift/libswiftIOKit.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
+			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftOSLog.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+			"/usr/lib/swift/libswiftXPC.dylib",
 		];
 
 		static string [] expectedFrameworks_macOS_Full = [
@@ -2655,6 +2997,7 @@ namespace Xamarin.Tests {
 			"/System/iOSSupport/System/Library/Frameworks/ReplayKit.framework/Versions/A/ReplayKit",
 			"/System/iOSSupport/System/Library/Frameworks/SafariServices.framework/Versions/A/SafariServices",
 			"/System/iOSSupport/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit",
+			"/System/iOSSupport/System/Library/Frameworks/ScreenCaptureKit.framework/Versions/A/ScreenCaptureKit",
 			"/System/iOSSupport/System/Library/Frameworks/ScreenTime.framework/Versions/A/ScreenTime",
 			"/System/iOSSupport/System/Library/Frameworks/SharedWithYou.framework/Versions/A/SharedWithYou",
 			"/System/iOSSupport/System/Library/Frameworks/Social.framework/Versions/A/Social",
@@ -2756,13 +3099,22 @@ namespace Xamarin.Tests {
 			"/usr/lib/libobjc.A.dylib",
 			"/usr/lib/libSystem.B.dylib",
 			"/usr/lib/libz.1.dylib",
+			"/System/iOSSupport/usr/lib/swift/libswiftUIKit.dylib",
 			"/usr/lib/swift/libswiftCore.dylib",
 			"/usr/lib/swift/libswiftCoreFoundation.dylib",
+			"/usr/lib/swift/libswiftCoreImage.dylib",
 			"/usr/lib/swift/libswiftDarwin.dylib",
+			"/usr/lib/swift/libswiftDataDetection.dylib",
 			"/usr/lib/swift/libswiftDispatch.dylib",
+			"/usr/lib/swift/libswiftFileProvider.dylib",
 			"/usr/lib/swift/libswiftFoundation.dylib",
 			"/usr/lib/swift/libswiftIOKit.dylib",
+			"/usr/lib/swift/libswiftMetal.dylib",
 			"/usr/lib/swift/libswiftObjectiveC.dylib",
+			"/usr/lib/swift/libswiftos.dylib",
+			"/usr/lib/swift/libswiftOSLog.dylib",
+			"/usr/lib/swift/libswiftQuartzCore.dylib",
+			"/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
 			"/usr/lib/swift/libswiftXPC.dylib",
 		];
 
@@ -2860,6 +3212,8 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["SupportedOSPlatformVersion"] = version;
+			properties ["ExcludeTouchUnitReference"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");

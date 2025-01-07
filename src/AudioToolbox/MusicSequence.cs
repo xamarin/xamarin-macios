@@ -112,6 +112,11 @@ namespace AudioToolbox {
 
 		internal static MusicSequence Lookup (IntPtr handle)
 		{
+			return Lookup (handle, false);
+		}
+
+		internal static MusicSequence Lookup (IntPtr handle, bool owns)
+		{
 			lock (sequenceMap) {
 				if (sequenceMap.TryGetValue (handle, out var weakRef)) {
 					var target = weakRef.Target;
@@ -120,7 +125,7 @@ namespace AudioToolbox {
 					}
 					sequenceMap.Remove (handle);
 				}
-				var ms = new MusicSequence (handle, false);
+				var ms = new MusicSequence (handle, owns);
 				sequenceMap [handle] = new WeakReference (ms);
 				return ms;
 			}

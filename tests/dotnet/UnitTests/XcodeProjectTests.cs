@@ -179,9 +179,10 @@ public class Binding
 			Assert.That (expectedNupkgOutput, Does.Exist, $"Expected pack output '{expectedNupkgOutput}' did not exist.");
 
 			List<string> zipContent = ZipHelpers.List (expectedNupkgOutput);
-			var expectedFxPath = $"lib/{platform.ToFrameworkWithPlatformVersion ()}/{TestName}.resources/{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist";
+			var tfm = platform.ToFrameworkWithPlatformVersion (isExecutable: false);
+			var expectedFxPath = $"lib/{tfm}/{TestName}.resources/{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist";
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
-				zipContent = ZipHelpers.ListInnerZip (expectedNupkgOutput, $"lib/{platform.ToFrameworkWithPlatformVersion ()}/{TestName}.resources.zip");
+				zipContent = ZipHelpers.ListInnerZip (expectedNupkgOutput, $"lib/{tfm}/{TestName}.resources.zip");
 				expectedFxPath = $"{xcodeProjName}{platform.AsString ()}.xcframework/Info.plist";
 			}
 			Assert.Contains (expectedFxPath, zipContent, $"Expected xcframework output was not found in '{expectedNupkgOutput}'.");
@@ -305,7 +306,7 @@ public class Binding
 		[Category ("Multiplatform")]
 		public void BuildMultiTargeting ()
 		{
-			var enabledPlatforms = Configuration.GetIncludedPlatforms (dotnet: true);
+			var enabledPlatforms = Configuration.GetIncludedPlatforms ();
 			var templatePlatform = enabledPlatforms.First ();
 			var testDir = Cache.CreateTemporaryDirectory (TestName);
 			var proj = Path.Combine (testDir, $"{TestName}.csproj");

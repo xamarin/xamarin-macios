@@ -312,20 +312,6 @@ namespace UIKit {
 	// In the hopes that the parameter is self document: this array  can contain either UIDocuments or UIResponders
 	delegate void UIApplicationRestorationHandler (NSObject [] uidocumentOrResponderObjects);
 
-#if !XAMCORE_3_0
-	[NoWatch]
-	[MacCatalyst (13, 1)]
-#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
-	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
-#pragma warning restore
-	[BaseType (typeof (NSAttributedString))]
-	interface NSAttributedStringAttachmentConveniences {
-		[Internal]
-		[Static, Export ("attributedStringWithAttachment:")]
-		NSAttributedString FromTextAttachment (NSTextAttachment attachment);
-	}
-#endif
-
 	/// <summary>Abstract base class for classes that generate feedback hints, such as haptics.</summary>
 	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
@@ -2294,10 +2280,6 @@ namespace UIKit {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate {
 			get; // readonly
-#if !XAMCORE_3_0
-			[NotImplemented]
-			set;
-#endif
 		}
 
 		[Wrap ("WeakDelegate")]
@@ -3043,6 +3025,10 @@ namespace UIKit {
 		[TV (17, 0), NoWatch, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("activateSceneSessionForRequest:errorHandler:")]
 		void ActivateSceneSession (UISceneSessionActivationRequest request, [NullAllowed] Action<NSError> errorHandler);
+
+		[iOS (18, 2), MacCatalyst (18, 2), TV (18, 2)]
+		[Field ("UIApplicationOpenDefaultApplicationsSettingsURLString")]
+		NSString UIApplicationOpenDefaultApplicationsSettingsUrlString { get; }
 	}
 
 	/// <summary>Icon for a Quick Action shortcut, which appears in response to user-applied pressure.</summary>
@@ -4687,15 +4673,8 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
-#if XAMCORE_3_0 && !NET
-	// bind like UITableViewDelegate to avoid generating duplicate code
-	// it's an API break (binary, source should be fine)
-	[BaseType (typeof (UIScrollViewDelegate))]
-	interface UICollectionViewDelegate {
-#else
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewDelegate : UIScrollViewDelegate {
-#endif
 		[Export ("collectionView:shouldHighlightItemAtIndexPath:")]
 		bool ShouldHighlightItem (UICollectionView collectionView, NSIndexPath indexPath);
 
@@ -7729,32 +7708,6 @@ namespace UIKit {
 		[Notification (typeof (UIKeyboardEventArgs))]
 		NSString DidChangeFrameNotification { get; }
 
-#if !XAMCORE_3_0
-		//
-		// Deprecated methods
-		//
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardCenterBeginUserInfoKey")]
-		NSString CenterBeginUserInfoKey { get; }
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardCenterEndUserInfoKey")]
-		NSString CenterEndUserInfoKey { get; }
-
-		[NoTV]
-		[Deprecated (PlatformName.iOS, 3, 2)]
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Field ("UIKeyboardBoundsUserInfoKey")]
-		NSString BoundsUserInfoKey { get; }
-#endif
 		//
 		// Keys
 		//
@@ -10199,23 +10152,6 @@ namespace UIKit {
 		[Export ("imageRectForContentRect:")]
 		CGRect ImageRectForContentRect (CGRect rect);
 
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("font", ArgumentSemantic.Retain)]
-		UIFont Font { get; set; }
-
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("lineBreakMode")]
-		UILineBreakMode LineBreakMode { get; set; }
-
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("titleShadowOffset")]
-		CGSize TitleShadowOffset { get; set; }
-#endif
-
 		//
 		// 6.0
 		//
@@ -10858,13 +10794,6 @@ namespace UIKit {
 		[Export ("mediaTypes", ArgumentSemantic.Copy)]
 		string [] MediaTypes { get; set; }
 
-#if !XAMCORE_3_0
-		[Export ("allowsImageEditing")]
-		[Deprecated (PlatformName.iOS, 3, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		bool AllowsImageEditing { get; set; }
-#endif
-
 		//
 		// 3.1 APIs
 		//
@@ -10974,12 +10903,6 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	interface UIImagePickerControllerDelegate {
-#if !XAMCORE_3_0
-		[Obsoleted (PlatformName.iOS, 3, 0)]
-		[Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
-		void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
-#endif
-
 		[Export ("imagePickerController:didFinishPickingMediaWithInfo:"), EventArgs ("UIImagePickerMediaPicked")]
 		void FinishedPickingMedia (UIImagePickerController picker, NSDictionary info);
 
@@ -12926,6 +12849,10 @@ namespace UIKit {
 		[TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("useSelectionForFind:")]
 		void UseSelectionForFind ([NullAllowed] NSObject sender);
+
+		[NoTV, iOS (18, 2), MacCatalyst (18, 2)]
+		[Export ("showWritingTools:")]
+		void ShowWritingTools ([NullAllowed] NSObject sender);
 	}
 
 #if !NET // These two methods are in the UIResponderStandardEditActions protocol
@@ -14324,6 +14251,10 @@ namespace UIKit {
 		[Field ("NSAdaptiveImageGlyphAttributeName")]
 		NSString AdaptiveImageGlyph { get; }
 
+		[NoTV, Mac (15, 2), iOS (18, 2), MacCatalyst (18, 2)]
+		[Field ("NSWritingToolsExclusionAttributeName")]
+		NSString WritingToolsExclusion { get; }
+
 	}
 
 	/// <summary>A <see cref="T:UIKit.UIControl" /> that displays an on/off switch.</summary>
@@ -15297,13 +15228,6 @@ namespace UIKit {
 		[Export ("tableView:viewForFooterInSection:")]
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
-		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
-#endif
-
 		[Export ("tableView:accessoryButtonTappedForRowWithIndexPath:")]
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
 
@@ -15785,13 +15709,6 @@ namespace UIKit {
 
 		[Export ("tableView:viewForFooterInSection:")]
 		UIView GetViewForFooter (UITableView tableView, nint section);
-
-#if !XAMCORE_3_0
-		[Deprecated (PlatformName.iOS, 3, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
-		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
-#endif
 
 		[Export ("tableView:accessoryButtonTappedForRowWithIndexPath:")]
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
@@ -16523,6 +16440,10 @@ namespace UIKit {
 		[NoWatch, NoTV, NoMacCatalyst, iOS (18, 0)]
 		[Export ("textFormattingConfiguration", ArgumentSemantic.Copy), NullAllowed]
 		UITextFormattingViewControllerConfiguration TextFormattingConfiguration { get; set; }
+
+		[NoTV, MacCatalyst (18, 2), iOS (18, 2)]
+		[Export ("writingToolsCoordinator")]
+		UIWritingToolsCoordinator WritingToolsCoordinator { get; }
 	}
 
 	interface IUITextViewDelegate { }
@@ -17013,6 +16934,7 @@ namespace UIKit {
 		[Export ("sizeToFit")]
 		void SizeToFit ();
 
+		[NullAllowed]
 		[Export ("superview")]
 		UIView Superview { get; }
 
@@ -17021,6 +16943,7 @@ namespace UIKit {
 
 		[Export ("window")]
 		[Transient]
+		[NullAllowed]
 		UIWindow Window { get; }
 
 		[Export ("removeFromSuperview")]
@@ -17068,6 +16991,7 @@ namespace UIKit {
 		[Export ("isDescendantOfView:")]
 		bool IsDescendantOfView (UIView view);
 
+		[return: NullAllowed]
 		[Export ("viewWithTag:")]
 		UIView ViewWithTag (nint tag);
 
@@ -17409,6 +17333,7 @@ namespace UIKit {
 		[Export ("motionEffects", ArgumentSemantic.Copy)]
 		UIMotionEffect [] MotionEffects { get; set; }
 
+		[return: NullAllowed]
 		[Export ("snapshotViewAfterScreenUpdates:")]
 		UIView SnapshotView (bool afterScreenUpdates);
 
@@ -21713,8 +21638,6 @@ namespace UIKit {
 	}
 
 	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
-	[NoWatch]
-	[NoWatch] // added in Xcode 7.1 / iOS 9.1 SDK
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIFocusUpdateContext))]
 	interface UICollectionViewFocusUpdateContext {
@@ -29521,7 +29444,7 @@ namespace UIKit {
 	interface UITraitAccessibilityContrast : UINSIntegerTraitDefinition {
 	}
 
-	[NoWatch, TV (17, 0), NoWatch, iOS (17, 0), MacCatalyst (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface UITraitUserInterfaceLevel : UINSIntegerTraitDefinition {
 	}
@@ -31001,4 +30924,55 @@ namespace UIKit {
 		UIView UIView { get; [Bind ("setUIView:")] set; }
 	}
 
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	delegate IUITextInput UITextInputReturnHandler ();
+
+	[NoMac, NoWatch, NoTV, iOS (18, 1), MacCatalyst (18, 1)]
+	[Category]
+	[BaseType (typeof (NSObject))]
+	interface NSObject_UIAccessibilityTextOperations {
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponder")]
+		IUITextInput GetAccessibilityTextInputResponder ();
+
+		[Export ("setAccessibilityTextInputResponder:")]
+		void SetAccessibilityTextInputResponder ([NullAllowed] IUITextInput textInput);
+
+		[return: NullAllowed]
+		[Export ("accessibilityTextInputResponderBlock")]
+		UITextInputReturnHandler GetAccessibilityTextInputResponderHandler ();
+
+		[Export ("setAccessibilityTextInputResponderBlock:")]
+		void SetAccessibilityTextInputResponderHandler ([NullAllowed] UITextInputReturnHandler handler);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Native]
+	public enum UIApplicationCategory : long {
+		UIApplicationCategoryWebBrowser = 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Native]
+	public enum UIApplicationCategoryDefaultStatus : long {
+		Unavailable,
+		IsDefault,
+		NotDefault,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[ErrorDomain ("UIApplicationCategoryDefaultErrorDomain")]
+	[Native]
+	public enum UIApplicationCategoryDefaultErrorCode : long {
+		RateLimited = 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (18, 2)]
+	[Category]
+	[BaseType (typeof (UIApplication))]
+	interface UIApplication_DefaultApplication {
+		[Export ("defaultStatusForCategory:error:")]
+		UIApplicationCategoryDefaultStatus GetDefaultStatus (UIApplicationCategory category, [NullAllowed] out NSError error);
+	}
 }

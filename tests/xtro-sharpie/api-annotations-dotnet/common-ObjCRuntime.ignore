@@ -17,6 +17,7 @@
 !unknown-pinvoke! objc_allocateClassPair bound
 !unknown-pinvoke! objc_allocateProtocol bound
 !unknown-pinvoke! objc_getClass bound
+!unknown-pinvoke! objc_getClassList bound
 !unknown-pinvoke! objc_getProtocol bound
 !unknown-pinvoke! objc_msgSend bound
 !unknown-pinvoke! objc_msgSendSuper bound

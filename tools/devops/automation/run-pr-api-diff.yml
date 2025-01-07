@@ -1,25 +1,15 @@
 # Pipeline that will calculate the api diff on a pr commit.
 
 trigger: none
+pr: none
 
-pr:
-  autoCancel: true
-  branches:
-    include:
-      - '*'  # yes, you do need the quote, * has meaning in yamls
-  paths:
-    exclude:
-      - .github
-      - docs
-      - CODEOWNERS
-      - ISSUE_TEMPLATE.md
-      - LICENSE
-      - NOTICE.txt
-      - SECURITY.MD
-      - README.md
-      - src/README.md
-      - tools/mtouch/README.md
-      - msbuild/Xamarin.Localization.MSBuild/README.md
+resources:
+  pipelines:
+    - pipeline: macios
+      source: \Xamarin\Mac-iOS\pr pipelines\xamarin-macios-pr
+      trigger:
+        stages:
+          - configure_build
 
 extends:
   template: templates/pipelines/api-diff-pipeline.yml

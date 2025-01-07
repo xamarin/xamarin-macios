@@ -4,12 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
     <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.Reflection.Metadata" that could not be resolved. -->
+    <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -19,17 +22,14 @@
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
-    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
-    <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" Aliases="Microsoft_Build_Tasks_Core" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
+    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir if IncludeMSBuildAssets was not set. -->
+    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildPackageVersion)" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCorePackageVersion)" IncludeAssets="$(IncludeMSBuildAssets)" Aliases="Microsoft_Build_Tasks_Core" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCorePackageVersion)" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
     <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETRuntimeMonoTargetsSdkPackageVersion)" GeneratePathProperty="true"/>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
-    <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
-    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
-    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
@@ -45,6 +45,25 @@
       <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\MonoTargetsTasks.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+
+  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
+    <ItemGroup>
+      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
+      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
+
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
+      <ReferencePath Remove="@(ReferencePathToRemove)" />
+
+      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
+
+      <ReferencePath Include="@(ReferencePathToAdd)">
+        <DestinationSubDirectory />
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>

@@ -36,7 +36,20 @@ namespace Xamarin.Tests {
 				foreach (var kvp in extraProperties)
 					rv [kvp.Key] = kvp.Value;
 			}
+
+			if (Configuration.IsBuildingRemotely && !rv.ContainsKey ("IsHotRestartBuild"))
+				AddRemoteProperties (rv);
+
 			return rv;
+		}
+
+		protected static void AddRemoteProperties (Dictionary<string, string> properties)
+		{
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
+			if (!string.IsNullOrEmpty (properties ["ServerUser"]))
+				properties ["ContinueOnDisconnected"] = "false";
 		}
 
 		protected static void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
@@ -67,12 +80,12 @@ namespace Xamarin.Tests {
 			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
@@ -169,6 +182,16 @@ namespace Xamarin.Tests {
 					continue;
 				Directory.Delete (dir, true);
 			}
+		}
+
+		protected static bool CanExecute (ApplePlatform platform, Dictionary<string, string> properties)
+		{
+			if (properties.TryGetValue ("RuntimeIdentifier", out var runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			} else if (properties.TryGetValue ("RuntimeIdentifiers", out runtimeIdentifiers)) {
+				return CanExecute (platform, runtimeIdentifiers);
+			}
+			return false;
 		}
 
 		protected static bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
@@ -359,9 +382,20 @@ namespace Xamarin.Tests {
 			}
 
 			var rv = Execute (executable, out var output, out string magicWord, environment);
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
-			return output.ToString ();
+			var outputString = output.ToString ();
+			if (rv.ExitCode != 0) {
+				var msg = $"'{executable}' exited with exit code {rv}:" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			if (!outputString.Contains (magicWord)) {
+				var msg = $"'{executable}' exited with exit code {rv}, but did not contain the magic word '{magicWord}' ({outputString.Length}):" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			return outputString;
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord, Dictionary<string, string?>? environment = null)
@@ -562,5 +596,35 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected Dictionary<string, string> GetHotRestartProperties ()
+		{
+			return GetHotRestartProperties (null, out var _, out var _);
+		}
+
+		protected Dictionary<string, string> GetHotRestartProperties (string? tmpdir, out string hotRestartOutputDir, out string hotRestartAppBundlePath)
+		{
+			var properties = new Dictionary<string, string> ();
+			properties ["IsHotRestartBuild"] = "true";
+			properties ["IsHotRestartEnvironmentReady"] = "true";
+			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
+			properties ["_IsAppSigned"] = "false";
+			properties ["_AppIdentifier"] = "placeholder_AppIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+			properties ["_BundleIdentifier"] = "placeholder_BundleIdentifier"; // This needs to be set to a placeholder value because DetectSigningIdentity usually does it (and we've disabled signing)
+
+			if (!string.IsNullOrEmpty (tmpdir)) {
+				// Redirect hot restart output to a place we can control from here
+				hotRestartOutputDir = Path.Combine (tmpdir, "out")!;
+				Directory.CreateDirectory (hotRestartOutputDir);
+				properties ["HotRestartSignedAppOutputDir"] = hotRestartOutputDir + Path.DirectorySeparatorChar;
+
+				hotRestartAppBundlePath = Path.Combine (tmpdir, "HotRestartAppBundlePath")!; // Do not create this directory, it will be created and populated with default contents if it doesn't exist.
+				properties ["HotRestartAppBundlePath"] = hotRestartAppBundlePath; // no trailing directory separator char for this property.
+			} else {
+				hotRestartOutputDir = string.Empty;
+				hotRestartAppBundlePath = string.Empty;
+			}
+
+			return properties;
+		}
 	}
 }

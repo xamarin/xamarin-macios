@@ -18,13 +18,11 @@ namespace Xharness.Jenkins.TestTasks {
 			base.SetEnvironmentVariables (process);
 			// modify those env vars that we do care about
 
-			if (TestProject.IsDotNetProject) {
-				process.StartInfo.EnvironmentVariables.Remove ("MSBUILD_EXE_PATH");
-				process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
-				process.StartInfo.EnvironmentVariables.Remove ("MSBuildSDKsPath");
-				process.StartInfo.EnvironmentVariables.Remove ("TargetFrameworkFallbackSearchPaths");
-				process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
-			}
+			process.StartInfo.EnvironmentVariables.Remove ("MSBUILD_EXE_PATH");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildSDKsPath");
+			process.StartInfo.EnvironmentVariables.Remove ("TargetFrameworkFallbackSearchPaths");
+			process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
 		}
 
 		protected virtual List<string> ToolArguments =>
@@ -37,23 +35,13 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected override void InitializeTool ()
 		{
-			if (TestProject.IsDotNetProject) {
-				buildToolTask = new DotNetBuild (
-					msbuildPath: () => ToolName,
-					processManager: ProcessManager,
-					resourceManager: ResourceManager,
-					eventLogger: this,
-					envManager: this,
-					errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
-			} else {
-				buildToolTask = new MSBuild (
-					msbuildPath: () => ToolName,
-					processManager: ProcessManager,
-					resourceManager: ResourceManager,
-					eventLogger: this,
-					envManager: this,
-					errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
-			}
+			buildToolTask = new DotNetBuild (
+				msbuildPath: () => ToolName,
+				processManager: ProcessManager,
+				resourceManager: ResourceManager,
+				eventLogger: this,
+				envManager: this,
+				errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
 		}
 
 		protected override async Task ExecuteAsync ()

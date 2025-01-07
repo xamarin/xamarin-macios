@@ -46,12 +46,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			foreach (var appex in Directory.EnumerateDirectories (AppBundlePath, "*.appex", SearchOption.AllDirectories))
 				Assert.AreEqual (expected, IsCodesigned (appex), "{0} is not properly codesigned.", appex);
-
-			var watchDir = Path.Combine (AppBundlePath, "Watch");
-			if (Directory.Exists (watchDir)) {
-				foreach (var watchApp in Directory.EnumerateDirectories (watchDir, "*.app", SearchOption.TopDirectoryOnly))
-					Assert.AreEqual (expected, IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
-			}
 		}
 
 		[Test]
@@ -152,94 +146,6 @@ namespace Xamarin.MacDev.Tasks {
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("bool imageFound = true;", "bool imageFound = false;");
 				File.WriteAllText (viewController, text);
-			}
-		}
-
-		[Test]
-		public void RebuildWatchAppNoChanges ()
-		{
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
-			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
-
-			bool expectedCodesignResults = Platform != "iPhoneSimulator";
-
-			BuildProject ("MyWatch2Container");
-
-			AssertProperlyCodesigned (expectedCodesignResults);
-
-			EnsureFilestampChange ();
-
-			// Rebuild w/ no changes
-			BuildProject ("MyWatch2Container", clean: false);
-
-			// make sure everything is still codesigned properly
-			AssertProperlyCodesigned (expectedCodesignResults);
-
-			if (Platform == "iPhone") {
-				// make sure the dSYMs exist
-
-				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
-				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
-
-				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
-				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
-
-				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
-				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
-			}
-		}
-
-		[Test]
-		public void CodesignAfterModifyingWatchApp2Test ()
-		{
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
-			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
-
-			var csproj = BuildProject ("MyWatch2Container", clean: true).ProjectCSProjPath;
-			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
-			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
-			var viewController = Path.Combine (appexProjectDir, "InterfaceController.cs");
-			var mainExecutable = Path.Combine (AppBundlePath, "MyWatch2Container");
-			bool expectedCodesignResults = Platform != "iPhoneSimulator";
-			var timestamp = File.GetLastWriteTimeUtc (mainExecutable);
-			var text = File.ReadAllText (viewController);
-
-			AssertProperlyCodesigned (expectedCodesignResults);
-
-			EnsureFilestampChange ();
-
-			// replace "bool imageFound = false;" with "bool imageFound = true;" so that we force the appex to get rebuilt
-			text = text.Replace ("{0} awake with context", "{0} The Awakening...");
-			File.WriteAllText (viewController, text);
-
-			try {
-				BuildProject ("MyWatch2Container", clean: false);
-
-				AssertProperlyCodesigned (expectedCodesignResults);
-
-				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
-
-				// make sure that the main app bundle was codesigned due to the changes in the appex
-				Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
-			} finally {
-				// restore the original ActionViewController.cs code...
-				text = text.Replace ("{0} The Awakening...", "{0} awake with context");
-				File.WriteAllText (viewController, text);
-			}
-
-			if (Platform == "iPhone") {
-				// make sure the dSYMs exist
-
-				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
-				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
-
-				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
-				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
-
-				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
-				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
 			}
 		}
 	}

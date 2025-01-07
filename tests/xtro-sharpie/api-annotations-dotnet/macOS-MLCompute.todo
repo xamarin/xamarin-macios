@@ -1,4 +1,3 @@
-!deprecated-attribute-missing! MLCRMSPropOptimizer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCActivationDescriptor missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCActivationLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCAdamOptimizer missing a [Deprecated] attribute

@@ -745,6 +745,8 @@ namespace AuthenticationServices {
 		Failed = 1004,
 		NotInteractive = 1005,
 		MatchedExcludedCredential = 1006,
+		CredentialImport = 1007,
+		CredentialExport = 1008,
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]

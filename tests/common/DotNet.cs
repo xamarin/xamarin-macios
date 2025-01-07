@@ -270,7 +270,11 @@ namespace Xamarin.Tests {
 					Console.WriteLine (outputStr);
 					if (rv.ExitCode != 0) {
 						var msg = new StringBuilder ();
-						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						if (rv.TimedOut) {
+							msg.AppendLine ($"'dotnet {verb}' timed out after {timeout}");
+						} else {
+							msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						}
 						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
 #if !MSBUILD_TASKS
 						try {

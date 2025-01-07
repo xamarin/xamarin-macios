@@ -118,13 +118,13 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : long {
 		Unspecified = 0,
 		Back = 1,
-		Front = 2
+		Front = 2,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -317,10 +317,8 @@ namespace AVFoundation {
 	}
 
 	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
-#if XAMCORE_3_0
 	[NoiOS]
 	[NoWatch]
-#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[Native]
@@ -332,9 +330,7 @@ namespace AVFoundation {
 	/// <summary>An enumeration whose values specify how interlaced fields should be dealt with.</summary>
 	///     
 	///     <!-- TODO: This should be used with AVCaptureConnection.VideoFieldMode property, but that doesn't appear to exist  -->
-#if XAMCORE_3_0
 	[NoiOS]
-#endif
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoTV]
 	[NoWatch]
@@ -626,16 +622,20 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : long {
 		Off,
-		Standard,
-		Cinematic,
+		Standard = 1,
+		Cinematic = 2,
 		[iOS (13, 0)]
 		[MacCatalyst (14, 0)]
-		CinematicExtended,
-		Auto = -1
+		CinematicExtended = 3,
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0), NoMac]
+		PreviewOptimized = 4,
+		[iOS (18, 0), MacCatalyst (18, 0), TV (18, 0), NoMac]
+		CinematicExtendedEnhanced = 5,
+		Auto = -1,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1026,7 +1026,7 @@ namespace AVFoundation {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
-	[NoTV]
+	[TV (17, 0)]
 	[Native]
 	public enum AVCaptureOutputDataDroppedReason : long {
 		None = 0,

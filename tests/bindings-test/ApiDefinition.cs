@@ -487,7 +487,6 @@ namespace Bindings.Test {
 	}
 	interface IProtocolWithBlockProperties { }
 
-#if NET
 	[BaseType (typeof (NSObject))]
 	interface SwiftTestClass {
 		[Export ("SayHello")]
@@ -508,5 +507,10 @@ namespace Bindings.Test {
 		// provide an actual argument when calling the method.
 		void DoSomethingComplexAsync (string message, IntPtr complexParameter, Action<NSString> completionHandler);
 	}
-#endif
+
+	[BaseType (typeof (SwiftTestClass), IsStubClass = true)]
+	interface SwiftTestClass2 {
+		[Export ("SayHello2")]
+		string SayHello2 ();
+	}
 }

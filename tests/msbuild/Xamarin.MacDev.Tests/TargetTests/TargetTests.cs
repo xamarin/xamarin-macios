@@ -100,17 +100,17 @@ namespace Xamarin.MacDev.Tasks {
 				return new [] {
 					"MyLibrary.MyLibraryFolder.LibraryLinkedEmbeddedResource.txt",
 					"MyLibrary.MyLibraryFolder.LibraryEmbeddedResource.txt",
-					"__monotouch_content_MyLibraryFolder_fLibraryLinkedBundleResource.txt",
-					"__monotouch_content_MyLibraryFolder_fLibraryBundleResource.txt",
-					"__monotouch_content_MyLibraryFolder_fLibraryLinkedContent.txt",
-					"__monotouch_content_MyLibraryFolder_fLibraryContent.txt",
-					"__monotouch_content_LibraryStoryboard.storyboardc_f1-view-2.nib",
-					"__monotouch_content_LibraryStoryboard.storyboardc_fInfo.plist",
-					"__monotouch_content_LibraryStoryboard.storyboardc_fUIViewController-1.nib",
-					"__monotouch_content_LibrarySecondStoryboard.storyboardc_f43-view-49.nib",
-					"__monotouch_content_LibrarySecondStoryboard.storyboardc_f45-view-53.nib",
-					"__monotouch_content_LibrarySecondStoryboard.storyboardc_fInfo.plist",
-					"__monotouch_content_LibrarySecondStoryboard.storyboardc_fUITabBarController-41.nib"
+					"__monotouch_content_MyLibraryFolder_sLibraryLinkedBundleResource.txt",
+					"__monotouch_content_MyLibraryFolder_sLibraryBundleResource.txt",
+					"__monotouch_content_MyLibraryFolder_sLibraryLinkedContent.txt",
+					"__monotouch_content_MyLibraryFolder_sLibraryContent.txt",
+					"__monotouch_content_LibraryStoryboard.storyboardc_s1-view-2.nib",
+					"__monotouch_content_LibraryStoryboard.storyboardc_sInfo.plist",
+					"__monotouch_content_LibraryStoryboard.storyboardc_sUIViewController-1.nib",
+					"__monotouch_content_LibrarySecondStoryboard.storyboardc_s43-view-49.nib",
+					"__monotouch_content_LibrarySecondStoryboard.storyboardc_s45-view-53.nib",
+					"__monotouch_content_LibrarySecondStoryboard.storyboardc_sInfo.plist",
+					"__monotouch_content_LibrarySecondStoryboard.storyboardc_sUITabBarController-41.nib"
 				};
 			}
 		}
@@ -274,6 +274,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void OptimizePngs_True ()
 		{
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 			MonoTouchProjectInstance.SetProperty ("OptimizePNGs", "True");
 			OptimizePngs_Core (true);
 		}
@@ -281,6 +282,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void OptimizePngs_False ()
 		{
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 			MonoTouchProjectInstance.SetProperty ("OptimizePNGs", "False");
 			OptimizePngs_Core (false);
 		}

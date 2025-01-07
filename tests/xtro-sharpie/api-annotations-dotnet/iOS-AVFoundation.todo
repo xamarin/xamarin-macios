@@ -293,8 +293,6 @@
 !deprecated-attribute-missing! AVAudioSession::recordPermission missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVAudioSession::requestRecordPermission: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVCaptureConnection::isVideoOrientationSupported missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::setVideoOrientation: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureConnection::videoOrientation missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::enqueueSampleBuffer: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::error missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::flush missing a [Deprecated] attribute
@@ -306,7 +304,6 @@
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::stopRequestingMediaData missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVSampleBufferDisplayLayer::timebase missing a [Deprecated] attribute
 !extra-designated-initializer! AVPlayerLooper::initWithPlayer:templateItem:timeRange: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-enum! AVAudioApplicationRecordPermission not bound
 !missing-enum! AVAudioVoiceProcessingOtherAudioDuckingLevel not bound
 !missing-enum! AVAudioVoiceProcessingSpeechActivityEvent not bound
 !missing-enum! AVCapturePhotoOutputCaptureReadiness not bound
@@ -319,14 +316,6 @@
 !missing-field! AVAudioApplicationMuteStateKey not bound
 !missing-field! AVAudioSessionPortContinuityMicrophone not bound
 !missing-field! AVCaptureDeviceTypeMicrophone not bound
-!missing-field! AVCaptureReactionTypeBalloons not bound
-!missing-field! AVCaptureReactionTypeConfetti not bound
-!missing-field! AVCaptureReactionTypeFireworks not bound
-!missing-field! AVCaptureReactionTypeHeart not bound
-!missing-field! AVCaptureReactionTypeLasers not bound
-!missing-field! AVCaptureReactionTypeRain not bound
-!missing-field! AVCaptureReactionTypeThumbsDown not bound
-!missing-field! AVCaptureReactionTypeThumbsUp not bound
 !missing-field! AVFileTypeAHAP not bound
 !missing-field! AVMediaCharacteristicCarriesVideoStereoMetadata not bound
 !missing-field! AVMediaCharacteristicContainsStereoMultiviewVideo not bound
@@ -352,8 +341,6 @@
 !missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
 !missing-selector! +AVAssetWriterInputTaggedPixelBufferGroupAdaptor::assetWriterInputTaggedPixelBufferGroupAdaptorWithAssetWriterInput:sourcePixelBufferAttributes: not bound
-!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
-!missing-selector! +AVAudioApplication::sharedInstance not bound
 !missing-selector! +AVCaptureDevice::reactionEffectGesturesEnabled not bound
 !missing-selector! +AVCaptureDevice::reactionEffectsEnabled not bound
 !missing-selector! +AVCaptureDevice::setUserPreferredCamera: not bound
@@ -373,17 +360,12 @@
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::initWithAssetWriterInput:sourcePixelBufferAttributes: not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::pixelBufferPool not bound
 !missing-selector! AVAssetWriterInputTaggedPixelBufferGroupAdaptor::sourcePixelBufferAttributes not bound
-!missing-selector! AVAudioApplication::isInputMuted not bound
-!missing-selector! AVAudioApplication::recordPermission not bound
-!missing-selector! AVAudioApplication::setInputMuted:error: not bound
 !missing-selector! AVAudioInputNode::setMutedSpeechActivityEventListener: not bound
 !missing-selector! AVAudioInputNode::setVoiceProcessingOtherAudioDuckingConfiguration: not bound
 !missing-selector! AVAudioInputNode::voiceProcessingOtherAudioDuckingConfiguration not bound
 !missing-selector! AVAudioSession::prefersInterruptionOnRouteDisconnect not bound
 !missing-selector! AVAudioSession::setPrefersInterruptionOnRouteDisconnect:error: not bound
-!missing-selector! AVCaptureConnection::isVideoRotationAngleSupported: not bound
 !missing-selector! AVCaptureConnection::setVideoRotationAngle: not bound
-!missing-selector! AVCaptureConnection::videoRotationAngle not bound
 !missing-selector! AVCaptureDevice::availableReactionTypes not bound
 !missing-selector! AVCaptureDevice::canPerformReactionEffects not bound
 !missing-selector! AVCaptureDevice::performEffectForReaction: not bound
@@ -441,7 +423,6 @@
 !missing-selector! AVVideoComposition::perFrameHDRDisplayMetadataPolicy not bound
 !missing-type! AVAssetVariantVideoLayoutAttributes not bound
 !missing-type! AVAssetWriterInputTaggedPixelBufferGroupAdaptor not bound
-!missing-type! AVAudioApplication not bound
 !missing-type! AVCaptureDeferredPhotoProxy not bound
 !missing-type! AVCaptureDeviceRotationCoordinator not bound
 !missing-type! AVCapturePhotoOutputReadinessCoordinator not bound
@@ -452,7 +433,6 @@
 !deprecated-attribute-missing! AVCaptureDeviceFormat::supportedVideoZoomFactorsForDepthDataDelivery missing a [Deprecated] attribute
 !missing-enum-value! AVCaptureColorSpace native value AVCaptureColorSpace_AppleLog = 3 not bound
 !missing-enum-value! AVCaptureSystemPressureFactors native value AVCaptureSystemPressureFactorCameraTemperature = 8 not bound
-!missing-enum-value! AVCaptureVideoStabilizationMode native value AVCaptureVideoStabilizationModePreviewOptimized = 4 not bound
 !missing-selector! +AVExternalStorageDevice::authorizationStatus not bound
 !missing-selector! +AVExternalStorageDevice::requestAccessWithCompletionHandler: not bound
 !missing-selector! +AVExternalStorageDeviceDiscoverySession::isSupported not bound
@@ -489,16 +469,6 @@
 !missing-type! AVPlayerVideoOutputConfiguration not bound
 !missing-type! AVVideoOutputSpecification not bound
 !missing-type! AVZoomRange not bound
-!deprecated-attribute-missing! AVAggregateAssetDownloadTask missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:forMediaSelection: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:aggregateAssetDownloadTask:willDownloadToURL: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:assetDownloadTask:didFinishDownloadingToURL: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadDelegate::URLSession:assetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadTask::loadedTimeRanges missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadTask::options missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadURLSession::aggregateAssetDownloadTaskWithURLAsset:mediaSelections:assetTitle:assetArtworkData:options: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVAssetDownloadURLSession::assetDownloadTaskWithURLAsset:assetTitle:assetArtworkData:options: missing a [Deprecated] attribute
 !missing-enum! AVCaptionAnimation not bound
 !missing-enum! AVCaptionConversionValidatorStatus not bound
 !missing-enum! AVCaptionDecoration not bound
@@ -516,7 +486,6 @@
 !missing-enum! AVExternalContentProtectionStatus not bound
 !missing-enum! AVPlayerInterstitialEventTimelineOccupancy not bound
 !missing-enum! AVPlayerItemSegmentType not bound
-!missing-enum-value! AVCaptureVideoStabilizationMode native value AVCaptureVideoStabilizationModeCinematicExtendedEnhanced = 5 not bound
 !missing-enum-value! AVError native value AVErrorToneMappingFailed = -11885 not bound
 !missing-field! AVAssetImageGeneratorDynamicRangePolicyForceSDR not bound
 !missing-field! AVAssetImageGeneratorDynamicRangePolicyMatchSource not bound
@@ -870,8 +839,6 @@
 !missing-field! AVMetadataQuickTimeMetadataKeyFullFrameRatePlaybackIntent not bound
 !missing-field! AVVideoCodecTypeJPEGXL not bound
 !missing-protocol! AVCaptureSessionControlsDelegate not bound
-!missing-protocol-member! AVCaptureFileOutputRecordingDelegate::captureOutput:didPauseRecordingToOutputFileAtURL:fromConnections: not found
-!missing-protocol-member! AVCaptureFileOutputRecordingDelegate::captureOutput:didResumeRecordingToOutputFileAtURL:fromConnections: not found
 !missing-selector! AVCaptureControl::isEnabled not bound
 !missing-selector! AVCaptureControl::setEnabled: not bound
 !missing-selector! AVCaptureDevice::displayVideoZoomFactorMultiplier not bound
@@ -880,9 +847,6 @@
 !missing-selector! AVCaptureDeviceInput::isWindNoiseRemovalEnabled not bound
 !missing-selector! AVCaptureDeviceInput::isWindNoiseRemovalSupported not bound
 !missing-selector! AVCaptureDeviceInput::setWindNoiseRemovalEnabled: not bound
-!missing-selector! AVCaptureFileOutput::isRecordingPaused not bound
-!missing-selector! AVCaptureFileOutput::pauseRecording not bound
-!missing-selector! AVCaptureFileOutput::resumeRecording not bound
 !missing-selector! AVCaptureIndexPicker::accessibilityIdentifier not bound
 !missing-selector! AVCaptureIndexPicker::initWithLocalizedTitle:symbolName:localizedIndexTitles: not bound
 !missing-selector! AVCaptureIndexPicker::initWithLocalizedTitle:symbolName:numberOfIndexes: not bound

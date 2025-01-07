@@ -1,66 +1,9 @@
 <Project>
-	<Target Name="ComputeXcsyncArguments">
-		<PropertyGroup>
-			<XcsyncExecute>xcsync</XcsyncExecute>
-			<XcsyncProjectFile Condition="'$(XcsyncProjectFile)' == ''">$(MSBuildProjectFullPath)</XcsyncProjectFile>
-			<XcsyncXcodeFolder Condition="'$(XcsyncXcodeFolder)' == ''">$(IntermediateOutputPath)xcode</XcsyncXcodeFolder>
-			<XcsyncTargetFrameworkMoniker Condition="'$(XcsyncTargetFrameworkMoniker)' == ''">$(TargetFramework)</XcsyncTargetFrameworkMoniker>
-			<XcsyncVerbosity Condition="'$(XcsyncVerbosity)' == ''">Diagnostic</XcsyncVerbosity>
-			<XcsyncOpenXcode Condition="'$(XcsyncOpenXcode)' == ''">true</XcsyncOpenXcode>
-
-			<XcsyncCommonArguments Condition="'$(XcsyncProjectFile)' != ''">$(XcsyncCommonArguments) -p "$(XcsyncProjectFile)"</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(XcsyncXcodeFolder)' != ''">$(XcsyncCommonArguments) -t "$(XcsyncXcodeFolder)"</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(XcsyncTargetFrameworkMoniker)' != ''">$(XcsyncCommonArguments) -tfm $(XcsyncTargetFrameworkMoniker)</XcsyncCommonArguments>
-			<XcsyncCommonArguments Condition="'$(XcsyncVerbosity)' != ''">$(XcsyncCommonArguments) -v $(XcsyncVerbosity)</XcsyncCommonArguments>
-			<XcsyncCommonArguments>$(XcsyncCommonArguments) --dotnet-path "$([System.IO.Path]::GetDirectoryName($(DOTNET_HOST_PATH)))"</XcsyncCommonArguments>
-
-			<XcsyncGenerateArguments>$(XcsyncCommonArguments) --force</XcsyncGenerateArguments>
-			<XcsyncGenerateArguments Condition="'$(XcsyncOpenXcode)' != 'false'">$(XcsyncGenerateArguments) --open</XcsyncGenerateArguments>
-
-			<XcsyncSyncArguments>$(XcsyncCommonArguments)</XcsyncSyncArguments>
-		</PropertyGroup>
+	<Target Name="xcsync-generate">
+		<Message Importance="High" Text="xcsync has been moved to a .NET Global tool, install it using `dotnet tool install dotnet-xcsync -g`. For more information visit https://aka.ms/xcsync-learn" />
 	</Target>
 
-	<Target Name="CheckXcsyncInstalled">		
-		<PropertyGroup>
-			<LocalErrorCode>0</LocalErrorCode>
-			<GlobalErrorCode>0</GlobalErrorCode>
-			<XcsyncInstalled>False</XcsyncInstalled>	
-		</PropertyGroup>
-		<Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(XcsyncExecute)" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
-			<Output TaskParameter="ExitCode" PropertyName="GlobalErrorCode"/>
-		</Exec>
-		<Exec ContinueOnError="True" IgnoreStandardErrorWarningFormat="true" Command="$(DOTNET_HOST_PATH) tool run xcsync" Condition="'$(GlobalErrorCode)' != '0'" StandardErrorImportance="Low" StandardOutputImportance="Low" CustomErrorRegularExpression="" CustomWarningRegularExpression="">
-			<Output TaskParameter="ExitCode" PropertyName="LocalErrorCode"/>
-    	</Exec>
-		<PropertyGroup>
-			<XcsyncInstalled Condition="'$(GlobalErrorCode)' == '0' OR '$(LocalErrorCode)' == '0'">True</XcsyncInstalled>
-			<XcsyncInstalled Condition="'$(GlobalErrorCode)' != '0' AND '$(LocalErrorCode)' != '0'">False</XcsyncInstalled>		
-			<XcsyncExecute Condition="'$(GlobalErrorCode)' != '0' AND '$(LocalErrorCode)' == '0'">$(DOTNET_HOST_PATH) tool run xcsync</XcsyncExecute>
-		</PropertyGroup>
-		<Message Importance="High" Text="The xcsync tool is not installed." Condition="'$(XcsyncInstalled)' != 'False'" />
+	<Target Name="xcsync-sync">
+		<Message Importance="High" Text="xcsync has been moved to a .NET Global tool, install it using `dotnet tool install dotnet-xcsync -g` For more information visit https://aka.ms/xcsync-learn" />
 	</Target>
-
-	<Target Name="InstallXcsync" DependsOnTargets="CheckXcsyncInstalled">
-		<Message Importance="High" Text="Installing xcsync tool..." Condition="'$(XcsyncInstalled)' == 'False'"/>
-		<Error Text="The xcsync tool could not be installed. Please install xcsync by running 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' != '0' AND '$(InstallErrorCode)' != ''" />
-		<Warning Text="The xcsync tool was installed globally. Remove it using the following command: 'dotnet tool install -g dotnet-xcsync --prerelease'." Condition="'$(InstallErrorCode)' == '0'" />
-		<PropertyGroup>
-			<XcsyncInstalled Condition="'$(InstallErrorCode)' == '0' OR '$(InstallErrorCode)' == ''">True</XcsyncInstalled>
-			<XcsyncInstalled Condition="'$(InstallErrorCode)' != '0' AND '$(InstallErrorCode)' != ''">False</XcsyncInstalled>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="xcsync-generate" DependsOnTargets="ComputeXcsyncArguments;InstallXcsync">
-		<Message Importance="Low" Text="Executing xcsync using: $(XcsyncExecute) generate $(XcsyncGenerateArguments)" Condition="'$(XcsyncInstalled)' == 'True'" />
-
-		<Exec SessionId="$(BuildSessionId)" Command="$(XcsyncExecute) generate $(XcsyncGenerateArguments)" Condition="'$(XcsyncInstalled)' == 'True'" />
-	</Target>
-
-	<Target Name="xcsync-sync" DependsOnTargets="ComputeXcsyncArguments;InstallXcsync">
-		<Message Importance="Low" Text="Executing xcsync using: $(XcsyncExecute) sync $(XcsyncSyncArguments)" Condition="'$(XcsyncInstalled)' == 'True'" />
-
-		<Exec SessionId="$(BuildSessionId)" Command="$(XcsyncExecute) sync $(XcsyncSyncArguments)" Condition="'$(XcsyncInstalled)' == 'True'" />
-	</Target>
-
 </Project>

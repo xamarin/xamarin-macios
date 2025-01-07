@@ -278,12 +278,11 @@ namespace LinkAll {
 #endif // !__MACOS__
 
 		[Test]
-#if !XAMCORE_3_0 && !NET
-		[Availability ()]
-#endif
 #if NET
+#pragma warning disable CA1418 // The platform '*' is not a known platform name
 		[SupportedOSPlatform ("none")]
 		[UnsupportedOSPlatform ("none)")]
+#pragma warning restore CA1418
 #else
 		[Introduced (PlatformName.None)]
 		[Deprecated (PlatformName.None)]
@@ -298,9 +297,6 @@ namespace LinkAll {
 			string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
-#if !XAMCORE_3_0
-			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-#endif
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.IntroducedAttribute, " + suffix), "IntroducedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.DeprecatedAttribute, " + suffix), "DeprecatedAttribute");
 			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");
@@ -371,7 +367,9 @@ namespace LinkAll {
 			string filename = FindAssemblyPath ();
 #if NET
 			// new behavior across all platforms, see https://github.com/dotnet/runtime/issues/50529
+#pragma warning disable SYSLIB0018 // 'Assembly.ReflectionOnlyLoadFrom(string)' is obsolete: 'ReflectionOnly loading is not supported and throws PlatformNotSupportedException.'
 			Assert.Throws<PlatformNotSupportedException> (() => Assembly.ReflectionOnlyLoadFrom (filename));
+#pragma warning restore SYSLIB0018
 #else
 			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
 #endif
