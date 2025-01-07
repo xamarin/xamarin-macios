@@ -38,9 +38,9 @@ elif [[ $FORMAT == markdown ]]; then
 	elif ! test -s "$OUTPUT_DIR/$HTML"; then
 		echo -n "~$PLATFORM~: (empty diff detected)" >> "$OUTPUT"
 	elif grep "BreakingChangesDetected" "$OUTPUT_DIR/$HTML" >/dev/null 2>&1; then
-		echo -n "$PLATFORM: [vsdrops]($HTML) [gist]($MARKDOWN) ($MARKDOWN_BREAKING_CHANGES_MESSAGE)" >> "$OUTPUT"
+		echo -n "$PLATFORM: [vsdrops]($HTML) [gist]($MARKDOWN) ( $MARKDOWN_BREAKING_CHANGES_MESSAGE )" >> "$OUTPUT"
 	elif ! grep "No change detected" "$OUTPUT_DIR/$HTML" >/dev/null 2>&1; then
-		echo -n "$PLATFORM: [vsdrops]($HTML) [gist]($MARKDOWN) ($MARKDOWN_NO_BREAKING_CHANGES_MESSAGE)" >> "$OUTPUT"
+		echo -n "$PLATFORM: [vsdrops]($HTML) [gist]($MARKDOWN) ( $MARKDOWN_NO_BREAKING_CHANGES_MESSAGE )" >> "$OUTPUT"
 	else
 		echo -n "~$PLATFORM~ (no change detected)" >> "$OUTPUT"
 	fi
