@@ -149,6 +149,7 @@ variables:
   value: false
 
 
+# only allow triggers from specific branches
 trigger:
   branches:
     include:
