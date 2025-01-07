@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -44,6 +48,21 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public bool IsNullable { get; init; }
 
 	/// <summary>
+	/// True if the parameter type is blittable.
+	/// </summary>
+	public bool IsBlittable { get; }
+
+	/// <summary>
+	/// Returns if the parameter type is a smart enum.
+	/// </summary>
+	public bool IsSmartEnum { get; init; }
+
+	/// <summary>
+	/// Returns if the parameter is an array type.
+	/// </summary>
+	public bool IsArray { get; init; }
+
+	/// <summary>
 	/// Optional default value.
 	/// </summary>
 	public string? DefaultValue { get; init; }
@@ -58,11 +77,32 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
-	public Parameter (int position, string type, string name)
+	public Parameter (int position, string type, string name, bool isBlittable)
 	{
 		Position = position;
 		Type = type;
 		Name = name;
+		IsBlittable = isBlittable;
+	}
+
+	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out Parameter? parameter)
+	{
+		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
+			? arrayTypeSymbol.ElementType.ToDisplayString ()
+			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
+		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
+			IsOptional = symbol.IsOptional,
+			IsParams = symbol.IsParams,
+			IsThis = symbol.IsThis,
+			IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated,
+			IsSmartEnum = symbol.Type.IsSmartEnum (),
+			IsArray = symbol.Type is IArrayTypeSymbol,
+			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
+			ReferenceKind = symbol.RefKind.ToReferenceKind (),
+			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
+		};
+		return true;
 	}
 
 	/// <inheritdoc/>
@@ -81,6 +121,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (IsThis != other.IsThis)
 			return false;
 		if (IsNullable != other.IsNullable)
+			return false;
+		if (IsBlittable != other.IsBlittable)
+			return false;
+		if (IsSmartEnum != other.IsSmartEnum)
+			return false;
+		if (IsArray != other.IsArray)
 			return false;
 		if (DefaultValue != other.DefaultValue)
 			return false;
@@ -107,6 +153,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsParams);
 		hashCode.Add (IsThis);
 		hashCode.Add (IsNullable);
+		hashCode.Add (IsSmartEnum);
+		hashCode.Add (IsArray);
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
 		return hashCode.ToHashCode ();
@@ -132,9 +180,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ("Attributes: ");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ($" IsOptional: {IsOptional}, ");
-		sb.Append ($"IsParams {IsParams}, ");
+		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
+		sb.Append ($"IsBlittable: {IsBlittable}, ");
+		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
+		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
 		sb.Append ($"ReferenceKind: {ReferenceKind} }}");
 		return sb.ToString ();

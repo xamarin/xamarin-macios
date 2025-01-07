@@ -1,24 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Macios.Generator.DataModel;
-
-class DeclarationCodeChangesEqualityComparer : EqualityComparer<(BaseTypeDeclarationSyntax Declaration, CodeChanges
-	Changes)> {
-	readonly CodeChangesEqualityComparer comparer = new ();
-
-	/// <inheritdoc/>
-	public override bool Equals ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) x,
-		(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) y)
-	{
-		return comparer.Equals (x.Changes, y.Changes);
-	}
-
-	/// <inheritdoc/>
-	public override int GetHashCode ((BaseTypeDeclarationSyntax Declaration, CodeChanges Changes) obj)
-		=> comparer.GetHashCode (obj.Changes);
-}
 
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
@@ -27,6 +10,9 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 	/// <inheritdoc />
 	public override bool Equals (CodeChanges x, CodeChanges y)
 	{
+
+		// order does not matter in the using directives, use a comparer that sorts them
+		var ignoreOrderComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
 		// things that mean a code change is the same:
 		// - the fully qualified symbol is the same
 		// - the binding type is the same
@@ -37,16 +23,23 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 		// this could be a massive 'or' but that makes it less readable
 		if (x.Name != y.Name)
 			return false;
-		var namespaceComparer = new ListComparer<string> ();
+		// order matters in the namespaces, therefore, use a comparer that does not reorder the collections
+		var namespaceComparer = new CollectionComparer<string> ();
 		if (!namespaceComparer.Equals (x.Namespace, y.Namespace))
 			return false;
 		if (x.FullyQualifiedSymbol != y.FullyQualifiedSymbol)
+			return false;
+		if (x.Base != y.Base)
+			return false;
+		if (!ignoreOrderComparer.Equals (x.Interfaces, y.Interfaces))
 			return false;
 		if (x.SymbolAvailability != y.SymbolAvailability)
 			return false;
 		if (x.BindingType != y.BindingType)
 			return false;
 		if (x.Attributes.Length != y.Attributes.Length)
+			return false;
+		if (!ignoreOrderComparer.Equals (x.UsingDirectives, y.UsingDirectives))
 			return false;
 		if (x.EnumMembers.Length != y.EnumMembers.Length)
 			return false;

@@ -4,13 +4,13 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests;
 
-public class ListComparerTests {
+public class CollectionComparerTests {
 	class MyComparer : IComparer<string> {
 		public int Compare (string? x, string? y)
 			=> String.Compare (x, y, StringComparison.Ordinal);
 	}
 
-	readonly ListComparer<string> comparer = new (new MyComparer ());
+	readonly CollectionComparer<string> comparer = new (new MyComparer ());
 
 	[Fact]
 	public void CompareBothNull ()
