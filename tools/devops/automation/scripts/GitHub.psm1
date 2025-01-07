@@ -227,6 +227,7 @@ class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Repo
     [ValidateNotNullOrEmpty ()][string] $Token
     [string] $Hash
+    [string[]] $PRIds
     hidden static [string] $GitHubGraphQLEndpoint = "https://api.github.com/graphql"
 
     GitHubComments (
@@ -238,6 +239,7 @@ class GitHubComments {
         $this.Repo = $githubRepo
         $this.Token = $githubToken
         $this.Hash = $null
+        $this.PRIds = [string[]]@()
     }
 
     GitHubComments (
@@ -250,9 +252,32 @@ class GitHubComments {
         $this.Repo = $githubRepo
         $this.Token = $githubToken
         $this.Hash = $hash
+        $this.PRIds = [GitHubComments]::GetPRIds($githubOrg, $githubRepo, $githubToken, $hash)
     }
 
-    static [bool] IsPR() {
+    static [string[]] GetPRIds([string] $org, [string] $repo, [string] $token, [string] $hash) {
+        $url = "https://api.github.com/repos/$($org)/$($repo)/commits/$hash/pulls"
+
+        $headers = @{
+            Authorization = ("token {0}" -f $token);
+        }
+
+        $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+
+        # loop over the result and remove all the extra noise we are not interested in
+        $prs = [System.Collections.ArrayList]@()
+        foreach ($prInfo in $request) {
+            $prInfo.number
+        }
+        return $prs
+    }
+
+    [bool] IsPR() {
+        # if the object has a list of pr ids, we are a pr, else check the resource trigger
+        if ($this.PRIds.Length -gt 0) {
+            return $true
+        }
+
         if ($Env:BUILD_REASON -eq "PullRequest") {
             return $true;
         }
@@ -265,12 +290,6 @@ class GitHubComments {
         }
 
         return $false
-    }
-
-    static [string] GetPRID() {
-        $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
-        $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-        return $changeId 
     }
 
     [void] WriteCommentHeader(
@@ -301,8 +320,9 @@ class GitHubComments {
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
         $hashUrl = $null
         $hashSource = $null
-        if ([GitHubComments]::IsPR()) {
-            $changeId = [GitHubComments]::GetPRID()
+        if ($this.IsPR()) {
+            # we should only have a single PR id, don't worry too much about it
+            $changeId = $this.PRIds[0]
             $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
             $hashSource = " [PR build]"
         } else {
@@ -325,8 +345,9 @@ class GitHubComments {
 
     [string] GetCommentUrl() {
         # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
-        if ([GitHubComments]::IsPR()) {
-            $changeId = [GitHubComments]::GetPRID()
+        if ($this.IsPR()) {
+            # we should only have a single PR id, don't worry too much about it
+            $changeId = $this.PRIds[0]
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
             if ($this.Hash) {
@@ -372,17 +393,23 @@ class GitHubComments {
     [void] HideComments(
         [string] $commentId
     ) {
+        if ($this.PRIds.Length -eq 0) {
+            Write-Host "Not hiding comments, because we're not in a pull request"
+            return
+        }
+
         if (!$commentId) {
             Write-Host "Not hiding comments, because no comment id provided"
             return
         }
 
-        if (![GitHubComments]::IsPR()) {
+        if (!$this.IsPR()) {
             Write-Host "Not hiding comments, because we're not in a pull request"
             return
         }
 
-        $prId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+        # we should only have a single pr id, don't worry too much about it
+        $prId = $this.PRIds[0]
         $prComments = $this.GetCommentsForPR($prId)
 
         $botComments = [System.Collections.ArrayList]@()
