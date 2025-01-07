@@ -521,8 +521,7 @@ function New-ParallelTestsResults {
         $testStage = $kvp.Name
         $outputs = $candidate.tests.outputs
 
-        Write-Host "Outputs for $($testStage):"
-        Write-Host $outputs
+        Write-Host "Outputs for $($testStage):  $( $outputs | ConvertTo-Json -Depth 100 )"
         foreach ($name in $outputs.Keys) {
             if ($name.EndsWith(".TESTS_LABEL")) {
                 $label = $outputs[$name]
@@ -532,7 +531,7 @@ function New-ParallelTestsResults {
                 $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
                 $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
                 $title = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "LABEL_WITH_PLATFORM") }
-                Write-Host "Keys: Label=$label Title=$title Status=$statusKey Bot=$botKey Platform=$platformKey Attempt=$attemptKey"
+                Write-Host "Keys for Label='$label', Title='$title' and JobName='$jobName': StatusKey=$statusKey BotKey=$botKey PlatformKey=$platformKey AttemptKey=$attemptKey"
                 $status =  if ($statusKey -eq $null) { "NotFound"} else { $outputs[$statusKey] }
                 $bot = if ($botKey -eq $null) { "NotFound" } else { $outputs[$botKey] }
                 $platform = if ($platformKey -eq $null) { "NotFound" } else { $outputs[$platformKey] }
