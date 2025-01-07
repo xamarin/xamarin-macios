@@ -1,6 +1,7 @@
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -48,9 +49,82 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					]
+				}
+			];
+
+			const string emptyClassWithBase = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass : NSObject {
+}
+";
+
+			yield return [
+				emptyClassWithBase,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "Foundation.NSObject",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					]
+				}
+			];
+
+			const string emptyClassWithBaseWithInterface = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+public interface IMyInterface {}
+
+[BindingType<Class>]
+public partial class MyClass : NSObject, IMyInterface {
+}
+";
+
+			yield return [
+				emptyClassWithBaseWithInterface,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "Foundation.NSObject",
+					Interfaces = ["NS.IMyInterface"],
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -79,9 +153,12 @@ internal partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -114,12 +191,15 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: builder.ToImmutable ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>"),
 						new ("System.Runtime.Versioning.UnsupportedOSPlatformAttribute", ["macos"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["tvos17.0"]),
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
 					],
+					UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings", "System.Runtime.Versioning" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -149,16 +229,19 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -196,16 +279,19 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
 					],
 					Constructors = [
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -214,7 +300,7 @@ public partial class MyClass {
 							parameters: []
 						),
 						new (
-							type: "NS.MyClass",
+							type: "MyClass",
 							symbolAvailability: new (),
 							attributes: [],
 							modifiers: [
@@ -224,7 +310,8 @@ public partial class MyClass {
 								new (
 									position: 0,
 									type: "string",
-									name: "name"
+									name: "name",
+									isBlittable: false
 								)
 							]
 						),
@@ -253,9 +340,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -264,6 +354,9 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -273,11 +366,169 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
 
+			const string singlePropertySmartEnumClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public enum MyEnum {
+	None = 0,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertySmartEnumClass,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isBlittable: true,
+							isSmartEnum: true,
+							isReferenceType: false,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+							]
+						) {
+							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+
+			const string singlePropertyEnumClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum {
+	None = 0,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial MyEnum Name { get; set; }
+}
+";
+
+			yield return [
+				singlePropertyEnumClass,
+				new CodeChanges (
+					bindingData: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							type: "NS.MyEnum",
+							isBlittable: true,
+							isSmartEnum: false,
+							isReferenceType: false,
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+							]
+						) {
 							ExportPropertyData = new ("name")
 						}
 					]
@@ -305,9 +556,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -316,6 +570,9 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -325,8 +582,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 
@@ -357,9 +626,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -368,6 +640,9 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
@@ -378,8 +653,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 
@@ -412,9 +699,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -423,6 +713,9 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -432,8 +725,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -466,9 +771,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -477,6 +785,9 @@ public partial class MyClass {
 						new (
 							name: "Name",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -486,8 +797,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("name")
@@ -495,6 +818,9 @@ public partial class MyClass {
 						new (
 							name: "Surname",
 							type: "string",
+							isBlittable: false,
+							isSmartEnum: false,
+							isReferenceType: true,
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -504,8 +830,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Getter, new (), [], []),
-								new (AccessorKind.Setter, new (), [], []),
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
 							]
 						) {
 							ExportPropertyData = new ("surname")
@@ -535,9 +873,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -548,6 +889,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -556,7 +898,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 					]
@@ -586,9 +928,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -599,6 +944,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -607,7 +953,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 					]
@@ -638,9 +984,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -651,6 +1000,7 @@ public partial class MyClass {
 							name: "SetName",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withName:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withName:"])
 							],
@@ -659,7 +1009,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "name")
+								new (position: 0, type: "string", name: "name", isBlittable: false)
 							]
 						),
 						new (
@@ -667,6 +1017,7 @@ public partial class MyClass {
 							name: "SetSurname",
 							returnType: "void",
 							symbolAvailability: new (),
+							exportMethodData: new ("withSurname:"),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Method>", ["withSurname:"])
 							],
@@ -675,7 +1026,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (0, "string", "inSurname")
+								new (position: 0, type: "string", name: "inSurname", isBlittable: false)
 							]
 						),
 					]
@@ -704,9 +1055,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -721,8 +1075,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							])
 					],
 				}
@@ -752,9 +1118,12 @@ public partial class MyClass {
 					fullyQualifiedSymbol: "NS.MyClass",
 					symbolAvailability: new ()
 				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
 					Attributes = [
 						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings", "System" },
 					Modifiers = [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
@@ -769,8 +1138,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 						new (
@@ -782,8 +1163,20 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 							],
 							accessors: [
-								new (AccessorKind.Add, new (), [], []),
-								new (AccessorKind.Remove, new (), [], [])
+								new (
+									accessorKind: AccessorKind.Add,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Remove,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								)
 							]
 						),
 					],
