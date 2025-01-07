@@ -27,7 +27,7 @@ MONO_API_HTML_EXEC = $(DOTNET) --roll-forward Major $(MONO_API_HTML)
 
 export HTML_BREAKING_CHANGES_MESSAGE=❗️Breaking changes❗️
 export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
-export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
+export MARKDOWN_BREAKING_CHANGES_MESSAGE=" :heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark: " # emoji markdown requires surrounding spaces
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 APIDIFF_IGNORE = -i 'INSObjectProtocol'
