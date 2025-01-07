@@ -32,7 +32,7 @@ namespace NS {
 			yield return [
 				emptyConstructor,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -57,14 +57,14 @@ namespace NS {
 			yield return [
 				singleParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
+						new (position: 0, type: "string", name: "inName", isBlittable: false),
 					]
 				)
 			];
@@ -87,15 +87,15 @@ namespace NS {
 			yield return [
 				multiParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
-						new (1, "int", "inAge"),
+						new (position: 0, type: "string", name: "inName", isBlittable: false),
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 					]
 				)
 			];
@@ -118,15 +118,17 @@ namespace NS {
 			yield return [
 				nullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
 					]
 				)
 			];
@@ -152,16 +154,21 @@ namespace NS {
 			yield return [
 				paramsCollectionParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsParams = true, IsArray = true },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
+							IsParams = true,
+							IsArray = true,
+						},
 					]
 				)
 			];
@@ -187,16 +194,21 @@ namespace NS {
 			yield return [
 				arrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsParams = false, IsArray = true },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
+							IsParams = false,
+							IsArray = true
+						},
 					]
 				)
 			];
@@ -222,16 +234,21 @@ namespace NS {
 			yield return [
 				nullableArrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string", "inSurnames") { IsNullable = true, IsArray = true },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
+							IsNullable = true,
+							IsArray = true
+						},
 					]
 				)
 			];
@@ -257,16 +274,21 @@ namespace NS {
 			yield return [
 				arrayOfNullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string?", "inSurnames") { IsNullable = false, IsArray = true },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string?", name: "inSurnames", isBlittable: false) {
+							IsNullable = false,
+							IsArray = true
+						},
 					]
 				)
 			];
@@ -292,16 +314,21 @@ namespace NS {
 			yield return [
 				nullableArrayOfNullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string?", "inSurnames") { IsNullable = true, IsArray = true },
+						new (0, "string", "inName", false) {
+							IsNullable = true,
+						},
+						new (1, "int", "inAge", true),
+						new (2, "string?", "inSurnames", false) {
+							IsNullable = true,
+							IsArray = true
+						},
 					]
 				)
 			];
@@ -327,16 +354,21 @@ namespace NS {
 			yield return [
 				twoDimensionalArrayParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string[]", "inSurnames") { IsParams = false, IsArray = true },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+						},
+						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 2, type: "string[]", name: "inSurnames", isBlittable: false) {
+							IsParams = false,
+							IsArray = true
+						},
 					]
 				)
 			];
@@ -357,14 +389,17 @@ namespace NS {
 			yield return [
 				optionalParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, IsOptional = true, },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+							IsOptional = true,
+						},
 					]
 				)
 			];
@@ -385,14 +420,17 @@ namespace NS {
 			yield return [
 				genericParameter,
 				new Constructor (
-					type: "NS.TestClass<T>",
+					type: "TestClass",
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "T", "inName") { IsOptional = true, IsNullable = true, },
+						new (position: 0, type: "T", name: "inName", isBlittable: false) {
+							IsOptional = true,
+							IsNullable = true,
+						},
 					]
 				)
 			];
@@ -419,14 +457,17 @@ namespace NS {
 			yield return [
 				availabilityPresent,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
 					symbolAvailability: builder.ToImmutable (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName") { IsNullable = true, IsOptional = true, },
+						new (position: 0, type: "string", name: "inName", isBlittable: false) {
+							IsNullable = true,
+							IsOptional = true,
+						},
 					]
 				)
 			];
