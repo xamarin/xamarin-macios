@@ -4,9 +4,6 @@ parameters:
   type: string
   default: 'latest'
 
-- name: pool
-  type: string
-
 - name: runTests
   type: boolean
   default: true
