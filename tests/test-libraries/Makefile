@@ -343,7 +343,7 @@ $(foreach testFramework,$(TEST_FRAMEWORKS),$(eval $(call TestFrameworkXCFramewor
 # create an xcframework of libraries
 define TestLibraryXCFramework
 $(1)_XCFRAMEWORKS += $$(foreach xcframeworkPlatform,$$(XCFRAMEWORK_PLATFORMS),.libs/$$(xcframeworkPlatform)/$(1).a)
-$(1)_XCTARGETS += $$(foreach xcframeworkPlatform,$$(XCFRAMEWORK_PLATFORMS),.libs/$$(xcframeworkPlatform).stamp)
+$(1)_XCTARGETS += $$(foreach xcframeworkPlatform,$$(XCFRAMEWORK_PLATFORMS),.libs/$$(xcframeworkPlatform)/$(1).a)
 .libs/$(1).xcframework: $$($(1)_XCTARGETS) Makefile
 	$$(Q) rm -rf $$@
 	$$(Q_GEN) $$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $$(foreach fw,$$($(1)_XCFRAMEWORKS),-library $$(fw)) -output $$@
