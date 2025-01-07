@@ -152,7 +152,7 @@ variables:
 trigger:
   branches:
     include:
-      - refs/heads/dev/*
+    - refs/heads/dev/*
 
 pr:
   autoCancel: true
