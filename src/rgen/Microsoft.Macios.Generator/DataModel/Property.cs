@@ -21,15 +21,27 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public string Name { get; } = string.Empty;
 
+	public string BackingField { get; private init; }
+
 	/// <summary>
 	/// String representation of the property type.
 	/// </summary>
 	public string Type { get; } = string.Empty;
 
 	/// <summary>
-	/// Returns if the parameter type is a smart enum.
+	/// Returns if the property type is bittable.
+	/// </summary>
+	public bool IsBlittable { get; }
+
+	/// <summary>
+	/// Returns if the property type is a smart enum.
 	/// </summary>
 	public bool IsSmartEnum { get; }
+
+	/// <summary>
+	/// Returns if the property type is a reference type.
+	/// </summary>
+	public bool IsReferenceType { get; }
 
 	/// <summary>
 	/// The platform availability of the property.
@@ -44,6 +56,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// True if the property represents a Objc field.
 	/// </summary>
+	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
 	/// <summary>
@@ -54,6 +67,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// True if the property represents a Objc property.
 	/// </summary>
+	[MemberNotNullWhen (true, nameof (ExportPropertyData))]
 	public bool IsProperty => ExportPropertyData is not null;
 
 	/// <summary>
@@ -72,14 +86,19 @@ readonly struct Property : IEquatable<Property> {
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
 	internal Property (string name, string type,
+		bool isBlittable,
 		bool isSmartEnum,
+		bool isReferenceType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
+		BackingField = $"_{Name}";
 		Type = type;
+		IsBlittable = isBlittable;
 		IsSmartEnum = isSmartEnum;
+		IsReferenceType = isReferenceType;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
@@ -94,7 +113,11 @@ readonly struct Property : IEquatable<Property> {
 			return false;
 		if (Type != other.Type)
 			return false;
+		if (IsBlittable != other.IsBlittable)
+			return false;
 		if (IsSmartEnum != other.IsSmartEnum)
+			return false;
+		if (IsReferenceType != other.IsReferenceType)
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
@@ -148,9 +171,9 @@ readonly struct Property : IEquatable<Property> {
 		}
 
 		var propertySupportedPlatforms = propertySymbol.GetSupportedPlatforms ();
-
 		var type = propertySymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
+
 		ImmutableArray<Accessor> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
@@ -159,9 +182,14 @@ readonly struct Property : IEquatable<Property> {
 				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
-				var accessorAttributeChanges = accessorDeclaration.GetAttributeCodeChanges (semanticModel);
-				accessorsBucket.Add (new (kind, accessorSymbol.GetSupportedPlatforms (), accessorAttributeChanges,
-					[.. accessorDeclaration.Modifiers]));
+				var accessorAttributeChanges =
+					accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+				accessorsBucket.Add (new (
+					accessorKind: kind,
+					exportPropertyData: accessorSymbol.GetExportData<ObjCBindings.Property> (),
+					symbolAvailability: accessorSymbol.GetSupportedPlatforms (),
+					attributes: accessorAttributeChanges,
+					modifiers: [.. accessorDeclaration.Modifiers]));
 			}
 
 			accessorCodeChanges = accessorsBucket.ToImmutable ();
@@ -170,15 +198,21 @@ readonly struct Property : IEquatable<Property> {
 		if (declaration.ExpressionBody is not null) {
 			// an expression body == a getter with no attrs or modifiers; that means that the accessor does not have
 			// extra availability, but the ones form the property
-			accessorCodeChanges = [
-				new (AccessorKind.Getter, propertySupportedPlatforms, [], [])
+			accessorCodeChanges = [new (
+				accessorKind: AccessorKind.Getter,
+				symbolAvailability: propertySupportedPlatforms,
+				exportPropertyData: null,
+				attributes: [],
+				modifiers: [])
 			];
 		}
 
 		change = new (
 			name: memberName,
 			type: type,
+			isBlittable: propertySymbol.Type.IsBlittable (),
 			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
+			isReferenceType: propertySymbol.Type.IsReferenceType,
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
@@ -193,7 +227,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsSmartEnum: {IsSmartEnum}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, IsReferenceType: {IsReferenceType} Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

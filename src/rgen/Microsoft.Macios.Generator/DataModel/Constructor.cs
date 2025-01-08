@@ -62,21 +62,13 @@ readonly struct Constructor : IEquatable<Constructor> {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in constructor.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			parametersBucket.Add (new (parameter.Ordinal, parameter.Type.ToDisplayString ().Trim (),
-				parameter.Name) {
-				IsOptional = parameter.IsOptional,
-				IsParams = parameter.IsParams,
-				IsThis = parameter.IsThis,
-				IsNullable = parameter.NullableAnnotation == NullableAnnotation.Annotated,
-				IsSmartEnum = parameter.Type.IsSmartEnum (),
-				DefaultValue = (parameter.HasExplicitDefaultValue) ? parameter.ExplicitDefaultValue?.ToString () : null,
-				ReferenceKind = parameter.RefKind.ToReferenceKind (),
-				Attributes = parameterDeclaration.GetAttributeCodeChanges (semanticModel),
-			});
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+				continue;
+			parametersBucket.Add (parameterChange.Value);
 		}
 
 		change = new (
-			type: constructor.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
+			type: constructor.ContainingSymbol.Name, // we DO NOT want the full name
 			symbolAvailability: constructor.GetSupportedPlatforms (),
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],

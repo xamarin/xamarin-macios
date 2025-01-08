@@ -65,7 +65,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
 		// check if we do have the binding attr, else there nothing to retrieve
-		bool isBindingType = declarationSyntax.HasAttribute (context.SemanticModel, AttributesNames.BindingAttribute);
+		bool isBindingType = declarationSyntax.HasAtLeastOneAttribute (context.SemanticModel, AttributesNames.BindingTypes);
 
 		if (!isBindingType) {
 			// return empty data + false
@@ -89,15 +89,17 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var rootContext = new RootBindingContext (compilation);
+		var sb = new TabbedStringBuilder (new ());
 		foreach (var change in changesList) {
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new ());
+			sb.Clear ();
 			sb.WriteHeader ();
-			if (EmitterFactory.TryCreate (change, rootContext, sb, out var emitter)) {
+			if (EmitterFactory.TryCreate (change, out var emitter)) {
 				// write the using statements
 				CollectUsingStatements (change, sb, emitter);
 
-				if (emitter.TryEmit (change, out var diagnostics)) {
+				var bindingContext = new BindingContext (rootContext, sb, change);
+				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
 					var namespacePath = Path.Combine (change.Namespace.ToArray ());
