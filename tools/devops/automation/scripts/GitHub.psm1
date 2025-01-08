@@ -252,7 +252,7 @@ class GitHubComments {
         $this.Repo = $githubRepo
         $this.Token = $githubToken
         $this.Hash = $hash
-        $this.PRIds = [GitHubComments]::GetPRIds($githubOrg, $githubRepo, $githubToken, $hash)
+        $this.PRIds = Get-GitHubPRsForHash -Org $githubOrg -Repo $githubRepo -Token $githubToken -Hash $hash
     }
 
     static [string[]] GetPRIds([string] $org, [string] $repo, [string] $token, [string] $hash) {
@@ -867,6 +867,67 @@ function Get-GitHubPRInfo {
 
 <#
     .SYNOPSIS
+        Get the PR Ids related to a commit hash. If the hash has multiple PRs, all of them will be returned.
+        If the commit has landed in main, the PRs will be empty.
+
+    .PARAMETER Org
+        The organization that owns the repository.
+    
+    .PARAMETER Repo
+        The repository where the commit is located.
+    
+    .PARAMETER Token
+        The token to be used to authenticate with the GitHub API.
+
+    .PARAMETER Hash
+        The hash of the commit whose PRs we want to retrieve.
+#>
+function Get-GitHubPRsForHash {
+    param (
+        [String]
+        $Org,
+
+        [String]
+        $Repo,
+
+        [string]
+        $Token,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Hash
+    )
+
+    Write-Host "Getting related PR ids for commit $Hash"
+
+    if ($Org -and $Repo) {
+        $url = "https://api.github.com/repos/$($Org)/$($Repo)/commits/$Hash/pulls"
+    } else {
+        $url = "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/commits/$Hash/pulls"
+    }
+
+    if (-not $Token) {
+        $Token = $Env:GITHUB_TOKEN
+    }
+
+    $headers = @{
+        Authorization = ("token {0}" -f $Token);
+    }
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+    Write-Host "Request result: $request"
+
+    # loop over the result and remove all the extra noise we are not interested in
+    $prs = [System.Collections.ArrayList]@()
+    foreach ($prInfo in $request) {
+        Write-Host "Found PR #$($prInfo.number) for commit $hash"
+        $prs.Add($prInfo.number)
+    }
+    return $prs
+}
+
+<#
+    .SYNOPSIS
         Class used to represent a single file to be added to a gist.
 #>
 class GistFile
@@ -1120,6 +1181,7 @@ function Convert-Markdown {
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function Get-GitHubPRInfo
+Export-ModuleMember -Function Get-GitHubPRsForHash
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
