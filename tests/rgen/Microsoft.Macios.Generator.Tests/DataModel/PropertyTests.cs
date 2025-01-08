@@ -400,7 +400,13 @@ public class TestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), null, [], [])
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
 					]
 				) {
 					ExportPropertyData = new ("name"),
@@ -442,7 +448,8 @@ public class TestClass {
 							attributes: [],
 							modifiers: []
 						)
-					]) {
+					]
+				) {
 					ExportPropertyData = new ("name"),
 				},
 			];
@@ -487,7 +494,8 @@ public class TestClass {
 							],
 							modifiers: []
 						)
-					]) {
+					]
+				) {
 					ExportPropertyData = new ("name"),
 				},
 			];

@@ -59,6 +59,8 @@ readonly struct Property : IEquatable<Property> {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
+	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (Field.Notification);
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
 	/// </summary>
