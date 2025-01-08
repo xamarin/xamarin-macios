@@ -3,5 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
   </PropertyGroup>
-  <Import Project="shared.csproj" /> 
+  <Import Project="shared.csproj" />
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
 </Project>

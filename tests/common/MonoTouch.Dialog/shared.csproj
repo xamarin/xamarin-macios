@@ -13,4 +13,8 @@
     <NoWarn>$(NoWarn);CA1422</NoWarn>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
 </Project>
