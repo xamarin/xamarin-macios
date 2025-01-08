@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class MethodReturnTypeComparer : IComparer<MethodReturnType> {
+class MethodReturnTypeComparer : IComparer<ReturnType> {
 
 	/// <inheritdoc/>
-	public int Compare (MethodReturnType x, MethodReturnType y)
+	public int Compare (ReturnType x, ReturnType y)
 	{
 		var returnTypeComparison = String.Compare (x.Type, y.Type, StringComparison.Ordinal);
 		if (returnTypeComparison != 0)

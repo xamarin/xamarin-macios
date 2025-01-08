@@ -11,15 +11,15 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffReturnType ()
 	{
-		var x = new MethodReturnType ("string");
-		var y = new MethodReturnType ("int");
+		var x = new ReturnType ("string");
+		var y = new ReturnType ("int");
 		Assert.Equal (String.Compare (x.Type, y.Type, StringComparison.Ordinal), compare.Compare (x, y));
 	}
 
 	[Fact]
 	public void CompareDiffNullable ()
 	{
-		var x = new MethodReturnType (
+		var x = new ReturnType (
 			type: "void",
 			isNullable: true,
 			isBlittable: false,
@@ -28,7 +28,7 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new MethodReturnType (
+		var y = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -42,7 +42,7 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffBlittable ()
 	{
-		var x = new MethodReturnType (
+		var x = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: true,
@@ -51,7 +51,7 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new MethodReturnType (
+		var y = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -65,7 +65,7 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffSmartEnum ()
 	{
-		var x = new MethodReturnType (
+		var x = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -74,7 +74,7 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new MethodReturnType (
+		var y = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -88,7 +88,7 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffIsArray ()
 	{
-		var x = new MethodReturnType (
+		var x = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -97,7 +97,7 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new MethodReturnType (
+		var y = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -111,7 +111,7 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffIsReference ()
 	{
-		var x = new MethodReturnType (
+		var x = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,
@@ -120,7 +120,7 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: true
 		);
 
-		var y = new MethodReturnType (
+		var y = new ReturnType (
 			type: "void",
 			isNullable: false,
 			isBlittable: false,

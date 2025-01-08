@@ -24,24 +24,24 @@ readonly struct Property : IEquatable<Property> {
 	public string BackingField { get; private init; }
 
 	/// <summary>
-	/// String representation of the property type.
+	/// Representation of the property type.
 	/// </summary>
-	public string Type { get; } = string.Empty;
+	public ReturnType ReturnType { get; } = default;
 
 	/// <summary>
 	/// Returns if the property type is bittable.
 	/// </summary>
-	public bool IsBlittable { get; }
+	public bool IsBlittable => ReturnType.IsBlittable;
 
 	/// <summary>
 	/// Returns if the property type is a smart enum.
 	/// </summary>
-	public bool IsSmartEnum { get; }
+	public bool IsSmartEnum  => ReturnType.IsSmartEnum;
 
 	/// <summary>
 	/// Returns if the property type is a reference type.
 	/// </summary>
-	public bool IsReferenceType { get; }
+	public bool IsReferenceType => ReturnType.IsReferenceType;
 
 	/// <summary>
 	/// The platform availability of the property.
@@ -87,20 +87,14 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
-	internal Property (string name, string type,
-		bool isBlittable,
-		bool isSmartEnum,
-		bool isReferenceType,
+	internal Property (string name, ReturnType returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
 		BackingField = $"_{Name}";
-		Type = type;
-		IsBlittable = isBlittable;
-		IsSmartEnum = isSmartEnum;
-		IsReferenceType = isReferenceType;
+		ReturnType = returnType;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
@@ -113,7 +107,7 @@ readonly struct Property : IEquatable<Property> {
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
-		if (Type != other.Type)
+		if (ReturnType != other.ReturnType)
 			return false;
 		if (IsBlittable != other.IsBlittable)
 			return false;
@@ -149,7 +143,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Name, Type, IsSmartEnum, Attributes, Modifiers, Accessors);
+		return HashCode.Combine (Name, ReturnType, IsSmartEnum, Attributes, Modifiers, Accessors);
 	}
 
 	public static bool operator == (Property left, Property right)
@@ -173,7 +167,6 @@ readonly struct Property : IEquatable<Property> {
 		}
 
 		var propertySupportedPlatforms = propertySymbol.GetSupportedPlatforms ();
-		var type = propertySymbol.Type.ToDisplayString ().Trim ();
 		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
 
 		ImmutableArray<Accessor> accessorCodeChanges = [];
@@ -211,10 +204,7 @@ readonly struct Property : IEquatable<Property> {
 
 		change = new (
 			name: memberName,
-			type: type,
-			isBlittable: propertySymbol.Type.IsBlittable (),
-			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
-			isReferenceType: propertySymbol.Type.IsReferenceType,
+			returnType: new (propertySymbol.Type),
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
@@ -229,7 +219,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, IsReferenceType: {IsReferenceType} Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
