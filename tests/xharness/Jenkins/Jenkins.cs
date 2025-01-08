@@ -91,17 +91,17 @@ namespace Xharness.Jenkins {
 		public bool IsIncluded (TestProject project)
 		{
 			if (!project.IsExecutableProject) {
-				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because is not a executable project.");
+				MainLog.WriteLine ($"Ignoring {project.Name} for {project.TestPlatform} with label {project.Label} because is not a executable project.");
 				return false;
 			}
 
 			if (!TestSelection.IsEnabled (TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
-				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because we cannot include the system permission tests");
+				MainLog.WriteLine ($"Ignoring {project.Name} for {project.TestPlatform} with label {project.Label} because we cannot include the system permission tests");
 				return false;
 			}
 
 			var rv = TestSelection.IsEnabled (project.Label);
-			MainLog.WriteLine ($"Including {project.Name} with label {project.Label.ToString ()}: {rv}");
+			MainLog.WriteLine ($"Including {project.Name} for {project.TestPlatform} with label {project.Label.ToString ()}: {rv}");
 			return rv;
 		}
 

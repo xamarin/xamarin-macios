@@ -83,6 +83,9 @@ namespace Xharness.Jenkins {
 					}
 
 					rv.AddRange (variations);
+
+					foreach (var v in variations)
+						this.Jenkins.MainLog.WriteLine ($"Created mac test variation '{v.Variation}' for {project.Name} on {project.TestPlatform}. Ignored: {v.Ignored}");
 				}
 			}
 
