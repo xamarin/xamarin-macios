@@ -19,13 +19,13 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Represents the type of binding that the code changes are for.
 	/// </summary>
-	public BindingType BindingType => BindingData.BindingType;
+	public BindingType BindingType => BindingInfo.BindingType;
 
-	readonly BindingData bindingData = default;
+	readonly BindingInfo bindingInfo = default;
 	/// <summary>
 	/// Represents the binding data that will be used to generate the code.
 	/// </summary>
-	public BindingData BindingData => bindingData;
+	public BindingInfo BindingInfo => bindingInfo;
 
 	readonly string name = string.Empty;
 	/// <summary>
@@ -248,15 +248,15 @@ readonly struct CodeChanges {
 	/// <summary>
 	/// Internal constructor added for testing purposes.
 	/// </summary>
-	/// <param name="bindingData">The binding data of binding for the given code changes.</param>
+	/// <param name="bindingInfo">The binding data of binding for the given code changes.</param>
 	/// <param name="name">The name of the named type that created the code change.</param>
 	/// <param name="namespace">The namespace that contains the named type.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
 	/// <param name="symbolAvailability">The platform availability of the named symbol.</param>
-	internal CodeChanges (BindingData bindingData, string name, ImmutableArray<string> @namespace,
+	internal CodeChanges (BindingInfo bindingInfo, string name, ImmutableArray<string> @namespace,
 		string fullyQualifiedSymbol, SymbolAvailability symbolAvailability)
 	{
-		this.bindingData = bindingData;
+		this.bindingInfo = bindingInfo;
 		this.name = name;
 		this.namespaces = @namespace;
 		FullyQualifiedSymbol = fullyQualifiedSymbol;
@@ -278,7 +278,7 @@ readonly struct CodeChanges {
 			interfaces: out interfaces,
 			namespaces: out namespaces,
 			symbolAvailability: out availability,
-			bindingData: out bindingData);
+			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
 		UsingDirectives = enumDeclaration.SyntaxTree.CollectUsingStatements ();
@@ -319,7 +319,7 @@ readonly struct CodeChanges {
 			interfaces: out interfaces,
 			namespaces: out namespaces,
 			symbolAvailability: out availability,
-			bindingData: out bindingData);
+			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
 		UsingDirectives = classDeclaration.SyntaxTree.CollectUsingStatements ();
@@ -351,7 +351,7 @@ readonly struct CodeChanges {
 			interfaces: out interfaces,
 			namespaces: out namespaces,
 			symbolAvailability: out availability,
-			bindingData: out bindingData);
+			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
 		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
 		UsingDirectives = interfaceDeclaration.SyntaxTree.CollectUsingStatements ();
@@ -387,7 +387,7 @@ readonly struct CodeChanges {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("Changes: {");
-		sb.Append ($"BindingData: '{BindingData}', Name: '{Name}', Namespace: [");
+		sb.Append ($"BindingData: '{BindingInfo}', Name: '{Name}', Namespace: [");
 		sb.AppendJoin (", ", Namespace);
 		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', Base: '{Base ?? "null"}', SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ("Interfaces: [");

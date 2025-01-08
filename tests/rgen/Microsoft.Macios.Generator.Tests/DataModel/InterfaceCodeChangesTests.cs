@@ -36,7 +36,7 @@ public partial interface IProtocol {
 			yield return [
 				emptyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -68,7 +68,7 @@ internal partial interface IProtocol {
 			yield return [
 				internalInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -100,7 +100,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -172,7 +172,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertySmartEnumInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -243,7 +243,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyEnumInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -310,7 +310,7 @@ public partial interface IProtocol {
 			yield return [
 				notificationPropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -379,7 +379,7 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterfaceMissingExport,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -449,7 +449,7 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -549,7 +549,7 @@ public partial interface IProtocol {
 			yield return [
 				singleMethodInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -602,7 +602,7 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterfaceMissingExport,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -656,7 +656,7 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -725,7 +725,7 @@ public partial interface IProtocol {
 			yield return [
 				singleEventInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -786,7 +786,7 @@ public partial interface IProtocol {
 			yield return [
 				multiEventInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
