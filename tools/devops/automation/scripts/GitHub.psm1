@@ -256,6 +256,9 @@ class GitHubComments {
     }
 
     static [string[]] GetPRIds([string] $org, [string] $repo, [string] $token, [string] $hash) {
+
+        Write-Host "Getting related PR ids for commit $hash"
+
         $url = "https://api.github.com/repos/$($org)/$($repo)/commits/$hash/pulls"
 
         $headers = @{
@@ -263,11 +266,13 @@ class GitHubComments {
         }
 
         $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+        Write-Host "Request result: $request"
 
         # loop over the result and remove all the extra noise we are not interested in
         $prs = [System.Collections.ArrayList]@()
         foreach ($prInfo in $request) {
-            $prInfo.number
+            Write-Host "Found PR #$($prInfo.number) for commit $hash"
+            $prs.Add($prInfo.number)
         }
         return $prs
     }
