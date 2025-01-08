@@ -779,6 +779,30 @@ only scan libraries with the `[LinkWith]` attribute for Objective-C classes:
 </PropertyGroup>
 ```
 
+## SkipStaticLibraryValidation
+
+Hot Restart doesn't support linking with static libraries, so by default we'll
+show an error if the project tries to link with any static libraries when
+using Hot Restart.
+
+However, in some cases it might be useful to ignore such errors (for instance if testing a code path in the app that doesn't require the static library in question), so it's possible to ignore them.
+
+The valid values are:
+
+* "true", "disable": Completely disable the validation.
+* "false", "error", empty string: Enable the validation (this is the default)
+* "warn": Validate, but show warnings instead of errors.
+
+Example:
+
+```xml
+<PropertyGroup>
+  <SkipStaticLibraryValidation>warn</SkipStaticLibraryValidation>
+</PropertyGroup>
+```
+
+This will show warnings instead of errors if the project tries to link with a static library.
+
 ## StripPath
 
 The full path to the `strip` command-line tool.
