@@ -313,7 +313,7 @@ class BuildConfiguration {
 
     [void] SetLabelsFromPR ([PSCustomObject] $prInfo, [bool]$isPR) {
         if ($prInfo) {
-            Write-Deubg "Setting VSTS labels from $($prInfo.labels)"
+            Write-Debug "Setting VSTS labels from $($prInfo.labels)"
             foreach ($l in [BuildConfiguration]::labelsOfInterest) {
                 $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
                 # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
