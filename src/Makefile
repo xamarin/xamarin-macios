@@ -357,7 +357,9 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources | $($(2)_DOT
 		$($(2)_DOTNET_CORE_SOURCES) \
 		-nullable+ \
 		-warnaserror+ \
+		-nowarn:1591 \
 		-out:$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
+		-doc:$($(2)_DOTNET_BUILD_DIR)/core-$(3).xml \
 		> $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -369,8 +371,10 @@ $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp: Makefile frameworks.sources
 		-debug \
 		-unsafe \
 		-target:library \
-		-nowarn:436 \
+		-nowarn:436,1591 \
+		-warnaserror+ \
 		-out:$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll \
+		-doc:$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).xml \
 		-r:$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
 		-nostdlib \
 		-nologo \
