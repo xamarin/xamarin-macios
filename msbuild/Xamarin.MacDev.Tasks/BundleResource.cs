@@ -1,4 +1,4 @@
-// #define TRACE
+// #define TRACE_TASK
 
 using System;
 using System.Diagnostics;
@@ -67,7 +67,7 @@ namespace Xamarin.MacDev {
 				.ToList ();
 		}
 
-		[Conditional ("TRACE")]
+		[Conditional ("TRACE_TASK")]
 		static void Trace (Task task, string msg)
 		{
 			task.Log.LogMessage (MessageImportance.Low, msg);
