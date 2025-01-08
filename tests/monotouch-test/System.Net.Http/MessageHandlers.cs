@@ -592,6 +592,7 @@ namespace MonoTests.System.Net.Http {
 		}
 
 #if NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/21912")]
 		[TestCase ("https://self-signed.badssl.com/")]
 		[TestCase ("https://wrong.host.badssl.com/")]
 		public void AcceptSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler (string url)
