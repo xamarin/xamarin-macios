@@ -100,12 +100,8 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
       XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
       DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-      ${{ if eq(parameters.testPool, '') }}:
-        AgentPoolComputed: $(PRBuildPool)
-      ${{ else }}:
-        AgentPoolComputed: ${{ parameters.testPool }}
     pool:
-      name: $(AgentPoolComputed)
+      name: ${{ parameters.testPool }}
       demands:
       - Agent.OS -equals Darwin
       - macOS.Name -equals ${{ parameters.macOSName }}
