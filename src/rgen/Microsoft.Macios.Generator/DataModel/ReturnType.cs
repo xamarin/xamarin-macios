@@ -51,10 +51,10 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		IsVoid = type == "void";
 	}
 
-	internal ReturnType (string type, 
-		bool isNullable = false, 
-		bool isBlittable = false, 
-		bool isSmartEnum = false, 
+	internal ReturnType (string type,
+		bool isNullable = false,
+		bool isBlittable = false,
+		bool isSmartEnum = false,
 		bool isArray = false,
 		bool isReferenceType = false) : this (type)
 	{
@@ -98,7 +98,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 
 		return true;
 	}
-	
+
 	/// <inheritdoc/>
 	public override bool Equals (object? obj)
 	{

@@ -23,7 +23,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var property = new Property (
 			name: propertyName,
-			returnType: new ReturnType("string"),
+			returnType: new ReturnType ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -90,11 +90,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: false, 
-				isSmartEnum: false, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),
@@ -105,11 +105,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: false, 
-				isSmartEnum: false, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: true
 			),
 			symbolAvailability: new (),
@@ -130,11 +130,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: true, 
-				isSmartEnum: false, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: true,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),
@@ -145,11 +145,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: false, 
-				isSmartEnum: false, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),
@@ -170,11 +170,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: false, 
-				isSmartEnum: true, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: true,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),
@@ -185,11 +185,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string", 
-				isBlittable: false, 
-				isSmartEnum: false, 
-				isNullable: false, 
-				isArray: false, 
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
 				isReferenceType: false
 			),
 			symbolAvailability: new (),

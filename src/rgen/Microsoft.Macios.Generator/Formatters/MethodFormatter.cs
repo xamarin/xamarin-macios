@@ -5,7 +5,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Formatters;
 
 static class MethodFormatter {
-	
+
 	public static CompilationUnitSyntax? ToDeclaration (this in Method? method)
 	{
 		if (method is null)

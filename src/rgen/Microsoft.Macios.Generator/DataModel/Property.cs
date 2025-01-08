@@ -36,7 +36,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Returns if the property type is a smart enum.
 	/// </summary>
-	public bool IsSmartEnum  => ReturnType.IsSmartEnum;
+	public bool IsSmartEnum => ReturnType.IsSmartEnum;
 
 	/// <summary>
 	/// Returns if the property type is a reference type.

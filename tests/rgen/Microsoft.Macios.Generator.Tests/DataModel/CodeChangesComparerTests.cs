@@ -599,7 +599,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					returnType: new("Utils.MyClass"),
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),

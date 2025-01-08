@@ -6,7 +6,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Formatters;
 
 static class ReturnTypeFormatter {
-	
+
 	public static TypeSyntax GetIdentifierSyntax (this in ReturnType returnType)
 	{
 		if (returnType.IsArray) {
