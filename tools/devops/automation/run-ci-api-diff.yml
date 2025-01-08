@@ -16,3 +16,4 @@ extends:
   template: templates/pipelines/api-diff-pipeline.yml
   parameters:
     isPR: false
+    pool: $(CIBuildPool)
