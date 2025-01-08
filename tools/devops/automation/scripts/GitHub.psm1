@@ -900,7 +900,7 @@ function Get-GitHubPRsForHash {
     foreach ($prInfo in $request) {
         $number = $prInfo.number
         Write-Host "Found PR #$number for commit $hash"
-        $prs.Add($number)
+        $prs.Add($number) > $null
     }
     Write-Host "Found $($prs.Count) PRs for commit $hash"
     return $prs
