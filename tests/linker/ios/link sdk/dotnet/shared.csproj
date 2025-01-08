@@ -20,6 +20,9 @@
     <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
     <NoWarn>$(NoWarn);CA1422</NoWarn>
 
+    <!-- trimmer warnings: the linker tests do a lot of trimmer-unsafe things, so ignore any trimmer warnings -->
+    <NoWarn>$(NoWarn);IL2026;IL2032;IL2057;IL2070;IL2075;IL2080;IL2111</NoWarn>
+
     <!-- We're warning-free, so let's make sure we stay that way -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
