@@ -40,18 +40,12 @@ jobs:
   displayName: 'Detect API changes'
   timeoutInMinutes: 1000
   variables:
-    ${{ if eq(parameters.pool, 'automatic') }}:
-      AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
-    ${{ if eq(parameters.pool, 'ci') }}:
-      AgentPoolComputed: $(CIBuildPool)
-    ${{ if eq(parameters.pool, 'pr') }}:
-      AgentPoolComputed: $(PRBuildPool)
     PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
     XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
   pool:
-    name: $(AgentPoolComputed)
+    name: ${{ parameters.pool }}
     demands:
     - Agent.OS -equals Darwin
     - macOS.Name -equals ${{ parameters.macOSName }}
