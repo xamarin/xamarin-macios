@@ -126,7 +126,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
@@ -138,8 +138,8 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
-				new (1, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]);
 		Assert.Equal (x.Parameters.Length.CompareTo (y.Parameters.Length), comparer.Compare (x, y));
 	}
@@ -157,7 +157,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
@@ -169,7 +169,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (1, "string", "surname"),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]);
 		var parameterCompare = new ParameterComparer ();
 		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
@@ -188,7 +188,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "MyEnum", "name") {
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
 					IsSmartEnum = true
 				},
 			]);
@@ -202,7 +202,7 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "MyEnum", "name") {
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
 					IsSmartEnum = false
 				},
 			]);
