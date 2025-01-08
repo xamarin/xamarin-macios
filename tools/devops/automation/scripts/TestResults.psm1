@@ -530,7 +530,7 @@ function New-ParallelTestsResults {
                 $botKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_BOT") }
                 $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
                 $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
-                $title = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "LABEL_WITH_PLATFORM") }
+                $title = $outputs.Keys | Where-Object { $_.StartsWith($jobName + ".") -and $_.EndsWith("." + "TESTS_TITLE") }
                 Write-Host "Keys for Label='$label', Title='$title' and JobName='$jobName': StatusKey=$statusKey BotKey=$botKey PlatformKey=$platformKey AttemptKey=$attemptKey"
                 $status =  if ($statusKey -eq $null) { "NotFound"} else { $outputs[$statusKey] }
                 $bot = if ($botKey -eq $null) { "NotFound" } else { $outputs[$botKey] }
