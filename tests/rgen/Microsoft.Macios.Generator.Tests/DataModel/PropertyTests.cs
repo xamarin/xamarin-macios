@@ -494,7 +494,8 @@ public class TestClass {
 							],
 							modifiers: []
 						)
-					]) {
+					]
+				) {
 					ExportPropertyData = new ("name"),
 				},
 			];
