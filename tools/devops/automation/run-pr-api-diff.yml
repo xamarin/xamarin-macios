@@ -15,3 +15,4 @@ extends:
   template: templates/pipelines/api-diff-pipeline.yml
   parameters:
     isPR: true
+    pool: $(PRBuildPool)
