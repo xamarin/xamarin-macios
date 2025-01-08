@@ -567,7 +567,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -620,7 +620,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -674,7 +674,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -691,7 +691,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetSurname",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withSurname:"),
 							attributes: [

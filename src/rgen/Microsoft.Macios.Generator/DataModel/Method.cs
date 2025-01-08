@@ -27,7 +27,7 @@ readonly struct Method : IEquatable<Method> {
 	/// <summary>
 	/// Method return type.
 	/// </summary>
-	public string ReturnType { get; }
+	public MethodReturnType ReturnType { get; }
 
 	/// <summary>
 	/// The platform availability of the method.
@@ -54,7 +54,7 @@ readonly struct Method : IEquatable<Method> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, string returnType,
+	public Method (string type, string name, MethodReturnType returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
 		ImmutableArray<AttributeCodeChange> attributes,
@@ -97,7 +97,7 @@ readonly struct Method : IEquatable<Method> {
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: method.ReturnType.ToDisplayString ().Trim (),
+			returnType: new (method.ReturnType),
 			symbolAvailability: method.GetSupportedPlatforms (),
 			exportMethodData: exportData,
 			attributes: attributes,

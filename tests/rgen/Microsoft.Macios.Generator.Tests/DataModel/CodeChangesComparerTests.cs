@@ -1295,7 +1295,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1312,7 +1319,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1440,7 +1447,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1579,7 +1593,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1596,7 +1617,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1725,7 +1746,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1739,7 +1760,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1878,7 +1906,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2007,7 +2035,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2149,7 +2184,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2166,7 +2208,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2287,7 +2329,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2301,7 +2343,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2443,7 +2492,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2460,7 +2516,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2588,7 +2644,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2602,7 +2658,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
