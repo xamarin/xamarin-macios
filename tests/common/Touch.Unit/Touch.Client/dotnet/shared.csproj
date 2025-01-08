@@ -10,47 +10,47 @@
     <NoWarn>$(NoWarn);CA1422</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Runner\ExcludedCategoryFilter.cs">
+    <Compile Include="..\Runner\ExcludedCategoryFilter.cs">
       <Link>ExcludedCategoryFilter.cs</Link>
     </Compile>
-    <Compile Include="Runner\HttpTextWriter.cs">
+    <Compile Include="..\Runner\HttpTextWriter.cs">
       <Link>HttpTextWriter.cs</Link>
     </Compile>
-    <Compile Include="Runner\NUnitOutputTextWriter.cs">
+    <Compile Include="..\Runner\NUnitOutputTextWriter.cs">
       <Link>NUnitOutputTextWriter.cs</Link>
     </Compile>
-    <Compile Include="Runner\TcpTextWriter.cs">
+    <Compile Include="..\Runner\TcpTextWriter.cs">
       <Link>TcpTextWriter.cs</Link>
     </Compile>
-    <Compile Include="Runner\TestRocks.cs">
+    <Compile Include="..\Runner\TestRocks.cs">
       <Link>TestRocks.cs</Link>
     </Compile>
-    <Compile Include="Runner\TouchOptions.cs">
+    <Compile Include="..\Runner\TouchOptions.cs">
       <Link>TouchOptions.cs</Link>
     </Compile>
-    <Compile Include="Runner\TouchRunner.cs">
+    <Compile Include="..\Runner\TouchRunner.cs">
       <Link>TouchRunner.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
-    <Compile Include="Runner\MacRunner.cs">
+    <Compile Include="..\Runner\MacRunner.cs">
       <Link>MacRunner.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
-    <Compile Include="Runner\TestCaseElement.cs">
+    <Compile Include="..\Runner\TestCaseElement.cs">
       <Link>TestCaseElement.cs</Link>
     </Compile>
-    <Compile Include="Runner\TestElement.cs">
+    <Compile Include="..\Runner\TestElement.cs">
       <Link>TestElement.cs</Link>
     </Compile>
-    <Compile Include="Runner\TestResultElement.cs">
+    <Compile Include="..\Runner\TestResultElement.cs">
       <Link>TestResultElement.cs</Link>
     </Compile>
-    <Compile Include="Runner\TestSuiteElement.cs">
+    <Compile Include="..\Runner\TestSuiteElement.cs">
       <Link>TestSuiteElement.cs</Link>
     </Compile>
-    <Compile Include="Runner\TouchViewController.cs">
+    <Compile Include="..\Runner\TouchViewController.cs">
       <Link>TouchViewController.cs</Link>
     </Compile>
   </ItemGroup>
@@ -64,15 +64,5 @@
     <PackageReference Include="Mono.Options">
       <Version>6.12.0.148</Version>
     </PackageReference>
-  </ItemGroup>
-  <!-- Currently, NuGet is not able to restore existing Xamarin.iOS/tvOS packages for a .NET 5 project, so use AssetTargetFallback to tell NuGet that the existing packages work -->
-  <PropertyGroup Condition="$(TargetFramework.EndsWith('-ios')) Or $(TargetFramework.EndsWith('-maccatalyst'))">
-    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
-  </PropertyGroup>
-  <ItemGroup Condition="$(TargetFramework.EndsWith('-ios')) Or $(TargetFramework.EndsWith('-tvos')) Or $(TargetFramework.EndsWith('-maccatalyst'))">
-    <ProjectReference Include="../../MonoTouch.Dialog/MonoTouch.Dialog.$(_PlatformName).csproj" />
   </ItemGroup>
 </Project>
