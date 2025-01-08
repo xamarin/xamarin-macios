@@ -14,7 +14,7 @@ namespace ObjCBindings {
 		/// <summary>
 		/// Use the default values.
 		/// </summary>
-		None = 0,
+		Default = 0,
 	}
 
 	/// <summary>
@@ -26,6 +26,6 @@ namespace ObjCBindings {
 		/// <summary>
 		/// Use the default values.
 		/// </summary>
-		None = 0,
+		Default = 0,
 	}
 }

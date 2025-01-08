@@ -66,6 +66,8 @@ public class MarshalTypeList : List<MarshalType> {
 			Add (new MarshalType (typeCache.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ", %OWNS%)!"));
 			Add (typeCache.CMAudioFormatDescription);
 			Add (typeCache.CMVideoFormatDescription);
+			Add (typeCache.CMTaggedBufferGroup);
+			Add (typeCache.CMTagCollection);
 		}
 		if (frameworks.HaveAudioUnit)
 			Add (typeCache.AudioUnit);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
@@ -11,6 +12,6 @@ namespace Microsoft.Macios.Generator.Emitters;
 /// </summary>
 interface ICodeEmitter {
 	string GetSymbolName (in CodeChanges codeChanges);
-	bool TryEmit (in CodeChanges codeChanges, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics);
+	bool TryEmit (in BindingContext bindingContext, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics);
 	IEnumerable<string> UsingStatements { get; }
 }

@@ -15,9 +15,6 @@ namespace Xamarin.Linker {
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
 		public const string AVRouting = nameof (AVRouting);
-#if !NET
-		public const string Chip = nameof (Chip);
-#endif
 		public const string Cinematic = nameof (Cinematic);
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
@@ -70,9 +67,6 @@ namespace Xamarin.Linker {
 		public const string Photos = nameof (Photos);
 		public const string PhotosUI = nameof (PhotosUI);
 		public const string PrintCore = nameof (PrintCore);
-#if !NET
-		public const string QTKit = nameof (QTKit);
-#endif
 		public const string QuartzComposer = nameof (QuartzComposer);
 		public const string Registrar = nameof (Registrar);
 		public const string SceneKit = nameof (SceneKit);

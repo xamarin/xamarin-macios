@@ -1,4 +1,7 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -23,5 +26,13 @@ static class RefKindExtensions {
 		RefKind.In => ReferenceKind.In,
 		RefKind.RefReadOnlyParameter => ReferenceKind.RefReadOnlyParameter,
 		_ => ReferenceKind.None,
+	};
+
+	public static SyntaxTokenList ToTokens (this ReferenceKind self) => self switch {
+		ReferenceKind.Ref => new (Token (SyntaxKind.RefKeyword)),
+		ReferenceKind.Out => new (Token (SyntaxKind.OutKeyword)),
+		ReferenceKind.In => new (Token (SyntaxKind.InKeyword)),
+		ReferenceKind.RefReadOnlyParameter => new (Token (SyntaxKind.RefKeyword), Token (SyntaxKind.ReadOnlyKeyword)),
+		_ => []
 	};
 }

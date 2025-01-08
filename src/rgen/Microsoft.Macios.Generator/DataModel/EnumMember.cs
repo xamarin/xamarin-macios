@@ -22,6 +22,9 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
 
+	/// <summary>
+	/// The data of the field attribute used to mark the value as a binding.
+	/// </summary>
 	public FieldData<EnumValue>? FieldData { get; }
 
 	/// <summary>

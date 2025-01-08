@@ -13,8 +13,6 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
-using OSStatus = System.Int32;
-
 namespace AudioToolbox {
 
 #if NET

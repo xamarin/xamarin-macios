@@ -7,12 +7,12 @@ using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : ICodeEmitter {
+class EnumEmitter : ICodeEmitter {
 
 	public string GetSymbolName (in CodeChanges codeChanges) => $"{codeChanges.Name}Extensions";
 	public IEnumerable<string> UsingStatements => ["Foundation", "ObjCRuntime", "System"];
 
-	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
+	void EmitEnumFieldAtIndex (RootBindingContext context, TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
 	{
 		var enumField = codeChanges.EnumMembers [index];
 		if (enumField.FieldData is null)
@@ -32,7 +32,7 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 		}
 	}
 
-	bool TryEmit (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
+	bool TryEmit (RootBindingContext context, TabbedStringBuilder classBlock, in CodeChanges codeChanges)
 	{
 		// keep track of the field symbols, they have to be unique, if we find a duplicate we return false and
 		// abort the code generation
@@ -44,7 +44,7 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 				return false;
 			}
 			classBlock.AppendLine ();
-			EmitEnumFieldAtIndex (classBlock, codeChanges, index);
+			EmitEnumFieldAtIndex (context, classBlock, codeChanges, index);
 		}
 		return true;
 	}
@@ -120,38 +120,39 @@ class EnumEmitter (RootBindingContext context, TabbedStringBuilder builder) : IC
 }}");
 	}
 
-	public bool TryEmit (in CodeChanges codeChanges, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryEmit (in BindingContext bindingContext, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
-		if (codeChanges.BindingType != BindingType.SmartEnum) {
+		if (bindingContext.Changes.BindingType != BindingType.SmartEnum) {
 			diagnostics = [Diagnostic.Create (
 					Diagnostics
-						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+						.RBI0000, // An unexpected error occurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					null,
-					codeChanges.FullyQualifiedSymbol)];
+					bindingContext.Changes.FullyQualifiedSymbol)];
 			return false;
 		}
 		// in the old generator we had to copy over the enum, in this new approach, the only code
 		// we need to create is the extension class for the enum that is backed by fields
-		builder.AppendLine ();
-		builder.AppendLine ($"namespace {string.Join (".", codeChanges.Namespace)};");
-		builder.AppendLine ();
+		bindingContext.Builder.AppendLine ();
+		bindingContext.Builder.AppendLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
+		bindingContext.Builder.AppendLine ();
 
-		builder.AppendMemberAvailability (codeChanges.SymbolAvailability);
-		builder.AppendGeneratedCodeAttribute ();
-		using (var classBlock = builder.CreateBlock ($"static public partial class {GetSymbolName (codeChanges)}", true)) {
+		bindingContext.Builder.AppendMemberAvailability (bindingContext.Changes.SymbolAvailability);
+		bindingContext.Builder.AppendGeneratedCodeAttribute ();
+		var modifiers = $"{string.Join (' ', bindingContext.Changes.Modifiers)} ";
+		using (var classBlock = bindingContext.Builder.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}static partial class {GetSymbolName (bindingContext.Changes)}", true)) {
 			classBlock.AppendLine ();
-			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{codeChanges.EnumMembers.Length}];");
+			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{bindingContext.Changes.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter
 			// will take care of generating the property. Do not order it by name to keep the order of the enum
-			if (!TryEmit (classBlock, codeChanges)) {
+			if (!TryEmit (bindingContext.RootContext, classBlock, bindingContext.Changes)) {
 				diagnostics = []; // empty diagnostics since it was a user error
 				return false;
 			}
 			classBlock.AppendLine ();
 
 			// emit the extension methods that will be used to get the values from the enum
-			EmitExtensionMethods (classBlock, codeChanges);
+			EmitExtensionMethods (classBlock, bindingContext.Changes);
 			classBlock.AppendLine ();
 		}
 

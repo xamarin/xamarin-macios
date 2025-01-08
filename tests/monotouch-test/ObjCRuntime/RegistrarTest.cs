@@ -5542,8 +5542,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ProtocolsTrimmedAway ()
 		{
-			TestRuntime.AssertNotInterpreter ("This test does not work in the interpreter: https://github.com/xamarin/xamarin-macios/issues/21782");
-
 			PreserveIUIApplicationDelegate (null);
 
 			// A little indirection to try to make the trimmer not be helpful and preserve all the methods on IUIApplicationDelegate.

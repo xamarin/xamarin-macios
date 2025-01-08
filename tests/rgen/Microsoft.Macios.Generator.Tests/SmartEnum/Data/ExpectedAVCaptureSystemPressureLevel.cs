@@ -10,7 +10,7 @@ using System;
 namespace AVFoundation;
 
 [BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-static public partial class AVCaptureSystemPressureLevelExtensions
+public static partial class AVCaptureSystemPressureLevelExtensions
 {
 
 	static IntPtr[] values = new IntPtr [5];
