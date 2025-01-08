@@ -348,7 +348,7 @@ class BuildConfiguration {
             if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
                 Write-Host "Getting the change id from the parent build source branch"
                 $prId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
-            } else if ($Env:BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
+            } elseif ($Env:BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
                 Write-Host "Getting the change id from the current build source branch"
                 $prId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
             } else {
