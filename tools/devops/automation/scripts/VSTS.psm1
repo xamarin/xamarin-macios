@@ -345,7 +345,7 @@ class BuildConfiguration {
             # there are two possible situations, the build is a PR manually triggered or a PR triggered by a commit to a
             # dev/* branch. In the first case we can get the PR id from the source branch, in the second case we need to
             # get the PR id associated to the current commit. 
-            if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/pull") {
+            if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
                 Write-Host "Getting the change id from the parent build source branch"
                 $prId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
             } else if ($Env:BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
