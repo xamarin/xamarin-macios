@@ -90,19 +90,10 @@ namespace Xamarin.MacDev.Tasks {
 				filesToZip.Add (manifestPath);
 
 				foreach (var nativeRef in filesToZip) {
-					var zipArguments = new List<string> ();
-					zipArguments.Add ("-9");
-					zipArguments.Add ("-r");
-					zipArguments.Add ("-y");
-					zipArguments.Add (zipFile);
-
-					var fullPath = Path.GetFullPath (nativeRef);
-					var workingDirectory = Path.GetDirectoryName (fullPath);
-					zipArguments.Add (Path.GetFileName (fullPath));
-					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
-
-					packagedFiles.Add (zipFile);
+					var workingDirectory = Path.GetDirectoryName (nativeRef);
+					CompressionHelper.TryCompress (Log, zipFile, new string [] { nativeRef }, false, workingDirectory, true);
 				}
+				packagedFiles.Add (zipFile);
 			} else {
 				var bindingResourcePath = BindingResourcePath;
 				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
@@ -127,11 +118,14 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		static bool ContainsSymlinks (ITaskItem [] items)
+		bool ContainsSymlinks (ITaskItem [] items)
 		{
 			foreach (var item in items) {
-				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec))
+				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec)) {
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+						Log.LogError (MSBStrings.E7120_TEMP /* Can't process the native reference '{0}' on this platform because it is or contains a symlink. */, item?.ItemSpec);
 					return true;
+				}
 			}
 
 			return false;

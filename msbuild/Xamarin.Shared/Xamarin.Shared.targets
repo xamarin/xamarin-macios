@@ -151,8 +151,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework' And '%(Extension)' != '.xcframework' And '%(Extension)' != '.zip'" />
 		</ItemGroup>
 		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(IsBindingProject)' != 'true'"
+			Condition="'$(IsBindingProject)' != 'true'"
 			Architectures="$(TargetArchitectures)"
 			FrameworksDirectory="$(_AppFrameworksRelativePath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -190,8 +189,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<CompressBindingResourcePackage>auto</CompressBindingResourcePackage>
 		</PropertyGroup>
 
-		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
+		<CreateBindingResourcePackage
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
 			Compress="$(CompressBindingResourcePackage)"
@@ -200,14 +198,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CreateBindingResourcePackage>
 
 		<MakeDir
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
 		/>
 
 		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
 			Files="$(BindingResourcePath).stamp"
 			>
@@ -245,7 +239,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeBindingResourcesInNuGetPackage</TargetsForTfmSpecificContentInPackage>
 	</PropertyGroup>
 	<Target Name="_IncludeBindingResourcesInNuGetPackage"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(IncludeBuildOutput)' != 'false'"
+		Condition="'$(IncludeBuildOutput)' != 'false'"
 	>
 		<PropertyGroup>
 			<_HasOldStyleBindingItems Condition="@(ObjcBindingNativeLibrary->Count()) > 0">true</_HasOldStyleBindingItems>
@@ -1784,6 +1778,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_GenerateBindingsDependsOn>
 
 		<_GenerateBindingsDependsOn>
+			_ComputeGenerationLocation;
 			_CompileApiDefinitions;
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
@@ -1863,7 +1858,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			@(_CompiledApiDefinitionsCompile);"
 		Outputs="$(_CompiledApiDefinitionAssembly);$(_CompiledApiDefinitionDocumentationFile)"
 		DependsOnTargets="_ComputeCompileApiDefinitionsInputs"
-		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'"
+		Condition="'$(IsBindingProject)' == 'true'"
 		>
 
 		<!-- This is a mirror of the method GetCompiledApiBindingsAssembly in BindingTouch.cs where the compilation is done inside bgen -->
@@ -1890,13 +1885,22 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Csc>
 	</Target>
 
+	<Target Name="_ComputeGenerationLocation">
+		<PropertyGroup>
+			<BuildBindingProjectLocally Condition="'$(BuildBindingProjectLocally)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</BuildBindingProjectLocally>
+			<BuildBindingProjectLocally Condition="'$(BuildBindingProjectLocally)' == ''">false</BuildBindingProjectLocally>
+			<BindingProjectBuildSessionId Condition="'$(BuildBindingProjectLocally)' != 'true'">$(BuildSessionId)</BindingProjectBuildSessionId>
+		</PropertyGroup>
+	</Target>
+
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
 		DependsOnTargets="$(_GenerateBindingsDependsOn)"
-		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
+		Condition="'$(IsBindingProject)' == 'true'">
 
-		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
+		<Error Condition="'$(IsMacEnabled)' != 'true' And '$(BuildBindingProjectLocally)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="It's not supported to build binding project locally on Windows in legacy Xamarin projects. Please upgrade the project to a .NET project, or connect to a remote Mac." />
+		<Error Condition="'$(IsMacEnabled)' != 'true' And '$(BuildBindingProjectLocally)' != 'true'" Text="The property 'BuildBindingProjectLocally' build is disabled, but there's no connection to a remote Mac." />
 
 		<PropertyGroup>
 			<BGenEmitDebugInformation Condition="'$(BGenEmitDebugInformation)' == ''">$(BTouchEmitDebugInformation)</BGenEmitDebugInformation>
@@ -1910,12 +1914,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<BGenReferencePath Include="@(BTouchReferencePath)" />
 		</ItemGroup>
 
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
+		<MakeDir SessionId="$(BindingProjectBuildSessionId)" Directories="$(GeneratedSourcesDir)" />
 
 		<!-- Compute some variables on the mac: this task is only executed when building on Windows -->
 		<ComputeRemoteGeneratorProperties
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(BuildSessionId)' != ''"
+			SessionId="$(BindingProjectBuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(BindingProjectBuildSessionId)' != ''"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
@@ -1927,8 +1931,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ComputeRemoteGeneratorProperties>
 
 		<BGen
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
+			SessionId="$(BindingProjectBuildSessionId)"
 			OutputPath="$(OutputPath)"
 			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
 			AdditionalLibPaths="$(AdditionalLibPaths)"

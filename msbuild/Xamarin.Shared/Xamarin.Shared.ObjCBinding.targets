@@ -93,14 +93,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="%(_NativeFrameworkResource.ZipFile)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="%(_NativeFrameworkResource.ZipFile)" />
+		<Delete Files="%(_NativeFrameworkResource.ZipFile)" />
 
 		<Zip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ZipPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
 			Sources="%(_NativeFrameworkResource.FrameworkPath)"
 			OutputFile="%(_NativeFrameworkResource.ZipFile)"
 			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >
@@ -116,8 +111,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_SanitizeNativeReferences">
 		<PrepareNativeReferences
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
 		>

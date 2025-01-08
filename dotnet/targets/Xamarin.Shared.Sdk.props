@@ -203,4 +203,10 @@
 		-->
 		<CustomNativeMain Condition="'$(OutputType)' == 'Exe'">true</CustomNativeMain>
 	</PropertyGroup>
+
+	<!-- Compute _SdkIsSimulator from the RuntimeIdentifier -->
+	<PropertyGroup>
+		<_SdkIsSimulator Condition="'$(RuntimeIdentifier)' != '' And '$(_SdkIsSimulator)' == ''">$(RuntimeIdentifier.Contains('simulator'))</_SdkIsSimulator>
+		<_SdkIsSimulator Condition="'$(RuntimeIdentifiers)' != '' And '$(_SdkIsSimulator)' == ''">$(RuntimeIdentifiers.Contains('simulator'))</_SdkIsSimulator>
+	</PropertyGroup>
 </Project>

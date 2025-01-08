@@ -1662,4 +1662,8 @@
     <data name="E7136" xml:space="preserve">
         <value>Unknown resource type: {1}.</value>
     </data>
+
+    <data name="E7120_TEMP" xml:space="preserve">
+        <value>Can't process the native reference '{0}' on this platform because it is or contains a symlink.</value>
+    </data>
 </root>
