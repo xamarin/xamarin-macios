@@ -47,9 +47,6 @@
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />
     <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />
-    <Compile Include="$(ThisTestDirectory)\..\..\CommonDontLinkTest.cs">
-      <Link>CommonDontLinkTest.cs</Link>
-    </Compile>
     <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
   </ItemGroup>
   <ItemGroup>
