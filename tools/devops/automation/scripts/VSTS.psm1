@@ -521,7 +521,7 @@ class BuildConfiguration {
             $tags.Add("cronjob")
         }
 
-        if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("dev/") -or $configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
+        if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/heads/dev/") -or $configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
 
           # retrieve the PR data to be able to fwd the labels from github
