@@ -360,6 +360,7 @@ class BuildConfiguration {
                     $prId = $prIDs[0]
                 }
             }
+        }
 
         # we can always fail (regexp error or not env varaible)
         if ($prId) {
