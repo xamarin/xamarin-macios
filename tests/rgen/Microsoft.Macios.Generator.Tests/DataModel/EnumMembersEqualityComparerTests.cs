@@ -54,8 +54,8 @@ public class EnumMembersEqualityComparerTests {
 	[Fact]
 	public void NotEqualsDiffFieldData ()
 	{
-		ImmutableArray<EnumMember> x = [new ("name", new ("x", "xLib", EnumValue.None), new SymbolAvailability (), []), new ("name1")];
-		ImmutableArray<EnumMember> y = [new ("name", new ("y", "xLib", EnumValue.None), new SymbolAvailability (), []), new ("name1")];
+		ImmutableArray<EnumMember> x = [new ("name", new ("x", "xLib", EnumValue.Default), new SymbolAvailability (), []), new ("name1")];
+		ImmutableArray<EnumMember> y = [new ("name", new ("y", "xLib", EnumValue.Default), new SymbolAvailability (), []), new ("name1")];
 		Assert.False (comparer.Equals (x, y));
 	}
 }

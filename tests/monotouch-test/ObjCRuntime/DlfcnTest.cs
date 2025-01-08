@@ -59,6 +59,18 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual (-7.7576533930025207E-103d, Dlfcn.GetDouble (handle, symbol), "GetDouble");
 					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, (nuint) Dlfcn.GetIntPtr (handle, symbol), "GetIntPtr"); // won't work in 32-bit, but we don't care about that anymore
 					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, Dlfcn.GetUIntPtr (handle, symbol), "GetUIntPtr");
+					Assert.AreEqual ((nint) 0xaabbccddeeff8899, Dlfcn.GetStruct<nint> (handle, symbol), "GetStruct<nint>"); // won't work in 32-bit, but we don't care about that anymore
+					Assert.AreEqual ((nuint) 0xaabbccddeeff8899, Dlfcn.GetStruct<nuint> (handle, symbol), "GetStruct<nuint>"); // won't work in 32-bit, but we don't care about that anymore
+					Assert.AreEqual ((long) 0xaabbccddeeff8899, Dlfcn.GetStruct<long> (handle, symbol), "GetStruct<long>");
+					Assert.AreEqual ((ulong) 0xaabbccddeeff8899, Dlfcn.GetStruct<ulong> (handle, symbol), "GetStruct<ulong>");
+					Assert.AreEqual ((int) 0xeeff8899, Dlfcn.GetStruct<int> (handle, symbol), "GetStruct<int>");
+					Assert.AreEqual ((uint) 0xeeff8899, Dlfcn.GetStruct<uint> (handle, symbol), "GetStruct<uint>");
+					Assert.AreEqual ((ulong) 0xaabbccddeeff8899, Dlfcn.GetStruct<SomeValue> (handle, symbol).Value, "GetStruct<SomeValue>");
+					Assert.AreEqual (-3.9541907E+28f, Dlfcn.GetStruct<float> (handle, symbol), "GetStruct<float>");
+					Assert.AreEqual (-7.7576533930025207E-103d, Dlfcn.GetStruct<double> (handle, symbol), "GetStruct<double>");
+
+					Assert.AreEqual ((ulong) 0, Dlfcn.GetStruct<ulong> (handle, "inexistent_symbol"), "GetStruct<ulong> inexistent");
+					Assert.AreEqual ((ulong) 0, Dlfcn.GetStruct<SomeValue> (handle, "inexistent_symbol").Value, "GetStruct<SomeValue> inexistent");
 
 					Dlfcn.SetInt16 (handle, symbol, 0x77);
 					Assert.AreEqual ((short) 0x77, Dlfcn.GetInt16 (handle, symbol), "SetInt16");
@@ -110,6 +122,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			});
 		}
+
+#pragma warning disable CS0649 // Field 'DlfcnTest.SomeValue.Value' is never assigned to, and will always have its default value 0
+		struct SomeValue {
+			public ulong Value;
+		}
+#pragma warning restore CS0649
 #endif
 	}
 }

@@ -51,8 +51,12 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Remove="SmartEnum\Data\*.cs" />
-      <None Include="SmartEnum\Data\*.cs" />
+        <Compile Remove="SmartEnum\Data\*.cs" />
+        <Compile Remove="Classes\Data\*.cs" />
+        
+        <None Include="SmartEnum\Data\*.cs" />
+        <None Include="Classes\Data\*.cs" />
     </ItemGroup>
+
 
 </Project>

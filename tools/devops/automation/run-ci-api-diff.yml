@@ -1,29 +1,19 @@
 # Pipeline that will calculate the api diff on a ci commit.
 
-trigger:
-  branches:
-    include:
-      - '*'
-    exclude:
-      - refs/heads/locfiles/*
-      - refs/heads/dev/*
-      - refs/heads/darc-*
-      - refs/heads/backport-pr-*
-  paths:
-    exclude:
-      - .github
-      - docs
-      - CODEOWNERS
-      - ISSUE_TEMPLATE.md
-      - LICENSE
-      - NOTICE.txt
-      - SECURITY.MD
-      - README.md
-      - src/README.md
-      - tools/mtouch/README.md
-      - msbuild/Xamarin.Localization.MSBuild/README.md
+trigger: none
+pr: none
+
+# we cannot use a template in a pipeline context
+resources:
+  pipelines:
+    - pipeline: macios
+      source: \Xamarin\Mac-iOS\ci pipelines\xamarin-macios-ci
+      trigger:
+        stages:
+          - configure_build
 
 extends:
   template: templates/pipelines/api-diff-pipeline.yml
   parameters:
     isPR: false
+    pool: $(CIBuildPool)

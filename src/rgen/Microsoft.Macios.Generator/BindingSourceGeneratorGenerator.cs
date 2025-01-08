@@ -22,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly DeclarationCodeChangesEqualityComparer equalityComparer = new ();
+	static readonly CodeChangesEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -34,15 +34,15 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				fileName, SourceText.From (content, Encoding.UTF8)));
 		}
 
-		// our bindings are special. Due to the fact that we write shared code in the Library.g.cs and the Trampolines.g.cs
+		// our bindings are special. Since we write shared code in the Library.g.cs and the Trampolines.g.cs
 		// we need to listen to all the BaseTypeDeclarationSyntax changes. We do so, generate a data model with the
-		// changes we are interested and later we transform them. This allows use to be able to use a RootBindingContext
+		// changes we are interested, and later we transform them. This allows use to be able to use a RootBindingContext
 		// as a bag in which we can add information about libraries and trampolines needed by the bindings.
 		var provider = context.SyntaxProvider
 			.CreateSyntaxProvider (static (node, _) => IsValidNode (node),
 				static (ctx, _) => GetChangesForSourceGen (ctx))
 			.Where (tuple => tuple.BindingAttributeFound)
-			.Select (static (tuple, _) => (tuple.Declaration, tuple.Changes))
+			.Select (static (tuple, _) => tuple.Changes)
 			.WithComparer (equalityComparer);
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (provider.Collect ()),
@@ -59,29 +59,28 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		_ => false,
 	};
 
-	static (BaseTypeDeclarationSyntax Declaration, CodeChanges Changes, bool BindingAttributeFound)
-		GetChangesForSourceGen (GeneratorSyntaxContext context)
+	static (CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
 		// we do know that the context node has to be one of the base type declarations
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
 		// check if we do have the binding attr, else there nothing to retrieve
-		bool isBindingType = declarationSyntax.HasAttribute (context.SemanticModel, AttributesNames.BindingAttribute);
+		bool isBindingType = declarationSyntax.HasAtLeastOneAttribute (context.SemanticModel, AttributesNames.BindingTypes);
 
 		if (!isBindingType) {
 			// return empty data + false
-			return (declarationSyntax, default, false);
+			return (default, false);
 		}
 
 		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, context.SemanticModel);
 		// if code changes are null, return the default value and a false to later ignore the change
 		return codeChanges is not null
-			? (declarationSyntax, codeChanges.Value, isBindingType)
-			: (declarationSyntax, default, false);
+			? (codeChanges.Value, isBindingType)
+			: (default, false);
 	}
 
 	static void GenerateCode (SourceProductionContext context, Compilation compilation,
-		in ImmutableArray<(BaseTypeDeclarationSyntax Declaration, CodeChanges Changes)> changesList)
+		in ImmutableArray<CodeChanges> changesList)
 	{
 		// The process is as follows, get all the changes we have received from the incremental generator,
 		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
@@ -90,15 +89,17 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var rootContext = new RootBindingContext (compilation);
-		foreach (var (declaration, change) in changesList) {
+		var sb = new TabbedStringBuilder (new ());
+		foreach (var change in changesList) {
 			// init sb and add the header
-			var sb = new TabbedStringBuilder (new ());
+			sb.Clear ();
 			sb.WriteHeader ();
-			if (EmitterFactory.TryCreate (change, rootContext, sb, out var emitter)) {
+			if (EmitterFactory.TryCreate (change, out var emitter)) {
 				// write the using statements
-				CollectUsingStatements (declaration.SyntaxTree, sb, emitter);
+				CollectUsingStatements (change, sb, emitter);
 
-				if (emitter.TryEmit (change, out var diagnostics)) {
+				var bindingContext = new BindingContext (rootContext, sb, change);
+				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
 					var namespacePath = Path.Combine (change.Namespace.ToArray ());
@@ -115,7 +116,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				context.ReportDiagnostic (Diagnostic.Create (
 					Diagnostics
 						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
-					declaration.GetLocation (),
+					null,
 					change.FullyQualifiedSymbol));
 			}
 		}
@@ -149,22 +150,18 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	}
 
 	/// <summary>
-	/// Collect the using statements from the class declaration root syntaxt tree and add them to the string builder
+	/// Collect the using statements from the named ype code changes and add them to the string builder
 	/// that will be used to generate the code. This way we ensure that we have all the namespaces needed by the
 	/// generated code.
 	/// </summary>
-	/// <param name="tree">Root syntax tree of the base type declaration.</param>
+	/// <param name="codeChanges">The code changes for a given named type.</param>
 	/// <param name="sb">String builder that will be used for the generated code.</param>
 	/// <param name="emitter">The emitter that will generate the code. Provides any extra needed namespace.</param>
-	static void CollectUsingStatements (SyntaxTree tree, TabbedStringBuilder sb, ICodeEmitter emitter)
+	static void CollectUsingStatements (in CodeChanges codeChanges, TabbedStringBuilder sb, ICodeEmitter emitter)
 	{
 		// collect all using from the syntax tree, add them to a hash to make sure that we don't have duplicates
 		// and add those usings that we do know we need for bindings.
-		var usingDirectives = tree.GetRoot ()
-			.DescendantNodes ()
-			.OfType<UsingDirectiveSyntax> ()
-			.Select (d => d.Name!.ToString ()).ToArray ();
-		var usingDirectivesToKeep = new HashSet<string> (usingDirectives) {
+		var usingDirectivesToKeep = new SortedSet<string> (codeChanges.UsingDirectives) {
 			// add the using statements that we know we need and print them to the sb
 		};
 
@@ -174,7 +171,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		}
 
 		// add them sorted so that we have testeable generated code
-		foreach (var ns in usingDirectivesToKeep.OrderBy (s => s)) {
+		foreach (var ns in usingDirectivesToKeep) {
 			if (string.IsNullOrEmpty (ns))
 				continue;
 			sb.AppendLine ($"using {ns};");

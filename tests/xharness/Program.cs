@@ -39,28 +39,7 @@ namespace Xharness {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
 				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
-				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v)) },
-				// Run
-				{ "run=", "Executes a project.", (v) =>
-					{
-						action = HarnessAction.Run;
-						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
-					}
-				},
-				{ "install=", "Installs a project.", (v) =>
-					{
-						action = HarnessAction.Install;
-						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
-					}
-				},
-				{ "uninstall=", "Uninstalls a project.", (v) =>
-					{
-						action = HarnessAction.Uninstall;
-						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
-					}
-				},
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },
 				{ "target=", "Where to run the project ([ios|tvos]-[device|simulator).", (v) => configuration.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => configuration.BuildConfiguration = v },

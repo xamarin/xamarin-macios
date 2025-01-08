@@ -55,5 +55,22 @@ namespace Foundation {
 		}
 
 		public bool SkipRegistration { get; set; }
+
+		/// <summary>
+		/// Specifies whether the Objective-C class is a stub class.
+		/// Objective-C stub classes are sometimes used when bridging Swift to Objective-C.
+		/// </summary>
+		/// <remarks>
+		///   <para>Stub classes can be identified because they include SWIFT_RESILIENT_CLASS in the generated Objective-C header.</para>
+		///   <para>Example Objective-C type declaration:</para>
+		///   <example>
+		///     <code lang="objective-c"><![CDATA[
+		///   SWIFT_RESILIENT_CLASS("_TtC16MySwiftFramework11MySwiftType")
+		///   @interface MySwiftType : SwiftTypeFromDifferentSwiftFramework
+		///   @end
+		/// ]]></code>
+		///   </example>
+		/// </remarks>
+		public bool IsStubClass { get; set; }
 	}
 }

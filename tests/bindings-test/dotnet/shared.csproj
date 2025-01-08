@@ -45,6 +45,11 @@
       <Kind>Framework</Kind>
       <LinkWithSwiftSystemLibraries>true</LinkWithSwiftSystemLibraries>
     </NativeReference>
+
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\SwiftTest2.xcframework">
+      <Kind>Framework</Kind>
+      <LinkWithSwiftSystemLibraries>true</LinkWithSwiftSystemLibraries>
+    </NativeReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -20,15 +20,15 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -41,14 +41,14 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -61,14 +61,14 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x, y], [y]));
 	}
@@ -81,14 +81,14 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.True (compare.Equals ([x, y], [y, x]));
 	}
@@ -106,7 +106,7 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 
 		var yBuilder = SymbolAvailability.CreateBuilder ();
@@ -118,7 +118,7 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		Assert.False (compare.Equals ([x], [y]));
 	}
@@ -136,7 +136,7 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 
 		var y = new Constructor ("MyClass",
@@ -144,7 +144,7 @@ public class ConstructorsEqualityComparerTests {
 			attributes: [],
 			modifiers: [],
 			parameters: [
-				new (0, "string", "surname"),
+				new (position: 0, type: "string", name: "surname", isBlittable: false),
 			]);
 		Assert.True (compare.Equals ([x], [y]));
 
