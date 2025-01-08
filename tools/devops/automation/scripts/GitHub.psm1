@@ -898,9 +898,11 @@ function Get-GitHubPRsForHash {
     # loop over the result and remove all the extra noise we are not interested in
     $prs = [System.Collections.ArrayList]@()
     foreach ($prInfo in $request) {
-        Write-Host "Found PR #$($prInfo.number) for commit $hash"
-        $prs.Add($prInfo.number)
+        $number = $prInfo.number
+        Write-Host "Found PR #$number for commit $hash"
+        $prs.Add($number)
     }
+    Write-Host "Found $($prs.Count) PRs for commit $hash"
     return $prs
 }
 
