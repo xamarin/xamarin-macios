@@ -15,7 +15,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 readonly struct Method : IEquatable<Method> {
 
 	/// <summary>
-	/// Type name that owns the constructor.
+	/// Type name that owns the method.
 	/// </summary>
 	public string Type { get; }
 
@@ -127,7 +127,7 @@ readonly struct Method : IEquatable<Method> {
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var paramComparer = new ParameterEqualityComparer ();
+		var paramComparer = new MethodParameterEqualityComparer ();
 		return paramComparer.Equals (Parameters, other.Parameters);
 	}
 
