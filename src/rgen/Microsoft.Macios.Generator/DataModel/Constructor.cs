@@ -91,7 +91,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var paramComparer = new ParameterEqualityComparer ();
+		var paramComparer = new MethodParameterEqualityComparer ();
 		return paramComparer.Equals (Parameters, other.Parameters);
 	}
 

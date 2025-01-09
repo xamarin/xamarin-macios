@@ -624,7 +624,6 @@ namespace NS {
 					]
 				)
 			];
-
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
