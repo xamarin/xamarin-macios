@@ -25,13 +25,9 @@ namespace Xamarin {
 		public const string MinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
 		public const string MinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
 
-		public const string DotNetMinOSX = "@DOTNET_MIN_MACOS_SDK_VERSION@";
 		public const string DotNetMiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
 		public const string DotNetMinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
 		public const string DotNetMinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
-		public const string LegacyMinOSX = "@MIN_MACOS_SDK_VERSION@";
-		public const string LegacyMiniOS = "@MIN_IOS_SDK_VERSION@";
-		public const string LegacyMinTVOS = "@MIN_TVOS_SDK_VERSION@";
 
 		public const string MiniOSSimulator = "@MIN_IOS_SIMULATOR_VERSION@";
 		public const string MinTVOSSimulator = "@MIN_TVOS_SIMULATOR_VERSION@";

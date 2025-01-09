@@ -592,6 +592,7 @@ namespace MonoTests.System.Net.Http {
 		}
 
 #if NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/21912")]
 		[TestCase ("https://self-signed.badssl.com/")]
 		[TestCase ("https://wrong.host.badssl.com/")]
 		public void AcceptSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler (string url)
@@ -626,7 +627,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.IsNotNull (serverCertificate, "Server certificate is null");
 				Assert.IsNull (ex, "Exception wasn't expected.");
 				Assert.IsNotNull (result, "Result was null");
-				Assert.IsTrue (result.IsSuccessStatusCode, "Status code was not success");
+				Assert.IsTrue (result.IsSuccessStatusCode, $"Status code was not success: {result.StatusCode}");
 			}
 		}
 

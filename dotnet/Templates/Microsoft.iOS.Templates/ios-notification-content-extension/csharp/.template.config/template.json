@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "iOS", "Mobile" ],
+  "groupIdentity": "Microsoft.iOS.iOSNotificationContentExtension",
+  "identity": "Microsoft.iOS.iOSNotificationContentExtension.CSharp",
+  "name": "iOS Notification Content Extension",
+  "description": "A project for creating a Notification Content Extension for a .NET iOS application",
+  "shortName": "ios-notification-content-extension",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "iOSNotificationContentExtension1",
+  "sources": [
+    {
+      "source": "./",
+      "target": "./"
+    }
+  ],
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "iOSNotificationContentExtension1.csproj" }
+  ],
+  "postActions": [{
+    "id": "addProjectReference",
+    "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+    "description": "Add project reference in main app's project file",
+    "sourceName": "iOSNotificationContentExtension1.csproj",
+    "applyFileRenamesToManualInstructions": true,
+    "manualInstructions": [{
+      "text": "The final step is to add a reference to this newly created project in the main app's project file, like this:\n\n\t<ItemGroup>\n\t\t<ProjectReference Include=\"iOSNotificationContentExtension1.csproj\">\n\t\t\t<IsAppExtension>true</IsAppExtension>\n\t\t</ProjectReference>\n\t</ItemGroup>\n"
+    }]
+  }],
+  "symbols": {
+    "bundleId": {
+      "type": "parameter",
+      "description": "The bundle identifier (CFBundleIdentifier from the Info.plist, or ApplicationId from the project file) for the parent iOS project",
+      "datatype": "string",
+      "replaces": "com.companyname.iOSApp1"
+    },
+    "minOSVersion": {
+      "type": "parameter",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
+      "replaces": "minOSVersion",
+      "datatype": "string",
+      "defaultValue": "13.0"
+    }
+  },
+  "defaultName": "iOSNotificationContentExtension1"
+}

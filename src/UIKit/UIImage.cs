@@ -102,7 +102,7 @@ namespace UIKit {
 				throw new ArgumentException (String.Format ("No resource named `{0}' found", name));
 
 			byte [] buffer = new byte [stream.Length];
-			stream.Read (buffer, 0, buffer.Length);
+			stream.ReadExactly (buffer, 0, buffer.Length);
 			unsafe {
 				fixed (byte* p = buffer) {
 					var data = NSData.FromBytes ((IntPtr) p, (uint) stream.Length);

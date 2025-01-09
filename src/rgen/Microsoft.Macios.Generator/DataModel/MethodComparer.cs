@@ -6,6 +6,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 class MethodComparer : IComparer<Method> {
 
+	/// <inheritdoc/>
 	public int Compare (Method x, Method y)
 	{
 		var typeComparison = String.Compare (x.Type, y.Type, StringComparison.Ordinal);
@@ -14,7 +15,8 @@ class MethodComparer : IComparer<Method> {
 		var nameComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
 		if (nameComparison != 0)
 			return nameComparison;
-		var returnTypeComparison = String.Compare (x.ReturnType, y.ReturnType, StringComparison.Ordinal);
+		var returnTypeComparer = new MethodReturnTypeComparer ();
+		var returnTypeComparison = returnTypeComparer.Compare (x.ReturnType, y.ReturnType);
 		if (returnTypeComparison != 0)
 			return returnTypeComparison;
 		var modifiersLengthCompare = x.Modifiers.Length.CompareTo (y.Modifiers.Length);

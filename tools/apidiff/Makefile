@@ -122,9 +122,9 @@ $(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/diff/Microsoft.*.html),! test -s "$(html)" &&) true; then \
 		echo "<details><summary>NET (empty diffs)</summary>" >> "$@"; \
 	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/diff/Microsoft.*.html &> /dev/null; then \
-		echo "<details><summary>.NET ($(MARKDOWN_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+		echo "<details><summary>.NET ( $(MARKDOWN_BREAKING_CHANGES_MESSAGE) )</summary>" >> "$@"; \
 	else \
-		echo "<details><summary>.NET ($(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+		echo "<details><summary>.NET ( $(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE) )</summary>" >> "$@"; \
 	fi
 	$(Q) echo "" >> $@
 

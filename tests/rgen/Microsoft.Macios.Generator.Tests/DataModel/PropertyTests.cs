@@ -26,6 +26,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 			type: "string",
 			isBlittable: false,
 			isSmartEnum: false,
+			isReferenceType: false,
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -281,7 +282,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", "string", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -295,7 +296,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, false, new (), [
+		var y = new Property ("First", "int", false, false, false, new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -392,22 +393,35 @@ public class TestClass {
 					isSmartEnum: false,
 					isReferenceType: true,
 					symbolAvailability: new (),
-					attributes: [],
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+					],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					accessors: [
-						new (AccessorKind.Getter, new (), [], [])
-					])
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new ("name"),
+				}
 			];
 
 			const string valueTypeProperty = @"
 using System;
+using ObjCBindings;
 
 namespace Test;
 
 public class TestClass {
 
+	[Export<Property>(""name"")]
 	public int Name { get; }
 }
 ";
@@ -434,7 +448,8 @@ public class TestClass {
 							attributes: [],
 							modifiers: []
 						)
-					]) {
+					]
+				) {
 					ExportPropertyData = new ("name"),
 				},
 			];
@@ -461,6 +476,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [
 						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
@@ -478,7 +494,8 @@ public class TestClass {
 							],
 							modifiers: []
 						)
-					]) {
+					]
+				) {
 					ExportPropertyData = new ("name"),
 				},
 			];
@@ -556,6 +573,7 @@ public class TestClass {
 					type: "string",
 					isBlittable: false,
 					isSmartEnum: false,
+					isReferenceType: true,
 					symbolAvailability: new (),
 					attributes: [
 						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
