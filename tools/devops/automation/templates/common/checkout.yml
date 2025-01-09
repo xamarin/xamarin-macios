@@ -23,12 +23,14 @@ steps:
     path: s/$(BUILD_REPOSITORY_TITLE)
     fetchTags: false
 
-- pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
+- pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "$Env:IS_PR"
   name: fix_commit
   displayName: "Undo Github merge"
   workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   condition: startsWith(variables['Build.SourceBranch'], 'refs/pull')
   timeoutInMinutes: 15
+  env:
+    IS_PR: and(eq(parameters.isPR, 'true'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull')))
 
 - checkout: maccore
   clean: true
