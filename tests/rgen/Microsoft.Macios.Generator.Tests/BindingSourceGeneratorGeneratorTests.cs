@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Linq;
 using Xamarin.Tests;
 using Xamarin.Utils;
