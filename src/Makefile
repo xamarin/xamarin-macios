@@ -143,13 +143,12 @@ IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES)
 $(IOS_DOTNET_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_NUGET_VERSION_MAJOR).$(IOS_NUGET_VERSION_MINOR).$(IOS_NUGET_VERSION_PATCH)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(IOS_NUGET_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g" \
 		$< > $@
 
 $(IOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
-		-e 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
 		-e 's|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g' \
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(IOS_NUGET_VERSION_NO_METADATA)|g' \
@@ -208,14 +207,13 @@ MACOS_DOTNET_SOURCES += \
 $(MACOS_DOTNET_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MACOS_DOTNET_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MACOS_NUGET_VERSION_MAJOR).$(MACOS_NUGET_VERSION_MINOR).$(MACOS_NUGET_VERSION_PATCH)/g" \
-			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+			-e 's/@REVISION@/$(MACOS_NUGET_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 			-e "s/@MACOS_SDK_VERSION@/$(MACOS_SDK_VERSION)/g" \
 			-e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" \
 		$< > $@
 
 $(MACOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MACOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed \
-		-e 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(MACOS_NUGET_VERSION_NO_METADATA)|g' \
 		-e 's|@NUGET_VERSION_MAJOR@|$(MACOS_NUGET_VERSION_MAJOR)|g' \
@@ -265,7 +263,7 @@ TVOS_DOTNET_SOURCES += \
 $(TVOS_DOTNET_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/Make.config.inc | $(TVOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e "s/@VERSION@/$(TVOS_NUGET_VERSION_MAJOR).$(TVOS_NUGET_VERSION_MINOR).$(TVOS_NUGET_VERSION_PATCH)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(TVOS_NUGET_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -317,7 +315,7 @@ MACCATALYST_DOTNET_SOURCES += \
 $(MACCATALYST_DOTNET_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.maccatalyst.cs.in Makefile $(TOP)/Make.config.inc | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed \
 		-e "s/@VERSION@/$(MACCATALYST_NUGET_VERSION_MAJOR).$(MACCATALYST_NUGET_VERSION_MINOR).$(MACCATALYST_NUGET_VERSION_PATCH)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
+		-e 's/@REVISION@/$(MACCATALYST_NUGET_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g" \
 		$< > $@
 
@@ -591,11 +589,6 @@ MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
 		-e 's/@DOTNET_MIN_TVOS_SDK_VERSION@/$(DOTNET_MIN_TVOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACOS_SDK_VERSION@/$(DOTNET_MIN_MACOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACCATALYST_SDK_VERSION@/$(DOTNET_MIN_MACCATALYST_SDK_VERSION)/g' \
-		\
-		-e 's/@MIN_IOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_IOS_SDK_VERSION))/g' \
-		-e 's/@MIN_MACOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACOS_SDK_VERSION))/g' \
-		-e 's/@MIN_TVOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_TVOS_SDK_VERSION))/g' \
-		-e 's/@MIN_MACCATALYST_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACCATALYST_SDK_VERSION))/g' \
 		$< > $@
 
 # Using .SECONDARY can cause make to go into an infinite loop.

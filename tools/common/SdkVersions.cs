@@ -25,13 +25,9 @@ namespace Xamarin {
 		public const string MinTVOS = "12.2";
 		public const string MinMacCatalyst = "15.0";
 
-		public const string DotNetMinOSX = "12.0";
 		public const string DotNetMiniOS = "12.2";
 		public const string DotNetMinTVOS = "12.2";
 		public const string DotNetMinMacCatalyst = "15.0";
-		public const string LegacyMinOSX = "12.0";
-		public const string LegacyMiniOS = "12.2";
-		public const string LegacyMinTVOS = "12.2";
 
 		public const string MiniOSSimulator = "15.0";
 		public const string MinTVOSSimulator = "15.0";

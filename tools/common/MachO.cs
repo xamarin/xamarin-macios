@@ -66,6 +66,7 @@ namespace Xamarin {
 		internal const uint FAT_MAGIC = 0xcafebabe;
 		internal const uint FAT_CIGAM = 0xbebafeca; /* NXSwapLong(FAT_MAGIC) */
 
+		internal const uint MH_OBJECT = 0x1; /* relocatable object file */
 		internal const uint MH_DYLIB = 0x6; /* dynamically bound shared library */
 
 		// Values here match the corresponding values in the Abi enum.
@@ -198,7 +199,7 @@ namespace Xamarin {
 				| ((number << 24)));
 		}
 
-		static object ReadFile (BinaryReader reader, string filename)
+		static object? ReadFile (BinaryReader reader, string filename, bool throw_if_error = true)
 		{
 			var magic = reader.ReadUInt32 ();
 			reader.BaseStream.Position = 0;
@@ -221,7 +222,9 @@ namespace Xamarin {
 					sl.Read (filename, reader, reader.BaseStream.Length);
 					return sl;
 				}
-				throw new Exception (string.Format ("File format not recognized: {0} (magic: 0x{1})", filename, magic.ToString ("X")));
+				if (throw_if_error)
+					throw new Exception (string.Format ("File format not recognized: {0} (magic: 0x{1})", filename, magic.ToString ("X")));
+				return null;
 			}
 		}
 
@@ -229,7 +232,7 @@ namespace Xamarin {
 		{
 			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				using (var reader = new BinaryReader (fs)) {
-					return ReadFile (reader, filename);
+					return ReadFile (reader, filename)!;
 				}
 			}
 		}
@@ -475,6 +478,30 @@ namespace Xamarin {
 			}
 
 			return Abi.None;
+		}
+
+		public static bool IsStaticLibraryOrObjectFile (string filename, bool throw_if_error, out bool objectFile)
+		{
+			objectFile = false;
+			using var fs = File.OpenRead (filename);
+			using var reader = new BinaryReader (fs);
+			if (StaticLibrary.IsStaticLibrary (reader, throw_if_error))
+				return true;
+			var f = ReadFile (reader, filename, throw_if_error);
+			if (f is StaticLibrary)
+				return true;
+			var fat = f as FatFile;
+			if (fat is null)
+				return false;
+			foreach (var entry in fat.entries!) {
+				if (entry.IsStaticLibrary)
+					return true;
+				if (entry.entry?.IsObjectFile == true) {
+					objectFile = true;
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public static bool IsDynamicFramework (string filename)
@@ -862,6 +889,10 @@ namespace Xamarin {
 		public bool IsDynamicLibrary {
 			get { return filetype == MachO.MH_DYLIB; }
 		}
+
+		public bool IsObjectFile {
+			get => filetype == MachO.MH_OBJECT;
+		}
 	}
 
 	public class FatFile {
@@ -928,6 +959,7 @@ namespace Xamarin {
 		public StaticLibrary? static_library;
 
 		public bool IsDynamicLibrary { get { return entry?.IsDynamicLibrary == true; } }
+		public bool IsStaticLibrary { get => static_library is not null; }
 		public FatFile Parent { get { return parent!; } }
 
 		internal void WriteHeader (BinaryWriter writer)
