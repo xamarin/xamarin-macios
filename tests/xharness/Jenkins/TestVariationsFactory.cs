@@ -209,14 +209,14 @@ namespace Xharness.Jenkins {
 								}
 							}
 						}
-						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False");
+						clone.Xml.SetProperty (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False");
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetProperty ("EnableSGenConc", "true");
 						if (use_llvm)
 							clone.Xml.SetProperty ("MtouchUseLlvm", "true");
 
 						if (!debug && !isMac)
-							clone.Xml.SetNode ("MtouchUseLlvm", "true");
+							clone.Xml.SetProperty ("MtouchUseLlvm", "true");
 						if (use_mono_runtime.HasValue)
 							clone.Xml.SetProperty ("UseMonoRuntime", use_mono_runtime.Value ? "true" : "false");
 						if (!string.IsNullOrEmpty (runtime_identifer))
