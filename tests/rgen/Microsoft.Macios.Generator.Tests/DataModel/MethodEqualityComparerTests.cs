@@ -18,7 +18,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -30,7 +30,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "Test",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -48,7 +48,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new ("myMethod"),
 				attributes: [],
@@ -60,7 +60,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new ("objcMethod"),
 				attributes: [],
@@ -78,7 +78,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -90,7 +90,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "int",
+				returnType: new ("int"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -108,7 +108,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -123,7 +123,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -143,7 +143,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -158,7 +158,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -179,7 +179,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -192,7 +192,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -207,7 +207,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -228,7 +228,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "string",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -243,7 +243,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -264,7 +264,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -277,7 +277,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -292,7 +292,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -305,7 +305,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -327,7 +327,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -340,7 +340,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -355,7 +355,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
@@ -368,7 +368,7 @@ public class MethodEqualityComparerTests {
 			new (
 				type: "MyTypeName",
 				name: "MyMethod",
-				returnType: "void",
+				returnType: new ("void"),
 				symbolAvailability: new (),
 				exportMethodData: new (),
 				attributes: [],
