@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Foundation;
 using ObjCBindings;
 
@@ -30,4 +32,3 @@ namespace Microsoft.Macios.Bindings.Analyzer.Sample {
 	}
 
 }
-
