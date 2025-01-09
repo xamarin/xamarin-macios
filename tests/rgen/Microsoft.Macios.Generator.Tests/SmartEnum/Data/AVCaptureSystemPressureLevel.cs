@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
 using Foundation;
 using ObjCRuntime;
 using ObjCBindings;
