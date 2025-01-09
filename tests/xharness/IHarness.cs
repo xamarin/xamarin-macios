@@ -30,6 +30,7 @@ namespace Xharness {
 		string JENKINS_RESULTS_DIRECTORY { get; }
 		string DOTNET_DIR { get; set; }
 		string DOTNET_TFM { get; }
+		Version DotNetVersion { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; }
 		double Timeout { get; }
