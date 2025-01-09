@@ -45,18 +45,18 @@ static class SemanticModelExtensions {
 		out ImmutableArray<string> interfaces,
 		out ImmutableArray<string> namespaces,
 		out SymbolAvailability symbolAvailability,
-		out BindingData bindingData)
+		out BindingInfo bindingInfo)
 	{
 		var symbol = self.GetDeclaredSymbol (declaration);
 		GetSymbolData (symbol, out name, out baseClass, out interfaces, out namespaces, out symbolAvailability);
 		if (symbol is null)
-			bindingData = default;
+			bindingInfo = default;
 		else {
-			bindingData = bindingType switch {
-				BindingType.Category => new BindingData (symbol.GetBindingData<ObjCBindings.Category> ()),
-				BindingType.Class => new BindingData (symbol.GetBindingData<ObjCBindings.Class> ()),
-				BindingType.Protocol => new BindingData (symbol.GetBindingData<ObjCBindings.Protocol> ()),
-				BindingType.SmartEnum => new BindingData (BindingType.SmartEnum, symbol.GetBindingData ()),
+			bindingInfo = bindingType switch {
+				BindingType.Category => new BindingInfo (symbol.GetBindingData<ObjCBindings.Category> ()),
+				BindingType.Class => new BindingInfo (symbol.GetBindingData<ObjCBindings.Class> ()),
+				BindingType.Protocol => new BindingInfo (symbol.GetBindingData<ObjCBindings.Protocol> ()),
+				BindingType.SmartEnum => new BindingInfo (BindingType.SmartEnum, symbol.GetBindingData ()),
 				_ => default,
 			};
 		}

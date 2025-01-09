@@ -185,6 +185,17 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			try {
+				LoggingService.SetCustomLogger (this);
+				ExecuteImpl ();
+				return !Log.HasLoggedErrors;
+			} finally {
+				LoggingService.SetCustomLogger (null);
+			}
+		}
+
+		bool ExecuteImpl ()
+		{
 			if (ShouldExecuteRemotely ()) {
 				// The new targets do not support the "default" value for the MtouchSdkVersion
 				// So we fix it to not break existing projects that has this value defined in the .csproj
