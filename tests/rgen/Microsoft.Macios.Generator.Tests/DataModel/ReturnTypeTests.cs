@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class MethodReturnTypeTests : BaseGeneratorTestClass {
+public class ReturnTypeTests : BaseGeneratorTestClass {
 
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
