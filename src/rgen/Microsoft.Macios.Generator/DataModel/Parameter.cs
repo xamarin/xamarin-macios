@@ -163,6 +163,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		return obj is Parameter other && Equals (other);
 	}
 
+	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
 		var hashCode = new HashCode ();

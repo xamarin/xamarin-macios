@@ -82,7 +82,7 @@
     <None Include="Resources\Entitlements.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\profile.mobileprovision">
+    <None Include="Resources\*.mobileprovision">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\iTunesArtwork.jpg">

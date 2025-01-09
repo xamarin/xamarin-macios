@@ -384,13 +384,13 @@ namespace Xamarin.Tests {
 			var rv = Execute (executable, out var output, out string magicWord, environment);
 			var outputString = output.ToString ();
 			if (rv.ExitCode != 0) {
-				var msg = $"'{executable}' exited with exit code {rv}:" +
+				var msg = $"'{executable}' exited with exit code {rv.ExitCode} (timed out: {rv.TimedOut} timeout: {rv.Timeout}):" +
 							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
 				Console.WriteLine (msg);
 				Assert.Fail (msg);
 			}
 			if (!outputString.Contains (magicWord)) {
-				var msg = $"'{executable}' exited with exit code {rv}, but did not contain the magic word '{magicWord}' ({outputString.Length}):" +
+				var msg = $"'{executable}' exited with exit code {rv.ExitCode} as expected, but did not contain the magic word '{magicWord}' ({outputString.Length}):" +
 							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
 				Console.WriteLine (msg);
 				Assert.Fail (msg);
