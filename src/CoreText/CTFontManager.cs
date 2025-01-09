@@ -80,7 +80,9 @@ namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	public enum CTFontManagerAutoActivation : uint {
-		Default = 0, Disabled = 1, Enabled = 2,
+		Default = 0,
+		Disabled = 1,
+		Enabled = 2,
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

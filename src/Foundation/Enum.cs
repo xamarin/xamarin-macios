@@ -72,7 +72,7 @@ namespace Foundation {
 		None,
 		ForSession,
 		Permanent,
-		Synchronizable
+		Synchronizable,
 	}
 
 #if MONOMAC
@@ -97,7 +97,7 @@ namespace Foundation {
 	public enum NSComparisonResult : long {
 		Ascending = -1,
 		Same,
-		Descending
+		Descending,
 	}
 
 	[Native]
@@ -115,7 +115,9 @@ namespace Foundation {
 
 	[Native]
 	public enum NSUrlCacheStoragePolicy : ulong {
-		Allowed, AllowedInMemoryOnly, NotAllowed
+		Allowed,
+		AllowedInMemoryOnly,
+		NotAllowed,
 	}
 
 	[Native]
@@ -127,21 +129,21 @@ namespace Foundation {
 		Writing = 4,
 		AtEnd = 5,
 		Closed = 6,
-		Error = 7
+		Error = 7,
 	}
 
 	[Native]
 	public enum NSPropertyListFormat : ulong {
 		OpenStep = 1,
 		Xml = 100,
-		Binary = 200
+		Binary = 200,
 	}
 
 	[Native]
 	public enum NSPropertyListMutabilityOptions : ulong {
 		Immutable = 0,
 		MutableContainers = 1,
-		MutableContainersAndLeaves = 2
+		MutableContainersAndLeaves = 2,
 	}
 
 	// Should mirror NSPropertyListMutabilityOptions
@@ -149,7 +151,7 @@ namespace Foundation {
 	public enum NSPropertyListWriteOptions : ulong {
 		Immutable = 0,
 		MutableContainers = 1,
-		MutableContainersAndLeaves = 2
+		MutableContainersAndLeaves = 2,
 	}
 
 	// Should mirror NSPropertyListMutabilityOptions, but currently
@@ -158,7 +160,7 @@ namespace Foundation {
 	public enum NSPropertyListReadOptions : ulong {
 		Immutable = 0,
 		MutableContainers = 1,
-		MutableContainersAndLeaves = 2
+		MutableContainersAndLeaves = 2,
 	}
 
 	[Native]
@@ -166,7 +168,7 @@ namespace Foundation {
 	public enum NSMachPortRights : ulong {
 		None = 0,
 		SendRight = (1 << 0),
-		ReceiveRight = (1 << 1)
+		ReceiveRight = (1 << 1),
 	}
 
 	[Native]
@@ -189,7 +191,7 @@ namespace Foundation {
 	[Native]
 	public enum NSNetServiceOptions : ulong {
 		NoAutoRename = 1 << 0,
-		ListenForConnections = 1 << 1
+		ListenForConnections = 1 << 1,
 	}
 
 	[Native]
@@ -198,7 +200,7 @@ namespace Foundation {
 		Short,
 		Medium,
 		Long,
-		Full
+		Full,
 	}
 
 	[Native]
@@ -214,7 +216,9 @@ namespace Foundation {
 
 	[Native]
 	public enum NSHttpCookieAcceptPolicy : ulong {
-		Always, Never, OnlyFromMainDocumentDomain
+		Always,
+		Never,
+		OnlyFromMainDocumentDomain,
 	}
 
 	[Flags]
@@ -256,7 +260,7 @@ namespace Foundation {
 		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
 #endif
-		MappedAlways = 1 << 3
+		MappedAlways = 1 << 3,
 	}
 
 	[Flags]
@@ -283,7 +287,11 @@ namespace Foundation {
 
 	[Native]
 	public enum NSOperationQueuePriority : long {
-		VeryLow = -8, Low = -4, Normal = 0, High = 4, VeryHigh = 8
+		VeryLow = -8,
+		Low = -4,
+		Normal = 0,
+		High = 4,
+		VeryHigh = 8,
 	}
 
 	[Flags]
@@ -291,19 +299,21 @@ namespace Foundation {
 	public enum NSNotificationCoalescing : ulong {
 		NoCoalescing = 0,
 		CoalescingOnName = 1,
-		CoalescingOnSender = 2
+		CoalescingOnSender = 2,
 	}
 
 	[Native]
 	public enum NSPostingStyle : ulong {
-		PostWhenIdle = 1, PostASAP = 2, Now = 3
+		PostWhenIdle = 1,
+		PostASAP = 2,
+		Now = 3,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSDataSearchOptions : ulong {
 		SearchBackwards = 1,
-		SearchAnchored = 2
+		SearchAnchored = 2,
 	}
 
 	[Native]
@@ -320,7 +330,7 @@ namespace Foundation {
 		NSAggregate,
 		AnyKey = 15,
 		Block = 19,
-		Conditional = 20
+		Conditional = 20,
 	}
 
 	public enum NSCocoaError : int {
@@ -501,19 +511,25 @@ namespace Foundation {
 
 	[Native]
 	public enum NSKeyValueChange : ulong {
-		Setting = 1, Insertion, Removal, Replacement
+		Setting = 1,
+		Insertion,
+		Removal,
+		Replacement,
 	}
 
 	[Native]
 	public enum NSKeyValueSetMutationKind : ulong {
-		UnionSet = 1, MinusSet, IntersectSet, SetSet
+		UnionSet = 1,
+		MinusSet,
+		IntersectSet,
+		SetSet,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSEnumerationOptions : ulong {
 		SortConcurrent = 1,
-		Reverse = 2
+		Reverse = 2,
 	}
 
 	[Flags]
@@ -524,14 +540,14 @@ namespace Foundation {
 		HasBytesAvailable = 1 << 1,
 		HasSpaceAvailable = 1 << 2,
 		ErrorOccurred = 1 << 3,
-		EndEncountered = 1 << 4
+		EndEncountered = 1 << 4,
 	}
 
 	[Native]
 	public enum NSComparisonPredicateModifier : ulong {
 		Direct,
 		All,
-		Any
+		Any,
 	}
 
 	[Native]
@@ -549,7 +565,7 @@ namespace Foundation {
 		In,
 		CustomSelector,
 		Contains = 99,
-		Between
+		Between,
 	}
 
 	[Flags]
@@ -558,14 +574,14 @@ namespace Foundation {
 		None = 0x00,
 		CaseInsensitive = 1 << 0,
 		DiacriticInsensitive = 1 << 1,
-		Normalized = 1 << 2
+		Normalized = 1 << 2,
 	}
 
 	[Native]
 	public enum NSCompoundPredicateType : ulong {
 		Not,
 		And,
-		Or
+		Or,
 	}
 
 	[Flags]
@@ -654,12 +670,19 @@ namespace Foundation {
 
 	[Native]
 	public enum NSRoundingMode : ulong {
-		Plain, Down, Up, Bankers
+		Plain,
+		Down,
+		Up,
+		Bankers,
 	}
 
 	[Native]
 	public enum NSCalculationError : ulong {
-		None, PrecisionLoss, Underflow, Overflow, DivideByZero
+		None,
+		PrecisionLoss,
+		Underflow,
+		Overflow,
+		DivideByZero,
 	}
 
 	[Flags]
@@ -680,7 +703,7 @@ namespace Foundation {
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		OneShot = (1 << 4),
-		TruncatesLastVisibleLine = (1 << 5)
+		TruncatesLastVisibleLine = (1 << 5),
 	}
 
 	[Native]
@@ -709,29 +732,38 @@ namespace Foundation {
 		[NoWatch]
 		[NoMacCatalyst]
 		Version_10_0 = 1000,
-		Version_10_4 = 1040
+		Version_10_4 = 1040,
 	}
 
 	[Native]
 	public enum NSNumberFormatterPadPosition : ulong {
-		BeforePrefix, AfterPrefix, BeforeSuffix, AfterSuffix
+		BeforePrefix,
+		AfterPrefix,
+		BeforeSuffix,
+		AfterSuffix,
 	}
 
 	[Native]
 	public enum NSNumberFormatterRoundingMode : ulong {
-		Ceiling, Floor, Down, Up, HalfEven, HalfDown, HalfUp
+		Ceiling,
+		Floor,
+		Down,
+		Up,
+		HalfEven,
+		HalfDown,
+		HalfUp,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSFileVersionReplacingOptions : ulong {
-		ByMoving = 1 << 0
+		ByMoving = 1 << 0,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSFileVersionAddingOptions : ulong {
-		ByMoving = 1 << 0
+		ByMoving = 1 << 0,
 	}
 
 	[Flags]
@@ -742,7 +774,7 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		ImmediatelyAvailableMetadataOnly = 1 << 2,
 		[MacCatalyst (13, 1)]
-		ForUploading = 1 << 3
+		ForUploading = 1 << 3,
 	}
 
 	[Flags]
@@ -763,12 +795,15 @@ namespace Foundation {
 		OmitPunctuation = 2,
 		OmitWhitespace = 4,
 		OmitOther = 8,
-		JoinNames = 16
+		JoinNames = 16,
 	}
 
 	[Native]
 	public enum NSUbiquitousKeyValueStoreChangeReason : long {
-		ServerChange, InitialSyncChange, QuotaViolationChange, AccountChange
+		ServerChange,
+		InitialSyncChange,
+		QuotaViolationChange,
+		AccountChange,
 	}
 
 	[Flags]
@@ -803,7 +838,11 @@ namespace Foundation {
 
 	[Native]
 	public enum NSLocaleLanguageDirection : ulong {
-		Unknown, LeftToRight, RightToLeft, TopToBottom, BottomToTop,
+		Unknown,
+		LeftToRight,
+		RightToLeft,
+		TopToBottom,
+		BottomToTop,
 	}
 
 	[Flags]
@@ -840,14 +879,14 @@ namespace Foundation {
 	[Native]
 	public enum NSFileWrapperReadingOptions : ulong {
 		Immediate = 1 << 0,
-		WithoutMapping = 1 << 1
+		WithoutMapping = 1 << 1,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSFileWrapperWritingOptions : ulong {
 		Atomic = 1 << 0,
-		WithNameUpdating = 1 << 1
+		WithNameUpdating = 1 << 1,
 	}
 
 	[Flags]
@@ -855,7 +894,7 @@ namespace Foundation {
 	public enum NSAttributedStringEnumeration : ulong {
 		None = 0,
 		Reverse = 1 << 1,
-		LongestEffectiveRangeNotRequired = 1 << 20
+		LongestEffectiveRangeNotRequired = 1 << 20,
 	}
 
 #if NET || !MONOMAC
@@ -872,7 +911,7 @@ namespace Foundation {
 		PatternDash = 0x0200,
 		PatternDashDot = 0x0300,
 		PatternDashDotDot = 0x0400,
-		ByWord = 0x8000
+		ByWord = 0x8000,
 	}
 #endif
 
@@ -882,7 +921,9 @@ namespace Foundation {
 	// See https://github.com/xamarin/xamarin-macios/issues/6573
 	[Native]
 	public enum NSWritingDirection : long {
-		Natural = -1, LeftToRight = 0, RightToLeft = 1,
+		Natural = -1,
+		LeftToRight = 0,
+		RightToLeft = 1,
 	}
 
 	[Flags]
@@ -898,12 +939,15 @@ namespace Foundation {
 		UseEB = 1 << 6,
 		UseZB = 1 << 7,
 		UseYBOrHigher = 0x0FF << 8,
-		UseAll = 0x0FFFF
+		UseAll = 0x0FFFF,
 	}
 
 	[Native]
 	public enum NSByteCountFormatterCountStyle : long {
-		File, Memory, Decimal, Binary
+		File,
+		Memory,
+		Decimal,
+		Binary,
 	}
 
 	[Flags]
@@ -936,7 +980,9 @@ namespace Foundation {
 
 	[Native]
 	public enum NSLigatureType : long {
-		None, Default, All
+		None,
+		Default,
+		All,
 	}
 
 #if !NET
@@ -1003,14 +1049,14 @@ namespace Foundation {
 	[Native]
 	public enum NSSortOptions : ulong {
 		Concurrent = 1 << 0,
-		Stable = 1 << 4
+		Stable = 1 << 4,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSDataBase64DecodingOptions : ulong {
 		None = 0,
-		IgnoreUnknownCharacters = 1
+		IgnoreUnknownCharacters = 1,
 	}
 
 	[Flags]
@@ -1020,7 +1066,7 @@ namespace Foundation {
 		SixtyFourCharacterLineLength = 1,
 		SeventySixCharacterLineLength = 1 << 1,
 		EndLineWithCarriageReturn = 1 << 4,
-		EndLineWithLineFeed = 1 << 5
+		EndLineWithLineFeed = 1 << 5,
 	}
 
 	[Native]
@@ -1028,7 +1074,7 @@ namespace Foundation {
 		UseCredential = 0,
 		PerformDefaultHandling = 1,
 		CancelAuthenticationChallenge = 2,
-		RejectProtectionSpace = 3
+		RejectProtectionSpace = 3,
 	}
 
 	[Native]
@@ -1036,7 +1082,7 @@ namespace Foundation {
 		Running = 0,
 		Suspended = 1,
 		Canceling = 2,
-		Completed = 3
+		Completed = 3,
 	}
 
 	[Native]
@@ -1044,14 +1090,14 @@ namespace Foundation {
 		Cancel = 0,
 		Allow = 1,
 		BecomeDownload = 2,
-		BecomeStream = 3
+		BecomeStream = 3,
 	}
 
 	[Native]
 	public enum NSUrlErrorCancelledReason : long {
 		UserForceQuitApplication,
 		BackgroundUpdatesDisabled,
-		InsufficientSystemResources
+		InsufficientSystemResources,
 	}
 
 	[Flags]
@@ -1076,7 +1122,7 @@ namespace Foundation {
 		DaylightSaving,
 		ShortDaylightSaving,
 		Generic,
-		ShortGeneric
+		ShortGeneric,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1086,7 +1132,7 @@ namespace Foundation {
 		None = 0,
 		ItemUnavailable = -1000,
 		UnexpectedValueClass = -1100,
-		UnavailableCoercion = -1200
+		UnavailableCoercion = -1200,
 	}
 
 	[Native]
@@ -1111,7 +1157,7 @@ namespace Foundation {
 		DropMiddle = (1 << 2),
 		DropTrailing = (1 << 3),
 		DropAll = (DropLeading | DropMiddle | DropTrailing),
-		Pad = (1 << 16)
+		Pad = (1 << 16),
 	}
 
 	[Native]
@@ -1122,7 +1168,7 @@ namespace Foundation {
 		Standalone = 2,
 		ListItem = 3,
 		BeginningOfSentence = 4,
-		MiddleOfSentence = 5
+		MiddleOfSentence = 5,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1132,7 +1178,7 @@ namespace Foundation {
 		Short = 1,
 		Medium = 2,
 		Long = 3,
-		Full = 4
+		Full = 4,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1141,7 +1187,7 @@ namespace Foundation {
 		Joule = 11,
 		Kilojoule = 14,
 		Calorie = (7 << 8) + 1,
-		Kilocalorie = (7 << 8) + 2
+		Kilocalorie = (7 << 8) + 2,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1149,7 +1195,7 @@ namespace Foundation {
 	public enum NSFormattingUnitStyle : long {
 		Short = 1,
 		Medium,
-		Long
+		Long,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1159,7 +1205,7 @@ namespace Foundation {
 		Kilogram = 14,
 		Ounce = (6 << 8) + 1,
 		Pound = (6 << 8) + 2,
-		Stone = (6 << 8) + 3
+		Stone = (6 << 8) + 3,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1172,7 +1218,7 @@ namespace Foundation {
 		Inch = (5 << 8) + 1,
 		Foot = (5 << 8) + 2,
 		Yard = (5 << 8) + 3,
-		Mile = (5 << 8) + 4
+		Mile = (5 << 8) + 4,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1182,18 +1228,23 @@ namespace Foundation {
 		UserInitiated = 25,
 		Utility = 17,
 		Background = 9,
-		Default = -1
+		Default = -1,
 	}
 
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSProcessInfoThermalState : long {
-		Nominal, Fair, Serious, Critical
+		Nominal,
+		Fair,
+		Serious,
+		Critical,
 	}
 
 	[Native]
 	public enum NSUrlRelationship : long {
-		Contains, Same, Other
+		Contains,
+		Same,
+		Other,
 	}
 
 	// NSTextCheckingResult.h:typedef NS_OPTIONS(uint64_t, NSTextCheckingType)
@@ -1218,7 +1269,7 @@ namespace Foundation {
 	public enum NSTextCheckingTypes : ulong {
 		AllSystemTypes = 0xffffffff,
 		AllCustomTypes = 0xffffffff00000000,
-		AllTypes = 0xffffffffffffffff
+		AllTypes = 0xffffffffffffffff,
 	}
 
 	[Native]
@@ -1230,7 +1281,7 @@ namespace Foundation {
 		DotMatchesLineSeparators = 1 << 3,
 		AnchorsMatchLines = 1 << 4,
 		UseUnixLineSeparators = 1 << 5,
-		UseUnicodeWordBoundaries = 1 << 6
+		UseUnicodeWordBoundaries = 1 << 6,
 	}
 
 	[Native]
@@ -1240,7 +1291,7 @@ namespace Foundation {
 		ReportCompletion = 1 << 1,
 		Anchored = 1 << 2,
 		WithTransparentBounds = 1 << 3,
-		WithoutAnchoringBounds = 1 << 4
+		WithoutAnchoringBounds = 1 << 4,
 	}
 
 	[Native]
@@ -1250,14 +1301,14 @@ namespace Foundation {
 		Completed = 1 << 1,
 		HitEnd = 1 << 2,
 		RequiredEnd = 1 << 3,
-		InternalError = 1 << 4
+		InternalError = 1 << 4,
 	}
 
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum NSPersonNameComponentsFormatterOptions : ulong {
-		Phonetic = (1 << 1)
+		Phonetic = (1 << 1),
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1267,14 +1318,14 @@ namespace Foundation {
 		Short,
 		Medium,
 		Long,
-		Abbreviated
+		Abbreviated,
 	}
 
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSDecodingFailurePolicy : long {
 		RaiseException,
-		SetErrorAndReturn
+		SetErrorAndReturn,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1304,7 +1355,7 @@ namespace Foundation {
 		Unknown,
 		NetworkLoad,
 		ServerPush,
-		LocalCache
+		LocalCache,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1313,7 +1364,7 @@ namespace Foundation {
 	public enum NSMeasurementFormatterUnitOptions : ulong {
 		ProvidedUnit = (1 << 0),
 		NaturalScale = (1 << 1),
-		TemperatureWithoutUnit = (1 << 2)
+		TemperatureWithoutUnit = (1 << 2),
 	}
 
 

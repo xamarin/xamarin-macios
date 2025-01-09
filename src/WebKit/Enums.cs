@@ -26,7 +26,7 @@ namespace WebKit {
 		Inherit = 0,
 		PrimitiveValue = 1,
 		ValueList = 2,
-		Custom = 3
+		Custom = 3,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -38,7 +38,7 @@ namespace WebKit {
 		Following = 0x04,
 		Contains = 0x08,
 		ContainedBy = 0x10,
-		ImplementationSpecific = 0x20
+		ImplementationSpecific = 0x20,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -55,7 +55,7 @@ namespace WebKit {
 		Document = 9,
 		DocumentType = 10,
 		DocumentFragment = 11,
-		Notation = 12
+		Notation = 12,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -64,19 +64,23 @@ namespace WebKit {
 		StartToStart = 0,
 		StartToEnd = 1,
 		EndToEnd = 2,
-		EndToStart = 3
+		EndToStart = 3,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Native]
 	public enum WebCacheModel : ulong {
-		DocumentViewer, DocumentBrowser, PrimaryWebBrowser
+		DocumentViewer,
+		DocumentBrowser,
+		PrimaryWebBrowser,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomEventPhase : ushort {
-		Capturing = 1, AtTarget, Bubbling
+		Capturing = 1,
+		AtTarget,
+		Bubbling,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -88,7 +92,7 @@ namespace WebKit {
 		Image = 2,
 		Link = 4,
 		Selection = 8,
-		Any = UInt64.MaxValue
+		Any = UInt64.MaxValue,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -101,7 +105,7 @@ namespace WebKit {
 		Link = 4,
 		[Obsolete ("This API is not available on this platform.")]
 		Selection = 8,
-		Any = UInt64.MaxValue
+		Any = UInt64.MaxValue,
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -111,7 +115,12 @@ namespace WebKit {
 	[Native]
 	public enum WebNavigationType : long {
 #endif
-		LinkClicked, FormSubmitted, BackForward, Reload, FormResubmitted, Other
+		LinkClicked,
+		FormSubmitted,
+		BackForward,
+		Reload,
+		FormResubmitted,
+		Other,
 	}
 
 	// Used as an 'unsigned int' parameter 
@@ -121,7 +130,7 @@ namespace WebKit {
 		Standard = 0,
 		Left = 1,
 		Right = 2,
-		NumberPad = 3
+		NumberPad = 3,
 	}
 
 	// Used as an 'int' parameter 
@@ -130,6 +139,6 @@ namespace WebKit {
 	public enum DomDelta : int {
 		Pixel = 0,
 		Line = 1,
-		Page = 2
+		Page = 2,
 	}
 }

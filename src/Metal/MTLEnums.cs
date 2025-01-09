@@ -65,7 +65,7 @@ namespace Metal {
 		Green = 0x1 << 2,
 		Blue = 0x1 << 1,
 		Alpha = 0x1 << 0,
-		All = 0xf
+		All = 0xf,
 	}
 
 	/// <summary>The state of the command-buffer state-machine. Enqueued-&gt;Committed-&gt;Scheduled-&gt;Completed.</summary>
@@ -76,7 +76,7 @@ namespace Metal {
 		Committed,
 		Scheduled,
 		Completed,
-		Error
+		Error,
 	}
 
 	/// <summary>Enumeration of error codes describing why a command buffer has failed.</summary>
@@ -99,13 +99,17 @@ namespace Metal {
 	/// <summary>An action performed at the start of a rendering pass.</summary>
 	[Native]
 	public enum MTLLoadAction : ulong {
-		DontCare, Load, Clear
+		DontCare,
+		Load,
+		Clear,
 	}
 
 	/// <summary>The action to be performed at the end of a rendering pass.</summary>
 	[Native]
 	public enum MTLStoreAction : ulong {
-		DontCare, Store, MultisampleResolve,
+		DontCare,
+		Store,
+		MultisampleResolve,
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		StoreAndMultisampleResolve,
@@ -138,7 +142,8 @@ namespace Metal {
 	/// <summary>Options for calculating the pixel value returned within a mipmap level.</summary>
 	[Native]
 	public enum MTLSamplerMinMagFilter : ulong {
-		Nearest, Linear
+		Nearest,
+		Linear,
 	}
 
 	/// <summary>Options for calculating the pixel value returned with multiple mipmap levels.</summary>
@@ -146,7 +151,7 @@ namespace Metal {
 	public enum MTLSamplerMipFilter : ulong {
 		NotMipmapped,
 		Nearest,
-		Linear
+		Linear,
 	}
 
 	/// <summary>The wrapping mode. Used when a fetch falls outside the bounds of a texture.</summary>
@@ -603,7 +608,9 @@ namespace Metal {
 	[Native]
 	[ErrorDomain ("MTLRenderPipelineErrorDomain")]
 	public enum MTLRenderPipelineError : ulong {
-		Internal = 1, Unsupported, InvalidInput
+		Internal = 1,
+		Unsupported,
+		InvalidInput,
 	}
 #endif
 
@@ -617,7 +624,7 @@ namespace Metal {
 		Greater = 4,
 		NotEqual = 5,
 		GreaterEqual = 6,
-		Always = 7
+		Always = 7,
 	}
 
 
@@ -631,7 +638,7 @@ namespace Metal {
 		DecrementClamp = 4,
 		Invert = 5,
 		IncrementWrap = 6,
-		DecrementWrap = 7
+		DecrementWrap = 7,
 	}
 
 	/// <summary>Enumerates the primitive geometry used for drawing commands.</summary>
@@ -641,13 +648,14 @@ namespace Metal {
 		Line = 1,
 		LineStrip = 2,
 		Triangle = 3,
-		TriangleStrip = 4
+		TriangleStrip = 4,
 	}
 
 	/// <summary>The index type for an index buffer.</summary>
 	[Native]
 	public enum MTLIndexType : ulong {
-		UInt16, UInt32
+		UInt16,
+		UInt32,
 	}
 
 	/// <summary>Enumerates values that control how and whether to monitor samples that pass depth and stencil tests.</summary>
@@ -663,19 +671,21 @@ namespace Metal {
 	public enum MTLCullMode : ulong {
 		None = 0,
 		Front = 1,
-		Back = 2
+		Back = 2,
 	}
 
 	/// <summary>Vertex winding rule for front-facing primitives.</summary>
 	[Native]
 	public enum MTLWinding : ulong {
-		Clockwise = 0, CounterClockwise = 1
+		Clockwise = 0,
+		CounterClockwise = 1,
 	}
 
 	/// <summary>How to rasterize triangle and triangle-strip primitives.</summary>
 	[Native]
 	public enum MTLTriangleFillMode : ulong {
-		Fill, Lines
+		Fill,
+		Lines,
 	}
 
 	/// <summary>The purgeable state of the resource.</summary>
@@ -684,13 +694,14 @@ namespace Metal {
 		KeepCurrent = 1,
 		NonVolatile = 2,
 		Volatile = 3,
-		Empty = 4
+		Empty = 4,
 	}
 
 	/// <summary>Enumerates what cache mode is used for CPU mapping of a resource.</summary>
 	[Native]
 	public enum MTLCpuCacheMode : ulong {
-		DefaultCache, WriteCombined
+		DefaultCache,
+		WriteCombined,
 	}
 
 	/// <summary>Enumerates the ways in which a <see cref="T:Metal.IMTLTexture" /> may be used.</summary>
@@ -746,7 +757,9 @@ namespace Metal {
 	/// <summary>The frequency at which the vertex shader function should fetch attribute data.</summary>
 	[Native]
 	public enum MTLVertexStepFunction : ulong {
-		Constant, PerVertex, PerInstance,
+		Constant,
+		PerVertex,
+		PerInstance,
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		PerPatch = 3,
@@ -951,7 +964,9 @@ namespace Metal {
 	[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 	[Native]
 	public enum MTLArgumentAccess : ulong {
-		ReadOnly, ReadWrite, WriteOnly
+		ReadOnly,
+		ReadWrite,
+		WriteOnly,
 	}
 #endif
 
@@ -1118,7 +1133,7 @@ namespace Metal {
 	[Native]
 	public enum MTLDepthClipMode : ulong {
 		Clip = 0,
-		Clamp = 1
+		Clamp = 1,
 	}
 
 	/// <summary>Enumerates blitting options.</summary>
@@ -1131,7 +1146,7 @@ namespace Metal {
 		StencilFromDepthStencil = 1 << 1,
 		[NoMac]
 		[MacCatalyst (13, 1)]
-		RowLinearPvrtc = 1 << 2
+		RowLinearPvrtc = 1 << 2,
 	}
 
 	/// <summary>Enumerates CPU cache modes for resource mapping.</summary>
@@ -1152,7 +1167,9 @@ namespace Metal {
 	/// <summary>Enumerates MSAA dept resolve filter operations.</summary>
 	[Native]
 	public enum MTLMultisampleDepthResolveFilter : ulong {
-		Sample0, Min, Max
+		Sample0,
+		Min,
+		Max,
 	}
 
 	[TV (16, 0)]
@@ -1162,7 +1179,7 @@ namespace Metal {
 	public enum MTLSamplerBorderColor : ulong {
 		TransparentBlack = 0,
 		OpaqueBlack = 1,
-		OpaqueWhite = 2
+		OpaqueWhite = 2,
 	}
 
 	[TV (13, 0)]
@@ -1172,7 +1189,7 @@ namespace Metal {
 		Unspecified = 0,
 		Point = 1,
 		Line = 2,
-		Triangle = 3
+		Triangle = 3,
 	}
 
 	[NoWatch]
@@ -1182,14 +1199,14 @@ namespace Metal {
 		Pow2 = 0,
 		Integer = 1,
 		FractionalOdd = 2,
-		FractionalEven = 3
+		FractionalEven = 3,
 	}
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLTessellationFactorFormat : ulong {
-		Half = 0
+		Half = 0,
 	}
 
 	[NoWatch]
@@ -1198,7 +1215,7 @@ namespace Metal {
 	public enum MTLTessellationControlPointIndexType : ulong {
 		None = 0,
 		UInt16 = 1,
-		UInt32 = 2
+		UInt32 = 2,
 	}
 
 	[NoWatch]
@@ -1208,7 +1225,7 @@ namespace Metal {
 		Constant = 0,
 		PerPatch = 1,
 		PerInstance = 2,
-		PerPatchAndPerInstance = 3
+		PerPatchAndPerInstance = 3,
 	}
 
 	[NoWatch]
@@ -1217,7 +1234,7 @@ namespace Metal {
 	public enum MTLPatchType : ulong {
 		None = 0,
 		Triangle = 1,
-		Quad = 2
+		Quad = 2,
 	}
 
 	/// <summary>Enumerates formats for function attributes.</summary>
@@ -1315,7 +1332,7 @@ namespace Metal {
 		ThreadPositionInGridX = 5,
 		ThreadPositionInGridY = 6,
 		ThreadPositionInGridXIndexed = 7,
-		ThreadPositionInGridYIndexed = 8
+		ThreadPositionInGridYIndexed = 8,
 	}
 
 	[NoWatch]

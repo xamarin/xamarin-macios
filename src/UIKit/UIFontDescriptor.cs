@@ -425,7 +425,18 @@ namespace UIKit {
 
 	// that's a convenience enum that maps to UIFontDescriptorXXX which are internal (hidden) NSString
 	public enum UIFontDescriptorAttribute {
-		Family, Face, Name, Size, VisibleName, Matrix, CharacterSet, CascadeList, Traits, FixedAdvance, FeatureSettings, TextStyle
+		Family,
+		Face,
+		Name,
+		Size,
+		VisibleName,
+		Matrix,
+		CharacterSet,
+		CascadeList,
+		Traits,
+		FixedAdvance,
+		FeatureSettings,
+		TextStyle,
 	}
 
 	public class UIFontTraits : DictionaryContainer {

@@ -93,7 +93,11 @@ namespace MapKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKAnnotationViewDragState : ulong {
-		None, Starting, Dragging, Canceling, Ending
+		None,
+		Starting,
+		Dragging,
+		Canceling,
+		Ending,
 	}
 
 	// NSUInteger -> MKTypes.h
@@ -106,7 +110,9 @@ namespace MapKit {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : ulong {
-		Red, Green, Purple
+		Red,
+		Green,
+		Purple,
 	}
 
 	// NSUInteger -> MKTypes.h
@@ -133,7 +139,7 @@ namespace MapKit {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	public enum MKSearchCompletionFilterType : long {
 		AndQueries = 0,
-		Only
+		Only,
 	}
 
 	[NoWatch]

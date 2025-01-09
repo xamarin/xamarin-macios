@@ -47,11 +47,20 @@ using CoreServices;
 
 namespace Foundation {
 	public enum NSStreamSocketSecurityLevel {
-		None, SslV2, SslV3, TlsV1, NegotiatedSsl, Unknown
+		None,
+		SslV2,
+		SslV3,
+		TlsV1,
+		NegotiatedSsl,
+		Unknown,
 	}
 
 	public enum NSStreamServiceType {
-		Default, VoIP, Video, Background, Voice
+		Default,
+		VoIP,
+		Video,
+		Background,
+		Voice,
 	}
 
 #if NET

@@ -25,7 +25,7 @@ namespace UIKit {
 		Low,
 		At640x480,
 		At1280x720,
-		At960x540
+		At960x540,
 	}
 
 	// NSInteger -> UIActivityIndicatorView.h
@@ -69,7 +69,7 @@ namespace UIKit {
 		Default,
 		SecureTextInput,
 		PlainTextInput,
-		LoginAndPasswordInput
+		LoginAndPasswordInput,
 	}
 
 	// NSInteger -> UIBarButtonItem.h
@@ -157,7 +157,7 @@ namespace UIKit {
 		AllEditingEvents = 0x000F0000,
 		ApplicationReserved = 0x0F000000,
 		SystemReserved = 0xF0000000,
-		AllEvents = 0xFFFFFFFF
+		AllEvents = 0xFFFFFFFF,
 	}
 
 	// NSInteger -> UIEvent.h
@@ -222,7 +222,7 @@ namespace UIKit {
 		Right = 2,
 		Fill = 3,
 		Leading = 4,
-		Trailing = 5
+		Trailing = 5,
 	}
 
 	// NSUInteger -> UIControl.h
@@ -238,7 +238,7 @@ namespace UIKit {
 		[MacCatalyst (13, 1)]
 		Focused = 1 << 3,
 		Application = 0x00FF0000,
-		Reserved = 0xFF000000
+		Reserved = 0xFF000000,
 	}
 
 	// NSInteger -> UIImage.h
@@ -269,7 +269,7 @@ namespace UIKit {
 		FlexibleBottomMargin = 1 << 5,
 		FlexibleMargins = FlexibleBottomMargin | FlexibleTopMargin | FlexibleLeftMargin | FlexibleRightMargin,
 		FlexibleDimensions = FlexibleHeight | FlexibleWidth,
-		All = 63
+		All = 63,
 	}
 
 	// NSInteger -> UIView.h
@@ -280,7 +280,7 @@ namespace UIKit {
 		EaseInOut,
 		EaseIn,
 		EaseOut,
-		Linear
+		Linear,
 	}
 
 	// NSInteger -> UIView.h
@@ -333,7 +333,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
-		LandscapePhonePrompt = CompactPrompt
+		LandscapePhonePrompt = CompactPrompt,
 	}
 
 	// NSInteger -> UIButton.h
@@ -408,7 +408,7 @@ namespace UIKit {
 		LandscapeLeft,
 		LandscapeRight,
 		FaceUp,
-		FaceDown
+		FaceDown,
 	}
 
 	// NSInteger -> UIDevice.h
@@ -434,7 +434,10 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIDocumentChangeKind : long {
-		Done, Undone, Redone, Cleared
+		Done,
+		Undone,
+		Redone,
+		Cleared,
 	}
 
 	// NSInteger -> UIDocument.h
@@ -447,7 +450,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIDocumentSaveOperation : long {
-		ForCreating, ForOverwriting
+		ForCreating,
+		ForOverwriting,
 	}
 
 	// NSUInteger -> UIDocument.h
@@ -463,7 +467,7 @@ namespace UIKit {
 		InConflict = 1 << 1,
 		SavingError = 1 << 2,
 		EditingDisabled = 1 << 3,
-		ProgressAvailable = 1 << 4
+		ProgressAvailable = 1 << 4,
 	}
 
 	// NSInteger -> UIImagePickerController.h
@@ -492,7 +496,8 @@ namespace UIKit {
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	public enum UIImagePickerControllerCameraCaptureMode : long {
-		Photo, Video
+		Photo,
+		Video,
 	}
 
 	// NSInteger -> UIImagePickerController.h
@@ -504,7 +509,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UIImagePickerControllerCameraDevice : long {
 		Rear,
-		Front
+		Front,
 	}
 
 	// NSInteger -> UIImagePickerController.h
@@ -515,7 +520,9 @@ namespace UIKit {
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	public enum UIImagePickerControllerCameraFlashMode : long {
-		Off = -1, Auto = 0, On = 1
+		Off = -1,
+		Auto = 0,
+		On = 1,
 	}
 
 	// NSInteger -> UIInterface.h
@@ -560,7 +567,7 @@ namespace UIKit {
 	public enum UIScrollViewIndicatorStyle : long {
 		Default,
 		Black,
-		White
+		White,
 	}
 
 	// NSInteger -> UITextInputTraits.h
@@ -602,7 +609,7 @@ namespace UIKit {
 		Twitter,
 		WebSearch,
 		[MacCatalyst (13, 1)]
-		AsciiCapableNumberPad
+		AsciiCapableNumberPad,
 	}
 
 	// NSInteger -> UISegmentedControl.h
@@ -617,7 +624,7 @@ namespace UIKit {
 		Plain,
 		Bordered,
 		Bar,
-		Bezeled
+		Bezeled,
 	}
 
 	// NSInteger -> UITabBarItem.h
@@ -659,7 +666,7 @@ namespace UIKit {
 		None,
 		Top,
 		Middle,
-		Bottom
+		Bottom,
 	}
 
 	// NSInteger -> UITableView.h
@@ -674,7 +681,7 @@ namespace UIKit {
 		Bottom,
 		None,
 		Middle,
-		Automatic = 100
+		Automatic = 100,
 	}
 
 	// #defines over UIBarPosition -> NSInteger -> UIBarCommon.h
@@ -684,7 +691,9 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIToolbarPosition : long {
-		Any, Bottom, Top
+		Any,
+		Bottom,
+		Top,
 	}
 
 	// NSInteger -> UITouch.h
@@ -752,7 +761,7 @@ namespace UIKit {
 		Right,
 
 		Justified,
-		Natural
+		Natural,
 	}
 
 	// NSInteger -> UITableViewCell.h
@@ -763,7 +772,7 @@ namespace UIKit {
 		Default,
 		Value1,
 		Value2,
-		Subtitle
+		Subtitle,
 	}
 
 	// NSInteger -> UITableViewCell.h
@@ -779,7 +788,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SingleLine' for a single line separator.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SingleLine' for a single line separator.")]
 		SingleLineEtched,
-		DoubleLineEtched = SingleLineEtched
+		DoubleLineEtched = SingleLineEtched,
 	}
 
 	// NSInteger -> UITableViewCell.h
@@ -790,7 +799,7 @@ namespace UIKit {
 		None,
 		Blue,
 		Gray,
-		Default
+		Default,
 	}
 
 	// NSInteger -> UITableViewCell.h
@@ -800,7 +809,7 @@ namespace UIKit {
 	public enum UITableViewCellEditingStyle : long {
 		None,
 		Delete,
-		Insert
+		Insert,
 	}
 
 	// NSInteger -> UITableViewCell.h
@@ -816,7 +825,7 @@ namespace UIKit {
 		Checkmark,
 		[NoTV]
 		[MacCatalyst (13, 1)]
-		DetailButton
+		DetailButton,
 	}
 
 	// NSUInteger -> UITableViewCell.h
@@ -827,7 +836,7 @@ namespace UIKit {
 	public enum UITableViewCellState : ulong {
 		DefaultMask = 0,
 		ShowingEditControlMask = 1 << 0,
-		ShowingDeleteConfirmationMask = 1 << 1
+		ShowingDeleteConfirmationMask = 1 << 1,
 	}
 
 	// NSInteger -> UITextField.h
@@ -838,7 +847,7 @@ namespace UIKit {
 		None,
 		Line,
 		Bezel,
-		RoundedRect
+		RoundedRect,
 	}
 
 	// NSInteger -> UITextField.h
@@ -849,7 +858,7 @@ namespace UIKit {
 		Never,
 		WhileEditing,
 		UnlessEditing,
-		Always
+		Always,
 	}
 
 	// NSInteger -> UIViewController.h
@@ -864,7 +873,7 @@ namespace UIKit {
 		CrossDissolve,
 		[NoTV]
 		[MacCatalyst (13, 1)]
-		PartialCurl
+		PartialCurl,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -882,7 +891,7 @@ namespace UIKit {
 		Portrait = UIDeviceOrientation.Portrait,
 		PortraitUpsideDown = UIDeviceOrientation.PortraitUpsideDown,
 		LandscapeLeft = UIDeviceOrientation.LandscapeRight,
-		LandscapeRight = UIDeviceOrientation.LandscapeLeft
+		LandscapeRight = UIDeviceOrientation.LandscapeLeft,
 	}
 
 	// NSUInteger -> UIApplication.h
@@ -918,7 +927,7 @@ namespace UIKit {
 		BackForward,
 		Reload,
 		FormResubmitted,
-		Other
+		Other,
 	}
 
 	// NSUInteger -> UIApplication.h
@@ -947,7 +956,7 @@ namespace UIKit {
 		PhysicalValue = 1uL << 8,
 
 		None = 0,
-		All = UInt64.MaxValue
+		All = UInt64.MaxValue,
 	}
 
 	// NSInteger -> UIActionSheet.h
@@ -1008,7 +1017,7 @@ namespace UIKit {
 	public enum UIStatusBarAnimation : long {
 		None,
 		Fade,
-		Slide
+		Slide,
 	}
 
 	// NSInteger -> UIGestureRecognizer.h
@@ -1023,7 +1032,7 @@ namespace UIKit {
 		Cancelled,
 		Failed,
 
-		Recognized = Ended
+		Recognized = Ended,
 	}
 
 	// NSUInteger -> UIApplication.h
@@ -1038,7 +1047,7 @@ namespace UIKit {
 		Badge = 1 << 0,
 		Sound = 1 << 1,
 		Alert = 1 << 2,
-		NewsstandContentAvailability = 1 << 3
+		NewsstandContentAvailability = 1 << 3,
 	}
 
 	// NSInteger -> UITextInputTraits.h
@@ -1049,7 +1058,7 @@ namespace UIKit {
 		Default,
 		Alert,
 		Dark = Alert,
-		Light
+		Light,
 	}
 
 	// NSInteger -> UITextInputTraits.h
@@ -1068,7 +1077,7 @@ namespace UIKit {
 		Yahoo,
 		Done,
 		EmergencyCall,
-		Continue
+		Continue,
 	}
 
 	// NSInteger -> UIViewController.h
@@ -1123,7 +1132,7 @@ namespace UIKit {
 		Left = 1 << 2,
 		Right = 1 << 3,
 		Any = Up | Down | Left | Right,
-		Unknown = UInt64.MaxValue
+		Unknown = UInt64.MaxValue,
 	};
 
 	// NSInteger -> UIMenuController.h
@@ -1148,7 +1157,7 @@ namespace UIKit {
 		TopRight = 1 << 1,
 		BottomLeft = 1 << 2,
 		BottomRight = 1 << 3,
-		AllCorners = ~(ulong) 0
+		AllCorners = ~(ulong) 0,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -1156,7 +1165,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIUserInterfaceLayoutDirection : long {
-		LeftToRight, RightToLeft
+		LeftToRight,
+		RightToLeft,
 	}
 
 	// NSInteger -> UIDevice.h
@@ -1183,7 +1193,7 @@ namespace UIKit {
 	public enum UIApplicationState : long {
 		Active,
 		Inactive,
-		Background
+		Background,
 	}
 
 	// NSInteger -> UIView.h
@@ -1272,7 +1282,7 @@ namespace UIKit {
 		General,
 		Photo,
 		Grayscale,
-		PhotoGrayscale
+		PhotoGrayscale,
 	}
 
 	// NSInteger -> UIAccessibility.h
@@ -1285,7 +1295,7 @@ namespace UIKit {
 		Up,
 		Down,
 		Next,
-		Previous
+		Previous,
 	}
 
 	// NSInteger -> UIScreen.h
@@ -1293,10 +1303,11 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIScreenOverscanCompensation : long {
-		Scale, InsetBounds,
+		Scale,
+		InsetBounds,
 		None,
 		[Obsolete ("Use 'UIScreenOverscanCompensation.None' instead.")]
-		InsetApplicationFrame = None
+		InsetApplicationFrame = None,
 	}
 
 	// NSInteger -> UISegmentedControl.h
@@ -1304,7 +1315,11 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UISegmentedControlSegment : long {
-		Any, Left, Center, Right, Alone
+		Any,
+		Left,
+		Center,
+		Right,
+		Alone,
 	}
 
 	// NSInteger -> UISearchBar.h
@@ -1321,7 +1336,7 @@ namespace UIKit {
 		Bookmark,
 		[NoTV]
 		[MacCatalyst (13, 1)]
-		ResultsList
+		ResultsList,
 	}
 
 	// NSInteger -> UIPageViewController.h
@@ -1329,7 +1344,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIPageViewControllerNavigationOrientation : long {
-		Horizontal, Vertical
+		Horizontal,
+		Vertical,
 	}
 
 	// NSInteger -> UIPageViewController.h
@@ -1337,7 +1353,10 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIPageViewControllerSpineLocation : long {
-		None, Min, Mid, Max
+		None,
+		Min,
+		Mid,
+		Max,
 	}
 
 	// NSInteger -> UIPageViewController.h
@@ -1345,7 +1364,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIPageViewControllerNavigationDirection : long {
-		Forward, Reverse
+		Forward,
+		Reverse,
 	}
 
 	// NSInteger -> UIPageViewController.h
@@ -1353,7 +1373,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIPageViewControllerTransitionStyle : long {
-		PageCurl, Scroll
+		PageCurl,
+		Scroll,
 	}
 
 	// NSInteger -> UITextInputTraits.h
@@ -1361,7 +1382,9 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UITextSpellCheckingType : long {
-		Default, No, Yes,
+		Default,
+		No,
+		Yes,
 	}
 
 	// NSInteger -> UITextInput.h
@@ -1369,7 +1392,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UITextStorageDirection : long {
-		Forward, Backward
+		Forward,
+		Backward,
 	}
 
 	// NSInteger -> UITextInput.h
@@ -1380,7 +1404,7 @@ namespace UIKit {
 		Right = 2,
 		Left,
 		Up,
-		Down
+		Down,
 	}
 
 	// Sum of UITextStorageDirection and UITextLayoutDirection 
@@ -1389,7 +1413,12 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UITextDirection : long {
-		Forward, Backward, Right, Left, Up, Down
+		Forward,
+		Backward,
+		Right,
+		Left,
+		Up,
+		Down,
 	}
 
 #if !NET
@@ -1415,7 +1444,7 @@ namespace UIKit {
 		Sentence,
 		Paragraph,
 		Line,
-		Document
+		Document,
 	}
 
 	// float (and not even a CGFloat) -> NSLayoutConstraint.h
@@ -1444,7 +1473,11 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UICollectionUpdateAction : long {
-		Insert, Delete, Reload, Move, None
+		Insert,
+		Delete,
+		Reload,
+		Move,
+		None,
 	}
 
 	// NSUInteger -> UICollectionView.h
@@ -1459,7 +1492,7 @@ namespace UIKit {
 		Bottom = 1 << 2,
 		Left = 1 << 3,
 		CenteredHorizontally = 1 << 4,
-		Right = 1 << 5
+		Right = 1 << 5,
 	}
 
 	// NSInteger -> UICollectionViewFlowLayout.h
@@ -1467,7 +1500,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UICollectionViewScrollDirection : long {
-		Vertical, Horizontal
+		Vertical,
+		Horizontal,
 	}
 
 	// NSInteger -> UICollectionViewFlowLayout.h
@@ -1475,7 +1509,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UILayoutConstraintAxis : long {
-		Horizontal, Vertical
+		Horizontal,
+		Vertical,
 	}
 
 	// NSInteger -> UIImage.h
@@ -1485,7 +1520,8 @@ namespace UIKit {
 	[Native]
 #endif
 	public enum UIImageResizingMode : long {
-		Tile, Stretch
+		Tile,
+		Stretch,
 	}
 
 	// NSUInteger -> UICollectionViewLayout.h
@@ -1493,7 +1529,9 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UICollectionElementCategory : ulong {
-		Cell, SupplementaryView, DecorationView
+		Cell,
+		SupplementaryView,
+		DecorationView,
 	}
 
 	// that's a convenience enum that maps to UICollectionElementKindSection[Footer|Header] which are NSString
@@ -1501,7 +1539,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UICollectionElementKindSection {
 		Header,
-		Footer
+		Footer,
 	}
 
 	// uint64_t -> UIAccessibilityConstants.h
@@ -1534,7 +1572,7 @@ namespace UIKit {
 	public enum UIImageRenderingMode : long {
 		Automatic,
 		AlwaysOriginal,
-		AlwaysTemplate
+		AlwaysTemplate,
 	}
 
 	// NSInteger -> UIMotionEffect.h
@@ -1543,7 +1581,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UIInterpolatingMotionEffectType : long {
 		TiltAlongHorizontalAxis,
-		TiltAlongVerticalAxis
+		TiltAlongVerticalAxis,
 	}
 
 	// NSInteger -> UINavigationController.h
@@ -1551,7 +1589,9 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UINavigationControllerOperation : long {
-		None, Push, Pop
+		None,
+		Push,
+		Pop,
 	}
 
 	// NSInteger -> UIActivity.h
@@ -1564,7 +1604,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIActivityCategory : long {
-		Action, Share
+		Action,
+		Share,
 	}
 
 	// NSInteger -> UIAttachmentBehavior.h
@@ -1572,7 +1613,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIAttachmentBehaviorType : long {
-		Items, Anchor
+		Items,
+		Anchor,
 	}
 
 	// NSInteger -> UIBarCommon.h
@@ -1580,7 +1622,10 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIBarPosition : long {
-		Any, Bottom, Top, TopAttached,
+		Any,
+		Bottom,
+		Top,
+		TopAttached,
 	}
 
 	// NSUInteger -> UICollisionBehavior.h
@@ -1591,7 +1636,7 @@ namespace UIKit {
 	public enum UICollisionBehaviorMode : ulong {
 		Items = 1,
 		Boundaries = 2,
-		Everything = UInt64.MaxValue
+		Everything = UInt64.MaxValue,
 	}
 
 	// uint32_t -> UIFontDescriptor.h
@@ -1619,7 +1664,7 @@ namespace UIKit {
 		ClassSansSerif = 8U << 28,
 		ClassOrnamentals = 9U << 28,
 		ClassScripts = 10U << 28,
-		ClassSymbolic = 12U << 28
+		ClassSymbolic = 12U << 28,
 	}
 
 	// NSInteger -> UIResponder.h
@@ -1657,7 +1702,8 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UIWebPaginationBreakingMode : long {
-		Page, Column
+		Page,
+		Column,
 	}
 
 	// NSInteger -> UIWebView.h
@@ -1671,7 +1717,7 @@ namespace UIKit {
 		LeftToRight,
 		TopToBottom,
 		BottomToTop,
-		RightToLeft
+		RightToLeft,
 	}
 
 	// NSInteger -> UIPushBehavior.h
@@ -1680,7 +1726,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UIPushBehaviorMode : long {
 		Continuous,
-		Instantaneous
+		Instantaneous,
 	}
 
 	// NSInteger -> UITabBar.h
@@ -1690,7 +1736,7 @@ namespace UIKit {
 	public enum UITabBarItemPositioning : long {
 		Automatic,
 		Fill,
-		Centered
+		Centered,
 	}
 
 	// NSUInteger -> UIView.h
@@ -1710,7 +1756,7 @@ namespace UIKit {
 		CalculationModeDiscrete = 1 << 10,
 		CalculationModePaced = 2 << 10,
 		CalculationModeCubic = 3 << 10,
-		CalculationModeCubicPaced = 4 << 10
+		CalculationModeCubicPaced = 4 << 10,
 	}
 
 	// NSInteger -> UIView.h
@@ -1720,7 +1766,7 @@ namespace UIKit {
 	public enum UIViewTintAdjustmentMode : long {
 		Automatic,
 		Normal,
-		Dimmed
+		Dimmed,
 	}
 
 	// NSUInteger -> UIView.h
@@ -1728,7 +1774,7 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UISystemAnimation : ulong {
-		Delete
+		Delete,
 	}
 
 	// NSUInteger -> UIGeometry.h
@@ -1739,7 +1785,7 @@ namespace UIKit {
 		Left = 1 << 1,
 		Bottom = 1 << 2,
 		Right = 1 << 3,
-		All = Top | Left | Bottom | Right
+		All = Top | Left | Bottom | Right,
 	}
 
 	// Xamarin.iOS home-grown define
@@ -1748,7 +1794,7 @@ namespace UIKit {
 		LetterPressStyle,
 
 		// An unkonwn value, the real value can be fetched using the WeakTextEffect: Apple added a new effect and the bindings are old.
-		UnknownUseWeakEffect
+		UnknownUseWeakEffect,
 	}
 
 	// NSUInteger -> UISearchBar.h
@@ -1758,7 +1804,7 @@ namespace UIKit {
 	public enum UISearchBarStyle : ulong {
 		Default,
 		Prominent,
-		Minimal
+		Minimal,
 	}
 
 	// NSInteger -> UIInputView.h
@@ -1767,7 +1813,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UIInputViewStyle : long {
 		Default,
-		Keyboard
+		Keyboard,
 	}
 
 	[Native]
@@ -1776,14 +1822,16 @@ namespace UIKit {
 	public enum UIUserInterfaceSizeClass : long {
 		Unspecified = 0,
 		Compact = 1,
-		Regular = 2
+		Regular = 2,
 	}
 
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIAlertActionStyle : long {
-		Default, Cancel, Destructive
+		Default,
+		Cancel,
+		Destructive,
 	}
 
 	[Native]
@@ -1791,14 +1839,16 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	public enum UIAlertControllerStyle : long {
 		ActionSheet,
-		Alert
+		Alert,
 	}
 
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIBlurEffectStyle : long {
-		ExtraLight, Light, Dark,
+		ExtraLight,
+		Light,
+		Dark,
 		[NoiOS, NoWatch]
 		[NoMacCatalyst]
 		ExtraDark,
@@ -1867,7 +1917,7 @@ namespace UIKit {
 		Receipt = 1 << 4,
 		Roll = 1 << 5,
 		LargeFormat = 1 << 6,
-		Postcard = 1 << 7
+		Postcard = 1 << 7,
 	}
 
 	/// <summary>Enumerates the various types of user notification. Can be "OR"ed together as flags.</summary>
@@ -1882,7 +1932,7 @@ namespace UIKit {
 		None = 0,
 		Badge = 1 << 0,
 		Sound = 1 << 1,
-		Alert = 1 << 2
+		Alert = 1 << 2,
 	}
 
 	/// <summary>Whether a <see cref="T:UIKit.UIUserNotificationAction" /> should run the app in foreground or background mode.</summary>
@@ -1894,7 +1944,7 @@ namespace UIKit {
 	[Native]
 	public enum UIUserNotificationActivationMode : ulong {
 		Foreground,
-		Background
+		Background,
 	}
 
 	/// <summary>Enumerates the amount of space available for a <see cref="T:UIKit.UIUserNotificationAction" />. Used with <see cref="M:UIKit.UIMutableUserNotificationCategory.SetActions(UIKit.UIUserNotificationAction[],UIKit.UIUserNotificationActionContext)" /></summary>
@@ -1906,7 +1956,7 @@ namespace UIKit {
 	[Native]
 	public enum UIUserNotificationActionContext : ulong {
 		Default,
-		Minimal
+		Minimal,
 	}
 
 	/// <summary>Enumerates the insertion points for custom menu items.</summary>
@@ -1918,7 +1968,7 @@ namespace UIKit {
 	[Native]
 	public enum UIDocumentMenuOrder : ulong {
 		First,
-		Last
+		Last,
 	}
 
 	/// <summary>Enumerates the types of file transfer operations used by the document picker.</summary>
@@ -1932,7 +1982,7 @@ namespace UIKit {
 		Import,
 		Open,
 		ExportToService,
-		MoveToService
+		MoveToService,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1941,7 +1991,7 @@ namespace UIKit {
 
 		Automatic = 0,
 		Separate = 1,
-		Combined = 2
+		Combined = 2,
 	}
 
 	[Native]
@@ -1992,14 +2042,17 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UIContextualActionStyle' and corresponding APIs instead.")]
 	public enum UITableViewRowActionStyle : long {
-		Default, Destructive = Default, Normal
+		Default,
+		Destructive = Default,
+		Normal,
 	}
 
 	// Utility enum for UITransitionContext[To|From]ViewKey
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UITransitionViewControllerKind {
-		ToView, FromView
+		ToView,
+		FromView,
 	}
 
 	// note [Native] since it maps to UIFontWeightConstants fields (CGFloat)
@@ -2032,7 +2085,7 @@ namespace UIKit {
 		FillEqually,
 		FillProportionally,
 		EqualSpacing,
-		EqualCentering
+		EqualCentering,
 	}
 
 	[NoWatch]
@@ -2046,7 +2099,7 @@ namespace UIKit {
 		Center,
 		Trailing,
 		Bottom = Trailing,
-		LastBaseline
+		LastBaseline,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2054,7 +2107,7 @@ namespace UIKit {
 	[Flags]
 	public enum NSWritingDirectionFormatType : long {
 		Embedding = 0 << 1,
-		Override = 1 << 1
+		Override = 1 << 1,
 	}
 
 	/// <summary>Enumerates desired page cutting behavior for roll-feed printers.</summary>
@@ -2067,7 +2120,7 @@ namespace UIKit {
 		PrinterDefault,
 		CutAfterEachPage,
 		CutAfterEachCopy,
-		CutAfterEachJob
+		CutAfterEachJob,
 	}
 
 	/// <summary>Enumerates whether the user may respond to a user notification with text input.</summary>
@@ -2079,7 +2132,7 @@ namespace UIKit {
 	[Native]
 	public enum UIUserNotificationActionBehavior : ulong {
 		Default,
-		TextInput
+		TextInput,
 	}
 
 	[NoWatch]
@@ -2090,7 +2143,7 @@ namespace UIKit {
 		Playback,
 		Spatial,
 		ForceLeftToRight,
-		ForceRightToLeft
+		ForceRightToLeft,
 	}
 
 	[NoWatch]
@@ -2099,7 +2152,7 @@ namespace UIKit {
 	public enum UIDynamicItemCollisionBoundsType : ulong {
 		Rectangle,
 		Ellipse,
-		Path
+		Path,
 	}
 
 	[Native]
@@ -2108,14 +2161,16 @@ namespace UIKit {
 	public enum UIForceTouchCapability : long {
 		Unknown = 0,
 		Unavailable = 1,
-		Available = 2
+		Available = 2,
 	}
 
 	[Native]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	public enum UIPreviewActionStyle : long {
-		Default, Selected, Destructive
+		Default,
+		Selected,
+		Destructive,
 	}
 
 	[NoWatch]
@@ -2126,7 +2181,7 @@ namespace UIKit {
 		Changed,
 		Stationary,
 		Ended,
-		Cancelled
+		Cancelled,
 	}
 
 	[NoWatch]
@@ -2159,7 +2214,7 @@ namespace UIKit {
 	[Native]
 	public enum UITableViewCellFocusStyle : long {
 		Default,
-		Custom
+		Custom,
 	}
 
 	[NoWatch]
@@ -2168,7 +2223,7 @@ namespace UIKit {
 	public enum UIDisplayGamut : long {
 		Unspecified = -1,
 		Srgb,
-		P3
+		P3,
 	}
 
 	[NoWatch]
@@ -2177,7 +2232,7 @@ namespace UIKit {
 	public enum UITraitEnvironmentLayoutDirection : long {
 		Unspecified = -1,
 		LeftToRight = UIUserInterfaceLayoutDirection.LeftToRight,
-		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
+		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft,
 	}
 
 	[NoWatch]
@@ -2186,7 +2241,7 @@ namespace UIKit {
 	public enum UIUserInterfaceStyle : long {
 		Unspecified,
 		Light,
-		Dark
+		Dark,
 	}
 
 	[NoWatch]
@@ -2195,7 +2250,7 @@ namespace UIKit {
 	public enum UITextItemInteraction : long {
 		InvokeDefaultAction,
 		PresentActions,
-		Preview
+		Preview,
 	}
 
 	[NoWatch]
@@ -2204,7 +2259,7 @@ namespace UIKit {
 	public enum UIViewAnimatingState : long {
 		Inactive,
 		Active,
-		Stopped
+		Stopped,
 	}
 
 	[NoWatch]
@@ -2213,7 +2268,7 @@ namespace UIKit {
 	public enum UIViewAnimatingPosition : long {
 		End,
 		Start,
-		Current
+		Current,
 	}
 
 	[NoWatch]
@@ -2223,7 +2278,7 @@ namespace UIKit {
 		Builtin,
 		Cubic,
 		Spring,
-		Composed
+		Composed,
 	}
 
 	/// <summary>Enumerates the ear (or ears) for which the accessibility device is paired.</summary>
@@ -2235,7 +2290,7 @@ namespace UIKit {
 		None = 0,
 		Left = 1 << 1,
 		Right = 1 << 2,
-		Both = Left | Right
+		Both = Left | Right,
 	}
 
 	[NoWatch]
@@ -2243,7 +2298,7 @@ namespace UIKit {
 	[Native]
 	public enum UIAccessibilityCustomRotorDirection : long {
 		Previous,
-		Next
+		Next,
 	}
 
 #if NET
@@ -2261,7 +2316,7 @@ namespace UIKit {
 		AllowPublic = 1 << 0,
 		AllowPrivate = 1 << 1,
 		AllowReadOnly = 1 << 2,
-		AllowReadWrite = 1 << 3
+		AllowReadWrite = 1 << 3,
 	}
 
 	[NoWatch]
@@ -2272,7 +2327,7 @@ namespace UIKit {
 		Committed,
 		[NoiOS]
 		[NoMacCatalyst]
-		Cancelled
+		Cancelled,
 	}
 
 	[NoWatch]
@@ -2280,7 +2335,7 @@ namespace UIKit {
 	[Native]
 	public enum UIScrollViewIndexDisplayMode : long {
 		Automatic,
-		AlwaysHidden
+		AlwaysHidden,
 	}
 
 	[NoWatch]
@@ -2290,7 +2345,7 @@ namespace UIKit {
 		Automatic,
 		ScrollableAxes,
 		Never,
-		Always
+		Always,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2311,7 +2366,7 @@ namespace UIKit {
 	public enum UITextSmartQuotesType : long {
 		Default,
 		No,
-		Yes
+		Yes,
 	}
 
 	[NoWatch]
@@ -2320,7 +2375,7 @@ namespace UIKit {
 	public enum UITextSmartDashesType : long {
 		Default,
 		No,
-		Yes
+		Yes,
 	}
 
 	[NoWatch]
@@ -2329,7 +2384,7 @@ namespace UIKit {
 	public enum UITextSmartInsertDeleteType : long {
 		Default,
 		No,
-		Yes
+		Yes,
 	}
 
 	[NoWatch]
@@ -2354,7 +2409,7 @@ namespace UIKit {
 		TextField,
 		Table,
 		List,
-		Landmark
+		Landmark,
 	}
 
 	/// <summary>Enumerates drag activity drop resolutions.</summary>
@@ -2365,7 +2420,7 @@ namespace UIKit {
 		Cancel = 0,
 		Forbidden = 1,
 		Copy = 2,
-		Move = 3
+		Move = 3,
 	}
 
 	/// <summary>Enumerates behaviors when dragging text.</summary>
@@ -2375,7 +2430,7 @@ namespace UIKit {
 	[Flags]
 	public enum UITextDragOptions : long {
 		None = 0,
-		StripTextColorFromPreviews = (1 << 0)
+		StripTextColorFromPreviews = (1 << 0),
 	}
 
 	/// <summary>Enumerates behaviors in response to dropped text.</summary>
@@ -2385,7 +2440,7 @@ namespace UIKit {
 	public enum UITextDropAction : ulong {
 		Insert = 0,
 		ReplaceSelection,
-		ReplaceAll
+		ReplaceAll,
 	}
 
 	/// <summary>Enumerates text drop progress notification styles.</summary>
@@ -2394,7 +2449,7 @@ namespace UIKit {
 	[Native]
 	public enum UITextDropProgressMode : ulong {
 		System = 0,
-		Custom
+		Custom,
 	}
 
 	/// <summary>Enumerates behaviors for noneditable views when receiving dropped text.</summary>
@@ -2404,7 +2459,7 @@ namespace UIKit {
 	public enum UITextDropEditability : ulong {
 		No = 0,
 		Temporary,
-		Yes
+		Yes,
 	}
 
 	/// <summary>Enumerates collection view reorganization speeds for drop animations.</summary>
@@ -2414,7 +2469,7 @@ namespace UIKit {
 	public enum UICollectionViewReorderingCadence : long {
 		Immediate,
 		Fast,
-		Slow
+		Slow,
 	}
 
 	/// <summary>Enumerates drop actions.</summary>
@@ -2424,7 +2479,7 @@ namespace UIKit {
 	public enum UICollectionViewDropIntent : long {
 		Unspecified,
 		InsertAtDestinationIndexPath,
-		InsertIntoDestinationIndexPath
+		InsertIntoDestinationIndexPath,
 	}
 
 	/// <summary>Enumerates drag operation states.</summary>
@@ -2434,7 +2489,7 @@ namespace UIKit {
 	public enum UICollectionViewCellDragState : long {
 		None,
 		Lifting,
-		Dragging
+		Dragging,
 	}
 
 	/// <summary>Enumerates presets for exporting images.</summary>
@@ -2446,7 +2501,7 @@ namespace UIKit {
 	[Native]
 	public enum UIImagePickerControllerImageUrlExportPreset : long {
 		Compatible = 0,
-		Current
+		Current,
 	}
 
 	/// <summary>Enumerates action button styles.</summary>
@@ -2456,7 +2511,7 @@ namespace UIKit {
 	[Native]
 	public enum UIContextualActionStyle : long {
 		Normal,
-		Destructive
+		Destructive,
 	}
 
 	/// <summary>Enumerates cell states while the cell is involved in a drag operation.</summary>
@@ -2466,7 +2521,7 @@ namespace UIKit {
 	public enum UITableViewCellDragState : long {
 		None,
 		Lifting,
-		Dragging
+		Dragging,
 	}
 
 	[NoWatch]
@@ -2474,7 +2529,7 @@ namespace UIKit {
 	[Native]
 	public enum UITableViewSeparatorInsetReference : long {
 		CellEdges,
-		AutomaticInsets
+		AutomaticInsets,
 	}
 
 	/// <summary>Enumerates drop handling options.</summary>
@@ -2485,7 +2540,7 @@ namespace UIKit {
 		Unspecified,
 		InsertAtDestinationIndexPath,
 		InsertIntoDestinationIndexPath,
-		Automatic
+		Automatic,
 	}
 
 	[NoWatch]
@@ -2493,7 +2548,7 @@ namespace UIKit {
 	[Native]
 	public enum UISplitViewControllerPrimaryEdge : long {
 		Leading,
-		Trailing
+		Trailing,
 	}
 
 	/// <summary>Enumerates drop progress indicator styles.</summary>
@@ -2502,7 +2557,7 @@ namespace UIKit {
 	[Native]
 	public enum UIDropSessionProgressIndicatorStyle : ulong {
 		None,
-		Default
+		Default,
 	}
 
 	/// <summary>Enumerates states for spring-loaded interactions.</summary>
@@ -2513,7 +2568,7 @@ namespace UIKit {
 		Inactive,
 		Possible,
 		Activating,
-		Activated
+		Activated,
 	}
 
 	/// <summary>Enumerates the import modes of the document browser.</summary>
@@ -2524,7 +2579,7 @@ namespace UIKit {
 	public enum UIDocumentBrowserImportMode : ulong {
 		None,
 		Copy,
-		Move
+		Move,
 	}
 
 	/// <summary>Enumerates document browser styles.</summary>
@@ -2535,7 +2590,7 @@ namespace UIKit {
 	public enum UIDocumentBrowserUserInterfaceStyle : ulong {
 		White = 0,
 		Light,
-		Dark
+		Dark,
 	}
 
 	/// <summary>Enumerates allowable action locations.</summary>
@@ -2546,7 +2601,7 @@ namespace UIKit {
 	[Flags]
 	public enum UIDocumentBrowserActionAvailability : long {
 		Menu = 1,
-		NavigationBar = 1 << 1
+		NavigationBar = 1 << 1,
 	}
 
 	/// <summary>Enumerates the type responsible for the drop operation.</summary>
@@ -2617,7 +2672,7 @@ namespace UIKit {
 		NotAvailableError = 1,
 		NoContentError,
 		UnknownImageFormatError,
-		JobFailedError
+		JobFailedError,
 	}
 
 	[iOS (13, 0), TV (13, 0), NoWatch]

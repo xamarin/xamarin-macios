@@ -13,15 +13,26 @@ using System;
 
 namespace AVFoundation {
 	public enum AVAudioDataSourceLocation {
-		Unknown, Upper, Lower
+		Unknown,
+		Upper,
+		Lower,
 	}
 
 	public enum AVAudioDataSourceOrientation {
-		Unknown, Top, Bottom, Front, Back, Left, Right
+		Unknown,
+		Top,
+		Bottom,
+		Front,
+		Back,
+		Left,
+		Right,
 	}
 
 	public enum AVAudioDataSourcePolarPattern {
-		Unknown, Omnidirectional, Cardioid, Subcardioid
+		Unknown,
+		Omnidirectional,
+		Cardioid,
+		Subcardioid,
 	}
 
 	public partial class AVAudioSessionDataSourceDescription {

@@ -39,7 +39,13 @@ namespace Foundation {
 
 	// This is a convenience enum around a set of native strings.
 	public enum NSFileType {
-		Directory, Regular, SymbolicLink, Socket, CharacterSpecial, BlockSpecial, Unknown
+		Directory,
+		Regular,
+		SymbolicLink,
+		Socket,
+		CharacterSpecial,
+		BlockSpecial,
+		Unknown,
 	}
 
 #if !MONOMAC

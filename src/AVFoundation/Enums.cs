@@ -37,7 +37,7 @@ namespace AVFoundation {
 		Low = 0x20,
 		Medium = 0x40,
 		High = 0x60,
-		Max = 0x7F
+		Max = 0x7F,
 	}
 
 	[Watch (6, 0)]
@@ -50,7 +50,7 @@ namespace AVFoundation {
 		Exporting,
 		Completed,
 		Failed,
-		Cancelled
+		Cancelled,
 	}
 
 	[Watch (6, 0)]
@@ -95,7 +95,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFlashMode : long {
-		Off, On, Auto
+		Off,
+		On,
+		Auto,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -104,7 +106,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureTorchMode : long {
-		Off, On, Auto
+		Off,
+		On,
+		Auto,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -113,7 +117,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFocusMode : long {
-		Locked, AutoFocus, ContinuousAutoFocus,
+		Locked,
+		AutoFocus,
+		ContinuousAutoFocus,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -146,7 +152,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureWhiteBalanceMode : long {
-		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
+		Locked,
+		AutoWhiteBalance,
+		ContinuousAutoWhiteBalance,
 	}
 
 #if !NET
@@ -155,7 +163,7 @@ namespace AVFoundation {
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionFlags : ulong {
-		ShouldResume = 1
+		ShouldResume = 1,
 	}
 #endif
 
@@ -254,7 +262,7 @@ namespace AVFoundation {
 	public enum AVPlayerActionAtItemEnd : long {
 		Advance,
 		Pause,
-		None
+		None,
 	}
 
 	[Watch (6, 0)]
@@ -262,7 +270,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : long {
-		Unknown, ReadyToPlay, Failed
+		Unknown,
+		ReadyToPlay,
+		Failed,
 	}
 
 #if !NET
@@ -272,7 +282,7 @@ namespace AVFoundation {
 	[Native]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
 	public enum AVAudioSessionFlags : ulong {
-		NotifyOthersOnDeactivation = 1
+		NotifyOthersOnDeactivation = 1,
 	}
 #endif
 
@@ -281,7 +291,11 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : long {
-		Unknown, Loading, Loaded, Failed, Cancelled
+		Unknown,
+		Loading,
+		Loaded,
+		Failed,
+		Cancelled,
 	}
 
 	[Watch (6, 0)]
@@ -291,7 +305,7 @@ namespace AVFoundation {
 	public enum AVPlayerStatus : long {
 		Unknown,
 		ReadyToPlay,
-		Failed
+		Failed,
 	}
 
 	[Watch (6, 0)]
@@ -313,7 +327,9 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
 	public enum AVAssetImageGeneratorResult : long {
-		Succeeded, Failed, Cancelled
+		Succeeded,
+		Failed,
+		Cancelled,
 	}
 
 	/// <summary>An enumeration whose values specify whether a <see cref="T:AVFoundation.AVCaptureDevice" /> is playing or not.</summary>
@@ -324,7 +340,8 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDeviceTransportControlsPlaybackMode : long {
-		NotPlaying, Playing
+		NotPlaying,
+		Playing,
 	}
 
 	/// <summary>An enumeration whose values specify how interlaced fields should be dealt with.</summary>
@@ -337,7 +354,10 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
-		Both, TopOnly, BottomOnly, Deinterlace
+		Both,
+		TopOnly,
+		BottomOnly,
+		Deinterlace,
 	}
 
 	[Watch (7, 0)]
@@ -346,7 +366,7 @@ namespace AVFoundation {
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionOptions : ulong {
-		ShouldResume = 1
+		ShouldResume = 1,
 	}
 
 	[Watch (7, 0)]
@@ -355,7 +375,7 @@ namespace AVFoundation {
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionSetActiveOptions : ulong {
-		NotifyOthersOnDeactivation = 1
+		NotifyOthersOnDeactivation = 1,
 	}
 
 	[Watch (7, 0)]
@@ -368,7 +388,7 @@ namespace AVFoundation {
 		[NoMac] // Removed in Xcode 12 GM
 		[NoWatch] // Removed in Xcode 12 GM
 		[MacCatalyst (13, 1)]
-		Speaker = 0x73706b72 // 'spkr'
+		Speaker = 0x73706b72, // 'spkr'
 	}
 
 	[Watch (7, 0)]
@@ -383,7 +403,7 @@ namespace AVFoundation {
 		Override,
 		WakeFromSleep = 6,
 		NoSuitableRouteForCategory = 7,
-		RouteConfigurationChange = 8
+		RouteConfigurationChange = 8,
 	}
 
 	[Flags]
@@ -426,7 +446,8 @@ namespace AVFoundation {
 	[Native]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionType : ulong {
-		Ended, Began
+		Ended,
+		Began,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -463,7 +484,7 @@ namespace AVFoundation {
 	public enum AVCaptureAutoFocusRangeRestriction : long {
 		None = 0,
 		Near = 1,
-		Far = 2
+		Far = 2,
 	}
 
 	// Convenience enum for native strings (defined in AVAudioSettings.h)
@@ -471,13 +492,13 @@ namespace AVFoundation {
 		Constant,
 		LongTermAverage,
 		VariableConstrained,
-		Variable
+		Variable,
 	}
 
 	// Convenience enum for native strings (defined in AVAudioSettings.h)
 	public enum AVSampleRateConverterAlgorithm : int {
 		Normal,
-		Mastering
+		Mastering,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -486,7 +507,10 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVAuthorizationStatus : long {
-		NotDetermined, Restricted, Denied, Authorized
+		NotDetermined,
+		Restricted,
+		Denied,
+		Authorized,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -494,7 +518,7 @@ namespace AVFoundation {
 	// NSInteger - AVSpeechSynthesis.h
 	public enum AVSpeechBoundary : long {
 		Immediate,
-		Word
+		Word,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -504,7 +528,7 @@ namespace AVFoundation {
 		PCMFloat32 = 1,
 		PCMFloat64 = 2,
 		PCMInt16 = 3,
-		PCMInt32 = 4
+		PCMInt32 = 4,
 	}
 
 	[Native]
@@ -529,7 +553,7 @@ namespace AVFoundation {
 	public enum AVAudioSessionRecordPermission : ulong {
 		Undetermined = 1970168948 /*'undt'*/,
 		Denied = 1684369017 /*'deny'*/,
-		Granted = 1735552628 /*'grnt'*/
+		Granted = 1735552628 /*'grnt'*/,
 	}
 
 	[Watch (7, 0)]
@@ -537,7 +561,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVAudioSessionSilenceSecondaryAudioHintType : ulong {
 		Begin = 1,
-		End = 0
+		End = 0,
 	}
 
 	[Flags]
@@ -545,7 +569,7 @@ namespace AVFoundation {
 	public enum AVAudioPlayerNodeBufferOptions : ulong {
 		Loops = 0x01,
 		Interrupts = 0x02,
-		InterruptsAtLoop = 0x04
+		InterruptsAtLoop = 0x04,
 	}
 
 	[Native]
@@ -560,7 +584,7 @@ namespace AVFoundation {
 		LowShelf = 7,
 		HighShelf = 8,
 		ResonantLowShelf = 9,
-		ResonantHighShelf = 10
+		ResonantHighShelf = 10,
 	}
 
 	[Native]
@@ -577,7 +601,7 @@ namespace AVFoundation {
 		LargeRoom2 = 9,
 		MediumHall2 = 10,
 		MediumHall3 = 11,
-		LargeHall2 = 12
+		LargeHall2 = 12,
 	}
 
 	[Native]
@@ -603,21 +627,23 @@ namespace AVFoundation {
 		SpeechCosmicInterference = 18,
 		SpeechGoldenPi = 19,
 		SpeechRadioTower = 20,
-		SpeechWaves = 21
+		SpeechWaves = 21,
 	}
 
 	[Native]
 	public enum AVAudioEnvironmentDistanceAttenuationModel : long {
 		Exponential = 1,
 		Inverse = 2,
-		Linear = 3
+		Linear = 3,
 	}
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : long {
-		Unknown, Rendering, Failed
+		Unknown,
+		Rendering,
+		Failed,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -645,7 +671,7 @@ namespace AVFoundation {
 	public enum AVCaptureAutoFocusSystem : long {
 		None,
 		ContrastDetection,
-		PhaseDetection
+		PhaseDetection,
 	}
 
 #if !MONOMAC
@@ -668,7 +694,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVSpeechSynthesisVoiceQuality : long {
 		Default = 1,
-		Enhanced
+		Enhanced,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -676,7 +702,7 @@ namespace AVFoundation {
 	public enum AVAudioConverterPrimeMethod : long {
 		Pre = 0,
 		Normal = 1,
-		None = 2
+		None = 2,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -684,7 +710,7 @@ namespace AVFoundation {
 	public enum AVAudioConverterInputStatus : long {
 		HaveData = 0,
 		NoDataNow = 1,
-		EndOfStream = 2
+		EndOfStream = 2,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -693,7 +719,7 @@ namespace AVFoundation {
 		HaveData = 0,
 		InputRanDry = 1,
 		EndOfStream = 2,
-		Error = 3
+		Error = 3,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -701,7 +727,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVMusicSequenceLoadOptions : ulong {
 		PreserveTracks = 0,
-		ChannelsToTracks = (1 << 0)
+		ChannelsToTracks = (1 << 0),
 	}
 
 	[NoTV]
@@ -712,7 +738,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVMovieWritingOptions : ulong {
 		AddMovieHeaderToDestination = 0,
-		TruncateDestinationToMovieHeaderOnly = (1 << 0)
+		TruncateDestinationToMovieHeaderOnly = (1 << 0),
 	}
 
 	[NoiOS]
@@ -769,7 +795,7 @@ namespace AVFoundation {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVMusicTrackLoopCount : long {
-		Forever = -1
+		Forever = -1,
 	}
 
 	[Watch (6, 0)]
@@ -778,7 +804,7 @@ namespace AVFoundation {
 	public enum AVPlayerTimeControlStatus : long {
 		Paused,
 		WaitingToPlayAtSpecifiedRate,
-		Playing
+		Playing,
 	}
 
 	[NoWatch]
@@ -797,7 +823,7 @@ namespace AVFoundation {
 		Unknown,
 		Ready,
 		Failed,
-		Cancelled
+		Cancelled,
 	}
 
 	[NoiOS]
@@ -808,7 +834,7 @@ namespace AVFoundation {
 	public enum AVContentProposalAction : long {
 		Accept,
 		Reject,
-		Defer
+		Defer,
 	}
 
 	[NoiOS]
@@ -818,7 +844,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVPlayerViewControllerSkippingBehavior : long {
 		Default = 0,
-		SkipItem
+		SkipItem,
 	}
 
 	[Watch (7, 0)]
@@ -830,7 +856,7 @@ namespace AVFoundation {
 		Renewed,
 		Retried,
 		Cancelled,
-		Failed
+		Failed,
 	}
 
 	[Watch (7, 0)]
@@ -970,7 +996,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVAudioEngineManualRenderingMode : long {
 		Offline = 0,
-		Realtime = 1
+		Realtime = 1,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -979,7 +1005,7 @@ namespace AVFoundation {
 		Error = -1,
 		Success = 0,
 		InsufficientDataFromInputNode = 1,
-		CannotDoInCurrentContext = 2
+		CannotDoInCurrentContext = 2,
 	}
 
 	[Watch (5, 0)]
@@ -1002,7 +1028,7 @@ namespace AVFoundation {
 	public enum AVAudioPlayerNodeCompletionCallbackType : long {
 		Consumed = 0,
 		Rendered = 1,
-		PlayedBack = 2
+		PlayedBack = 2,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1120,7 +1146,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVDepthDataQuality : long {
 		Low = 0,
-		High = 1
+		High = 1,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -1133,7 +1159,7 @@ namespace AVFoundation {
 		None = 0,
 		SystemTemperature = (1 << 0),
 		PeakPower = (1 << 1),
-		DepthModuleTemperature = (1 << 2)
+		DepthModuleTemperature = (1 << 2),
 	}
 
 	[NoWatch]

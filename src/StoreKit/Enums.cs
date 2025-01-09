@@ -21,7 +21,7 @@ namespace StoreKit {
 		Failed,
 		Restored,
 		[MacCatalyst (13, 1)]
-		Deferred
+		Deferred,
 	}
 
 	// untyped enum and not used in API - so it _could_ be an `int`
@@ -71,7 +71,12 @@ namespace StoreKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKDownloadState : long {
-		Waiting, Active, Paused, Finished, Failed, Cancelled
+		Waiting,
+		Active,
+		Paused,
+		Finished,
+		Failed,
+		Cancelled,
 	}
 
 	/// <summary>Enumerates authorization states for music store access.</summary>
@@ -87,7 +92,7 @@ namespace StoreKit {
 		NotDetermined,
 		Denied,
 		Restricted,
-		Authorized
+		Authorized,
 	}
 
 	/// <summary>Enumerates flags that describe the user's local music library capabilities..</summary>
