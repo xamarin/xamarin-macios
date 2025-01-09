@@ -486,10 +486,10 @@ namespace ObjCRuntime {
 
 			if (MarshalObjectiveCException is not null) {
 				var exception = GetNSObject<NSException> (exception_handle);
-				var args = new MarshalObjectiveCExceptionEventArgs () {
-					Exception = exception,
-					ExceptionMode = (throwManagedAsDefault != 0) ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
-				};
+				var args = new MarshalObjectiveCExceptionEventArgs (
+					exception,
+					(throwManagedAsDefault != 0) ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode
+				);
 
 				MarshalObjectiveCException (null, args);
 				return args.ExceptionMode;
@@ -501,10 +501,7 @@ namespace ObjCRuntime {
 		{
 			if (MarshalManagedException is not null) {
 				var exception = GCHandle.FromIntPtr (exception_handle).Target as Exception;
-				var args = new MarshalManagedExceptionEventArgs () {
-					Exception = exception,
-					ExceptionMode = managed_exception_mode,
-				};
+				var args = new MarshalManagedExceptionEventArgs (exception, managed_exception_mode);
 				MarshalManagedException (null, args);
 				return args.ExceptionMode;
 			}

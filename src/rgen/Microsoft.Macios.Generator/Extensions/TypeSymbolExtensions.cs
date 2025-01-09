@@ -231,6 +231,9 @@ static class TypeSymbolExtensions {
 	/// <seealso cref="https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types"/>
 	public static bool IsBlittable (this ITypeSymbol symbol)
 	{
+		if (symbol.NullableAnnotation == NullableAnnotation.Annotated)
+			return false;
+
 		while (true) {
 			// per the documentation, the following system types are blittable
 			switch (symbol.SpecialType) {
