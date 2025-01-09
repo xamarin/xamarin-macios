@@ -1,0 +1,338 @@
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+//
+// TypeMapInfo.cs
+//
+// Author:
+//   Jb Evain (jbevain@novell.com)
+//
+// (C) 2009 Novell, Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Mono.Cecil;
+
+namespace Mono.Linker {
+
+	internal class TypeMapInfo {
+		readonly HashSet<AssemblyDefinition> assemblies = new HashSet<AssemblyDefinition> ();
+		readonly LinkContext context;
+		protected readonly Dictionary<MethodDefinition, List<OverrideInformation>> base_methods = new Dictionary<MethodDefinition, List<OverrideInformation>> ();
+		protected readonly Dictionary<MethodDefinition, List<OverrideInformation>> override_methods = new Dictionary<MethodDefinition, List<OverrideInformation>> ();
+
+		public TypeMapInfo (LinkContext context)
+		{
+			this.context = context;
+		}
+
+		void EnsureProcessed (AssemblyDefinition assembly)
+		{
+			if (!assemblies.Add (assembly))
+				return;
+
+			foreach (TypeDefinition type in assembly.MainModule.Types)
+				MapType (type);
+		}
+
+		ICollection<MethodDefinition> MethodsWithOverrideInformation => override_methods.Keys;
+
+		/// <summary>
+		/// Returns a list of all methods that override <paramref name="method"/>.
+		/// <paramref name="method"/> must be a virtual method on a class, not an interface.
+		/// </summary>
+		public List<OverrideInformation>? GetOverrides (MethodDefinition method)
+		{
+			Debug.Assert (!method.DeclaringType.IsInterface);
+			EnsureProcessed (method.Module.Assembly);
+			override_methods.TryGetValue (method, out List<OverrideInformation>? overrides);
+			return overrides;
+		}
+
+		void AddOverride (MethodDefinition @base, MethodDefinition @override)
+		{
+			override_methods.AddToList (@base, new OverrideInformation (@base, @override));
+		}
+
+		protected virtual void MapType (TypeDefinition type)
+		{
+			MapVirtualMethods (type);
+
+			if (!type.HasNestedTypes)
+				return;
+
+			foreach (var nested in type.NestedTypes)
+				MapType (nested);
+		}
+
+		void MapVirtualMethods (TypeDefinition type)
+		{
+			if (!type.HasMethods)
+				return;
+
+			foreach (MethodDefinition method in type.Methods) {
+				// We do not proceed unless a method is virtual or is static
+				// A static method with a .override could be implementing a static interface method
+				if (!(method.IsStatic || method.IsVirtual))
+					continue;
+
+				if (method.IsVirtual)
+					MapVirtualMethod (method);
+
+				if (method.HasOverrides)
+					MapOverrides (method);
+			}
+		}
+
+		void MapVirtualMethod (MethodDefinition method)
+		{
+			MethodDefinition? @base = GetBaseMethodInTypeHierarchy (method);
+			if (@base is null)
+				return;
+
+			Debug.Assert (!@base.DeclaringType.IsInterface);
+
+			AddOverride (@base, method);
+		}
+
+		void MapOverrides (MethodDefinition method)
+		{
+			foreach (MethodReference baseMethodRef in method.Overrides) {
+				MethodDefinition? baseMethod = context.TryResolve (baseMethodRef);
+				if (baseMethod is null)
+					continue;
+				// Don't track interface methods
+				if (baseMethod.DeclaringType.IsInterface)
+					continue;
+
+				AddOverride (baseMethod, method);
+			}
+		}
+
+		MethodDefinition? GetBaseMethodInTypeHierarchy (MethodDefinition method)
+		{
+			return GetBaseMethodInTypeHierarchy (method.DeclaringType, method);
+		}
+
+		MethodDefinition? GetBaseMethodInTypeHierarchy (TypeDefinition type, MethodReference method)
+		{
+			TypeReference? @base = GetInflatedBaseType (type);
+			while (@base is not null) {
+				MethodDefinition? base_method = TryMatchMethod (@base, method);
+				if (base_method is not null)
+					return base_method;
+
+				@base = GetInflatedBaseType (@base);
+			}
+
+			return null;
+		}
+
+		TypeReference? GetInflatedBaseType (TypeReference type)
+		{
+			if (type is null)
+				return null;
+
+			if (type.IsGenericParameter || type.IsByReference || type.IsPointer)
+				return null;
+
+			if (type is SentinelType sentinelType)
+				return GetInflatedBaseType (sentinelType.ElementType);
+
+			if (type is PinnedType pinnedType)
+				return GetInflatedBaseType (pinnedType.ElementType);
+
+			if (type is RequiredModifierType requiredModifierType)
+				return GetInflatedBaseType (requiredModifierType.ElementType);
+
+			if (type is GenericInstanceType genericInstance) {
+				var baseType = context.TryResolve (type)?.BaseType;
+
+				if (baseType is GenericInstanceType)
+					return TypeReferenceExtensions.InflateGenericType (genericInstance, baseType);
+
+				return baseType;
+			}
+
+			return context.TryResolve (type)?.BaseType;
+		}
+
+		MethodDefinition? TryMatchMethod (TypeReference type, MethodReference method)
+		{
+			foreach (var candidate in type.GetMethods (context)) {
+				var md = context.TryResolve (candidate);
+				if (md?.IsVirtual != true)
+					continue;
+
+				if (MethodMatch (candidate, method))
+					return md;
+			}
+
+			return null;
+		}
+
+		[SuppressMessage ("ApiDesign", "RS0030:Do not used banned APIs", Justification = "It's best to leave working code alone.")]
+		static bool MethodMatch (MethodReference candidate, MethodReference method)
+		{
+			if (candidate.HasParameters != method.HasMetadataParameters ())
+				return false;
+
+			if (candidate.Name != method.Name)
+				return false;
+
+			if (candidate.HasGenericParameters != method.HasGenericParameters)
+				return false;
+
+			// we need to track what the generic parameter represent - as we cannot allow it to
+			// differ between the return type or any parameter
+			if (!TypeMatch (candidate.GetReturnType (), method.GetReturnType ()))
+				return false;
+
+			if (!candidate.HasMetadataParameters ())
+				return true;
+
+			var cp = candidate.Parameters;
+			var mp = method.Parameters;
+			if (cp.Count != mp.Count)
+				return false;
+
+			if (candidate.GenericParameters.Count != method.GenericParameters.Count)
+				return false;
+
+			for (int i = 0; i < cp.Count; i++) {
+				if (!TypeMatch (candidate.GetInflatedParameterType (i), method.GetInflatedParameterType (i)))
+					return false;
+			}
+
+			return true;
+		}
+
+		static bool TypeMatch (IModifierType a, IModifierType b)
+		{
+			if (!TypeMatch (a.ModifierType, b.ModifierType))
+				return false;
+
+			return TypeMatch (a.ElementType, b.ElementType);
+		}
+
+		static bool TypeMatch (TypeSpecification a, TypeSpecification b)
+		{
+			if (a is GenericInstanceType gita)
+				return TypeMatch (gita, (GenericInstanceType) b);
+
+			if (a is IModifierType mta)
+				return TypeMatch (mta, (IModifierType) b);
+
+			if (a is FunctionPointerType fpta)
+				return TypeMatch (fpta, (FunctionPointerType) b);
+
+			return TypeMatch (a.ElementType, b.ElementType);
+		}
+
+		static bool TypeMatch (GenericInstanceType a, GenericInstanceType b)
+		{
+			if (!TypeMatch (a.ElementType, b.ElementType))
+				return false;
+
+			if (a.HasGenericArguments != b.HasGenericArguments)
+				return false;
+
+			if (!a.HasGenericArguments)
+				return true;
+
+			var gaa = a.GenericArguments;
+			var gab = b.GenericArguments;
+			if (gaa.Count != gab.Count)
+				return false;
+
+			for (int i = 0; i < gaa.Count; i++) {
+				if (!TypeMatch (gaa [i], gab [i]))
+					return false;
+			}
+
+			return true;
+		}
+
+		static bool TypeMatch (GenericParameter a, GenericParameter b)
+		{
+			if (a.Position != b.Position)
+				return false;
+
+			if (a.Type != b.Type)
+				return false;
+
+			return true;
+		}
+
+		static bool TypeMatch (FunctionPointerType a, FunctionPointerType b)
+		{
+			if (a.HasParameters != b.HasParameters)
+				return false;
+
+			if (a.CallingConvention != b.CallingConvention)
+				return false;
+
+			// we need to track what the generic parameter represent - as we cannot allow it to
+			// differ between the return type or any parameter
+			if (a.ReturnType is not TypeReference aReturnType ||
+				b.ReturnType is not TypeReference bReturnType ||
+				!TypeMatch (aReturnType, bReturnType))
+				return false;
+
+			if (!a.HasParameters)
+				return true;
+
+			var ap = a.Parameters;
+			var bp = b.Parameters;
+			if (ap.Count != bp.Count)
+				return false;
+
+			for (int i = 0; i < ap.Count; i++) {
+				if (a.Parameters [i].ParameterType is not TypeReference aParameterType ||
+					b.Parameters [i].ParameterType is not TypeReference bParameterType ||
+					!TypeMatch (aParameterType, bParameterType))
+					return false;
+			}
+
+			return true;
+		}
+
+		static bool TypeMatch (TypeReference a, TypeReference b)
+		{
+			if (a is TypeSpecification || b is TypeSpecification) {
+				if (a.GetType () != b.GetType ())
+					return false;
+
+				return TypeMatch ((TypeSpecification) a, (TypeSpecification) b);
+			}
+
+			if (a is GenericParameter genericParameterA && b is GenericParameter genericParameterB)
+				return TypeMatch (genericParameterA, genericParameterB);
+
+			return a.FullName == b.FullName;
+		}
+	}
+}

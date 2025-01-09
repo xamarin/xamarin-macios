@@ -1,6 +1,6 @@
 using System;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 using Xamarin.Bundler;
 #endif
 
@@ -73,7 +73,7 @@ namespace Xamarin {
 
 		public static Version XcodeVersion { get { return new Version (Xcode); } }
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 		public static Version GetVersion (Application app)
 		{
 			switch (app.Platform) {

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 using Mono.Cecil;
 using Xamarin.Linker;
 #else
@@ -29,7 +29,7 @@ namespace ObjCRuntime {
 
 		string? http_message_handler;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 		/*
 		 * This section is only used by the tools
 		 */

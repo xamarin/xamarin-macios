@@ -1,4 +1,4 @@
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP || BUNDLER || PRETRIM
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
