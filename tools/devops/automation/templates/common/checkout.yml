@@ -27,7 +27,6 @@ steps:
   name: fix_commit
   displayName: "Undo Github merge"
   workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/pull')
   timeoutInMinutes: 15
   env:
     IS_PR: and(eq(parameters.isPR, 'true'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull')))
