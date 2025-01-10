@@ -5165,7 +5165,7 @@ public partial class Generator : IMemberGatherer {
 		if (include_extensions) {
 			// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated extension member - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
 			print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
-			// extension methods
+													  // extension methods
 			if (BindingTouch.SupportsXmlDocumentation) {
 				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
 				print ($"/// <remarks>");
