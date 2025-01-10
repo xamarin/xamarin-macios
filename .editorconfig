@@ -1,3 +1,8 @@
+# EditorConfig is awesome: https://editorconfig.org
+
+# top-most EditorConfig file
+root = true
+
 [*.{props,targets}]
 indent_style = tab
 indent_size = 4

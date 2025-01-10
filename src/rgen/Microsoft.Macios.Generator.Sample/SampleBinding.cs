@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.Sample;
