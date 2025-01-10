@@ -1,19 +1,19 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using System;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
-/// Readonly structure that represents a change in a parameter.
+/// Readonly structure that describes a parameter in a delegate. This class contains less information
+/// than Parameter since some of the extra fields make no sense in delegates.
 /// </summary>
-readonly struct Parameter : IEquatable<Parameter> {
+readonly struct DelegateParameter : IEquatable<DelegateParameter> {
+
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>
@@ -65,32 +65,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public bool IsArray { get; init; }
 
 	/// <summary>
-	/// Optional default value.
-	/// </summary>
-	public string? DefaultValue { get; init; }
-
-	/// <summary>
 	/// The reference type used.
 	/// </summary>
 	public ReferenceKind ReferenceKind { get; init; }
 
-	/// <summary>
-	/// If the parameter is a delegate. The method information of the invoke.
-	/// </summary>
-	public DelegateInfo? Delegate { get; init; } = null;
-
-	/// <summary>
-	/// True if the parameter is a delegate.
-	/// </summary>
-	//[MemberNotNullWhen (true, nameof (DelegateMethod))]
-	public bool IsDelegate => Delegate is not null;
-
-	/// <summary>
-	/// List of attributes attached to the parameter.
-	/// </summary>
-	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
-
-	public Parameter (int position, string type, string name, bool isBlittable)
+	public DelegateParameter (int position, string type, string name, bool isBlittable)
 	{
 		Position = position;
 		Type = type;
@@ -98,17 +77,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 		IsBlittable = isBlittable;
 	}
 
-	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
-		[NotNullWhen (true)] out Parameter? parameter)
+	public static bool TryCreate (IParameterSymbol symbol,
+		[NotNullWhen (true)] out DelegateParameter? parameter)
 	{
 		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
-		DelegateInfo? delegateInfo = null;
-		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
-			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
-			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
-		}
 
 		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
@@ -117,16 +91,13 @@ readonly struct Parameter : IEquatable<Parameter> {
 			IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated,
 			IsSmartEnum = symbol.Type.IsSmartEnum (),
 			IsArray = symbol.Type is IArrayTypeSymbol,
-			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
 			ReferenceKind = symbol.RefKind.ToReferenceKind (),
-			Delegate = delegateInfo,
-			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
 		};
 		return true;
 	}
 
 	/// <inheritdoc/>
-	public bool Equals (Parameter other)
+	public bool Equals (DelegateParameter other)
 	{
 		if (Position != other.Position)
 			return false;
@@ -148,21 +119,13 @@ readonly struct Parameter : IEquatable<Parameter> {
 			return false;
 		if (IsArray != other.IsArray)
 			return false;
-		if (DefaultValue != other.DefaultValue)
-			return false;
-		if (ReferenceKind != other.ReferenceKind)
-			return false;
-		if (Delegate != other.Delegate)
-			return false;
-
-		var attributeComparer = new AttributesEqualityComparer ();
-		return attributeComparer.Equals (Attributes, other.Attributes);
+		return ReferenceKind == other.ReferenceKind;
 	}
 
 	/// <inheritdoc/>
 	public override bool Equals (object? obj)
 	{
-		return obj is Parameter other && Equals (other);
+		return obj is DelegateParameter other && Equals (other);
 	}
 
 	/// <inheritdoc/>
@@ -178,18 +141,16 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsNullable);
 		hashCode.Add (IsSmartEnum);
 		hashCode.Add (IsArray);
-		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
-		hashCode.Add (Delegate);
 		return hashCode.ToHashCode ();
 	}
 
-	public static bool operator == (Parameter left, Parameter right)
+	public static bool operator == (DelegateParameter left, DelegateParameter right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (Parameter left, Parameter right)
+	public static bool operator != (DelegateParameter left, DelegateParameter right)
 	{
 		return !left.Equals (right);
 	}
@@ -201,18 +162,14 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"Position: {Position}, ");
 		sb.Append ($"Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
-		sb.Append ("Attributes: ");
-		sb.AppendJoin (", ", Attributes);
-		sb.Append ($" IsOptional: {IsOptional}, ");
+		sb.Append ($"IsOptional: {IsOptional}, ");
 		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
 		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
-		sb.Append ($"DefaultValue: {DefaultValue}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
-		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
+		sb.Append ($"ReferenceKind: {ReferenceKind} ");
 		return sb.ToString ();
 	}
 }

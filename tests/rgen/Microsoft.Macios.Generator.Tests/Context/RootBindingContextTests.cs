@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.Macios.Generator.Context;
 using Xamarin.Tests;
 using Xamarin.Utils;
