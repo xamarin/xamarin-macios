@@ -110,11 +110,11 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (
-					name: "name", 
+					name: "name",
 					libraryName: "Test",
 					libraryPath: "/path/to/library",
-					fieldData: new (), 
-					symbolAvailability: new (), 
+					fieldData: new (),
+					symbolAvailability: new (),
 					attributes: [])
 			],
 		};
@@ -132,11 +132,11 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (
-					name: "name", 
+					name: "name",
 					libraryName: "Test",
 					libraryPath: "/path/to/library",
-					fieldData: new (), 
-					symbolAvailability: new (), 
+					fieldData: new (),
+					symbolAvailability: new (),
 					attributes: [])
 			],
 		};
@@ -148,11 +148,11 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ()) {
 			EnumMembers = [
 				new EnumMember (
-					name: "name2", 
+					name: "name2",
 					libraryName: "Test",
 					libraryPath: "/path/to/library",
-					fieldData: new (), 
-					symbolAvailability: new (), 
+					fieldData: new (),
+					symbolAvailability: new (),
 					attributes: [])
 			],
 		};

@@ -35,7 +35,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			context.RegisterPostInitializationOutput (ctx => ctx.AddSource (
 				fileName, SourceText.From (content, Encoding.UTF8)));
 		}
-		
+
 		// our bindings are special. Since we write shared code in the Library.g.cs and the Trampolines.g.cs
 		// we need to listen to all the BaseTypeDeclarationSyntax changes. We do so, generate a data model with the
 		// changes we are interested, and later we transform them. This allows use to be able to use a RootBindingContext
@@ -44,7 +44,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			.CreateSyntaxProvider (static (node, _) => IsValidNode (node),
 				static (ctx, _) => GetChangesForSourceGen (ctx))
 			.Where (tuple => tuple.BindingAttributeFound);
-			
+
 		var codeChanges = provider
 			.Select (static (tuple, _) => tuple.Changes)
 			.WithComparer (equalityComparer);
@@ -56,7 +56,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (codeChanges.Collect ()),
 			((ctx, t) => GenerateCode (ctx, t.Right)));
-		
+
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (libraryProvider.Collect ()),
 			((ctx, t) => GenerateLibraryCode (ctx, t.Right)));
 	}
@@ -139,23 +139,23 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// </summary>
 	/// <param name="context">Source production context.</param>
 	/// <param name="libraryChanges">The root context of the current generation.</param>
-	static void GenerateLibraryCode (SourceProductionContext context, 
+	static void GenerateLibraryCode (SourceProductionContext context,
 		ImmutableArray<(RootBindingContext RootBindingContext, IEnumerable<(string LibraryName, string? LibraryPath)> LibraryPaths)> libraryChanges)
 	{
 		if (libraryChanges.Length == 0)
 			return;
 		// we have at least one, we can get the root binding changes from it
-		var rootBindingContext = libraryChanges[0].RootBindingContext;
+		var rootBindingContext = libraryChanges [0].RootBindingContext;
 		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
-		
+
 		// Each code change might have returned the same list of libraries, we need to get the distinct ones
 		var libComparer = new LibraryPathsComparer ();
 		var distinctLibraryPaths = libraryChanges
 			.SelectMany (library => library.LibraryPaths)
 			.Distinct (libComparer)
 			.ToImmutableArray ();
-		
+
 		// no need to collect the using statements, this file is completely generated
 		var emitter = new LibraryEmitter (rootBindingContext, sb);
 

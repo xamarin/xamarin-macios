@@ -48,7 +48,7 @@ public class EnumMembersEqualityComparerTests {
 	[Fact]
 	public void EqualsDiffOrder ()
 	{
-		ImmutableArray<EnumMember> x = [new ("name1", string.Empty,  string.Empty), new ("name", string.Empty, string.Empty)];
+		ImmutableArray<EnumMember> x = [new ("name1", string.Empty, string.Empty), new ("name", string.Empty, string.Empty)];
 		ImmutableArray<EnumMember> y = [new ("name", string.Empty, string.Empty), new ("name1", string.Empty, string.Empty)];
 		Assert.True (comparer.Equals (x, y));
 	}
