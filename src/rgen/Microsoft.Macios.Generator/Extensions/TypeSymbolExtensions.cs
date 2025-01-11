@@ -315,15 +315,15 @@ static class TypeSymbolExtensions {
 	{
 		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
 		const string nsObjectClass = "Foundation.NSObject";
-		
+
 		isNSObject = false;
 		isNativeObject = false;
-		
+
 		// parents will be returned directly in a Immutable array via a builder since the order is important
 		// interfaces will use a hash set because we do not want duplicates.
 		var parentsBuilder = ImmutableArray.CreateBuilder<string> ();
 		// init the set with all the interfaces of the current symbol
-		var interfacesSet = new HashSet<string> (symbol.Interfaces.Select (i => i.ToDisplayString()));
+		var interfacesSet = new HashSet<string> (symbol.Interfaces.Select (i => i.ToDisplayString ()));
 
 		var currentType = symbol.BaseType;
 		while (currentType is not null) {
@@ -331,15 +331,15 @@ static class TypeSymbolExtensions {
 			var parentName = currentType.ToDisplayString ().Trim ();
 			isNSObject |= parentName == nsObjectClass;
 			parentsBuilder.Add (parentName);
-			
+
 			// union with the current interfaces
 			interfacesSet.UnionWith (currentType.Interfaces.Select (i => i.ToDisplayString ()));
-			
+
 			currentType = currentType.BaseType;
 		}
-		
+
 		isNativeObject = interfacesSet.Contains (nativeObjectInterface);
 		parents = parentsBuilder.ToImmutable ();
-		interfaces = [..interfacesSet];
+		interfaces = [.. interfacesSet];
 	}
 }

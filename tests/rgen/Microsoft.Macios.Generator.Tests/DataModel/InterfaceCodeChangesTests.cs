@@ -257,7 +257,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: ReturnTypeForEnum("NS.MyEnum"),
+							returnType: ReturnTypeForEnum ("NS.MyEnum"),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -602,7 +602,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: ReturnTypeForVoid (), 
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [

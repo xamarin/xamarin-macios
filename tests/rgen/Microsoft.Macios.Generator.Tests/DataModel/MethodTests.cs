@@ -34,7 +34,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -62,7 +62,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new ("myMethod"),
 					attributes: [
@@ -329,7 +329,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -430,7 +430,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -467,7 +467,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],

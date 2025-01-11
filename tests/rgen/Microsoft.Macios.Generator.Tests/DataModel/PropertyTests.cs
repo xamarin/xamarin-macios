@@ -26,7 +26,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var property = new Property (
 			name: propertyName,
-			returnType: ReturnTypeForString(),
+			returnType: ReturnTypeForString (),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],

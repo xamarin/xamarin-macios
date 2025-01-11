@@ -55,7 +55,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		get => isNSObject;
 		init => isNSObject = value;
 	}
-	
+
 	readonly bool isNativeObject = false;
 
 	public bool IsNativeObject {
@@ -72,7 +72,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 	readonly ImmutableArray<string> interfaces = [];
 
 	public ImmutableArray<string> Interfaces {
-		get => interfaces; 
+		get => interfaces;
 		init => interfaces = value;
 	}
 
@@ -108,9 +108,9 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
 		symbol.GetInheritance (
-			isNSObject: out isNSObject, 
-			isNativeObject: out isNativeObject, 
-			parents: out parents, 
+			isNSObject: out isNSObject,
+			isNativeObject: out isNativeObject,
+			parents: out parents,
 			interfaces: out interfaces);
 	}
 
@@ -131,7 +131,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 			return false;
 		if (IsVoid != other.IsVoid)
 			return false;
-		
+
 		// compare base classes and interfaces, order does not matter at all
 		var listComparer = new CollectionComparer<string> ();
 		if (!listComparer.Equals (parents, other.Parents))
