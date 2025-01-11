@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -74,7 +76,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 		bindingContext.Builder.AppendLine ();
 
 		// register the class only if we are not dealing with a static class
-		var bindingData = (BindingTypeData<Class>) bindingContext.Changes.BindingData;
+		var bindingData = (BindingTypeData<Class>) bindingContext.Changes.BindingInfo;
 		// registration depends on the class name. If the binding data contains a name, we use that one, else
 		// we use the name of the class
 		var registrationName = bindingData.Name ?? bindingContext.Changes.Name;

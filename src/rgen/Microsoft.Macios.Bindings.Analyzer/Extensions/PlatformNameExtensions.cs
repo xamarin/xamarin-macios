@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Bindings.Analyzer.Extensions;

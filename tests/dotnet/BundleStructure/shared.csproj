@@ -12,6 +12,9 @@
 		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
 		<!-- disable IL stripping, because some of our assemblies aren't actually assemblies, they're just placeholder files -->
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+		<!-- Skip static library validation for Hot Restart, we have some static libraries here we don't care about at runtime -->
+		<SkipStaticLibraryValidation>warn</SkipStaticLibraryValidation>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />

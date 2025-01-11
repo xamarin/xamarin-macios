@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -5,6 +7,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Formatters;
 
 static class MethodFormatter {
+
 	public static CompilationUnitSyntax? ToDeclaration (this in Method? method)
 	{
 		if (method is null)
@@ -13,7 +16,7 @@ static class MethodFormatter {
 			.WithMembers (
 				SingletonList<MemberDeclarationSyntax> (
 					MethodDeclaration (
-							returnType: IdentifierName (method.Value.ReturnType),
+							returnType: method.Value.ReturnType.GetIdentifierSyntax (),
 							identifier: Identifier (method.Value.Name)
 								.WithLeadingTrivia (Space)
 								.WithTrailingTrivia (Space)) // adding the spaces manually to follow the mono style

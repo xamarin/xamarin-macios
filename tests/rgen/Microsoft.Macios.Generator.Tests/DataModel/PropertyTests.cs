@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +25,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var property = new Property (
 			name: propertyName,
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
+			returnType: new ReturnType ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -39,10 +39,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: true,
+			returnType: new ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -50,10 +47,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "Second",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: true,
+			returnType: new ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -71,10 +65,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -82,10 +73,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "First",
-			type: "int",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new ("int"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -103,10 +91,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new (
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -114,20 +106,24 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: true,
+			returnType: new (
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: true
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			accessors: []
 		);
 
-		Assert.False (x.Equals (y));
-		Assert.False (y.Equals (x));
-		Assert.False (x == y);
-		Assert.True (x != y);
+		Assert.False (condition: x.Equals (other: y));
+		Assert.False (condition: y.Equals (other: x));
+		Assert.False (condition: x == y);
+		Assert.True (condition: x != y);
 	}
 
 	[Fact]
@@ -135,10 +131,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new (
+				type: "string",
+				isBlittable: true,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -146,10 +146,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: true,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new (
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -167,10 +171,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: false,
-			isReferenceType: false,
+			returnType: new (
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: true,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -178,10 +186,14 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "First",
-			type: "string",
-			isBlittable: false,
-			isSmartEnum: true,
-			isReferenceType: false,
+			returnType: new (
+				type: "string",
+				isBlittable: false,
+				isSmartEnum: false,
+				isNullable: false,
+				isArray: false,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -197,11 +209,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", "string", false, false, false, new (), [
+		var x = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", "int", false, false, false, new (), [
+		var y = new Property ("First", new ("string"), new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -214,13 +226,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", "string", false, false, false, new (), [
+		var x = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", "int", false, false, false, new (), [
+		var y = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -236,7 +248,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", "string", false, false, false, new (), [
+		var x = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -257,7 +269,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, false, false, new (), [
+		var y = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -281,7 +293,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
-		var x = new Property ("First", "string", false, false, new (), [
+		var x = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -295,7 +307,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "int", false, false, new (), [
+		var y = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -319,7 +331,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", "string", false, false, false, new (), [
+		var x = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -340,7 +352,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", "string", false, false, false, new (), [
+		var y = new Property ("First", new ("string"), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -387,44 +399,13 @@ public class TestClass {
 				automaticGetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
-					symbolAvailability: new (),
-					attributes: [],
-					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
-					],
-					accessors: [
-						new (AccessorKind.Getter, new (), [], [])
-					])
-			];
-
-			const string valueTypeProperty = @"
-using System;
-
-namespace Test;
-
-public class TestClass {
-
-	public int Name { get; }
-}
-";
-			yield return [
-				valueTypeProperty,
-				new Property (
-					name: "Name",
-					type: "int",
-					isBlittable: true,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [
-						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -434,8 +415,47 @@ public class TestClass {
 							attributes: [],
 							modifiers: []
 						)
-					]) {
-					ExportPropertyData = new ("name"),
+					]
+				) {
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string valueTypeProperty = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public int Name { get; }
+}
+";
+			yield return [
+				valueTypeProperty,
+				new Property (
+					name: "Name",
+					returnType: new (type: "int", isBlittable: true),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new (selector: "name"),
 				},
 			];
 
@@ -458,28 +478,27 @@ public class TestClass {
 				automaticGetterExportData,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [
-						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Getter,
 							symbolAvailability: new (),
-							exportPropertyData: new ("myName"),
+							exportPropertyData: new (selector: "myName"),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
+								new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["myName"]),
 							],
 							modifiers: []
 						)
-					]) {
-					ExportPropertyData = new ("name"),
+					]
+				) {
+					ExportPropertyData = new (selector: "name"),
 				},
 			];
 
@@ -500,16 +519,13 @@ public class TestClass {
 				automaticGetterSetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [
-						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.InternalKeyword),
 					],
 					accessors: [
 						new (
@@ -527,7 +543,7 @@ public class TestClass {
 							modifiers: []
 						)
 					]) {
-					ExportPropertyData = new ("name"),
+					ExportPropertyData = new (selector: "name"),
 				},
 			];
 
@@ -553,37 +569,35 @@ public class TestClass {
 				automaticGetterSetterExportData,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [
-						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"]),
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.InternalKeyword),
 					],
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Getter,
 							symbolAvailability: new (),
-							exportPropertyData: new ("myName"),
+							exportPropertyData: new (selector: "myName"),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["myName"]),
+								new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["myName"]),
 							],
 							modifiers: []
 						),
 						new (
 							accessorKind: AccessorKind.Setter,
 							symbolAvailability: new (),
-							exportPropertyData: new ("setMyName"),
+							exportPropertyData: new (selector: "setMyName"),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["setMyName"]),
+								new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["setMyName"]),
 							],
 							modifiers: []
 						)
 					]) {
-					ExportPropertyData = new ("name"),
+					ExportPropertyData = new (selector: "name"),
 				},
 			];
 
@@ -600,14 +614,11 @@ public class TestClass {
 				manualGetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -633,14 +644,11 @@ public class TestClass {
 				expressionGetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -668,14 +676,11 @@ public class TestClass {
 				expressionGetterSetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -711,14 +716,11 @@ public class TestClass {
 				manualGetterSetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -754,14 +756,11 @@ public class TestClass {
 				internalSetter,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -777,7 +776,7 @@ public class TestClass {
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: [
-								SyntaxFactory.Token (SyntaxKind.InternalKeyword),
+								SyntaxFactory.Token (kind: SyntaxKind.InternalKeyword),
 							]
 						),
 					])
@@ -801,22 +800,19 @@ public class TestClass {
 ";
 
 			var propertyAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
-			propertyAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios"));
+			propertyAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios"));
 
 			yield return [
 				propertyWithAttribute,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -856,21 +852,18 @@ public class TestClass {
 
 			var getterAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
 			var setterAvailabilityBuilder = SymbolAvailability.CreateBuilder ();
-			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
 			yield return [
 				propertyGetterWithAttribute,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -878,7 +871,7 @@ public class TestClass {
 							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [
-								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
 							],
 							modifiers: []
 						),
@@ -913,23 +906,20 @@ public class TestClass {
 
 			getterAvailabilityBuilder.Clear ();
 			setterAvailabilityBuilder.Clear ();
-			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
-			setterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios18.0"));
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			setterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios18.0"));
 
 			yield return [
 				propertyWithGetterAndSetterWithAttribute,
 				new Property (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "string", isReferenceType: true),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -937,7 +927,7 @@ public class TestClass {
 							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [
-								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
 							],
 							modifiers: []
 						),
@@ -946,7 +936,7 @@ public class TestClass {
 							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [
-								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios18.0"]),
 							],
 							modifiers: []
 						),
@@ -977,23 +967,20 @@ namespace Test {
 ";
 			getterAvailabilityBuilder.Clear ();
 			setterAvailabilityBuilder.Clear ();
-			getterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios17.0"));
-			setterAvailabilityBuilder.Add (new SupportedOSPlatformData ("ios18.0"));
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			setterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios18.0"));
 
 			yield return [
 				propertyWithCustomType,
 				new Property (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: true,
+					returnType: new (type: "Utils.MyClass", isReferenceType: true),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
-						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
 					],
 					modifiers: [
-						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
 					],
 					accessors: [
 						new (
@@ -1001,7 +988,7 @@ namespace Test {
 							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [
-								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios17.0"]),
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
 							],
 							modifiers: []
 						),
@@ -1010,7 +997,7 @@ namespace Test {
 							symbolAvailability: setterAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [
-								new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios18.0"]),
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios18.0"]),
 							],
 							modifiers: []
 						),

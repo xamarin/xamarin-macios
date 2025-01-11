@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
@@ -23,10 +25,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -43,10 +42,7 @@ public class PropertiesEqualityComparerTests {
 				]),
 			new (
 				name: "SecondProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -65,10 +61,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -94,10 +87,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -116,10 +106,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "AVFoundation.AVVideo",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("AVFoundation.AVVideo"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -145,10 +132,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -167,10 +151,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				isSmartEnum: false,
-				type: "string",
-				isBlittable: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -196,10 +177,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: false,
-				isReferenceType: false,
+				returnType: new ("string"),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
@@ -218,10 +196,7 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "string",
-				isBlittable: false,
-				isSmartEnum: true,
-				isReferenceType: false,
+				returnType: new ("string", isSmartEnum: true),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
