@@ -27,8 +27,9 @@ namespace MyNamespace {
 	}
 }
 ";
-		var (compilation, _) = CreateCompilation (platform, sources: inputText);
-		var rootContext = new RootBindingContext (compilation);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (compilation.SyntaxTrees);
+		var rootContext = new RootBindingContext (compilation.GetSemanticModel (syntaxTrees[0]));
 		Assert.True (rootContext.TryComputeLibraryName (attributeLibName, ns, out var libName, out var libPath));
 		Assert.Equal (expectedLibraryName, libName);
 	}
@@ -48,8 +49,9 @@ namespace MyNamespace {
 	}
 }
 ";
-		var (compilation, _) = CreateCompilation (platform, sources: inputText);
-		var rootContext = new RootBindingContext (compilation);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (compilation.SyntaxTrees);
+		var rootContext = new RootBindingContext (compilation.GetSemanticModel (syntaxTrees[0]));
 		Assert.Equal (rootContext.IsSystemLibrary (lib), expectedResult);
 	}
 }

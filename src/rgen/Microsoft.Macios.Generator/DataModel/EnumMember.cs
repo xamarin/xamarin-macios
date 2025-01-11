@@ -18,6 +18,16 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Get the name of the member.
 	/// </summary>
 	public string Name { get; }
+	
+	/// <summary>
+	/// Name of the library that contains the smart enum definition.
+	/// </summary>
+	public string LibraryName { get; }
+	
+	/// <summary>
+	/// Path of the library that contains the smart enum definition.
+	/// </summary>
+	public string? LibraryPath { get; }
 
 	/// <summary>
 	/// The platform availability of the enum value.
@@ -38,13 +48,21 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
+	/// <param name="libraryName">The library name of the smart enum.</param>
+	/// <param name="libraryPath">The library path to the library, null if it is a known frameworl.</param>
 	/// <param name="fieldData">The binding data attached to this enum value.</param>
 	/// <param name="symbolAvailability">The symbol availability of the member.</param>
 	/// <param name="attributes">The list of attribute changes in the member.</param>
-	public EnumMember (string name, FieldData<EnumValue>? fieldData, SymbolAvailability symbolAvailability,
+	public EnumMember (string name, 
+		string libraryName,
+		string? libraryPath,
+		FieldData<EnumValue>? fieldData, 
+		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
+		LibraryName = libraryName;
+		LibraryPath = libraryPath;
 		FieldData = fieldData;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
@@ -54,7 +72,16 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
-	public EnumMember (string name) : this (name, null, new SymbolAvailability (), ImmutableArray<AttributeCodeChange>.Empty)
+	/// <param name="libraryName">The library name of the smart enum.</param>
+	/// <param name="libraryPath">The library path to the library, null if it is a known frameworl.</param>
+	public EnumMember (string name, string libraryName, string? libraryPath) 
+		: this (
+			name: name, 
+			libraryName: libraryName, 
+			libraryPath: libraryPath, 
+			fieldData: null, 
+			symbolAvailability: new SymbolAvailability (), 
+			attributes: ImmutableArray<AttributeCodeChange>.Empty)
 	{
 	}
 
