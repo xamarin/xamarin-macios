@@ -12,6 +12,7 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 using Property = Microsoft.Macios.Generator.DataModel.Property;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -25,7 +26,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var property = new Property (
 			name: propertyName,
-			returnType: new ReturnType ("string"),
+			returnType: ReturnTypeForString(),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -39,7 +40,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			returnType: new ("string"),
+			returnType: ReturnTypeForString (),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -47,7 +48,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "Second",
-			returnType: new ("string"),
+			returnType: ReturnTypeForString (),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -65,7 +66,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var x = new Property (
 			name: "First",
-			returnType: new ("string"),
+			returnType: ReturnTypeForString (),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -73,7 +74,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		);
 		var y = new Property (
 			name: "First",
-			returnType: new ("int"),
+			returnType: ReturnTypeForInt (),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
@@ -209,11 +210,11 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAttrs ()
 	{
-		var x = new Property ("First", new ("string"), new (), [
+		var x = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [], []);
-		var y = new Property ("First", new ("string"), new (), [
+		var y = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr2"),
 		], [], []);
 
@@ -226,13 +227,13 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffModifiers ()
 	{
-		var x = new Property ("First", new ("string"), new (), [
+		var x = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
 			SyntaxFactory.Token (SyntaxKind.AbstractKeyword)
 		], []);
-		var y = new Property ("First", new ("string"), new (), [
+		var y = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -248,7 +249,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessors ()
 	{
-		var x = new Property ("First", new ("string"), new (), [
+		var x = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -269,7 +270,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", new ("string"), new (), [
+		var y = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -293,7 +294,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDiffAccessorsExportData ()
 	{
-		var x = new Property ("First", new ("string"), new (), [
+		var x = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -307,7 +308,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", new ("string"), new (), [
+		var y = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -331,7 +332,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareEquals ()
 	{
-		var x = new Property ("First", new ("string"), new (), [
+		var x = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -352,7 +353,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 				modifiers: []
 			),
 		]);
-		var y = new Property ("First", new ("string"), new (), [
+		var y = new Property ("First", ReturnTypeForString (), new (), [
 			new ("Attr1"),
 			new ("Attr2"),
 		], [
@@ -399,7 +400,7 @@ public class TestClass {
 				automaticGetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [
 						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
@@ -437,7 +438,7 @@ public class TestClass {
 				valueTypeProperty,
 				new Property (
 					name: "Name",
-					returnType: new (type: "int", isBlittable: true),
+					returnType: ReturnTypeForInt (),
 					symbolAvailability: new (),
 					attributes: [
 						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
@@ -478,7 +479,7 @@ public class TestClass {
 				automaticGetterExportData,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [
 						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
@@ -519,7 +520,7 @@ public class TestClass {
 				automaticGetterSetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [
 						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
@@ -569,7 +570,7 @@ public class TestClass {
 				automaticGetterSetterExportData,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [
 						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
@@ -614,7 +615,7 @@ public class TestClass {
 				manualGetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -644,7 +645,7 @@ public class TestClass {
 				expressionGetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -676,7 +677,7 @@ public class TestClass {
 				expressionGetterSetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -716,7 +717,7 @@ public class TestClass {
 				manualGetterSetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -739,7 +740,6 @@ public class TestClass {
 						),
 					])
 			];
-
 			const string internalSetter = @"
 namespace Test;
 
@@ -756,7 +756,7 @@ public class TestClass {
 				internalSetter,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
@@ -806,7 +806,7 @@ public class TestClass {
 				propertyWithAttribute,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
@@ -857,7 +857,7 @@ public class TestClass {
 				propertyGetterWithAttribute,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
@@ -913,7 +913,7 @@ public class TestClass {
 				propertyWithGetterAndSetterWithAttribute,
 				new Property (
 					name: "Name",
-					returnType: new (type: "string", isReferenceType: true),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
@@ -974,7 +974,7 @@ namespace Test {
 				propertyWithCustomType,
 				new Property (
 					name: "Name",
-					returnType: new (type: "Utils.MyClass", isReferenceType: true),
+					returnType: ReturnTypeForClass ("Utils.MyClass"),
 					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 					attributes: [
 						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),

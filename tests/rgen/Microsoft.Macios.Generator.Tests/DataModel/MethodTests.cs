@@ -11,6 +11,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -33,7 +34,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid(),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -61,7 +62,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid(),
 					symbolAvailability: new (),
 					exportMethodData: new ("myMethod"),
 					attributes: [
@@ -89,14 +90,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -125,14 +119,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "NS.CustomType",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForClass ("NS.CustomType"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -158,14 +145,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -193,14 +173,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -230,14 +203,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -268,14 +234,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -306,14 +265,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -344,14 +296,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -384,7 +329,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid(),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -413,14 +358,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -453,7 +391,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: new ("bool"),
+					returnType: ReturnTypeForBool (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -492,7 +430,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid(),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -529,7 +467,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid(),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -563,14 +501,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: builder.ToImmutable (),
 					exportMethodData: new (),
 					attributes: [
@@ -607,7 +538,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: new ("bool"),
+					returnType: ReturnTypeForBool (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [
