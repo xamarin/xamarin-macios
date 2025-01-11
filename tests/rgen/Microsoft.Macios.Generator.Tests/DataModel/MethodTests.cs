@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -59,7 +61,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new ("myMethod"),
 					attributes: [
@@ -87,7 +89,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -116,7 +125,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "NS.CustomType",
+					returnType: new (
+						type: "NS.CustomType",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -142,7 +158,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -170,7 +193,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -200,7 +230,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -231,7 +268,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -262,7 +306,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -293,7 +344,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -326,7 +384,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -355,7 +413,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -388,7 +453,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new ("bool"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -427,7 +492,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -464,7 +529,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -498,7 +563,14 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "string",
+					returnType: new (
+						type: "string",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: true
+					),
 					symbolAvailability: builder.ToImmutable (),
 					exportMethodData: new (),
 					attributes: [
@@ -535,7 +607,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new ("bool"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [
@@ -554,7 +626,6 @@ namespace NS {
 					]
 				)
 			];
-
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -27,7 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 			return CreateEntitlementsTask (out compiledEntitlements, out var _);
 		}
 
-		CustomCompileEntitlements CreateEntitlementsTask (out string compiledEntitlements, out string archivedEntitlements)
+		CustomCompileEntitlements CreateEntitlementsTask (out string compiledEntitlements, out string archivedEntitlements, string mobileProvision = "profile.mobileprovision")
 		{
 			var task = CreateTask<CustomCompileEntitlements> ();
 
@@ -35,7 +39,8 @@ namespace Xamarin.MacDev.Tasks {
 			task.BundleIdentifier = "com.xamarin.MySingleView";
 			task.CompiledEntitlements = new TaskItem (Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent"));
 			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "Entitlements.plist");
-			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", "profile.mobileprovision");
+			if (!string.IsNullOrEmpty (mobileProvision))
+				task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", mobileProvision);
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
@@ -256,6 +261,168 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.IsTrue (archived.ContainsKey ("keychain-access-group"), "archived");
 			var archivedKag = ((PString?) archived ["keychain-access-group"])?.Value;
 			Assert.That (archivedKag, Is.EqualTo ("Z8CSQKJE7R.org.xamarin"), "archived value 1");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_Invalid (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("invalid", 1, mode);
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Message, "Invalid value 'invalid' for the 'ValidateEntitlements' property. Valid values are: 'disable', 'warn' or 'error'.", "Error message");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Code, "MT7138", "Error code");
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_NotInProfile_Default (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("", 1, mode);
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Message, "The app requests the entitlement 'aps-environment', but the provisioning profile 'iOS Team Provisioning Profile: *' does not contain this entitlement.", "Error message");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Code, "MT7140", "Error code");
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_NotInProfile_Error (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("error", 1, mode);
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Message, "The app requests the entitlement 'aps-environment', but the provisioning profile 'iOS Team Provisioning Profile: *' does not contain this entitlement.", "Error message");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Code, "MT7140", "Error code");
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_NotInProfile_Warning (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("warn", 0, mode);
+			Assert.AreEqual (1, Engine.Logger.WarningsEvents.Count, "WarningCount");
+			Assert.AreEqual (Engine.Logger.WarningsEvents [0].Message, "The app requests the entitlement 'aps-environment', but the provisioning profile 'iOS Team Provisioning Profile: *' does not contain this entitlement.", "Warning message");
+			Assert.AreEqual (Engine.Logger.WarningsEvents [0].Code, "MT7140", "Warning code");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_NoProfile_Error (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("error", 1, mode, mobileProvision: string.Empty);
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Message, "The app requests the entitlement 'aps-environment', but no provisioning profile has been specified. Please specify the name of the provisioning profile to use with the 'CodesignProvision' property in the project file.", "Error message");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Code, "MT7139", "Error code");
+			Assert.AreEqual (0, GetWarningsSkippingIrrelevantWarnings ().Count, "WarningCount");
+		}
+
+		List<BuildWarningEventArgs> GetWarningsSkippingIrrelevantWarnings ()
+		{
+			return Engine.Logger.WarningsEvents.Where (v => {
+				Console.WriteLine ($"Message: {v.Message}");
+				return v.Message != ("Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile for key 'application-identifier' with value '$(AppIdentifierPrefix)$(CFBundleIdentifier)'.");
+			}).ToList ();
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_NoProfile_Warning (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("warn", 0, mode, mobileProvision: string.Empty);
+			var warnings = GetWarningsSkippingIrrelevantWarnings ();
+			Assert.AreEqual (1, warnings.Count, "WarningCount");
+			Assert.AreEqual (warnings [0].Message, "The app requests the entitlement 'aps-environment', but no provisioning profile has been specified. Please specify the name of the provisioning profile to use with the 'CodesignProvision' property in the project file.", "Error message");
+			Assert.AreEqual (warnings [0].Code, "MT7139", "Warning code");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_MismatchedValue_Error (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("error", 1, mode, mobileProvision: "APS_Development_Environment_Profile.mobileprovision");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Message, "The app requests the entitlement 'aps-environment' with the value 'production', but the provisioning profile 'APS Development Environment Profile' grants it for the value 'development'.", "Error message");
+			Assert.AreEqual (Engine.Logger.ErrorEvents [0].Code, "MT7137", "Error code");
+			var warnings = GetWarningsSkippingIrrelevantWarnings ();
+			Assert.AreEqual (0, warnings.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_MismatchedValue_Warning (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("warn", 0, mode, mobileProvision: "APS_Development_Environment_Profile.mobileprovision");
+			Assert.AreEqual (1, Engine.Logger.WarningsEvents.Count, "WarningCount");
+			Assert.AreEqual (Engine.Logger.WarningsEvents [0].Message, "The app requests the entitlement 'aps-environment' with the value 'production', but the provisioning profile 'APS Development Environment Profile' grants it for the value 'development'.", "Warning message");
+			Assert.AreEqual (Engine.Logger.WarningsEvents [0].Code, "MT7137", "Warning code");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_MatchingValue_NoError (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("error", 0, mode, mobileProvision: "APS_Development_Environment_Profile.mobileprovision", apsEnvironmentValue: "development");
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_MatchingValue_NoWarning (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("warn", 0, mode, mobileProvision: "APS_Development_Environment_Profile.mobileprovision", apsEnvironmentValue: "development");
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		[Test]
+		[TestCase (EntitlementsMode.InCustomEntitlements)]
+		[TestCase (EntitlementsMode.InFile)]
+		public void ValidateEntitlements_Disabled (EntitlementsMode mode)
+		{
+			ValidateEntitlementsImpl ("disable", 0, mode);
+			Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "WarningCount");
+		}
+
+		public enum EntitlementsMode {
+			None,
+			InFile,
+			InCustomEntitlements,
+		}
+
+		CompileEntitlements ValidateEntitlementsImpl (string validateEntitlements, int expectedErrorCount, EntitlementsMode entitlementsMode, string mobileProvision = "profile.mobileprovision", string apsEnvironmentValue = "production")
+		{
+			var task = CreateTask<CustomCompileEntitlements> ();
+
+			var dir = Cache.CreateTemporaryDirectory ();
+			task.AppBundleDir = Path.Combine (dir, "TestApp.app");
+			task.BundleIdentifier = "com.xamarin.compileentitlementstasktest";
+			task.CompiledEntitlements = new TaskItem (Path.Combine (dir, "Entitlements.xcent"));
+			switch (entitlementsMode) {
+			case EntitlementsMode.InFile:
+				var path = Path.Combine (dir, "Entitlements.plist");
+				File.WriteAllText (path, $"<plist version=\"1.0\"><dict><key>aps-environment</key><string>{apsEnvironmentValue}</string></dict></plist>");
+				task.Entitlements = path;
+				break;
+			case EntitlementsMode.InCustomEntitlements:
+				var apsEnvironment = new TaskItem ("aps-environment");
+				apsEnvironment.SetMetadata ("Type", "String");
+				apsEnvironment.SetMetadata ("Value", apsEnvironmentValue);
+				task.CustomEntitlements = new [] { apsEnvironment };
+				break;
+			}
+			if (!string.IsNullOrEmpty (mobileProvision))
+				task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location)!, "Resources", mobileProvision);
+			task.SdkPlatform = "iPhoneOS";
+			// task.SdkVersion = "6.1";
+			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
+			task.ValidateEntitlements = validateEntitlements;
+			ExecuteTask (task, expectedErrorCount: expectedErrorCount);
+			return task;
 		}
 	}
 }
