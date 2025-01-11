@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Macios.Generator.Attributes;
@@ -8,7 +10,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// This struct works as a union to store the possible BindingTypeData that can be present in the bindings.
 /// </summary>
 [StructLayout (LayoutKind.Explicit)]
-readonly struct BindingData : IEquatable<BindingData> {
+readonly struct BindingInfo : IEquatable<BindingInfo> {
 	// make the struct smaller by making all wrapped structs be at index 0
 	[FieldOffset (0)] readonly BindingType bindingType;
 	[FieldOffset (8)] readonly BindingTypeData bindingTypeData;
@@ -18,42 +20,60 @@ readonly struct BindingData : IEquatable<BindingData> {
 
 	public BindingType BindingType => bindingType;
 
-	public BindingData (BindingType type, BindingTypeData data)
+	public BindingInfo (BindingType type, BindingTypeData data)
 	{
 		bindingType = type;
 		bindingTypeData = data;
 	}
 
-	public BindingData (BindingTypeData<ObjCBindings.Class> data)
+	public BindingInfo (BindingTypeData<ObjCBindings.Class> data)
 	{
 		bindingType = BindingType.Class;
 		classData = data;
 	}
 
-	public BindingData (BindingTypeData<ObjCBindings.Protocol> data)
+	public BindingInfo (BindingTypeData<ObjCBindings.Protocol> data)
 	{
 		bindingType = BindingType.Protocol;
 		protocolData = data;
 	}
 
-	public BindingData (BindingTypeData<ObjCBindings.Category> data)
+	public BindingInfo (BindingTypeData<ObjCBindings.Category> data)
 	{
 		bindingType = BindingType.Category;
 		categoryData = data;
 	}
 
-	public static implicit operator BindingTypeData (BindingData data) => data.bindingTypeData;
-	public static implicit operator BindingTypeData<ObjCBindings.Class> (BindingData data) => data.classData;
-	public static implicit operator BindingTypeData<ObjCBindings.Protocol> (BindingData data) => data.protocolData;
-	public static implicit operator BindingTypeData<ObjCBindings.Category> (BindingData data) => data.categoryData;
+	public static implicit operator BindingTypeData (BindingInfo info) => info.bindingTypeData;
 
-	public static implicit operator BindingData (BindingTypeData data) => new (BindingType.Unknown, data);
-	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Class> data) => new (data);
-	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Protocol> data) => new (data);
-	public static implicit operator BindingData (BindingTypeData<ObjCBindings.Category> data) => new (data);
+	public static implicit operator BindingTypeData<ObjCBindings.Class> (BindingInfo info)
+	{
+		if (info.BindingType != BindingType.Class)
+			throw new InvalidCastException ($"Invalid cast to ObjCBindings.Class for binding type {info.BindingType}");
+		return info.classData;
+	}
+
+	public static implicit operator BindingTypeData<ObjCBindings.Protocol> (BindingInfo info)
+	{
+		if (info.BindingType != BindingType.Protocol)
+			throw new InvalidCastException ($"Invalid cast to ObjCBindings.Protocol for binding type {info.BindingType}");
+		return info.protocolData;
+	}
+
+	public static implicit operator BindingTypeData<ObjCBindings.Category> (BindingInfo info)
+	{
+		if (info.BindingType != BindingType.Category)
+			throw new InvalidCastException ($"Invalid cast to ObjCBindings.Category for binding type {info.BindingType}");
+		return info.categoryData;
+	}
+
+	public static implicit operator BindingInfo (BindingTypeData data) => new (BindingType.Unknown, data);
+	public static implicit operator BindingInfo (BindingTypeData<ObjCBindings.Class> data) => new (data);
+	public static implicit operator BindingInfo (BindingTypeData<ObjCBindings.Protocol> data) => new (data);
+	public static implicit operator BindingInfo (BindingTypeData<ObjCBindings.Category> data) => new (data);
 
 	/// <inheritdoc />
-	public bool Equals (BindingData other)
+	public bool Equals (BindingInfo other)
 	{
 		if (bindingType != other.bindingType)
 			return false;
@@ -75,7 +95,7 @@ readonly struct BindingData : IEquatable<BindingData> {
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
-		return obj is BindingData other && Equals (other);
+		return obj is BindingInfo other && Equals (other);
 	}
 
 	/// <inheritdoc />
@@ -87,12 +107,12 @@ readonly struct BindingData : IEquatable<BindingData> {
 		_ => HashCode.Combine (bindingType, bindingTypeData)
 	};
 
-	public static bool operator == (BindingData x, BindingData y)
+	public static bool operator == (BindingInfo x, BindingInfo y)
 	{
 		return x.Equals (y);
 	}
 
-	public static bool operator != (BindingData x, BindingData y)
+	public static bool operator != (BindingInfo x, BindingInfo y)
 	{
 		return !(x == y);
 	}

@@ -64,6 +64,13 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-report/xtro-report.cs
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.csproj"
 dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-html/mono-api-html.csproj"
 dotnet format whitespace "$SRC_DIR/tools/api-tools/mono-api-info/mono-api-info.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/MonoTouch.Dialog/MonoTouch.Dialog.iOS.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/MonoTouch.Dialog/MonoTouch.Dialog.MacCatalyst.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/MonoTouch.Dialog/MonoTouch.Dialog.tvOS.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/Touch.Unit/Touch.Client/dotnet/Touch.Client.iOS.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/Touch.Unit/Touch.Client/dotnet/Touch.Client.MacCatalyst.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/Touch.Unit/Touch.Client/dotnet/Touch.Client.macOS.csproj"
+dotnet format whitespace "$SRC_DIR/tests/common/Touch.Unit/Touch.Client/dotnet/Touch.Client.tvOS.csproj"
 dotnet format whitespace --folder "$SRC_DIR"
 
 for file in "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/*/.template.config/localize/*.json "$SRC_DIR"/dotnet/Templates/Microsoft.*.Templates/*/.template.config/localize/*.json; do

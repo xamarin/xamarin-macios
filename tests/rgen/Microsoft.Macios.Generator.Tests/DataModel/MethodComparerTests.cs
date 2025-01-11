@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
@@ -14,7 +16,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -25,7 +27,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyOtherType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -42,7 +44,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -53,7 +55,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyOtherMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -69,7 +71,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -80,14 +82,22 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "int",
+			returnType: new (
+				type: "int",
+				isNullable: false,
+				isBlittable: false,
+				isSmartEnum: false,
+				isArray: true,
+				isReferenceType: false
+			),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
 			modifiers: [],
 			parameters: []
 		);
-		Assert.Equal (String.Compare (x.ReturnType, y.ReturnType, StringComparison.Ordinal), comparer.Compare (x, y));
+		var returnTypeComparer = new MethodReturnTypeComparer ();
+		Assert.Equal (returnTypeComparer.Compare (x.ReturnType, y.ReturnType), comparer.Compare (x, y));
 	}
 
 	[Fact]
@@ -96,7 +106,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -110,7 +120,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -128,7 +138,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -141,7 +151,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [],
@@ -161,7 +171,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -177,7 +187,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -197,7 +207,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -212,7 +222,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -233,7 +243,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -250,7 +260,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -273,7 +283,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -290,7 +300,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -313,7 +323,7 @@ public class MethodComparerTests {
 		var x = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [
@@ -332,7 +342,7 @@ public class MethodComparerTests {
 		var y = new Method (
 			type: "MyType",
 			name: "MyMethod",
-			returnType: "void",
+			returnType: new ("void"),
 			symbolAvailability: new (),
 			exportMethodData: new (),
 			attributes: [

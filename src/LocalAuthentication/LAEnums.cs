@@ -43,15 +43,15 @@ namespace LocalAuthentication {
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : long {
 		Success = 0,
-		/// Authentication was not successful, because user failed to provide valid credentials.
+		/// <summary>Authentication was not successful, because user failed to provide valid credentials.</summary>
 		AuthenticationFailed = -1,
-		/// Authentication was canceled by user (e.g. tapped Cancel button).
+		/// <summary>Authentication was canceled by user (e.g. tapped Cancel button).</summary>
 		UserCancel = -2,
-		/// Authentication was canceled, because the user tapped the fallback button (Enter Password).
+		/// <summary>Authentication was canceled, because the user tapped the fallback button (Enter Password).</summary>
 		UserFallback = -3,
-		/// Authentication was canceled by system (e.g. another application went to foreground).
+		/// <summary>Authentication was canceled by system (e.g. another application went to foreground).</summary>
 		SystemCancel = -4,
-		/// Authentication could not start, because passcode is not set on the device.
+		/// <summary>Authentication could not start, because passcode is not set on the device.</summary>
 		PasscodeNotSet = -5,
 
 #if !NET

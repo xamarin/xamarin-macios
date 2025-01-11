@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #pragma warning disable APL0003
 using System;
 using System.Collections;
@@ -23,7 +25,7 @@ public class SemanticModelExtensionsTests : BaseGeneratorTestClass {
 	class TestDataGetNameAndNamespaceTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			var bindingData = new BindingData (new BindingTypeData<Class> ());
+			var bindingData = new BindingInfo (new BindingTypeData<Class> ());
 			var builder = SymbolAvailability.CreateBuilder ();
 			const string filescopedNamespaceClass = @"
 using ObjCBindings;
@@ -116,7 +118,7 @@ namespace Foo {
 	class TestDataGetNameAndNamespaceAndAvailabilityTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			var bindingData = new BindingData (new BindingTypeData<Class> ());
+			var bindingData = new BindingInfo (new BindingTypeData<Class> ());
 			var builder = SymbolAvailability.CreateBuilder ();
 			builder.Add (new SupportedOSPlatformData ("ios17.0"));
 			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
@@ -249,7 +251,7 @@ public class Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Class> ())];
+				new BindingInfo (new BindingTypeData<Class> ())];
 
 			const string classBindingDisableConstructorsType = @"
 using ObjCBindings;
@@ -267,7 +269,7 @@ public class Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Class> (Class.DisableDefaultCtor))];
+				new BindingInfo (new BindingTypeData<Class> (Class.DisableDefaultCtor))];
 
 			const string classBindingName = @"
 using ObjCBindings;
@@ -285,7 +287,7 @@ public class Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Class> ("ObjcFoo"))];
+				new BindingInfo (new BindingTypeData<Class> ("ObjcFoo"))];
 
 			const string classBindingNameAndFlags = @"
 using ObjCBindings;
@@ -303,7 +305,7 @@ public class Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Class> ("ObjcFoo", Class.DisableDefaultCtor))];
+				new BindingInfo (new BindingTypeData<Class> ("ObjcFoo", Class.DisableDefaultCtor))];
 
 			const string categoryBindingType = @"
 using ObjCBindings;
@@ -321,7 +323,7 @@ public static class Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Category> ())];
+				new BindingInfo (new BindingTypeData<Category> ())];
 
 			const string protocolBindingType = @"
 using ObjCBindings;
@@ -339,7 +341,7 @@ public interface IFoo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (new BindingTypeData<Protocol> ())];
+				new BindingInfo (new BindingTypeData<Protocol> ())];
 
 			const string smartEnumBindingType = @"
 using ObjCBindings;
@@ -358,7 +360,7 @@ public enum Foo {
 				ImmutableArray<string>.Empty,
 				ns,
 				builder.ToImmutable (),
-				new BindingData (BindingType.SmartEnum, new ())];
+				new BindingInfo (BindingType.SmartEnum, new ())];
 
 		}
 
@@ -368,8 +370,8 @@ public enum Foo {
 	class TestDataGetNameAndNamespaceInheritanceTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			var classBindingData = new BindingData (new BindingTypeData<Class> ());
-			var protocolBindingData = new BindingData (new BindingTypeData<Protocol> ());
+			var classBindingData = new BindingInfo (new BindingTypeData<Class> ());
+			var protocolBindingData = new BindingInfo (new BindingTypeData<Protocol> ());
 			var builder = SymbolAvailability.CreateBuilder ();
 			ImmutableArray<string> ns = ImmutableArray.Create ("Test");
 
@@ -612,7 +614,7 @@ public interface IFoo : IList<string> {
 	[AllSupportedPlatformsClassData<TestDataGetNameAndNamespaceInheritanceTests>]
 	internal void GetNameAndNamespaceTests (ApplePlatform platform, BindingType bindingType,
 		string inputText, string expectedName, string? expectedBaseClass, ImmutableArray<string> expectedInterfaces,
-		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability, BindingData expectedData)
+		ImmutableArray<string> expectedNamespace, SymbolAvailability expectedAvailability, BindingInfo expectedInfo)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
@@ -630,12 +632,12 @@ public interface IFoo : IList<string> {
 			interfaces: out var interfaces,
 			namespaces: out var @namespace,
 			symbolAvailability: out var symbolAvailability,
-			bindingData: out var bindingData);
+			bindingInfo: out var bindingData);
 		Assert.Equal (expectedName, name);
 		Assert.Equal (expectedBaseClass, baseClass);
 		Assert.Equal (expectedInterfaces, interfaces, interfacesComparer);
 		Assert.Equal (expectedNamespace, @namespace, nameSpaceComparer);
 		Assert.Equal (expectedAvailability, symbolAvailability);
-		Assert.Equal (expectedData, bindingData);
+		Assert.Equal (expectedInfo, bindingData);
 	}
 }

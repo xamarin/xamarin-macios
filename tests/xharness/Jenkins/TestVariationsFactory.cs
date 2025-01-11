@@ -172,7 +172,6 @@ namespace Xharness.Jenkins {
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
-					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
@@ -202,31 +201,22 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetProperty ("MtouchLink", link_mode);
 						}
 						if (!string.IsNullOrEmpty (defines)) {
-							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+							clone.Xml.AddAdditionalDefines (defines);
 							if (clone.ProjectReferences is not null) {
 								foreach (var pr in clone.ProjectReferences) {
-									pr.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+									pr.Xml.AddAdditionalDefines (defines);
 									pr.Xml.Save (pr.Path);
 								}
 							}
 						}
-						if (!string.IsNullOrEmpty (undefines)) {
-							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
-							if (clone.ProjectReferences is not null) {
-								foreach (var pr in clone.ProjectReferences) {
-									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
-									pr.Xml.Save (pr.Path);
-								}
-							}
-						}
-						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+						clone.Xml.SetProperty (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False");
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetProperty ("EnableSGenConc", "true");
 						if (use_llvm)
 							clone.Xml.SetProperty ("MtouchUseLlvm", "true");
 
 						if (!debug && !isMac)
-							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
+							clone.Xml.SetProperty ("MtouchUseLlvm", "true");
 						if (use_mono_runtime.HasValue)
 							clone.Xml.SetProperty ("UseMonoRuntime", use_mono_runtime.Value ? "true" : "false");
 						if (!string.IsNullOrEmpty (runtime_identifer))

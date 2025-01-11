@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ public partial interface IProtocol {
 			yield return [
 				emptyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -68,7 +70,7 @@ internal partial interface IProtocol {
 			yield return [
 				internalInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -100,7 +102,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -117,10 +119,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "string",
-							isBlittable: false,
-							isSmartEnum: false,
-							isReferenceType: true,
+							returnType: new (type: "string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -172,7 +171,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertySmartEnumInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -189,10 +188,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "NS.MyEnum",
-							isBlittable: true,
-							isSmartEnum: true,
-							isReferenceType: false,
+							returnType: new ("NS.MyEnum", isSmartEnum: true, isBlittable: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -243,7 +239,7 @@ public partial interface IProtocol {
 			yield return [
 				singlePropertyEnumInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -260,10 +256,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "NS.MyEnum",
-							isBlittable: true,
-							isSmartEnum: false,
-							isReferenceType: false,
+							returnType: new ("NS.MyEnum", isBlittable: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -310,7 +303,7 @@ public partial interface IProtocol {
 			yield return [
 				notificationPropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -327,10 +320,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "string",
-							isBlittable: false,
-							isSmartEnum: false,
-							isReferenceType: true,
+							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
@@ -379,7 +369,7 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterfaceMissingExport,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -396,10 +386,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "string",
-							isBlittable: false,
-							isSmartEnum: false,
-							isReferenceType: true,
+							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -449,7 +436,7 @@ public partial interface IProtocol {
 			yield return [
 				multiPropertyInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -466,10 +453,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							type: "string",
-							isBlittable: false,
-							isSmartEnum: false,
-							isReferenceType: true,
+							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -499,10 +483,7 @@ public partial interface IProtocol {
 						},
 						new (
 							name: "Surname",
-							type: "string",
-							isBlittable: false,
-							isSmartEnum: false,
-							isReferenceType: true,
+							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -549,7 +530,7 @@ public partial interface IProtocol {
 			yield return [
 				singleMethodInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -567,7 +548,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -602,7 +583,7 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterfaceMissingExport,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -620,7 +601,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -656,7 +637,7 @@ public partial interface IProtocol {
 			yield return [
 				multiMethodInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -674,7 +655,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -691,7 +672,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetSurname",
-							returnType: "void",
+							returnType: new ("void"),
 							symbolAvailability: new (),
 							exportMethodData: new ("withSurname:"),
 							attributes: [
@@ -725,7 +706,7 @@ public partial interface IProtocol {
 			yield return [
 				singleEventInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",
@@ -786,7 +767,7 @@ public partial interface IProtocol {
 			yield return [
 				multiEventInterface,
 				new CodeChanges (
-					bindingData: new (new BindingTypeData<Protocol> ()),
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
 					fullyQualifiedSymbol: "NS.IProtocol",

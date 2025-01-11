@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -73,6 +75,17 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public ReferenceKind ReferenceKind { get; init; }
 
 	/// <summary>
+	/// If the parameter is a delegate. The method information of the invoke.
+	/// </summary>
+	public DelegateInfo? Delegate { get; init; } = null;
+
+	/// <summary>
+	/// True if the parameter is a delegate.
+	/// </summary>
+	//[MemberNotNullWhen (true, nameof (DelegateMethod))]
+	public bool IsDelegate => Delegate is not null;
+
+	/// <summary>
 	/// List of attributes attached to the parameter.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
@@ -91,6 +104,12 @@ readonly struct Parameter : IEquatable<Parameter> {
 		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
 			? arrayTypeSymbol.ElementType.ToDisplayString ()
 			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
+		DelegateInfo? delegateInfo = null;
+		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
+			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
+			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
+		}
+
 		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
@@ -100,6 +119,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 			IsArray = symbol.Type is IArrayTypeSymbol,
 			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
 			ReferenceKind = symbol.RefKind.ToReferenceKind (),
+			Delegate = delegateInfo,
 			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
 		};
 		return true;
@@ -132,6 +152,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 			return false;
 		if (ReferenceKind != other.ReferenceKind)
 			return false;
+		if (Delegate != other.Delegate)
+			return false;
 
 		var attributeComparer = new AttributesEqualityComparer ();
 		return attributeComparer.Equals (Attributes, other.Attributes);
@@ -143,6 +165,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		return obj is Parameter other && Equals (other);
 	}
 
+	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
 		var hashCode = new HashCode ();
@@ -157,6 +180,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsArray);
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
+		hashCode.Add (Delegate);
 		return hashCode.ToHashCode ();
 	}
 
@@ -187,7 +211,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind} }}");
+		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
+		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
 		return sb.ToString ();
 	}
 }

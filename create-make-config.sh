@@ -12,9 +12,6 @@ LANG=C
 export LANG
 
 # Compute commit distances
-printf "IOS_COMMIT_DISTANCE:=$(git log $(git blame -- ./Make.versions HEAD | grep IOS_PACKAGE_VERSION= | sed 's/ .*//' )..HEAD --oneline | wc -l | sed 's/ //g')\n" >> "$OUTPUT_FILE"
-printf "MAC_COMMIT_DISTANCE:=$(git log $(git blame -- ./Make.versions HEAD | grep MAC_PACKAGE_VERSION= | sed 's/ .*//' )..HEAD --oneline | wc -l | sed 's/ //g')\n" >> "$OUTPUT_FILE"
-
 for platform in $ALL_DOTNET_PLATFORMS; do
 	PLATFORM=$(echo "$platform" | tr '[:lower:]' '[:upper:]')
 	COMMIT=$(git blame -- ./Make.versions HEAD | grep "${PLATFORM}_NUGET_OS_VERSION=" | sed 's/ .*//')
