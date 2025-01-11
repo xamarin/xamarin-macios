@@ -30,7 +30,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
+
 #define DOUBLE_BLOCKS
+
+global using nfloat = global::System.Runtime.InteropServices.NFloat;
+
 using ObjCRuntime;
 using CloudKit;
 using CoreData;

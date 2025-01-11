@@ -1,36 +1,55 @@
 <Documentation>
   <Docs DocId="T:UIKit.UIAlertView">
-    <summary>A <see cref="T:UIKit.UIView" /> that displays a dialog message with one or more buttons. (As of iOS 8, devs should use <see cref="T:UIKit.UIAlertController" /> rather than this class.)</summary>
+    <summary>
+      A <see cref="UIView" /> that displays a dialog message with one or more buttons.
+      (As of iOS 8, devs should use <see cref="UIAlertController" /> rather than this class.)
+    </summary>
     <remarks>
-      <para>As of iOS 8, app devs should use <see cref="T:UIKit.UIAlertController" /> rather than this class. Extensions may not use this class at all.</para>
       <para>
-        The <see cref="T:UIKit.UIAlertView" /> allows the application user to choose among alternative actions. The following code and image, taken from the "AlertViews" section of the "ios Standard Controls" sample illustrates the simplest use-case:
+        As of iOS 8, app devs should use <see cref="UIAlertController" /> rather than this class.
+        Extensions may not use this class at all.
+      </para>
+      <para>
+        The <see cref="UIAlertView" /> allows the application user to choose among alternative actions.
+        The following code and image, taken from the "AlertViews" section of the "ios Standard Controls"
+        sample illustrates the simplest use-case:
       </para>
       <example>
         <code lang="csharp lang-csharp"><![CDATA[
-UIAlertView alert = new UIAlertView () { 
-	Title = "alert title", Message = "this is a simple alert"
+var alert = new UIAlertView () {
+	Title = "alert title",
+  Message = "this is a simple alert"
 };
-alert.AddButton("OK");
+alert.AddButton ("OK");
 alert.Show ();
         ]]></code>
       </example>
       <para>
-        <img href="~/UIKit/_images/UIKit.UIAlertView.png" alt="Screenshot showing the alert view" />
+        An alternative to the <see cref="UIAlertView" /> is the <see cref="UIActionSheet" />.
       </para>
-      <para>An alternative to the <see cref="T:UIKit.UIAlertView" /> is the <see cref="T:UIKit.UIActionSheet" />.</para>
-      <para>The application developer can use <see cref="T:UIKit.UIAlertViewStyle" />s such as <see cref="F:UIKit.UIAlertViewStyle.PlainTextInput" /> or <see cref="F:UIKit.UIAlertViewStyle.LoginAndPasswordInput" /> to allow the application user to enter values.</para>
       <para>
-   The Xamarin API supports two styles of event notification: the Objective-C style that uses a delegate class or the C# style using event notifications.  
-</para>
-      <para>
-   The C# style allows the user to add or remove event handlers at runtime by assigning to the events of properties of this class.    Event handlers can be anyone of a method, an anonymous methods or a lambda expression.  Using the C# style events or properties will override any manual settings to the Objective-C Delegate or WeakDelegate settings.
-</para>
-      <para>The Objective-C style requires the user to create a new class derived from <see cref="T:UIKit.UIAlertViewDelegate" /> class and assign it to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=UIKit%20Delegate&amp;scope=Xamarin" title="P:UIKit.Delegate">P:UIKit.Delegate</a></format> property.   Alternatively, for low-level control, by creating a class derived from <see cref="T:Foundation.NSObject" /> which has every entry point properly decorated with an [Export] attribute.   The instance of this object can then be assigned to the <see cref="P:UIKit.UIAlertView.WeakDelegate" /> property.   
+        The application developer can use <see cref="UIAlertViewStyle" />s such as <see cref="UIAlertViewStyle.PlainTextInput" />
+        or <see cref="UIAlertViewStyle.LoginAndPasswordInput" /> to allow the application user to enter values.
       </para>
-      <block subset="none" type="overrides">
+      <para>
+        The managed API supports two styles of event notification: the Objective-C style that uses a delegate class or the C# style using event notifications.
+      </para>
+      <para>
+        The C# style allows the user to add or remove event handlers at runtime by assigning to the
+        events of properties of this class. Event handlers can be anyone of a method, an anonymous method
+        or a lambda expression. Using the C# style events or properties will override any manual settings
+        to the Objective-C Delegate or WeakDelegate settings.
+      </para>
+      <para>
+        The Objective-C style requires the user to create a new class derived from <see cref="UIAlertViewDelegate" />
+        class and assign it to the <see cref="Delegate" /> property. Alternatively, for low-level control, by creating
+        a class derived from <see cref="NSObject" /> which has every entry point properly decorated with an
+        <see cref="ExportAttribute" /> attribute and assigning an instance of this class to the <see cref="WeakDelegate" />
+        property.
+      </para>
+      <para>
         <para>This class should not be subclassed.</para>
-      </block>
+      </para>
     </remarks>
     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIAlertView_Class/index.html">Apple documentation for <c>UIAlertView</c></related>
   </Docs>

@@ -227,6 +227,7 @@ class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Repo
     [ValidateNotNullOrEmpty ()][string] $Token
     [string] $Hash
+    [string[]] $PRIds
     hidden static [string] $GitHubGraphQLEndpoint = "https://api.github.com/graphql"
 
     GitHubComments (
@@ -238,6 +239,7 @@ class GitHubComments {
         $this.Repo = $githubRepo
         $this.Token = $githubToken
         $this.Hash = $null
+        $this.PRIds = [string[]]@()
     }
 
     GitHubComments (
@@ -250,9 +252,15 @@ class GitHubComments {
         $this.Repo = $githubRepo
         $this.Token = $githubToken
         $this.Hash = $hash
+        $this.PRIds = Get-GitHubPRsForHash -Org $githubOrg -Repo $githubRepo -Token $githubToken -Hash $hash
     }
 
-    static [bool] IsPR() {
+    [bool] IsPR() {
+        # if the object has a list of pr ids, we are a pr, else check the resource trigger
+        if ($this.PRIds.Length -gt 0) {
+            return $true
+        }
+
         if ($Env:BUILD_REASON -eq "PullRequest") {
             return $true;
         }
@@ -265,12 +273,6 @@ class GitHubComments {
         }
 
         return $false
-    }
-
-    static [string] GetPRID() {
-        $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
-        $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-        return $changeId 
     }
 
     [void] WriteCommentHeader(
@@ -301,8 +303,9 @@ class GitHubComments {
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
         $hashUrl = $null
         $hashSource = $null
-        if ([GitHubComments]::IsPR()) {
-            $changeId = [GitHubComments]::GetPRID()
+        if ($this.IsPR()) {
+            # we should only have a single PR id, don't worry too much about it
+            $changeId = $this.PRIds[0]
             $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
             $hashSource = " [PR build]"
         } else {
@@ -325,8 +328,9 @@ class GitHubComments {
 
     [string] GetCommentUrl() {
         # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
-        if ([GitHubComments]::IsPR()) {
-            $changeId = [GitHubComments]::GetPRID()
+        if ($this.IsPR()) {
+            # we should only have a single PR id, don't worry too much about it
+            $changeId = $this.PRIds[0]
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
             if ($this.Hash) {
@@ -372,17 +376,23 @@ class GitHubComments {
     [void] HideComments(
         [string] $commentId
     ) {
+        if ($this.PRIds.Length -eq 0) {
+            Write-Host "Not hiding comments, because we're not in a pull request"
+            return
+        }
+
         if (!$commentId) {
             Write-Host "Not hiding comments, because no comment id provided"
             return
         }
 
-        if (![GitHubComments]::IsPR()) {
+        if (!$this.IsPR()) {
             Write-Host "Not hiding comments, because we're not in a pull request"
             return
         }
 
-        $prId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+        # we should only have a single pr id, don't worry too much about it
+        $prId = $this.PRIds[0]
         $prComments = $this.GetCommentsForPR($prId)
 
         $botComments = [System.Collections.ArrayList]@()
@@ -835,6 +845,69 @@ function Get-GitHubPRInfo {
 
 <#
     .SYNOPSIS
+        Get the PR Ids related to a commit hash. If the hash has multiple PRs, all of them will be returned.
+        If the commit has landed in main, the PRs will be empty.
+
+    .PARAMETER Org
+        The organization that owns the repository.
+    
+    .PARAMETER Repo
+        The repository where the commit is located.
+    
+    .PARAMETER Token
+        The token to be used to authenticate with the GitHub API.
+
+    .PARAMETER Hash
+        The hash of the commit whose PRs we want to retrieve.
+#>
+function Get-GitHubPRsForHash {
+    param (
+        [String]
+        $Org,
+
+        [String]
+        $Repo,
+
+        [string]
+        $Token,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Hash
+    )
+
+    Write-Host "Getting related PR ids for commit $Hash"
+
+    if ($Org -and $Repo) {
+        $url = "https://api.github.com/repos/$($Org)/$($Repo)/commits/$Hash/pulls"
+    } else {
+        $url = "https://api.github.com/repos/$Env:BUILD_REPOSITORY_NAME/commits/$Hash/pulls"
+    }
+
+    if (-not $Token) {
+        $Token = $Env:GITHUB_TOKEN
+    }
+
+    $headers = @{
+        Authorization = ("token {0}" -f $Token);
+    }
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+    Write-Host "Request result: $request"
+
+    # loop over the result and remove all the extra noise we are not interested in
+    $prs = [System.Collections.ArrayList]@()
+    foreach ($prInfo in $request) {
+        $number = $prInfo.number
+        Write-Host "Found PR #$number for commit $hash"
+        $prs.Add($number) > $null
+    }
+    Write-Host "Found $($prs.Count) PRs for commit $hash"
+    return $prs
+}
+
+<#
+    .SYNOPSIS
         Class used to represent a single file to be added to a gist.
 #>
 class GistFile
@@ -1088,6 +1161,7 @@ function Convert-Markdown {
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function Get-GitHubPRInfo
+Export-ModuleMember -Function Get-GitHubPRsForHash
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 

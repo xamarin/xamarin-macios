@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -13,13 +15,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name2",
@@ -31,7 +33,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentBase ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -39,7 +41,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Base = "Base1"
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -53,7 +55,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentInterface ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -61,7 +63,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Interfaces = ["IBase1"]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -75,13 +77,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentNameSymbol ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name2",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -93,13 +95,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentNamespaceSymbol ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS1"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS2"],
 			fullyQualifiedSymbol: "NS.name1",
@@ -111,13 +113,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentBindingType ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -129,13 +131,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentAttributesLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -151,7 +153,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentAttributes ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -161,7 +163,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -177,13 +179,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMembersLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -199,7 +201,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMembers ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -209,7 +211,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -225,7 +227,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentPropertyLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -234,7 +236,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = []
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -243,10 +245,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -284,17 +283,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareSamePropertiesDiffOrder ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"], fullyQualifiedSymbol: "NS.name", symbolAvailability: new ()) {
 			EnumMembers = [],
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -322,10 +318,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -356,7 +349,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -365,10 +358,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -398,10 +388,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -436,7 +423,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentProperties ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -445,10 +432,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -476,10 +460,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -510,7 +491,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -519,10 +500,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -551,10 +529,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -589,7 +564,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentEventsLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -598,10 +573,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -629,10 +601,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -679,7 +648,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -688,10 +657,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -721,10 +687,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -759,7 +722,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareSameEventsDiffOrder ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -768,10 +731,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -799,10 +759,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -871,7 +828,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -880,10 +837,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -913,10 +867,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -991,7 +942,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentEvents ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1000,10 +951,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1031,10 +979,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1081,7 +1026,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1090,10 +1035,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1123,10 +1065,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1180,7 +1119,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMethodsLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1189,10 +1128,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1220,10 +1156,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1295,7 +1228,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1312,7 +1252,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1326,7 +1266,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1335,10 +1275,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1368,10 +1305,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1440,7 +1374,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1464,7 +1405,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareSameMethodsDiffOrder ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1473,10 +1414,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1504,10 +1442,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1579,7 +1514,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1596,7 +1538,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1610,7 +1552,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1619,10 +1561,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1652,10 +1591,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1725,7 +1661,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1739,7 +1675,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1763,7 +1706,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMethods ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1772,10 +1715,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1803,10 +1743,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1878,7 +1815,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -1892,7 +1829,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1901,10 +1838,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1934,10 +1868,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2007,7 +1938,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2034,7 +1972,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -2043,10 +1981,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2074,10 +2009,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2149,7 +2081,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2166,7 +2105,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2180,7 +2119,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -2189,10 +2128,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2222,10 +2158,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2287,7 +2220,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2301,7 +2234,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2328,7 +2268,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -2337,10 +2277,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2368,10 +2305,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2443,7 +2377,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2460,7 +2401,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2474,7 +2415,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -2483,10 +2424,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2516,10 +2454,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -2588,7 +2523,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: "void",
+					returnType: new ("void"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -2602,7 +2537,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: "bool",
+					returnType: new (
+						type: "bool",
+						isNullable: false,
+						isBlittable: false,
+						isSmartEnum: false,
+						isArray: false,
+						isReferenceType: false
+					),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],

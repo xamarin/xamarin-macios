@@ -28,7 +28,7 @@ endif
 	cd msbuild && zip -9 -r $(abspath $@) .
 	rm -rf msbuild
 
-bundle.zip: Version Version.rev
+bundle.zip:
 	rm -f $@
 	$(foreach platform,$(DOTNET_PLATFORMS),export $(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME);) \
 	for platform in $(DOTNET_PLATFORMS); do \
@@ -41,11 +41,3 @@ bundle.zip: Version Version.rev
 		zip -9 -r $(CURDIR)/bundle.zip ./Microsoft.$$platform.Ref/ref/; \
 		rm -rf tmpdir; \
 	done
-	zip -9 $@ Version Version.rev
-
-Version:
-	$(Q) echo "$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)" > $@
-
-Version.rev:
-	$(Q) echo "$(IOS_PACKAGE_VERSION_BUILD)" > $@
-

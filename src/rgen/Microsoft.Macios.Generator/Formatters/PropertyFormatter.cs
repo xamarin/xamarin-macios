@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
@@ -20,7 +22,7 @@ static class PropertyFormatter {
 		var compilationUnit = CompilationUnit ().WithMembers (
 			SingletonList<MemberDeclarationSyntax> (
 				PropertyDeclaration (
-						type: IdentifierName (property.Value.Type),
+						type: property.Value.ReturnType.GetIdentifierSyntax (),
 						identifier: Identifier (property.Value.Name))
 					.WithModifiers (TokenList (property.Value.Modifiers)))).NormalizeWhitespace ();
 		return compilationUnit;

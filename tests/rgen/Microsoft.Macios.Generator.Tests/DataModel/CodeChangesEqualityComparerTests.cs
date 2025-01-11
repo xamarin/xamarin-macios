@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
@@ -11,13 +13,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name2",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name2",
@@ -29,13 +31,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentBindingType ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.SmartEnum, new ()),
+			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -47,13 +49,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentAttributesLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -69,7 +71,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentAttributes ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -79,7 +81,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -95,13 +97,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMembersLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -117,7 +119,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentMembers ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -127,7 +129,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -143,7 +145,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentPropertyLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -152,7 +154,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = []
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -161,10 +163,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -202,7 +201,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareSamePropertiesDiffOrder ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -211,10 +210,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -242,10 +238,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -276,7 +269,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -285,10 +278,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -318,10 +308,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -356,7 +343,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentProperties ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -365,10 +352,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -396,10 +380,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -430,7 +411,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			]
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -439,10 +420,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -472,10 +450,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -510,7 +485,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentConstructorLength ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -519,10 +494,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -550,10 +522,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -585,7 +554,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Constructors = [],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -594,10 +563,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -627,10 +593,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -668,7 +631,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareDifferentConstructors ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -677,10 +640,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -708,10 +668,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -745,7 +702,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -754,10 +711,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -787,10 +741,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -834,7 +785,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareSameConstructors ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -843,10 +794,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -874,10 +822,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -918,7 +863,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -927,10 +872,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -960,10 +902,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1008,7 +947,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareSameConstructorsDiffOrder ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1017,10 +956,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1048,10 +984,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1092,7 +1025,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1101,10 +1034,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1133,10 +1063,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1181,7 +1108,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	public void CompareSameDiffModifiers ()
 	{
 		var changes1 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1194,10 +1121,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1225,10 +1149,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1269,7 +1190,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 		};
 		var changes2 = new CodeChanges (
-			bindingData: new (BindingType.Protocol, new ()),
+			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
@@ -1283,10 +1204,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			Properties = [
 				new (
 					name: "Name",
-					type: "Utils.MyClass",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("Utils.MyClass"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
@@ -1316,10 +1234,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 				new (
 					name: "Surname",
-					type: "string",
-					isBlittable: false,
-					isSmartEnum: false,
-					isReferenceType: false,
+					returnType: new ("string"),
 					symbolAvailability: new (),
 					attributes: [
 						new ("System.Runtime.Versioning.SupportedOSPlatformAttribute", ["ios"]),
