@@ -18,6 +18,9 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    
+    <!-- RBI0001 -->
+    
     <data name="RBI0001Description" xml:space="preserve">
         <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
     </data>
@@ -29,69 +32,146 @@
         <value>Binding type declaration must be partial</value>
     </data>
 
+    <!-- RBI0002 -->
+    
     <data name="RBI0002Description" xml:space="preserve">
-        <value>In order for the code to be generated a smart enum value has to have a backing field.</value>
+        <value>BindingType&lt;Class&gt; can only decorate partial classes.</value>
     </data>
     <data name="RBI0002MessageFormat" xml:space="preserve">
+        <value>BindingType&lt;Class&gt; can only be used to decorate a class but was found on '{0}' which is not a class</value>
+        <comment>'{0}' is the name of type.</comment>
+    </data>
+    <data name="RBI0002Title" xml:space="preserve">
+        <value>BindingType&lt;Class&gt; must be on a class</value>
+    </data>
+
+    <!-- RBI0003 -->
+
+    <data name="RBI0003Description" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; can only decorate partial classes.</value>
+    </data>
+    <data name="RBI0003MessageFormat" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; can only be used to decorate a class but was found on '{0}' which is not a class</value>
+        <comment>'{0}' is the name of type.</comment>
+    </data>
+    <data name="RBI0003Title" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; must be on a class</value>
+    </data>
+
+    <!-- RBI0004 -->
+    
+    <data name="RBI0004Description" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; can only decorate static classes.</value>
+    </data>
+    <data name="RBI0004MessageFormat" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; can only be used to decorate a static class but was found on '{0}' which is not static</value>
+        <comment>'{0}' is the name of type.</comment>
+    </data>
+    <data name="RBI0004Title" xml:space="preserve">
+        <value>BindingType&lt;Category&gt; must be on a static class</value>
+    </data>
+
+    <!-- RBI0005 -->
+    
+    <data name="RBI0005Description" xml:space="preserve">
+        <value>BindingType&lt;Protocol&gt; can only decorate interfaces.</value>
+    </data>
+    <data name="RBI0005MessageFormat" xml:space="preserve">
+        <value>BindingType&lt;Protocol&gt; can only be used to decorate an interface but was found on '{0}' which is not an interface</value>
+        <comment>'{0}' is the name of type.</comment>
+    </data>
+    <data name="RBI0005Title" xml:space="preserve">
+        <value>BindingType&lt;Protocol&gt; must be on an interface</value>
+    </data>
+
+    <!-- RBI0006 -->
+
+    <data name="RBI0006Description" xml:space="preserve">
+        <value>BindingType can only decorate enumerators.</value>
+    </data>
+    <data name="RBI0006MessageFormat" xml:space="preserve">
+        <value>BindingType can only be used to decorate an enumerator but was found on '{0}' which is not an enumerator</value>
+        <comment>'{0}' is the name of type.</comment>
+    </data>
+    <data name="RBI0006Title" xml:space="preserve">
+        <value>BindingType must be on an enumerator</value>
+    </data>
+
+    <!-- RBI0007 -->
+
+    <data name="RBI0007Description" xml:space="preserve">
+        <value>In order for the code to be generated a smart enum value has to have a backing field.</value>
+    </data>
+    <data name="RBI0007MessageFormat" xml:space="preserve">
         <value>The enum value '{0}' must be tagged with a Field&lt;EnumValue&gt; attribute</value>
         <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
-    <data name="RBI0002Title" xml:space="preserve">
+    <data name="RBI0007Title" xml:space="preserve">
         <value>Smart enum values must be tagged with an Field&lt;EnumValue&gt; attribute</value>
     </data>
 
-    <data name="RBI0003Description" xml:space="preserve">
+    <!-- RBI0008 -->
+
+    <data name="RBI0008Description" xml:space="preserve">
         <value>Smart enum backing field cannot appear more than once.</value>
     </data>
-    <data name="RBI0003MessageFormat" xml:space="preserve">
+    <data name="RBI0008MessageFormat" xml:space="preserve">
         <value>The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'</value>
         <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field. '{2}' is the previous enum value</comment>
     </data>
-    <data name="RBI0003Title" xml:space="preserve">
+    <data name="RBI0008Title" xml:space="preserve">
         <value>Smart enum backing field cannot appear more than once</value>
     </data>
 
-    <data name="RBI0004Description" xml:space="preserve">
+    <!-- RBI0009 -->
+    
+    <data name="RBI0009Description" xml:space="preserve">
         <value>Smart enum backing field must be a valid identifier.</value>
     </data>
-    <data name="RBI0004MessageFormat" xml:space="preserve">
+    <data name="RBI0009MessageFormat" xml:space="preserve">
         <value>The enum value '{0}' backing field '{1}' is not a valid identifier</value>
         <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field.</comment>
     </data>
-    <data name="RBI0004Title" xml:space="preserve">
+    <data name="RBI0009Title" xml:space="preserve">
         <value>Smart enum backing field must represent a valid C# identifier to be used</value>
     </data>
 
-    <data name="RBI0005Description" xml:space="preserve">
+    <!-- RBI0010 -->
+    
+    <data name="RBI0010Description" xml:space="preserve">
         <value>Smart enum backing field for a non Apple framework must provide a library name.</value>
     </data>
-    <data name="RBI0005MessageFormat" xml:space="preserve">
+    <data name="RBI0010MessageFormat" xml:space="preserve">
         <value>The field attribute for the enum value '{0}' must set the property 'LibraryName'</value>
         <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
-    <data name="RBI0005Title" xml:space="preserve">
+    <data name="RBI0010Title" xml:space="preserve">
         <value>Non Apple framework bindings must provide a library name</value>
     </data>
 
-    <data name="RBI0006Description" xml:space="preserve">
+    <!-- RBI0011 -->
+    
+    <data name="RBI0011Description" xml:space="preserve">
         <value>Fields of known Apple frameworks should not provide a LibraryName.</value>
     </data>
-    <data name="RBI0006MessageFormat" xml:space="preserve">
+    <data name="RBI0011MessageFormat" xml:space="preserve">
         <value>The Field attribute for the enum value '{0}' must not provide a value for 'LibraryName'</value>
         <comment>'{0}' is the name of the native field.</comment>
     </data>
-    <data name="RBI0006Title" xml:space="preserve">
+    <data name="RBI0011Title" xml:space="preserve">
         <value>Do not provide the LibraryName for known Apple frameworks</value>
     </data>
 
-    <data name="RBI0007Description" xml:space="preserve">
+    <!-- RBI0012 -->
+
+    <data name="RBI0012Description" xml:space="preserve">
         <value>Wrong flags were used in the FieldAttribute when applying it on an enum value.</value>
     </data>
-    <data name="RBI0007MessageFormat" xml:space="preserve">
+    <data name="RBI0012MessageFormat" xml:space="preserve">
         <value>Used attribute '{0}' on enum value '{1}' when 'ObjCBindings.FieldAttribute&lt;ObjCBindings.EnumValue&gt;' was expected</value>
         <comment>'{0}' is the name of an attribute. '{1}' is the name of the enumerator value.</comment>
     </data>
-    <data name="RBI0007Title" xml:space="preserve">
+    <data name="RBI0012Title" xml:space="preserve">
         <value>Enum values must be tagged with Field&lt;EnumValue&gt;</value>
     </data>
 </root>

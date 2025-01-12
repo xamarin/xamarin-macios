@@ -26,19 +26,18 @@ public static class BindingTypeAnalyzerExtensions {
 			return;
 		}
 
-		// the c# syntax is a a list of lists of attributes. That is why we need to iterate through the list of lists
+		// The c# syntax is a a list of lists of attributes. That is why we need to iterate through the list of lists
 		foreach (var attributeData in boundAttributes) {
 			// based on the type use the correct parser to retrieve the data
 			var attributeType = attributeData.AttributeClass?.ToDisplayString ();
-			switch (attributeType) {
-			case AttributesNames.BindingAttribute:
-				// validate that the class is partial, else we need to report an error
-				var diagnostics = self.Analyze (context.Compilation.GetCurrentPlatform (),
-					declarationNode, declaredSymbol);
-				foreach (var diagnostic in diagnostics)
-					context.ReportDiagnostic (diagnostic);
-				break;
-			}
+			// ignore attrs whose name we cannot get, or we do not care about
+			if (attributeType is null || !self.AttributeNames.Contains (attributeType))
+				continue;
+			
+			var diagnostics = self.Analyze (attributeType, context.Compilation.GetCurrentPlatform (),
+				declarationNode, declaredSymbol);
+			foreach (var diagnostic in diagnostics)
+				context.ReportDiagnostic (diagnostic);
 		}
 	}
 }
