@@ -28,7 +28,7 @@ namespace Test {
 			yield return [
 				nonPartialClassBinding,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must be declared as a partial class"
+				"The binding type 'Test.Examples' must be declared partial"
 			];
 
 			const string classBindingNotClas = @"
@@ -58,7 +58,7 @@ namespace Test {
 			yield return [
 				nonPartialCategory,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must be declared as a partial class"
+				"The binding type 'Test.Examples' must be declared partial"
 			];
 
 			const string nonClassCategory = @"
@@ -103,7 +103,7 @@ namespace Test {
 			yield return [
 				nonPartialProtocol,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must be declared as a partial class"
+				"The binding type 'Test.Examples' must be declared partial"
 			];
 
 			const string nonInterfaceProtocol = @"
@@ -121,7 +121,7 @@ namespace Test {
 				"BindingType<Protocol> can only be used to decorate an interface but was found on 'Test.Examples' which is not an interface"
 			];
 
-			const string inputText = @"
+			const string nonSmartEnum = @"
 using ObjCBindings;
 
 namespace Test {
@@ -131,9 +131,39 @@ namespace Test {
 }
 ";
 			yield return [
-				inputText,
+				nonSmartEnum,
 				BindingTypeSemanticAnalyzer.RBI0006.Id,
 				"BindingType can only be used to decorate an enumerator but was found on 'Test.Examples' which is not an enumerator"
+			];
+			
+			const string nonPartialStrongDictionary = @"
+using ObjCBindings;
+
+namespace Test {
+	[BindingType<StrongDictionary>]
+	public class Examples {
+	}
+}
+";
+			yield return [
+				nonPartialStrongDictionary,
+				BindingTypeSemanticAnalyzer.RBI0001.Id,
+				"The binding type 'Test.Examples' must be declared partial"
+			];
+			
+			const string nonClassStrongDictionary = @"
+using ObjCBindings;
+
+namespace Test {
+	[BindingType<StrongDictionary>]
+	public interface Examples {
+	}
+}
+";
+			yield return [
+				nonClassStrongDictionary,
+				BindingTypeSemanticAnalyzer.RBI0007.Id,
+				"BindingType<StrongDictionary> can only be used to decorate a class but was found on 'Test.Examples' which is not a class"
 			];
 		}
 

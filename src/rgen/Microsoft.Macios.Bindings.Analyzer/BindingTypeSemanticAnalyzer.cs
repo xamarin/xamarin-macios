@@ -109,6 +109,18 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 		description: new LocalizableResourceString (nameof (Resources.RBI0006Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
+	
+	internal static readonly DiagnosticDescriptor RBI0007 = new (
+		"RBI0007",
+		new LocalizableResourceString (nameof (Resources.RBI0007Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0007MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
+		"Usage",
+		DiagnosticSeverity.Error,
+		isEnabledByDefault: true,
+		description: new LocalizableResourceString (nameof (Resources.RBI0007Description), Resources.ResourceManager,
+			typeof (Resources))
+	);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [
 		RBI0001,
@@ -117,6 +129,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 		RBI0004,
 		RBI0005,
 		RBI0006,
+		RBI0007,
 	];
 
 	public override void Initialize (AnalysisContext context)
@@ -209,6 +222,29 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 		return bucket.ToImmutable ();
 	}
 
+	ImmutableArray<Diagnostic> ValidateStrongDictionary (BaseTypeDeclarationSyntax declarationNode,
+		INamedTypeSymbol symbol)
+	{
+		var bucket = ImmutableArray.CreateBuilder<Diagnostic> ();
+		if (declarationNode is ClassDeclarationSyntax classDeclarationSyntax) {
+			if (!classDeclarationSyntax.IsPartial ()) {
+				var partialDiagnostic = Diagnostic.Create (
+					descriptor: RBI0001, // Binding types should be declared as partial classes.
+					location: declarationNode.Identifier.GetLocation (),
+					messageArgs: symbol.ToDisplayString ());
+				bucket.Add (partialDiagnostic);
+			}
+		} else {
+			var notAInterfaceDiagnostic = Diagnostic.Create (
+				descriptor: RBI0007, // BindingType<StrongDictionary> must be on a class 
+				location: declarationNode.Identifier.GetLocation (),
+				messageArgs: symbol.ToDisplayString ());
+			bucket.Add (notAInterfaceDiagnostic);
+		}
+
+		return bucket.ToImmutable ();
+	}
+
 	public ImmutableArray<Diagnostic> ValidateSmartEnum (BaseTypeDeclarationSyntax declarationNode,
 		INamedTypeSymbol symbol)
 	{
@@ -231,6 +267,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 			AttributesNames.BindingCategoryAttribute => ValidateCategory (declarationNode, symbol),
 			AttributesNames.BindingProtocolAttribute => ValidateProtocol (declarationNode, symbol),
 			AttributesNames.BindingAttribute => ValidateSmartEnum (declarationNode, symbol),
+			AttributesNames.BindingStrongDictionaryAttribute => ValidateStrongDictionary (declarationNode, symbol),
 			_ => throw new InvalidOperationException ($"Not recognized attribute {matchedAttribute}.")
 		};
 }

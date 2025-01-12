@@ -25,7 +25,7 @@
         <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
     </data>
     <data name="RBI0001MessageFormat" xml:space="preserve">
-        <value>The binding type '{0}' must be declared as a partial class</value>
+        <value>The binding type '{0}' must be declared partial</value>
         <comment>'{0}' is the name of the class.</comment>
     </data>
     <data name="RBI0001Title" xml:space="preserve">
@@ -100,78 +100,91 @@
     <!-- RBI0007 -->
 
     <data name="RBI0007Description" xml:space="preserve">
-        <value>In order for the code to be generated a smart enum value has to have a backing field.</value>
+        <value>BindingType&lt;StrongDictionary&gt; can only decorate classes.</value>
     </data>
     <data name="RBI0007MessageFormat" xml:space="preserve">
-        <value>The enum value '{0}' must be tagged with a Field&lt;EnumValue&gt; attribute</value>
-        <comment>'{0}' is the name of the enumerator value.</comment>
+        <value>BindingType&lt;StrongDictionary&gt; can only be used to decorate a class but was found on '{0}' which is not a class</value>
+        <comment>'{0}' is the name of type.</comment>
     </data>
     <data name="RBI0007Title" xml:space="preserve">
-        <value>Smart enum values must be tagged with an Field&lt;EnumValue&gt; attribute</value>
+        <value>BindingType&lt;StrongDictionary&gt; must be on a class</value>
     </data>
 
     <!-- RBI0008 -->
 
     <data name="RBI0008Description" xml:space="preserve">
-        <value>Smart enum backing field cannot appear more than once.</value>
+        <value>In order for the code to be generated a smart enum value has to have a backing field.</value>
     </data>
     <data name="RBI0008MessageFormat" xml:space="preserve">
-        <value>The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'</value>
-        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field. '{2}' is the previous enum value</comment>
+        <value>The enum value '{0}' must be tagged with a Field&lt;EnumValue&gt; attribute</value>
+        <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
     <data name="RBI0008Title" xml:space="preserve">
-        <value>Smart enum backing field cannot appear more than once</value>
+        <value>Smart enum values must be tagged with an Field&lt;EnumValue&gt; attribute</value>
     </data>
 
     <!-- RBI0009 -->
-    
+
     <data name="RBI0009Description" xml:space="preserve">
-        <value>Smart enum backing field must be a valid identifier.</value>
+        <value>Smart enum backing field cannot appear more than once.</value>
     </data>
     <data name="RBI0009MessageFormat" xml:space="preserve">
-        <value>The enum value '{0}' backing field '{1}' is not a valid identifier</value>
-        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field.</comment>
+        <value>The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'</value>
+        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field. '{2}' is the previous enum value</comment>
     </data>
     <data name="RBI0009Title" xml:space="preserve">
-        <value>Smart enum backing field must represent a valid C# identifier to be used</value>
+        <value>Smart enum backing field cannot appear more than once</value>
     </data>
 
     <!-- RBI0010 -->
     
     <data name="RBI0010Description" xml:space="preserve">
-        <value>Smart enum backing field for a non Apple framework must provide a library name.</value>
+        <value>Smart enum backing field must be a valid identifier.</value>
     </data>
     <data name="RBI0010MessageFormat" xml:space="preserve">
-        <value>The field attribute for the enum value '{0}' must set the property 'LibraryName'</value>
-        <comment>'{0}' is the name of the enumerator value.</comment>
+        <value>The enum value '{0}' backing field '{1}' is not a valid identifier</value>
+        <comment>'{0}' is the name of the enum value. '{1}' is the name of a native field.</comment>
     </data>
     <data name="RBI0010Title" xml:space="preserve">
-        <value>Non Apple framework bindings must provide a library name</value>
+        <value>Smart enum backing field must represent a valid C# identifier to be used</value>
     </data>
 
     <!-- RBI0011 -->
     
     <data name="RBI0011Description" xml:space="preserve">
-        <value>Fields of known Apple frameworks should not provide a LibraryName.</value>
+        <value>Smart enum backing field for a non Apple framework must provide a library name.</value>
     </data>
     <data name="RBI0011MessageFormat" xml:space="preserve">
-        <value>The Field attribute for the enum value '{0}' must not provide a value for 'LibraryName'</value>
-        <comment>'{0}' is the name of the native field.</comment>
+        <value>The field attribute for the enum value '{0}' must set the property 'LibraryName'</value>
+        <comment>'{0}' is the name of the enumerator value.</comment>
     </data>
     <data name="RBI0011Title" xml:space="preserve">
-        <value>Do not provide the LibraryName for known Apple frameworks</value>
+        <value>Non Apple framework bindings must provide a library name</value>
     </data>
 
     <!-- RBI0012 -->
-
+    
     <data name="RBI0012Description" xml:space="preserve">
-        <value>Wrong flags were used in the FieldAttribute when applying it on an enum value.</value>
+        <value>Fields of known Apple frameworks should not provide a LibraryName.</value>
     </data>
     <data name="RBI0012MessageFormat" xml:space="preserve">
+        <value>The Field attribute for the enum value '{0}' must not provide a value for 'LibraryName'</value>
+        <comment>'{0}' is the name of the native field.</comment>
+    </data>
+    <data name="RBI0012Title" xml:space="preserve">
+        <value>Do not provide the LibraryName for known Apple frameworks</value>
+    </data>
+
+    <!-- RBI0013 -->
+
+    <data name="RBI0013Description" xml:space="preserve">
+        <value>Wrong flags were used in the FieldAttribute when applying it on an enum value.</value>
+    </data>
+    <data name="RBI0013MessageFormat" xml:space="preserve">
         <value>Used attribute '{0}' on enum value '{1}' when 'ObjCBindings.FieldAttribute&lt;ObjCBindings.EnumValue&gt;' was expected</value>
         <comment>'{0}' is the name of an attribute. '{1}' is the name of the enumerator value.</comment>
     </data>
-    <data name="RBI0012Title" xml:space="preserve">
+    <data name="RBI0013Title" xml:space="preserve">
         <value>Enum values must be tagged with Field&lt;EnumValue&gt;</value>
     </data>
 </root>

@@ -260,5 +260,23 @@ namespace Microsoft.Macios.Bindings.Analyzer {
                 return ResourceManager.GetString("RBI0012Title", resourceCulture);
             }
         }
+        
+        internal static string RBI0013Description {
+            get {
+                return ResourceManager.GetString("RBI0013Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0013MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0013MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0013Title {
+            get {
+                return ResourceManager.GetString("RBI0013Title", resourceCulture);
+            }
+        }
     }
 }

@@ -23,21 +23,6 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	/// <summary>
 	/// All enum values must have a Field attribute
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0007 = new (
-		"RBI0007",
-		new LocalizableResourceString (nameof (Resources.RBI0007Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0007MessageFormat), Resources.ResourceManager,
-			typeof (Resources)),
-		"Usage",
-		DiagnosticSeverity.Error,
-		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0007Description), Resources.ResourceManager,
-			typeof (Resources))
-	);
-
-	/// <summary>
-	/// Do not allow duplicated backing fields
-	/// </summary>
 	internal static readonly DiagnosticDescriptor RBI0008 = new (
 		"RBI0008",
 		new LocalizableResourceString (nameof (Resources.RBI0008Title), Resources.ResourceManager, typeof (Resources)),
@@ -51,7 +36,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	);
 
 	/// <summary>
-	/// Fields must be a valid identifier
+	/// Do not allow duplicated backing fields
 	/// </summary>
 	internal static readonly DiagnosticDescriptor RBI0009 = new (
 		"RBI0009",
@@ -66,7 +51,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	);
 
 	/// <summary>
-	/// If not an apple framework, we should provide the library path
+	/// Fields must be a valid identifier
 	/// </summary>
 	internal static readonly DiagnosticDescriptor RBI0010 = new (
 		"RBI0010",
@@ -81,7 +66,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	);
 
 	/// <summary>
-	/// if apple framework, the library path should be empty
+	/// If not an apple framework, we should provide the library path
 	/// </summary>
 	internal static readonly DiagnosticDescriptor RBI0011 = new (
 		"RBI0011",
@@ -89,14 +74,14 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 		new LocalizableResourceString (nameof (Resources.RBI0011MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
-		DiagnosticSeverity.Warning,
+		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
 		description: new LocalizableResourceString (nameof (Resources.RBI0011Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
-	/// User used the wrong flag for the attribute
+	/// if apple framework, the library path should be empty
 	/// </summary>
 	internal static readonly DiagnosticDescriptor RBI0012 = new (
 		"RBI0012",
@@ -104,15 +89,36 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 		new LocalizableResourceString (nameof (Resources.RBI0012MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
-		DiagnosticSeverity.Error,
+		DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
 		description: new LocalizableResourceString (nameof (Resources.RBI0012Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
+	/// <summary>
+	/// User used the wrong flag for the attribute
+	/// </summary>
+	internal static readonly DiagnosticDescriptor RBI0013 = new (
+		"RBI0013",
+		new LocalizableResourceString (nameof (Resources.RBI0013Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0013MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
+		"Usage",
+		DiagnosticSeverity.Error,
+		isEnabledByDefault: true,
+		description: new LocalizableResourceString (nameof (Resources.RBI0013Description), Resources.ResourceManager,
+			typeof (Resources))
+	);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-		[RBI0007, RBI0008, RBI0009, RBI0010, RBI0011, RBI0012];
+
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [
+		RBI0008, 
+		RBI0009, 
+		RBI0010, 
+		RBI0011, 
+		RBI0012, 
+		RBI0013,
+	];
 
 	public override void Initialize (AnalysisContext context)
 	{
@@ -165,7 +171,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 			if (attributes.Count == 0) {
 				//  All enum values are marked with a Field attribute, therefore add a diagnostic
 				bucket.Add (Diagnostic.Create (
-					RBI0007, // Smart enum values must be tagged with an Field<EnumValue> attribute.
+					RBI0008, // Smart enum values must be tagged with an Field<EnumValue> attribute.
 					fieldSymbol.Locations.First (),
 					fieldSymbol.ToDisplayString ()));
 				continue;
@@ -186,7 +192,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					if (backingFields.TryGetValue (fieldData.Value.SymbolName, out var previousEnumValue)) {
 						// All symbol names have to be unique
 						bucket.Add (Diagnostic.Create (
-							RBI0008, // The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'
+							RBI0009, // The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'
 							fieldSyntax.GetLocation (),
 							fieldSymbol.ToDisplayString (), fieldData.Value.SymbolName,
 							fieldSymbol.ToDisplayString ().Trim (), previousEnumValue));
@@ -199,7 +205,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 						// If the Field attribute is not from a known apple library, the library name is set
 						if (string.IsNullOrWhiteSpace (fieldData.Value.LibraryName)) {
 							bucket.Add (Diagnostic.Create (
-								RBI0010, // Non Apple framework bindings must provide a library name.
+								RBI0011, // Non Apple framework bindings must provide a library name.
 								fieldSyntax.GetLocation (),
 								fieldSymbol.ToDisplayString ()));
 						}
@@ -207,7 +213,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 						// If the Field attribute is from a known apple library, the lib should be null
 						if (fieldData.Value.LibraryName is not null) {
 							bucket.Add (Diagnostic.Create (
-								RBI0011, // Do not provide the LibraryName for known Apple frameworks.
+								RBI0012, // Do not provide the LibraryName for known Apple frameworks.
 								fieldSyntax.GetLocation (),
 								fieldSymbol.ToDisplayString ()));
 						}
@@ -217,7 +223,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					switch (errorTuple.Error) {
 					case FieldData<EnumValue>.ParsingError.NotIdentifier:
 						// Backing field is not a valid identifier.
-						bucket.Add (Diagnostic.Create (RBI0009,
+						bucket.Add (Diagnostic.Create (RBI0010,
 							fieldSyntax
 								.GetLocation (), // Smart enum backing field must represent a valid C# identifier to be used.
 							fieldSymbol.ToDisplayString (), errorTuple.Value));
@@ -230,7 +236,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					.FirstOrDefault (s => s.StartsWith (AttributesNames.FieldAttribute));
 				if (fieldAttr is not null) {
 					bucket.Add (Diagnostic.Create (
-						RBI0012, // Enum values must be tagged with Field<EnumValue>.
+						RBI0013, // Enum values must be tagged with Field<EnumValue>.
 						fieldSymbol.Locations.First (),
 						fieldAttr, fieldSymbol.ToDisplayString ()));
 				}

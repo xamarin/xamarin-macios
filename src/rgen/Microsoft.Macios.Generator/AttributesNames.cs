@@ -13,6 +13,7 @@ static class AttributesNames {
 	public const string BindingCategoryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Category>";
 	public const string BindingClassAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>";
 	public const string BindingProtocolAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>";
+	public const string BindingStrongDictionaryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.StrongDictionary>";
 	public const string FieldAttribute = "ObjCBindings.FieldAttribute";
 	public const string EnumFieldAttribute = "ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>";
 	public const string ExportFieldAttribute = "ObjCBindings.ExportAttribute<ObjCBindings.Field>";
@@ -26,7 +27,8 @@ static class AttributesNames {
 		BindingAttribute,
 		BindingCategoryAttribute,
 		BindingClassAttribute,
-		BindingProtocolAttribute
+		BindingProtocolAttribute,
+		BindingStrongDictionaryAttribute, 
 	];
 
 
@@ -41,6 +43,9 @@ static class AttributesNames {
 		}
 		if (type == typeof (ObjCBindings.Protocol)) {
 			return BindingProtocolAttribute;
+		}
+		if (type == typeof(ObjCBindings.StrongDictionary)) {
+			return BindingStrongDictionaryAttribute;
 		}
 
 		return null;
