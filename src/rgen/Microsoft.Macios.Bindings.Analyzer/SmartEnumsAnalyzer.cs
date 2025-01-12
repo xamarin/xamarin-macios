@@ -112,11 +112,11 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [
-		RBI0008, 
-		RBI0009, 
-		RBI0010, 
-		RBI0011, 
-		RBI0012, 
+		RBI0008,
+		RBI0009,
+		RBI0010,
+		RBI0011,
+		RBI0012,
 		RBI0013,
 	];
 

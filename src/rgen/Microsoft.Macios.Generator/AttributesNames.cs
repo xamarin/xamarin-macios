@@ -28,7 +28,7 @@ static class AttributesNames {
 		BindingCategoryAttribute,
 		BindingClassAttribute,
 		BindingProtocolAttribute,
-		BindingStrongDictionaryAttribute, 
+		BindingStrongDictionaryAttribute,
 	];
 
 
@@ -44,7 +44,7 @@ static class AttributesNames {
 		if (type == typeof (ObjCBindings.Protocol)) {
 			return BindingProtocolAttribute;
 		}
-		if (type == typeof(ObjCBindings.StrongDictionary)) {
+		if (type == typeof (ObjCBindings.StrongDictionary)) {
 			return BindingStrongDictionaryAttribute;
 		}
 

@@ -109,7 +109,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 		description: new LocalizableResourceString (nameof (Resources.RBI0006Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
-	
+
 	internal static readonly DiagnosticDescriptor RBI0007 = new (
 		"RBI0007",
 		new LocalizableResourceString (nameof (Resources.RBI0007Title), Resources.ResourceManager, typeof (Resources)),

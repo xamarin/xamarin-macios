@@ -135,7 +135,7 @@ namespace Test {
 				BindingTypeSemanticAnalyzer.RBI0006.Id,
 				"BindingType can only be used to decorate an enumerator but was found on 'Test.Examples' which is not an enumerator"
 			];
-			
+
 			const string nonPartialStrongDictionary = @"
 using ObjCBindings;
 
@@ -150,7 +150,7 @@ namespace Test {
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
 				"The binding type 'Test.Examples' must be declared partial"
 			];
-			
+
 			const string nonClassStrongDictionary = @"
 using ObjCBindings;
 
