@@ -126,7 +126,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 
 	static readonly HashSet<string> attributes = [AttributesNames.BindingAttribute];
 	public IReadOnlySet<string> AttributeNames => attributes;
-	
+
 	public ImmutableArray<Diagnostic> Analyze (string matchedAttribute, PlatformName platformName, EnumDeclarationSyntax declarationNode,
 		INamedTypeSymbol symbol)
 	{

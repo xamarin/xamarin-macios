@@ -16,7 +16,7 @@ public static class BaseTypeDeclarationSyntaxExtensions {
 	/// <returns>True if the declaration is partial.</returns>
 	public static bool IsPartial (this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
 		=> baseTypeDeclarationSyntax.Modifiers.Any (x => x.IsKind (SyntaxKind.PartialKeyword));
-	
+
 	/// <summary>
 	/// Returns if the based type declaration was declared as a static one.
 	/// </summary>

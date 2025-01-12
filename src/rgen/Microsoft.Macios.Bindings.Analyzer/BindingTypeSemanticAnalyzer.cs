@@ -23,91 +23,91 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 	/// <summary>
 	/// All binding types should be partial.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0001 = new(
+	internal static readonly DiagnosticDescriptor RBI0001 = new (
 		"RBI0001",
-		new LocalizableResourceString (nameof(Resources.RBI0001Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0001MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0001Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0001MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0001Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0001Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	/// <summary>
 	/// BindingType&lt;Class&gt; can only decorate partial classes.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0002 = new(
+	internal static readonly DiagnosticDescriptor RBI0002 = new (
 		"RBI0002",
-		new LocalizableResourceString (nameof(Resources.RBI0002Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0002MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0002Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0002MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0002Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0002Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	/// <summary>
 	/// BindingType&lt;Category&gt; can only decorate partial classes.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0003 = new(
+	internal static readonly DiagnosticDescriptor RBI0003 = new (
 		"RBI0003",
-		new LocalizableResourceString (nameof(Resources.RBI0003Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0003MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0003Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0003MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0003Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0003Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	/// <summary>
 	/// BindingType&lt;Category&gt; can only decorate static classes.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0004 = new(
+	internal static readonly DiagnosticDescriptor RBI0004 = new (
 		"RBI0004",
-		new LocalizableResourceString (nameof(Resources.RBI0004Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0004MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0004Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0004MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0004Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0004Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	/// <summary>
 	/// BindingType&lt;Protocol&gt; can only decorate interfaces.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0005 = new(
+	internal static readonly DiagnosticDescriptor RBI0005 = new (
 		"RBI0005",
-		new LocalizableResourceString (nameof(Resources.RBI0005Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0005MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0005Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0005MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0005Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0005Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	/// <summary>
 	/// BindingType can only decorate enumerators.
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0006 = new(
+	internal static readonly DiagnosticDescriptor RBI0006 = new (
 		"RBI0006",
-		new LocalizableResourceString (nameof(Resources.RBI0006Title), Resources.ResourceManager, typeof(Resources)),
-		new LocalizableResourceString (nameof(Resources.RBI0006MessageFormat), Resources.ResourceManager,
-			typeof(Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0006Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0006MessageFormat), Resources.ResourceManager,
+			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof(Resources.RBI0006Description), Resources.ResourceManager,
-			typeof(Resources))
+		description: new LocalizableResourceString (nameof (Resources.RBI0006Description), Resources.ResourceManager,
+			typeof (Resources))
 	);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [
@@ -123,8 +123,8 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 	{
 		context.ConfigureGeneratedCodeAnalysis (GeneratedCodeAnalysisFlags.None);
 		context.EnableConcurrentExecution ();
-		context.RegisterSyntaxNodeAction (AnalysisContext, 
-			SyntaxKind.ClassDeclaration, 
+		context.RegisterSyntaxNodeAction (AnalysisContext,
+			SyntaxKind.ClassDeclaration,
 			SyntaxKind.InterfaceDeclaration,
 			SyntaxKind.EnumDeclaration);
 	}

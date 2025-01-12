@@ -33,7 +33,7 @@ public static class BindingTypeAnalyzerExtensions {
 			// ignore attrs whose name we cannot get, or we do not care about
 			if (attributeType is null || !self.AttributeNames.Contains (attributeType))
 				continue;
-			
+
 			var diagnostics = self.Analyze (attributeType, context.Compilation.GetCurrentPlatform (),
 				declarationNode, declaredSymbol);
 			foreach (var diagnostic in diagnostics)

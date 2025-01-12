@@ -13,6 +13,6 @@ namespace Microsoft.Macios.Bindings.Analyzer;
 /// </summary>
 public interface IBindingTypeAnalyzer<T> where T : BaseTypeDeclarationSyntax {
 	IReadOnlySet<string> AttributeNames { get; }
-	
+
 	ImmutableArray<Diagnostic> Analyze (string matchedAttribute, PlatformName platformName, T declarationNode, INamedTypeSymbol symbol);
 }
