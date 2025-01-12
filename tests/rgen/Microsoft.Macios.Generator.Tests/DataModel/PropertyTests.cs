@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -378,6 +379,27 @@ public class PropertyTests : BaseGeneratorTestClass {
 		Assert.True (y.Equals (x));
 		Assert.True (x == y);
 		Assert.False (x != y);
+	}
+
+	[Theory]
+	[InlineData (ObjCBindings.Property.Default, false)]
+	[InlineData (ObjCBindings.Property.Notification, true)]
+#pragma warning disable xUnit1025
+	[InlineData (ObjCBindings.Property.Notification | ObjCBindings.Property.Default, true)]
+#pragma warning restore xUnit1025
+	public void IsNotification (ObjCBindings.Property flag, bool expectedResult)
+	{
+		var property = new Property (
+			name: "Test",
+			returnType: new ReturnType ("string"),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportFieldData = new FieldData<ObjCBindings.Property> ("name", flag)
+		};
+		Assert.Equal (expectedResult, property.IsNotification);
 	}
 
 	class TestDataFromPropertyDeclaration : IEnumerable<object []> {

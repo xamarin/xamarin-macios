@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
@@ -193,22 +194,17 @@ static class TypeSymbolExtensions {
 		return default;
 	}
 
-	/// <summary>
-	/// Retrieve the data of an export attribute on a symbol.
-	/// </summary>
-	/// <param name="symbol">The tagged symbol.</param>
-	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
-	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
-	/// <remarks>If the passed enum is unknown or not supproted as an enum for the export attribute, null will be
-	/// returned.</remarks>
-	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
+	delegate string? GetAttributeNames ();
+	delegate bool TryParse<T> (AttributeData  data, [NotNullWhen(true)]out T? value) where T : struct;
+
+	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse) where T : struct 
 	{
 		var attributes = symbol.GetAttributeData ();
 		if (attributes.Count == 0)
 			return null;
 
 		// retrieve the name of the attribute based on the flag
-		var attrName = AttributesNames.GetFieldAttributeName<T> ();
+		var attrName = getAttributeNames ();
 		if (attrName is null)
 			return null;
 		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
@@ -220,10 +216,32 @@ static class TypeSymbolExtensions {
 		if (fieldSyntax is null)
 			return null;
 
-		if (ExportData<T>.TryParse (exportAttrData, out var exportData))
+		if (tryParse (exportAttrData, out var exportData))
 			return exportData.Value;
 		return null;
 	}
+
+	/// <summary>
+	/// Retrieve the data of an export attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
+	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
+	/// <remarks>If the passed enum is unknown or not supported as an enum for the export attribute, null will be
+	/// returned.</remarks>
+	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
+		=> GetAttribute<ExportData<T>> (symbol, AttributesNames.GetExportAttributeName<T>, ExportData<T>.TryParse);
+	
+	/// <summary>
+	/// Retrieve the data of a field attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
+	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
+	/// <remarks>If the passed enum is unknown or not supported as an enum for the field attribute, null will be
+	/// returned.</remarks>
+	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
+		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
 
 	/// <summary>
 	/// Returns if a type is blittable or not.

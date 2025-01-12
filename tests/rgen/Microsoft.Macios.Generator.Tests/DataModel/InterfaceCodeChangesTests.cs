@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using ObjCBindings;
-using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -295,7 +294,7 @@ namespace NS;
 
 [BindingType]
 public partial interface IProtocol {
-	[Export<Property> (""name"", Property.Notification)]
+	[Field<Property> (""name"", Property.Notification)]
 	public partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -323,7 +322,7 @@ public partial interface IProtocol {
 							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -346,7 +345,7 @@ public partial interface IProtocol {
 								),
 							]
 						) {
-							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+							ExportFieldData= new ("name", Property.Notification)
 						}
 					]
 				}

@@ -29,7 +29,7 @@ public class ClassCodeChangesTests : BaseGeneratorTestClass {
 			builder.Add (new SupportedOSPlatformData ("ios17.0"));
 			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
 			builder.Add (new UnsupportedOSPlatformData ("macos"));
-
+			
 			const string emptyClass = @"
 using Foundation;
 using ObjCRuntime;
@@ -535,7 +535,7 @@ namespace NS;
 
 [BindingType]
 public partial class MyClass {
-	[Export<Property> (""name"", Property.Notification)]
+	[Field<Property> (""name"", Property.Notification)]
 	public partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -565,7 +565,7 @@ public partial class MyClass {
 							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -589,7 +589,7 @@ public partial class MyClass {
 							]
 						) {
 
-							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+							ExportFieldData = new (symbolName: "name", flags: Property.Notification)
 						}
 					]
 				}
@@ -602,7 +602,7 @@ namespace NS;
 
 [BindingType]
 public partial class MyClass {
-	[Export<Field> (""CONSTANT"")]
+	[Field<Property> (""CONSTANT"")]
 	public static partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -632,7 +632,7 @@ public partial class MyClass {
 							returnType: new ("string", isReferenceType: true),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["CONSTANT"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
