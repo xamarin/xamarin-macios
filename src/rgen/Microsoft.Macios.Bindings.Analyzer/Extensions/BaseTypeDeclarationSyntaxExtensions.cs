@@ -10,7 +10,7 @@ namespace Microsoft.Macios.Bindings.Analyzer.Extensions;
 public static class BaseTypeDeclarationSyntaxExtensions {
 
 	/// <summary>
-	/// Returns if the based type declaration was declared as a partial one.
+	/// Returns if the base type declaration was declared as a partial one.
 	/// </summary>
 	/// <param name="baseTypeDeclarationSyntax">The declaration under test.</param>
 	/// <returns>True if the declaration is partial.</returns>
