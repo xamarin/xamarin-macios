@@ -28,7 +28,7 @@ namespace Test {
 			yield return [
 				nonPartialClassBinding,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must declared as a partial class"
+				"The binding type 'Test.Examples' must be declared as a partial class"
 			];
 
 			const string classBindingNotClas = @"
@@ -58,7 +58,7 @@ namespace Test {
 			yield return [
 				nonPartialCategory,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must declared as a partial class"
+				"The binding type 'Test.Examples' must be declared as a partial class"
 			];
 
 			const string nonClassCategory = @"
@@ -103,7 +103,7 @@ namespace Test {
 			yield return [
 				nonPartialProtocol,
 				BindingTypeSemanticAnalyzer.RBI0001.Id,
-				"The binding type 'Test.Examples' must declared as a partial class"
+				"The binding type 'Test.Examples' must be declared as a partial class"
 			];
 
 			const string nonInterfaceProtocol = @"

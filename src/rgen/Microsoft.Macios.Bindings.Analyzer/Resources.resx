@@ -25,7 +25,7 @@
         <value>In order for the code to be generated all binding types have to be declared as partial classes.</value>
     </data>
     <data name="RBI0001MessageFormat" xml:space="preserve">
-        <value>The binding type '{0}' must declared as a partial class</value>
+        <value>The binding type '{0}' must be declared as a partial class</value>
         <comment>'{0}' is the name of the class.</comment>
     </data>
     <data name="RBI0001Title" xml:space="preserve">
