@@ -256,6 +256,10 @@ class GitHubComments {
     }
 
     [bool] IsPR() {
+        if (-not $this.PRIds) {
+            return $false
+        }
+
         # if the object has a list of pr ids, we are a pr, else check the resource trigger
         if ($this.PRIds.Length -gt 0) {
             return $true
