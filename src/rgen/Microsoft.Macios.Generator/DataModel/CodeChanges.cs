@@ -176,7 +176,7 @@ readonly struct CodeChanges {
 			// same library path (either null or with a value). We keep track of the ones we already
 			// returned in a set and skip if we already returned it.
 			var visited = new HashSet<string> ();
-			
+
 			// return those libs needed by smart enums
 			foreach (var enumMember in EnumMembers) {
 				if (visited.Add (enumMember.LibraryName)) // if already visited we cannot add it
@@ -317,7 +317,7 @@ readonly struct CodeChanges {
 			var fieldData = enumValueSymbol.GetFieldData ();
 			// try and compute the library for this enum member
 			if (fieldData is null || !context.TryComputeLibraryName (fieldData.Value.LibraryName, Namespace [^1],
-				    out string? libraryName, out string? libraryPath)) 
+					out string? libraryName, out string? libraryPath))
 				// could not calculate the library for the enum, do not add it
 				continue;
 			var enumMember = new EnumMember (

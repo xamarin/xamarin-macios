@@ -106,6 +106,6 @@ class RootBindingContext {
 			.Select (f => f.Name)
 			.Any (s => IsLibraryName (s, name));
 	}
-	
+
 	public static implicit operator RootBindingContext (SemanticModel semanticModel) => new (semanticModel);
 }

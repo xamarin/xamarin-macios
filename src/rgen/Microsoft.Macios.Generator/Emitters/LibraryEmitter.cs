@@ -33,7 +33,7 @@ class LibraryEmitter (
 
 	public IEnumerable<string> UsingStatements { get; } = [];
 
-	public bool TryEmit (ImmutableArray<(string LibraryName, string? LibraryPath)> libraries, 
+	public bool TryEmit (ImmutableArray<(string LibraryName, string? LibraryPath)> libraries,
 		[NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
