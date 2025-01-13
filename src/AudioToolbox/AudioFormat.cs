@@ -47,15 +47,12 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFormat {
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public AudioChannelLayoutTag AudioChannelLayoutTag;
 
-#if !WATCH
 		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat [] formatList)
 		{
 			if (formatList is null)
@@ -72,15 +69,12 @@ namespace AudioToolbox {
 				return formatList [index];
 			}
 		}
-#endif
 
 		public override string ToString ()
 		{
 			return AudioChannelLayoutTag + ":" + AudioStreamBasicDescription.ToString ();
 		}
 	}
-
-#if !WATCH
 
 	public enum AudioFormatError : int // Implictly cast to OSType
 	{
@@ -420,5 +414,4 @@ namespace AudioToolbox {
 		HardwareCodecCapabilities = 0x68776363, // 'hwcc'
 #endif
 	}
-#endif // !WATCH
 }

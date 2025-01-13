@@ -17,9 +17,7 @@ namespace Intents {
 
 		public static INRadioTypeResolutionResult GetSuccess (INRadioType resolvedValue)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return SuccessWithResolvedRadioType (resolvedValue);
 			else
@@ -29,9 +27,7 @@ namespace Intents {
 
 		public static INRadioTypeResolutionResult GetConfirmationRequired (INRadioType valueToConfirm)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return ConfirmationRequiredWithRadioTypeToConfirm (valueToConfirm);
 			else

@@ -16,7 +16,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace UIKit {
-#if !NET && !WATCH
+#if !NET
 	public partial class UIPresentationController {
 
 		[Obsolete ("Removed in iOS10. Use '.ctor (UIViewController,UIViewController)'.")]
@@ -45,7 +45,7 @@ namespace UIKit {
 
 #endif
 
-#if !NET && !WATCH
+#if !NET
 	public partial class UICollectionViewFocusUpdateContext {
 		[Obsolete ("This cannot be directly created.")]
 		public UICollectionViewFocusUpdateContext () { }

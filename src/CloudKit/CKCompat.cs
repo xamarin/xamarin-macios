@@ -28,7 +28,7 @@ namespace CloudKit {
 	}
 #endif
 
-#if !NET && !WATCH
+#if !NET
 	public partial class CKOperation {
 
 		[Obsoleted (PlatformName.iOS, 9, 3, message: "Do not use; this API was removed and will always return 0.")]
@@ -88,7 +88,6 @@ namespace CloudKit {
 
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
-#if !WATCH
 	[Obsoleted (PlatformName.iOS, 14, 0, message: "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
 	public partial class CKDiscoverUserInfosOperation : CKOperation {
 
@@ -120,7 +119,6 @@ namespace CloudKit {
 		public override NativeHandle ClassHandle { get; }
 #pragma warning restore CS0809
 	}
-#endif
 
 	public partial class CKSubscription {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API). Use 'CKRecordZoneSubscription' instead.")]
@@ -130,10 +128,8 @@ namespace CloudKit {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API). Use 'CKRecordZoneSubscription' instead.")]
 		public CKSubscription (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions)
 			=> throw new NotSupportedException ();
-#if !WATCH
 		[Obsolete ("Empty stub (not a public API). Use 'CKRecordZoneSubscription' intead.")]
 		public virtual CKSubscriptionOptions SubscriptionOptions { get; }
-#endif
 	}
 
 #if MONOMAC || IOS
@@ -159,24 +155,6 @@ namespace CloudKit {
 	}
 #endif
 
-#endif
-
-#if WATCH
-	public partial class CKModifyRecordZonesOperation {
-
-		// `init` does not work on watchOS but we can keep compatibility with a different init
-		public CKModifyRecordZonesOperation () : this (null, null)
-		{
-		}
-	}
-
-	public partial class CKModifyRecordsOperation {
-
-		// `init` does not work on watchOS but we can keep compatibility with a different init
-		public CKModifyRecordsOperation () : this (null, null)
-		{
-		}
-	}
 #endif
 }
 

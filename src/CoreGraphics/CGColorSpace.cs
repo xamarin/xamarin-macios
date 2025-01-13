@@ -441,7 +441,6 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCProfile (/* CFDataRef */ IntPtr data);
@@ -467,7 +466,6 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
 #endif
 #if NET
 		public static CGColorSpace? CreateIccProfile (NSData? data)
@@ -540,7 +538,6 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead.")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFDataRef */ IntPtr CGColorSpaceCopyICCProfile (/* CGColorSpaceRef */ IntPtr space);
@@ -557,7 +554,6 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead.")]
 #endif
 #if NET
 		public NSData? GetIccProfile ()
@@ -658,8 +654,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCopyPropertyList (IntPtr space);
@@ -669,8 +663,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCreateWithPropertyList (IntPtr plist);
@@ -680,8 +672,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public CFPropertyList? ToPropertyList ()
 		{
@@ -702,11 +692,9 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 15, 4)]
 		[Deprecated (PlatformName.iOS, 13, 4)]
 		[Deprecated (PlatformName.TvOS, 13, 4)]
-		[Deprecated (PlatformName.WatchOS, 6, 2)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern byte CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
@@ -722,11 +710,9 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 15, 4)]
 		[Deprecated (PlatformName.iOS, 13, 4)]
 		[Deprecated (PlatformName.TvOS, 13, 4)]
-		[Deprecated (PlatformName.WatchOS, 6, 2)]
 #endif
 		public bool IsHdr {
 			get {
@@ -742,7 +728,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -756,7 +741,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public bool UsesExtendedRange {
@@ -773,7 +757,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -787,7 +770,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (Handle) != 0;
@@ -800,7 +782,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -814,7 +795,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		public CGColorSpace? CreateLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateLinearized (Handle), owns: true);
@@ -827,7 +807,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -841,7 +820,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		public CGColorSpace? CreateExtended () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtended (Handle), owns: true);
@@ -854,7 +832,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -868,7 +845,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 0)]
 #endif
 		public CGColorSpace? CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (Handle), owns: true);
@@ -883,7 +859,6 @@ namespace CoreGraphics {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[MacCatalyst (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCreateCopyWithStandardRange (/* CGColorSpaceRef */ IntPtr s);
@@ -898,7 +873,6 @@ namespace CoreGraphics {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[MacCatalyst (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public CGColorSpace? CreateCopyWithStandardRange () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateCopyWithStandardRange (Handle), owns: true);
 
@@ -911,7 +885,6 @@ namespace CoreGraphics {
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Watch (8, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern byte CGColorSpaceIsHLGBased (/* CGColorSpace */ IntPtr space);
@@ -925,7 +898,6 @@ namespace CoreGraphics {
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Watch (8, 0)]
 #endif
 		public bool IsHlgBased => CGColorSpaceIsHLGBased (Handle) != 0;
 
@@ -938,7 +910,6 @@ namespace CoreGraphics {
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Watch (8, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern byte CGColorSpaceIsPQBased (/* CGColorSpace */ IntPtr space);
@@ -952,7 +923,6 @@ namespace CoreGraphics {
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Watch (8, 0)]
 #endif
 		public bool IsPQBased => CGColorSpaceIsPQBased (Handle) != 0;
 
@@ -966,7 +936,6 @@ namespace CoreGraphics {
 		[iOS (18, 0)]
 		[TV (18, 0)]
 		[MacCatalyst (18, 0)]
-		[Watch (11, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCopyBaseColorSpace (/* CGColorSpaceRef */ IntPtr space);
@@ -983,7 +952,6 @@ namespace CoreGraphics {
 		[iOS (18, 0)]
 		[TV (18, 0)]
 		[MacCatalyst (18, 0)]
-		[Watch (11, 0)]
 #endif
 		public CGColorSpace? CopyBaseColorSpace ()
 		{

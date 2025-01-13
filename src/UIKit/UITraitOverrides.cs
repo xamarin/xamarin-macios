@@ -7,8 +7,6 @@
 // Copyright 2023 Microsoft Corp. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 
 using Foundation;
@@ -97,5 +95,3 @@ namespace UIKit {
 #endif // !XAMCORE_5_0
 	}
 }
-
-#endif // !__WATCHOS__

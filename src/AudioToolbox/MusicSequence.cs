@@ -9,8 +9,6 @@
 
 #nullable enable
 
-#if !WATCH
-
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -438,5 +436,3 @@ namespace AudioToolbox {
 		Samples = 0x73616d70    // 'samp'
 	}
 }
-
-#endif // IOS || TVOS

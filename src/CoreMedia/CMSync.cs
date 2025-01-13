@@ -28,8 +28,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMClock : CMClockOrTimebase {
 #if !NET
@@ -128,8 +126,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMTimebase : CMClockOrTimebase {
 #if !NET
@@ -159,7 +155,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ IntPtr* timebaseOut);
@@ -197,7 +192,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterTimebase (/* CFAllocatorRef */ IntPtr allocator, /* CMTimebaseRef */ IntPtr masterTimebase, /* CMTimebaseRef* */ IntPtr* timebaseOut);
@@ -228,7 +222,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -257,7 +250,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -273,7 +265,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -302,7 +293,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -355,7 +345,6 @@ namespace CoreMedia {
 			}
 		}
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -511,7 +500,6 @@ namespace CoreMedia {
 
 			return new CMClock (ptr, false);
 		}
-#endif
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimebaseGetTimeWithTimeScale (/* CMTimebaseRef */ IntPtr timebase, CMTimeScale timescale, CMTimeRoundingMethod method);
@@ -620,7 +608,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
@@ -638,7 +625,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
 		{
@@ -661,7 +647,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
@@ -679,7 +664,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 #endif
 		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
 		{
@@ -699,7 +683,7 @@ namespace CoreMedia {
 			return SystemVersion.CheckiOS (9, 0);
 #elif MONOMAC
 			return SystemVersion.CheckmacOS (10, 11);
-#elif TVOS || WATCH
+#elif TVOS
 			return true;
 #endif
 		}
@@ -710,10 +694,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMasterTimebase (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMasterTimebase (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -727,10 +709,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMasterClock (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMasterClock (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -744,10 +724,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyMaster (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetMaster (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -761,10 +739,8 @@ namespace CoreMedia {
 			bool deprecated = IsDeprecated ();
 			if (deprecated)
 				ptr = CMTimebaseCopyUltimateMasterClock (Handle);
-#if !WATCH
 			else
 				ptr = CMTimebaseGetUltimateMasterClock (Handle);
-#endif
 
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -785,7 +761,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMTimebaseRef */ IntPtr CMTimebaseCopyMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
@@ -803,7 +778,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMasterClock' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyMasterClock (/* CMTimebaseRef */ IntPtr timebase);
@@ -821,7 +795,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMaster' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe IntPtr /* void* */ CMTimebaseCopyMaster (/* CMTimebaseRef */ IntPtr timebase);
@@ -839,7 +812,6 @@ namespace CoreMedia {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
@@ -859,8 +831,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMClockOrTimebase : NativeObject {
 #if !NET
@@ -962,7 +932,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -976,7 +945,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -990,7 +958,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -1011,7 +978,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -1025,7 +991,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -1039,7 +1004,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -1060,7 +1024,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -1074,7 +1037,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]

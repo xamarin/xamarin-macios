@@ -94,7 +94,6 @@ namespace Security {
 #else
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 #endif
 		Watch = 1 << 5,
 
@@ -106,7 +105,6 @@ namespace Security {
 #else
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 #endif
 		Companion = 1 << 5,
 

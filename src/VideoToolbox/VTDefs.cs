@@ -56,11 +56,11 @@ namespace VideoToolbox {
 		DecoderNeedsRosetta = -17692,
 		[MacCatalyst (13, 1)]
 		EncoderNeedsRosetta = -17693,
-		[iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		VideoDecoderReferenceMissing = -17694,
-		[iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		VideoDecoderCallbackMessaging = -17695,
-		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 		VideoDecoderUnknownErr = -17696,
 		ExtensionDisabledErr = -17697,
 		VideoEncoderMVHEVCVideoLayerIDsMismatchErr = -17698,
@@ -290,7 +290,7 @@ namespace VideoToolbox {
 		Average
 	}
 
-	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum HdrMetadataInsertionMode {
 		[Field ("kVTHDRMetadataInsertionMode_None")]
@@ -299,7 +299,7 @@ namespace VideoToolbox {
 		Auto,
 	}
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	public enum VTRotation {
 		[DefaultEnumValue]
 		[Field ("kVTRotation_0")]

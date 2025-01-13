@@ -291,7 +291,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !WATCH
 	public static class AVUtilities {
 
 		[DllImport (Constants.AVFoundationLibrary)]
@@ -302,7 +301,6 @@ namespace AVFoundation {
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);
 		}
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("macos")]
@@ -311,7 +309,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -391,7 +388,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -520,7 +516,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -537,7 +532,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -630,7 +624,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif

@@ -21,7 +21,7 @@ namespace ClassKit {
 
 	/// <summary>Enumerates activity outcome types.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Native]
 	enum CLSBinaryValueType : long {
 		TrueFalse = 0,
@@ -33,7 +33,7 @@ namespace ClassKit {
 
 	/// <summary>Enumerates curriculum units.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Native]
 	enum CLSContextType : long {
 		None = 0,
@@ -62,7 +62,7 @@ namespace ClassKit {
 
 	/// <summary>Enumerates ClassKit error codes.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Native]
 	[ErrorDomain ("CLSErrorCodeDomain")]
 	public enum CLSErrorCode : long {
@@ -82,7 +82,7 @@ namespace ClassKit {
 
 	/// <summary>Enumerates topics for contexts.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	enum CLSContextTopic {
 		[Field ("CLSContextTopicMath")]
 		Math,
@@ -107,7 +107,7 @@ namespace ClassKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, iOS (14, 0)]
+	[NoTV, iOS (14, 0)]
 	[Native]
 	public enum CLSProgressReportingCapabilityKind : long {
 		Duration = 0,
@@ -119,7 +119,7 @@ namespace ClassKit {
 
 	/// <summary>Contains keys for accessing error data.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Static]
 	interface CLSErrorUserInfoKeys {
 
@@ -136,7 +136,7 @@ namespace ClassKit {
 
 	/// <summary>Enumerates key paths for retrieving ClassKit contexts.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Static]
 	interface CLSPredicateKeyPath {
 		[Field ("CLSPredicateKeyPathDateCreated")]
@@ -160,7 +160,7 @@ namespace ClassKit {
 
 	/// <summary>Base class for ClassKit objects.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSObject : NSSecureCoding {
@@ -174,7 +174,7 @@ namespace ClassKit {
 
 	/// <summary>Encapsulates and interaction between the student and a task for a context.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivity {
@@ -217,7 +217,7 @@ namespace ClassKit {
 
 	/// <summary>Base class for activity items.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivityItem {
@@ -230,7 +230,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSBinaryItem {
@@ -248,7 +248,7 @@ namespace ClassKit {
 
 	/// <summary>A node in a ClassKit context hierarchy.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSContext {
@@ -386,7 +386,7 @@ namespace ClassKit {
 	///       <para>ClassKit contexts are used to arrange nested content, such as chapters and sections of a lesson plan, in order to organize and track student progress and tests. ClassKit supports a maximum of 8 layers of content nesting.</para>
 	///     </remarks>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CLSDataStoreDelegate {
@@ -399,7 +399,7 @@ namespace ClassKit {
 
 	/// <summary>Manages ClassKit data by operating on hierarchical contexts, such as acts, chapters, sections, and so on.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSDataStore {
@@ -454,7 +454,7 @@ namespace ClassKit {
 
 	/// <summary>Represents a quantitative data item.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSQuantityItem {
@@ -469,7 +469,7 @@ namespace ClassKit {
 
 	/// <summary>Represents a score for a test or quiz.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSScoreItem {
@@ -486,7 +486,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV]
+	[NoTV]
 	[Protocol]
 	interface CLSContextProvider {
 		[Abstract]
@@ -495,7 +495,7 @@ namespace ClassKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, iOS (14, 0)]
+	[NoTV, iOS (14, 0)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSProgressReportingCapability {

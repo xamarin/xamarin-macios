@@ -5,17 +5,17 @@ using Foundation;
 using System;
 
 namespace Symbols {
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSymbolEffect : NSCopying, NSSecureCoding { }
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSymbolContentTransition : NSCopying, NSSecureCoding { }
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSymbolEffectOptions : NSCopying, NSSecureCoding {
@@ -28,7 +28,6 @@ namespace Symbols {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		NSSymbolEffectOptions CreateRepeating ();
 
@@ -36,7 +35,6 @@ namespace Symbols {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		NSSymbolEffectOptions GetRepeating ();
 
@@ -52,7 +50,6 @@ namespace Symbols {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		NSSymbolEffectOptions Create (nint repeatCount);
 
@@ -60,7 +57,6 @@ namespace Symbols {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'NSSymbolEffectOptionsRepeatBehavior.CreatePeriodic' instead.")]
 		NSSymbolEffectOptions Get (nint repeatCount);
 
@@ -71,17 +67,17 @@ namespace Symbols {
 		[Export ("optionsWithSpeed:")]
 		NSSymbolEffectOptions Get (double speed);
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Static]
 		[Export ("optionsWithRepeatBehavior:")]
 		NSSymbolEffectOptions Create (NSSymbolEffectOptionsRepeatBehavior behavior);
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("optionsWithRepeatBehavior:")]
 		NSSymbolEffectOptions Get (NSSymbolEffectOptionsRepeatBehavior behavior);
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolPulseEffect {
@@ -96,7 +92,7 @@ namespace Symbols {
 		NSSymbolPulseEffect WholeSymbol { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolBounceEffect {
@@ -119,7 +115,7 @@ namespace Symbols {
 		NSSymbolBounceEffect WholeSymbol { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolVariableColorEffect {
@@ -146,7 +142,7 @@ namespace Symbols {
 		NSSymbolVariableColorEffect DimInactiveLayers { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolScaleEffect {
@@ -169,7 +165,7 @@ namespace Symbols {
 		NSSymbolScaleEffect WholeSymbol { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolAppearEffect {
@@ -192,7 +188,7 @@ namespace Symbols {
 		NSSymbolAppearEffect WholeSymbol { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolDisappearEffect {
@@ -215,7 +211,7 @@ namespace Symbols {
 		NSSymbolDisappearEffect WholeSymbol { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
 	[DisableDefaultCtor]
 	interface NSSymbolReplaceContentTransition {
@@ -242,12 +238,12 @@ namespace Symbols {
 		NSSymbolReplaceContentTransition WholeSymbol { get; }
 
 		[Static]
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Export ("magicTransitionWithFallback:")]
 		NSSymbolMagicReplaceContentTransition CreateMagicTransition (NSSymbolReplaceContentTransition fallback);
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
 	[DisableDefaultCtor]
 	interface NSSymbolAutomaticContentTransition {
@@ -256,7 +252,7 @@ namespace Symbols {
 		NSSymbolAutomaticContentTransition Create ();
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSymbolEffectOptionsRepeatBehavior : NSCopying, NSSecureCoding {
@@ -281,7 +277,7 @@ namespace Symbols {
 		NSSymbolEffectOptionsRepeatBehavior CreateContinuous ();
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolWiggleEffect {
@@ -332,7 +328,7 @@ namespace Symbols {
 		NSSymbolWiggleEffect WholeSymbol { get; }
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolRotateEffect {
@@ -355,7 +351,7 @@ namespace Symbols {
 		NSSymbolRotateEffect WholeSymbol { get; }
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	[DisableDefaultCtor]
 	interface NSSymbolBreatheEffect {
@@ -378,7 +374,7 @@ namespace Symbols {
 		NSSymbolBreatheEffect WholeSymbol { get; }
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
 	[DisableDefaultCtor]
 	interface NSSymbolMagicReplaceContentTransition {

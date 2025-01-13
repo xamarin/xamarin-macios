@@ -1,7 +1,5 @@
 #nullable enable
 
-#if !WATCH
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -33,4 +31,3 @@ namespace PassKit {
 		}
 	}
 }
-#endif // !WATCH

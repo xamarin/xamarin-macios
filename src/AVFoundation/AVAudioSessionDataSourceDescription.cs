@@ -85,7 +85,6 @@ namespace AVFoundation {
 			}
 		}
 
-#if !WATCH
 		public AVAudioDataSourcePolarPattern []? SupportedPolarPatterns {
 			get {
 				var x = SupportedPolarPatterns_;
@@ -116,7 +115,6 @@ namespace AVFoundation {
 		{
 			return SetPreferredPolarPattern_ (ToToken (pattern), out outError);
 		}
-#endif
 	}
 }
 #endif

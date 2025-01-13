@@ -32,9 +32,7 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
-#if !WATCH
 using CoreMedia;
-#endif
 
 namespace Foundation {
 	public enum NSCalendarType {
