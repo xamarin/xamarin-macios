@@ -388,7 +388,7 @@ namespace Xharness {
 					Label = TestLabel.DotnetTest,
 					ProjectPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")),
 					Name = "DotNet tests",
-					Timeout = (TimeSpan?) TimeSpan.FromHours (6),
+					Timeout = (TimeSpan?) TimeSpan.FromMinutes (165 /* 2h45m: to time out here before the CI job does at 3h */),
 					Filter = "Category!=Windows",
 				},
 				new {
