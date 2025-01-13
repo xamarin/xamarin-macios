@@ -15,27 +15,23 @@ class EnumEmitter : ICodeEmitter {
 	public string GetSymbolName (in CodeChanges codeChanges) => $"{codeChanges.Name}Extensions";
 	public IEnumerable<string> UsingStatements => ["Foundation", "ObjCRuntime", "System"];
 
-	void EmitEnumFieldAtIndex (RootBindingContext context, TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
+	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
 	{
 		var enumField = codeChanges.EnumMembers [index];
 		if (enumField.FieldData is null)
 			return;
-		if (!context.TryComputeLibraryName (enumField.FieldData.Value.LibraryName, codeChanges.Namespace [^1],
-				out string? libraryName, out string? libraryPath)) {
-			return;
-		}
 
 		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
-		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.Value.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.Value.SymbolName}\", \"{enumField.LibraryPath ?? enumField.LibraryName}\")]");
 		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.Value.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
 			getterBlock.AppendLine (
-				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{enumField.FieldData.Value.SymbolName}\", storage);");
+				$"\treturn Dlfcn.CachePointer (Libraries.{enumField.LibraryName}.Handle, \"{enumField.FieldData.Value.SymbolName}\", storage);");
 		}
 	}
 
-	bool TryEmit (RootBindingContext context, TabbedStringBuilder classBlock, in CodeChanges codeChanges)
+	bool TryEmit (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
 	{
 		// keep track of the field symbols, they have to be unique, if we find a duplicate we return false and
 		// abort the code generation
@@ -47,7 +43,7 @@ class EnumEmitter : ICodeEmitter {
 				return false;
 			}
 			classBlock.AppendLine ();
-			EmitEnumFieldAtIndex (context, classBlock, codeChanges, index);
+			EmitEnumFieldAtIndex (classBlock, codeChanges, index);
 		}
 		return true;
 	}
@@ -149,7 +145,7 @@ class EnumEmitter : ICodeEmitter {
 			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{bindingContext.Changes.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter
 			// will take care of generating the property. Do not order it by name to keep the order of the enum
-			if (!TryEmit (bindingContext.RootContext, classBlock, bindingContext.Changes)) {
+			if (!TryEmit (classBlock, bindingContext.Changes)) {
 				diagnostics = []; // empty diagnostics since it was a user error
 				return false;
 			}
