@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.Macios.Generator.Tests;
 
