@@ -398,7 +398,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 			modifiers: [],
 			accessors: []
 		) {
-			ExportFieldData = new FieldData<ObjCBindings.Property> ("name", flag)
+			ExportFieldData = new (new FieldData<ObjCBindings.Property> ("name", flag), ""),
 		};
 		Assert.Equal (expectedResult, property.IsNotification);
 	}

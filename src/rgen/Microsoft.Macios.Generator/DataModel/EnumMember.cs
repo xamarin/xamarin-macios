@@ -20,16 +20,6 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	public string Name { get; }
 
 	/// <summary>
-	/// Name of the library that contains the smart enum definition.
-	/// </summary>
-	public string LibraryName { get; }
-
-	/// <summary>
-	/// Path of the library that contains the smart enum definition.
-	/// </summary>
-	public string? LibraryPath { get; }
-
-	/// <summary>
 	/// The platform availability of the enum value.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
@@ -37,7 +27,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a binding.
 	/// </summary>
-	public FieldData<EnumValue>? FieldData { get; }
+	public FieldInfo<EnumValue>? FieldInfo { get; }
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -61,9 +51,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 		ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
-		LibraryName = libraryName;
-		LibraryPath = libraryPath;
-		FieldData = fieldData;
+		FieldInfo = fieldData is null ? null : new(fieldData.Value, libraryName, libraryPath);
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 	}
@@ -92,7 +80,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		if (FieldData != other.FieldData)
+		if (FieldInfo != other.FieldInfo)
 			return false;
 
 		var attrComparer = new AttributesEqualityComparer ();
@@ -125,7 +113,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldData: {FieldData} Attributes: [");
+			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldInfo: {FieldInfo} Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("] }");
 		return sb.ToString ();
