@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -8,7 +10,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly structure that represents a change in a method return type.
 /// </summary>
-readonly struct MethodReturnType : IEquatable<MethodReturnType> {
+readonly struct ReturnType : IEquatable<ReturnType> {
 
 	/// <summary>
 	/// Type of the parameter.
@@ -45,14 +47,18 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 	/// </summary>
 	public bool IsVoid { get; }
 
-	internal MethodReturnType (string type)
+	internal ReturnType (string type)
 	{
 		Type = type;
 		IsVoid = type == "void";
 	}
 
-	internal MethodReturnType (string type, bool isNullable, bool isBlittable, bool isSmartEnum, bool isArray,
-		bool isReferenceType) : this (type)
+	internal ReturnType (string type,
+		bool isNullable = false,
+		bool isBlittable = false,
+		bool isSmartEnum = false,
+		bool isArray = false,
+		bool isReferenceType = false) : this (type)
 	{
 		IsNullable = isNullable;
 		IsBlittable = isBlittable;
@@ -61,7 +67,7 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 		IsReferenceType = isReferenceType;
 	}
 
-	internal MethodReturnType (ITypeSymbol symbol) :
+	internal ReturnType (ITypeSymbol symbol) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
@@ -75,7 +81,7 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 	}
 
 	/// <inheritdoc/>
-	public bool Equals (MethodReturnType other)
+	public bool Equals (ReturnType other)
 	{
 		if (Type != other.Type)
 			return false;
@@ -98,7 +104,7 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 	/// <inheritdoc/>
 	public override bool Equals (object? obj)
 	{
-		return obj is MethodReturnType other && Equals (other);
+		return obj is ReturnType other && Equals (other);
 	}
 
 	/// <inheritdoc/>
@@ -107,12 +113,12 @@ readonly struct MethodReturnType : IEquatable<MethodReturnType> {
 		return HashCode.Combine (Type, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
 	}
 
-	public static bool operator == (MethodReturnType left, MethodReturnType right)
+	public static bool operator == (ReturnType left, ReturnType right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (MethodReturnType left, MethodReturnType right)
+	public static bool operator != (ReturnType left, ReturnType right)
 	{
 		return !left.Equals (right);
 	}

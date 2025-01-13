@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 namespace Microsoft.Macios.Generator;
 
 public static class ExtraSources {
