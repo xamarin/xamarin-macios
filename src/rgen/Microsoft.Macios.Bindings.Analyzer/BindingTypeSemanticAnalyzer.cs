@@ -184,7 +184,7 @@ public class BindingTypeSemanticAnalyzer : DiagnosticAnalyzer, IBindingTypeAnaly
 
 			if (!classDeclarationSyntax.IsStatic ()) {
 				var partialDiagnostic = Diagnostic.Create (
-					descriptor: RBI0004, // BindintType<Category> must be on a static class
+					descriptor: RBI0004, // BindingType<Category> must be on a static class
 					location: declarationNode.Identifier.GetLocation (),
 					messageArgs: symbol.ToDisplayString ());
 				bucket.Add (partialDiagnostic);
