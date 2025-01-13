@@ -248,13 +248,14 @@ AVFOUNDATION_CORE_SOURCES = \
 	AVFoundation/AVUrlAssetOptions.cs \
 	AVFoundation/AVVideoSettings.cs \
 	AVFoundation/AVTypes.cs \
+	AVFoundation/AVAssetReaderVideoCompositionOutput.cs \
+	AVFoundation/AVAudioVoiceProcessingOtherAudioDuckingConfiguration.cs \
 
 AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAssetDownloadStorageManagementPolicy.cs \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
-	AVFoundation/AVAssetReaderVideoCompositionOutput.cs \
 	AVFoundation/AVAssetResourceLoadingDataRequest.cs \
 	AVFoundation/AVAudioBuffer.cs \
 	AVFoundation/AVAudioChannelLayout.cs \
@@ -287,11 +288,15 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVSampleBufferExtensions.cs \
 	AVFoundation/AVSampleCursor.cs \
 	AVFoundation/AVSpeechSynthesizer.cs \
+	AVFoundation/AVSpeechSynthesisMarker.cs \
+	AVFoundation/AVSpeechSynthesisProviderAudioUnit.cs \
+	AVFoundation/AVSpeechUtterance.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
 	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
 	AVFoundation/AVCaptureReactionType.rgen.cs \
+	AVFoundation/CMTagCollectionVideoOutputPreset.cs \
 
 # AVKit
 
