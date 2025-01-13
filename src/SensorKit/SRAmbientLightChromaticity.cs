@@ -12,7 +12,6 @@ namespace SensorKit {
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos")]
 #else
-	[NoWatch]
 	[NoTV]
 	[NoMac]
 	[iOS (14, 0)]

@@ -212,12 +212,12 @@ namespace SafariServices {
 		bool BarCollapsingEnabled { get; set; }
 
 		[NullAllowed]
-		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV, NoWatch]
+		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV]
 		[Export ("activityButton", ArgumentSemantic.Copy)]
 		SFSafariViewControllerActivityButton ActivityButton { get; set; }
 
 		[NullAllowed]
-		[NoWatch, NoTV, iOS (15, 2), MacCatalyst (15, 2), NoMac]
+		[NoTV, iOS (15, 2), MacCatalyst (15, 2), NoMac]
 		[Export ("eventAttribution", ArgumentSemantic.Copy)]
 		UIEventAttribution EventAttribution { get; set; }
 	}
@@ -250,7 +250,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -292,7 +291,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -318,7 +316,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[Protocol]
 	interface SFSafariExtensionHandling {
@@ -363,7 +360,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -377,7 +373,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface SFSafariPageProperties {
@@ -398,7 +393,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -428,7 +422,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -455,7 +448,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -482,7 +474,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface SFSafariExtensionViewController {
@@ -495,7 +486,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling {
@@ -521,7 +511,6 @@ namespace SafariServices {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -541,7 +530,7 @@ namespace SafariServices {
 	}
 
 	[Static]
-	[iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), NoTV]
 	[DisableDefaultCtor]
 	interface SFExtension {
 		[Field ("SFExtensionMessageKey")]
@@ -552,7 +541,7 @@ namespace SafariServices {
 		NSString ProfileKey { get; }
 	}
 
-	[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV, NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerActivityButton : NSCopying, NSSecureCoding {
@@ -567,7 +556,7 @@ namespace SafariServices {
 		string ExtensionIdentifier { get; }
 	}
 
-	[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV, NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerPrewarmingToken /* Privately conforms to NSCoding and NSSecureCoding */
@@ -576,7 +565,7 @@ namespace SafariServices {
 		void Invalidate ();
 	}
 
-	[iOS (16, 0), MacCatalyst (16, 0), NoMac, NoTV, NoWatch]
+	[iOS (16, 0), MacCatalyst (16, 0), NoMac, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerDataStore {
@@ -592,7 +581,7 @@ namespace SafariServices {
 	delegate void SFAddToHomeScreenActivityItemGetWebAppManifestCallback ([NullAllowed] BEWebAppManifest appManifest);
 	delegate void SFAddToHomeScreenActivityItemGetHomeScreenWebAppInfoCallback ([NullAllowed] SFAddToHomeScreenInfo appManifest);
 
-	[iOS (17, 4), MacCatalyst (17, 4), NoMac, NoTV, NoWatch]
+	[iOS (17, 4), MacCatalyst (17, 4), NoMac, NoTV]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface SFAddToHomeScreenActivityItem {
 

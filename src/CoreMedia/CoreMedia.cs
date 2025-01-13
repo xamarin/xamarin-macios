@@ -24,8 +24,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMSampleTimingInfo {
@@ -40,8 +38,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMTimeRange {
@@ -100,8 +96,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMTimeMapping {
@@ -217,8 +211,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMTimeScale {
@@ -243,8 +235,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public struct CMVideoDimensions {
 		public int Width;

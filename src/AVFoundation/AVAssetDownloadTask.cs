@@ -13,7 +13,7 @@ using Foundation;
 #nullable enable
 
 namespace AVFoundation {
-#if !MONOMAC && !WATCH && !TVOS
+#if !MONOMAC && !TVOS
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {
 
 		// NSURLRequest and NSURLResponse objects are not available for AVAssetDownloadTask

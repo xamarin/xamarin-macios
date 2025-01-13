@@ -41,7 +41,6 @@ namespace Network {
 #else
 	[TV (13, 0)]
 	[iOS (13, 0)]
-	[Watch (6, 0)]
 #endif
 	public class NWFramer : NativeObject {
 		[Preserve (Conditional = true)]
@@ -472,7 +471,6 @@ namespace Network {
 		[Mac (13, 0)]
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_options nw_framer_copy_options (OS_nw_framer framer);
@@ -487,7 +485,6 @@ namespace Network {
 		[Mac (13, 0)]
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public NSProtocolFramerOptions? ProtocolOptions {
 			get {

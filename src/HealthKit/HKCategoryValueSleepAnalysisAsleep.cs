@@ -32,7 +32,7 @@ namespace HealthKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+		[iOS (16, 0), Mac (13, 0), NoTV, MacCatalyst (16, 0)]
 #endif // NET
 		[DllImport (Constants.HealthKitLibrary)]
 		static extern NativeHandle HKCategoryValueSleepAnalysisAsleepValues ();
@@ -43,7 +43,7 @@ namespace HealthKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+		[iOS (16, 0), Mac (13, 0), NoTV, MacCatalyst (16, 0)]
 #endif // NET
 		public static HashSet<HKCategoryValueSleepAnalysis> GetAsleepValues ()
 		{

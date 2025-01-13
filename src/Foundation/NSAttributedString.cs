@@ -297,9 +297,7 @@ namespace Foundation {
 						  NSLigatureType ligature,
 						  float kerning,
 						  NSUnderlineStyle underlineStyle,
-#if !WATCH
 						  NSShadow? shadow,
-#endif
 						  float strokeWidth,
 						  NSUnderlineStyle strikethroughStyle)
 		{
@@ -328,11 +326,9 @@ namespace Foundation {
 			if (underlineStyle != NSUnderlineStyle.None) {
 				attr.UnderlineStyle = underlineStyle;
 			}
-#if !WATCH
 			if (shadow is not null) {
 				attr.Shadow = shadow;
 			}
-#endif
 			if (strokeWidth != 0) {
 				attr.StrokeWidth = strokeWidth;
 			}
@@ -352,15 +348,11 @@ namespace Foundation {
 					   NSLigatureType ligatures = NSLigatureType.Default,
 					   float kerning = 0,
 					   NSUnderlineStyle underlineStyle = NSUnderlineStyle.None,
-#if !WATCH
 					   NSShadow? shadow = null,
-#endif
 					   float strokeWidth = 0,
 					   NSUnderlineStyle strikethroughStyle = NSUnderlineStyle.None)
 		: this (str, ToDictionary (font, foregroundColor, backgroundColor, strokeColor, paragraphStyle, ligatures, kerning, underlineStyle,
-#if !WATCH
 			shadow,
-#endif
 			strokeWidth, strikethroughStyle))
 		{
 		}

@@ -31,7 +31,6 @@ namespace Network {
 #else
 	[TV (13, 0)]
 	[iOS (13, 0)]
-	[Watch (6, 0)]
 #endif
 	public class NWBrowserDescriptor : NativeObject {
 
@@ -50,7 +49,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_application_service (IntPtr application_service_name);
@@ -64,7 +62,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public static NWBrowserDescriptor CreateApplicationServiceName (string applicationServiceName)
 		{
@@ -84,7 +81,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_browse_descriptor_get_application_service_name (OS_nw_browse_descriptor descriptor);
@@ -98,7 +94,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public string? ApplicationServiceName {
 			get {

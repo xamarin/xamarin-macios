@@ -186,7 +186,6 @@ namespace Accounts {
 
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[NoMacCatalyst]
 		[Field ("ACAccountTypeIdentifierLinkedIn")]
@@ -239,7 +238,6 @@ namespace Accounts {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 	[NoMacCatalyst]
 	[Static]

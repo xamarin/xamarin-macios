@@ -34,12 +34,10 @@ using CoreFoundation;
 using System.Net;
 using System.Net.Sockets;
 using ObjCRuntime;
-#if !WATCH
 #if NET
 using CFNetwork;
 #else
 using CoreServices;
-#endif
 #endif
 
 // Disable until we get around to enable + fix any issues.
@@ -245,7 +243,6 @@ namespace Foundation {
 			}
 		}
 
-#if !WATCH // There's no CFStreamCreatePairWithSocketToCFHost in WatchOS
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
 													   out NSInputStream readStream,
 													   out NSOutputStream writeStream)
@@ -258,7 +255,6 @@ namespace Foundation {
 				AssignStreams (read, write, out readStream, out writeStream);
 			}
 		}
-#endif
 
 		public static void CreateBoundPair (out NSInputStream readStream, out NSOutputStream writeStream, nint bufferSize)
 		{

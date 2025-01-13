@@ -10,7 +10,6 @@ using NativeHandle = System.IntPtr;
 namespace MediaSetup {
 
 	[NoTV]
-	[NoWatch]
 	[NoMac]
 	[iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
@@ -46,7 +45,6 @@ namespace MediaSetup {
 	interface IMSAuthenticationPresentationContext { }
 
 	[NoTV]
-	[NoWatch]
 	[NoMac]
 	[iOS (14, 0)]
 	[Protocol]
@@ -58,7 +56,6 @@ namespace MediaSetup {
 	}
 
 	[NoTV]
-	[NoWatch]
 	[NoMac]
 	[iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
