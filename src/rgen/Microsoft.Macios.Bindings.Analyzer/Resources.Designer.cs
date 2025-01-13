@@ -170,5 +170,113 @@ namespace Microsoft.Macios.Bindings.Analyzer {
                 return ResourceManager.GetString("RBI0007Title", resourceCulture);
             }
         }
+        
+        internal static string RBI0008Description {
+            get {
+                return ResourceManager.GetString("RBI0008Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0008MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0008MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0008Title {
+            get {
+                return ResourceManager.GetString("RBI0008Title", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0009Description {
+            get {
+                return ResourceManager.GetString("RBI0009Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0009MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0009MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0009Title {
+            get {
+                return ResourceManager.GetString("RBI0009Title", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0010Description {
+            get {
+                return ResourceManager.GetString("RBI0010Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0010MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0010MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0010Title {
+            get {
+                return ResourceManager.GetString("RBI0010Title", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0011Description {
+            get {
+                return ResourceManager.GetString("RBI0011Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0011MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0011MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0011Title {
+            get {
+                return ResourceManager.GetString("RBI0011Title", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0012Description {
+            get {
+                return ResourceManager.GetString("RBI0012Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0012MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0012MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0012Title {
+            get {
+                return ResourceManager.GetString("RBI0012Title", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0013Description {
+            get {
+                return ResourceManager.GetString("RBI0013Description", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0013MessageFormat {
+            get {
+                return ResourceManager.GetString("RBI0013MessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string RBI0013Title {
+            get {
+                return ResourceManager.GetString("RBI0013Title", resourceCulture);
+            }
+        }
     }
 }
