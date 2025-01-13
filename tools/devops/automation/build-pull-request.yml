@@ -201,11 +201,15 @@ extends:
       sourceRepositoriesToScan:
         runInSingleJob: true # run both maccore and macios in the same job
         include:
-        - repository: maccore
+          - repository: maccore
         exclude:
-        - repository: yaml-templates
-        - repository: sdk-insertions
-        - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
+          - repository: yaml-templates
+          - repository: sdk-insertions
+          - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
+      codeql:
+        compiled:
+          enabled: false
+          justificationForDisabling: This pipeline is not a production one. Running results on duplicated results.
     stages:
     - template: templates/main-stage.yml
       parameters:
