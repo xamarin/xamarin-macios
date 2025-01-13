@@ -2261,15 +2261,17 @@ namespace Registrar {
 			string h;
 			switch (ns) {
 			case "CallKit":
+			case "CoreHaptics":
 				if (App.Platform == ApplePlatform.MacOSX) {
-					// AVFoundation can't be imported before CallKit on macOS
+					// AVFoundation can't be imported before CallKit or CoreHaptics on macOS
 					// Ref: https://github.com/xamarin/maccore/issues/2301
 					// Ref: https://github.com/xamarin/maccore/issues/2257
+					// Ref: https://github.com/xamarin/maccore/issues/2261
 					// The fun part is that other frameworks can import AVFoundation, so we can't check for AVFoundation specifically.
-					// Instead add CallKit before any other imports.
+					// Instead add CallKit/CoreHaptics before any other imports.
 					var firstImport = header.StringBuilder.ToString ().IndexOf ("#import <");
 					if (firstImport >= 0) {
-						header.StringBuilder.Insert (firstImport, "#import <CallKit/CallKit.h>\n");
+						header.StringBuilder.Insert (firstImport, $"#import <{ns}/{ns}.h>\n");
 						return;
 					}
 				}
