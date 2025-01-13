@@ -28,8 +28,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[Watch (4, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* CFStringRef */ IntPtr SecCopyErrorMessageString (
@@ -41,8 +39,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[Watch (4, 3)]
 #endif
 		public static string GetStatusDescription (this SecStatusCode status)
 		{

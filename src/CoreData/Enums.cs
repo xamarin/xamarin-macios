@@ -61,7 +61,7 @@ namespace CoreData {
 		Uri = 1200,
 		Transformable = 1800,
 		ObjectID = 2000,
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		CompositeAttributeType = 2100,
 	}
 
@@ -94,7 +94,6 @@ namespace CoreData {
 		Save,
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		BatchInsert = 5,
 		BatchUpdate = 6,
@@ -231,7 +230,7 @@ namespace CoreData {
 		TransactionsAndChanges = 5
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSBatchInsertRequestResultType : ulong {
@@ -240,7 +239,7 @@ namespace CoreData {
 		Count = 2,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -250,7 +249,7 @@ namespace CoreData {
 		PrintSchema = 1 << 2,
 	}
 
-	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NSPersistentCloudKitContainerEventResultType : long {
@@ -258,7 +257,7 @@ namespace CoreData {
 		CountEvents,
 	}
 
-	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NSPersistentCloudKitContainerEventType : long {

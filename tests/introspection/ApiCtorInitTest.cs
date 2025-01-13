@@ -541,6 +541,12 @@ namespace Introspection {
 				if (cstr == "Void .ctor(Vision.VNRequestCompletionHandler)")
 					return true;
 				break;
+			case "AVSpeechSynthesisProviderAudioUnit":
+				if (cstr == "Void .ctor(AudioUnit.AudioComponentDescription, AudioUnit.AudioComponentInstantiationOptions, Foundation.NSError ByRef)") {
+					// This constructor is exposed using a factory method.
+					return true;
+				}
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

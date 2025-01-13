@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 #nullable enable
 
-#if !WATCH && !__MACCATALYST__
+#if !__MACCATALYST__
 
 namespace Cinematic {
 
@@ -15,7 +15,7 @@ namespace Cinematic {
 	[SupportedOSPlatform ("ios17.0")]
 	[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-	[NoWatch, TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 	public enum CNDecisionIdentifierType {
 		Single,

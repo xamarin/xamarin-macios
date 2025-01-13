@@ -15,14 +15,14 @@ using Foundation;
 
 namespace DeviceDiscoveryExtension {
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	public enum DDDeviceProtocol : long {
 		Invalid = 0,
 		Dial = 1,
 	}
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	public enum DDDeviceCategory : long {
 		HiFiSpeaker = 0,
@@ -35,7 +35,7 @@ namespace DeviceDiscoveryExtension {
 		AccessorySetup = 6,
 	}
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	public enum DDDeviceState : long {
 		Invalid = 0,
@@ -45,7 +45,7 @@ namespace DeviceDiscoveryExtension {
 		Invalidating = 30,
 	}
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	public enum DDDeviceMediaPlaybackState : long {
 		NoContent = 0,
@@ -53,7 +53,7 @@ namespace DeviceDiscoveryExtension {
 		Playing = 2,
 	}
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[ErrorDomain ("DDErrorDomain")]
 	[Native]
 	public enum DDErrorCode : long {
@@ -68,7 +68,7 @@ namespace DeviceDiscoveryExtension {
 		// Next, // don't bind 'Next', it's not static and we'd have to break compat if it were ever to change
 	}
 
-	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (16, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	public enum DDEventType : long {
 		Unknown = 0,
@@ -77,7 +77,7 @@ namespace DeviceDiscoveryExtension {
 		DeviceChanged = 42,
 	}
 
-	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoWatch, NoTV]
+	[Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0), NoTV]
 	[Native]
 	[Flags]
 	public enum DDDeviceSupports : ulong {

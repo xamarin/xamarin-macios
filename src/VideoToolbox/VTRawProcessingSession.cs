@@ -29,7 +29,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("macos15.0")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+	[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 	public class VTRawProcessingSession : NativeObject {
 		[Preserve (Conditional = true)]

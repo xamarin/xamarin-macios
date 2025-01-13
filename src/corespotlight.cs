@@ -86,12 +86,12 @@ namespace CoreSpotlight {
 		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV]
 		[Export ("initWithName:protectionClass:bundleIdentifier:options:")]
 		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass, string bundleIdentifier, nint options);
 
 		[Wrap ("this (name, protectionClass.GetConstant (), bundleIdentifier, options)")]
-		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV]
 		NativeHandle Constructor (string name, NSFileProtectionType protectionClass, string bundleIdentifier, nint options);
 
 		[Export ("indexSearchableItems:completionHandler:")]
@@ -232,11 +232,11 @@ namespace CoreSpotlight {
 		[Export ("attributeSet", ArgumentSemantic.Strong)]
 		CSSearchableItemAttributeSet AttributeSet { get; set; }
 
-		[NoTV, iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoWatch]
+		[NoTV, iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0)]
 		[Export ("compareByRank:")]
 		NSComparisonResult CompareByRank (CSSearchableItem other);
 
-		[NoTV, NoWatch]
+		[NoTV]
 		[Export ("isUpdate", ArgumentSemantic.Assign)]
 		bool IsUpdate { get; set; }
 	}
@@ -1278,11 +1278,11 @@ namespace CoreSpotlight {
 		[Export ("compareByRank:")]
 		NSComparisonResult CompareByRank (CSSuggestion other);
 
-		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV]
 		[Export ("score")]
 		NSNumber Score { get; }
 
-		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV]
 		[Export ("suggestionDataSources")]
 		NSObject [] SuggestionDataSources { get; }
 	}

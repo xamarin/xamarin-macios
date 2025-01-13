@@ -33,9 +33,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
-#if !WATCH
 using CoreText;
-#endif
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
@@ -137,7 +135,6 @@ namespace UIKit {
 			}
 		}
 
-#if !WATCH
 		public NSShadow Shadow {
 			get {
 				return Dictionary [UIStringAttributeKey.Shadow] as NSShadow;
@@ -146,7 +143,6 @@ namespace UIKit {
 				SetNativeValue (UIStringAttributeKey.Shadow, value);
 			}
 		}
-#endif // !WATCH
 
 		public NSUnderlineStyle? UnderlineStyle {
 			get {
@@ -195,7 +191,6 @@ namespace UIKit {
 			}
 		}
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -209,7 +204,6 @@ namespace UIKit {
 				SetNativeValue (UIStringAttributeKey.Attachment, value);
 			}
 		}
-#endif // !WATCH
 
 #if NET
 		[SupportedOSPlatform ("ios")]

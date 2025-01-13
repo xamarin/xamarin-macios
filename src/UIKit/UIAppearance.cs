@@ -7,8 +7,6 @@
 // Copyright 2011, 2015 Xamarin Inc
 //
 
-#if !WATCH
-
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -152,5 +150,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

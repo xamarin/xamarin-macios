@@ -7,8 +7,6 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -28,5 +26,3 @@ namespace SceneKit {
 		}
 	}
 }
-
-#endif

@@ -14,7 +14,6 @@ using ObjCRuntime;
 
 namespace ClockKit {
 
-	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Native]
 	public enum CLKComplicationFamily : long {
 		ModularSmall,
@@ -25,15 +24,10 @@ namespace ClockKit {
 		// nothing has the value of 5
 		UtilitarianSmallFlat = 6,
 		ExtraLarge = 7,
-		[Watch (5, 0)]
 		GraphicCorner,
-		[Watch (5, 0)]
 		GraphicBezel,
-		[Watch (5, 0)]
 		GraphicCircular,
-		[Watch (5, 0)]
 		GraphicRectangular,
-		[Watch (7, 0)]
 		GraphicExtraLarge = 12,
 	}
 
@@ -75,15 +69,11 @@ namespace ClockKit {
 		Natural,
 		Offset,
 		Timer,
-		[Watch (5, 0)]
 		NaturalAbbreviated,
-		[Watch (6, 0)]
 		OffsetShort,
-		[Watch (6, 0)]
 		NaturalFull,
 	}
 
-	[Watch (5, 0)]
 	[Native]
 	public enum CLKGaugeProviderStyle : long {
 		Ring,

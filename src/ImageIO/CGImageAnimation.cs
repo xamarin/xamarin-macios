@@ -36,7 +36,6 @@ namespace ImageIO {
 #else
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ BlockLiteral* block);
@@ -49,7 +48,6 @@ namespace ImageIO {
 #else
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ BlockLiteral* block);
@@ -62,7 +60,6 @@ namespace ImageIO {
 #else
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
@@ -92,7 +89,6 @@ namespace ImageIO {
 #else
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
-		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)

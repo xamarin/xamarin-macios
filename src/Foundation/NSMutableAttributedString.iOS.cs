@@ -6,7 +6,6 @@
 //
 //
 
-#if !WATCH // NSMutableAttributedString needs some work before it can be included in WatchOS
 #if !MONOMAC
 
 using UIKit;
@@ -32,4 +31,3 @@ namespace Foundation {
 }
 
 #endif // !MONOMAC
-#endif // !WATCH

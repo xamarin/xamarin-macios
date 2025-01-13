@@ -7,7 +7,6 @@
 // Copyright 2017 Xamarin Inc.
 //
 
-#if !WATCH
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -40,4 +39,3 @@ namespace AVFoundation {
 		}
 	}
 }
-#endif

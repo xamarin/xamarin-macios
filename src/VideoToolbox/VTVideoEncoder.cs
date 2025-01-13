@@ -132,7 +132,7 @@ namespace VideoToolbox {
 		public bool SupportsFrameReordering { get; private set; }
 
 #if !NET
-		[NoiOS, NoTV, NoMacCatalyst, NoMac, NoWatch]
+		[NoiOS, NoTV, NoMacCatalyst, NoMac]
 		public bool SupportsMultiPass { get; private set; }
 #endif // !NET
 
@@ -145,7 +145,6 @@ namespace VideoToolbox {
 		[iOS (15, 0)]
 		[TV (15, 0)]
 		[MacCatalyst (15, 0)]
-		[Watch (8, 0)]
 #endif
 		public bool IncludeStandardDefinitionDVEncoders { get; private set; }
 

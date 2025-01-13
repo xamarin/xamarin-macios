@@ -9,7 +9,7 @@ using Foundation;
 namespace CoreLocation {
 
 #nullable enable
-#if !NET && !WATCH
+#if !NET
 
 #if !TVOS
 	public partial class CLHeading {
@@ -30,9 +30,9 @@ namespace CoreLocation {
 			return base.Description;
 		}
 	}
-#endif // !NET && !WATCH
+#endif // !NET
 
-#if !NET && (WATCH || TVOS || MONOMAC)
+#if !NET && (TVOS || MONOMAC)
 
 	// Symbol in Xcode 13.2 from watchOS and tvOS
 
@@ -61,5 +61,5 @@ namespace CoreLocation {
 		public static void ServiceExtensionWillTerminate (this ICLLocationPushServiceExtension This) => throw new PlatformNotSupportedException (Constants.UnavailableOnThisPlatform);
 	}
 
-#endif // !NET && (WATCH || TVOS)
+#endif // !NET && TVOS
 }
