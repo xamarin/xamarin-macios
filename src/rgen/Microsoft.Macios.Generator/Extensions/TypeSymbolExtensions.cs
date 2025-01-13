@@ -195,9 +195,9 @@ static class TypeSymbolExtensions {
 	}
 
 	delegate string? GetAttributeNames ();
-	delegate bool TryParse<T> (AttributeData  data, [NotNullWhen(true)]out T? value) where T : struct;
+	delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
 
-	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse) where T : struct 
+	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse) where T : struct
 	{
 		var attributes = symbol.GetAttributeData ();
 		if (attributes.Count == 0)
@@ -231,7 +231,7 @@ static class TypeSymbolExtensions {
 	/// returned.</remarks>
 	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
 		=> GetAttribute<ExportData<T>> (symbol, AttributesNames.GetExportAttributeName<T>, ExportData<T>.TryParse);
-	
+
 	/// <summary>
 	/// Retrieve the data of a field attribute on a symbol.
 	/// </summary>

@@ -26,10 +26,10 @@ readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 		LibraryName = libraryName;
 		Flags = flags;
 	}
-	
-	internal FieldData (string symbolName, T? flags) : this(symbolName, null, flags) { }
-	
-	internal FieldData (string symbolName) : this(symbolName, null, default) { }
+
+	internal FieldData (string symbolName, T? flags) : this (symbolName, null, flags) { }
+
+	internal FieldData (string symbolName) : this (symbolName, null, default) { }
 
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out FieldData<T>? data)

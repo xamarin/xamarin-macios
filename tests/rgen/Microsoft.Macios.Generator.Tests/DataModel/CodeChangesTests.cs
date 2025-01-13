@@ -136,7 +136,7 @@ public class TestClass {
 }
 ";
 			yield return [exportFieldAttributeInProperty, true];
-			
+
 			const string fieldAttributeInProperty = @"
 using System;
 using Foundation;

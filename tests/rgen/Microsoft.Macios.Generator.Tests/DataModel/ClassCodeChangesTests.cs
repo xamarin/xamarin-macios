@@ -29,7 +29,7 @@ public class ClassCodeChangesTests : BaseGeneratorTestClass {
 			builder.Add (new SupportedOSPlatformData ("ios17.0"));
 			builder.Add (new SupportedOSPlatformData ("tvos17.0"));
 			builder.Add (new UnsupportedOSPlatformData ("macos"));
-			
+
 			const string emptyClass = @"
 using Foundation;
 using ObjCRuntime;

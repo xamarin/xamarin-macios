@@ -505,7 +505,7 @@ public partial class MyClass {
 ";
 			yield return [fieldPropertyClass, Property.Default, new FieldData<Property> ("CONSTANT")];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 

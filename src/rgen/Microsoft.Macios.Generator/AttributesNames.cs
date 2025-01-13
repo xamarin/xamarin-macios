@@ -58,7 +58,7 @@ static class AttributesNames {
 		if (type == typeof (ObjCBindings.Property)) {
 			return FieldPropertyAttribute;
 		}
-		if (type == typeof(ObjCBindings.EnumValue)) {
+		if (type == typeof (ObjCBindings.EnumValue)) {
 			return EnumFieldAttribute;
 		}
 		return null;
