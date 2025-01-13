@@ -56,11 +56,11 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		init => isNSObject = value;
 	}
 
-	readonly bool isNativeObject = false;
+	readonly bool isINativeObject = false;
 
-	public bool IsNativeObject {
-		get => isNativeObject;
-		init => isNativeObject = value;
+	public bool IsINativeObject {
+		get => isINativeObject;
+		init => isINativeObject = value;
 	}
 
 	readonly ImmutableArray<string> parents = [];
@@ -109,7 +109,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		IsReferenceType = symbol.IsReferenceType;
 		symbol.GetInheritance (
 			isNSObject: out isNSObject,
-			isNativeObject: out isNativeObject,
+			isNativeObject: out isINativeObject,
 			parents: out parents,
 			interfaces: out interfaces);
 	}
@@ -176,7 +176,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		sb.Append ($"IsReferenceType: {IsReferenceType}, ");
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
-		sb.Append ($"IsNativeObject: {IsNativeObject}, ");
+		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
 		sb.Append ("Parents: [");
 		sb.AppendJoin (", ", parents);
 		sb.Append ("], Interfaces: [");

@@ -29,7 +29,7 @@ static class TestDataFactory {
 			],
 			Parents = ["object"],
 			IsNSObject = false,
-			IsNativeObject = false,
+			IsINativeObject = false,
 		};
 
 	public static ReturnType ReturnTypeForInt (bool isNullable = false)
