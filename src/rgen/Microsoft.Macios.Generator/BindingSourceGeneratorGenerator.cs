@@ -49,8 +49,8 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			.Select (static (tuple, _) => tuple.Changes)
 			.WithComparer (equalityComparer);
 
-		// ideally we could do a district, because each code change can return the same libs, this makes the library
-		// generation more common that what we would like, but it is the smallest code generation.
+		// ideally we could do a distinct, because each code change can return the same libs, this makes the library
+		// generation more common than what we would like, but it is the smallest code generation.
 		var libraryProvider = provider
 			.Select ((tuple, _) => (tuple.RootBindingContext, tuple.Changes.LibraryPaths));
 
