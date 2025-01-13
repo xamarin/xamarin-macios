@@ -209,7 +209,7 @@ extends:
       codeql:
         compiled:
           enabled: false
-          justificationForDisabling: This pipeline is not a production one. Running results on duplicated results.
+          justificationForDisabling: This pipeline is not a production one. Running results in duplicated results.
     stages:
     - template: templates/main-stage.yml
       parameters:
