@@ -2301,7 +2301,7 @@ namespace UIKit {
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIResponder))]
-	interface UIApplication {
+	interface UIApplication : UIAccessibility {
 		[Static, ThreadSafe]
 		[Export ("sharedApplication")]
 		UIApplication SharedApplication { get; }
