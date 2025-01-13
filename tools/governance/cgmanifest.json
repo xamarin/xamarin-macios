@@ -5,16 +5,6 @@
       "Component": {
         "Type": "git",
         "Git": {
-          "RepositoryUrl": "https://github.com/spouliot/Touch.Unit.git",
-          "CommitHash": "89afaf7e05a942c87231cf5601b3a5b59640e218"
-        }
-      },
-      "DevelopmentDependency": true
-    },
-    {
-      "Component": {
-        "Type": "git",
-        "Git": {
           "RepositoryUrl": "https://github.com/xamarin/Xamarin.MacDev",
           "CommitHash": "7ea83265099f904eaeb487a7b6a579e9e77d9433"
         }

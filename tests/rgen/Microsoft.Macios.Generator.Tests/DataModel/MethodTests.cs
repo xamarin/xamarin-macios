@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -624,7 +626,6 @@ namespace NS {
 					]
 				)
 			];
-
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

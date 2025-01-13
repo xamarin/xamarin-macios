@@ -2,14 +2,24 @@
   <Docs DocId="T:UIKit.UIDocument">
     <summary>Abstract base class providing local and cloud-based management of Model data.</summary>
     <remarks>
-      <para>Application developers can subclass <see cref="T:UIKit.UIDocument" /> to create objects that are "Model-Controllers" and relate to Model (domain) objects analogously to how <see cref="T:UIKit.UIViewController" /> relate to <see cref="T:UIKit.UIView" />s. iOS provides a number of functions, including background asynchronous reading and writing of application data, automatic and safe data-saving, storage that is automatically coordinated between the application sandbox and cloud services, etc.</para>
-      <block subset="none" type="inheritors">
-        <para>At a minimum, application developers need to implement <see cref="M:UIKit.UIDocument.ContentsForType(System.String,Foundation.NSError@)" /> (for storage) and <see cref="M:UIKit.UIDocument.LoadFromContents(Foundation.NSObject,System.String,Foundation.NSError@)" /> (for retrieval). Additionally, application developers need to manage the lifecyle of the <see cref="T:UIKit.UIDocument" /> and this requires the application developer to set the preferred storage location, create a file URL, and discover, open, and close the file. Application developers should also track changes and resolve conflicts between document versions.</para>
-      </block>
-      <para tool="threads">The members of this class can be used from a background thread.</para>
+      <para>
+        Application developers can subclass <see cref="UIDocument" /> to create objects that are "Model-Controllers" and
+        relate to Model (domain) objects analogously to how <see cref="UIViewController" /> relate to <see cref="UIView" />s.
+        UIKit provides a number of functions, including background asynchronous reading and writing of application data,
+        automatic and safe data-saving, storage that is automatically coordinated between the application sandbox and cloud services, etc.
+      </para>
+      <para>
+        At a minimum, application developers need to implement <see cref="ContentsForType(string,out NSError)" /> (for storage) and
+        <see cref="LoadFromContents(NSObject,string,out NSError)" /> (for retrieval). Additionally, application developers need to
+        manage the lifecyle of the <see cref="UIDocument" /> and this requires the application developer to set the preferred storage
+        location, create a file URL, and discover, open, and close the file. Application developers should also track changes and resolve
+        conflicts between document versions.
+      </para>
+      <para>
+        The members of this class can be used from a background thread.
+      </para>
     </remarks>
     <related type="article" href="https://github.com/conceptdev/taskcloud">TaskCloud</related>
-    
     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDocument_Class/index.html">Apple documentation for <c>UIDocument</c></related>
   </Docs>
 </Documentation>

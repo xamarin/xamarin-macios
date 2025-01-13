@@ -30,46 +30,99 @@ using System.Runtime.InteropServices;
 
 namespace AVFoundation {
 	public partial class AVAudioPlayer {
-
-		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
-		unsafe static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2);
-
-		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified url and hint for the file type.</summary>
+		/// <param name="url">The url of a local audio file.</param>
+		/// <param name="fileTypeHint">The uniform type identifier for the audio format.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromUrl (NSUrl url, NSString? fileTypeHint, out NSError? error)
 		{
-			error = null;
-			IntPtr url__handle__ = url!.GetNonNullHandle (nameof (url));
-			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
-			IntPtr errorptr = IntPtr.Zero;
-			if (handle == IntPtr.Zero)
+			var rv = new AVAudioPlayer (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithContentsOfUrl (url, fileTypeHint, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
 				return null;
-			unsafe {
-				handle = objc_msgSend (handle, Selector.GetHandle ("initWithContentsOfURL:error:"), url__handle__, &errorptr);
 			}
-			error = Runtime.GetNSObject<NSError> (errorptr);
-			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
+			return rv;
 		}
 
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified url and hint for the file type.</summary>
+		/// <param name="url">The url of a local audio file.</param>
+		/// <param name="fileTypeHint">The uniform type identifier for the audio format.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromUrl (NSUrl url, AVFileTypes fileTypeHint, out NSError? error)
+		{
+			return FromUrl (url, fileTypeHint.GetConstant (), out error);
+		}
+
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified url.</summary>
+		/// <param name="url">The url of a local audio file.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
+		{
+			var rv = new AVAudioPlayer (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithContentsOfUrl (url, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified url.</summary>
+		/// <param name="url">The url of a local audio file.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
 		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
 			return FromUrl (url, out _);
 		}
 
-		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified data and hint for the file type.</summary>
+		/// <param name="data">The audio data to play.</param>
+		/// <param name="fileTypeHint">The uniform type identifier for the audio format.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromData (NSData data, AVFileTypes fileTypeHint, out NSError? error)
 		{
-			error = null;
-			IntPtr data__handle__ = data!.GetNonNullHandle (nameof (data));
-			IntPtr errorptr = IntPtr.Zero;
-			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
-
-			if (handle == IntPtr.Zero)
-				return null;
-			unsafe {
-				handle = objc_msgSend (handle, Selector.GetHandle ("initWithData:error:"), data__handle__, &errorptr);
-			}
-			error = Runtime.GetNSObject<NSError> (errorptr);
-			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
+			return FromData (data, fileTypeHint.GetConstant (), out error);
 		}
 
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified data and hint for the file type.</summary>
+		/// <param name="data">The audio data to play.</param>
+		/// <param name="fileTypeHint">The uniform type identifier for the audio format.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromData (NSData data, NSString? fileTypeHint, out NSError? error)
+		{
+			var rv = new AVAudioPlayer (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithData (data, fileTypeHint, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified data.</summary>
+		/// <param name="data">The audio data to play.</param>
+		/// <param name="error">An object describing the error in case an error occurs, null otherwise.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
+		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
+		{
+			var rv = new AVAudioPlayer (NSObjectFlag.Empty);
+			rv.InitializeHandle (rv._InitWithData (data, out error), string.Empty, false);
+			if (rv.Handle == IntPtr.Zero) {
+				rv.Dispose ();
+				return null;
+			}
+			return rv;
+		}
+
+		/// <summary>Create a new <see cref="AVAudioPlayer" /> from the specified data.</summary>
+		/// <param name="data">The audio data to play.</param>
+		/// <returns>A new <see cref="AVAudioPlayer" /> instance if successful, null otherwise.</returns>
 		public static AVAudioPlayer? FromData (NSData data)
 		{
 			return FromData (data, out _);

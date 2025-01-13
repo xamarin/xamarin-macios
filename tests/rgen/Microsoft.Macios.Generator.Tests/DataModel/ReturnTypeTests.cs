@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class MethodReturnTypeTests : BaseGeneratorTestClass {
+public class ReturnTypeTests : BaseGeneratorTestClass {
 
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()

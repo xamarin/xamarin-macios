@@ -667,35 +667,24 @@ namespace AVFoundation {
 	}
 #endif // !XAMCORE_5_0 && !__IOS__ && !__TVOS__
 
-#if MONOMAC
-
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[Native]
 	public enum AVCaptionUnitsType : long {
 		Unspecified = 0,
 		Cells,
 		Percent,
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
@@ -710,19 +699,15 @@ namespace AVFoundation {
 		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, /* AVCaptionUnitsType */ nuint units);
 
 		public static AVCaptionDimension Create (nfloat dimension, AVCaptionUnitsType units)
-			=> AVCaptionDimensionMake (dimension, (nuint) (long)units);
+			=> AVCaptionDimensionMake (dimension, (nuint) (long) units);
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionPoint {
 		public AVCaptionDimension X;
@@ -732,19 +717,15 @@ namespace AVFoundation {
 		static extern AVCaptionPoint AVCaptionPointMake (AVCaptionDimension x, AVCaptionDimension y);
 
 		public static AVCaptionPoint Create (AVCaptionDimension x, AVCaptionDimension y)
-			=> AVCaptionPointMake (x,y);
+			=> AVCaptionPointMake (x, y);
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionSize {
 		public AVCaptionDimension Width;
@@ -756,7 +737,5 @@ namespace AVFoundation {
 		public static AVCaptionSize Create (AVCaptionDimension width, AVCaptionDimension height)
 			=> AVCaptionSizeMake (width, height);
 	}
-
-#endif
-
+#endif // __TVOS__
 }
