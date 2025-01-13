@@ -56,7 +56,6 @@ namespace CoreText {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		Persistent = 2,
 #if NET
@@ -67,13 +66,11 @@ namespace CoreText {
 #else
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 #endif
 		Session = 3,
 #if !NET
 		[NoiOS]
 		[NoTV]
-		[NoWatch] // historically not available under the old name
 		User = Persistent,
 #endif
 	}
@@ -178,7 +175,6 @@ namespace CoreText {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -195,7 +191,6 @@ namespace CoreText {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'RegisterFonts' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'RegisterFonts' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'RegisterFonts' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'RegisterFonts' instead.")]
 #endif
 		public static NSError []? RegisterFontsForUrl (NSUrl [] fontUrls, CTFontManagerScope scope)
@@ -216,7 +211,6 @@ namespace CoreText {
 		// [SupportedOSPlatform ("ios13.0")]
 		// [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -246,7 +240,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -259,7 +252,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -322,7 +314,6 @@ namespace CoreText {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -339,7 +330,6 @@ namespace CoreText {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'UnregisterFonts' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UnregisterFonts' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'UnregisterFonts' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'UnregisterFonts' instead.")]
 #endif
 		public static NSError []? UnregisterFontsForUrl (NSUrl [] fontUrls, CTFontManagerScope scope)
@@ -360,7 +350,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -373,7 +362,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -443,7 +431,6 @@ namespace CoreText {
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		unsafe static extern byte CTFontManagerRegisterGraphicsFont (IntPtr cgfont, IntPtr* error);
@@ -462,7 +449,6 @@ namespace CoreText {
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'CreateFontDescriptors' or 'RegisterFontsForUrl' instead.")]
 #endif
 		public static bool RegisterGraphicsFont (CGFont font, [NotNullWhen (true)] out NSError? error)
 		{
@@ -499,7 +485,6 @@ namespace CoreText {
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		[Deprecated (PlatformName.TvOS, 18, 0)]
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		unsafe static extern byte CTFontManagerUnregisterGraphicsFont (IntPtr cgfont, IntPtr* error);
@@ -518,7 +503,6 @@ namespace CoreText {
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		[Deprecated (PlatformName.TvOS, 18, 0)]
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
 #endif
 		public static bool UnregisterGraphicsFont (CGFont font, out NSError? error)
 		{
@@ -586,7 +570,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -599,7 +582,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -628,7 +610,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -641,7 +622,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -683,7 +663,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (13,0)]
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 #endif
@@ -716,7 +695,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -729,7 +707,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -750,7 +727,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[iOS (13,0)]
@@ -765,7 +741,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[iOS (13,0)]
@@ -795,7 +770,6 @@ namespace CoreText {
 		// [UnsupportedOSPlatform ("tvos")]
 		// [UnsupportedOSPlatform ("macos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[iOS (13,0)]
@@ -808,7 +782,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[iOS (13,0)]
@@ -839,7 +812,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[iOS (13,0)]

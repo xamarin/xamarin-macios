@@ -162,7 +162,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public CGColor (CGConstantColor color)
@@ -338,7 +337,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateSRGB (nfloat red, nfloat green, nfloat blue, nfloat alpha);
@@ -351,7 +349,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		static public CGColor? CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
 		{
@@ -367,7 +364,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha);
@@ -380,7 +376,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		static public CGColor? CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
 		{
@@ -396,7 +391,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -410,7 +404,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		static public CGColor? CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
@@ -427,7 +420,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.AccessibilityLibrary)]
@@ -441,7 +433,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public string? AXName => CFString.FromHandle (AXNameFromColor (Handle));

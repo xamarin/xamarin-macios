@@ -16,7 +16,7 @@ using CoreFoundation;
 #nullable enable
 
 namespace GameKit {
-#if !MONOMAC && !TVOS && !WATCH
+#if !MONOMAC && !TVOS
 	public class GKDataReceivedEventArgs : EventArgs {
 		public GKDataReceivedEventArgs (NSData data, string peer, GKSession session)
 		{
@@ -29,7 +29,7 @@ namespace GameKit {
 		public GKSession Session { get; private set; }
 	}
 
-#if !TVOS && !WATCH
+#if !TVOS
 	public partial class GKSession {
 		[Register ("MonoTouch_GKSession_ReceivedObject")]
 		internal class ReceiverObject : NSObject {

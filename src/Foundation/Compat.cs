@@ -26,7 +26,6 @@ namespace Foundation {
 	}
 #endif
 
-#if !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type.")]
@@ -35,7 +34,6 @@ namespace Foundation {
 		{
 		}
 	}
-#endif
 #endif // !NET
 
 #if !XAMCORE_5_0

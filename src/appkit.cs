@@ -15776,15 +15776,15 @@ namespace AppKit {
 		[Internal, Field ("NSSourceTextScalingDocumentOption")]
 		NSString SourceTextScalingDocumentOption { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSTextHighlightStyleAttributeName")]
 		NSString TextHighlightStyle { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSTextHighlightColorSchemeAttributeName")]
 		NSString TextHighlightColorScheme { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("NSAdaptiveImageGlyphAttributeName")]
 		NSString AdaptiveImageGlyph { get; }
 
@@ -20402,7 +20402,7 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
-	[NoWatch, NoTV, NoiOS]
+	[NoTV, NoiOS]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSToolbarItem : NSCopying, NSMenuItemValidation, NSValidatedUserInterfaceItem

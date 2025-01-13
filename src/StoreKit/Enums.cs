@@ -11,8 +11,6 @@ namespace StoreKit {
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKPaymentTransactionState : long {
@@ -67,7 +65,6 @@ namespace StoreKit {
 	// typedef NSInteger SKDownloadState;
 	// StoreKit.framework/Headers/SKDownload.h
 	/// <summary>An enumeration whose values specify the state of an <see cref="T:StoreKit.SKDownload" /> object. Used with the <see cref="P:StoreKit.SKDownload.DownloadState" /> property.</summary>
-	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKDownloadState : long {
@@ -84,8 +81,6 @@ namespace StoreKit {
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
@@ -100,8 +95,6 @@ namespace StoreKit {
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
@@ -117,8 +110,6 @@ namespace StoreKit {
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductStorePromotionVisibility : long {
@@ -128,12 +119,10 @@ namespace StoreKit {
 	}
 
 	/// <summary>Defines the natural period for a subscription.</summary>
-	[Watch (6, 2)]
 	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -144,12 +133,10 @@ namespace StoreKit {
 	}
 
 	/// <summary>Enumerates how a discount price is applied.</summary>
-	[Watch (6, 2)]
 	[Deprecated (PlatformName.iOS, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacCatalyst, 18, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.MacOSX, 15, 0 /* Apple's replacement requires Swift */ )]
 	[Deprecated (PlatformName.TvOS, 18, 0 /* Apple's replacement requires Swift */ )]
-	[Deprecated (PlatformName.WatchOS, 11, 0 /* Apple's replacement requires Swift */ )]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {
@@ -158,7 +145,7 @@ namespace StoreKit {
 		FreeTrial,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum SKOverlayPosition : long {
@@ -166,7 +153,7 @@ namespace StoreKit {
 		Raised = 1,
 	}
 
-	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	public enum SKAdNetworkCoarseConversionValue {
 		[Field ("SKAdNetworkCoarseConversionValueHigh")]
 		High,

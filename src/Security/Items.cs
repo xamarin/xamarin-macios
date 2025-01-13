@@ -740,8 +740,6 @@ namespace Security {
 			var kind = SecClass.FromSecKind (secKind);
 #if MONOMAC
 			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
-#elif WATCH
-			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
@@ -1099,7 +1097,7 @@ namespace Security {
 			}
 		}
 
-#if !WATCH && !TVOS
+#if !TVOS
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
@@ -1466,7 +1464,6 @@ namespace Security {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public bool UseDataProtectionKeychain {
 			get {

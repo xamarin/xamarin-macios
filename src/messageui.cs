@@ -138,7 +138,7 @@ namespace MessageUI {
 		[Export ("addAttachmentData:typeIdentifier:filename:")]
 		bool AddAttachment (NSData attachmentData, string uti, string filename);
 
-		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 		[Export ("insertCollaborationItemProvider:")]
 		bool InsertCollaboration (NSItemProvider itemProvider);
 
@@ -159,7 +159,7 @@ namespace MessageUI {
 		NSString AttachmentURL { get; }
 
 		[Async]
-		[iOS (17, 0), NoMacCatalyst, NoWatch, NoTV]
+		[iOS (17, 0), NoMacCatalyst, NoTV]
 		[Export ("setUPIVerificationCodeSendCompletion:")]
 		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}

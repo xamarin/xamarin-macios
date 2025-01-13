@@ -89,7 +89,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("macos15.0")]
 	[SupportedOSPlatform ("tvos18.0")]
 #else
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 	public enum AudioConverterOptions : uint {
 		None = 0,
@@ -467,7 +467,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioConverterOptions options, out AudioConverterError error)
 		{
@@ -491,7 +491,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioConverterOptions options)
 		{
@@ -849,7 +849,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe static extern void AudioConverterPrepare (uint inFlags, IntPtr ioReserved, BlockLiteral* block);
@@ -860,7 +860,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe static extern /* OSStatus */ AudioConverterError AudioConverterNewWithOptions (

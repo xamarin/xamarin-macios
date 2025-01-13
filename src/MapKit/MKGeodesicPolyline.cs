@@ -24,7 +24,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !WATCH
 using System;
 using System.Threading.Tasks;
 using System.Threading;
@@ -62,4 +61,3 @@ namespace MapKit {
 		}
 	}
 }
-#endif // !WATCH

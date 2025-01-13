@@ -10,7 +10,6 @@ namespace MobileCoreServices {
 	///     </remarks>
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-	[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Partial]
@@ -486,14 +485,12 @@ namespace MobileCoreServices {
 
 		[NoiOS]
 		[NoMacCatalyst]
-		[NoWatch]
 		[NoTV]
 		[Field ("kUTTagClassNSPboardType", "+CoreServices")]
 		NSString TagClassNSPboardType { get; }
 
 		[NoiOS]
 		[NoMacCatalyst]
-		[NoWatch]
 		[NoTV]
 		[Field ("kUTTagClassOSType", "+CoreServices")]
 		NSString TagClassOSType { get; }
@@ -502,32 +499,26 @@ namespace MobileCoreServices {
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]
 		NSString SwiftSource { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeAlembic", "ModelIO")]
 		NSString Alembic { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kUTType3dObject", "ModelIO")]
 		NSString k3dObject { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kUTTypePolygon", "ModelIO")]
 		NSString Polygon { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeStereolithography", "ModelIO")]
 		NSString Stereolithography { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
 
-		[NoWatch]
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		[Field ("kUTTypeUniversalSceneDescriptionMobile", "ModelIO")]
 		NSString UniversalSceneDescriptionMobile { get; }

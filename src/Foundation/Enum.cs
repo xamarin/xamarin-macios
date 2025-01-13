@@ -184,9 +184,6 @@ namespace Foundation {
 		MissingRequiredConfigurationError = -72008,
 	}
 
-#if XAMCORE_5_0
-	[NoWatch]
-#endif
 	[Flags]
 	[Native]
 	public enum NSNetServiceOptions : ulong {
@@ -208,7 +205,6 @@ namespace Foundation {
 		Default = 0,
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 		[NoMacCatalyst]
 		Mode_10_0 = 1000,
 		Mode_10_4 = 1040,
@@ -279,7 +275,7 @@ namespace Foundation {
 		FileProtectionCompleteUnlessOpen = 0x30000000,
 		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
-		[iOS (17, 0), NoMac, MacCatalyst (17, 0), TV (17, 0), Watch (10, 0)]
+		[iOS (17, 0), NoMac, MacCatalyst (17, 0), TV (17, 0)]
 		FileProtectionCompleteWhenUserInactive = 0x50000000,
 	}
 
@@ -604,10 +600,10 @@ namespace Foundation {
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants = 1 << 1,
 		SkipsHiddenFiles = 1 << 2,
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		IncludesDirectoriesPostOrder = 1 << 3,
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		ProducesRelativePathUrls = 1 << 4,
 	}
@@ -644,7 +640,6 @@ namespace Foundation {
 		PrinterDescriptionDirectory = 20,
 		SharedPublicDirectory = 21,
 		PreferencePanesDirectory = 22,
-		[NoWatch]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -652,7 +647,7 @@ namespace Foundation {
 		ItemReplacementDirectory = 99,
 		AllApplicationsDirectory = 100,
 		AllLibrariesDirectory = 101,
-		[NoTV, NoWatch]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		TrashDirectory = 102,
 	}
@@ -692,14 +687,12 @@ namespace Foundation {
 		UsesFontLeading = (1 << 1),
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		DisableScreenFontSubstitution = (1 << 2),
 		UsesDeviceMetrics = (1 << 3),
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		OneShot = (1 << 4),
@@ -729,7 +722,6 @@ namespace Foundation {
 		Default = 0,
 		[NoiOS]
 		[NoTV]
-		[NoWatch]
 		[NoMacCatalyst]
 		Version_10_0 = 1000,
 		Version_10_4 = 1040,
@@ -812,9 +804,9 @@ namespace Foundation {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		Json5Allowed = 8,
-		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		TopLevelDictionaryAssumed = 16,
 #if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
@@ -828,10 +820,10 @@ namespace Foundation {
 		PrettyPrinted = 1,
 		[MacCatalyst (13, 1)]
 		SortedKeys = (1 << 1),
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		FragmentsAllowed = (1 << 2),
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		WithoutEscapingSlashes = (1 << 3),
 	}
@@ -956,13 +948,13 @@ namespace Foundation {
 		PreferFileIDResolution = 1 << 8,
 		MinimalBookmark = 1 << 9,
 		SuitableForBookmarkFile = 1 << 10,
-		[NoiOS, NoTV, NoWatch]
+		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		WithSecurityScope = 1 << 11,
-		[NoiOS, NoTV, NoWatch]
+		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		SecurityScopeAllowOnlyReadAccess = 1 << 12,
-		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		CreationWithoutImplicitSecurityScope = 1 << 29,
 	}
 
@@ -971,10 +963,10 @@ namespace Foundation {
 	public enum NSUrlBookmarkResolutionOptions : ulong {
 		WithoutUI = 1 << 8,
 		WithoutMounting = 1 << 9,
-		[NoiOS, NoTV, NoWatch]
+		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		WithSecurityScope = 1 << 10,
-		[iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		WithoutImplicitStartAccessing = 1 << 15,
 	}
 
@@ -1025,20 +1017,18 @@ namespace Foundation {
 		Default,
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PushKit' framework instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PushKit' framework instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'PushKit' framework instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PushKit' framework instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PushKit' framework instead.")]
 		VoIP,
 		Video,
 		Background,
 		Voice,
-		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveData = 6,
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		AVStreaming = 8,
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveAV = 9,
 		[MacCatalyst (13, 1)]
@@ -1375,7 +1365,7 @@ namespace Foundation {
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		Team = 1,
-		[NoiOS, NoTV, NoWatch]
+		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		Group = 2,
 		OwnProcess = 3,
@@ -1419,7 +1409,7 @@ namespace Foundation {
 		CompleteUntilFirstUserAuthentication,
 		[Field ("NSFileProtectionNone")]
 		None,
-		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSFileProtectionCompleteWhenUserInactive")]
 		CompleteWhenUserInactive,
 	}

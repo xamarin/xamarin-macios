@@ -30,7 +30,6 @@ namespace Network {
 #else
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 #endif
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
@@ -43,7 +42,6 @@ namespace Network {
 #else
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 #endif
 	public delegate void NWConnectionGroupStateChangedDelegate (NWConnectionGroupState state, NWError? error);
@@ -56,7 +54,6 @@ namespace Network {
 #else
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 #endif
 	public class NWConnectionGroup : NativeObject {
@@ -317,7 +314,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -331,7 +327,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -350,7 +345,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -364,7 +358,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -385,7 +378,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -399,7 +391,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -416,7 +407,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -430,7 +420,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -448,7 +437,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -480,7 +468,6 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]

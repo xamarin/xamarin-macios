@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !NET
+#if !NET
 using System;
 using System.Drawing;
 using System.Diagnostics;
@@ -18,7 +18,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INRadioTypeResolutionResult", true)]
+	[Register ("INRadioTypeResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INRadioTypeResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
@@ -52,4 +52,4 @@ namespace Intents {
 		}
 	} /* class INRadioTypeResolutionResult */
 }
-#endif // __WATCHOS__ && !NET
+#endif // !NET

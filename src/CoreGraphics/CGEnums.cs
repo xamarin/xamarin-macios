@@ -168,7 +168,7 @@ namespace CoreGraphics {
 		Figure = 700,
 		Formula,
 		Form,
-		[NoWatch, TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		Object = 800,
 	}
 
@@ -203,7 +203,6 @@ namespace CoreGraphics {
 	// this enum does not exist in the headers anymore
 	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
 	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[NoWatch]
 	[NoMac]
 	public enum CGColorConverterTransformType : uint {
 		FromSpace,

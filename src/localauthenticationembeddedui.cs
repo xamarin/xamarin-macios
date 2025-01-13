@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 
 namespace LocalAuthenticationEmbeddedUI {
 
-	[NoWatch, NoTV, NoiOS, NoMacCatalyst]
+	[NoTV, NoiOS, NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	interface LAAuthenticationView {
 		[Export ("initWithFrame:")]

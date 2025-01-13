@@ -231,7 +231,7 @@ namespace EventKit {
 		Reminder,
 	}
 
-#if MONOMAC || WATCH
+#if MONOMAC
 	// untyped enum -> EKTypes.h (but not in the iOS SDK, only OSX)
 	// turned into a typed (NSInteger) enum in El Capitan (and also an NSInteger in watchOS)
 	[Native]

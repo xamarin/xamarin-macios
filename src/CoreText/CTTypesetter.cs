@@ -99,8 +99,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public bool AllowUnboundedLayout {
 			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);

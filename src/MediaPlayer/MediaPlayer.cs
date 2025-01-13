@@ -19,7 +19,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration of possible states in which the <see cref="T:MediaPlayer.MPMoviePlayerController" /> may be. Used with the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Media%20Player%20MPMovie%20Cotnroller%20Playback%20State&amp;scope=Xamarin" title="P:MediaPlayer.MPMovieCotnroller.PlaybackState">P:MediaPlayer.MPMovieCotnroller.PlaybackState</a></format> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -37,7 +36,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values reflect a movie's load state. Used in the <see cref="P:MediaPlayer.MPMoviePlayerController.LoadState" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -53,7 +51,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration that specifies whether a movie should repeat or not. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.RepeatMode" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -67,7 +64,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values specify various modes for the <see cref="P:MediaPlayer.MPMoviePlayerController.ControlStyle" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -83,7 +79,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values specify various ways a movie may have finished.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -98,7 +93,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration that specifies the movie's media types. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.MovieMediaTypes" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -114,7 +108,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration that specifies whether a movie's data is provided by a file or streaming. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.SourceType" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -129,7 +122,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration that specifies which frame to use when generating thumbnails.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -140,7 +132,6 @@ namespace MediaPlayer {
 	}
 
 	// NSUInteger -> MPMediaItem.h
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -172,7 +163,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values specify various types of playlist.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -187,7 +177,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values specify various ways in which media can be logically grouped.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPMediaGrouping : long {
@@ -205,7 +194,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration whose values specifies a comparison-type to be used with a <see cref="T:MediaPlayer.MPMediaPredicate" />.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPMediaPredicateComparison : long {
@@ -217,7 +205,6 @@ namespace MediaPlayer {
 	/// <summary>An enumeration of video scaling modes. Used with the <see cref="P:MediaPlayer.MPMoviePlayerController.ScalingMode" /> property.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -240,7 +227,6 @@ namespace MediaPlayer {
 
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
-	[NoWatch]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -255,7 +241,6 @@ namespace MediaPlayer {
 
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
-	[NoWatch]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -268,7 +253,6 @@ namespace MediaPlayer {
 
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
-	[NoWatch]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -281,7 +265,6 @@ namespace MediaPlayer {
 
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPShuffleType : long {
@@ -290,7 +273,6 @@ namespace MediaPlayer {
 		Collections,
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPRepeatType : long {
@@ -299,7 +281,6 @@ namespace MediaPlayer {
 		All,
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPChangeLanguageOptionSetting : long {
@@ -309,7 +290,6 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPRemoteCommand.h
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPRemoteCommandHandlerStatus : long {
@@ -323,7 +303,6 @@ namespace MediaPlayer {
 	}
 
 	// NSUInteger -> MPRemoteCommandEvent.h
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPSeekCommandEventType : ulong {
@@ -331,7 +310,6 @@ namespace MediaPlayer {
 		EndSeeking
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPNowPlayingInfoLanguageOptionType : ulong {
@@ -339,7 +317,6 @@ namespace MediaPlayer {
 		Legible,
 	}
 
-	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]
@@ -357,7 +334,6 @@ namespace MediaPlayer {
 	/// <summary>Enumerates the status of the application's permission to access the media library.</summary>
 	[NoMac]
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPMediaLibraryAuthorizationStatus : long {
@@ -367,7 +343,6 @@ namespace MediaPlayer {
 		Authorized,
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPNowPlayingInfoMediaType : ulong {
@@ -376,7 +351,6 @@ namespace MediaPlayer {
 		Video,
 	}
 
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPNowPlayingPlaybackState : ulong {

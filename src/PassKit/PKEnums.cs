@@ -52,7 +52,6 @@ namespace PassKit {
 		SecureElement,
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElement' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElement' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SecureElement' instead.")]
 		Payment = SecureElement,
@@ -67,21 +66,18 @@ namespace PassKit {
 		Failure,
 
 		[NoMac]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		InvalidBillingPostalAddress,
 
 		[NoMac]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		InvalidShippingPostalAddress,
 
 		[NoMac]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
@@ -98,7 +94,6 @@ namespace PassKit {
 	/// <summary>Enumeration of valid states of a <see cref="T:PassKit.PKPaymentPass" /> payment card.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPassActivationState' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Native]
@@ -110,7 +105,7 @@ namespace PassKit {
 		Deactivated,
 	}
 
-	[Watch (6, 2), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKSecureElementPassActivationState : long {
@@ -129,14 +124,13 @@ namespace PassKit {
 		EMV = 1 << 1,
 		Credit = 1 << 2,
 		Debit = 1 << 3,
-		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), NoTV, MacCatalyst (17, 0)]
 		InstantFundsOut = 1 << 7,
 	}
 
 	/// <summary>Holds address information for billing or shipping purposes.</summary>
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'PKContactField' instead.")]
-	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'PKContactField' instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PKContactField' instead.")]
 	[Native]
@@ -152,7 +146,6 @@ namespace PassKit {
 	}
 
 	/// <summary>Enumerates available styles for <see cref="T:PassKit.PKPaymentButton" /> objects.</summary>
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentButtonStyle : long {
@@ -165,7 +158,6 @@ namespace PassKit {
 	}
 
 	/// <summary>Enumerates the types of <see cref="T:PassKit.PKPaymentButton" /> objects.</summary>
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentButtonType : long {
@@ -214,7 +206,7 @@ namespace PassKit {
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Tip = 15,
-		[iOS (15, 0), Watch (8, 0)]
+		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		Continue = 16,
 #if !NET
@@ -236,7 +228,6 @@ namespace PassKit {
 	}
 
 	/// <summary>Enumerates error codes relating to PassKit operations.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPaymentPassError : long {
@@ -247,7 +238,6 @@ namespace PassKit {
 
 	/// <summary>Enumerates results that are used in calls to <see cref="M:PassKit.PKPassLibrary.RequestAutomaticPassPresentationSuppression(System.Action{PassKit.PKAutomaticPassPresentationSuppressionResult})" />.</summary>
 	[Mac (11, 0)]
-	[Watch (10, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAutomaticPassPresentationSuppressionResult : ulong {
@@ -279,7 +269,6 @@ namespace PassKit {
 	}
 
 	/// <summary>Enumerates Pass Button styles.</summary>
-	[NoWatch]
 	[NoMac] // under `#if TARGET_OS_IOS`
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -301,7 +290,6 @@ namespace PassKit {
 		CouponCodeExpired,
 	}
 
-	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPaymentPassStyle : ulong {
@@ -309,7 +297,7 @@ namespace PassKit {
 		Access,
 	}
 
-	[Watch (6, 2), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
 	[Native]
@@ -319,7 +307,6 @@ namespace PassKit {
 		[Deprecated (PlatformName.iOS, 18, 0, message: "Use 'GenericError' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0, message: "Use 'GenericError' instead.")]
 		[Deprecated (PlatformName.TvOS, 18, 0, message: "Use 'GenericError' instead.")]
-		[Deprecated (PlatformName.WatchOS, 11, 0, message: "Use 'GenericError' instead.")]
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use 'GenericError' instead.")]
 		UnknownError = GenericError,
 #endif
@@ -331,7 +318,7 @@ namespace PassKit {
 		OSVersionNotSupportedError,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	public enum PKIdentityButtonLabel : long {
 		VerifyIdentity = 0,
@@ -340,14 +327,14 @@ namespace PassKit {
 		Continue,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	public enum PKIdentityButtonStyle : long {
 		Black = 0,
 		Outline,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	[ErrorDomain ("PKIdentityErrorDomain")]
 	public enum PKIdentityError : long {
@@ -362,7 +349,7 @@ namespace PassKit {
 		RegionNotSupported = 8,
 	}
 
-	[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), NoTV, MacCatalyst (16, 0)]
 	[Native]
 	[ErrorDomain ("PKShareSecureElementPassErrorDomain")]
 	public enum PKShareSecureElementPassErrorCode : long {
@@ -370,7 +357,7 @@ namespace PassKit {
 		SetupError,
 	}
 
-	[iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV, NoMac]
+	[iOS (16, 0), MacCatalyst (16, 0), NoTV, NoMac]
 	[Native]
 	public enum PKShareSecureElementPassResult : long {
 		Canceled,
@@ -378,7 +365,7 @@ namespace PassKit {
 		Failed,
 	}
 
-	[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), NoTV, MacCatalyst (16, 0)]
 	[Native]
 	public enum PKVehicleConnectionErrorCode : long {
 		Unknown = 0,
@@ -386,7 +373,7 @@ namespace PassKit {
 		SessionNotActive,
 	}
 
-	[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), NoTV, MacCatalyst (16, 0)]
 	[Native]
 	public enum PKVehicleConnectionSessionConnectionState : long {
 		Disconnected = 0,
@@ -395,7 +382,7 @@ namespace PassKit {
 		FailedToConnect,
 	}
 
-	[iOS (17, 0), Mac (14, 0), Watch (10, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[iOS (17, 0), Mac (14, 0), TV (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	public enum PKApplePayLaterAvailability : long {
 		Available,
@@ -403,7 +390,7 @@ namespace PassKit {
 		UnavailableRecurringTransaction,
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	[ErrorDomain ("PKDisbursementErrorDomain")]
 	public enum PKDisbursementErrorCode : long {
@@ -412,14 +399,14 @@ namespace PassKit {
 		RecipientContactInvalidError,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
 	[Native]
 	public enum PKPayLaterAction : long {
 		LearnMore = 0,
 		Calculator,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
 	[Native]
 	public enum PKPayLaterDisplayStyle : long {
 		Standard = 0,
@@ -430,7 +417,7 @@ namespace PassKit {
 
 	[Static]
 	[Internal]
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	interface PKMerchantCategoryCodeValues {
 		[Field ("PKMerchantCategoryCodeNone")]
 		short None { get; }

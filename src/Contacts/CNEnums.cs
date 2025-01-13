@@ -71,7 +71,7 @@ namespace Contacts {
 		Restricted,
 		Denied,
 		Authorized,
-		[iOS (18, 0), NoMacCatalyst, Watch (11, 0), NoMac]
+		[iOS (18, 0), NoMacCatalyst, NoMac]
 		Limited,
 	}
 

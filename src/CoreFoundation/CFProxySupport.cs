@@ -27,8 +27,6 @@
 
 #nullable enable
 
-#if !WATCH
-
 using System;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -1094,5 +1092,3 @@ namespace CoreFoundation {
 		}
 	}
 }
-
-#endif // !WATCH

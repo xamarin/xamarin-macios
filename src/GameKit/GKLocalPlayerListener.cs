@@ -1,4 +1,4 @@
-#if !MONOMAC && !WATCH && !NET
+#if !MONOMAC && !NET
 using System;
 using Foundation;
 using ObjCRuntime;

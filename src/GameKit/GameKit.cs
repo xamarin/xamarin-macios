@@ -21,7 +21,6 @@ namespace GameKit {
 	// NSUInteger -> GKPeerPickerController.h
 	/// <summary>An enumeration whose values specify acceptable ping for peer-to-peer connections.</summary>
 	[NoMac]
-	[NoWatch]
 #if NET
 	[NoTV]
 #endif
@@ -181,14 +180,8 @@ namespace GameKit {
 	[Deprecated (PlatformName.TvOS, 12, 0)]
 	[Deprecated (PlatformName.iOS, 12, 0)]
 	[Native]
-#if WATCH
-	// removed in Xcode 10 but a breaking change (for us) to remove
-	[Obsolete ("Not used in watchOS.")]
-#else
-	[Unavailable (PlatformName.WatchOS)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
-#endif
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
@@ -295,7 +288,6 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKGameCenterViewControllerState : long {
@@ -314,7 +306,6 @@ namespace GameKit {
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		[TV (15, 0)]
-		[NoWatch]
 		LocalPlayerFriendsList = 5,
 	}
 
@@ -370,7 +361,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[NoWatch]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKAccessPointLocation : long {
@@ -382,7 +372,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKLeaderboardType : long {
@@ -392,7 +381,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[NoWatch]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKMatchmakingMode : long {
@@ -405,7 +393,6 @@ namespace GameKit {
 		InviteOnly = 3,
 	}
 
-	[Watch (7, 4)]
 	[TV (14, 5)]
 	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]

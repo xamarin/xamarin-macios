@@ -23,7 +23,6 @@ namespace AVKit {
 	[TV (13, 0)]
 #if NET
 	[NoMac]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 #endif
 	[Native]
@@ -38,7 +37,6 @@ namespace AVKit {
 		RecordingFailed = -1200,
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoMac]
 	[iOS (13, 0)]
@@ -51,7 +49,6 @@ namespace AVKit {
 	}
 
 	[NoiOS]
-	[NoWatch]
 	[NoTV]
 	[NoMacCatalyst]
 	[Native]
