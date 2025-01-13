@@ -210,10 +210,11 @@ namespace Xamarin.MacDev {
 				targetPath = Path.GetFullPath (targetPath);
 
 				// validate that the unzipped file is inside the target directory
-				if (!targetPath.StartsWith (decompressionDir + Path.DirectorySeparatorChar)) {
+				var decompressionDirectoryPath = decompressionDir.Trim (Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+				if (!targetPath.StartsWith (decompressionDirectoryPath) {
 					log.LogWarning (7144, null, MSBStrings.W7144 /* Did not extract {0} because it would write outside the target directory. */, entryPath);
 					log.LogWarning ($"Target path: {targetPath}");
-					log.LogWarning ($"decompressionDir: {decompressionDir + Path.DirectorySeparatorChar}");
+					log.LogWarning ($"decompressionDir: {decompressionDirectoryPath}");
 					continue;
 				}
 
