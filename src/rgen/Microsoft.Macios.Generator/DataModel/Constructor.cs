@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -91,7 +93,7 @@ readonly struct Constructor : IEquatable<Constructor> {
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var paramComparer = new ParameterEqualityComparer ();
+		var paramComparer = new MethodParameterEqualityComparer ();
 		return paramComparer.Equals (Parameters, other.Parameters);
 	}
 

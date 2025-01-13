@@ -20,10 +20,10 @@ XPCSERVICES=XpcServiceE CompressedXpcServiceF XpcServiceG CompressedXpcServiceH
 # a few lookup tables, because the data we have is not always in the format we need it
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions shared.c -Wall -framework Foundation -lz
-iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(iossimulator_SDK)
-iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(ios_SDK)
-tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(tvossimulator_SDK)
-tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(tvos_SDK)
+iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=$(DOTNET_MIN_IOS_SDK_VERSION) -isysroot $(iossimulator_SDK)
+iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=$(DOTNET_MIN_IOS_SDK_VERSION) -isysroot $(ios_SDK)
+tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=$(DOTNET_MIN_TVOS_SDK_VERSION) -isysroot $(tvossimulator_SDK)
+tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=$(DOTNET_MIN_TVOS_SDK_VERSION) -isysroot $(tvos_SDK)
 maccatalyst_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) $(maccatalyst_CFLAGS)
 mac_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk
 

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-ios</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">iOSNotificationServiceExtension1</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>minOSVersion</SupportedOSPlatformVersion>
+    <IsAppExtension>True</IsAppExtension>
+
+    <!-- The bundle identifier (aka ApplicationId) for an app extension must be the main app's bundle identifier + ".<something>" -->
+    <ApplicationId>com.companyname.iOSApp1.notificationserviceextension</ApplicationId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CustomEntitlements Include="aps-environment" Type="String" Value="development" Condition="'$(Configuration)' != 'Release'" />
+    <CustomEntitlements Include="aps-environment" Type="String" Value="production" Condition="'$(Configuration)' == 'Release'" />
+  </ItemGroup>
+</Project>

@@ -279,8 +279,7 @@ namespace AuthenticationServices {
 	/// <summary>Delegate object for completion handlers in methods within <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Authentication%20Services%20ASCredential%20Provider%20Extension&amp;scope=Xamarin" title="T:AuthenticationServices.ASCredentialProviderExtension">T:AuthenticationServices.ASCredentialProviderExtension</a></format>.</summary>
 	delegate void ASCredentialProviderExtensionRequestCompletionHandler (bool expired);
 
-	/// <summary>
-	///       <see cfref="T:Foundation.NSExtensionContext" /> subclass that provides context for a credential provider.</summary>
+	/// <summary>An <see cref="NSExtensionContext" /> subclass that provides context for a credential provider.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV]
 	[NoWatch]

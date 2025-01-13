@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -15,7 +17,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 readonly struct Method : IEquatable<Method> {
 
 	/// <summary>
-	/// Type name that owns the constructor.
+	/// Type name that owns the method.
 	/// </summary>
 	public string Type { get; }
 
@@ -27,7 +29,7 @@ readonly struct Method : IEquatable<Method> {
 	/// <summary>
 	/// Method return type.
 	/// </summary>
-	public string ReturnType { get; }
+	public ReturnType ReturnType { get; }
 
 	/// <summary>
 	/// The platform availability of the method.
@@ -54,7 +56,7 @@ readonly struct Method : IEquatable<Method> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, string returnType,
+	public Method (string type, string name, ReturnType returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
 		ImmutableArray<AttributeCodeChange> attributes,
@@ -97,7 +99,7 @@ readonly struct Method : IEquatable<Method> {
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: method.ReturnType.ToDisplayString ().Trim (),
+			returnType: new (method.ReturnType),
 			symbolAvailability: method.GetSupportedPlatforms (),
 			exportMethodData: exportData,
 			attributes: attributes,
@@ -127,7 +129,7 @@ readonly struct Method : IEquatable<Method> {
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var paramComparer = new ParameterEqualityComparer ();
+		var paramComparer = new MethodParameterEqualityComparer ();
 		return paramComparer.Equals (Parameters, other.Parameters);
 	}
 
