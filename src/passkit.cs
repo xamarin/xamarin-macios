@@ -434,7 +434,11 @@ namespace PassKit {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("canMakePaymentsUsingNetworks:capabilities:")]
+#if XAMCORE_5_0
+		bool CanMakePaymentsUsingNetworks (string [] supportedNetworks, PKMerchantCapability capabilities);
+#else
 		bool CanMakePaymentsUsingNetworks (string [] supportedNetworks, PKMerchantCapability capabilties);
+#endif
 
 		[NoTV, Mac (15, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
@@ -1289,7 +1293,11 @@ namespace PassKit {
 
 		[Static]
 		[Export ("canMakePaymentsUsingNetworks:capabilities:")]
+#if XAMCORE_5_0
+		bool CanMakePaymentsUsingNetworks (string [] supportedNetworks, PKMerchantCapability capabilities);
+#else
 		bool CanMakePaymentsUsingNetworks (string [] supportedNetworks, PKMerchantCapability capabilties);
+#endif
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IPKPaymentAuthorizationControllerDelegate Delegate { get; set; }
