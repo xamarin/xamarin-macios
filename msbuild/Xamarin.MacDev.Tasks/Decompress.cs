@@ -171,6 +171,7 @@ namespace Xamarin.MacDev {
 			resource = resource.TrimEnd ('/', '\\');
 			resource = resource.Replace ('\\', zipDirectorySeparator);
 			var resourceAsDir = resource + zipDirectorySeparator;
+			decompressionDir = Path.GetFullPath (decompressionDir);
 
 			using var archive = ZipFile.OpenRead (zip);
 			foreach (var entry in archive.Entries) {
@@ -204,6 +205,16 @@ namespace Xamarin.MacDev {
 
 				var isDir = entryPath [entryPath.Length - 1] == zipDirectorySeparator;
 				var targetPath = Path.Combine (decompressionDir, entryPath.Replace (zipDirectorySeparator, Path.DirectorySeparatorChar));
+
+				// canonicalize the path
+				targetPath = Path.GetFullPath (targetPath);
+
+				// validate that the unzipped file is inside the target directory
+				if (!targetPath.StartsWith (decompressionDir + Path.DirectorySeparatorChar)) {
+					log.LogMessage (MessageImportance.Low, "Did not extract {0} because it would write outside the target directory.", entryPath);
+					continue;
+				}
+
 				if (isDir) {
 					Directory.CreateDirectory (targetPath);
 				} else {
