@@ -45,4 +45,16 @@ namespace ObjCBindings {
 		/// </summary>
 		Default = 0,
 	}
+
+	/// <summary>
+	/// Flags to be used on strong dictionary bindings.
+	/// </summary>
+	[Flags]
+	[Experimental ("APL0003")]
+	public enum StrongDictionary : Int64 {
+		/// <summary>
+		/// Use the default values.
+		/// </summary>
+		Default = 0,
+	}
 }
