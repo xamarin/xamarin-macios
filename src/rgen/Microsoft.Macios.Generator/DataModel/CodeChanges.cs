@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -167,6 +168,24 @@ readonly struct CodeChanges {
 	}
 
 	/// <summary>
+	/// Returns all the library names and paths that are needed by the native code represented by the code change.
+	/// </summary>
+	public IEnumerable<(string LibraryName, string? LibraryPath)> LibraryPaths {
+		get {
+			// we want to return unique values, A library name should always point to the
+			// same library path (either null or with a value). We keep track of the ones we already
+			// returned in a set and skip if we already returned it.
+			var visited = new HashSet<string> ();
+
+			// return those libs needed by smart enums
+			foreach (var enumMember in EnumMembers) {
+				if (visited.Add (enumMember.LibraryName)) // if already visited we cannot add it
+					yield return (enumMember.LibraryName, enumMember.LibraryPath);
+			}
+		}
+	}
+
+	/// <summary>
 	/// Decide if an enum value should be ignored as a change.
 	/// </summary>
 	/// <param name="enumMemberDeclarationSyntax">The enum declaration under test.</param>
@@ -269,10 +288,10 @@ readonly struct CodeChanges {
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given enum declaration.
 	/// </summary>
 	/// <param name="enumDeclaration">The enum declaration that triggered the change.</param>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
-	CodeChanges (EnumDeclarationSyntax enumDeclaration, SemanticModel semanticModel)
+	/// <param name="context">The root binding context of the current compilation.</param>
+	CodeChanges (EnumDeclarationSyntax enumDeclaration, RootBindingContext context)
 	{
-		semanticModel.GetSymbolData (
+		context.SemanticModel.GetSymbolData (
 			declaration: enumDeclaration,
 			bindingType: BindingType.SmartEnum,
 			name: out name,
@@ -282,23 +301,32 @@ readonly struct CodeChanges {
 			symbolAvailability: out availability,
 			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = enumDeclaration.GetFullyQualifiedIdentifier ();
-		Attributes = enumDeclaration.GetAttributeCodeChanges (semanticModel);
+		Attributes = enumDeclaration.GetAttributeCodeChanges (context.SemanticModel);
 		UsingDirectives = enumDeclaration.SyntaxTree.CollectUsingStatements ();
 		Modifiers = [.. enumDeclaration.Modifiers];
 		var bucket = ImmutableArray.CreateBuilder<EnumMember> ();
 		// loop over the fields and add those that contain a FieldAttribute
 		var enumValueDeclarations = enumDeclaration.Members.OfType<EnumMemberDeclarationSyntax> ();
 		foreach (var enumValueDeclaration in enumValueDeclarations) {
-			if (Skip (enumValueDeclaration, semanticModel))
+			if (Skip (enumValueDeclaration, context.SemanticModel))
 				continue;
-			if (semanticModel.GetDeclaredSymbol (enumValueDeclaration) is not IFieldSymbol enumValueSymbol) {
+			if (context.SemanticModel.GetDeclaredSymbol (enumValueDeclaration) is not IFieldSymbol enumValueSymbol) {
 				continue;
 			}
+
+			var fieldData = enumValueSymbol.GetFieldData ();
+			// try and compute the library for this enum member
+			if (fieldData is null || !context.TryComputeLibraryName (fieldData.Value.LibraryName, Namespace [^1],
+					out string? libraryName, out string? libraryPath))
+				// could not calculate the library for the enum, do not add it
+				continue;
 			var enumMember = new EnumMember (
 				name: enumValueDeclaration.Identifier.ToFullString ().Trim (),
+				libraryName: libraryName,
+				libraryPath: libraryPath,
 				fieldData: enumValueSymbol.GetFieldData (),
 				symbolAvailability: enumValueSymbol.GetSupportedPlatforms (),
-				attributes: enumValueDeclaration.GetAttributeCodeChanges (semanticModel)
+				attributes: enumValueDeclaration.GetAttributeCodeChanges (context.SemanticModel)
 			);
 			bucket.Add (enumMember);
 		}
@@ -310,10 +338,10 @@ readonly struct CodeChanges {
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given class declaration.
 	/// </summary>
 	/// <param name="classDeclaration">The class declaration that triggered the change.</param>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
-	CodeChanges (ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+	/// <param name="context">The root binding context of the current compilation.</param>
+	CodeChanges (ClassDeclarationSyntax classDeclaration, RootBindingContext context)
 	{
-		semanticModel.GetSymbolData (
+		context.SemanticModel.GetSymbolData (
 			declaration: classDeclaration,
 			bindingType: BindingType.Class,
 			name: out name,
@@ -323,18 +351,18 @@ readonly struct CodeChanges {
 			symbolAvailability: out availability,
 			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = classDeclaration.GetFullyQualifiedIdentifier ();
-		Attributes = classDeclaration.GetAttributeCodeChanges (semanticModel);
+		Attributes = classDeclaration.GetAttributeCodeChanges (context.SemanticModel);
 		UsingDirectives = classDeclaration.SyntaxTree.CollectUsingStatements ();
 		Modifiers = [.. classDeclaration.Modifiers];
 
 		// use the generic method to get the members, we are using an out param to try an minimize the number of times
 		// the value types are copied
-		GetMembers<ConstructorDeclarationSyntax, Constructor> (classDeclaration, semanticModel, Skip,
+		GetMembers<ConstructorDeclarationSyntax, Constructor> (classDeclaration, context.SemanticModel, Skip,
 			Constructor.TryCreate, out constructors);
-		GetMembers<PropertyDeclarationSyntax, Property> (classDeclaration, semanticModel, Skip, Property.TryCreate,
+		GetMembers<PropertyDeclarationSyntax, Property> (classDeclaration, context.SemanticModel, Skip, Property.TryCreate,
 			out properties);
-		GetMembers<EventDeclarationSyntax, Event> (classDeclaration, semanticModel, Skip, Event.TryCreate, out events);
-		GetMembers<MethodDeclarationSyntax, Method> (classDeclaration, semanticModel, Skip, Method.TryCreate,
+		GetMembers<EventDeclarationSyntax, Event> (classDeclaration, context.SemanticModel, Skip, Event.TryCreate, out events);
+		GetMembers<MethodDeclarationSyntax, Method> (classDeclaration, context.SemanticModel, Skip, Method.TryCreate,
 			out methods);
 	}
 
@@ -342,10 +370,10 @@ readonly struct CodeChanges {
 	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given interface declaration.
 	/// </summary>
 	/// <param name="interfaceDeclaration">The interface declaration that triggered the change.</param>
-	/// <param name="semanticModel">The semantic model of the compilation.</param>
-	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, SemanticModel semanticModel)
+	/// <param name="context">The root binding context of the current compilation.</param>
+	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, RootBindingContext context)
 	{
-		semanticModel.GetSymbolData (
+		context.SemanticModel.GetSymbolData (
 			declaration: interfaceDeclaration,
 			bindingType: BindingType.Protocol,
 			name: out name,
@@ -355,16 +383,16 @@ readonly struct CodeChanges {
 			symbolAvailability: out availability,
 			bindingInfo: out bindingInfo);
 		FullyQualifiedSymbol = interfaceDeclaration.GetFullyQualifiedIdentifier ();
-		Attributes = interfaceDeclaration.GetAttributeCodeChanges (semanticModel);
+		Attributes = interfaceDeclaration.GetAttributeCodeChanges (context.SemanticModel);
 		UsingDirectives = interfaceDeclaration.SyntaxTree.CollectUsingStatements ();
 		Modifiers = [.. interfaceDeclaration.Modifiers];
 		// we do not init the constructors, we use the default empty array
 
-		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, semanticModel, Skip, Property.TryCreate,
+		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclaration, context.SemanticModel, Skip, Property.TryCreate,
 			out properties);
-		GetMembers<EventDeclarationSyntax, Event> (interfaceDeclaration, semanticModel, Skip, Event.TryCreate,
+		GetMembers<EventDeclarationSyntax, Event> (interfaceDeclaration, context.SemanticModel, Skip, Event.TryCreate,
 			out events);
-		GetMembers<MethodDeclarationSyntax, Method> (interfaceDeclaration, semanticModel, Skip, Method.TryCreate,
+		GetMembers<MethodDeclarationSyntax, Method> (interfaceDeclaration, context.SemanticModel, Skip, Method.TryCreate,
 			out methods);
 	}
 
@@ -373,15 +401,15 @@ readonly struct CodeChanges {
 	/// it will return null.
 	/// </summary>
 	/// <param name="baseTypeDeclarationSyntax">The declaration syntax whose change we want to calculate.</param>
-	/// <param name="semanticModel">The semantic model related to the syntax tree that contains the node.</param>
+	/// <param name="context">The root binding context of the current compilation.</param>
 	/// <returns>A code change or null if it could not be calculated.</returns>
 	public static CodeChanges? FromDeclaration (BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
-		SemanticModel semanticModel)
+		RootBindingContext context)
 		=> baseTypeDeclarationSyntax switch {
-			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (enumDeclarationSyntax, semanticModel),
+			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (enumDeclarationSyntax, context),
 			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges (interfaceDeclarationSyntax,
-				semanticModel),
-			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (classDeclarationSyntax, semanticModel),
+				context),
+			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (classDeclarationSyntax, context),
 			_ => null
 		};
 

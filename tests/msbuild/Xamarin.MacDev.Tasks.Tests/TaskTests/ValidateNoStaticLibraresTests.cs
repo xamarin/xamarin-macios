@@ -26,6 +26,8 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("")]
 		public void StaticLibraries_Error (string skipStaticLibraryValidation)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+
 			var paths = new [] {
 				Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "libtest.a"),
 				Path.Combine (Configuration.RootPath, "README.md"),
@@ -48,6 +50,8 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("warn")]
 		public void StaticLibraries_Warn (string skipStaticLibraryValidation)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+
 			var paths = new [] {
 				Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "libtest.a"),
 				Path.Combine (Configuration.RootPath, "README.md"),
@@ -65,6 +69,8 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("disable")]
 		public void StaticLibraries_Disabled (string skipStaticLibraryValidation)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+
 			var paths = new [] {
 				Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "libtest.a"),
 				Path.Combine (Configuration.RootPath, "README.md"),
@@ -82,6 +88,8 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("invalid")]
 		public void StaticLibraries_Invalid (string skipStaticLibraryValidation)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+
 			var paths = new [] {
 				Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "iossimulator", "libtest.a"),
 				Path.Combine (Configuration.RootPath, "README.md"),
