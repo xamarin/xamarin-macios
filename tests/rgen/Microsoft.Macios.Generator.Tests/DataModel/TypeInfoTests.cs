@@ -272,7 +272,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string intPtrMethodNoParams = @"
 using System;
 
@@ -287,7 +287,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForIntPtr(),
+					returnType: ReturnTypeForIntPtr (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -297,7 +297,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string nullableIntPtrMethodNoParams = @"
 using System;
 
@@ -312,7 +312,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForIntPtr(isNullable: true),
+					returnType: ReturnTypeForIntPtr (isNullable: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],

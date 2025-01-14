@@ -17,7 +17,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// Type of the parameter.
 	/// </summary>
 	public string Name { get; }
-	
+
 	/// <summary>
 	/// The metadata name of the type. This is normally the same as name except
 	/// when the SpecialType is not None.
@@ -108,7 +108,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
-				: symbol.ToDisplayString ().Trim ('?', '[', ']'), 
+				: symbol.ToDisplayString ().Trim ('?', '[', ']'),
 			symbol.SpecialType)
 	{
 		IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated;

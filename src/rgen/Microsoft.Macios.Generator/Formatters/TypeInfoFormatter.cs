@@ -18,7 +18,7 @@ static class TypeInfoFormatter {
 		var name = typeInfo.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
 			? typeInfo.MetadataName! // we know is not null
 			: typeInfo.Name;
-		
+
 		if (typeInfo.IsArray) {
 			// could be a params array or simply an array
 			var arrayType = ArrayType (IdentifierName (name))
