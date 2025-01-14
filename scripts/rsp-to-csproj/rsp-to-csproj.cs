@@ -87,12 +87,12 @@ if (verbose)
 	Console.WriteLine ($"Found {arguments.Count} arguments and {sourceFiles.Count} files.");
 
 foreach (var a in arguments) {
-	var splitIndex = a.IndexOfAny (new char [] { ':', '='});
+	var splitIndex = a.IndexOfAny (new char [] { ':', '=' });
 	var name = a;
 	var value = string.Empty;
 	if (splitIndex >= 0) {
-		name = a[..splitIndex];
-		value = a[(splitIndex+1)..];
+		name = a [..splitIndex];
+		value = a [(splitIndex + 1)..];
 	}
 	switch (name) {
 	case "D":
