@@ -24,16 +24,16 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// when the SpecialType is not None.
 	/// </summary>
 	public string? MetadataName { get; init; }
-	
+
 	/// <summary>
 	/// If the type is an enum, it returns the special type of the underlying type.
 	/// </summary>
 	public SpecialType? EnumUnderlyingType { get; init; }
-	
+
 	/// <summary>
 	/// If the type is an enum type.
 	/// </summary>
-	[MemberNotNullWhen(true, nameof(EnumUnderlyingType))]
+	[MemberNotNullWhen (true, nameof (EnumUnderlyingType))]
 	public bool IsEnum => EnumUnderlyingType is not null;
 
 	/// <summary>
@@ -131,20 +131,20 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		IsSmartEnum = symbol.IsSmartEnum ();
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
-		
+
 		// data that we can get from the symbol without being INamedType
 		symbol.GetInheritance (
 			isNSObject: out isNSObject,
 			isNativeObject: out isINativeObject,
 			parents: out parents,
 			interfaces: out interfaces);
-		
+
 		// try to get the named type symbol to have more educated decisions
 		var namedTypeSymbol = symbol as INamedTypeSymbol;
-		
+
 		// store the enum special type, useful when generate code that needs to cast
 		EnumUnderlyingType = namedTypeSymbol?.EnumUnderlyingType?.SpecialType;
-		
+
 		if (!IsReferenceType && IsNullable && namedTypeSymbol is not null) {
 			// get the type argument for nullable, which we know is the data that was boxed and use it to 
 			// overwrite the SpecialType 
@@ -156,7 +156,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 			MetadataName = SpecialType is SpecialType.None or SpecialType.System_Void
 				? null : symbol.MetadataName;
 		}
-		
+
 	}
 
 	/// <inheritdoc/>
@@ -230,7 +230,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
-		sb.Append ($"EnumUnderlyingType: '{EnumUnderlyingType?.ToString() ?? "null"}', ");
+		sb.Append ($"EnumUnderlyingType: '{EnumUnderlyingType?.ToString () ?? "null"}', ");
 		sb.Append ("Parents: [");
 		sb.AppendJoin (", ", parents);
 		sb.Append ("], Interfaces: [");
