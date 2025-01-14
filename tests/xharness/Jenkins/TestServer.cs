@@ -279,8 +279,16 @@ namespace Xharness.Jenkins {
 								jenkins.GenerateReport ();
 							}
 
-							if (serveFile is null)
+							if (serveFile is null) {
 								serveFile = Path.Combine (Path.GetDirectoryName (jenkins.LogDirectory), request.Url.LocalPath.Substring (1));
+								serveFile = Path.GetFullPath (serveFile);
+								if (!serveFile.StartsWith (Path.GetDirectoryName (Path.GetFullPath (jenkins.LogDirectory)) + Path.DirectorySeparatorChar)) {
+									Console.WriteLine ($"400: {request.Url.LocalPath}");
+									response.StatusCode = 400;
+									response.OutputStream.WriteByte ((byte) '?');
+									break;
+								}
+							}
 							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];
