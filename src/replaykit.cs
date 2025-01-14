@@ -376,11 +376,8 @@ namespace ReplayKit {
 		[Export ("updateServiceInfo:")]
 		void UpdateServiceInfo (NSDictionary<NSString, INSCoding> serviceInfo);
 
-		// NSInvalidArgumentException -[RPBroadcastHandler updateBroadcastURL:]: unrecognized selector sent to instance 0x608001a4b160
-		//	https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
-		//
-		//[Export ("updateBroadcastURL:")]
-		//void UpdateBroadcastUrl (NSUrl broadcastUrl);
+		[Export ("updateBroadcastURL:")]
+		void UpdateBroadcastUrl (NSUrl broadcastUrl);
 	}
 
 	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastMP4ClipHandler">Apple documentation for <c>RPBroadcastMP4ClipHandler</c></related>
