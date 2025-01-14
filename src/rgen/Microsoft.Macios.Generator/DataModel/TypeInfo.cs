@@ -24,6 +24,9 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// </summary>
 	public string? MetadataName { get; init; }
 
+	/// <summary>
+	/// The special type enum of the type info. This is used to differentiate nint from IntPtr and other.
+	/// </summary>
 	public SpecialType SpecialType { get; } = SpecialType.None;
 
 	/// <summary>
