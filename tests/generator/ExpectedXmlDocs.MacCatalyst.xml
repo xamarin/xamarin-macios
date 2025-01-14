@@ -155,6 +155,9 @@
                 </para>
             </remarks>
         </member>
+        <member name="P:XmlDocumentation.Notification1.ANotification">
+            <summary>Summary for DocumentedNotification</summary>
+        </member>
         <member name="T:XmlDocumentation.Notification1.Notifications">
             <summary>Notifications posted by the <see cref="T:XmlDocumentation.Notification1" /> class.</summary>
             <remarks>
@@ -200,6 +203,12 @@
             ]]></code>
               </example>
             </remarks>
+        </member>
+        <member name="T:XmlDocumentation.OptionKeys">
+            <summary>Summary for OptionKeys.</summary>
+        </member>
+        <member name="P:XmlDocumentation.OptionKeys.Option1">
+            <summary>Summary for Option1Key.</summary>
         </member>
         <member name="T:XmlDocumentation.IP1">
             <summary>
@@ -454,6 +463,15 @@
             <summary>
             Summary for TG1.TGProperty
             </summary>
+        </member>
+        <member name="T:XmlDocumentation.OptionsA">
+            <summary>Summary for OptionsA.</summary>
+        </member>
+        <member name="P:XmlDocumentation.OptionsA.Option1">
+            <summary>Summary for Option1.</summary>
+        </member>
+        <member name="P:XmlDocumentation.OptionsB.Option1">
+            <summary>Summary for Option1.</summary>
         </member>
     </members>
 </doc>

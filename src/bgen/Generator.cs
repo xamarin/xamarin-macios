@@ -1820,6 +1820,7 @@ public partial class Generator : IMemberGatherer {
 
 				print ("namespace {0} {{", dictType.Namespace);
 				indent++;
+				WriteDocumentation (dictType);
 				PrintPlatformAttributes (dictType);
 				PrintExperimentalAttribute (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
@@ -1844,6 +1845,7 @@ public partial class Generator : IMemberGatherer {
 							keyname = keyContainerType + "." + keyname + "!";
 					}
 
+					WriteDocumentation (pi);
 					PrintPlatformAttributes (pi);
 					string modifier = pi.IsInternal (this) ? "internal" : "public";
 
@@ -6257,6 +6259,7 @@ public partial class Generator : IMemberGatherer {
 						print ("static {0}? _{1};", fieldTypeName, field_pi.Name);
 					}
 
+					WriteDocumentation (field_pi);
 					PrintAttributes (field_pi, preserve: true, advice: true);
 					PrintObsoleteAttributes (field_pi);
 					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);
