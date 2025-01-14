@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Extensions;
@@ -23,6 +24,17 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// when the SpecialType is not None.
 	/// </summary>
 	public string? MetadataName { get; init; }
+	
+	/// <summary>
+	/// If the type is an enum, it returns the special type of the underlying type.
+	/// </summary>
+	public SpecialType? EnumUnderlyingType { get; init; }
+	
+	/// <summary>
+	/// If the type is an enum type.
+	/// </summary>
+	[MemberNotNullWhen(true, nameof(EnumUnderlyingType))]
+	public bool IsEnum => EnumUnderlyingType is not null;
 
 	/// <summary>
 	/// The special type enum of the type info. This is used to differentiate nint from IntPtr and other.
@@ -119,7 +131,21 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		IsSmartEnum = symbol.IsSmartEnum ();
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
-		if (!IsReferenceType && IsNullable && symbol is INamedTypeSymbol namedTypeSymbol) {
+		
+		// data that we can get from the symbol without being INamedType
+		symbol.GetInheritance (
+			isNSObject: out isNSObject,
+			isNativeObject: out isINativeObject,
+			parents: out parents,
+			interfaces: out interfaces);
+		
+		// try to get the named type symbol to have more educated decisions
+		var namedTypeSymbol = symbol as INamedTypeSymbol;
+		
+		// store the enum special type, useful when generate code that needs to cast
+		EnumUnderlyingType = namedTypeSymbol?.EnumUnderlyingType?.SpecialType;
+		
+		if (!IsReferenceType && IsNullable && namedTypeSymbol is not null) {
 			// get the type argument for nullable, which we know is the data that was boxed and use it to 
 			// overwrite the SpecialType 
 			var typeArgument = namedTypeSymbol.TypeArguments [0];
@@ -130,11 +156,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 			MetadataName = SpecialType is SpecialType.None or SpecialType.System_Void
 				? null : symbol.MetadataName;
 		}
-		symbol.GetInheritance (
-			isNSObject: out isNSObject,
-			isNativeObject: out isINativeObject,
-			parents: out parents,
-			interfaces: out interfaces);
+		
 	}
 
 	/// <inheritdoc/>
@@ -157,6 +179,8 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		if (IsReferenceType != other.IsReferenceType)
 			return false;
 		if (IsVoid != other.IsVoid)
+			return false;
+		if (EnumUnderlyingType != other.EnumUnderlyingType)
 			return false;
 
 		// compare base classes and interfaces, order does not matter at all
@@ -206,6 +230,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
+		sb.Append ($"EnumUnderlyingType: '{EnumUnderlyingType?.ToString() ?? "null"}', ");
 		sb.Append ("Parents: [");
 		sb.AppendJoin (", ", parents);
 		sb.Append ("], Interfaces: [");

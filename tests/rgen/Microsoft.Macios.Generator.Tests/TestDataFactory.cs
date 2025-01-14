@@ -181,7 +181,8 @@ static class TestDataFactory {
 				"System.IConvertible",
 				"System.IFormattable",
 				"System.ISpanFormattable"
-			]
+			],
+			EnumUnderlyingType = SpecialType.System_Int32,
 		};
 
 	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
