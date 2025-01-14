@@ -273,6 +273,55 @@ namespace NS {
 				)
 			];
 
+			const string intPtrMethodNoParams = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public IntPtr MyMethod () {}
+	}
+}
+";
+			yield return [
+				intPtrMethodNoParams,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForIntPtr (),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				)
+			];
+
+			const string nullableIntPtrMethodNoParams = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public IntPtr? MyMethod () {}
+	}
+}
+";
+			yield return [
+				nullableIntPtrMethodNoParams,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForIntPtr (isNullable: true),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				)
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

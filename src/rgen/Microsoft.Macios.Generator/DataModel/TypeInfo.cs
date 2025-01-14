@@ -19,6 +19,17 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	public string Name { get; }
 
 	/// <summary>
+	/// The metadata name of the type. This is normally the same as name except
+	/// when the SpecialType is not None.
+	/// </summary>
+	public string? MetadataName { get; init; }
+
+	/// <summary>
+	/// The special type enum of the type info. This is used to differentiate nint from IntPtr and other.
+	/// </summary>
+	public SpecialType SpecialType { get; } = SpecialType.None;
+
+	/// <summary>
 	/// True if the parameter is nullable.
 	/// </summary>
 	public bool IsNullable { get; }
@@ -46,7 +57,7 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// <summary>
 	/// Returns if the return type is void.
 	/// </summary>
-	public bool IsVoid { get; }
+	public bool IsVoid => SpecialType == SpecialType.System_Void;
 
 	readonly bool isNSObject = false;
 
@@ -75,18 +86,19 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		init => interfaces = value;
 	}
 
-	internal TypeInfo (string name)
+	internal TypeInfo (string name, SpecialType specialType)
 	{
 		Name = name;
-		IsVoid = name == "void";
+		SpecialType = specialType;
 	}
 
 	internal TypeInfo (string name,
+		SpecialType specialType = SpecialType.None,
 		bool isNullable = false,
 		bool isBlittable = false,
 		bool isSmartEnum = false,
 		bool isArray = false,
-		bool isReferenceType = false) : this (name)
+		bool isReferenceType = false) : this (name, specialType)
 	{
 		IsNullable = isNullable;
 		IsBlittable = isBlittable;
@@ -99,13 +111,25 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
-				: symbol.ToDisplayString ().Trim ('?', '[', ']'))
+				: symbol.ToDisplayString ().Trim ('?', '[', ']'),
+			symbol.SpecialType)
 	{
 		IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated;
 		IsBlittable = symbol.IsBlittable ();
 		IsSmartEnum = symbol.IsSmartEnum ();
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
+		if (!IsReferenceType && IsNullable && symbol is INamedTypeSymbol namedTypeSymbol) {
+			// get the type argument for nullable, which we know is the data that was boxed and use it to 
+			// overwrite the SpecialType 
+			var typeArgument = namedTypeSymbol.TypeArguments [0];
+			SpecialType = typeArgument.SpecialType;
+			MetadataName = SpecialType is SpecialType.None or SpecialType.System_Void
+				? null : typeArgument.MetadataName;
+		} else {
+			MetadataName = SpecialType is SpecialType.None or SpecialType.System_Void
+				? null : symbol.MetadataName;
+		}
 		symbol.GetInheritance (
 			isNSObject: out isNSObject,
 			isNativeObject: out isINativeObject,
@@ -117,6 +141,10 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	public bool Equals (TypeInfo other)
 	{
 		if (Name != other.Name)
+			return false;
+		if (SpecialType != other.SpecialType)
+			return false;
+		if (MetadataName != other.MetadataName)
 			return false;
 		if (IsNullable != other.IsNullable)
 			return false;
@@ -167,7 +195,9 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("{");
-		sb.Append ($"Type: {Name}, ");
+		sb.Append ($"Name: '{Name}', ");
+		sb.Append ($"MetadataName: '{MetadataName}', ");
+		sb.Append ($"SpecialType: '{SpecialType}', ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
 		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");

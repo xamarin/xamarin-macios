@@ -1,7 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 #pragma warning disable APL0003
-using Microsoft.Macios.Generator.DataModel;
+using Microsoft.CodeAnalysis;
+using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 
 namespace Microsoft.Macios.Generator.Tests;
 
@@ -10,6 +11,7 @@ static class TestDataFactory {
 	public static TypeInfo ReturnTypeForString ()
 		=> new (
 			name: "string",
+			specialType: SpecialType.System_String,
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -27,6 +29,7 @@ static class TestDataFactory {
 				"System.IParsable<string>",
 				"System.ISpanParsable<string>"
 			],
+			MetadataName = "String",
 			Parents = ["object"],
 			IsNSObject = false,
 			IsINativeObject = false,
@@ -35,6 +38,7 @@ static class TestDataFactory {
 	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
 		=> new (
 			name: "int",
+			specialType: SpecialType.System_Int32,
 			isBlittable: !isNullable,
 			isNullable: isNullable
 		) {
@@ -74,11 +78,59 @@ static class TestDataFactory {
 					"System.Numerics.IMinMaxValue<int>",
 					"System.Numerics.ISignedNumber<int>"
 			],
+			MetadataName = "Int32",
+		};
+
+	public static TypeInfo ReturnTypeForIntPtr (bool isNullable = false)
+		=> new (
+			name: "nint",
+			specialType: SpecialType.System_IntPtr,
+			isBlittable: !isNullable,
+			isNullable: isNullable
+		) {
+			Parents = ["System.ValueType", "object"],
+			Interfaces = isNullable
+				? []
+				: [
+					"System.IComparable",
+					"System.IComparable<nint>",
+					"System.IEquatable<nint>",
+					"System.IFormattable",
+					"System.IParsable<nint>",
+					"System.ISpanFormattable",
+					"System.ISpanParsable<nint>",
+					"System.IUtf8SpanFormattable",
+					"System.IUtf8SpanParsable<nint>",
+					"System.Numerics.IAdditionOperators<nint, nint, nint>",
+					"System.Numerics.IAdditiveIdentity<nint, nint>",
+					"System.Numerics.IBinaryInteger<nint>",
+					"System.Numerics.IBinaryNumber<nint>",
+					"System.Numerics.IBitwiseOperators<nint, nint, nint>",
+					"System.Numerics.IComparisonOperators<nint, nint, bool>",
+					"System.Numerics.IEqualityOperators<nint, nint, bool>",
+					"System.Numerics.IDecrementOperators<nint>",
+					"System.Numerics.IDivisionOperators<nint, nint, nint>",
+					"System.Numerics.IIncrementOperators<nint>",
+					"System.Numerics.IModulusOperators<nint, nint, nint>",
+					"System.Numerics.IMultiplicativeIdentity<nint, nint>",
+					"System.Numerics.IMultiplyOperators<nint, nint, nint>",
+					"System.Numerics.INumber<nint>",
+					"System.Numerics.INumberBase<nint>",
+					"System.Numerics.ISubtractionOperators<nint, nint, nint>",
+					"System.Numerics.IUnaryNegationOperators<nint, nint>",
+					"System.Numerics.IUnaryPlusOperators<nint, nint>",
+					"System.Numerics.IShiftOperators<nint, int, nint>",
+					"System.Numerics.IMinMaxValue<nint>",
+					"System.Numerics.ISignedNumber<nint>",
+					"System.Runtime.Serialization.ISerializable"
+				],
+			MetadataName = "IntPtr",
 		};
 
 	public static TypeInfo ReturnTypeForBool ()
 		=> new (
 			name: "bool",
+			specialType: SpecialType.System_Boolean,
 			isBlittable: false
 		) {
 			Parents = ["System.ValueType", "object"],
@@ -89,11 +141,12 @@ static class TestDataFactory {
 				"System.IEquatable<bool>",
 				"System.IParsable<bool>",
 				"System.ISpanParsable<bool>"
-			]
+			],
+			MetadataName = "Boolean",
 		};
 
 	public static TypeInfo ReturnTypeForVoid ()
-		=> new ("void") {
+		=> new ("void", SpecialType.System_Void) {
 			Parents = ["System.ValueType", "object"],
 		};
 
