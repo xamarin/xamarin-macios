@@ -97,7 +97,7 @@ namespace Security {
 		Compatibility,
 		Legacy,
 		Ats,
-		AtsCompatibility
+		AtsCompatibility,
 	}
 
 	// subset of OSStatus (int)
@@ -226,7 +226,7 @@ namespace Security {
 	public enum SslAuthenticate {
 		Never,
 		Always,
-		Try
+		Try,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -250,7 +250,7 @@ namespace Security {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslConnectionType {
 		Stream,
-		Datagram
+		Datagram,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -266,7 +266,7 @@ namespace Security {
 		Handshake,
 		Connected,
 		Closed,
-		Aborted
+		Aborted,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -278,7 +278,7 @@ namespace Security {
 	public enum SslSessionStrengthPolicy {
 		Default,
 		ATSv1,
-		ATSv1NoPFS
+		ATSv1NoPFS,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -292,7 +292,7 @@ namespace Security {
 		None,
 		Requested,
 		Sent,
-		Rejected
+		Rejected,
 	}
 
 #if !NET
@@ -471,6 +471,10 @@ namespace Security {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	// typedef CF_ENUM(int, SSLCiphersuiteGroup)
 	public enum SslCipherSuiteGroup {
-		Default, Compatibility, Legacy, Ats, AtsCompatibility,
+		Default,
+		Compatibility,
+		Legacy,
+		Ats,
+		AtsCompatibility,
 	}
 }

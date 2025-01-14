@@ -90,13 +90,17 @@ namespace UIKit {
 	[Native] // NSInteger -> UIApplication.h
 	[MacCatalyst (13, 1)]
 	public enum UIBackgroundRefreshStatus : long {
-		Restricted, Denied, Available
+		Restricted,
+		Denied,
+		Available,
 	}
 
 	[MacCatalyst (13, 1)]
 	[Native] // NSUInteger -> UIApplication.h
 	public enum UIBackgroundFetchResult : ulong {
-		NewData, NoData, Failed
+		NewData,
+		NoData,
+		Failed,
 	}
 
 	/// <include file="../docs/api/UIKit/UIApplicationShortcutIconType.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIApplicationShortcutIconType']/*" />
@@ -133,7 +137,7 @@ namespace UIKit {
 		Bookmark,
 		Shuffle,
 		Audio,
-		Update
+		Update,
 	}
 
 	/// <summary>Enumerates the mass of the objects used by the <see cref="T:UIKit.UIImpactFeedbackGenerator" /> class.</summary>
@@ -159,7 +163,7 @@ namespace UIKit {
 	public enum UINotificationFeedbackType : long {
 		Success,
 		Warning,
-		Error
+		Error,
 	}
 
 	[Native]
@@ -3146,7 +3150,7 @@ namespace UIKit {
 		AccessibilityExtraExtraLarge,
 
 		[Field ("UIContentSizeCategoryAccessibilityExtraExtraExtraLarge")]
-		AccessibilityExtraExtraExtraLarge
+		AccessibilityExtraExtraExtraLarge,
 	}
 
 	[iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]

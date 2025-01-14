@@ -74,14 +74,17 @@ namespace CoreMidi {
 		WrongThread = -10841,
 		ObjectNotFound = -10842,
 		IDNotUnique = -10843,
-		NotPermitted = -10844
+		NotPermitted = -10844,
 	}
 
 	[Flags]
 	// SInt32 - MIDIServices.h
 	enum MidiObjectType : int {
 		Other = -1,
-		Device, Entity, Source, Destination,
+		Device,
+		Entity,
+		Source,
+		Destination,
 		ExternalMask = 0x10,
 		ExternalDevice = ExternalMask | Device,
 		ExternalEntity = ExternalMask | Entity,

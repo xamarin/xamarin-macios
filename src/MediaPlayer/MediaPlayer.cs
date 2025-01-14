@@ -29,7 +29,7 @@ namespace MediaPlayer {
 		Paused,
 		Interrupted,
 		SeekingForward,
-		SeekingBackward
+		SeekingBackward,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -56,7 +56,8 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMovieRepeatMode : long {
-		None, One
+		None,
+		One,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -68,7 +69,10 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMovieControlStyle : long {
-		None, Embedded, Fullscreen, Default = Embedded
+		None,
+		Embedded,
+		Fullscreen,
+		Default = Embedded,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -80,7 +84,9 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMovieFinishReason : long {
-		PlaybackEnded, PlaybackError, UserExited
+		PlaybackEnded,
+		PlaybackError,
+		UserExited,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -95,7 +101,7 @@ namespace MediaPlayer {
 	public enum MPMovieMediaType : long {
 		None = 0,
 		Video = 1 << 0,
-		Audio = 1 << 1
+		Audio = 1 << 1,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -107,7 +113,9 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMovieSourceType : long {
-		Unknown, File, Streaming
+		Unknown,
+		File,
+		Streaming,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -120,7 +128,7 @@ namespace MediaPlayer {
 	[Native]
 	public enum MPMovieTimeOption : long {
 		NearestKeyFrame,
-		Exact
+		Exact,
 	}
 
 	// NSUInteger -> MPMediaItem.h
@@ -148,7 +156,7 @@ namespace MediaPlayer {
 		HomeVideo = 1 << 13,
 		[MacCatalyst (13, 1)]
 		TypeAnyVideo = 0xff00,
-		Any = 0xFFFFFFFFFFFFFFFF
+		Any = 0xFFFFFFFFFFFFFFFF,
 	}
 
 	// NSInteger -> MPMediaPlaylist.h
@@ -162,7 +170,7 @@ namespace MediaPlayer {
 		None = 0,
 		OnTheGo = (1 << 0), // if set, the playlist was created on a device rather than synced from iTunes
 		Smart = (1 << 1),
-		Genius = (1 << 2)
+		Genius = (1 << 2),
 	};
 
 	// NSInteger -> MPMediaQuery.h
@@ -179,7 +187,7 @@ namespace MediaPlayer {
 		Composer,
 		Genre,
 		Playlist,
-		PodcastTitle
+		PodcastTitle,
 	}
 
 	// NSInteger -> MPMediaQuery.h
@@ -190,7 +198,7 @@ namespace MediaPlayer {
 	[Native]
 	public enum MPMediaPredicateComparison : long {
 		EqualsTo,
-		Contains
+		Contains,
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
@@ -205,7 +213,7 @@ namespace MediaPlayer {
 		None,
 		AspectFit,
 		AspectFill,
-		Fill
+		Fill,
 	}
 
 	// untyped enum -> MPMoviePlayerController.h
@@ -214,7 +222,7 @@ namespace MediaPlayer {
 	public enum MPMovieControlMode {
 		Default,
 		VolumeOnly,
-		Hidden
+		Hidden,
 	}
 
 	// NSInteger -> /MPMusicPlayerController.h
@@ -228,7 +236,7 @@ namespace MediaPlayer {
 		Paused,
 		Interrupted,
 		SeekingForward,
-		SeekingBackward
+		SeekingBackward,
 	}
 
 	// NSInteger -> /MPMusicPlayerController.h
@@ -240,7 +248,7 @@ namespace MediaPlayer {
 		Default,
 		None,
 		One,
-		All
+		All,
 	}
 
 	// NSInteger -> /MPMusicPlayerController.h
@@ -252,7 +260,7 @@ namespace MediaPlayer {
 		Default,
 		Off,
 		Songs,
-		Albums
+		Albums,
 	}
 
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
@@ -262,7 +270,7 @@ namespace MediaPlayer {
 	public enum MPShuffleType : long {
 		Off,
 		Items,
-		Collections
+		Collections,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -270,7 +278,7 @@ namespace MediaPlayer {
 	public enum MPRepeatType : long {
 		Off,
 		One,
-		All
+		All,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -278,7 +286,7 @@ namespace MediaPlayer {
 	public enum MPChangeLanguageOptionSetting : long {
 		None,
 		NowPlayingItemOnly,
-		Permanent
+		Permanent,
 	}
 
 	// NSInteger -> MPRemoteCommand.h
@@ -291,7 +299,7 @@ namespace MediaPlayer {
 		NoActionableNowPlayingItem = 110,
 		[MacCatalyst (13, 1)]
 		DeviceNotFound = 120,
-		CommandFailed = 200
+		CommandFailed = 200,
 	}
 
 	// NSUInteger -> MPRemoteCommandEvent.h
@@ -306,7 +314,7 @@ namespace MediaPlayer {
 	[Native]
 	public enum MPNowPlayingInfoLanguageOptionType : ulong {
 		Audible,
-		Legible
+		Legible,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -332,7 +340,7 @@ namespace MediaPlayer {
 		NotDetermined = 0,
 		Denied,
 		Restricted,
-		Authorized
+		Authorized,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -340,7 +348,7 @@ namespace MediaPlayer {
 	public enum MPNowPlayingInfoMediaType : ulong {
 		None = 0,
 		Audio,
-		Video
+		Video,
 	}
 
 	[MacCatalyst (13, 1)]

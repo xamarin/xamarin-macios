@@ -40,6 +40,8 @@ namespace Accounts {
 	/// <summary>An enumeration whose values indicate the result of a credential renewal request (see <see cref="M:Accounts.ACAccountStore.RenewCredentials(Accounts.ACAccount,System.Action{Accounts.ACAccountCredentialRenewResult,Foundation.NSError})" />).</summary>
 	[Native]
 	public enum ACAccountCredentialRenewResult : long {
-		Renewed, Rejected, Failed
+		Renewed,
+		Rejected,
+		Failed,
 	}
 }

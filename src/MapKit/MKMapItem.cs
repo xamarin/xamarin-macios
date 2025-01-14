@@ -19,7 +19,9 @@ namespace MapKit {
 	// it's similar to MKDirectionsTransportType values but it's something only used on the managed side
 	// to replace NSString fields
 	public enum MKDirectionsMode {
-		Driving, Walking, Transit,
+		Driving,
+		Walking,
+		Transit,
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
@@ -28,7 +30,7 @@ namespace MapKit {
 #else
 		[NoTV]
 #endif
-		Default
+		Default,
 	}
 
 #if NET
