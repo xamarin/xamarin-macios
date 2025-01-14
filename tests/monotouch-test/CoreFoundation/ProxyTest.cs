@@ -76,6 +76,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 							var context = listener.GetContext ();
 							var request = context.Request;
 							var pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, request.RawUrl.Substring (1));
+							pacPath = Path.GetFullPath (pacPath);
+							if (!pacPath.StartsWith (Path.GetFullPath (NSBundle.MainBundle.ResourcePath) + Path.DirectorySeparatorChar))
+								throw new InvalidOperationException ($"Invalid access: {request.RawUrl}");
 							Console.WriteLine ($"    Serving {pacPath}");
 							var buf = File.ReadAllBytes (pacPath);
 							context.Response.ContentLength64 = buf.Length;

@@ -38,66 +38,78 @@ namespace GLKit {
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffects.h
 	public enum GLKVertexAttrib {
-		Position, Normal, Color, TexCoord0, TexCoord1
+		Position,
+		Normal,
+		Color,
+		TexCoord0,
+		TexCoord1,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffectPropertyLight.h
 	public enum GLKLightingType {
 		PerVertex,
-		PerPixel
+		PerPixel,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffectPropertyTexture.h
 	public enum GLKTextureEnvMode {
-		Replace, Modulate, Decal
+		Replace,
+		Modulate,
+		Decal,
 	}
 
 	// GLenum (32 bits on 64 bit hardware) -> GLKEffectPropertyTexture.h
 	public enum GLKTextureTarget {
 		Texture2D = 0x0DE1,    // GL_TEXTURE_2D
 		CubeMap = 0x8513, // GL_TEXTURE_CUBE_MAP
-		TargetCt = 2
+		TargetCt = 2,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffectPropertyFog.h
 	public enum GLKFogMode {
 		Exp = 0,
 		Exp2,
-		Linear
+		Linear,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKView.h
 	public enum GLKViewDrawableColorFormat {
 		RGBA8888 = 0,
 		RGB565,
-		SRGBA8888
+		SRGBA8888,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKView.h
 	public enum GLKViewDrawableDepthFormat {
-		None, Format16, Format24,
+		None,
+		Format16,
+		Format24,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKView.h
 	public enum GLKViewDrawableStencilFormat {
-		FormatNone, Format8
+		FormatNone,
+		Format8,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKView.h
 	public enum GLKViewDrawableMultisample {
-		None, Sample4x
+		None,
+		Sample4x,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKTextureLoader.h
 	public enum GLKTextureInfoAlphaState {
-		None, NonPremultiplied, Premultiplied
+		None,
+		NonPremultiplied,
+		Premultiplied,
 	}
 
 	// GLint (32 bits on 64 bit hardware) -> GLKTextureLoader.h
 	public enum GLKTextureInfoOrigin {
 		Unknown = 0,
 		TopLeft,
-		BottomLeft
+		BottomLeft,
 	}
 
 	// GLuint (we'll keep `int` for compatibility) -> GLKTextureLoader.h

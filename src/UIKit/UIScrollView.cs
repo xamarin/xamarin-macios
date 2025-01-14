@@ -7,8 +7,6 @@
 // Copyright 2009, Novell, Inc.
 //
 
-#if !WATCH
-
 using System;
 
 namespace UIKit {
@@ -23,5 +21,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

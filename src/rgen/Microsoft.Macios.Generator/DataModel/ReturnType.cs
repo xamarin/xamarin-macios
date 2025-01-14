@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using System;
+using System.Collections.Immutable;
+using System.Data;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Extensions;
@@ -47,6 +49,33 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 	/// </summary>
 	public bool IsVoid { get; }
 
+	readonly bool isNSObject = false;
+
+	public bool IsNSObject {
+		get => isNSObject;
+		init => isNSObject = value;
+	}
+
+	readonly bool isINativeObject = false;
+
+	public bool IsINativeObject {
+		get => isINativeObject;
+		init => isINativeObject = value;
+	}
+
+	readonly ImmutableArray<string> parents = [];
+	public ImmutableArray<string> Parents {
+		get => parents;
+		init => parents = value;
+	}
+
+	readonly ImmutableArray<string> interfaces = [];
+
+	public ImmutableArray<string> Interfaces {
+		get => interfaces;
+		init => interfaces = value;
+	}
+
 	internal ReturnType (string type)
 	{
 		Type = type;
@@ -78,6 +107,11 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		IsSmartEnum = symbol.IsSmartEnum ();
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
+		symbol.GetInheritance (
+			isNSObject: out isNSObject,
+			isNativeObject: out isINativeObject,
+			parents: out parents,
+			interfaces: out interfaces);
 	}
 
 	/// <inheritdoc/>
@@ -96,6 +130,13 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		if (IsReferenceType != other.IsReferenceType)
 			return false;
 		if (IsVoid != other.IsVoid)
+			return false;
+
+		// compare base classes and interfaces, order does not matter at all
+		var listComparer = new CollectionComparer<string> ();
+		if (!listComparer.Equals (parents, other.Parents))
+			return false;
+		if (!listComparer.Equals (interfaces, other.Interfaces))
 			return false;
 
 		return true;
@@ -133,7 +174,14 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"IsReferenceType: {IsReferenceType}, ");
-		sb.Append ($"IsVoid : {IsVoid} }}");
+		sb.Append ($"IsVoid : {IsVoid}, ");
+		sb.Append ($"IsNSObject : {IsNSObject}, ");
+		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
+		sb.Append ("Parents: [");
+		sb.AppendJoin (", ", parents);
+		sb.Append ("], Interfaces: [");
+		sb.AppendJoin (", ", interfaces);
+		sb.Append ("]}");
 		return sb.ToString ();
 	}
 }

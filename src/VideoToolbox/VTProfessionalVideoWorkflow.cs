@@ -26,7 +26,7 @@ namespace VideoToolbox {
 	[UnsupportedOSPlatform ("watchos")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoiOS, NoMacCatalyst, NoWatch, NoTV]
+	[NoiOS, NoMacCatalyst, NoTV]
 #endif
 	public static class VTProfessionalVideoWorkflow {
 		[DllImport (Constants.VideoToolboxLibrary, EntryPoint = "VTRegisterProfessionalVideoWorkflowVideoDecoders")]

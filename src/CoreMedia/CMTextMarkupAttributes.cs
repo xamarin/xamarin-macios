@@ -43,8 +43,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public struct TextMarkupColor {
 		public TextMarkupColor (float red, float green, float blue, float alpha)
@@ -76,8 +74,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMTextMarkupAttributes : DictionaryContainer {
 		public CMTextMarkupAttributes ()

@@ -18,8 +18,6 @@ namespace Intents {
 		{
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
-#elif WATCH
-			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif

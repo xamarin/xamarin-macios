@@ -1,4 +1,3 @@
-#if !WATCH // doesn't show up in watch headers
 #if !MONOMAC
 using System;
 using ObjCRuntime;
@@ -34,4 +33,3 @@ namespace MapKit {
 	}
 }
 #endif
-#endif // !WATCH

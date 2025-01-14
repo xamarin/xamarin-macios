@@ -3,7 +3,6 @@
 //
 
 #if !XAMCORE_5_0
-#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;
@@ -33,5 +32,4 @@ namespace MapKit {
 	}
 }
 
-#endif
 #endif // !XAMCORE_5_0

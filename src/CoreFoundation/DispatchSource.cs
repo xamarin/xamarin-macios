@@ -29,7 +29,9 @@ namespace CoreFoundation {
 
 	[Flags]
 	public enum MemoryPressureFlags {
-		Normal = 1, Warn = 2, Critical = 4
+		Normal = 1,
+		Warn = 2,
+		Critical = 4,
 	}
 
 	[Flags]
@@ -37,7 +39,7 @@ namespace CoreFoundation {
 		Exit = 0x80000000,
 		Fork = 0x40000000,
 		Exec = 0x20000000,
-		Signal = 0x08000000
+		Signal = 0x08000000,
 	}
 
 	[Flags]
@@ -48,7 +50,7 @@ namespace CoreFoundation {
 		Attrib = 8,
 		Link = 0x10,
 		Rename = 0x20,
-		Revoke = 0x40
+		Revoke = 0x40,
 	}
 
 #if NET

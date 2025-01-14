@@ -46,12 +46,12 @@ namespace CoreText {
 		[Field ("kCTFontFeatureSelectorSettingKey")]
 		NSString Setting { get; }
 
-		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTFontFeatureSampleTextKey")]
 		NSString SampleText { get; }
 
-		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTFontFeatureTooltipTextKey")]
 		NSString TooltipText { get; }
@@ -103,7 +103,6 @@ namespace CoreText {
 		NSString ForceEmbeddingLevel { get; }
 #endif
 
-		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }
@@ -114,12 +113,12 @@ namespace CoreText {
 		[Field ("kCTFontManagerErrorFontURLsKey")]
 		NSString FontUrlsKey { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoTV, NoMac, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTFontManagerErrorFontDescriptorsKey")]
 		NSString FontDescriptorsKey { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoTV, NoMac, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTFontManagerErrorFontAssetNameKey")]
 		NSString FontAssetNameKey { get; }
@@ -227,7 +226,7 @@ namespace CoreText {
 		[Field ("kCTFontEnabledAttribute")]
 		NSString Enabled { get; }
 
-		[iOS (13, 0), NoTV, NoWatch, MacCatalyst (13, 1), NoMac]
+		[iOS (13, 0), NoTV, MacCatalyst (13, 1), NoMac]
 		[Field ("kCTFontRegistrationUserInfoAttribute")]
 		NSString RegistrationUserInfo { get; }
 	}
@@ -454,18 +453,18 @@ namespace CoreText {
 		[Field ("kCTRubyAnnotationAttributeName")]
 		NSString RubyAnnotation { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("kCTAdaptiveImageProviderAttributeName")]
 		NSString AdaptiveImageProvider { get; }
 #endif
 
-		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTTrackingAttributeName")]
 		NSString TrackingAttributeName { get; }
 	}
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
 	interface CTAdaptiveImageProviding {
 		[Abstract]

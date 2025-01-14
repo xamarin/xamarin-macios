@@ -17,9 +17,7 @@ namespace Intents {
 
 		public static INCarDefrosterResolutionResult GetSuccess (INCarDefroster resolvedValue)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return SuccessWithResolvedCarDefroster (resolvedValue);
 			else
@@ -29,9 +27,7 @@ namespace Intents {
 
 		public static INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster valueToConfirm)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return ConfirmationRequiredWithCarDefrosterToConfirm (valueToConfirm);
 			else

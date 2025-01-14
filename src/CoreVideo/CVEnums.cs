@@ -141,7 +141,6 @@ namespace CoreVideo {
 		FlushExcessBuffers = 1,
 	}
 
-#if !WATCH
 	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CVImageBufferAlphaChannelMode {
@@ -150,5 +149,4 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferAlphaChannelMode_PremultipliedAlpha")]
 		Premultiplied,
 	}
-#endif
 }

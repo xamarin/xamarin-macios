@@ -15,7 +15,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public static class IMTLRenderCommandEncoder_Extensions {
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -23,16 +22,13 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetViewports (this IMTLRenderCommandEncoder This, MTLViewport [] viewports)
 		{
 			fixed (void* handle = viewports)
 				This.SetViewports ((IntPtr) handle, (nuint) (viewports?.Length ?? 0));
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -40,16 +36,13 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetScissorRects (this IMTLRenderCommandEncoder This, MTLScissorRect [] scissorRects)
 		{
 			fixed (void* handle = scissorRects)
 				This.SetScissorRects ((IntPtr) handle, (nuint) (scissorRects?.Length ?? 0));
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -57,16 +50,13 @@ namespace Metal {
 		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer [] buffers, nuint [] offsets, NSRange range)
 		{
 			fixed (void* handle = offsets)
 				This.SetTileBuffers (buffers, (IntPtr) handle, range);
 		}
-#endif // !WATCH
 
-#if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -74,7 +64,6 @@ namespace Metal {
 		[SupportedOSPlatform ("macos")]
 #else
 		[TV (14, 5)]
-		[NoWatch]
 #endif
 		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState [] samplers, float [] lodMinClamps, float [] lodMaxClamps, NSRange range)
 		{
@@ -84,6 +73,5 @@ namespace Metal {
 				}
 			}
 		}
-#endif // !WATCH
 	}
 }

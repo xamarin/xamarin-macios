@@ -1,4 +1,4 @@
-#if IOS || WATCH
+#if IOS
 using System;
 using ObjCRuntime;
 
@@ -14,15 +14,12 @@ namespace CoreBluetooth {
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (13,0)]
-		[Watch (6,0)]
 #endif
 		public static CBManagerAuthorization Authorization {
 			get {
 				// in iOS 13.1 / Watch 6.1 this is a static property, like other [tv|mac]OS
 #if IOS
 				if (SystemVersion.CheckiOS (13, 1)) {
-#elif WATCH
-				if (SystemVersion.CheckwatchOS (6, 1)) {
 #endif
 					return _SAuthorization;
 				} else {

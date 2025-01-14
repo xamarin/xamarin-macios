@@ -55,7 +55,7 @@ namespace AudioUnit {
 
 #if !COREBUILD
 
-#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#if !TVOS || (TVOS && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
@@ -64,10 +64,9 @@ namespace AudioUnit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 #endif
-#if ((WATCH || TVOS) && !NET)
+#if TVOS && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
@@ -130,10 +129,9 @@ namespace AudioUnit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 #endif
-#if ((WATCH || TVOS) && !NET)
+#if TVOS && !NET
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class AudioComponentInfo : DictionaryContainer {
@@ -235,7 +233,7 @@ namespace AudioUnit {
 			}
 		}
 	}
-#endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
+#endif // !TVOS || (TVOS && !NET)
 
 #endif // !COREBUILD
 
@@ -368,7 +366,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[NoWatch]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -382,7 +379,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[NoWatch]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -499,7 +495,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -513,7 +508,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -535,7 +529,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -548,7 +541,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -564,7 +556,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -586,7 +577,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -616,7 +606,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -630,7 +619,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -659,7 +647,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -673,7 +660,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 		[Mac (13,0)]
 		[iOS (16,0)]
@@ -686,7 +672,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -698,7 +683,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -710,7 +694,6 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch]
 		[NoTV]
 #endif
 		public AudioComponentInfo[]? ComponentList {

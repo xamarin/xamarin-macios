@@ -161,8 +161,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public static readonly NSString ContainsGrayscaleKey;
 
@@ -296,7 +294,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static byte CVIsCompressedPixelFormatAvailable (int /* OSType = int32_t */ pixelFormat);
@@ -310,7 +308,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0), Watch (8, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0)]
 #endif
 		public static bool IsPixelFormatAvailable (CVPixelFormatType pixelFormat)
 		{

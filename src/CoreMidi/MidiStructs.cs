@@ -1,4 +1,4 @@
-#if !TVOS && !WATCH
+#if !TVOS
 #nullable enable
 
 using System;
@@ -85,7 +85,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("macos15.0")]
 	[SupportedOSPlatform ("tvos18.0")]
 #else
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 	[NativeName ("MIDICIProfileIDStandard")]
 	public struct MidiCIProfileIdStandard {
@@ -102,7 +102,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("macos15.0")]
 	[SupportedOSPlatform ("tvos18.0")]
 #else
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 	[NativeName ("MIDICIProfileIDManufacturerSpecific")]
 	public struct MidiCIProfileIdManufacturerSpecific {
@@ -119,7 +119,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("macos15.0")]
 	[SupportedOSPlatform ("tvos18.0")]
 #else
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 	[NativeName ("MIDICIProfileID")]
 	public struct MidiCIProfileId {

@@ -7,8 +7,6 @@
 //   Miguel de Icaza
 //
 
-#if !WATCH
-
 using System;
 
 using TextAttributes = UIKit.UIStringAttributes;
@@ -50,5 +48,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

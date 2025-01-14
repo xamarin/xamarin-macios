@@ -7,8 +7,6 @@
 // Copyright 2013, Xamarin Inc
 //
 
-#if !WATCH
-
 using System;
 #if IOS
 using System.Drawing;
@@ -69,13 +67,11 @@ namespace UIKit {
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowGlyphs (
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
@@ -101,7 +97,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -213,5 +208,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

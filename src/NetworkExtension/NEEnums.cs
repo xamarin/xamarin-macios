@@ -94,7 +94,7 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Group31 = 31,
-		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		Group32 = 32,
 	}
 
@@ -137,7 +137,7 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Ed25519 = 5,
-		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		Rsapss = 6,
 	}
 
@@ -311,7 +311,7 @@ namespace NetworkExtension {
 	}
 #endif
 
-	[NoWatch, NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	[ErrorDomain ("NEAppPushErrorDomain")]
@@ -322,7 +322,7 @@ namespace NetworkExtension {
 		InactiveSession = 4,
 	}
 
-	[NoWatch, iOS (14, 0)]
+	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("NEDNSProtocol")]
 	public enum NEDnsProtocol : long {
@@ -331,7 +331,7 @@ namespace NetworkExtension {
 		Https = 3,
 	}
 
-	[NoWatch, NoTV, iOS (14, 0)]
+	[NoTV, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("NEDNSSettingsManagerError")]
 	[ErrorDomain ("NEDNSSettingsErrorDomain")]
@@ -342,7 +342,7 @@ namespace NetworkExtension {
 		CannotBeRemoved = 4,
 	}
 
-	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	public enum NERelayManagerError : long {
 		Invalid = 1,

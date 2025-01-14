@@ -27,7 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 using System;
 using ObjCRuntime;

@@ -1,4 +1,4 @@
-#if !WATCH && !__MACCATALYST__
+#if !__MACCATALYST__
 
 using System;
 using ObjCRuntime;
