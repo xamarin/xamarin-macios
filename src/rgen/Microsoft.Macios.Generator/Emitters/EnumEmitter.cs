@@ -18,16 +18,18 @@ class EnumEmitter : ICodeEmitter {
 	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
 	{
 		var enumField = codeChanges.EnumMembers [index];
-		if (enumField.FieldData is null)
+		if (enumField.FieldInfo is null)
 			return;
 
+		var (fieldData, libraryName, libraryPath) = enumField.FieldInfo.Value;
+
 		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
-		classBlock.AppendLine ($"[Field (\"{enumField.FieldData.Value.SymbolName}\", \"{enumField.LibraryPath ?? enumField.LibraryName}\")]");
-		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {enumField.FieldData.Value.SymbolName}", true))
+		classBlock.AppendLine ($"[Field (\"{fieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
 			getterBlock.AppendLine (
-				$"\treturn Dlfcn.CachePointer (Libraries.{enumField.LibraryName}.Handle, \"{enumField.FieldData.Value.SymbolName}\", storage);");
+				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{fieldData.SymbolName}\", storage);");
 		}
 	}
 
@@ -37,9 +39,9 @@ class EnumEmitter : ICodeEmitter {
 		// abort the code generation
 		var backingFields = new HashSet<string> ();
 		for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
-			if (codeChanges.EnumMembers [index].FieldData is null)
+			if (codeChanges.EnumMembers [index].FieldInfo is null)
 				continue;
-			if (!backingFields.Add (codeChanges.EnumMembers [index].FieldData!.Value.SymbolName)) {
+			if (!backingFields.Add (codeChanges.EnumMembers [index].FieldInfo!.Value.FieldData.SymbolName)) {
 				return false;
 			}
 			classBlock.AppendLine ();
@@ -61,10 +63,11 @@ class EnumEmitter : ICodeEmitter {
 			using (var switchBlock = getConstantBlock.CreateBlock ("switch ((int) self)", true)) {
 				for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
 					var enumMember = codeChanges.EnumMembers [index];
-					if (enumMember.FieldData is null)
+					if (enumMember.FieldInfo is null)
 						continue;
-					switchBlock.AppendLine ($"case {index}: // {enumMember.FieldData.Value.SymbolName}");
-					switchBlock.AppendLine ($"\tptr = {enumMember.FieldData.Value.SymbolName};");
+					var (fieldData, _, _) = enumMember.FieldInfo.Value;
+					switchBlock.AppendLine ($"case {index}: // {fieldData.SymbolName}");
+					switchBlock.AppendLine ($"\tptr = {fieldData.SymbolName};");
 					switchBlock.AppendLine ("\tbreak;");
 				}
 			}
@@ -78,9 +81,10 @@ class EnumEmitter : ICodeEmitter {
 			getValueBlock.AppendLine ("if (constant is null)");
 			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
 			foreach (var enumMember in codeChanges.EnumMembers) {
-				if (enumMember.FieldData is null)
+				if (enumMember.FieldInfo is null)
 					continue;
-				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({enumMember.FieldData.Value.SymbolName}))");
+				var (fieldData, _, _) = enumMember.FieldInfo.Value;
+				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
 				getValueBlock.AppendLine ($"\treturn {codeChanges.Name}.{enumMember.Name};");
 			}
 

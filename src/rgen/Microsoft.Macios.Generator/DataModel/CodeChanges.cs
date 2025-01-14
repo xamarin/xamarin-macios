@@ -179,8 +179,20 @@ readonly struct CodeChanges {
 
 			// return those libs needed by smart enums
 			foreach (var enumMember in EnumMembers) {
-				if (visited.Add (enumMember.LibraryName)) // if already visited we cannot add it
-					yield return (enumMember.LibraryName, enumMember.LibraryPath);
+				if (enumMember.FieldInfo is null)
+					continue;
+				var (_, libraryName, libraryPath) = enumMember.FieldInfo.Value;
+				if (visited.Add (libraryName)) // if already visited, we cannot add it
+					yield return (libraryName, libraryPath);
+			}
+
+			// return those libs needed by field properties
+			foreach (var property in Properties) {
+				if (property.ExportFieldData is null)
+					continue;
+				var (_, libraryName, libraryPath) = property.ExportFieldData.Value;
+				if (visited.Add (libraryName)) // if already visited, we cannot add it
+					yield return (libraryName, libraryPath);
 			}
 		}
 	}
@@ -244,12 +256,12 @@ readonly struct CodeChanges {
 
 	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
 
-	delegate bool TryCreateDelegate<in T, TR> (T declaration, SemanticModel semanticModel,
+	delegate bool TryCreateDelegate<in T, TR> (T declaration, RootBindingContext context,
 		[NotNullWhen (true)] out TR? change)
 		where T : MemberDeclarationSyntax
 		where TR : struct;
 
-	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, SemanticModel semanticModel,
+	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, RootBindingContext context,
 		SkipDelegate<T> skip, TryCreateDelegate<T, TR> tryCreate, out ImmutableArray<TR> members)
 		where T : MemberDeclarationSyntax
 		where TR : struct
@@ -257,9 +269,9 @@ readonly struct CodeChanges {
 		var bucket = ImmutableArray.CreateBuilder<TR> ();
 		var declarations = baseDeclarationSyntax.Members.OfType<T> ();
 		foreach (var declaration in declarations) {
-			if (skip (declaration, semanticModel))
+			if (skip (declaration, context.SemanticModel))
 				continue;
-			if (tryCreate (declaration, semanticModel, out var change))
+			if (tryCreate (declaration, context, out var change))
 				bucket.Add (change.Value);
 		}
 
@@ -357,12 +369,12 @@ readonly struct CodeChanges {
 
 		// use the generic method to get the members, we are using an out param to try an minimize the number of times
 		// the value types are copied
-		GetMembers<ConstructorDeclarationSyntax, Constructor> (classDeclaration, context.SemanticModel, Skip,
+		GetMembers<ConstructorDeclarationSyntax, Constructor> (classDeclaration, context, Skip,
 			Constructor.TryCreate, out constructors);
-		GetMembers<PropertyDeclarationSyntax, Property> (classDeclaration, context.SemanticModel, Skip, Property.TryCreate,
+		GetMembers<PropertyDeclarationSyntax, Property> (classDeclaration, context, Skip, Property.TryCreate,
 			out properties);
-		GetMembers<EventDeclarationSyntax, Event> (classDeclaration, context.SemanticModel, Skip, Event.TryCreate, out events);
-		GetMembers<MethodDeclarationSyntax, Method> (classDeclaration, context.SemanticModel, Skip, Method.TryCreate,
+		GetMembers<EventDeclarationSyntax, Event> (classDeclaration, context, Skip, Event.TryCreate, out events);
+		GetMembers<MethodDeclarationSyntax, Method> (classDeclaration, context, Skip, Method.TryCreate,
 			out methods);
 	}
 

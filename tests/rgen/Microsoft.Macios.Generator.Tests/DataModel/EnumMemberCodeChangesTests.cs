@@ -262,6 +262,7 @@ public class EnumMemberCodeChangesTests {
 	class TestDataToString : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
+
 			var simpleEnum = new EnumMember (
 				name: "EnumValue",
 				libraryName: "Test",
@@ -269,7 +270,7 @@ public class EnumMemberCodeChangesTests {
 				fieldData: null,
 				symbolAvailability: new (),
 				attributes: []);
-			yield return [simpleEnum, "{ Name: 'EnumValue' SymbolAvailability: [] FieldData:  Attributes: [] }"];
+			yield return [simpleEnum, "{ Name: 'EnumValue' SymbolAvailability: [] FieldInfo:  Attributes: [] }"];
 
 			var fieldDataEnum = new EnumMember (
 				name: "EnumValue",
@@ -278,7 +279,10 @@ public class EnumMemberCodeChangesTests {
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: new (),
 				attributes: []);
-			yield return [fieldDataEnum, "{ Name: 'EnumValue' SymbolAvailability: [] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' } Attributes: [] }"];
+			yield return [
+				fieldDataEnum,
+				"{ Name: 'EnumValue' SymbolAvailability: [] FieldInfo: FieldData = { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' }, LibraryName = Test, LibraryPath = /path/to/library Attributes: [] }"
+			];
 
 			var builder = SymbolAvailability.CreateBuilder ();
 			builder.Add (new SupportedOSPlatformData ("ios"));
@@ -290,7 +294,10 @@ public class EnumMemberCodeChangesTests {
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: builder.ToImmutable (),
 				attributes: []);
-			yield return [availabilityEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' } Attributes: [] }"];
+			yield return [
+				availabilityEnum,
+				"{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldInfo: FieldData = { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' }, LibraryName = Test, LibraryPath = /path/to/library Attributes: [] }"
+			];
 
 			var attrsEnum = new EnumMember (
 				name: "EnumValue",
@@ -302,7 +309,10 @@ public class EnumMemberCodeChangesTests {
 					new ("Attribute1"),
 					new ("Attribute2"),
 				]);
-			yield return [attrsEnum, "{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldData: { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' } Attributes: [{ Name: Attribute1, Arguments: [] }, { Name: Attribute2, Arguments: [] }] }"];
+			yield return [
+				attrsEnum,
+				"{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldInfo: FieldData = { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' }, LibraryName = Test, LibraryPath = /path/to/library Attributes: [{ Name: Attribute1, Arguments: [] }, { Name: Attribute2, Arguments: [] }] }"
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
@@ -312,6 +322,9 @@ public class EnumMemberCodeChangesTests {
 	[Theory]
 	[ClassData (typeof (TestDataToString))]
 	void TestFieldDataToString (EnumMember x, string expected)
-		=> Assert.Equal (expected, x.ToString ());
+	{
+		var str = x.ToString ();
+		Assert.Equal (expected, x.ToString ());
+	}
 
 }
