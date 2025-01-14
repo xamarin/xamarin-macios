@@ -37,7 +37,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 #endif
 	public abstract class SslConnection : IDisposable {
 

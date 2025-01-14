@@ -31,8 +31,6 @@ namespace Security {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Watch (5, 0)]
 #endif
 	public class SecProtocolOptions : NativeObject {
 #if !COREBUILD
@@ -54,7 +52,6 @@ namespace Security {
 #if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_add_tls_ciphersuite (sec_protocol_options_t handle, SslCipherSuite cipherSuite);
@@ -63,7 +60,6 @@ namespace Security {
 #if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
@@ -75,7 +71,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -88,7 +83,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -105,7 +99,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -122,7 +115,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 #endif
 		public void AddTlsCipherSuiteGroup (SslCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_add_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
@@ -133,7 +125,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -146,7 +137,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -164,7 +154,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -182,7 +171,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
 #endif
@@ -194,7 +182,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -207,7 +194,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -225,7 +211,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -243,7 +228,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
 #endif
@@ -255,7 +239,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -268,7 +251,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -281,7 +263,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -294,7 +275,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -306,7 +286,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -319,7 +298,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -331,7 +309,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -344,7 +321,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -356,7 +332,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -369,7 +344,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -409,7 +383,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use non-DHE cipher suites instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use non-DHE cipher suites instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -427,7 +400,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use non-DHE cipher suites instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use non-DHE cipher suites instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
 #endif
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
@@ -516,7 +488,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -530,7 +501,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -547,7 +517,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -566,7 +535,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -579,7 +547,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif

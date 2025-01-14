@@ -10,6 +10,7 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class ReturnTypeTests : BaseGeneratorTestClass {
@@ -32,7 +33,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -57,14 +58,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int",
-						isNullable: false,
-						isBlittable: true,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: false
-					),
+					returnType: ReturnTypeForInt (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -89,14 +83,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int",
-						isNullable: true,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: false
-					),
+					returnType: ReturnTypeForInt (isNullable: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -121,14 +108,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int",
-						isNullable: false,
-						isBlittable: true,
-						isSmartEnum: false,
-						isArray: true,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForArray ("int", isBlittable: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -153,14 +133,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int",
-						isNullable: true,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: true,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForArray ("int", isNullable: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -185,14 +158,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int?",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: true,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForArray ("int?", isBlittable: false),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -217,14 +183,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "int[]",
-						isNullable: false,
-						isBlittable: true,
-						isSmartEnum: false,
-						isArray: true,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForArray ("int[]", isBlittable: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -249,14 +208,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -283,14 +235,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "NS.ReturnClass",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForClass ("NS.ReturnClass"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -317,14 +262,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "NS.ReturnClass",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: false
-					),
+					returnType: ReturnTypeForStruct ("NS.ReturnClass"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -334,6 +272,7 @@ namespace NS {
 					parameters: []
 				)
 			];
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

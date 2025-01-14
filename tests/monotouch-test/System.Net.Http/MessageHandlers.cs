@@ -471,12 +471,14 @@ namespace MonoTests.System.Net.Http {
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
+#pragma warning disable SM02184 // "Server certificate validation disabled" - the warning is incorrect, because it's supposed to detect when server validation always passes (i.e. the callback returns 'true'), but we return _false_ (i.e. we always fail the server validation).
 #pragma warning disable SYSLIB0014 // 'ServicePointManager' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. Settings on ServicePointManager no longer affect SslStream or HttpClient.' (https://aka.ms/dotnet-warnings/SYSLIB0014)
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
 #pragma warning restore SYSLIB0014
 					invalidServicePointManagerCbWasExcuted = true;
 					return false;
 				};
+#pragma warning restore SM02184
 #if NET
 			} else if (handler is SocketsHttpHandler shh) {
 				expectedExceptionType = typeof (AuthenticationException);

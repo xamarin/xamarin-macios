@@ -4863,6 +4863,9 @@ public partial class Generator : IMemberGatherer {
 		var extensionMethods = optionalInstanceMethods.Concat (requiredInstanceMethods.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 		var extensionProperties = optionalInstanceProperties.Concat (requiredInstanceProperties.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 
+		// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated interface - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
+		print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
+
 		WriteDocumentation (type);
 
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
@@ -5153,12 +5156,16 @@ public partial class Generator : IMemberGatherer {
 		print ("}");
 		print ("");
 
+		print ("#pragma warning restore CS1573");
+
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
 		if (backwardsCompatibleCodeGeneration)
 			include_extensions = extensionMethods.Any () || extensionProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
-			// extension methods
+			// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated extension member - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
+			print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
+													  // extension methods
 			if (BindingTouch.SupportsXmlDocumentation) {
 				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
 				print ($"/// <remarks>");
@@ -5199,6 +5206,7 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 			print ("");
+			print ("#pragma warning restore CS1573");
 		}
 
 		// Add API from base interfaces we also need to implement.

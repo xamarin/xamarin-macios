@@ -22,8 +22,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public partial struct CMTime {

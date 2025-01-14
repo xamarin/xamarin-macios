@@ -48,10 +48,9 @@ These are the symbols defined for each platform assembly:
 | ------------------  | -----------                        |
 | Xamarin.iOS.dll     | IPHONE MONOTOUCH IOS               |
 | Xamarin.Mac.dll     | MONOMAC                            |
-| Xamarin.WatchOS.dll | IPHONE MONOTOUCH WATCH             |
 | Xamarin.TVOS.dll    | IPHONE MONOTOUCH TVOS              |
 
-To build core for only one platform, use the platform unique variables `IOS`, `MONOMAC`, `WATCH` or `TVOS`.
+To build core for only one platform, use the platform unique variables `IOS`, `MONOMAC`, or `TVOS`.
 
 ## Core Assemblies ##
 

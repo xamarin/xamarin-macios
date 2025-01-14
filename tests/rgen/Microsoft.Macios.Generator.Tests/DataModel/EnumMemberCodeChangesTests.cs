@@ -15,8 +15,20 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void EqualsNoParams ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), []);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), []);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: []);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: []);
 		Assert.True (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.True (memberCodeChange1 == memberCodeChange2);
 		Assert.False (memberCodeChange1 != memberCodeChange2);
@@ -25,12 +37,26 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void EqualsWithArgumentParams ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		);
 		Assert.True (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.True (memberCodeChange1 == memberCodeChange2);
 		Assert.False (memberCodeChange1 != memberCodeChange2);
@@ -39,8 +65,21 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentName ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), []);
-		var memberCodeChange2 = new EnumMember ("name2", new (), new (), []);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: []);
+		var memberCodeChange2 = new EnumMember (
+			name: "name2",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: []
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -49,12 +88,26 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentAttributeNames ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name2", ["arg1", "arg2"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name2", ["arg1", "arg2"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -63,12 +116,26 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentAttributeParams ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg3"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg3"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -77,12 +144,26 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentAttributeParamsOrder ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg2", "arg1"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg2", "arg1"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -91,13 +172,27 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentAttributesCount ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"]),
-			new AttributeCodeChange ("name2", [])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg2", "arg1"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"]),
+				new AttributeCodeChange ("name2", [])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg2", "arg1"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -112,13 +207,27 @@ public class EnumMemberCodeChangesTests {
 		builder.Add (new UnsupportedOSPlatformData ("tvos"));
 		var availability = builder.ToImmutable ();
 
-		var memberCodeChange1 = new EnumMember ("name", new (), availability, [
-			new AttributeCodeChange ("name", ["arg1", "arg2"]),
-			new AttributeCodeChange ("name2", [])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new (), new (), [
-			new AttributeCodeChange ("name", ["arg2", "arg1"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: availability,
+			attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"]),
+				new AttributeCodeChange ("name2", [])
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new (),
+			symbolAvailability: new (),
+			attributes: [
+				new AttributeCodeChange ("name", ["arg2", "arg1"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -127,13 +236,24 @@ public class EnumMemberCodeChangesTests {
 	[Fact]
 	public void NotEqualsDifferentFieldData ()
 	{
-		var memberCodeChange1 = new EnumMember ("name", new ("x", "libName", EnumValue.Default), new (), [
-			new AttributeCodeChange ("name", ["arg1", "arg2"]),
-			new AttributeCodeChange ("name2", [])
-		]);
-		var memberCodeChange2 = new EnumMember ("name", new ("x", "yLibName", EnumValue.Default), new (), [
-			new AttributeCodeChange ("name", ["arg2", "arg1"])
-		]);
+		var memberCodeChange1 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new ("x", "libName", EnumValue.Default),
+			symbolAvailability: new (), attributes: [
+				new AttributeCodeChange ("name", ["arg1", "arg2"]),
+			]
+		);
+		var memberCodeChange2 = new EnumMember (
+			name: "name",
+			libraryName: "Test",
+			libraryPath: "/path/to/library",
+			fieldData: new ("x", "yLibName", EnumValue.Default),
+			symbolAvailability: new (), attributes: [
+				new AttributeCodeChange ("name", ["arg2", "arg1"])
+			]
+		);
 		Assert.False (memberCodeChange1.Equals (memberCodeChange2));
 		Assert.False (memberCodeChange1 == memberCodeChange2);
 		Assert.True (memberCodeChange1 != memberCodeChange2);
@@ -144,6 +264,8 @@ public class EnumMemberCodeChangesTests {
 		{
 			var simpleEnum = new EnumMember (
 				name: "EnumValue",
+				libraryName: "Test",
+				libraryPath: "/path/to/library",
 				fieldData: null,
 				symbolAvailability: new (),
 				attributes: []);
@@ -151,6 +273,8 @@ public class EnumMemberCodeChangesTests {
 
 			var fieldDataEnum = new EnumMember (
 				name: "EnumValue",
+				libraryName: "Test",
+				libraryPath: "/path/to/library",
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: new (),
 				attributes: []);
@@ -161,6 +285,8 @@ public class EnumMemberCodeChangesTests {
 
 			var availabilityEnum = new EnumMember (
 				name: "EnumValue",
+				libraryName: "Test",
+				libraryPath: "/path/to/library",
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: builder.ToImmutable (),
 				attributes: []);
@@ -168,6 +294,8 @@ public class EnumMemberCodeChangesTests {
 
 			var attrsEnum = new EnumMember (
 				name: "EnumValue",
+				libraryName: "Test",
+				libraryPath: "/path/to/library",
 				fieldData: new ("x", "libName", EnumValue.Default),
 				symbolAvailability: builder.ToImmutable (),
 				attributes: [

@@ -539,7 +539,6 @@ namespace GLKit {
 
 		[NoiOS]
 		[NoMacCatalyst]
-		[NoWatch]
 		[NoTV]
 		[Export ("initWithShareContext:")]
 		NativeHandle Constructor (NSOpenGLContext context);

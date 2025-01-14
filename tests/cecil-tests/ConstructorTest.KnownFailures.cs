@@ -97,8 +97,6 @@ namespace Cecil.Tests {
 			"AVFoundation.AVAudioFile::.ctor(Foundation.NSUrl,Foundation.NSDictionary,AVFoundation.AVAudioCommonFormat,System.Boolean,Foundation.NSError&)",
 			"AVFoundation.AVAudioFile::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSError&)",
 			"AVFoundation.AVAudioFile::.ctor(Foundation.NSUrl,Foundation.NSError&)",
-			"AVFoundation.AVAudioPlayer::.ctor(Foundation.NSData,System.String,Foundation.NSError&)",
-			"AVFoundation.AVAudioPlayer::.ctor(Foundation.NSUrl,System.String,Foundation.NSError&)",
 			"AVFoundation.AVAudioRecorder::.ctor(Foundation.NSUrl,AVFoundation.AudioSettings,Foundation.NSError&)",
 			"AVFoundation.AVAudioRecorder::.ctor(Foundation.NSUrl,AVFoundation.AVAudioFormat,Foundation.NSError&)",
 			"AVFoundation.AVCaptureDeviceInput::.ctor(AVFoundation.AVCaptureDevice,Foundation.NSError&)",

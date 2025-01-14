@@ -21,7 +21,7 @@ namespace CoreBluetooth {
 		}
 	}
 
-#if !WATCH && !NET
+#if !NET
 	public partial class CBCentralManager {
 
 		public new virtual CBCentralManagerState State {

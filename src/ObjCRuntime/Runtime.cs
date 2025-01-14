@@ -85,8 +85,6 @@ namespace ObjCRuntime {
 
 #if __TVOS__
 		internal const string PlatformName = "tvOS";
-#elif __WATCHOS__
-		internal const string PlatformName = "watchOS";
 #elif __MACCATALYST__
 		internal const string PlatformName = "Mac Catalyst";
 #elif __IOS__

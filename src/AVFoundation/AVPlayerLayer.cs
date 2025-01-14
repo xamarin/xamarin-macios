@@ -7,8 +7,6 @@
 // Copyright 2015 Xamarin Inc.
 //
 
-#if !WATCH
-
 using ObjCRuntime;
 using CoreVideo;
 
@@ -36,5 +34,3 @@ namespace AVFoundation {
 		}
 	}
 }
-
-#endif

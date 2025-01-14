@@ -1,4 +1,4 @@
-#if !TVOS && !WATCH
+#if !TVOS
 #nullable enable
 
 using System;
@@ -17,7 +17,6 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
@@ -42,7 +41,6 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]

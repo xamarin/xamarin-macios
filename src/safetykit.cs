@@ -19,7 +19,7 @@ using NativeHandle = System.IntPtr;
 
 namespace SafetyKit {
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SACrashDetectionEvent : NSSecureCoding, NSCopying {
@@ -35,7 +35,7 @@ namespace SafetyKit {
 
 	delegate void SACrashDetectionManagerRequestAuthorizationCompletionHandler (SAAuthorizationStatus status, [NullAllowed] NSError error);
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface SACrashDetectionManager {
 		[Static]
@@ -59,7 +59,7 @@ namespace SafetyKit {
 
 	interface ISACrashDetectionDelegate { }
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 #if NET
 	[Protocol, Model]
 #else
@@ -73,7 +73,7 @@ namespace SafetyKit {
 
 	delegate void SAEmergencyResponseManagerDialVoiceCallCompletionHandler (bool requestAccepted, [NullAllowed] NSError error);
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface SAEmergencyResponseManager {
 		[Wrap ("WeakDelegate")]
@@ -90,7 +90,7 @@ namespace SafetyKit {
 
 	interface ISAEmergencyResponseDelegate { }
 
-	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV]
 #if NET
 	[Protocol, Model]
 #else

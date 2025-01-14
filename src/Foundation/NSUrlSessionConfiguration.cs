@@ -71,7 +71,7 @@ namespace Foundation {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 #else
-		[TV (17, 0), Watch (10, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 #endif
 		public NWProxyConfig [] ProxyConfigurations {
 			get => NSArray.ArrayFromHandleFunc (_ProxyConfigurations, handle => new NWProxyConfig (handle, owns: false));

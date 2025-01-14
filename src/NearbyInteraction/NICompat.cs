@@ -33,17 +33,6 @@ namespace NearbyInteraction {
 
 #if !__MACOS__ && !__TVOS__
 	public partial class NISession {
-
-#if WATCH
-		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public virtual void SetARSession (ARSession session) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
-
-		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		public virtual MatrixFloat4x4 GetWorldTransform (NINearbyObject @object) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
-#endif // WATCH
-
 #if __MACCATALYST__
 		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]

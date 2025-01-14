@@ -415,7 +415,6 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNTessellationSmoothingMode : long {
@@ -447,7 +446,7 @@ namespace SceneKit {
 		Focusable,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeType : long {
@@ -455,7 +454,7 @@ namespace SceneKit {
 		Radiance = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeUpdateType : long {
@@ -463,7 +462,7 @@ namespace SceneKit {
 		Realtime = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightAreaType : long {

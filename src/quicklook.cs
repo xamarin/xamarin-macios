@@ -219,7 +219,7 @@ namespace QuickLook {
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewReply {
 		[Export ("stringEncoding")]
@@ -246,7 +246,7 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLPreviewReplyAttachment {
@@ -261,7 +261,7 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLFilePreviewRequest {
@@ -270,13 +270,12 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewProvider : NSExtensionRequestHandling {
 	}
 
-	[NoWatch]
 	[NoTV]
 	[NoMac] // availability not mentioned in the header files
 	[iOS (15, 0), MacCatalyst (15, 0)]
@@ -316,7 +315,7 @@ namespace QuickLook {
 	}
 #else
 	[Static]
-	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+	[NoiOS][NoMacCatalyst][NoTV]
 	interface QLThumbnailImage {
 		[Internal, Field ("kQLThumbnailOptionScaleFactorKey")]
 		NSString OptionScaleFactorKey { get; }

@@ -13,7 +13,6 @@ using Foundation;
 using ObjCRuntime;
 
 #nullable enable
-#if !WATCH
 
 namespace UIKit {
 
@@ -106,4 +105,3 @@ namespace UIKit {
 		}
 	} /* class NIDUICellAccessoryPosition */
 }
-#endif // WATCH

@@ -191,7 +191,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -207,7 +213,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		var changes2 = new CodeChanges (
@@ -217,7 +229,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name2",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));

@@ -1,4 +1,4 @@
-#if !TVOS && !WATCH
+#if !TVOS
 //
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //
@@ -1466,7 +1466,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+		[NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {
@@ -1483,7 +1483,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos14.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		public ushort UmpActiveGroupBitmap {
 			get {
@@ -1500,7 +1500,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos14.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		public bool UmpCanTransmitGroupless {
 			get {
@@ -2053,7 +2053,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+		[NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {
@@ -2500,7 +2500,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, iOS (14, 0), MacCatalyst (14, 0)]
+		[NoTV, iOS (14, 0), MacCatalyst (14, 0)]
 #endif
 		public MidiProtocolId ProtocolId {
 			get {
@@ -2517,7 +2517,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos14.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		public ushort UmpActiveGroupBitmap {
 			get {
@@ -2534,7 +2534,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos14.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		public bool UmpCanTransmitGroupless {
 			get {
@@ -2551,7 +2551,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("macos15.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public int AssociatedEndpoint {
 			get {

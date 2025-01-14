@@ -101,7 +101,6 @@ namespace CoreText {
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'MaximumLineSpacing' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Use 'MaximumLineSpacing' instead.")]
 		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use 'MaximumLineSpacing' instead.")]
-		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use 'MaximumLineSpacing' instead.")]
 #endif
 		LineSpacing = 10,
 		ParagraphSpacing = 11,

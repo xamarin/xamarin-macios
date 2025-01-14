@@ -301,4 +301,45 @@ static class TypeSymbolExtensions {
 			return false;
 		}
 	}
+
+	/// <summary>
+	/// Returns the parents and all the implemented interfaces (including those of the parents).
+	/// </summary>
+	/// <param name="symbol">The symbol whose inheritance we want to retrieve.</param>
+	/// <param name="isNativeObject">If the type implements the INativeObject interface.</param>
+	/// <param name="parents">An immutable array of the parents in order from closest to furthest.</param>
+	/// <param name="interfaces">All implemented interfaces by the type and its parents.</param>
+	/// <param name="isNSObject">If the type inherits from NSObject.</param>
+	public static void GetInheritance (
+		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out ImmutableArray<string> parents, out ImmutableArray<string> interfaces)
+	{
+		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
+		const string nsObjectClass = "Foundation.NSObject";
+
+		isNSObject = false;
+		isNativeObject = false;
+
+		// parents will be returned directly in a Immutable array via a builder since the order is important
+		// interfaces will use a hash set because we do not want duplicates.
+		var parentsBuilder = ImmutableArray.CreateBuilder<string> ();
+		// init the set with all the interfaces of the current symbol
+		var interfacesSet = new HashSet<string> (symbol.Interfaces.Select (i => i.ToDisplayString ()));
+
+		var currentType = symbol.BaseType;
+		while (currentType is not null) {
+			// check if we reach the NSObject as a parent
+			var parentName = currentType.ToDisplayString ().Trim ();
+			isNSObject |= parentName == nsObjectClass;
+			parentsBuilder.Add (parentName);
+
+			// union with the current interfaces
+			interfacesSet.UnionWith (currentType.Interfaces.Select (i => i.ToDisplayString ()));
+
+			currentType = currentType.BaseType;
+		}
+
+		isNativeObject = interfacesSet.Contains (nativeObjectInterface);
+		parents = parentsBuilder.ToImmutable ();
+		interfaces = [.. interfacesSet];
+	}
 }

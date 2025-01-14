@@ -27,6 +27,7 @@ public class AttributesNamesTests {
 	[InlineData (Category.Default, AttributesNames.BindingCategoryAttribute)]
 	[InlineData (Class.Default, AttributesNames.BindingClassAttribute)]
 	[InlineData (Protocol.Default, AttributesNames.BindingProtocolAttribute)]
+	[InlineData (StrongDictionary.Default, AttributesNames.BindingStrongDictionaryAttribute)]
 	public void GetBindingTypeAttributeName<T> (T @enum, string? expectedName) where T : Enum
 	{
 		Assert.NotNull (@enum);
