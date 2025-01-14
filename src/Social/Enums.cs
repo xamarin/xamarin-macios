@@ -16,7 +16,10 @@ namespace Social {
 	/// <summary>The HTTP verb associated with a social service request.</summary>
 	[Native]
 	public enum SLRequestMethod : long {
-		Get, Post, Delete, Put
+		Get,
+		Post,
+		Delete,
+		Put,
 	}
 
 	// NSInteger -> SLComposeViewController.h
@@ -27,7 +30,8 @@ namespace Social {
 #endif
 	[Native]
 	public enum SLComposeViewControllerResult : long {
-		Cancelled, Done
+		Cancelled,
+		Done,
 	}
 
 	// note: those are NSString in iOS/OSX that we expose as an enum (i.e. it's NOT a native enum)
@@ -40,7 +44,7 @@ namespace Social {
 		SinaWeibo,
 		TencentWeibo,
 #if MONOMAC
-		LinkedIn
+		LinkedIn,
 #endif
 	}
 }

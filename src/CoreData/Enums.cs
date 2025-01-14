@@ -37,7 +37,7 @@ namespace CoreData {
 		Add = 0x02,
 		Remove = 0x03,
 		Copy = 0x04,
-		Transform = 0x05
+		Transform = 0x05,
 	}
 
 	// NUInteger -> NSAttributeDescription.h
@@ -73,7 +73,7 @@ namespace CoreData {
 		ManagedObject = 0x00,
 		ManagedObjectID = 0x01,
 		DictionaryResultType = 0x02,
-		NSCountResultType = 0x04
+		NSCountResultType = 0x04,
 	}
 
 	// NUInteger -> NSRelationshipDescription.h
@@ -83,7 +83,7 @@ namespace CoreData {
 		NoAction,
 		Nullify,
 		Cascade,
-		Deny
+		Deny,
 	}
 
 	// NUInteger -> NSPersistentStoreRequest.h
@@ -97,21 +97,27 @@ namespace CoreData {
 		[MacCatalyst (13, 1)]
 		BatchInsert = 5,
 		BatchUpdate = 6,
-		BatchDelete = 7
+		BatchDelete = 7,
 	}
 
 	// NUInteger -> NSManagedObjectContext.h
 	/// <summary>Enumerates types of concurrenty patterns that can be used by a <see cref="T:CoreData.NSManagedObjectContext" />.</summary>
 	[Native]
 	public enum NSManagedObjectContextConcurrencyType : ulong {
-		Confinement, PrivateQueue, MainQueue
+		Confinement,
+		PrivateQueue,
+		MainQueue,
 	}
 
 	// NUInteger -> NSManagedObjectContext.h
 	/// <summary>Enumerates policies for merging.</summary>
 	[Native]
 	public enum NSMergePolicyType : ulong {
-		Error, PropertyStoreTrump, PropertyObjectTrump, Overwrite, RollbackMerge
+		Error,
+		PropertyStoreTrump,
+		PropertyObjectTrump,
+		Overwrite,
+		RollbackMerge,
 	}
 
 	// NUInteger -> NSFetchedResultsController.h
@@ -121,7 +127,7 @@ namespace CoreData {
 		Insert = 1,
 		Delete = 2,
 		Move = 3,
-		Update = 4
+		Update = 4,
 	}
 
 	/// <summary>Enumerates the kind of results that can be returned from a batched update request.</summary>
@@ -129,7 +135,7 @@ namespace CoreData {
 	public enum NSBatchUpdateRequestResultType : ulong {
 		StatusOnly = 0,
 		UpdatedObjectIDs = 1,
-		UpdatedObjectsCount = 2
+		UpdatedObjectsCount = 2,
 	}
 
 	/// <summary>Enumerates the form of the result of a <see cref="T:CoreData.NSBatchDeleteRequest" />.</summary>
@@ -138,7 +144,7 @@ namespace CoreData {
 	public enum NSBatchDeleteRequestResultType : ulong {
 		StatusOnly = 0,
 		ObjectIDs = 1,
-		Count = 2
+		Count = 2,
 	}
 
 	/// <summary>Enumerates errors that can be encountered during validation.</summary>
@@ -169,7 +175,7 @@ namespace CoreData {
 		PersistentStoreCoordinatorLocking = 132010,
 		ManagedObjectReferentialIntegrity = 133000,
 		ManagedObjectExternalRelationship = 133010,
-		ManagedObjectMerge = 133020
+		ManagedObjectMerge = 133020,
 	}
 
 	/// <summary>Enumerates error codes that can be encountered while working with persistent stores.</summary>
@@ -184,7 +190,7 @@ namespace CoreData {
 		Operation = 134070,
 		Open = 134080,
 		Timeout = 134090,
-		IncompatibleVersionHash = 134100
+		IncompatibleVersionHash = 134100,
 	}
 
 	/// <summary>Enumerates error codes that can be encountered while migrating stores.</summary>
@@ -208,7 +214,7 @@ namespace CoreData {
 	[Native]
 	public enum NSFetchIndexElementType : ulong {
 		Binary,
-		RTree
+		RTree,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -216,7 +222,7 @@ namespace CoreData {
 	public enum NSPersistentHistoryChangeType : long {
 		Insert,
 		Update,
-		Delete
+		Delete,
 	}
 
 	[MacCatalyst (13, 1)]

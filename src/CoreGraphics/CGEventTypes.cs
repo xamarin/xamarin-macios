@@ -33,7 +33,7 @@ namespace CoreGraphics {
 	public enum CGEventTapLocation : int {
 		HID,
 		Session,
-		AnnotatedSession
+		AnnotatedSession,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
@@ -45,7 +45,7 @@ namespace CoreGraphics {
 #endif
 	public enum CGEventTapPlacement : uint {
 		HeadInsert,
-		TailAppend
+		TailAppend,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
@@ -57,7 +57,7 @@ namespace CoreGraphics {
 #endif
 	public enum CGEventTapOptions : uint {
 		Default, 
-		ListenOnly
+		ListenOnly,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
@@ -68,7 +68,9 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public enum CGMouseButton : uint {
-		Left, Right, Center
+		Left,
+		Right,
+		Center,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
@@ -79,7 +81,8 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public enum CGScrollEventUnit : uint {
-		Pixel, Line
+		Pixel,
+		Line,
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
@@ -395,7 +398,7 @@ namespace CoreGraphics {
 
 		// no documentation for this value in the header file.
 		/// <summary>A value that represents the raw delta value for axis 2.</summary>
-		ScrollWheelEventRawDeltaAxis2 = 177
+		ScrollWheelEventRawDeltaAxis2 = 177,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
@@ -435,7 +438,9 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventMouseSubtype : uint {
-		Default, TabletPoint, TabletProximity
+		Default,
+		TabletPoint,
+		TabletProximity,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
@@ -446,7 +451,9 @@ namespace CoreGraphics {
 	[MacCatalyst (13,1)]
 #endif
 	public enum CGEventSourceStateID : int {
-		Private = -1, CombinedSession = 0, HidSystem = 1
+		Private = -1,
+		CombinedSession = 0,
+		HidSystem = 1,
 	}
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventFilterMask;
@@ -460,7 +467,7 @@ namespace CoreGraphics {
 	public enum CGEventFilterMask : uint {
 		PermitLocalMouseEvents = 1,
 		PermitLocalKeyboardEvents = 2,
-		PermitSystemDefinedEvents = 4
+		PermitSystemDefinedEvents = 4,
 	}
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventSuppressionState;

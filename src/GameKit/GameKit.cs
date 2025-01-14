@@ -30,7 +30,7 @@ namespace GameKit {
 	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
-		Nearby = 1 << 1
+		Nearby = 1 << 1,
 	}
 
 	// untyped enum -> GKPublicConstants.h
@@ -57,7 +57,7 @@ namespace GameKit {
 		NetworkConfiguration = 32013,
 		UnsupportedRemoteVersion = 32014,
 		OutOfMemory = 32015,
-		InvalidParameter = 32016
+		InvalidParameter = 32016,
 	}
 
 	// untyped enum -> GKPublicConstants.h
@@ -98,13 +98,16 @@ namespace GameKit {
 	// NSInteger -> GKLeaderboard.h
 	[Native]
 	public enum GKLeaderboardTimeScope : long {
-		Today, Week, AllTime
+		Today,
+		Week,
+		AllTime,
 	}
 
 	// NSInteger -> GKLeaderboard.h
 	[Native]
 	public enum GKLeaderboardPlayerScope : long {
-		Global, FriendsOnly
+		Global,
+		FriendsOnly,
 	}
 
 	// NSInteger -> GKError.h
@@ -205,13 +208,16 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum GKMatchSendDataMode : long {
-		Reliable, Unreliable
+		Reliable,
+		Unreliable,
 	}
 
 	// NSInteger -> GKMatch.h
 	[Native]
 	public enum GKPlayerConnectionState : long {
-		Unknown, Connected, Disconnected
+		Unknown,
+		Connected,
+		Disconnected,
 	}
 
 	// NSInteger -> GKVoiceChat.h
@@ -225,32 +231,50 @@ namespace GameKit {
 		Disconnected,
 		Speaking,
 		Silent,
-		Connecting
+		Connecting,
 	}
 
 	// NSInteger -> GKPlayer.h
 	[Native]
 	public enum GKPhotoSize : long {
-		Small, Normal
+		Small,
+		Normal,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedMatchStatus : long {
-		Unknown, Open, Ended, Matching
+		Unknown,
+		Open,
+		Ended,
+		Matching,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedParticipantStatus : long {
-		Unknown, Invited, Declined, Matching, Active, Done
+		Unknown,
+		Invited,
+		Declined,
+		Matching,
+		Active,
+		Done,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedMatchOutcome : long {
-		None, Quit, Won, Lost, Tied, TimeExpired,
-		First, Second, Third, Fourth, CustomRange = 0xff0000
+		None,
+		Quit,
+		Won,
+		Lost,
+		Tied,
+		TimeExpired,
+		First,
+		Second,
+		Third,
+		Fourth,
+		CustomRange = 0xff0000,
 	}
 
 	// NSInteger -> GKChallenge.h
@@ -260,7 +284,7 @@ namespace GameKit {
 		Invalid = 0,
 		Pending,
 		Completed,
-		Declined
+		Declined,
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
@@ -301,7 +325,7 @@ namespace GameKit {
 	public enum GKMatchType : ulong {
 		PeerToPeer,
 		Hosted,
-		TurnBased
+		TurnBased,
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
@@ -310,7 +334,7 @@ namespace GameKit {
 		Active,
 		Complete,
 		Resolved,
-		Canceled
+		Canceled,
 	}
 
 	[Native]

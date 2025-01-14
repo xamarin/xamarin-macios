@@ -53,7 +53,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a field binding. 
 	/// </summary>
-	public ExportData<Field>? ExportFieldData { get; init; }
+	public FieldData<ObjCBindings.Property>? ExportFieldData { get; init; }
 
 	/// <summary>
 	/// True if the property represents a Objc field.
@@ -61,7 +61,7 @@ readonly struct Property : IEquatable<Property> {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
-	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (Field.Notification);
+	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (ObjCBindings.Property.Notification);
 
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
@@ -211,7 +211,7 @@ readonly struct Property : IEquatable<Property> {
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			accessors: accessorCodeChanges) {
-			ExportFieldData = propertySymbol.GetExportData<Field> (),
+			ExportFieldData = propertySymbol.GetFieldData<ObjCBindings.Property> (),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
 		return true;

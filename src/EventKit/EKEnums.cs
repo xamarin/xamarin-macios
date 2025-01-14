@@ -15,7 +15,11 @@ namespace EventKit {
 	/// <summary>Specifies the type of a calendar.</summary>
 	[Native]
 	public enum EKCalendarType : long {
-		Local, CalDav, Exchange, Subscription, Birthday
+		Local,
+		CalDav,
+		Exchange,
+		Subscription,
+		Birthday,
 	}
 
 	// untyped enum -> EKTypes.h
@@ -23,7 +27,11 @@ namespace EventKit {
 	/// <summary>The kind of participant to the event.</summary>
 	[Native]
 	public enum EKParticipantType : long {
-		Unknown, Person, Room, Resource, Group
+		Unknown,
+		Person,
+		Room,
+		Resource,
+		Group,
 	}
 
 	// untyped enum -> EKTypes.h
@@ -31,7 +39,11 @@ namespace EventKit {
 	/// <summary>The role of an <see cref="T:EventKit.EKParticipant" /></summary>
 	[Native]
 	public enum EKParticipantRole : long {
-		Unknown, Required, Optional, Chair, NonParticipant
+		Unknown,
+		Required,
+		Optional,
+		Chair,
+		NonParticipant,
 	}
 
 	// untyped enum -> EKTypes.h
@@ -39,8 +51,14 @@ namespace EventKit {
 	/// <summary>The status of a participant.</summary>
 	[Native]
 	public enum EKParticipantStatus : long {
-		Unknown, Pending, Accepted, Declined,
-		Tentative, Delegated, Completed, InProcess
+		Unknown,
+		Pending,
+		Accepted,
+		Declined,
+		Tentative,
+		Delegated,
+		Completed,
+		InProcess,
 	}
 
 	// untyped enum -> EKError.h
@@ -97,7 +115,12 @@ namespace EventKit {
 	public enum EKDay {
 		NotSet = 0,
 		Sunday = 1,
-		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+		Monday,
+		Tuesday,
+		Wednesday,
+		Thursday,
+		Friday,
+		Saturday,
 	}
 
 	/// <summary>Enumerates the days of the week.</summary>
@@ -119,7 +142,10 @@ namespace EventKit {
 	/// <summary>The recurring frequency for the event.</summary>
 	[Native]
 	public enum EKRecurrenceFrequency : long {
-		Daily, Weekly, Monthly, Yearly
+		Daily,
+		Weekly,
+		Monthly,
+		Yearly,
 	}
 
 	// untyped enum -> EKEventStore.h
@@ -127,7 +153,8 @@ namespace EventKit {
 	/// <summary>Determines how changes to an event will be applied, either it affects a single instance or affects all instances.</summary>
 	[Native]
 	public enum EKSpan : long {
-		ThisEvent, FutureEvents
+		ThisEvent,
+		FutureEvents,
 	}
 
 	// NSUInteger -> EKTypes.h
@@ -139,7 +166,7 @@ namespace EventKit {
 		Busy = 1,
 		Free = 2,
 		Tentative = 4,
-		Unavailable = 8
+		Unavailable = 8,
 	}
 
 	// untyped enum -> EKEvent.h
@@ -148,7 +175,10 @@ namespace EventKit {
 	[Native]
 	public enum EKEventAvailability : long {
 		NotSupported = -1,
-		Busy = 0, Free, Tentative, Unavailable,
+		Busy = 0,
+		Free,
+		Tentative,
+		Unavailable,
 	}
 
 	// untyped enum -> EKEvent.h
@@ -156,7 +186,10 @@ namespace EventKit {
 	/// <summary>The event status.</summary>
 	[Native]
 	public enum EKEventStatus : long {
-		None, Confirmed, Tentative, Cancelled
+		None,
+		Confirmed,
+		Tentative,
+		Cancelled,
 	}
 
 	// untyped enum -> EKTypes.h
@@ -164,14 +197,21 @@ namespace EventKit {
 	/// <summary>An enumeration whose values indicate the type of a <see cref="T:EventKit.EKSource" /> object.</summary>
 	[Native]
 	public enum EKSourceType : long {
-		Local, Exchange, CalDav, MobileMe, Subscribed, Birthdays
+		Local,
+		Exchange,
+		CalDav,
+		MobileMe,
+		Subscribed,
+		Birthdays,
 	}
 
 	// NSInteger -> EKTypes.h
 	/// <summary>An enumeration whose values specify whether an event was raised by entering or leaving a region.</summary>
 	[Native]
 	public enum EKAlarmProximity : long {
-		None, Enter, Leave
+		None,
+		Enter,
+		Leave,
 	}
 
 	// NSUInteger -> EKTypes.h
@@ -180,7 +220,7 @@ namespace EventKit {
 	[Flags]
 	public enum EKEntityMask : ulong {
 		Event = 1 << (int) EKEntityType.Event,
-		Reminder = 1 << (int) EKEntityType.Reminder
+		Reminder = 1 << (int) EKEntityType.Reminder,
 	}
 
 	// NSUInteger -> EKTypes.h
@@ -188,7 +228,7 @@ namespace EventKit {
 	[Native]
 	public enum EKEntityType : ulong {
 		Event,
-		Reminder
+		Reminder,
 	}
 
 #if MONOMAC
@@ -196,7 +236,10 @@ namespace EventKit {
 	// turned into a typed (NSInteger) enum in El Capitan (and also an NSInteger in watchOS)
 	[Native]
 	public enum EKAlarmType : long {
-		Display, Audio, Procedure, Email
+		Display,
+		Audio,
+		Procedure,
+		Email,
 	}
 #endif
 	// NSInteger -> EKEventStore.h
@@ -220,7 +263,7 @@ namespace EventKit {
 		NoPrivileges,
 		DeliveryFailed,
 		CannotDeliver,
-		RecipientNotAllowed
+		RecipientNotAllowed,
 	}
 
 	[Native]
@@ -228,7 +271,7 @@ namespace EventKit {
 		None = 0,
 		High = 1,
 		Medium = 5,
-		Low = 9
+		Low = 9,
 	}
 
 }

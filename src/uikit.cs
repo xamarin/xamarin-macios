@@ -90,13 +90,17 @@ namespace UIKit {
 	[Native] // NSInteger -> UIApplication.h
 	[MacCatalyst (13, 1)]
 	public enum UIBackgroundRefreshStatus : long {
-		Restricted, Denied, Available
+		Restricted,
+		Denied,
+		Available,
 	}
 
 	[MacCatalyst (13, 1)]
 	[Native] // NSUInteger -> UIApplication.h
 	public enum UIBackgroundFetchResult : ulong {
-		NewData, NoData, Failed
+		NewData,
+		NoData,
+		Failed,
 	}
 
 	/// <include file="../docs/api/UIKit/UIApplicationShortcutIconType.xml" path="/Documentation/Docs[@DocId='T:UIKit.UIApplicationShortcutIconType']/*" />
@@ -133,7 +137,7 @@ namespace UIKit {
 		Bookmark,
 		Shuffle,
 		Audio,
-		Update
+		Update,
 	}
 
 	/// <summary>Enumerates the mass of the objects used by the <see cref="T:UIKit.UIImpactFeedbackGenerator" /> class.</summary>
@@ -159,7 +163,7 @@ namespace UIKit {
 	public enum UINotificationFeedbackType : long {
 		Success,
 		Warning,
-		Error
+		Error,
 	}
 
 	[Native]
@@ -1537,9 +1541,11 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIActivity {
 		[Export ("activityType")]
+		[NullAllowed]
 		NSString Type { get; }
 
 		[Export ("activityTitle")]
+		[NullAllowed]
 		string Title { get; }
 
 		[Export ("activityImage")]
@@ -1663,9 +1669,11 @@ namespace UIKit {
 		NativeHandle Constructor (NSObject placeholderItem);
 
 		[Export ("placeholderItem", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSObject PlaceholderItem { get; }
 
 		[Export ("activityType")]
+		[NullAllowed]
 		NSString ActivityType { get; }
 
 		[Export ("item")]
@@ -1698,6 +1706,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("activityViewController:itemForActivityType:")]
+		[return: NullAllowed]
 		NSObject GetItemForActivity (UIActivityViewController activityViewController, [NullAllowed] NSString activityType);
 
 		[Export ("activityViewController:dataTypeIdentifierForActivityType:")]
@@ -1764,6 +1773,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	partial interface UIAlertAction : NSCopying, UIAccessibilityIdentification {
 		[Export ("title")]
+		[NullAllowed]
 		string Title { get; }
 
 		[Export ("style")]
@@ -2018,6 +2028,7 @@ namespace UIKit {
 		IUIStateRestoring RestorationParent { get; }
 
 		[Export ("objectRestorationClass")]
+		[NullAllowed]
 		Class ObjectRestorationClass { get; }
 
 		[Export ("encodeRestorableStateWithCoder:")]
@@ -3146,7 +3157,7 @@ namespace UIKit {
 		AccessibilityExtraExtraLarge,
 
 		[Field ("UIContentSizeCategoryAccessibilityExtraExtraExtraLarge")]
-		AccessibilityExtraExtraExtraLarge
+		AccessibilityExtraExtraExtraLarge,
 	}
 
 	[iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
@@ -3802,6 +3813,7 @@ namespace UIKit {
 
 		[Export ("titleTextAttributesForState:"), Internal]
 		[Appearance]
+		[return: NullAllowed]
 		NSDictionary _GetTitleTextAttributes (UIControlState state);
 
 		[MacCatalyst (13, 1)]
@@ -4159,6 +4171,7 @@ namespace UIKit {
 		NativeHandle Constructor (CGRect frame);
 
 		[Export ("reuseIdentifier", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSString ReuseIdentifier { get; }
 
 		[RequiresSuper]
@@ -5082,6 +5095,7 @@ namespace UIKit {
 		UICollectionElementCategory RepresentedElementCategory { get; }
 
 		[Export ("representedElementKind")]
+		[NullAllowed]
 		string RepresentedElementKind { get; }
 
 		[Static]
@@ -5115,14 +5129,17 @@ namespace UIKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("invalidatedItemIndexPaths")]
+		[NullAllowed]
 		NSIndexPath [] InvalidatedItemIndexPaths { get; }
 
 		[MacCatalyst (13, 1)]
 		[Export ("invalidatedSupplementaryIndexPaths")]
+		[NullAllowed]
 		NSDictionary InvalidatedSupplementaryIndexPaths { get; }
 
 		[MacCatalyst (13, 1)]
 		[Export ("invalidatedDecorationIndexPaths")]
+		[NullAllowed]
 		NSDictionary InvalidatedDecorationIndexPaths { get; }
 
 		[MacCatalyst (13, 1)]
@@ -6066,6 +6083,7 @@ namespace UIKit {
 		bool TranslatesReferenceBoundsIntoBoundary { get; set; }
 
 		[Export ("boundaryIdentifiers", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSObject [] BoundaryIdentifiers { get; }
 
 		[Export ("collisionDelegate", ArgumentSemantic.Assign), NullAllowed]
@@ -6137,6 +6155,7 @@ namespace UIKit {
 		string LocalizedName { get; }
 
 		[Export ("fileType", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string FileType { get; }
 
 		[Export ("fileModificationDate", ArgumentSemantic.Copy)]
@@ -6165,6 +6184,7 @@ namespace UIKit {
 		bool LoadFromContents (NSObject contents, [NullAllowed] string typeName, out NSError outError);
 
 		[Export ("contentsForType:error:")]
+		[return: NullAllowed]
 		NSObject ContentsForType (string typeName, out NSError outError);
 
 		[Export ("disableEditing")]
@@ -6197,6 +6217,7 @@ namespace UIKit {
 		void AutoSave ([NullAllowed] UIOperationHandler completionHandler);
 
 		[Export ("savingFileType")]
+		[NullAllowed]
 		string SavingFileType { get; }
 
 		[Export ("fileNameExtensionForType:saveOperation:")]
@@ -6209,6 +6230,7 @@ namespace UIKit {
 		bool WriteContents (NSObject contents, NSUrl toUrl, UIDocumentSaveOperation saveOperation, [NullAllowed] NSUrl originalContentsURL, out NSError outError);
 
 		[Export ("fileAttributesToWriteToURL:forSaveOperation:error:")]
+		[return: NullAllowed]
 		NSDictionary GetFileAttributesToWrite (NSUrl forUrl, UIDocumentSaveOperation saveOperation, out NSError outError);
 
 		[Export ("readFromURL:error:")]
@@ -6765,6 +6787,7 @@ namespace UIKit {
 		UIFontDescriptorSymbolicTraits SymbolicTraits { get; }
 
 		[Export ("objectForKey:")]
+		[return: NullAllowed]
 		NSObject GetObject (NSString anAttribute);
 
 		[Export ("fontAttributes")]
@@ -9229,16 +9252,20 @@ namespace UIKit {
 		UIEventButtonMask ButtonMask { get; }
 
 		[Export ("allTouches")]
+		[NullAllowed]
 		NSSet AllTouches { get; }
 
 		[Export ("touchesForView:")]
+		[return: NullAllowed]
 		NSSet TouchesForView (UIView view);
 
 		[Export ("touchesForWindow:")]
+		[return: NullAllowed]
 		NSSet TouchesForWindow (UIWindow window);
 
 
 		[Export ("touchesForGestureRecognizer:")]
+		[return: NullAllowed]
 		NSSet TouchesForGestureRecognizer (UIGestureRecognizer window);
 
 		[MacCatalyst (13, 1)]
@@ -9460,6 +9487,7 @@ namespace UIKit {
 		UIControlEvent AllControlEvents { get; }
 
 		[Export ("actionsForTarget:forControlEvent:")]
+		[return: NullAllowed]
 		string [] GetActions ([NullAllowed] NSObject target, UIControlEvent events);
 
 		[TV (14, 0), iOS (14, 0)]
@@ -9823,6 +9851,7 @@ namespace UIKit {
 		void SetBackgroundImage ([NullAllowed] UIImage image, UIControlState forState);
 
 		[Export ("titleForState:")]
+		[return: NullAllowed]
 		string Title (UIControlState state);
 
 		[Export ("titleColorForState:")]
@@ -9842,6 +9871,7 @@ namespace UIKit {
 		UIImage BackgroundImageForState (UIControlState state);
 
 		[Export ("currentTitle", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		string CurrentTitle { get; }
 
 		[Export ("currentTitleColor", ArgumentSemantic.Retain)]
@@ -9898,12 +9928,14 @@ namespace UIKit {
 		// 6.0
 		//
 		[Export ("currentAttributedTitle", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSAttributedString CurrentAttributedTitle { get; }
 
 		[Export ("setAttributedTitle:forState:")]
 		void SetAttributedTitle ([NullAllowed] NSAttributedString title, UIControlState state);
 
 		[Export ("attributedTitleForState:")]
+		[return: NullAllowed]
 		NSAttributedString GetAttributedTitle (UIControlState state);
 
 		[Appearance]
@@ -10361,6 +10393,7 @@ namespace UIKit {
 		void PlayInputClick ();
 
 		[Export ("identifierForVendor", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSUuid IdentifierForVendor { get; }
 	}
 
@@ -10368,6 +10401,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIDictationPhrase {
 		[Export ("alternativeInterpretations")]
+		[NullAllowed]
 		string [] AlternativeInterpretations { get; }
 
 		[Export ("text")]
@@ -10516,6 +10550,7 @@ namespace UIKit {
 		bool IsSourceTypeAvailable (UIImagePickerControllerSourceType sourceType);
 
 		[Export ("availableMediaTypesForSourceType:"), Static]
+		[return: NullAllowed]
 		string [] AvailableMediaTypes (UIImagePickerControllerSourceType sourceType);
 
 		// This is the foundation to implement both id <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
@@ -10564,6 +10599,7 @@ namespace UIKit {
 
 		[Static]
 		[Export ("availableCaptureModesForCameraDevice:")]
+		[return: NullAllowed]
 		NSNumber [] AvailableCaptureModesForCameraDevice (UIImagePickerControllerCameraDevice cameraDevice);
 
 		[Export ("cameraDevice")]
@@ -10686,6 +10722,7 @@ namespace UIKit {
 		bool ReadAdditionalContent (NSUrl absoluteURL, out NSError error);
 
 		[Export ("additionalContentForURL:error:")]
+		[return: NullAllowed]
 		NSObject AdditionalContent (NSUrl absoluteURL, out NSError error);
 
 		[Export ("writeAdditionalContent:toURL:originalContentsURL:error:")]
@@ -11618,9 +11655,11 @@ namespace UIKit {
 		bool Contains (string [] pasteboardTypes);
 
 		[Export ("dataForPasteboardType:")]
+		[return: NullAllowed]
 		NSData DataForPasteboardType (string pasteboardType);
 
 		[Export ("valueForPasteboardType:")]
+		[return: NullAllowed]
 		NSObject GetValue (string pasteboardType);
 
 		[Export ("setValue:forPasteboardType:")]
@@ -11644,14 +11683,17 @@ namespace UIKit {
 		bool Contains (string [] pasteboardTypes, [NullAllowed] NSIndexSet itemSet);
 
 		[Export ("itemSetWithPasteboardTypes:")]
+		[return: NullAllowed]
 		NSIndexSet ItemSetWithPasteboardTypes (string [] pasteboardTypes);
 
 		[Export ("valuesForPasteboardType:inItemSet:")]
-		NSData [] GetValuesForPasteboardType (string pasteboardType, NSIndexSet itemSet);
+		[return: NullAllowed]
+		NSData [] GetValuesForPasteboardType (string pasteboardType, [NullAllowed] NSIndexSet itemSet);
 
 
 		[Export ("dataForPasteboardType:inItemSet:")]
-		NSData [] GetDataForPasteboardType (string pasteboardType, NSIndexSet itemSet);
+		[return: NullAllowed]
+		NSData [] GetDataForPasteboardType (string pasteboardType, [NullAllowed] NSIndexSet itemSet);
 
 		[Export ("items", ArgumentSemantic.Copy)]
 		NSDictionary [] Items { get; set; }
@@ -11932,6 +11974,7 @@ namespace UIKit {
 		nfloat GetComponentWidth (UIPickerView pickerView, nint component);
 
 		[Export ("pickerView:titleForRow:forComponent:")]
+		[return: NullAllowed]
 		string GetTitle (UIPickerView pickerView, nint row, nint component);
 
 		[Export ("pickerView:viewForRow:forComponent:reusingView:")]
@@ -11953,9 +11996,11 @@ namespace UIKit {
 	[BaseType (typeof (UIPickerViewDelegate))]
 	interface UIPickerViewAccessibilityDelegate {
 		[Export ("pickerView:accessibilityLabelForComponent:")]
+		[return: NullAllowed]
 		string GetAccessibilityLabel (UIPickerView pickerView, nint acessibilityLabelForComponent);
 
 		[Export ("pickerView:accessibilityHintForComponent:")]
+		[return: NullAllowed]
 		string GetAccessibilityHint (UIPickerView pickerView, nint component);
 
 		[MacCatalyst (13, 1)]
@@ -12375,6 +12420,7 @@ namespace UIKit {
 		void ClearTextInputContextIdentifier (NSString identifier);
 
 		[Export ("targetForAction:withSender:")]
+		[return: NullAllowed]
 		NSObject GetTargetForAction (Selector action, [NullAllowed] NSObject sender);
 
 		[iOS (13, 0), TV (13, 0)]
@@ -12388,6 +12434,7 @@ namespace UIKit {
 		void ValidateCommand (UICommand command);
 
 		[Export ("textInputContextIdentifier")]
+		[NullAllowed]
 		NSString TextInputContextIdentifier { get; }
 
 		[Export ("textInputMode")]
@@ -12627,6 +12674,7 @@ namespace UIKit {
 		nfloat Scale { get; }
 
 		[Export ("displayLinkWithTarget:selector:")]
+		[return: NullAllowed]
 		CADisplayLink CreateDisplayLink (NSObject target, Selector sel);
 
 		[MacCatalyst (13, 1)]
@@ -13031,6 +13079,7 @@ namespace UIKit {
 	[BaseType (typeof (UIScrollViewDelegate))]
 	interface UIScrollViewAccessibilityDelegate {
 		[Export ("accessibilityScrollStatusForScrollView:")]
+		[return: NullAllowed]
 		string GetAccessibilityScrollStatus (UIScrollView scrollView);
 
 		[MacCatalyst (13, 1)]
@@ -13180,6 +13229,7 @@ namespace UIKit {
 
 		[Export ("scopeBarButtonTitleTextAttributesForState:"), Internal]
 		[Appearance]
+		[return: NullAllowed]
 		NSDictionary _GetScopeBarButtonTitleTextAttributes (UIControlState state);
 
 		[Appearance]
@@ -13653,6 +13703,7 @@ namespace UIKit {
 		void SetTitle (string title, nint segment);
 
 		[Export ("titleForSegmentAtIndex:")]
+		[return: NullAllowed]
 		string TitleAt (nint segment);
 
 		[Export ("setImage:forSegmentAtIndex:")]
@@ -14872,9 +14923,11 @@ namespace UIKit {
 		nint NumberOfSections (UITableView tableView);
 
 		[Export ("tableView:titleForHeaderInSection:")]
+		[return: NullAllowed]
 		string TitleForHeader (UITableView tableView, nint section);
 
 		[Export ("tableView:titleForFooterInSection:")]
+		[return: NullAllowed]
 		string TitleForFooter (UITableView tableView, nint section);
 
 		[Export ("tableView:canEditRowAtIndexPath:")]
@@ -14885,6 +14938,7 @@ namespace UIKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("sectionIndexTitlesForTableView:")]
+		[return: NullAllowed]
 		string [] SectionIndexTitles (UITableView tableView);
 
 		[MacCatalyst (13, 1)]
@@ -14919,9 +14973,11 @@ namespace UIKit {
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:willSelectRowAtIndexPath:")]
+		[return: NullAllowed]
 		NSIndexPath WillSelectRow (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:willDeselectRowAtIndexPath:")]
+		[return: NullAllowed]
 		NSIndexPath WillDeselectRow (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:didSelectRowAtIndexPath:")]
@@ -14936,6 +14992,7 @@ namespace UIKit {
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("tableView:titleForDeleteConfirmationButtonForRowAtIndexPath:")]
+		[return: NullAllowed]
 		string TitleForDeleteConfirmation (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:shouldIndentWhileEditingRowAtIndexPath:")]
@@ -15198,6 +15255,7 @@ namespace UIKit {
 		UIView SelectedBackgroundView { get; set; }
 
 		[Export ("reuseIdentifier", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSString ReuseIdentifier { get; }
 
 		[RequiresSuper]
@@ -15341,9 +15399,11 @@ namespace UIKit {
 		nint NumberOfSections (UITableView tableView);
 
 		[Export ("tableView:titleForHeaderInSection:")]
+		[return: NullAllowed]
 		string TitleForHeader (UITableView tableView, nint section);
 
 		[Export ("tableView:titleForFooterInSection:")]
+		[return: NullAllowed]
 		string TitleForFooter (UITableView tableView, nint section);
 
 		[Export ("tableView:canEditRowAtIndexPath:")]
@@ -15354,6 +15414,7 @@ namespace UIKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("sectionIndexTitlesForTableView:")]
+		[return: NullAllowed]
 		string [] SectionIndexTitles (UITableView tableView);
 
 		[MacCatalyst (13, 1)]
@@ -15397,9 +15458,11 @@ namespace UIKit {
 		void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:willSelectRowAtIndexPath:")]
+		[return: NullAllowed]
 		NSIndexPath WillSelectRow (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:willDeselectRowAtIndexPath:")]
+		[return: NullAllowed]
 		NSIndexPath WillDeselectRow (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:didSelectRowAtIndexPath:")]
@@ -15414,6 +15477,7 @@ namespace UIKit {
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("tableView:titleForDeleteConfirmationButtonForRowAtIndexPath:")]
+		[return: NullAllowed]
 		string TitleForDeleteConfirmation (UITableView tableView, NSIndexPath indexPath);
 
 		[Export ("tableView:shouldIndentWhileEditingRowAtIndexPath:")]
@@ -15662,6 +15726,7 @@ namespace UIKit {
 		UIView BackgroundView { get; set; }
 
 		[Export ("reuseIdentifier", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSString ReuseIdentifier { get; }
 
 		[DesignatedInitializer]
@@ -18911,9 +18976,11 @@ namespace UIKit {
 		NSRange RangeOfMisspelledWordInString (string stringToCheck, NSRange range, nint startingOffset, bool wrapFlag, string language);
 
 		[Export ("guessesForWordRange:inString:language:")]
+		[return: NullAllowed]
 		string [] GuessesForWordRange (NSRange range, string str, string language);
 
 		[Export ("completionsForPartialWordRange:inString:language:")]
+		[return: NullAllowed]
 		string [] CompletionsForPartialWordRange (NSRange range, string str, string language);
 
 		[Export ("ignoreWord:")]
@@ -19849,6 +19916,7 @@ namespace UIKit {
 		UITextInputMode CurrentInputMode { get; }
 
 		[Export ("primaryLanguage", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		string PrimaryLanguage { get; }
 
 		[Field ("UITextInputCurrentInputModeDidChangeNotification")]
@@ -19875,12 +19943,14 @@ namespace UIKit {
 		string DisplayName { get; }
 
 		[Export ("displayLocation")]
+		[NullAllowed]
 		string DisplayLocation { get; }
 
 		[Export ("supportedJobTypes")]
 		UIPrinterJobTypes SupportedJobTypes { get; }
 
 		[Export ("makeAndModel")]
+		[NullAllowed]
 		string MakeAndModel { get; }
 
 		[Export ("supportsColor")]
@@ -20394,6 +20464,7 @@ namespace UIKit {
 	[DesignatedDefaultCtor]
 	interface UIMotionEffect : NSCoding, NSCopying {
 		[Export ("keyPathsAndRelativeValuesForViewerOffset:")]
+		[return: NullAllowed]
 		NSDictionary ComputeKeyPathsAndRelativeValues (UIOffset viewerOffset);
 	}
 
@@ -20661,10 +20732,12 @@ namespace UIKit {
 	partial interface UITextDocumentProxy : UIKeyInput {
 		[Abstract]
 		[Export ("documentContextBeforeInput")]
+		[NullAllowed]
 		string DocumentContextBeforeInput { get; }
 
 		[Abstract]
 		[Export ("documentContextAfterInput")]
+		[NullAllowed]
 		string DocumentContextAfterInput { get; }
 
 		[Abstract]
@@ -21230,10 +21303,12 @@ namespace UIKit {
 	interface UICollectionViewFocusUpdateContext {
 
 		[Export ("previouslyFocusedIndexPath", ArgumentSemantic.Strong)]
-		NSIndexPath PreviouslyFocusedIndexPath { [return: NullAllowed] get; }
+		[NullAllowed]
+		NSIndexPath PreviouslyFocusedIndexPath { get; }
 
 		[Export ("nextFocusedIndexPath", ArgumentSemantic.Strong)]
-		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
+		[NullAllowed]
+		NSIndexPath NextFocusedIndexPath { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -21590,10 +21665,12 @@ namespace UIKit {
 	interface UITableViewFocusUpdateContext {
 
 		[Export ("previouslyFocusedIndexPath", ArgumentSemantic.Strong)]
-		NSIndexPath PreviouslyFocusedIndexPath { [return: NullAllowed] get; }
+		[NullAllowed]
+		NSIndexPath PreviouslyFocusedIndexPath { get; }
 
 		[Export ("nextFocusedIndexPath", ArgumentSemantic.Strong)]
-		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
+		[NullAllowed]
+		NSIndexPath NextFocusedIndexPath { get; }
 	}
 
 	[NoiOS]

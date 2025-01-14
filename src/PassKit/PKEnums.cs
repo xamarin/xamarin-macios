@@ -31,7 +31,7 @@ namespace PassKit {
 		InvalidData = 1,
 		UnsupportedVersion,
 		InvalidSignature,
-		NotEntitled
+		NotEntitled,
 	}
 
 	// NSInteger -> PKPassLibrary.h
@@ -41,7 +41,7 @@ namespace PassKit {
 	public enum PKPassLibraryAddPassesStatus : long {
 		DidAddPasses,
 		ShouldReviewPasses,
-		DidCancelAddPasses
+		DidCancelAddPasses,
 	}
 
 	/// <summary>Enumeration of pass types (whether a pass is a barcode or presents a payment card).</summary>
@@ -88,7 +88,7 @@ namespace PassKit {
 		[MacCatalyst (13, 1)]
 		PinIncorrect,
 		[MacCatalyst (13, 1)]
-		PinLockout
+		PinLockout,
 	}
 
 	/// <summary>Enumeration of valid states of a <see cref="T:PassKit.PKPaymentPass" /> payment card.</summary>
@@ -98,7 +98,11 @@ namespace PassKit {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Native]
 	public enum PKPaymentPassActivationState : ulong {
-		Activated, RequiresActivation, Activating, Suspended, Deactivated
+		Activated,
+		RequiresActivation,
+		Activating,
+		Suspended,
+		Deactivated,
 	}
 
 	[iOS (13, 4)]
@@ -138,7 +142,7 @@ namespace PassKit {
 		Email = 1 << 2,
 		[MacCatalyst (13, 1)]
 		Name = 1 << 3,
-		All = PostalAddress | Phone | Email | Name
+		All = PostalAddress | Phone | Email | Name,
 	}
 
 	/// <summary>Enumerates available styles for <see cref="T:PassKit.PKPaymentButton" /> objects.</summary>
@@ -229,7 +233,7 @@ namespace PassKit {
 	public enum PKAddPaymentPassError : long {
 		Unsupported,
 		UserCancelled,
-		SystemCancelled
+		SystemCancelled,
 	}
 
 	/// <summary>Enumerates results that are used in calls to <see cref="M:PassKit.PKPassLibrary.RequestAutomaticPassPresentationSuppression(System.Action{PassKit.PKAutomaticPassPresentationSuppressionResult})" />.</summary>
@@ -241,7 +245,7 @@ namespace PassKit {
 		AlreadyPresenting,
 		Denied,
 		Cancelled,
-		Success
+		Success,
 	}
 
 	/// <summary>Enumerates the types of cards available to Apple Pay.</summary>
@@ -261,7 +265,7 @@ namespace PassKit {
 	[Native]
 	public enum PKPaymentSummaryItemType : ulong {
 		Final,
-		Pending
+		Pending,
 	}
 
 	/// <summary>Enumerates Pass Button styles.</summary>
@@ -270,7 +274,7 @@ namespace PassKit {
 	[Native]
 	public enum PKAddPassButtonStyle : long {
 		Black = 0,
-		Outline
+		Outline,
 	}
 
 	/// <summary>Enumerates error conditions for payment operations.</summary>

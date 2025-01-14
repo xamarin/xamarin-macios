@@ -212,7 +212,7 @@ readonly struct CodeChanges {
 		//    2. Exported properties
 		if (propertyDeclarationSyntax.Modifiers.Any (SyntaxKind.PartialKeyword)) {
 			return !propertyDeclarationSyntax.HasAtLeastOneAttribute (semanticModel,
-				AttributesNames.ExportFieldAttribute, AttributesNames.ExportPropertyAttribute);
+				AttributesNames.FieldPropertyAttribute, AttributesNames.ExportPropertyAttribute);
 		}
 
 		return true;

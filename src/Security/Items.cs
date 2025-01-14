@@ -55,7 +55,7 @@ namespace Security {
 		GenericPassword,
 		Certificate,
 		Key,
-		Identity
+		Identity,
 	}
 
 	// manually mapped to KeysAccessible
@@ -89,14 +89,42 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #endif
 		AlwaysThisDeviceOnly,
-		WhenPasscodeSetThisDeviceOnly
+		WhenPasscodeSetThisDeviceOnly,
 	}
 
 	public enum SecProtocol {
 		Invalid = -1,
-		Ftp, FtpAccount, Http, Irc, Nntp, Pop3, Smtp, Socks, Imap, Ldap, AppleTalk, Afp, Telnet, Ssh,
-		Ftps, Https, HttpProxy, HttpsProxy, FtpProxy, Smb, Rtsp, RtspProxy, Daap, Eppc, Ipp,
-		Nntps, Ldaps, Telnets, Imaps, Ircs, Pop3s,
+		Ftp,
+		FtpAccount,
+		Http,
+		Irc,
+		Nntp,
+		Pop3,
+		Smtp,
+		Socks,
+		Imap,
+		Ldap,
+		AppleTalk,
+		Afp,
+		Telnet,
+		Ssh,
+		Ftps,
+		Https,
+		HttpProxy,
+		HttpsProxy,
+		FtpProxy,
+		Smb,
+		Rtsp,
+		RtspProxy,
+		Daap,
+		Eppc,
+		Ipp,
+		Nntps,
+		Ldaps,
+		Telnets,
+		Imaps,
+		Ircs,
+		Pop3s,
 	}
 
 	public enum SecAuthenticationType {
