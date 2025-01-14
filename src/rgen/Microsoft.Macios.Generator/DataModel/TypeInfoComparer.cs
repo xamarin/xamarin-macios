@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class MethodReturnTypeComparer : IComparer<ReturnType> {
+class TypeInfoComparer : IComparer<TypeInfo> {
 
 	/// <inheritdoc/>
-	public int Compare (ReturnType x, ReturnType y)
+	public int Compare (TypeInfo x, TypeInfo y)
 	{
-		var returnTypeComparison = String.Compare (x.Type, y.Type, StringComparison.Ordinal);
+		var returnTypeComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
 		if (returnTypeComparison != 0)
 			return returnTypeComparison;
 		var isNullableComparison = x.IsNullable.CompareTo (y.IsNullable);

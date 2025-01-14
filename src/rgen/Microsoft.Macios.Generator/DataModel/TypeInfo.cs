@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
-using System.Data;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Extensions;
@@ -12,12 +11,12 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly structure that represents a change in a method return type.
 /// </summary>
-readonly struct ReturnType : IEquatable<ReturnType> {
+readonly struct TypeInfo : IEquatable<TypeInfo> {
 
 	/// <summary>
 	/// Type of the parameter.
 	/// </summary>
-	public string Type { get; }
+	public string Name { get; }
 
 	/// <summary>
 	/// True if the parameter is nullable.
@@ -76,18 +75,18 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		init => interfaces = value;
 	}
 
-	internal ReturnType (string type)
+	internal TypeInfo (string name)
 	{
-		Type = type;
-		IsVoid = type == "void";
+		Name = name;
+		IsVoid = name == "void";
 	}
 
-	internal ReturnType (string type,
+	internal TypeInfo (string name,
 		bool isNullable = false,
 		bool isBlittable = false,
 		bool isSmartEnum = false,
 		bool isArray = false,
-		bool isReferenceType = false) : this (type)
+		bool isReferenceType = false) : this (name)
 	{
 		IsNullable = isNullable;
 		IsBlittable = isBlittable;
@@ -96,7 +95,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 		IsReferenceType = isReferenceType;
 	}
 
-	internal ReturnType (ITypeSymbol symbol) :
+	internal TypeInfo (ITypeSymbol symbol) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
@@ -115,9 +114,9 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 	}
 
 	/// <inheritdoc/>
-	public bool Equals (ReturnType other)
+	public bool Equals (TypeInfo other)
 	{
-		if (Type != other.Type)
+		if (Name != other.Name)
 			return false;
 		if (IsNullable != other.IsNullable)
 			return false;
@@ -145,21 +144,21 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 	/// <inheritdoc/>
 	public override bool Equals (object? obj)
 	{
-		return obj is ReturnType other && Equals (other);
+		return obj is TypeInfo other && Equals (other);
 	}
 
 	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Type, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
+		return HashCode.Combine (Name, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
 	}
 
-	public static bool operator == (ReturnType left, ReturnType right)
+	public static bool operator == (TypeInfo left, TypeInfo right)
 	{
 		return left.Equals (right);
 	}
 
-	public static bool operator != (ReturnType left, ReturnType right)
+	public static bool operator != (TypeInfo left, TypeInfo right)
 	{
 		return !left.Equals (right);
 	}
@@ -168,7 +167,7 @@ readonly struct ReturnType : IEquatable<ReturnType> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("{");
-		sb.Append ($"Type: {Type}, ");
+		sb.Append ($"Type: {Name}, ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
 		sb.Append ($"IsBlittable: {IsBlittable}, ");
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");

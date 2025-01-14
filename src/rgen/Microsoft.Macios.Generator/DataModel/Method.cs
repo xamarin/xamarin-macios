@@ -29,7 +29,7 @@ readonly struct Method : IEquatable<Method> {
 	/// <summary>
 	/// Method return type.
 	/// </summary>
-	public ReturnType ReturnType { get; }
+	public TypeInfo ReturnType { get; }
 
 	/// <summary>
 	/// The platform availability of the method.
@@ -56,7 +56,7 @@ readonly struct Method : IEquatable<Method> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, ReturnType returnType,
+	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
 		ImmutableArray<AttributeCodeChange> attributes,

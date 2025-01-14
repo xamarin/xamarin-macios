@@ -6,23 +6,23 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class MethodReturnTypeComparerTests {
+public class TypeInfoComparerTests {
 
-	MethodReturnTypeComparer compare = new ();
+	TypeInfoComparer compare = new ();
 
 	[Fact]
 	public void CompareDiffReturnType ()
 	{
-		var x = new ReturnType ("string");
-		var y = new ReturnType ("int");
-		Assert.Equal (String.Compare (x.Type, y.Type, StringComparison.Ordinal), compare.Compare (x, y));
+		var x = new TypeInfo ("string");
+		var y = new TypeInfo ("int");
+		Assert.Equal (String.Compare (x.Name, y.Name, StringComparison.Ordinal), compare.Compare (x, y));
 	}
 
 	[Fact]
 	public void CompareDiffNullable ()
 	{
-		var x = new ReturnType (
-			type: "void",
+		var x = new TypeInfo (
+			name: "void",
 			isNullable: true,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -30,8 +30,8 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new ReturnType (
-			type: "void",
+		var y = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -44,8 +44,8 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffBlittable ()
 	{
-		var x = new ReturnType (
-			type: "void",
+		var x = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: true,
 			isSmartEnum: false,
@@ -53,8 +53,8 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new ReturnType (
-			type: "void",
+		var y = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -67,8 +67,8 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffSmartEnum ()
 	{
-		var x = new ReturnType (
-			type: "void",
+		var x = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: true,
@@ -76,8 +76,8 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new ReturnType (
-			type: "void",
+		var y = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -90,8 +90,8 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffIsArray ()
 	{
-		var x = new ReturnType (
-			type: "void",
+		var x = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -99,8 +99,8 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: false
 		);
 
-		var y = new ReturnType (
-			type: "void",
+		var y = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -113,8 +113,8 @@ public class MethodReturnTypeComparerTests {
 	[Fact]
 	public void CompareDiffIsReference ()
 	{
-		var x = new ReturnType (
-			type: "void",
+		var x = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -122,8 +122,8 @@ public class MethodReturnTypeComparerTests {
 			isReferenceType: true
 		);
 
-		var y = new ReturnType (
-			type: "void",
+		var y = new TypeInfo (
+			name: "void",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,

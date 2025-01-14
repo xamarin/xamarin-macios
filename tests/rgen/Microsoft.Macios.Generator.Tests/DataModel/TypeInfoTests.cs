@@ -13,7 +13,7 @@ using Xunit;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class ReturnTypeTests : BaseGeneratorTestClass {
+public class TypeInfoTests : BaseGeneratorTestClass {
 
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
