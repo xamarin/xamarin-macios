@@ -62,8 +62,7 @@ ifeq ($(XCODE_IS_STABLE),true)
 DOTNET_FLAGS+=/define:XCODE_IS_STABLE
 endif
 
-DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
-DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
+DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 
@@ -94,6 +93,12 @@ CSC_WARNINGS_TO_FIX=108,219,618,114,414,1635,3021,4014
 # We (will) post-process xml documentation to add missing members, so
 # we can ignore this warning.
 CSC_WARNINGS_TO_FIX:=$(CSC_WARNINGS_TO_FIX),1591
+
+# warning CS8981: The type name 'nfloat' only contains lower-cased ascii characters. Such names may become reserved for the language.
+CSC_WARNINGS_TO_FIX:=$(CSC_WARNINGS_TO_FIX),CS8981
+
+# availability warnings, need to fix https://github.com/xamarin/xamarin-macios/pull/21185 to stop ignoring this.
+CSC_WARNINGS_TO_FIX:=$(CSC_WARNINGS_TO_FIX),CA1416,CA1422
 
 WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX)
 CORE_WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX),$(BGEN_WARNINGS_TO_FIX)
@@ -343,8 +348,18 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $
 ### .NET ###
 
 include $(TOP)/scripts/generate-sourcelink-json/fragment.mk
+include $(TOP)/scripts/rsp-to-csproj/fragment.mk
 
 define BuildDotNetIntermediateAssembly
+
+CORE_$(1)_CSPROJ = $(DOTNET_BUILD_DIR)/$(1)/csproj/core/Core.$(1).csproj
+CSPROJECTS += $$(CORE_$(1)_CSPROJ)
+$$(CORE_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp $(RSP_TO_CSPROJ)
+	$$(Q) rm -f $$@
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $$<) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
 rsp:: $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp
 $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) echo \
@@ -383,6 +398,14 @@ $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp: Makefile frameworks.sources | $
 		> $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
+APIDEFINITION_$(1)_CSPROJ = $(DOTNET_BUILD_DIR)/$(1)/csproj/api/ApiDefinition.$(1).csproj
+CSPROJECTS += $$(APIDEFINITION_$(1)_CSPROJ)
+$$(APIDEFINITION_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp $(RSP_TO_CSPROJ)
+	$$(Q) rm -f $$@
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $$<) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
 $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES)
 	$$(Q_GEN) $(DOTNET_CSC) $(DOTNET_FLAGS) @$$<
 
@@ -392,7 +415,7 @@ $(3)-apidefinition: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
 	$$(Q_DOTNET_GEN) $$< @$($(2)_DOTNET_BUILD_DIR)/$(3).rsp
 
-$($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator Makefile.rgenerator frameworks.sources $(ROSLYN_GENERATOR) $(ROSLYN_ANALYZER) $(DOTNET_COMPILER) | $($(2)_DOTNET_BUILD_DIR)
+$($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator Makefile.rgenerator frameworks.sources $(ROSLYN_GENERATOR) $(ROSLYN_ANALYZER) | $($(2)_DOTNET_BUILD_DIR)
 	$(Q) echo \
 		$($(2)_GENERATOR_FLAGS) \
 		$(DOTNET_GENERATOR_FLAGS) \
@@ -487,6 +510,16 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 
+ifeq ($(4),64)
+PLATFORM_$(1)_CSPROJ = $(DOTNET_BUILD_DIR)/$(1)/platform/Microsoft.$(1).csproj
+CSPROJECTS += $$(PLATFORM_$(1)_CSPROJ)
+$$(PLATFORM_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp Makefile $(RSP_TO_CSPROJ) $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp
+	$$(Q) rm -f $$@
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+endif
+
 rsp:: $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp
 
 $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp: Makefile | $($(2)_DOTNET_BUILD_DIR)
@@ -571,11 +604,6 @@ $(SHARED_PATH)/Delegates.generated.cs: $(SHARED_PATH)/Delegates.cs.t4 $(SHARED_P
 $(COMMON_TARGET_DIRS):
 	$(Q) mkdir -p $@
 
-$(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
-	$(Q) echo "#!/bin/zsh -e" > $@
-	$(Q) echo "exec $(DOTNET_CSC) $(DOTNET_FLAGS) \"\$$@\"" >> $@
-	$(Q) chmod +x $@
-
 DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/dotnet/bin/Debug/$(DOTNET_TFM)/generate-frameworks-constants.dll
 
 $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
@@ -587,29 +615,36 @@ $(DOTNET_BUILD_DIR)/%/Constants.generated.cs: Makefile $(DOTNET_GENERATE_FRAMEWO
 	$(Q) $(DOTNET) $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS) "$*" "$@.tmp"
 	$(Q) mv "$@.tmp" "$@"
 
+# This target builds all the generated project files. It's not really useful by itself,
+# except to validate that the csproj files actually work.
+build-csproj: $(CSPROJECTS) $(foreach platform,$(DOTNET_PLATFORMS),$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES))
+	$(Q) set -e; \
+	for csproj in $(CSPROJECTS); do \
+		echo "Building $$csproj..."; \
+		$(DOTNET) build $$csproj /bl:"$$(dirname $$csproj)/$$(basename -s .csproj $$csproj).binlog" $(DOTNET_BUILD_VERBOSITY); \
+		echo "Built $$csproj successfully."; \
+	done
+
+# This targets runs 'dotnet format' on the generated project files.
+format-csproj: $(CSPROJECTS) $(foreach platform,$(DOTNET_PLATFORMS),$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES))
+	$(Q) set -e; \
+	for csproj in $(CSPROJECTS); do \
+		echo "Formatting $$csproj..."; \
+		$(DOTNET) format whitespace $$csproj; \
+		echo "Formatted $$csproj successfully."; \
+	done
+
+csproj:: $(CSPROJECTS)
+ALL_TARGETS += $(CSPROJECTS)
+
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)
 
 $(DOTNET_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
-define DotNetProjectFiles
-$(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj: dotnet.tmpl.csproj Makefile $$(wildcard $(CURDIR)/*.sources)
-	@mkdir -p $$(dir $$@)
-	@sed \
-		-e 's*%DOTNET_TFM%*$(DOTNET_TFM)*' \
-		-e 's*%PLATFORM%*$(1)*' \
-		-e 's*<!--%FILES%-->*$$(foreach file,$$($(2)_DOTNET_SOURCES),<Compile Include="../../../../$$(file)" Link="sources/$$(file)" />)*' \
-		-e 's*<!--%APIS%-->*$$(foreach file,$$($(2)_DOTNET_APIS),<None Include="../../../../$$(file)" Link="apis/$$(file)" />)*' \
-		$$< | xmllint --format - > $$@
-PROJECT_FILES += $(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj
-endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetProjectFiles,$(platform),$(shell echo $(platform) | tr '[:lower:]' '[:upper:]'))))
-
 dotnet: $(DOTNET_TARGETS)
 all-local:: $(DOTNET_TARGETS)
-
-project-files: $(PROJECT_FILES)
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
