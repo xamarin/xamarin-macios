@@ -162,7 +162,7 @@ namespace XmlDocumentation {
 	/// <summary>Summary for OptionKeys.</summary>
 	[Static]
 	interface OptionKeys {
-	/// <summary>Summary for Option1Key.</summary>
+		/// <summary>Summary for Option1Key.</summary>
 		[Field ("Option1Key", "TheLibrary")]
 		NSString Option1 { get; }
 	}
