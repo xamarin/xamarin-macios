@@ -298,7 +298,7 @@ public class EnumMemberCodeChangesTests {
 				availabilityEnum,
 				"{ Name: 'EnumValue' SymbolAvailability: [{ Platform: 'iOS', Supported: '0.0', Unsupported: [], Obsoleted: [] }] FieldInfo: FieldData = { SymbolName: 'x' LibraryName: 'libName', Flags: 'Default' }, LibraryName = Test, LibraryPath = /path/to/library Attributes: [] }"
 			];
-			
+
 			var attrsEnum = new EnumMember (
 				name: "EnumValue",
 				libraryName: "Test",
@@ -320,10 +320,10 @@ public class EnumMemberCodeChangesTests {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToString))]
+	[ClassData (typeof (TestDataToString))]
 	void TestFieldDataToString (EnumMember x, string expected)
 	{
-		var str = x.ToString ();	
+		var str = x.ToString ();
 		Assert.Equal (expected, x.ToString ());
 	}
 

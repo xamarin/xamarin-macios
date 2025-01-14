@@ -12,7 +12,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// </summary>
 readonly struct FieldInfo<T> : IEquatable<FieldInfo<T>> where T : Enum {
 
-	
+
 	/// <summary>
 	/// Name of the library that contains the smart enum definition.
 	/// </summary>
@@ -22,7 +22,7 @@ readonly struct FieldInfo<T> : IEquatable<FieldInfo<T>> where T : Enum {
 	/// Path of the library that contains the smart enum definition.
 	/// </summary>
 	public string? LibraryPath { get; }
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a binding.
 	/// </summary>
@@ -34,14 +34,14 @@ readonly struct FieldInfo<T> : IEquatable<FieldInfo<T>> where T : Enum {
 		LibraryPath = libraryPath;
 		FieldData = fieldData;
 	}
-	
+
 	public void Deconstruct (out FieldData<T> fieldData, out string libraryName, out string? libraryPath)
 	{
 		fieldData = FieldData;
 		libraryName = LibraryName;
 		libraryPath = LibraryPath;
 	}
-	
+
 	/// <inheritdoc />
 	public bool Equals (FieldInfo<T> other)
 	{
@@ -79,5 +79,5 @@ readonly struct FieldInfo<T> : IEquatable<FieldInfo<T>> where T : Enum {
 	{
 		return $"FieldData = {FieldData}, LibraryName = {LibraryName}, LibraryPath = {LibraryPath ?? "null"}";
 	}
-	
+
 }

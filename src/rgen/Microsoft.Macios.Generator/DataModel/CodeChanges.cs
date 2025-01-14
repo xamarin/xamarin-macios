@@ -185,7 +185,7 @@ readonly struct CodeChanges {
 				if (visited.Add (libraryName)) // if already visited, we cannot add it
 					yield return (libraryName, libraryPath);
 			}
-			
+
 			// return those libs needed by field properties
 			foreach (var property in Properties) {
 				if (property.ExportFieldData is null)

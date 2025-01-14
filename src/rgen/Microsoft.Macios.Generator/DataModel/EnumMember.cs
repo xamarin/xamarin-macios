@@ -51,7 +51,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 		ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
-		FieldInfo = fieldData is null ? null : new(fieldData.Value, libraryName, libraryPath);
+		FieldInfo = fieldData is null ? null : new (fieldData.Value, libraryName, libraryPath);
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 	}

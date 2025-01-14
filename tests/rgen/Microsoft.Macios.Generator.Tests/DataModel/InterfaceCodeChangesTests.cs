@@ -347,7 +347,7 @@ public partial interface IProtocol {
 							]
 						) {
 							ExportFieldData = new (
-								fieldData: new ("name", Property.Notification), 
+								fieldData: new ("name", Property.Notification),
 								libraryName: "NS"),
 						}
 					]

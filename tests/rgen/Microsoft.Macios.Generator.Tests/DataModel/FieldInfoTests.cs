@@ -12,9 +12,9 @@ public class FieldInfoTests {
 	[Fact]
 	public void CompareSame ()
 	{
-		var x = new FieldInfo<ObjCBindings.Property> (new("test"), "");
-		var y = new FieldInfo<ObjCBindings.Property> (new("test"), "");
-		
+		var x = new FieldInfo<ObjCBindings.Property> (new ("test"), "");
+		var y = new FieldInfo<ObjCBindings.Property> (new ("test"), "");
+
 		Assert.True (x.Equals (y));
 		Assert.True (x == y);
 		Assert.False (x != y);
@@ -23,9 +23,9 @@ public class FieldInfoTests {
 	[Fact]
 	public void CompareDiffAttr ()
 	{
-		var x = new FieldInfo<ObjCBindings.Property> (new("xData"), "");
-		var y = new FieldInfo<ObjCBindings.Property> (new("test"), "");
-		
+		var x = new FieldInfo<ObjCBindings.Property> (new ("xData"), "");
+		var y = new FieldInfo<ObjCBindings.Property> (new ("test"), "");
+
 		Assert.False (x.Equals (y));
 		Assert.False (x == y);
 		Assert.True (x != y);
@@ -34,9 +34,9 @@ public class FieldInfoTests {
 	[Fact]
 	public void CompareDiffLibraryName ()
 	{
-		var x = new FieldInfo<ObjCBindings.Property> (new("test"), "xLib");
-		var y = new FieldInfo<ObjCBindings.Property> (new("test"), "yLib");
-		
+		var x = new FieldInfo<ObjCBindings.Property> (new ("test"), "xLib");
+		var y = new FieldInfo<ObjCBindings.Property> (new ("test"), "yLib");
+
 		Assert.False (x.Equals (y));
 		Assert.False (x == y);
 		Assert.True (x != y);
@@ -45,9 +45,9 @@ public class FieldInfoTests {
 	[Fact]
 	public void CompareDiffLibraryPath ()
 	{
-		var x = new FieldInfo<ObjCBindings.Property> (new("test"), "lib", "xpath");
-		var y = new FieldInfo<ObjCBindings.Property> (new("test"), "lib");
-		
+		var x = new FieldInfo<ObjCBindings.Property> (new ("test"), "lib", "xpath");
+		var y = new FieldInfo<ObjCBindings.Property> (new ("test"), "lib");
+
 		Assert.False (x.Equals (y));
 		Assert.False (x == y);
 		Assert.True (x != y);
@@ -56,7 +56,7 @@ public class FieldInfoTests {
 	[Fact]
 	public void DeconstructTests ()
 	{
-		var x = new FieldInfo<ObjCBindings.Property> (new("test"), "lib", "xpath");
+		var x = new FieldInfo<ObjCBindings.Property> (new ("test"), "lib", "xpath");
 		var (attr, name, path) = x;
 		Assert.Equal (x.FieldData, attr);
 		Assert.Equal (name, x.LibraryName);

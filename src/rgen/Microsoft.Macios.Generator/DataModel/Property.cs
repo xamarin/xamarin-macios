@@ -61,7 +61,7 @@ readonly struct Property : IEquatable<Property> {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
-	public bool IsNotification 
+	public bool IsNotification
 		=> IsField && ExportFieldData.Value.FieldData.Flags.HasFlag (ObjCBindings.Property.Notification);
 
 	/// <summary>
@@ -158,15 +158,15 @@ readonly struct Property : IEquatable<Property> {
 	{
 		return !left.Equals (right);
 	}
-	
-	static FieldInfo<ObjCBindings.Property>? GetFieldInfo(RootBindingContext context, IPropertySymbol propertySymbol)
+
+	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
 	{
 		// grab the last port of the namespace
-		var ns = propertySymbol.ContainingNamespace.Name.Split ('.')[^1];
+		var ns = propertySymbol.ContainingNamespace.Name.Split ('.') [^1];
 		var fieldData = propertySymbol.GetFieldData<ObjCBindings.Property> ();
 		FieldInfo<ObjCBindings.Property>? fieldInfo = null;
 		if (fieldData is not null && context.TryComputeLibraryName (fieldData.Value.LibraryName, ns,
-			    out string? libraryName, out string? libraryPath)) {
+				out string? libraryName, out string? libraryPath)) {
 			fieldInfo = new FieldInfo<ObjCBindings.Property> (fieldData.Value, libraryName, libraryPath);
 		}
 
