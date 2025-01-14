@@ -94,7 +94,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: false,
 				isSmartEnum: false,
 				isNullable: false,
@@ -109,7 +109,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: false,
 				isSmartEnum: false,
 				isNullable: false,
@@ -134,7 +134,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: true,
 				isSmartEnum: false,
 				isNullable: false,
@@ -149,7 +149,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: false,
 				isSmartEnum: false,
 				isNullable: false,
@@ -174,7 +174,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var x = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: false,
 				isSmartEnum: true,
 				isNullable: false,
@@ -189,7 +189,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var y = new Property (
 			name: "First",
 			returnType: new (
-				type: "string",
+				name: "string",
 				isBlittable: false,
 				isSmartEnum: false,
 				isNullable: false,
@@ -392,7 +392,7 @@ public class PropertyTests : BaseGeneratorTestClass {
 	{
 		var property = new Property (
 			name: "Test",
-			returnType: new ReturnType ("string"),
+			returnType: new TypeInfo ("string"),
 			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],

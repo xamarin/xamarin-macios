@@ -7,24 +7,24 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Generator.Formatters;
 
-static class ReturnTypeFormatter {
+static class TypeInfoFormatter {
 
-	public static TypeSyntax GetIdentifierSyntax (this in ReturnType returnType)
+	public static TypeSyntax GetIdentifierSyntax (this in TypeInfo typeInfo)
 	{
-		if (returnType.IsArray) {
+		if (typeInfo.IsArray) {
 			// could be a params array or simply an array
-			var arrayType = ArrayType (IdentifierName (returnType.Type))
+			var arrayType = ArrayType (IdentifierName (typeInfo.Name))
 				.WithRankSpecifiers (SingletonList (
 					ArrayRankSpecifier (
 						SingletonSeparatedList<ExpressionSyntax> (OmittedArraySizeExpression ()))));
-			return returnType.IsNullable
+			return typeInfo.IsNullable
 				? NullableType (arrayType)
 				: arrayType;
 		}
 
 		// dealing with a non-array type
-		return returnType.IsNullable
-			? NullableType (IdentifierName (returnType.Type))
-			: IdentifierName (returnType.Type);
+		return typeInfo.IsNullable
+			? NullableType (IdentifierName (typeInfo.Name))
+			: IdentifierName (typeInfo.Name);
 	}
 }

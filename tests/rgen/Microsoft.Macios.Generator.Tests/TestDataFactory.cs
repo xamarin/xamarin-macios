@@ -7,9 +7,9 @@ namespace Microsoft.Macios.Generator.Tests;
 
 static class TestDataFactory {
 
-	public static ReturnType ReturnTypeForString ()
+	public static TypeInfo ReturnTypeForString ()
 		=> new (
-			type: "string",
+			name: "string",
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -32,9 +32,9 @@ static class TestDataFactory {
 			IsINativeObject = false,
 		};
 
-	public static ReturnType ReturnTypeForInt (bool isNullable = false)
+	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
 		=> new (
-			type: "int",
+			name: "int",
 			isBlittable: !isNullable,
 			isNullable: isNullable
 		) {
@@ -76,9 +76,9 @@ static class TestDataFactory {
 			],
 		};
 
-	public static ReturnType ReturnTypeForBool ()
+	public static TypeInfo ReturnTypeForBool ()
 		=> new (
-			type: "bool",
+			name: "bool",
 			isBlittable: false
 		) {
 			Parents = ["System.ValueType", "object"],
@@ -92,29 +92,29 @@ static class TestDataFactory {
 			]
 		};
 
-	public static ReturnType ReturnTypeForVoid ()
+	public static TypeInfo ReturnTypeForVoid ()
 		=> new ("void") {
 			Parents = ["System.ValueType", "object"],
 		};
 
-	public static ReturnType ReturnTypeForClass (string className)
+	public static TypeInfo ReturnTypeForClass (string className)
 		=> new (
-			type: className,
+			name: className,
 			isReferenceType: true
 		) {
 			Parents = ["object"]
 		};
 
-	public static ReturnType ReturnTypeForStruct (string structName)
+	public static TypeInfo ReturnTypeForStruct (string structName)
 		=> new (
-			type: structName
+			name: structName
 		) {
 			Parents = ["System.ValueType", "object"]
 		};
 
-	public static ReturnType ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
 		=> new (
-			type: enumName,
+			name: enumName,
 			isBlittable: true,
 			isSmartEnum: isSmartEnum
 		) {
@@ -131,9 +131,9 @@ static class TestDataFactory {
 			]
 		};
 
-	public static ReturnType ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
+	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
 		=> new (
-			type: type,
+			name: type,
 			isNullable: isNullable,
 			isBlittable: isBlittable,
 			isArray: true,

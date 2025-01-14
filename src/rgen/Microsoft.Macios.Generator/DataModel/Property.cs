@@ -28,7 +28,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Representation of the property type.
 	/// </summary>
-	public ReturnType ReturnType { get; } = default;
+	public TypeInfo ReturnType { get; } = default;
 
 	/// <summary>
 	/// Returns if the property type is bittable.
@@ -89,7 +89,7 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
-	internal Property (string name, ReturnType returnType,
+	internal Property (string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)

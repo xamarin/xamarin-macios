@@ -83,7 +83,7 @@ public class MethodComparerTests {
 			type: "MyType",
 			name: "MyMethod",
 			returnType: new (
-				type: "int",
+				name: "int",
 				isNullable: false,
 				isBlittable: false,
 				isSmartEnum: false,
@@ -96,7 +96,7 @@ public class MethodComparerTests {
 			modifiers: [],
 			parameters: []
 		);
-		var returnTypeComparer = new MethodReturnTypeComparer ();
+		var returnTypeComparer = new TypeInfoComparer ();
 		Assert.Equal (returnTypeComparer.Compare (x.ReturnType, y.ReturnType), comparer.Compare (x, y));
 	}
 
