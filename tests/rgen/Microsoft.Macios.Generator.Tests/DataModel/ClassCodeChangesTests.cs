@@ -590,7 +590,9 @@ public partial class MyClass {
 							]
 						) {
 
-							ExportFieldData = new (symbolName: "name", flags: Property.Notification)
+							ExportFieldData = new (
+								fieldData: new (symbolName: "name", flags: Property.Notification),
+								libraryName: "NS"),
 						}
 					]
 				}
@@ -658,7 +660,9 @@ public partial class MyClass {
 							]
 						) {
 
-							ExportFieldData = new ("CONSTANT")
+							ExportFieldData = new (
+								fieldData: new ("CONSTANT"),
+								libraryName: "NS"),
 						}
 					]
 				}

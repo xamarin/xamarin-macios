@@ -9,8 +9,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
-using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -53,7 +53,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a field binding. 
 	/// </summary>
-	public FieldData<ObjCBindings.Property>? ExportFieldData { get; init; }
+	public FieldInfo<ObjCBindings.Property>? ExportFieldData { get; init; }
 
 	/// <summary>
 	/// True if the property represents a Objc field.
@@ -61,7 +61,8 @@ readonly struct Property : IEquatable<Property> {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
-	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (ObjCBindings.Property.Notification);
+	public bool IsNotification
+		=> IsField && ExportFieldData.Value.FieldData.Flags.HasFlag (ObjCBindings.Property.Notification);
 
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
@@ -158,29 +159,43 @@ readonly struct Property : IEquatable<Property> {
 		return !left.Equals (right);
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
+	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
+	{
+		// grab the last port of the namespace
+		var ns = propertySymbol.ContainingNamespace.Name.Split ('.') [^1];
+		var fieldData = propertySymbol.GetFieldData<ObjCBindings.Property> ();
+		FieldInfo<ObjCBindings.Property>? fieldInfo = null;
+		if (fieldData is not null && context.TryComputeLibraryName (fieldData.Value.LibraryName, ns,
+				out string? libraryName, out string? libraryPath)) {
+			fieldInfo = new FieldInfo<ObjCBindings.Property> (fieldData.Value, libraryName, libraryPath);
+		}
+
+		return fieldInfo;
+	}
+
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
 			change = null;
 			return false;
 		}
 
 		var propertySupportedPlatforms = propertySymbol.GetSupportedPlatforms ();
-		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
+		var attributes = declaration.GetAttributeCodeChanges (context.SemanticModel);
 
 		ImmutableArray<Accessor> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
 			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
-				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
+				if (context.SemanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges =
-					accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+					accessorDeclaration.GetAttributeCodeChanges (context.SemanticModel);
 				accessorsBucket.Add (new (
 					accessorKind: kind,
 					exportPropertyData: accessorSymbol.GetExportData<ObjCBindings.Property> (),
@@ -211,7 +226,7 @@ readonly struct Property : IEquatable<Property> {
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			accessors: accessorCodeChanges) {
-			ExportFieldData = propertySymbol.GetFieldData<ObjCBindings.Property> (),
+			ExportFieldData = GetFieldInfo (context, propertySymbol),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
 		return true;
