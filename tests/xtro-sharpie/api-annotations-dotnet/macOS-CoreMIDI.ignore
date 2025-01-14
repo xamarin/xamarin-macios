@@ -31,8 +31,6 @@
 !missing-pinvoke! MIDISendEventList is not bound
 !missing-pinvoke! MIDISourceCreateWithProtocol is not bound
 
-# header's clearly say this enum value is not supported on macOS, yet xtro claims it is
-!missing-enum-value! MidiNotificationMessageId native value kMIDIMsgInternalStart = 4096 not bound
 !missing-pinvoke! MIDIEventPacketSysexBytesForGroup is not bound
 !missing-pinvoke! MIDISendUMPSysex is not bound
 !missing-pinvoke! MIDISendUMPSysex8 is not bound
