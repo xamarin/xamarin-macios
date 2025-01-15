@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Text;
@@ -25,7 +27,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a binding.
 	/// </summary>
-	public FieldData<EnumValue>? FieldData { get; }
+	public FieldInfo<EnumValue>? FieldInfo { get; }
 
 	/// <summary>
 	/// Get the attributes added to the member.
@@ -36,14 +38,20 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
+	/// <param name="libraryName">The library name of the smart enum.</param>
+	/// <param name="libraryPath">The library path to the library, null if it is a known frameworl.</param>
 	/// <param name="fieldData">The binding data attached to this enum value.</param>
 	/// <param name="symbolAvailability">The symbol availability of the member.</param>
 	/// <param name="attributes">The list of attribute changes in the member.</param>
-	public EnumMember (string name, FieldData<EnumValue>? fieldData, SymbolAvailability symbolAvailability,
+	public EnumMember (string name,
+		string libraryName,
+		string? libraryPath,
+		FieldData<EnumValue>? fieldData,
+		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes)
 	{
 		Name = name;
-		FieldData = fieldData;
+		FieldInfo = fieldData is null ? null : new (fieldData.Value, libraryName, libraryPath);
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 	}
@@ -52,7 +60,16 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// Create a new change that happened on a member.
 	/// </summary>
 	/// <param name="name">The name of the changed member.</param>
-	public EnumMember (string name) : this (name, null, new SymbolAvailability (), ImmutableArray<AttributeCodeChange>.Empty)
+	/// <param name="libraryName">The library name of the smart enum.</param>
+	/// <param name="libraryPath">The library path to the library, null if it is a known frameworl.</param>
+	public EnumMember (string name, string libraryName, string? libraryPath)
+		: this (
+			name: name,
+			libraryName: libraryName,
+			libraryPath: libraryPath,
+			fieldData: null,
+			symbolAvailability: new SymbolAvailability (),
+			attributes: ImmutableArray<AttributeCodeChange>.Empty)
 	{
 	}
 
@@ -63,7 +80,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
-		if (FieldData != other.FieldData)
+		if (FieldInfo != other.FieldInfo)
 			return false;
 
 		var attrComparer = new AttributesEqualityComparer ();
@@ -96,7 +113,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldData: {FieldData} Attributes: [");
+			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldInfo: {FieldInfo} Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("] }");
 		return sb.ToString ();

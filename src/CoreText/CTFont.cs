@@ -60,7 +60,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), Watch (9, 0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Mac (13, 0)]
 #endif
 		PreventAutoDownload = 1 << 1,
 		PreferSystemFont = 1 << 2,
@@ -193,7 +193,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.TvOS, 16, 0)]
-		[Deprecated (PlatformName.WatchOS, 9, 0)]
 #endif
 		ExcludeSynthetic = (1 << 0),
 	}
@@ -2102,7 +2101,6 @@ namespace CoreText {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
@@ -2119,7 +2117,6 @@ namespace CoreText {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public CTFont? ForString (string value, NSRange range, string? language)
 		{
@@ -2306,7 +2303,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7, 0)]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 #endif
@@ -2319,7 +2315,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7, 0)]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 #endif
@@ -2673,7 +2668,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static /* CGRect */ CGRect CTFontGetTypographicBoundsForAdaptiveImageProvider (
@@ -2689,7 +2684,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public CGRect GetTypographicBoundsForAdaptiveImageProvider (ICTAdaptiveImageProviding? provider)
 		{
@@ -2702,7 +2697,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTFontDrawImageFromAdaptiveImageProviderAtPoint (
@@ -2721,7 +2716,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public void DrawImage (ICTAdaptiveImageProviding provider, CGPoint point, CGContext context)
 		{
@@ -2734,7 +2729,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 #else
-		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
+		[TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static byte CTFontHasTable (
@@ -2751,7 +2746,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 #else
-		[Watch (6, 0), TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
+		[TV (13, 0), iOS (13, 0), MacCatalyst (13, 0)]
 #endif
 		public bool HasTable (CTFontTable tag)
 		{

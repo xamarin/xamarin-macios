@@ -18,7 +18,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace BackgroundAssets {
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	public enum BADownloadState : long {
 		Failed = -1,
@@ -28,7 +28,7 @@ namespace BackgroundAssets {
 		Finished,
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	public enum BAContentRequest : long {
 		Install = 1,
@@ -36,7 +36,7 @@ namespace BackgroundAssets {
 		Periodic,
 	}
 
-	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[ErrorDomain ("BAErrorDomain")]
 	[Native]
 	public enum BAErrorCode : long {
@@ -58,7 +58,7 @@ namespace BackgroundAssets {
 		SessionDownloadNotPermittedBeforeAppLaunch = 206,
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BADownload : NSCoding, NSSecureCoding, NSCopying {
@@ -84,7 +84,7 @@ namespace BackgroundAssets {
 		BADownload CopyAsNonEssential ();
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BAAppExtensionInfo : NSSecureCoding {
@@ -94,13 +94,13 @@ namespace BackgroundAssets {
 		[Export ("restrictedDownloadSizeRemaining", ArgumentSemantic.Strong)]
 		NSNumber RestrictedDownloadSizeRemaining { get; }
 
-		[NoWatch, NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[NullAllowed]
 		[Export ("restrictedEssentialDownloadSizeRemaining", ArgumentSemantic.Strong)]
 		NSNumber RestrictedEssentialDownloadSizeRemaining { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
 	interface BADownloaderExtension {
 
@@ -125,7 +125,7 @@ namespace BackgroundAssets {
 
 	interface IBADownloadManagerDelegate { }
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 #if NET
 	[Protocol][Model]
 #else
@@ -153,7 +153,7 @@ namespace BackgroundAssets {
 		void Finished (BADownload download, NSUrl fileUrl);
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BADownloadManager {
@@ -194,7 +194,7 @@ namespace BackgroundAssets {
 		void PerformWithExclusiveControlBeforeDate (NSDate date, Action<bool, NSError> performHandler);
 	}
 
-	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (BADownload), Name = "BAURLDownload")]
 	[DisableDefaultCtor]
 	interface BAUrlDownload {

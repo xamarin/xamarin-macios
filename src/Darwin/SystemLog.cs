@@ -53,7 +53,11 @@ namespace Darwin {
 		}
 		
 		[Flags]
-		public enum Option { Stderr, NoDelay, NoRemote }
+		public enum Option {
+			Stderr,
+			NoDelay,
+			NoRemote,
+		}
 
 		protected override void Dispose (bool disposing)
 		{
@@ -202,7 +206,10 @@ namespace Darwin {
 	}
 
 	public class Message : DisposableObject {
-		public enum Kind { Message, Query }
+		public enum Kind {
+			Message,
+			Query,
+		}
 
 		[Flags]
 		public enum Op {
@@ -218,7 +225,7 @@ namespace Darwin {
 			Less = 4,
 			LessEqual = 5,
 			NotEqual = 6,
-			True = 7
+			True = 7,
 		}
 
 		[Preserve (Conditional = true)]

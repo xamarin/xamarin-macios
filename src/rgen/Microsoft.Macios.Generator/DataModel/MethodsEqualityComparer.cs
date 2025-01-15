@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -21,7 +23,7 @@ class MethodsEqualityComparer : EqualityComparer<ImmutableArray<Method>> {
 		// create the dictionary comparer that will do the based comparison and relay on a list comparer for the
 		// diff methods
 		var dictionaryComparer =
-			new DictionaryComparer<(MethodReturnType ReturnType, string Name, int ParameterCount), List<Method>> (
+			new DictionaryComparer<(TypeInfo ReturnType, string Name, int ParameterCount), List<Method>> (
 				new CollectionComparer<Method> (new MethodComparer ()));
 		return dictionaryComparer.Equals (xMethods, yMethods);
 	}

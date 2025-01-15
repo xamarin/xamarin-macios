@@ -1,6 +1,6 @@
 #nullable enable
 
-#if !NET && (IOS || WATCHOS)
+#if !NET && IOS
 
 using System;
 using Foundation;
@@ -321,7 +321,6 @@ namespace HealthKit {
 			}
 		}
 
-		[Introduced (PlatformName.WatchOS, 4,2, PlatformArchitecture.All)]
 		public static NSString? DistanceDownhillSnowSports {
 			get {
 				return HKQuantityTypeIdentifierExtensions.GetConstant (HKQuantityTypeIdentifier.DistanceDownhillSnowSports);

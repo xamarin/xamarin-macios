@@ -14,7 +14,7 @@ IOS_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/ios
 TVOS_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/tvos
 MACCATALYST_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/maccatalyst
 
-GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
+GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -native-exception-marshalling --ns:ObjCRuntime
 
 GENERATOR_TF_VERSION=$(subst net,,$(DOTNET_TFM))
 
@@ -56,7 +56,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_OR_GREATER_DEFINES:=$(foreach version,$(shell seq 6 $(firstword $(subst ., ,$(subst net,,$(DOTNET_TFM))))),/define:NET$(version)_0_OR_GREATER)
-DOTNET_FLAGS=/warnaserror+ /noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
+DOTNET_FLAGS=/warnaserror+ /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
 
 ifeq ($(XCODE_IS_STABLE),true)
 DOTNET_FLAGS+=/define:XCODE_IS_STABLE
@@ -135,7 +135,8 @@ IOS_DOTNET_CORE_SOURCES += $(IOS_DOTNET_EXTRA_SOURCES)
 
 IOS_DOTNET_SOURCES += $(IOS_DOTNET_EXTRA_SOURCES) $(IOS_DOTNET_HTTP_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums $(IOS_GENERATOR_WARNASERROR)
+IOS_GENERATOR_DEFINES = -d:IOS
+IOS_GENERATOR_FLAGS = -inline-selectors -process-enums $(IOS_GENERATOR_WARNASERROR) $(IOS_GENERATOR_DEFINES)
 IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:SYSTEM_NET_HTTP
 
 IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES)
@@ -168,7 +169,8 @@ $(IOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_D
 #
 
 MAC_COMMON_DEFINES = -define:MONOMAC -d:__MACOS__
-MACOS_GENERATOR_FLAGS = -d:MONOMAC -d:__MACOS__
+MACOS_GENERATOR_DEFINES = -d:MONOMAC -d:__MACOS__
+MACOS_GENERATOR_FLAGS = $(MACOS_GENERATOR_DEFINES)
 MACOS_CORE_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
 MACOS_DEFINES = $(MAC_COMMON_DEFINES) -D:XAMARIN_MODERN
 
@@ -234,7 +236,8 @@ $(MACOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC
 TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:__TVOS__ -d:SYSTEM_NET_HTTP
 
 TVOS_CORE_DEFINES=$(TVOS_DEFINES) -d:COREBUILD
-TVOS_GENERATOR_FLAGS = -d:TVOS -inline-selectors
+TVOS_GENERATOR_DEFINES = -d:TVOS
+TVOS_GENERATOR_FLAGS = $(TVOS_GENERATOR_DEFINES) -inline-selectors
 
 TVOS_DOTNET_EXTRA_CORE_SOURCES = \
 	$(TVOS_DOTNET_BUILD_DIR)/Constants.cs    \
@@ -292,7 +295,8 @@ $(TVOS_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/M
 MACCATALYST_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:__MACCATALYST__ -d:SYSTEM_NET_HTTP
 
 MACCATALYST_CORE_DEFINES=$(MACCATALYST_DEFINES) -d:COREBUILD
-MACCATALYST_GENERATOR_FLAGS = -d:__MACCATALYST__ -d:IOS -inline-selectors
+MACCATALYST_GENERATOR_DEFINES = -d:__MACCATALYST__ -d:IOS
+MACCATALYST_GENERATOR_FLAGS = $(MACCATALYST_GENERATOR_DEFINES) -inline-selectors
 
 MACCATALYST_DOTNET_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/Constants.cs    \
@@ -341,9 +345,9 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $
 include $(TOP)/scripts/generate-sourcelink-json/fragment.mk
 
 define BuildDotNetIntermediateAssembly
-$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.sources $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
-	$$(Q_DOTNET_GEN) \
-		$(DOTNET_CSC) \
+rsp:: $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp
+$($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources | $($(2)_DOTNET_BUILD_DIR)
+	$$(Q_DOTNET_GEN) echo \
 		$(DOTNET_FLAGS) \
 		$(DOTNET_CORE_WARNINGS_TO_FIX) \
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
@@ -351,9 +355,41 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 		$($(2)_DOTNET_CORE_SOURCES) \
 		-nullable+ \
 		-warnaserror+ \
-		-out:$$@
+		-nowarn:1591 \
+		-out:$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
+		-doc:$($(2)_DOTNET_BUILD_DIR)/core-$(3).xml \
+		> $$@.tmp
+	$$(Q) mv $$@.tmp $$@
 
-$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
+$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp | $($(2)_DOTNET_BUILD_DIR)
+	$$(Q_DOTNET_GEN) $(DOTNET_CSC) @$($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp
+
+$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp: Makefile frameworks.sources | $($(2)_DOTNET_BUILD_DIR)
+	$$(Q_DOTNET_GEN) echo \
+		-debug \
+		-unsafe \
+		-target:library \
+		-nowarn:436,1591,CA1416,CS8981 \
+		-warnaserror+ \
+		-out:$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll \
+		-doc:$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).xml \
+		-r:$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
+		-nostdlib \
+		-nologo \
+		-r:$(DOTNET_BINDING_ATTRIBUTES) \
+		$($(2)_APIS) \
+		$($(2)_GENERATOR_DEFINES) \
+		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
+		> $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES)
+	$$(Q_GEN) $(DOTNET_CSC) $(DOTNET_FLAGS) @$$<
+
+apidefinition:: $(3)-apidefinition
+$(3)-apidefinition: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll
+
+$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
 	$$(Q_DOTNET_GEN) $$< @$($(2)_DOTNET_BUILD_DIR)/$(3).rsp
 
 $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator Makefile.rgenerator frameworks.sources $(ROSLYN_GENERATOR) $(ROSLYN_ANALYZER) $(DOTNET_COMPILER) | $($(2)_DOTNET_BUILD_DIR)
@@ -365,8 +401,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator Makefile.rgenerat
 		-tmpdir=$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
 		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=$(3) \
-		$($(2)_APIS) \
-		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
+		--compiled-api-definition-assembly=$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll \
 		> $$@
 
 DOTNET_TARGETS_$(3) += \
@@ -440,6 +475,7 @@ endif
 
 $(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES = \
 	$($(2)_DOTNET_SOURCES) \
+	$($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp \
 	$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/SourceLink.json \
 	$($(2)_DOTNET_BUILD_DIR)/embed-files.rsp \
@@ -451,9 +487,11 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 
-$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) $$(ROSLYN_GENERATOR) $$(ROSLYN_ANALYZER) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
-	$$(call Q_PROF_CSC,dotnet/$(4)-bit) \
-		$(DOTNET_CSC)  \
+rsp:: $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp
+
+$($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp: Makefile | $($(2)_DOTNET_BUILD_DIR)
+	$$(Q) rm -f $$@
+	$$(Q) echo \
 		$(DOTNET_FLAGS) \
 		/analyzer:$(ROSLYN_GENERATOR_COMMON) \
 		/analyzer:$(ROSLYN_GENERATOR) \
@@ -468,18 +506,23 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		$$($(2)_$(4)_REFOUT_ARG) \
 		$$($(2)_$(4)_DOC_ARG) \
 		-sourcelink:$($(2)_DOTNET_BUILD_DIR)/SourceLink.json \
-		@$($(2)_DOTNET_BUILD_DIR)/embed-files.rsp \
+		@$$(abspath $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp) \
 		$$($(2)_DEFINES) \
 		$(ARGS_$(4)) \
 		$$(DOTNET_WARNINGS_TO_FIX) \
-		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
+		@$$(abspath $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp) \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		-warnaserror+ \
 		-nullable+ \
 		$$($(2)_DOTNET_SOURCES) \
-		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
+		@$$(abspath $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources) \
 		-out:$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
+		> $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) $$(ROSLYN_GENERATOR) $$(ROSLYN_ANALYZER) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
+	$$(call Q_PROF_CSC,dotnet/$(4)-bit) $(DOTNET_CSC) @$($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp
 
 dotnet-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll
 

@@ -150,7 +150,6 @@ namespace AudioUnit {
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #endif
 		AUiPodTime = 0x6970746d, // 'iptm'
 #endif
@@ -208,7 +207,6 @@ namespace AudioUnit {
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 #endif
 		AUiPodEQ = 0x69706571, // 'ipeq'
 #endif

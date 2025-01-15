@@ -45,8 +45,6 @@ namespace HealthKit {
 	}
 #pragma warning restore CS0618 // Type or member is obsolete
 
-
-#if !WATCH
 	public partial class HKDocumentType {
 		public static HKDocumentType? Create (HKDocumentTypeIdentifier kind)
 		{
@@ -56,5 +54,4 @@ namespace HealthKit {
 			return null;
 		}
 	}
-#endif
 }

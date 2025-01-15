@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 namespace CallKit {
 
 	/// <summary>Enumerates call directory states.</summary>
-	[NoMac, NoWatch]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CXCallDirectoryEnabledStatus : long {
@@ -30,7 +30,7 @@ namespace CallKit {
 	}
 
 	/// <summary>Enumerates Call Kit errors.</summary>
-	[NoMac, MacCatalyst (14, 0), Watch (9, 0)]
+	[NoMac, MacCatalyst (14, 0)]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
 	public enum CXErrorCode : long {
@@ -89,7 +89,7 @@ namespace CallKit {
 		UnexpectedIncrementalRemoval = 8,
 	}
 
-	[iOS (14, 5), Watch (9, 0), NoTV, NoMac]
+	[iOS (14, 5), NoTV, NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 5)]
 	[ErrorDomain ("CXErrorDomainNotificationServiceExtension")]
 	[Native]
@@ -147,7 +147,7 @@ namespace CallKit {
 	/// <summary>A unique identifier for a VOIP user.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXHandle">Apple documentation for <c>CXHandle</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -170,7 +170,7 @@ namespace CallKit {
 	/// <summary>Base class for CallKit actions, such as those taken when a call begins or ends, a call is put on hold, and so on.</summary>
 	///     <remarks>Developers manage the life cycle of a call by sending and receiving objects that derive from <see cref="T:CallKit.CXAction" /> to and from <see cref="T:CallKit.CXProvider" /> and <see cref="T:CallKit.CXCallController" /> objects.</remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXAction">Apple documentation for <c>CXAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -200,7 +200,7 @@ namespace CallKit {
 	///     <remarks>
 	///       <see cref="T:CallKit.CXAnswerCallAction" /> objects are passed to the developer's <see cref="M:CallKit.CXProviderDelegate.PerformAnswerCallAction(CallKit.CXProvider,CallKit.CXAnswerCallAction)" /> method when the user answers a call.</remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXAnswerCallAction">Apple documentation for <c>CXAnswerCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
@@ -217,7 +217,7 @@ namespace CallKit {
 	/// <summary>Represents a CallKit call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCall">Apple documentation for <c>CXCall</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -245,7 +245,7 @@ namespace CallKit {
 	/// <summary>Base class for objects that contain the information that is needed to perform an action on a call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallAction">Apple documentation for <c>CXCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CXAction))]
 	[DisableDefaultCtor]
@@ -262,7 +262,7 @@ namespace CallKit {
 	/// <summary>Informs the system about in-band user actions, such as reqeusts to start a call, or to put a call on hold.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallController">Apple documentation for <c>CXCallController</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallController {
@@ -292,7 +292,7 @@ namespace CallKit {
 	/// <summary>Extension context for a call directory.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallDirectoryExtensionContext">Apple documentation for <c>CXCallDirectoryExtensionContext</c></related>
-	[NoMac, NoWatch]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface CXCallDirectoryExtensionContext {
@@ -307,7 +307,7 @@ namespace CallKit {
 		[Export ("completeRequestWithCompletionHandler:")]
 		void CompleteRequest ([NullAllowed] Action<bool> completion);
 
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak), NoWatch]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		[MacCatalyst (13, 1)]
 		ICXCallDirectoryExtensionContextDelegate Delegate { get; set; }
 
@@ -335,7 +335,7 @@ namespace CallKit {
 	interface ICXCallDirectoryExtensionContextDelegate { }
 
 	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallDirectoryExtensionContextDelegate">Apple documentation for <c>CXCallDirectoryExtensionContextDelegate</c></related>
-	[NoMac, NoWatch]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	[Model]
@@ -350,7 +350,7 @@ namespace CallKit {
 	/// <summary>Manages a call directory extension.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallDirectoryManager">Apple documentation for <c>CXCallDirectoryManager</c></related>
-	[NoMac, NoWatch]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryManager {
@@ -367,7 +367,7 @@ namespace CallKit {
 		[Export ("getEnabledStatusForExtensionWithIdentifier:completionHandler:")]
 		void GetEnabledStatusForExtension (string identifier, Action<CXCallDirectoryEnabledStatus, NSError> completion);
 
-		[NoWatch, NoTV, NoMac, iOS (13, 4), MacCatalyst (14, 0)]
+		[NoTV, NoMac, iOS (13, 4), MacCatalyst (14, 0)]
 		[Async]
 		[Export ("openSettingsWithCompletionHandler:")]
 		void OpenSettings ([NullAllowed] Action<NSError> completion);
@@ -376,7 +376,7 @@ namespace CallKit {
 	/// <summary>Call directory extension provider.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallDirectoryProvider">Apple documentation for <c>CXCallDirectoryProvider</c></related>
-	[NoMac, NoWatch]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryProvider : NSExtensionRequestHandling {
@@ -389,7 +389,7 @@ namespace CallKit {
 	/// <summary>Delegate object that responds to call changes.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallObserverDelegate">Apple documentation for <c>CXCallObserverDelegate</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -403,7 +403,7 @@ namespace CallKit {
 	/// <summary>Observer for the calls in a <see cref="T:CallKit.CXCallController" />.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallObserver">Apple documentation for <c>CXCallObserver</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserver {
@@ -418,7 +418,7 @@ namespace CallKit {
 	/// <summary>Contains values with which to update a call's parameters.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXCallUpdate">Apple documentation for <c>CXCallUpdate</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallUpdate : NSCopying {
@@ -449,7 +449,7 @@ namespace CallKit {
 	///     <remarks>
 	///       <see cref="T:CallKit.CXAnswerCallAction" /> objects are passed to the developer's <see cref="M:CallKit.CXProviderDelegate.PerformEndCallAction(CallKit.CXProvider,CallKit.CXEndCallAction)" /> method when a call is ended.</remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXEndCallAction">Apple documentation for <c>CXEndCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
@@ -466,7 +466,7 @@ namespace CallKit {
 	/// <summary>Contains the information that is needed to play a DTMF signal that represents a touch tone.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXPlayDTMFCallAction">Apple documentation for <c>CXPlayDTMFCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction), Name = "CXPlayDTMFCallAction")]
@@ -493,7 +493,7 @@ namespace CallKit {
 
 	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXProviderDelegate">Apple documentation for <c>CXProviderDelegate</c></related>
 	[Protocol, Model]
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CXProviderDelegate {
@@ -548,7 +548,6 @@ namespace CallKit {
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXProvider">Apple documentation for <c>CXProvider</c></related>
 	[NoMac]
-	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -577,7 +576,7 @@ namespace CallKit {
 		[Export ("reportOutgoingCallWithUUID:connectedAtDate:")]
 		void ReportConnectedOutgoingCall (NSUuid uuid, [NullAllowed] NSDate dateConnected);
 
-		[NoWatch, NoTV, NoMac, iOS (14, 5)]
+		[NoTV, NoMac, iOS (14, 5)]
 		[Introduced (PlatformName.MacCatalyst, 14, 5)]
 		[Static, Async]
 		[Export ("reportNewIncomingVoIPPushPayload:completion:")]
@@ -599,7 +598,6 @@ namespace CallKit {
 	/// <summary>Contains values that control miscellaneous call properties, such as the ringtone, whether the call supports video, the maximum number of callers, and so on.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXProviderConfiguration">Apple documentation for <c>CXProviderConfiguration</c></related>
-	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -654,7 +652,6 @@ namespace CallKit {
 	///       <see cref="T:CallKit.CXSetGroupCallAction" /> objects are passed to the developer's <see cref="M:CallKit.CXProviderDelegate.PerformSetGroupCallAction(CallKit.CXProvider,CallKit.CXSetGroupCallAction)" /> method when the user joins a call.</remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXSetGroupCallAction">Apple documentation for <c>CXSetGroupCallAction</c></related>
 	[NoMac]
-	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
@@ -672,7 +669,7 @@ namespace CallKit {
 	///     <remarks>
 	///       <see cref="T:CallKit.CXSetHeldCallAction" /> objects are passed to the developer's <see cref="M:CallKit.CXProviderDelegate.PerformSetHeldCallAction(CallKit.CXProvider,CallKit.CXSetHeldCallAction)" /> method when the user puts a call on hold or takes a call off hold.</remarks>
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXSetHeldCallAction">Apple documentation for <c>CXSetHeldCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
@@ -689,7 +686,7 @@ namespace CallKit {
 	/// <summary>Contains the information that is necessary to mute or unmute a call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXSetMutedCallAction">Apple documentation for <c>CXSetMutedCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
@@ -710,7 +707,7 @@ namespace CallKit {
 	/// <summary>Contains the information that is necessary to start a call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXStartCallAction">Apple documentation for <c>CXStartCallAction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
@@ -738,7 +735,7 @@ namespace CallKit {
 	/// <summary>Runs a group of Call Kit actions atomically.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/CallKit/CXTransaction">Apple documentation for <c>CXTransaction</c></related>
-	[NoMac, Watch (9, 0)]
+	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // there's a designated initializer that does not accept null

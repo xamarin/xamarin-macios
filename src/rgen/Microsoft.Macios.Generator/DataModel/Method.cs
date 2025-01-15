@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -7,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using ObjCRuntime;
 
@@ -15,7 +18,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 readonly struct Method : IEquatable<Method> {
 
 	/// <summary>
-	/// Type name that owns the constructor.
+	/// Type name that owns the method.
 	/// </summary>
 	public string Type { get; }
 
@@ -27,7 +30,7 @@ readonly struct Method : IEquatable<Method> {
 	/// <summary>
 	/// Method return type.
 	/// </summary>
-	public MethodReturnType ReturnType { get; }
+	public TypeInfo ReturnType { get; }
 
 	/// <summary>
 	/// The platform availability of the method.
@@ -54,7 +57,7 @@ readonly struct Method : IEquatable<Method> {
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
 
-	public Method (string type, string name, MethodReturnType returnType,
+	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
 		ImmutableArray<AttributeCodeChange> attributes,
@@ -71,20 +74,20 @@ readonly struct Method : IEquatable<Method> {
 		Parameters = parameters;
 	}
 
-	public static bool TryCreate (MethodDeclarationSyntax declaration, SemanticModel semanticModel,
+	public static bool TryCreate (MethodDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Method? change)
 	{
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
 			change = null;
 			return false;
 		}
 
-		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
+		var attributes = declaration.GetAttributeCodeChanges (context.SemanticModel);
 		var parametersBucket = ImmutableArray.CreateBuilder<Parameter> ();
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}
@@ -127,7 +130,7 @@ readonly struct Method : IEquatable<Method> {
 		if (!modifiersComparer.Equals (Modifiers, other.Modifiers))
 			return false;
 
-		var paramComparer = new ParameterEqualityComparer ();
+		var paramComparer = new MethodParameterEqualityComparer ();
 		return paramComparer.Equals (Parameters, other.Parameters);
 	}
 

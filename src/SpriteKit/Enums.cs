@@ -201,7 +201,6 @@ namespace SpriteKit {
 
 	/// <summary>Enumerates the various ways a <see cref="T:SpriteKit.SKNode" /> may be focusable.</summary>
 	[NoMac]
-	[Watch (9, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKNodeFocusBehavior : long {

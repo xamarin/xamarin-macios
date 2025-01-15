@@ -23,8 +23,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMCustomBlockAllocator : IDisposable {
 
@@ -133,9 +131,6 @@ namespace CoreMedia {
 
 	// This class is used internally by a couple of CMBlockBuffer methods
 	// that take a managed array as input parameter
-#if !NET
-	[Watch (6, 0)]
-#endif
 	internal class CMManagedArrayBlockAllocator : CMCustomBlockAllocator {
 
 		GCHandle dataHandle;

@@ -8,7 +8,7 @@
 
 #nullable enable
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 
 using System;
 using System.Runtime.InteropServices;
@@ -45,4 +45,4 @@ namespace CoreGraphics {
 #endif // !NET
 }
 
-#endif // !MONOMAC && !WATCH
+#endif // !MONOMAC

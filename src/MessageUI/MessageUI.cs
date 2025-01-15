@@ -24,7 +24,7 @@ namespace MessageUI {
 		Cancelled,
 		Saved,
 		Sent,
-		Failed
+		Failed,
 	}
 
 	/// <summary>Details of the composing error.</summary>
@@ -38,7 +38,7 @@ namespace MessageUI {
 	public enum MFMailComposeErrorCode {
 #endif
 		SaveFailed,
-		SendFailed
+		SendFailed,
 	}
 
 #if NET
@@ -50,6 +50,8 @@ namespace MessageUI {
 	// Note: now used as a NSInteger in the API.
 	public enum MessageComposeResult {
 #endif
-		Cancelled, Sent, Failed
+		Cancelled,
+		Sent,
+		Failed,
 	}
 }

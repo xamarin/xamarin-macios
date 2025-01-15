@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -441,6 +443,118 @@ public partial class MyClass {
 
 			yield return [paramsMethod, "public partial void TestMethod (params string[] data)"];
 
+
+			const string actionNoParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action cb) {}
+	}
+}
+";
+			yield return [actionNoParam, "public partial void TestMethod (System.Action cb)"];
+
+			const string actionSingleParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string> cb) {}
+	}
+}
+";
+			yield return [actionSingleParam, "public partial void TestMethod (System.Action<string> cb)"];
+
+			const string actionSingleNullableParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string?> cb) {}
+	}
+}
+";
+			yield return [actionSingleNullableParam, "public partial void TestMethod (System.Action<string?> cb)"];
+
+			const string actionMultiParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Action<string, string> cb) {}
+	}
+}
+";
+			yield return [actionMultiParam, "public partial void TestMethod (System.Action<string, string> cb)"];
+
+			const string funcSingleParam = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public partial void TestMethod (Func<string, string> cb) {}
+	}
+}
+";
+			yield return [funcSingleParam, "public partial void TestMethod (System.Func<string, string> cb)"];
+
+			const string customDelegate = @"
+using System;
+
+namespace NS {
+	public class MyClass {
+		public delegate int? Callback(string name, string? middleName, params string[] surname);
+
+		public partial void TestMethod (Callback cb) {}
+	}
+}
+";
+			yield return [customDelegate, "public partial void TestMethod (NS.MyClass.Callback cb)"];
+
+			const string intReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial int TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [intReturnMethod, "public partial int TestMethod (string myParam, int myParamInt)"];
+
+			const string nullableIntReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial int? TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [nullableIntReturnMethod, "public partial int? TestMethod (string myParam, int myParamInt)"];
+
+			const string intPtrReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial IntPtr TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [intPtrReturnMethod, "public partial IntPtr TestMethod (string myParam, int myParamInt)"];
+
+			const string nullableIntPtrReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial IntPtr? TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [nullableIntPtrReturnMethod, "public partial IntPtr? TestMethod (string myParam, int myParamInt)"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

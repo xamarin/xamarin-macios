@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft
 //
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 using System;
 using ObjCRuntime;

@@ -76,6 +76,20 @@ namespace XmlDocumentation {
 		[Abstract]
 		[Export ("propertyRequired")]
 		int PAProperty { get; set; }
+
+		/// <summary>
+		/// Summary for P1.PMethodWithArgs
+		/// </summary>
+		/// <param name="arg0">Docs for arg0.</param>
+		[Export ("method:")]
+		int PMethodWithArgs (int arg0);
+
+		/// <summary>
+		/// Summary for P1.PMethodWithArgs
+		/// </summary>
+		// No <param /> tag here
+		[Export ("methodWithUndocumentedArgs:")]
+		int PMethodWithUndocumentedArgs (int arg0);
 	}
 
 	/// <summary>

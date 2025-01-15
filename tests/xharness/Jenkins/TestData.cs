@@ -12,7 +12,6 @@ namespace Xharness.Jenkins {
 		public bool Profiling;
 		public string LinkMode;
 		public string Defines;
-		public string Undefines;
 		public bool? Ignored;
 		public bool EnableSGenConc;
 		public bool UseLlvm;

@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -7,8 +9,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
-using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -24,24 +26,24 @@ readonly struct Property : IEquatable<Property> {
 	public string BackingField { get; private init; }
 
 	/// <summary>
-	/// String representation of the property type.
+	/// Representation of the property type.
 	/// </summary>
-	public string Type { get; } = string.Empty;
+	public TypeInfo ReturnType { get; } = default;
 
 	/// <summary>
 	/// Returns if the property type is bittable.
 	/// </summary>
-	public bool IsBlittable { get; }
+	public bool IsBlittable => ReturnType.IsBlittable;
 
 	/// <summary>
 	/// Returns if the property type is a smart enum.
 	/// </summary>
-	public bool IsSmartEnum { get; }
+	public bool IsSmartEnum => ReturnType.IsSmartEnum;
 
 	/// <summary>
 	/// Returns if the property type is a reference type.
 	/// </summary>
-	public bool IsReferenceType { get; }
+	public bool IsReferenceType => ReturnType.IsReferenceType;
 
 	/// <summary>
 	/// The platform availability of the property.
@@ -51,7 +53,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a field binding. 
 	/// </summary>
-	public ExportData<Field>? ExportFieldData { get; init; }
+	public FieldInfo<ObjCBindings.Property>? ExportFieldData { get; init; }
 
 	/// <summary>
 	/// True if the property represents a Objc field.
@@ -59,7 +61,8 @@ readonly struct Property : IEquatable<Property> {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
-	public bool IsNotification => IsField && ExportFieldData.Value.Flags.HasFlag (Field.Notification);
+	public bool IsNotification
+		=> IsField && ExportFieldData.Value.FieldData.Flags.HasFlag (ObjCBindings.Property.Notification);
 
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
@@ -87,20 +90,14 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
-	internal Property (string name, string type,
-		bool isBlittable,
-		bool isSmartEnum,
-		bool isReferenceType,
+	internal Property (string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
 	{
 		Name = name;
 		BackingField = $"_{Name}";
-		Type = type;
-		IsBlittable = isBlittable;
-		IsSmartEnum = isSmartEnum;
-		IsReferenceType = isReferenceType;
+		ReturnType = returnType;
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 		Modifiers = modifiers;
@@ -113,7 +110,7 @@ readonly struct Property : IEquatable<Property> {
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
 			return false;
-		if (Type != other.Type)
+		if (ReturnType != other.ReturnType)
 			return false;
 		if (IsBlittable != other.IsBlittable)
 			return false;
@@ -149,7 +146,7 @@ readonly struct Property : IEquatable<Property> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Name, Type, IsSmartEnum, Attributes, Modifiers, Accessors);
+		return HashCode.Combine (Name, ReturnType, IsSmartEnum, Attributes, Modifiers, Accessors);
 	}
 
 	public static bool operator == (Property left, Property right)
@@ -162,30 +159,43 @@ readonly struct Property : IEquatable<Property> {
 		return !left.Equals (right);
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
+	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
+	{
+		// grab the last port of the namespace
+		var ns = propertySymbol.ContainingNamespace.Name.Split ('.') [^1];
+		var fieldData = propertySymbol.GetFieldData<ObjCBindings.Property> ();
+		FieldInfo<ObjCBindings.Property>? fieldInfo = null;
+		if (fieldData is not null && context.TryComputeLibraryName (fieldData.Value.LibraryName, ns,
+				out string? libraryName, out string? libraryPath)) {
+			fieldInfo = new FieldInfo<ObjCBindings.Property> (fieldData.Value, libraryName, libraryPath);
+		}
+
+		return fieldInfo;
+	}
+
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
 			change = null;
 			return false;
 		}
 
 		var propertySupportedPlatforms = propertySymbol.GetSupportedPlatforms ();
-		var type = propertySymbol.Type.ToDisplayString ().Trim ();
-		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
+		var attributes = declaration.GetAttributeCodeChanges (context.SemanticModel);
 
 		ImmutableArray<Accessor> accessorCodeChanges = [];
 		if (declaration.AccessorList is not null && declaration.AccessorList.Accessors.Count > 0) {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
 			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
-				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
+				if (context.SemanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				var accessorAttributeChanges =
-					accessorDeclaration.GetAttributeCodeChanges (semanticModel);
+					accessorDeclaration.GetAttributeCodeChanges (context.SemanticModel);
 				accessorsBucket.Add (new (
 					accessorKind: kind,
 					exportPropertyData: accessorSymbol.GetExportData<ObjCBindings.Property> (),
@@ -211,15 +221,12 @@ readonly struct Property : IEquatable<Property> {
 
 		change = new (
 			name: memberName,
-			type: type,
-			isBlittable: propertySymbol.Type.IsBlittable (),
-			isSmartEnum: propertySymbol.Type.IsSmartEnum (),
-			isReferenceType: propertySymbol.Type.IsReferenceType,
+			returnType: new (propertySymbol.Type),
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			accessors: accessorCodeChanges) {
-			ExportFieldData = propertySymbol.GetExportData<Field> (),
+			ExportFieldData = GetFieldInfo (context, propertySymbol),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
 		return true;
@@ -229,7 +236,7 @@ readonly struct Property : IEquatable<Property> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: '{Type}', IsBlittable: {IsBlittable}, IsSmartEnum: {IsSmartEnum}, IsReferenceType: {IsReferenceType} Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

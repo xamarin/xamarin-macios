@@ -7,8 +7,6 @@
 //   Miguel de Icaza
 //
 
-#if !WATCH
-
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -126,5 +124,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

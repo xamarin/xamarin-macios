@@ -21,7 +21,6 @@ namespace GameKit {
 	// NSUInteger -> GKPeerPickerController.h
 	/// <summary>An enumeration whose values specify acceptable ping for peer-to-peer connections.</summary>
 	[NoMac]
-	[NoWatch]
 #if NET
 	[NoTV]
 #endif
@@ -31,7 +30,7 @@ namespace GameKit {
 	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
-		Nearby = 1 << 1
+		Nearby = 1 << 1,
 	}
 
 	// untyped enum -> GKPublicConstants.h
@@ -58,7 +57,7 @@ namespace GameKit {
 		NetworkConfiguration = 32013,
 		UnsupportedRemoteVersion = 32014,
 		OutOfMemory = 32015,
-		InvalidParameter = 32016
+		InvalidParameter = 32016,
 	}
 
 	// untyped enum -> GKPublicConstants.h
@@ -99,13 +98,16 @@ namespace GameKit {
 	// NSInteger -> GKLeaderboard.h
 	[Native]
 	public enum GKLeaderboardTimeScope : long {
-		Today, Week, AllTime
+		Today,
+		Week,
+		AllTime,
 	}
 
 	// NSInteger -> GKLeaderboard.h
 	[Native]
 	public enum GKLeaderboardPlayerScope : long {
-		Global, FriendsOnly
+		Global,
+		FriendsOnly,
 	}
 
 	// NSInteger -> GKError.h
@@ -178,14 +180,8 @@ namespace GameKit {
 	[Deprecated (PlatformName.TvOS, 12, 0)]
 	[Deprecated (PlatformName.iOS, 12, 0)]
 	[Native]
-#if WATCH
-	// removed in Xcode 10 but a breaking change (for us) to remove
-	[Obsolete ("Not used in watchOS.")]
-#else
-	[Unavailable (PlatformName.WatchOS)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
-#endif
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
@@ -212,13 +208,16 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum GKMatchSendDataMode : long {
-		Reliable, Unreliable
+		Reliable,
+		Unreliable,
 	}
 
 	// NSInteger -> GKMatch.h
 	[Native]
 	public enum GKPlayerConnectionState : long {
-		Unknown, Connected, Disconnected
+		Unknown,
+		Connected,
+		Disconnected,
 	}
 
 	// NSInteger -> GKVoiceChat.h
@@ -232,32 +231,50 @@ namespace GameKit {
 		Disconnected,
 		Speaking,
 		Silent,
-		Connecting
+		Connecting,
 	}
 
 	// NSInteger -> GKPlayer.h
 	[Native]
 	public enum GKPhotoSize : long {
-		Small, Normal
+		Small,
+		Normal,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedMatchStatus : long {
-		Unknown, Open, Ended, Matching
+		Unknown,
+		Open,
+		Ended,
+		Matching,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedParticipantStatus : long {
-		Unknown, Invited, Declined, Matching, Active, Done
+		Unknown,
+		Invited,
+		Declined,
+		Matching,
+		Active,
+		Done,
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
 	[Native]
 	public enum GKTurnBasedMatchOutcome : long {
-		None, Quit, Won, Lost, Tied, TimeExpired,
-		First, Second, Third, Fourth, CustomRange = 0xff0000
+		None,
+		Quit,
+		Won,
+		Lost,
+		Tied,
+		TimeExpired,
+		First,
+		Second,
+		Third,
+		Fourth,
+		CustomRange = 0xff0000,
 	}
 
 	// NSInteger -> GKChallenge.h
@@ -267,11 +284,10 @@ namespace GameKit {
 		Invalid = 0,
 		Pending,
 		Completed,
-		Declined
+		Declined,
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GKGameCenterViewControllerState : long {
@@ -290,7 +306,6 @@ namespace GameKit {
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		[TV (15, 0)]
-		[NoWatch]
 		LocalPlayerFriendsList = 5,
 	}
 
@@ -310,7 +325,7 @@ namespace GameKit {
 	public enum GKMatchType : ulong {
 		PeerToPeer,
 		Hosted,
-		TurnBased
+		TurnBased,
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
@@ -319,7 +334,7 @@ namespace GameKit {
 		Active,
 		Complete,
 		Resolved,
-		Canceled
+		Canceled,
 	}
 
 	[Native]
@@ -346,7 +361,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[NoWatch]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKAccessPointLocation : long {
@@ -358,7 +372,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKLeaderboardType : long {
@@ -368,7 +381,6 @@ namespace GameKit {
 
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[NoWatch]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GKMatchmakingMode : long {
@@ -381,7 +393,6 @@ namespace GameKit {
 		InviteOnly = 3,
 	}
 
-	[Watch (7, 4)]
 	[TV (14, 5)]
 	[iOS (14, 5)]
 	[MacCatalyst (14, 5)]

@@ -23,7 +23,7 @@ using Vector3 = global::OpenTK.Vector3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 
-#if __IOS__ || WATCH
+#if __IOS__
 namespace NearbyInteraction {
 	partial class NINearbyObject
 	{
@@ -52,7 +52,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), Watch (9,0), MacCatalyst (16,0)]
+		[iOS (16,0), MacCatalyst (16,0)]
 #endif // NET
 		// Following similar strategy found here: https://github.com/xamarin/maccore/issues/2274
 		[Field ("NINearbyObjectWorldTransformNotAvailable",  "NearbyInteraction")]

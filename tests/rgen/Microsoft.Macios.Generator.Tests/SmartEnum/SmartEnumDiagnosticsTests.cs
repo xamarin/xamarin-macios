@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using Xamarin.Tests;
@@ -17,6 +19,12 @@ public class SmartEnumDiagnosticsTests : BaseGeneratorTestClass {
 			(ApplePlatform.iOS, "AVCaptureDeviceTypeExtensions", "AVCaptureDeviceTypeEnum.cs", "ExpectedAVCaptureDeviceTypeEnum.cs", null),
 			(ApplePlatform.iOS, "AVCaptureSystemPressureLevelExtensions", "AVCaptureSystemPressureLevel.cs", "ExpectedAVCaptureSystemPressureLevel.cs", null),
 			(ApplePlatform.iOS, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectediOSAVMediaCharacteristics.cs", null),
+			(ApplePlatform.TVOS, "AVCaptureDeviceTypeExtensions", "AVCaptureDeviceTypeEnum.cs", "ExpectedAVCaptureDeviceTypeEnum.cs", null),
+			(ApplePlatform.TVOS, "AVCaptureSystemPressureLevelExtensions", "AVCaptureSystemPressureLevel.cs", "ExpectedAVCaptureSystemPressureLevel.cs", null),
+			(ApplePlatform.TVOS, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectediOSAVMediaCharacteristics.cs", null),
+			(ApplePlatform.MacCatalyst, "AVCaptureDeviceTypeExtensions", "AVCaptureDeviceTypeEnum.cs", "ExpectedAVCaptureDeviceTypeEnum.cs", null),
+			(ApplePlatform.MacCatalyst, "AVCaptureSystemPressureLevelExtensions", "AVCaptureSystemPressureLevel.cs", "ExpectedAVCaptureSystemPressureLevel.cs", null),
+			(ApplePlatform.MacCatalyst, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectediOSAVMediaCharacteristics.cs", null),
 			(ApplePlatform.MacOSX, "AVMediaCharacteristicsExtensions", "AVMediaCharacteristics.cs", "ExpectedMacOSAVMediaCharacteristics.cs", null),
 			(ApplePlatform.MacOSX, "CustomLibraryEnumExtensions", "CustomLibraryEnum.cs", "ExpectedCustomLibraryEnum.cs", "ExpectedCustomLibraryEnumLibrariesClass.cs"),
 			(ApplePlatform.MacOSX, "CustomLibraryEnumInternalExtensions", "CustomLibraryEnumInternal.cs", "ExpectedCustomLibraryEnumInternal.cs", "ExpectedCustomLibraryEnumInternalLibrariesClass.cs"),
@@ -48,43 +56,4 @@ public class SmartEnumDiagnosticsTests : BaseGeneratorTestClass {
 	public void ExtensionGenerationTests (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 		=> CompareGeneratedCode (platform, className, inputFileName, inputText, outputFileName, expectedOutputText, expectedLibraryText);
 
-	[Theory]
-	[AllSupportedPlatforms]
-	public void DuplicatedSymbolsDoNotGenerateCode (ApplePlatform platform)
-	{
-		const string inputText = @"
-using Foundation;
-using ObjCRuntime;
-using ObjCBindings;
-
-namespace AVFoundation;
-
-[BindingType]
-public enum AVCaptureSystemPressureExampleLevel {
-	[Field<EnumValue> (""AVCaptureSystemPressureLevelNominal"")]
-	Nominal,
-
-	// duplicated, this should be an error
-	[Field<EnumValue> (""AVCaptureSystemPressureLevelNominal"")]
-	Fair,
-
-	[Field<EnumValue> (""AVCaptureSystemPressureLevelSerious"")]
-	Serious,
-
-	[Field<EnumValue> (""AVCaptureSystemPressureLevelCritical"")]
-	Critical,
-
-	[Field<EnumValue> (""AVCaptureSystemPressureLevelShutdown"")]
-	Shutdown,
-}";
-
-		// We need to create a compilation with the required source code.
-		var (compilation, _) = CreateCompilation (platform, sources: inputText);
-
-		// Run generators and retrieve all results.
-		var runResult = RunGenerators (compilation);
-
-		// bad formed bindings should not generate code
-		Assert.Empty (runResult.GeneratedTrees);
-	}
 }

@@ -428,6 +428,8 @@ namespace Cecil.Tests {
 				case "SceneKit.SCNAnimationPlayer.RemoveAnimation(Foundation.NSString, System.Runtime.InteropServices.NFloat)":
 				case "SceneKit.SCNAnimationPlayer.ResumeAnimation(Foundation.NSString)":
 				case "System.Boolean PdfKit.PdfView::EnableDataDetectors()": // added in tvOS 18.2, when it was already obsoleted on other platforms.
+				case "System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoOrientation()": // added in tvOS 17.0, when it was already obsoleted on other platforms.
+				case "AVFoundation.AVCapturePhoto.GetFileDataRepresentation(Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>, Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>, CoreVideo.CVPixelBuffer, AVFoundation.AVDepthData)": // added in tvOS 17.0, when it was already obsoleted on other platforms.
 					return true;
 				}
 				break;

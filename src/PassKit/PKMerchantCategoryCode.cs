@@ -30,7 +30,7 @@ namespace PassKit {
 	[SupportedOSPlatform ("maccatalyst18.0")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (15, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0), Watch (11, 0)]
+	[Mac (15, 0), iOS (18, 0), NoTV, MacCatalyst (18, 0)]
 #endif
 	public struct PKMerchantCategoryCode {
 		short value;
