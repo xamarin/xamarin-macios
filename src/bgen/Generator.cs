@@ -1536,6 +1536,7 @@ public partial class Generator : IMemberGatherer {
 		if (exceptions.All (v => v is BindingException pe && !pe.Error)) {
 			foreach (var e in exceptions)
 				ErrorHelper.Show (e);
+			return;
 		}
 
 		throw new AggregateException (exceptions);
