@@ -206,6 +206,10 @@ namespace Xharness {
 		public string DOTNET_DIR { get; set; }
 		public string DOTNET_TFM { get; set; }
 
+		public Version DotNetVersion {
+			get => Version.Parse (DOTNET_TFM.Replace ("net", ""));
+		}
+
 		// Run
 
 		public string XcodeRoot { get; private set; }
