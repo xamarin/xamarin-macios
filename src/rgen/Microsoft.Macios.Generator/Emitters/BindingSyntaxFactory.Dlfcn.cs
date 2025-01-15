@@ -2,10 +2,12 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
+using Microsoft.Macios.Generator.Extensions;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Generator.Emitters;
@@ -48,15 +50,39 @@ static partial class BindingSyntaxFactory {
 	/// <summary>
 	/// Generic method that returns the syntax for the Get* methods.
 	/// </summary>
-	/// <param name="methodName">The method name for the invocation.</param>
 	/// <param name="libraryName">The name of the library that contains the field.</param>
 	/// <param name="fieldName">The field name literal.</param>
-	/// <returns></returns>
-	static CompilationUnitSyntax GetConstant (string methodName, string libraryName, string fieldName)
+	/// <param name="methodName">The method name for the invocation.</param>
+	/// <returns>The syntax needed to get a constant.</returns>
+	static CompilationUnitSyntax GetConstant (string libraryName, string fieldName, [CallerMemberName] string methodName = "")
 	{
 		var arguments = new SyntaxNodeOrToken [] {
 			GetLibraryArgument (libraryName), Token (SyntaxKind.CommaToken),
 			GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, fieldName),
+		};
+		return StaticInvocationExpression (Dlfcn, methodName, arguments);
+	}
+
+	/// <summary>
+	/// Generic method that returns the syntax for the Set methods.
+	/// </summary>
+	/// <param name="libraryName">The name of the library that contains the field.</param>
+	/// <param name="fieldName">The field name literal.</param>
+	/// <param name="variableName">The name of the variable to use for the value. This is NOT a literal value.</param>
+	/// <param name="methodName">The method name for the invocation.</param>
+	/// <param name="castTarget">An optional type to cast to.</param>
+	/// <returns>The sytax needed to set a constant.</returns>
+	static CompilationUnitSyntax SetConstant (string libraryName, string fieldName,
+		string variableName, [CallerMemberName] string methodName = "", string? castTarget = null)
+	{
+		var arguments = new SyntaxNodeOrToken [] {
+			GetLibraryArgument (libraryName), 
+			Token (SyntaxKind.CommaToken),
+			GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, fieldName),
+			Token (SyntaxKind.CommaToken),
+			Argument (castTarget is null 
+				? IdentifierName (variableName)
+				: CastExpression (IdentifierName (castTarget), IdentifierName (variableName))),
 		};
 		return StaticInvocationExpression (Dlfcn, methodName, arguments);
 	}
@@ -79,7 +105,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetStringConstant (string libraryName, string fieldName)
-		=> GetConstant ("GetStringConstant", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
 
 	/// <summary>
@@ -89,7 +115,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetIndirect (string libraryName, string fieldName)
-		=> GetConstant ("GetIndirect", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetStruct;lt&type;gt& (libraryName, fieldName);"];
@@ -108,10 +134,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetSByte (string libraryName, string fieldName)
-		=> GetConstant ("GetSByte", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetSByte (string libraryName, string symbol, sbyte value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetSByte (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetSByte (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetSByte (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetSByte (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetByte (libraryName, fieldName);"];
@@ -120,11 +164,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetByte (string libraryName, string fieldName)
-		=> GetConstant ("GetByte", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-
-	public static CompilationUnitSyntax SetByte (string libraryName, string symbol, byte value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetByte (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetByte (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetByte (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetByte (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetInt16 (libraryName, fieldName);"];
@@ -133,10 +194,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetInt16 (string libraryName, string fieldName)
-		=> GetConstant ("GetInt16", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetInt16 (string libraryName, string symbol, short value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetInt16 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt16 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetInt16 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetUInt16 (libraryName, fieldName);"];
@@ -145,11 +224,29 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetUInt16 (string libraryName, string fieldName)
-		=> GetConstant ("GetUInt16", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetUInt16 (IntPtr handle, string symbol, ushort value)
-		=> throw new NotImplementedException ();
-
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt16 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt16 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
+	
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetInt32 (libraryName, fieldName);"];
 	/// </summary>
@@ -157,10 +254,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetInt32 (string libraryName, string fieldName)
-		=> GetConstant ("GetInt32", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetInt32 (IntPtr handle, string symbol, int value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetInt32 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt32 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetInt32 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetUInt32 (libraryName, fieldName);"];
@@ -169,10 +284,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetUInt32 (string libraryName, string fieldName)
-		=> GetConstant ("GetUInt32", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetUInt32 (IntPtr handle, string symbol, uint value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt32 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetInt64 (libraryName, fieldName);"];
@@ -181,10 +314,28 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetInt64 (string libraryName, string fieldName)
-		=> GetConstant ("GetInt64", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetInt64 (IntPtr handle, string symbol, long value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt64 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetUInt64 (libraryName, fieldName);"];
@@ -193,31 +344,58 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetUInt64 (string libraryName, string fieldName)
-		=> GetConstant ("GetUInt64", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetUInt64 (string libraryName, string symbol, ulong value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt64 (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt64 (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
+	
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUInt64 (libraryName, fieldName, (cast)value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <param name="castTarget">An optional type to cast too.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
+		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
-	public static CompilationUnitSyntax SetString (string libraryName, string symbol, string? value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetString (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetString (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
-	public static CompilationUnitSyntax SetArray (string libraryName, string symbol, /*NSArray?*/ string array)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetArray (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetArray (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
-	public static CompilationUnitSyntax SetObject (string libraryName, string symbol, /*NSObject?*/ string value)
-		=> throw new NotImplementedException ();
-
-	public static CompilationUnitSyntax GetNInt (string libraryName, string symbol)
-		=> GetConstant ("GetNInt", libraryName, symbol);
-
-	public static CompilationUnitSyntax SetNInt (IntPtr handle, string symbol, nint value)
-		=> throw new NotImplementedException ();
-
-	public static CompilationUnitSyntax GetNUInt (string libraryName, string symbol)
-		=> GetConstant ("GetNInt", libraryName, symbol);
-
-	public static CompilationUnitSyntax SetNUInt (string libraryName, string symbol, nuint value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetObject (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetObject (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetNFloat (libraryName, fieldName);"];
@@ -226,10 +404,17 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetNFloat (string libraryName, string fieldName)
-		=> GetConstant ("GetNFloat", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetNFloat (string libraryName, string symbol, /*nfloat*/ string value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetNFloat (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetNFloat (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetIntPtr (libraryName, fieldName);"];
@@ -238,7 +423,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetIntPtr (string libraryName, string fieldName)
-		=> GetConstant ("GetIntPtr", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetUIntPtr (libraryName, fieldName);"];
@@ -247,16 +432,36 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetUIntPtr (string libraryName, string fieldName)
-		=> GetConstant ("GetUIntPtr", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetUIntPtr (string libraryName, string symbol, UIntPtr value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetUIntPtr (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetUIntPtr (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
-	public static CompilationUnitSyntax SetIntPtr (string libraryName, string symbol, IntPtr value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetIntPtr (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetIntPtr (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
-	public static CompilationUnitSyntax GetCGRect (string libraryName, string symbol)
-		=> GetConstant ("GetCGRect", libraryName, symbol);
+	/// <summary>
+	/// Generates a call for "Dlfcn.GetCGRect (libraryName, fieldName);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax GetCGRect (string libraryName, string fieldName)
+		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetCGSize (libraryName, fieldName);"];
@@ -265,10 +470,17 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetCGSize (string libraryName, string fieldName)
-		=> GetConstant ("GetCGSize", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetCGSize (string libraryName, string symbol, /*CGSize*/ string value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetCGSize (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetCGSize (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetDouble (libraryName, fieldName);"];
@@ -277,10 +489,17 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetDouble (string libraryName, string fieldName)
-		=> GetConstant ("GetDouble", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetDouble (string libraryName, string symbol, double value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetDouble (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetDouble (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetFloat (libraryName, fieldName);"];
@@ -289,10 +508,17 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetFloat (string libraryName, string fieldName)
-		=> GetConstant ("GetFloat", libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName);
 
-	public static CompilationUnitSyntax SetFloat (IntPtr handle, string symbol, float value)
-		=> throw new NotImplementedException ();
+	/// <summary>
+	/// Generates a call for "Dlfcn.SetFloat (libraryName, fieldName, value);"];
+	/// </summary>
+	/// <param name="libraryName">The library from where the field will be loaded.</param>
+	/// <param name="fieldName">The field name.</param>
+	/// <param name="variableName">The name of the variable to get the value from.</param>
+	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
+	public static CompilationUnitSyntax SetFloat (string libraryName, string fieldName, string variableName)
+		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
 	/// Generates a call for "Runtime.GetNSObject&lt;nsobjectType&gt; (Dlfcn.GetIndirect (libraryName, fieldName))!;"];
@@ -319,10 +545,6 @@ static partial class BindingSyntaxFactory {
 			ArgumentList (SingletonSeparatedList (Argument (getIndirectInvocation)));
 		return GetNSObject (nsObjectType, getNSObjectArguments, suppressNullableWarning: true);
 	}
-
-	public static CompilationUnitSyntax SetNSObject (string nsObjectType, string libraryName, string symbol,
-		string value)
-		=> throw new NotImplementedException ();
 
 	public static CompilationUnitSyntax GetBlittableField (string blittableType, string libraryName, string fieldName)
 	{
@@ -358,10 +580,99 @@ static partial class BindingSyntaxFactory {
 		return compilationUnit;
 	}
 
+	/// <summary>
+	/// Returns a tuple with the getter and setter for a given field property.
+	/// </summary>
+	/// <param name="property">The property whose getter and setter we want to generate.</param>
+	/// <returns>A tuple with the syntax factory methods for the getters and setters.</returns>
+	/// <exception cref="NotSupportedException">When the property is not a field property.</exception>
+	/// <exception cref="NotImplementedException">When the return type of the property is not supported.</exception>
+	public static (Func<string, string, CompilationUnitSyntax> Getter,
+		Func<string, string, string, CompilationUnitSyntax> Setter) FieldConstantGetterSetter (
+			in Property property)
+	{
+		// check if this is a field, if it is not, we have an issue with the code generator
+		if (!property.IsField)
+			throw new NotSupportedException ("Cannot retrieve getter for non field property.");
 
-	public static CompilationUnitSyntax SetBlittableField (string nsObjectType, string libraryName, string fieldName,
-		string value)
-		=> throw new NotImplementedException ();
+		var fieldType = property.ReturnType.Name;
+		var underlyingEnumType = property.ReturnType.EnumUnderlyingType.GetKeyword ();
+
+		Func<string, string, CompilationUnitSyntax> WrapGenericCall (string genericType,
+			Func<string, string, string, CompilationUnitSyntax> genericCall)
+		{
+			return (libraryName, fieldName) => genericCall (genericType, libraryName, fieldName);
+		}
+
+		Func<string, string, string, CompilationUnitSyntax> WrapThrow ()
+		{
+			return (_, _, _) => ThrowNotSupportedException ($"Setting fields of type '{fieldType}' is not supported.");
+		}
+
+		Func<string, string, string, CompilationUnitSyntax> WithCast (Func<string, string, string, string?, CompilationUnitSyntax> setterCall)
+		{
+			return (libraryName, fieldName, variableName) =>
+				setterCall (libraryName, fieldName, variableName, underlyingEnumType);
+		}
+
+		if (property.ReturnType.IsNSObject) {
+			return property.ReturnType switch {
+				{ Name: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString),
+				{ Name: "Foundation.NSArray" } => (
+					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField), 
+					Setter: SetArray),
+				_ => (
+					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
+					Setter: SetObject)
+			};
+		}
+
+		// keep the formatting to make it more readable
+#pragma warning disable format
+		// use the return type and the special type of the property to decide what getter we are going to us
+		return property.ReturnType switch {
+			// special types
+			{ Name: "CoreGraphics.CGSize" } => (Getter: GetCGSize, Setter: SetCGSize),
+			{ Name: "CoreMedia.CMTag" } => (
+				Getter: WrapGenericCall ("CoreMedia.CMTag", GetStruct),
+				Setter: WrapThrow ()),
+			{ Name: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
+
+			// Billable types 
+			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
+				=> (Getter: WrapGenericCall (property.ReturnType.Name, GetBlittableField),
+					Setter: WrapThrow ()),
+
+			// enum types, decide based on its enum backing field, smart enums have to be done in the binding
+			// manually
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => (Getter: GetSByte, Setter: WithCast (SetSByte)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => (Getter: GetByte, Setter: WithCast (SetByte)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => (Getter: GetInt16, Setter: WithCast (SetInt16)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => (Getter: GetUInt16, Setter: WithCast (SetUInt16)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => (Getter: GetInt32, Setter: WithCast (SetInt32)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => (Getter: GetUInt32, Setter: WithCast (SetUInt32)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => (Getter: GetInt64, Setter: WithCast (SetInt64)),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => (Getter: GetUInt64, Setter: WithCast (SetUInt64)),
+
+			// General special types
+			{ SpecialType: SpecialType.System_SByte } => (Getter: GetSByte, Setter: SetSByte),
+			{ SpecialType: SpecialType.System_Byte } => (Getter: GetByte, Setter: SetByte),
+			{ SpecialType: SpecialType.System_Int16 } => (Getter: GetInt16, Setter: SetInt16),
+			{ SpecialType: SpecialType.System_UInt16 } => (Getter: GetUInt16, Setter: SetUInt16),
+			{ SpecialType: SpecialType.System_IntPtr } => (Getter: GetIntPtr, Setter: SetIntPtr),
+			{ SpecialType: SpecialType.System_Int32 } => (Getter: GetInt32, Setter: SetInt32),
+			{ SpecialType: SpecialType.System_UIntPtr } => (Getter: GetUIntPtr, Setter: SetUIntPtr),
+			{ SpecialType: SpecialType.System_UInt32 } => (Getter: GetUInt32, Setter: SetUInt32),
+			{ SpecialType: SpecialType.System_Int64 } => (Getter: GetInt64, Setter: SetInt64),
+			{ SpecialType: SpecialType.System_UInt64 } => (Getter: GetUInt64, Setter: SetUInt64),
+			{ SpecialType: SpecialType.System_Double } => (Getter: GetDouble, Setter: SetDouble),
+			{ SpecialType: SpecialType.System_Single } => (Getter: GetFloat, Setter: SetFloat),
+
+			// We do not support the property
+			_ => throw new NotImplementedException ($"Return type {property.ReturnType} is not implemented."),
+		};
+#pragma warning restore format
+	}
 
 	/// <summary>
 	/// Returns the getter needed to access the native value exposed by a field property. The method will return the
@@ -380,55 +691,28 @@ static partial class BindingSyntaxFactory {
 		// retrieve all the necessary data from the info field of the property
 		var libraryName = property.ExportFieldData.Value.LibraryName;
 		var symbolName = property.ExportFieldData.Value.FieldData.SymbolName;
+		return FieldConstantGetterSetter (property).Getter (libraryName, symbolName);
+	}
 
-		if (property.ReturnType.IsNSObject) {
-			return property.ReturnType.Name == "Foundation.NSString"
-				? GetStringConstant (libraryName, symbolName)
-				// all nsobjects are retrieved using the same generic getter
-				: GetNSObjectField (property.ReturnType.Name, libraryName, symbolName);
-		}
+	/// <summary>
+	/// Returns the setter needed to access the native value exposed by a field property. The method will return the
+	/// Dflcn calls needed.
+	/// </summary>
+	/// <param name="property">A field property under code generation.</param>
+	/// <param name="variableName">The name of the variable that contains the value to set.</param>
+	/// <returns>The appropriate Dlfcn call to retrieve the native value of a field property.</returns>
+	/// <exception cref="NotSupportedException">When the caller tries to generate the call for a no field property.</exception>
+	/// <exception cref="NotImplementedException">When the property type is not supported for a field property.</exception>
+	public static CompilationUnitSyntax FieldConstantSetter (in Property property, string variableName)
+	{
+		if (variableName == null) throw new ArgumentNullException (nameof(variableName));
+		// check if this is a field, if it is not, we have an issue with the code generator
+		if (!property.IsField)
+			throw new NotSupportedException ("Cannot retrieve getter for non field property.");
 
-		// keep the formatting to make it more readable
-#pragma warning disable format
-		// use the return type and the special type of the property to decide what getter we are going to us
-		return property.ReturnType switch {
-			// special types
-			{ Name: "CoreGraphics.CGSize" } => GetCGSize (libraryName, symbolName),
-			{ Name: "CoreMedia.CMTag" } => GetStruct ("CoreMedia.CMTag", libraryName, symbolName),
-			{ Name: "nfloat" } => GetNFloat (libraryName, symbolName),
-
-			// Blittable types 
-			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
-				=> GetBlittableField (property.ReturnType.Name, libraryName, symbolName),
-
-			// enum types, decide based on its enum backing field, smart enums have to be done in the binding
-			// manually
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => GetByte (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName),
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName),
-
-			// General special types
-			{ SpecialType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Byte } => GetByte (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_IntPtr } => GetIntPtr (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_UIntPtr } => GetUIntPtr (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Double } => GetDouble (libraryName, symbolName),
-			{ SpecialType: SpecialType.System_Single } => GetFloat (libraryName, symbolName),
-
-			// We do not support the property
-			_ => throw new NotImplementedException ($"Return type {property.ReturnType} is not implemented."),
-		};
-#pragma warning restore format
+		// retrieve all the necessary data from the info field of the property
+		var libraryName = property.ExportFieldData.Value.LibraryName;
+		var symbolName = property.ExportFieldData.Value.FieldData.SymbolName;
+		return FieldConstantGetterSetter (property).Setter (libraryName, symbolName, variableName);
 	}
 }
