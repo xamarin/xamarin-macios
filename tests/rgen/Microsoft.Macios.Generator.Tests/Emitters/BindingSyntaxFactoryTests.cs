@@ -398,27 +398,6 @@ namespace CoreGraphics {
 			yield return [uintPtrFieldProperty,
 				"Dlfcn.GetUIntPtr (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
 
-			const string sizeFFieldProperty = @"
-using System;
-using System.Drawing;
-using Foundation;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial SizeF GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [sizeFFieldProperty,
-				"Dlfcn.GetSizeF (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
-
 			const string nintFieldProperty = @"
 using System;
 using Foundation;

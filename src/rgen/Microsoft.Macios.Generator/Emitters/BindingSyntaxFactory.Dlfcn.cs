@@ -295,18 +295,6 @@ static partial class BindingSyntaxFactory {
 		=> throw new NotImplementedException ();
 
 	/// <summary>
-	/// Generates a call for "Dlfcn.GetSizeF (libraryName, fieldName);"];
-	/// </summary>
-	/// <param name="libraryName">The library from where the field will be loaded.</param>
-	/// <param name="fieldName">The field name.</param>
-	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetSizeF (string libraryName, string fieldName)
-		=> GetConstant ("GetSizeF", libraryName, fieldName);
-
-	public static CompilationUnitSyntax GetSizeF (IntPtr handle, string fieldName, float value)
-		=> throw new NotImplementedException ();
-
-	/// <summary>
 	/// Generates a call for "Runtime.GetNSObject;lt&Foundation.NSArray;gt& (Dlfcn.GetIndirect (libraryName, fieldName))!;"];
 	/// </summary>
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
@@ -408,7 +396,6 @@ static partial class BindingSyntaxFactory {
 			{ Name: "CoreGraphics.CGSize" } => GetCGSize (libraryName, symbolName),
 			{ Name: "CoreMedia.CMTag" } => GetStruct ("CoreMedia.CMTag", libraryName, symbolName),
 			{ Name: "nfloat" } => GetNFloat (libraryName, symbolName),
-			{ Name: "System.Drawing.SizeF" } => GetSizeF (libraryName, symbolName),
 
 			// Billable types 
 			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
