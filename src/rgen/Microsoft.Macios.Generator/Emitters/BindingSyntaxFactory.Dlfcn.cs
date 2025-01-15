@@ -295,7 +295,7 @@ static partial class BindingSyntaxFactory {
 		=> throw new NotImplementedException ();
 
 	/// <summary>
-	/// Generates a call for "Runtime.GetNSObject;lt&Foundation.NSArray;gt& (Dlfcn.GetIndirect (libraryName, fieldName))!;"];
+	/// Generates a call for "Runtime.GetNSObject&lt;nsobjectType&gt; (Dlfcn.GetIndirect (libraryName, fieldName))!;"];
 	/// </summary>
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
