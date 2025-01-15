@@ -3433,7 +3433,7 @@ public partial class Generator : IMemberGatherer {
 	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (AttributeManager.IsNullable (mi))
-			exceptions.Add (ErrorHelper.CreateError (1118, mi));
+			exceptions.Add (ErrorHelper.CreateWarning (1118, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
 			var safe_name = pi.Name.GetSafeParamName ();
@@ -4190,7 +4190,7 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.IsNullable (setter);
 			if (null_allowed)
-				exceptions.Add (ErrorHelper.CreateError (1118, setter));
+				exceptions.Add (ErrorHelper.CreateWarning (1118, setter));
 			null_allowed |= AttributeManager.IsNullable (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
