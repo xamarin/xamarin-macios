@@ -397,7 +397,7 @@ static partial class BindingSyntaxFactory {
 			{ Name: "CoreMedia.CMTag" } => GetStruct ("CoreMedia.CMTag", libraryName, symbolName),
 			{ Name: "nfloat" } => GetNFloat (libraryName, symbolName),
 
-			// Billable types 
+			// Blittable types 
 			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
 				=> GetBlittableField (property.ReturnType.Name, libraryName, symbolName),
 
