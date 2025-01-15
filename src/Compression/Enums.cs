@@ -29,7 +29,7 @@ namespace Compression {
 #if NET
 		[iOS (15, 0), Mac (12, 0), TV (15, 0), MacCatalyst (15, 0)]
 #else
-		[iOS (15, 0), Mac (12, 0), TV (15, 0), Watch (8, 0)]
+		[iOS (15, 0), Mac (12, 0), TV (15, 0)]
 #endif
 		LZBitmap = 0x702,
 	}

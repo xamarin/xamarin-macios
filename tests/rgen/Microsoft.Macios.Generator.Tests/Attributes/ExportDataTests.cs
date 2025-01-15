@@ -16,8 +16,8 @@ public class ExportDataTests {
 	[Fact]
 	public void TestExportDataEqualsDiffSelector ()
 	{
-		var x = new ExportData<Field> ("field1");
-		var y = new ExportData<Field> ("field2");
+		var x = new ExportData<Method> ("field1");
+		var y = new ExportData<Method> ("field2");
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
 		Assert.False (x == y);
@@ -27,8 +27,8 @@ public class ExportDataTests {
 	[Fact]
 	public void TestExportDataEqualsDiffArgumentSemantic ()
 	{
-		var x = new ExportData<Field> ("property", ArgumentSemantic.None);
-		var y = new ExportData<Field> ("property", ArgumentSemantic.Retain);
+		var x = new ExportData<Method> ("property", ArgumentSemantic.None);
+		var y = new ExportData<Method> ("property", ArgumentSemantic.Retain);
 		Assert.False (x.Equals (y));
 		Assert.False (y.Equals (x));
 		Assert.False (x == y);
@@ -52,14 +52,14 @@ public class ExportDataTests {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
-				Field.Default,
-				new ExportData<Field> ("symbol", ArgumentSemantic.None, Field.Default),
-				"{ Type: 'ObjCBindings.Field', Selector: 'symbol', ArgumentSemantic: 'None', Flags: 'Default' }"
+				Method.Default,
+				new ExportData<Method> ("symbol", ArgumentSemantic.None, Method.Default),
+				"{ Type: 'ObjCBindings.Method', Selector: 'symbol', ArgumentSemantic: 'None', Flags: 'Default' }"
 			];
 			yield return [
-				Field.Default,
-				new ExportData<Field> ("symbol"),
-				"{ Type: 'ObjCBindings.Field', Selector: 'symbol', ArgumentSemantic: 'None', Flags: 'Default' }"
+				Method.Default,
+				new ExportData<Method> ("symbol"),
+				"{ Type: 'ObjCBindings.Method', Selector: 'symbol', ArgumentSemantic: 'None', Flags: 'Default' }"
 			];
 			yield return [
 				Property.Default,

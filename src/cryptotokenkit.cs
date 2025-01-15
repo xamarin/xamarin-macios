@@ -19,7 +19,7 @@ namespace CryptoTokenKit {
 #endif
 	[Native]
 	[ErrorDomain ("TKErrorDomain")]
-	[iOS (9, 0), Mac (10, 10), MacCatalyst (13, 1), TV (9, 0), Watch (2, 0)]
+	[iOS (9, 0), Mac (10, 10), MacCatalyst (13, 1), TV (9, 0)]
 	public enum TKErrorCode : long
 	{
 		NotImplemented = -1,
@@ -36,7 +36,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[Native]
 	public enum TKSmartCardSlotState : long
 	{
@@ -50,7 +50,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Native ("TKSmartCardPINCharset")]
 	public enum TKSmartCardPinCharset : long
 	{
@@ -62,7 +62,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Native ("TKSmartCardPINEncoding")]
 	public enum TKSmartCardPinEncoding : long
 	{
@@ -74,7 +74,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Native ("TKSmartCardPINJustification")]
 	public enum TKSmartCardPinJustification : long
 	{
@@ -86,7 +86,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[Flags]
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Native ("TKSmartCardPINCompletion")]
 	public enum TKSmartCardPinCompletion : ulong
 	{
@@ -99,7 +99,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[Flags]
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Native ("TKSmartCardPINConfirmation")]
 	public enum TKSmartCardPinConfirmation : ulong
 	{
@@ -112,7 +112,7 @@ namespace CryptoTokenKit {
 	[Experimental ("APL0001")]
 #endif
 	[Flags]
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[Native]
 	public enum TKSmartCardProtocol : ulong
 	{
@@ -126,7 +126,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[Native]
 	public enum TKTokenOperation : long
 	{
@@ -140,7 +140,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 12), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 12), MacCatalyst (13, 1), TV (13, 0)]
 	[Protocol]
 	interface TKSmartCardTokenDriverDelegate : TKTokenDriverDelegate
 	{
@@ -158,7 +158,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[Protocol]
 	interface TKSmartCardUserInteractionDelegate
 	{
@@ -192,7 +192,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenDelegate
@@ -214,12 +214,12 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenDriverDelegate
 	{
-		[Watch (7,0), TV (14,0), Mac (10,15), iOS (14,0)]
+		[TV (14,0), Mac (10,15), iOS (14,0)]
 		[Export ("tokenDriver:tokenForConfiguration:error:")]
 		[return: NullAllowed]
 		TKToken GetToken (TKTokenDriver driver, TKTokenConfiguration configuration, [NullAllowed] out NSError error);
@@ -236,7 +236,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenSessionDelegate
@@ -269,7 +269,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTlvRecord), Name = "TKBERTLVRecord")]
 	interface TKBerTlvRecord
 	{
@@ -287,7 +287,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTlvRecord), Name = "TKCompactTLVRecord")]
 	interface TKCompactTlvRecord
 	{
@@ -298,7 +298,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTlvRecord), Name = "TKSimpleTLVRecord")]
 	interface TKSimpleTlvRecord
 	{
@@ -319,7 +319,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKSmartCard
 	{
@@ -390,7 +390,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject), Name = "TKSmartCardATR")]
 	[DisableDefaultCtor]
 	interface TKSmartCardAtr
@@ -429,7 +429,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject), Name = "TKSmartCardATRInterfaceGroup")]
 	interface TKSmartCardAtrInterfaceGroup
 	{
@@ -452,7 +452,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenSession
@@ -475,7 +475,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject), Name = "TKSmartCardPINFormat")]
 	interface TKSmartCardPinFormat
 	{
@@ -510,7 +510,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKSmartCardSlot
 	{
@@ -542,7 +542,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 10), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKSmartCardSlotManager
@@ -567,7 +567,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKToken))]
 	interface TKSmartCardToken
 	{
@@ -582,7 +582,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof (TKTokenDriver))]
 	interface TKSmartCardTokenDriver
 	{
@@ -591,7 +591,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTokenSession))]
 	interface TKSmartCardTokenSession
 	{
@@ -607,7 +607,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKSmartCardUserInteraction
 	{
@@ -635,7 +635,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(TKSmartCardUserInteraction), Name = "TKSmartCardUserInteractionForPINOperation")]
 	interface TKSmartCardUserInteractionForPinOperation
 	{
@@ -659,7 +659,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof(TKSmartCardUserInteractionForPinOperation), Name = "TKSmartCardUserInteractionForSecurePINChange")]
 	interface TKSmartCardUserInteractionForSecurePinChange
 	{
@@ -670,7 +670,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0), Watch (8, 0)]
+	[iOS (13, 0), Mac (10, 11), MacCatalyst (13, 1), TV (13, 0)]
 	[BaseType (typeof (TKSmartCardUserInteractionForPinOperation), Name = "TKSmartCardUserInteractionForSecurePINVerification")]
 	interface TKSmartCardUserInteractionForSecurePinVerification
 	{
@@ -679,7 +679,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject), Name = "TKTLVRecord")]
 	[DisableDefaultCtor]
 	interface TKTlvRecord
@@ -707,7 +707,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKToken
@@ -726,7 +726,7 @@ namespace CryptoTokenKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0), Watch (7, 0)]
+		[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0)]
 		[Export ("configuration")]
 		TKTokenConfiguration Configuration { get; }
 
@@ -737,7 +737,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenAuthOperation : NSSecureCoding
 	{
@@ -748,7 +748,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0), Watch (7, 0)]
+	[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenConfiguration
@@ -774,7 +774,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenDriver
 	{
@@ -789,7 +789,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0), Watch (7, 0)]
+	[iOS (14, 0), Mac (10, 15), MacCatalyst (14, 0), TV (14, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenDriverConfiguration
@@ -814,7 +814,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenKeyAlgorithm
@@ -829,7 +829,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTokenKeychainItem))]
 	interface TKTokenKeychainCertificate
 	{
@@ -844,7 +844,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenKeychainContents
@@ -867,7 +867,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenKeychainItem
@@ -889,7 +889,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTokenKeychainItem))]
 	interface TKTokenKeychainKey
 	{
@@ -931,7 +931,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenKeyExchangeParameters
 	{
@@ -945,7 +945,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTokenAuthOperation))]
 	interface TKTokenPasswordAuthOperation
 	{
@@ -956,7 +956,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(TKTokenAuthOperation), Name = "TKTokenSmartCardPINAuthOperation")]
 	interface TKTokenSmartCardPinAuthOperation
 	{
@@ -979,7 +979,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+	[iOS (10, 0), Mac (10, 12), MacCatalyst (13, 1), TV (11, 0)]
 	[BaseType (typeof(NSObject))]
 	interface TKTokenWatcher
 	{
@@ -991,18 +991,17 @@ namespace CryptoTokenKit {
 		[Deprecated (PlatformName.iOS, 11, 0, "Use the default constructor followed by a call to the 'SetInsertionHandler' method.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, "Use the default constructor followed by a call to the 'SetInsertionHandler' method.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, "Use the default constructor followed by a call to the 'SetInsertionHandler' method.")]
-		[Deprecated (PlatformName.WatchOS, 4, 0, "Use the default constructor followed by a call to the 'SetInsertionHandler' method.")]
 		[Export ("initWithInsertionHandler:")]
 		NativeHandle Constructor (Action<NSString> insertionHandler);
 
-		[iOS (11, 0), Mac (10, 13), MacCatalyst (13, 1), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), MacCatalyst (13, 1), TV (11, 0)]
 		[Export ("setInsertionHandler:")]
 		void SetInsertionHandler (Action<NSString> insertionHandler);
 
 		[Export ("addRemovalHandler:forTokenID:")]
 		void AddRemovalHandler (Action<NSString> removalHandler, string tokenId);
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Export ("tokenInfoForTokenID:")]
 		[return: NullAllowed]
 		TKTokenWatcherTokenInfo GetTokenInfo (string tokenId);
@@ -1011,7 +1010,7 @@ namespace CryptoTokenKit {
 #if !STABLE_CRYPTOTOKENKIT
 	[Experimental ("APL0001")]
 #endif
-	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0), Watch (8, 0)]
+	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0), TV (15, 0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface TKTokenWatcherTokenInfo

@@ -179,35 +179,7 @@
 !extra-null-allowed! 'UIKit.UIView UIKit.UIScreen::SnapshotView(System.Boolean)' has a extraneous [NullAllowed] on return type
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::get_CurrentAttributedTitle()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::GetAttributedTitle(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary UIKit.UIBarItem::_GetTitleTextAttributes(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary UIKit.UICollectionViewLayoutInvalidationContext::get_InvalidatedDecorationIndexPaths()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary UIKit.UICollectionViewLayoutInvalidationContext::get_InvalidatedSupplementaryIndexPaths()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary UIKit.UIMotionEffect::ComputeKeyPathsAndRelativeValues(UIKit.UIOffset)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary UIKit.UISearchBar::_GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_NextFocusedIndexPath()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_PreviouslyFocusedIndexPath()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewDelegate::WillDeselectRow(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewDelegate::WillSelectRow(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewFocusUpdateContext::get_NextFocusedIndexPath()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewFocusUpdateContext::get_PreviouslyFocusedIndexPath()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UICollectionViewLayoutInvalidationContext::get_InvalidatedItemIndexPaths()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.UIFontDescriptor::GetObject(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.UIResponder::GetTargetForAction(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] UIKit.UICollisionBehavior::get_BoundaryIdentifiers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::get_AllTouches()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::TouchesForGestureRecognizer(UIKit.UIGestureRecognizer)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::TouchesForView(UIKit.UIView)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::TouchesForWindow(UIKit.UIWindow)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString UIKit.UICollectionReusableView::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString UIKit.UIResponder::get_TextInputContextIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString UIKit.UITableViewCell::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString UIKit.UITableViewHeaderFooterView::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUuid UIKit.UIDevice::get_IdentifierForVendor()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Class UIKit.UIStateRestoring::get_ObjectRestorationClass()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean UIKit.UIApplicationDelegate::FinishedLaunching(UIKit.UIApplication,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UIApplicationDelegate::WillFinishLaunching(UIKit.UIApplication,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UIScrollView::TouchesShouldBegin(Foundation.NSSet,UIKit.UIEvent,UIKit.UIView)' is missing an [NullAllowed] on parameter #1
@@ -216,22 +188,6 @@
 !missing-null-allowed! 'System.Double UIKit.UIViewControllerAnimatedTransitioning::TransitionDuration(UIKit.IUIViewControllerContextTransitioning)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.IntPtr UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.IntPtr UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.String UIKit.UIAlertAction::get_Title()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UIButton::get_CurrentTitle()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UIButton::Title(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UICollectionViewLayoutAttributes::get_RepresentedElementKind()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UIScrollViewAccessibilityDelegate::GetAccessibilityScrollStatus(UIKit.UIScrollView)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UISegmentedControl::TitleAt(System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UITableViewDataSource::TitleForFooter(UIKit.UITableView,System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UITableViewDataSource::TitleForHeader(UIKit.UITableView,System.IntPtr)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UITextDocumentProxy::get_DocumentContextAfterInput()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UITextDocumentProxy::get_DocumentContextBeforeInput()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String UIKit.UITextInputMode::get_PrimaryLanguage()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] UIKit.UIControl::GetActions(Foundation.NSObject,UIKit.UIControlEvent)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] UIKit.UIDictationPhrase::get_AlternativeInterpretations()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] UIKit.UITableViewDataSource::SectionIndexTitles(UIKit.UITableView)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] UIKit.UITextChecker::CompletionsForPartialWordRange(Foundation.NSRange,System.String,System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] UIKit.UITextChecker::GuessesForWordRange(Foundation.NSRange,System.String,System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Void Foundation.NSObject::set_AccessibilityAttributedUserInputLabels(Foundation.NSAttributedString[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSObject::set_AccessibilityUserInputLabels(System.String[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #1
@@ -366,9 +322,6 @@
 ## Enums not needed on tvOS
 !missing-enum! UIListSeparatorVisibility not bound
 !missing-enum! UIPrintRenderingQuality not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
 
 # Not binding for now, does not make sense on tvOS
 !missing-selector! +UITextInputContext::current not bound

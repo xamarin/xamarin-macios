@@ -2,8 +2,6 @@
 // Mostly notifications for keyboard events
 //
 
-#if !WATCH
-
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -91,5 +89,3 @@ namespace UIKit {
 #endif
 	}
 }
-
-#endif // !WATCH

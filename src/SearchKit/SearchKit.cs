@@ -35,7 +35,10 @@ using NativeHandle = System.IntPtr;
 
 namespace SearchKit {
 	public enum SKIndexType {
-		Unknown, Inverted, Vector, InvertedVector
+		Unknown,
+		Inverted,
+		Vector,
+		InvertedVector,
 	};
 
 	[Flags]
@@ -43,7 +46,7 @@ namespace SearchKit {
 		Default = 0,
 		NoRelevanceScores = 1 << 0,
 		SpaceMeansOr = 1 << 1,
-		FindSimilar = 1 << 2
+		FindSimilar = 1 << 2,
 	}
 
 #if NET

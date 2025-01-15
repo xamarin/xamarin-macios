@@ -111,6 +111,9 @@ namespace CoreMotion {
 
 	// untyped enum -> CMDeviceMotion.h
 	public enum CMMagneticFieldCalibrationAccuracy {
-		Uncalibrated = -1, Low, Medium, High
+		Uncalibrated = -1,
+		Low,
+		Medium,
+		High,
 	}
 }

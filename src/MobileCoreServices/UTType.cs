@@ -265,8 +265,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[Watch (5, 0)]
 #endif
 		public static bool Equals (NSString uti1, NSString uti2)
 		{

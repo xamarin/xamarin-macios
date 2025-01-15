@@ -10,8 +10,6 @@
 
 #nullable enable
 
-#if !WATCH
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -270,5 +268,3 @@ namespace AudioToolbox {
 #endif
 	}
 }
-
-#endif // IOS || TVOS

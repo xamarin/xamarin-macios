@@ -322,7 +322,7 @@ namespace CoreHaptics {
 		[Export ("playPatternFromData:error:")]
 		bool PlayPattern (NSData data, [NullAllowed] out NSError outError);
 
-		[TV (16, 0), NoWatch, MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Export ("playsAudioOnly")]
 		bool PlaysAudioOnly { get; set; }
 	}
@@ -371,11 +371,11 @@ namespace CoreHaptics {
 		[Field ("CHHapticPatternKeyParameterCurveControlPoints")]
 		NSString ParameterCurveControlPointsKey { get; }
 
-		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("CHHapticPatternKeyEventWaveformUseVolumeEnvelope")]
 		NSString EventWaveformUseVolumeEnvelopeKey { get; }
 
-		[TV (16, 0), NoWatch, MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("CHHapticPatternKeyEventWaveformLoopEnabled")]
 		NSString EventWaveformLoopEnabledKey { get; }
 	}
@@ -404,7 +404,7 @@ namespace CoreHaptics {
 		[Export ("ParameterCurveControlPointsKey")]
 		NSObject WeakParameterCurveControlPoints { get; set; }
 		[Advice ("The default value is true.")]
-		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		bool EventWaveformUseVolumeEnvelope { get; set; }
 	}
 
@@ -428,7 +428,7 @@ namespace CoreHaptics {
 		[Wrap ("this (patternDefinition.GetDictionary ()!, out outError)")]
 		NativeHandle Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
 
-		[TV (16, 0), NoWatch, MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Export ("initWithContentsOfURL:error:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
 
@@ -444,18 +444,18 @@ namespace CoreHaptics {
 
 	[Static]
 	[Internal]
-	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
+	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 	partial interface CHHapticAudioResourceKeys {
 		[Field ("CHHapticAudioResourceKeyUseVolumeEnvelope")]
 		NSString UseVolumeEnvelopeKey { get; }
 
-		[TV (16, 0), NoWatch, MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("CHHapticAudioResourceKeyLoopEnabled")]
 		NSString LoopEnabledKey { get; }
 
 	}
 
-	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
+	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 	[StrongDictionary ("CHHapticAudioResourceKeys")]
 	partial interface CHHapticAudioResourceDefinition {
 		[Advice ("The default value is true.")]

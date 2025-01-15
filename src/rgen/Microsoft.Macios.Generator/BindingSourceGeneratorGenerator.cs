@@ -43,12 +43,22 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		var provider = context.SyntaxProvider
 			.CreateSyntaxProvider (static (node, _) => IsValidNode (node),
 				static (ctx, _) => GetChangesForSourceGen (ctx))
-			.Where (tuple => tuple.BindingAttributeFound)
+			.Where (tuple => tuple.BindingAttributeFound);
+
+		var codeChanges = provider
 			.Select (static (tuple, _) => tuple.Changes)
 			.WithComparer (equalityComparer);
 
-		context.RegisterSourceOutput (context.CompilationProvider.Combine (provider.Collect ()),
-			((ctx, t) => GenerateCode (ctx, t.Left, t.Right)));
+		// ideally we could do a distinct, because each code change can return the same libs, this makes the library
+		// generation more common than what we would like, but it is the smallest code generation.
+		var libraryProvider = provider
+			.Select ((tuple, _) => (tuple.RootBindingContext, tuple.Changes.LibraryPaths));
+
+		context.RegisterSourceOutput (context.CompilationProvider.Combine (codeChanges.Collect ()),
+			((ctx, t) => GenerateCode (ctx, t.Right)));
+
+		context.RegisterSourceOutput (context.CompilationProvider.Combine (libraryProvider.Collect ()),
+			((ctx, t) => GenerateLibraryCode (ctx, t.Right)));
 	}
 
 	/// <summary>
@@ -61,8 +71,9 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		_ => false,
 	};
 
-	static (CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
+	static (RootBindingContext RootBindingContext, CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
+		var bindingContext = new RootBindingContext (context.SemanticModel);
 		// we do know that the context node has to be one of the base type declarations
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
@@ -71,18 +82,17 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 		if (!isBindingType) {
 			// return empty data + false
-			return (default, false);
+			return (bindingContext, default, false);
 		}
 
-		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, context.SemanticModel);
+		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, bindingContext);
 		// if code changes are null, return the default value and a false to later ignore the change
 		return codeChanges is not null
-			? (codeChanges.Value, isBindingType)
-			: (default, false);
+			? (bindingContext, codeChanges.Value, isBindingType)
+			: (bindingContext, default, false);
 	}
 
-	static void GenerateCode (SourceProductionContext context, Compilation compilation,
-		in ImmutableArray<CodeChanges> changesList)
+	static void GenerateCode (SourceProductionContext context, in ImmutableArray<CodeChanges> changesList)
 	{
 		// The process is as follows, get all the changes we have received from the incremental generator,
 		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
@@ -90,7 +100,6 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		//
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
-		var rootContext = new RootBindingContext (compilation);
 		var sb = new TabbedStringBuilder (new ());
 		foreach (var change in changesList) {
 			// init sb and add the header
@@ -100,7 +109,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				// write the using statements
 				CollectUsingStatements (change, sb, emitter);
 
-				var bindingContext = new BindingContext (rootContext, sb, change);
+				var bindingContext = new BindingContext (sb, change);
 				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
@@ -122,9 +131,6 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 					change.FullyQualifiedSymbol));
 			}
 		}
-
-		// we are done with the types, generate the library and trampoline code
-		GenerateLibraryCode (context, rootContext);
 	}
 
 	/// <summary>
@@ -132,15 +138,28 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// by the binding. This is a single generated file.
 	/// </summary>
 	/// <param name="context">Source production context.</param>
-	/// <param name="rootContext">The root context of the current generation.</param>
-	static void GenerateLibraryCode (SourceProductionContext context, RootBindingContext rootContext)
+	/// <param name="libraryChanges">The root context of the current generation.</param>
+	static void GenerateLibraryCode (SourceProductionContext context,
+		ImmutableArray<(RootBindingContext RootBindingContext, IEnumerable<(string LibraryName, string? LibraryPath)> LibraryPaths)> libraryChanges)
 	{
+		if (libraryChanges.Length == 0)
+			return;
+		// we have at least one, we can get the root binding changes from it
+		var rootBindingContext = libraryChanges [0].RootBindingContext;
 		var sb = new TabbedStringBuilder (new ());
 		sb.WriteHeader ();
-		// no need to collect the using statements, this file is completely generated
-		var emitter = new LibraryEmitter (rootContext, sb);
 
-		if (emitter.TryEmit (out var diagnostics)) {
+		// Each code change might have returned the same list of libraries, we need to get the distinct ones
+		var libComparer = new LibraryPathsComparer ();
+		var distinctLibraryPaths = libraryChanges
+			.SelectMany (library => library.LibraryPaths)
+			.Distinct (libComparer)
+			.ToImmutableArray ();
+
+		// no need to collect the using statements, this file is completely generated
+		var emitter = new LibraryEmitter (rootBindingContext, sb);
+
+		if (emitter.TryEmit (distinctLibraryPaths, out var diagnostics)) {
 			// only add a file when we do generate code
 			var code = sb.ToString ();
 			context.AddSource ($"{Path.Combine (emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",

@@ -9,7 +9,7 @@ using NativeHandle = System.IntPtr;
 
 namespace OSLog {
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogEntryLogLevel : long {
 		Undefined,
@@ -20,7 +20,7 @@ namespace OSLog {
 		Fault,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogEntrySignpostType : long {
 		Undefined,
@@ -29,7 +29,7 @@ namespace OSLog {
 		Event,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogEntryStoreCategory : long {
 		Undefined,
@@ -43,14 +43,14 @@ namespace OSLog {
 		LongTerm30,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	enum OSLogEnumeratorOptions : ulong {
 		Reverse = 0x1,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogMessageComponentArgumentCategory : long {
 		Undefined,
@@ -61,15 +61,21 @@ namespace OSLog {
 		UInt64,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogStoreScope : long {
+#if XAMCORE_5_0
+		[NoTV, NoiOS, NoMacCatalyst]
+#endif
+#if !MONOMAC
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		System = 0,
 		CurrentProcessIdentifier = 1,
 	}
 
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
 	interface OSLogEntryFromProcess {
 
@@ -94,7 +100,7 @@ namespace OSLog {
 		ulong ThreadIdentifier { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
 	interface OSLogEntryWithPayload {
 
@@ -115,7 +121,7 @@ namespace OSLog {
 		string Subsystem { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface OSLogEntry {
@@ -130,7 +136,7 @@ namespace OSLog {
 		OSLogEntryStoreCategory StoreCategory { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (OSLogEntry))]
 	[DisableDefaultCtor]
 	interface OSLogEntryActivity : OSLogEntryFromProcess {
@@ -139,13 +145,13 @@ namespace OSLog {
 		ulong ParentActivityIdentifier { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (OSLogEntry))]
 	[DisableDefaultCtor]
 	interface OSLogEntryBoundary {
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (OSLogEntry))]
 	[DisableDefaultCtor]
 	interface OSLogEntryLog : OSLogEntryFromProcess, OSLogEntryWithPayload {
@@ -154,7 +160,7 @@ namespace OSLog {
 		OSLogEntryLogLevel Level { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (OSLogEntry))]
 	[DisableDefaultCtor]
 	interface OSLogEntrySignpost : OSLogEntryFromProcess, OSLogEntryWithPayload {
@@ -169,13 +175,13 @@ namespace OSLog {
 		OSLogEntrySignpostType SignpostType { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSEnumerator))]
 	[DisableDefaultCtor]
 	interface OSLogEnumerator {
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface OSLogMessageComponent : NSSecureCoding {
@@ -208,22 +214,22 @@ namespace OSLog {
 		ulong ArgumentUInt64Value { get; }
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface OSLogPosition {
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init was added only on macos 12
 	interface OSLogStore {
 
-		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
+		[NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Export ("init")]
 		NativeHandle Constructor ();
 
-		[NoWatch, NoTV, NoiOS, MacCatalyst (15, 0)]
+		[NoTV, NoiOS, MacCatalyst (15, 0)]
 		[Static]
 		[Export ("localStoreAndReturnError:")]
 		[return: NullAllowed]

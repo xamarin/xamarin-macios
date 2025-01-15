@@ -1,4 +1,3 @@
-#if !WATCH
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -33,4 +32,3 @@ namespace MapKit {
 		}
 	}
 }
-#endif // !WATCH

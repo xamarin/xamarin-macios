@@ -15,7 +15,6 @@ namespace CoreMedia {
 	/// <summary>Class that manages the repetitive allocation and deallocation of large blocks of memory.</summary>
 	///     
 	///     <!-- TODO: No Apple documentation on this as of 2013-05-01 -->
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Partial]
 	interface CMMemoryPool {
@@ -25,13 +24,13 @@ namespace CoreMedia {
 		IntPtr AgeOutPeriodSelector { get; }
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	public enum CMFormatDescriptionProjectionKind {
 		[Field ("kCMFormatDescriptionProjectionKind_Rectilinear")]
 		Rectilinear,
 	}
 
-	[NoWatch, NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	public enum CMFormatDescriptionViewPackingKind {
 		[Field ("kCMFormatDescriptionViewPackingKind_SideBySide")]
 		SideBySide,
@@ -42,7 +41,6 @@ namespace CoreMedia {
 
 	[Static]
 	[Internal]
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	interface CMTextMarkupAttributesKeys {
 		[Internal]
@@ -80,7 +78,6 @@ namespace CoreMedia {
 
 	[Static]
 	[Internal]
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	interface CMSampleAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
@@ -217,18 +214,17 @@ namespace CoreMedia {
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		NSString ForceKeyFrameKey { get; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
 		NSString Hdr10PlusPerFrameDataKey { get; }
 
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 		[Field ("kCMSampleAttachmentKey_PostDecodeProcessingMetadata")]
 		NSString PostDecodeProcessingMetadataKey { get; }
 	}
 
 	/// <summary>The keys for <see cref="T:CoreMedia.CMSampleBuffer" /> attachments.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMSampleAttachmentKey")]
 	interface CMSampleBufferAttachmentSettings {
@@ -266,16 +262,15 @@ namespace CoreMedia {
 		[MacCatalyst (13, 1)]
 		bool ForceKeyFrame { get; set; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		NSData Hdr10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
 
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 		NSDictionary PostDecodeProcessingMetadata { get; set; } // it is a CFDictionary, but that is a toll-free bridged
 	}
 
 	[Internal]
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface CMHevcTemporalLevelInfoKeys {
@@ -302,7 +297,6 @@ namespace CoreMedia {
 		NSString LevelIndexKey { get; }
 	}
 
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMHevcTemporalLevelInfoKeys")]
 	interface CMHevcTemporalLevelInfoSettings {
@@ -318,7 +312,6 @@ namespace CoreMedia {
 
 #if false
 	// right now the generator can't add fields in a partial struct
-	[Watch (6,0)]
 	[Partial]
 	interface CMTime {
 		[Field ("kCMTimeValueKey")]

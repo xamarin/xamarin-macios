@@ -192,7 +192,6 @@ namespace CoreVideo {
 			}
 		}
 
-#if !WATCH
 #if !__MACCATALYST__
 		public bool? OpenGLESCompatibility {
 			set {
@@ -218,7 +217,6 @@ namespace CoreVideo {
 				return GetBoolValue (CVPixelBuffer.MetalCompatibilityKey);
 			}
 		}
-#endif // !WATCH
 #endif
 #endif
 	}

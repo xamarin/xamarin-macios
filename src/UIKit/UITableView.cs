@@ -1,5 +1,3 @@
-
-#if !WATCH // no header
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -88,4 +86,3 @@ namespace UIKit {
 		}
 	}
 }
-#endif // !WATCH

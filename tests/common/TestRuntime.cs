@@ -1902,6 +1902,18 @@ partial class TestRuntime {
 			break;
 		}
 	}
+
+	// this only applies to macOS, we can't determine it for other platforms.
+	public static void IgnoreIfLockedScreen ()
+	{
+#if __MACOS__
+		var props = global::CoreGraphics.CGSession.GetProperties ();
+		var value = props?.Dictionary [(NSString) "CGSSessionScreenIsLocked"]; // This key isn't documented, so no binding for it.
+		var isLocked = (value as NSNumber)?.BoolValue;
+		if (isLocked == true)
+			Assert.Ignore ("The screen is locked.");
+#endif
+	}
 }
 
 #if NET

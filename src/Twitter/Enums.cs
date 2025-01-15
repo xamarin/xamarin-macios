@@ -17,7 +17,8 @@ namespace Twitter {
 	// SLComposeViewControllerResult, which is a NSInteger -> SLComposeViewController.h, but a 
 	// sizeof(TWTweetComposeViewControllerResultDone) shows it's 4 bytes (on a 64 bits process)
 	public enum TWTweetComposeViewControllerResult {
-		Cancelled, Done
+		Cancelled,
+		Done,
 	}
 
 	// untyped enum -> TWRequest.h where the values are equals to those of SLRequestMethod, 
@@ -28,6 +29,8 @@ namespace Twitter {
 	// which likely means it's internally used as a `SLRequestMethod`
 	[Native]
 	public enum TWRequestMethod : long {
-		Get, Post, Delete
+		Get,
+		Post,
+		Delete,
 	}
 }

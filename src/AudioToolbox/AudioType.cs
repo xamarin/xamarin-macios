@@ -96,7 +96,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[NoWatch]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
@@ -109,7 +108,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 #else
-		[NoWatch, iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
+		[iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
 #endif
 		Apac = 0x61706163, // 'apac'
 	}
@@ -147,14 +146,12 @@ namespace AudioToolbox {
 		CafIsLittleEndian = (1 << 1)
 	}
 
-#if !WATCH
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioFormatInfo {
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public byte* MagicCookieWeak;
 		public int MagicCookieSize;
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -223,7 +220,6 @@ namespace AudioToolbox {
 			return desc;
 		}
 
-#if !WATCH
 		public unsafe static AudioChannelLayoutTag []? GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
@@ -374,7 +370,6 @@ namespace AudioToolbox {
 				return data != 0;
 			}
 		}
-#endif // !WATCH
 
 		public override string ToString ()
 		{
@@ -607,7 +602,6 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !WATCH
 		public unsafe string? Name {
 			get {
 				IntPtr sptr;
@@ -639,7 +633,6 @@ namespace AudioToolbox {
 				return new CFString (sptr, true);
 			}
 		}
-#endif
 
 		internal unsafe IntPtr ToPointer ()
 		{
@@ -866,7 +859,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -879,7 +871,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -892,7 +883,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -905,7 +895,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -918,7 +907,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -931,7 +919,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
 		[Mac (14, 0)]
-		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
 		[MacCatalyst (17, 0)]
@@ -944,7 +931,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_5_0_E = (216U << 16) | 5,
 
@@ -954,7 +941,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_5_1_E = (217U << 16) | 6,
 
@@ -964,7 +951,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_6_1_B = (218U << 16) | 7,
 
@@ -974,14 +961,14 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		MPEG_7_1_D = (219U << 16) | 8,
 
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
-#if !COREBUILD && !WATCH
+#if !COREBUILD
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -1041,7 +1028,6 @@ namespace AudioToolbox {
 			}
 		}
 
-#if !WATCH
 		[Advice ("Use the strongly typed 'AudioTag' instead.")]
 		public int Tag {
 			get {
@@ -1061,13 +1047,11 @@ namespace AudioToolbox {
 				ChannelUsage = (AudioChannelBit) value;
 			}
 		}
-#endif
 
 		public AudioChannelLayoutTag AudioTag;
 		public AudioChannelBit ChannelUsage;
 		public AudioChannelDescription []? Channels;
 
-#if !WATCH
 		public unsafe string? Name {
 			get {
 				IntPtr sptr;
@@ -1132,7 +1116,6 @@ namespace AudioToolbox {
 			Marshal.FreeHGlobal (ptr);
 			return layout;
 		}
-#endif // !WATCH
 
 		internal static AudioChannelLayout? FromHandle (IntPtr handle)
 		{
@@ -1170,7 +1153,6 @@ namespace AudioToolbox {
 			return buffer;
 		}
 
-#if !WATCH
 		public static AudioFormatError Validate (AudioChannelLayout layout)
 		{
 			if (layout is null)
@@ -1307,7 +1289,6 @@ namespace AudioToolbox {
 				return data;
 			}
 		}
-#endif // !WATCH
 
 		public NSData AsData ()
 		{
