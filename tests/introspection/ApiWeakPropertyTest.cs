@@ -60,6 +60,12 @@ namespace Introspection {
 				}
 				return false;
 			}
+
+			switch (property.DeclaringType.Name) {
+			case "CHHapticPatternDefinition":
+				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
+			}
+
 			return false;
 		}
 
