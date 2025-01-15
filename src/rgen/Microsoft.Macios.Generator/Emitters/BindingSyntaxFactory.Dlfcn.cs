@@ -400,6 +400,8 @@ static partial class BindingSyntaxFactory {
 				: GetNSObjectField (property.ReturnType.Name, libraryName, symbolName);
 		}
 
+		// keep the formatting to make it more readable
+#pragma warning disable format
 		// use the return type and the special type of the property to decide what getter we are going to us
 		return property.ReturnType switch {
 			// special types
@@ -440,5 +442,6 @@ static partial class BindingSyntaxFactory {
 			// We do not support the property
 			_ => throw new NotImplementedException ($"Return type {property.ReturnType} is not implemented."),
 		};
+#pragma warning restore format
 	}
 }
