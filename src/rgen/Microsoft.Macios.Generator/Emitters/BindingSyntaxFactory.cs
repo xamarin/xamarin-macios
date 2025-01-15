@@ -9,7 +9,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Emitters;
 
 static partial class BindingSyntaxFactory {
-	
+
 	/// <summary>
 	/// Returns an argument syntax for the provided kind and literal expression.
 	/// </summary>
@@ -76,12 +76,12 @@ static partial class BindingSyntaxFactory {
 		var throwExpression = ThrowStatement (
 			ObjectCreationExpression (IdentifierName (type))
 				.WithArgumentList (argumentList)).NormalizeWhitespace ();
-		
+
 		return CompilationUnit ().WithMembers (
 			SingletonList<MemberDeclarationSyntax> (
 				GlobalStatement (throwExpression)));
 	}
-	
+
 	static CompilationUnitSyntax ThrowNotSupportedException (string message)
 		=> ThrowException (type: "NotSupportedException", message: message);
 }

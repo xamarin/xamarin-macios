@@ -76,11 +76,11 @@ static partial class BindingSyntaxFactory {
 		string variableName, [CallerMemberName] string methodName = "", string? castTarget = null)
 	{
 		var arguments = new SyntaxNodeOrToken [] {
-			GetLibraryArgument (libraryName), 
+			GetLibraryArgument (libraryName),
 			Token (SyntaxKind.CommaToken),
 			GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, fieldName),
 			Token (SyntaxKind.CommaToken),
-			Argument (castTarget is null 
+			Argument (castTarget is null
 				? IdentifierName (variableName)
 				: CastExpression (IdentifierName (castTarget), IdentifierName (variableName))),
 		};
@@ -175,7 +175,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetByte (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetByte (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -205,7 +205,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetInt16 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetInt16 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -235,7 +235,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetUInt16 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -246,7 +246,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.GetInt32 (libraryName, fieldName);"];
 	/// </summary>
@@ -265,7 +265,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetInt32 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetInt32 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -295,7 +295,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetUInt32 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -325,7 +325,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetInt64 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetUInt32 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -355,7 +355,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax SetUInt64 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
-	
+
 	/// <summary>
 	/// Generates a call for "Dlfcn.SetUInt64 (libraryName, fieldName, (cast)value);"];
 	/// </summary>
@@ -616,11 +616,9 @@ static partial class BindingSyntaxFactory {
 		}
 
 		if (property.ReturnType.IsNSObject) {
-			return property.ReturnType switch {
-				{ Name: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString),
-				{ Name: "Foundation.NSArray" } => (
-					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField), 
-					Setter: SetArray),
+			return property.ReturnType switch { { Name: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString), { Name: "Foundation.NSArray" } => (
+																																	   Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
+																																	   Setter: SetArray),
 				_ => (
 					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
 					Setter: SetObject)
@@ -705,7 +703,7 @@ static partial class BindingSyntaxFactory {
 	/// <exception cref="NotImplementedException">When the property type is not supported for a field property.</exception>
 	public static CompilationUnitSyntax FieldConstantSetter (in Property property, string variableName)
 	{
-		if (variableName == null) throw new ArgumentNullException (nameof(variableName));
+		if (variableName is null) throw new ArgumentNullException (nameof (variableName));
 		// check if this is a field, if it is not, we have an issue with the code generator
 		if (!property.IsField)
 			throw new NotSupportedException ("Cannot retrieve getter for non field property.");

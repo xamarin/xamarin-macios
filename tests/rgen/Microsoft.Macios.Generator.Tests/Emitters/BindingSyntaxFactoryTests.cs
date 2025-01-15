@@ -837,7 +837,7 @@ namespace CoreGraphics {
 		var str = compilationUnit.ToString ();
 		Assert.Equal (expectedCall, FieldConstantGetter (property.Value).ToString ());
 	}
-	
+
 	class TestDataFieldConstantSetter : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -858,7 +858,7 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nsStringFieldProperty, 
+			yield return [nsStringFieldProperty,
 				"value",
 				"Dlfcn.SetString (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\", value);"];
 
@@ -1670,10 +1670,10 @@ namespace CoreGraphics {
 				"value",
 				"throw new NotSupportedException(\"Setting fields of type 'AVFoundation.AVCaptureWhiteBalanceGains' is not supported.\");"];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataFieldConstantSetter>]
 	void FieldConstantSetterTests (ApplePlatform platform, string inputText, string variableName, string expectedCall)

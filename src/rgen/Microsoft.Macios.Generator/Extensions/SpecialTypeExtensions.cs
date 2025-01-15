@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class SpecialTypeExtensions {
-	
+
 	/// <summary>
 	/// Return the keyword for a given special type.
 	/// </summary>
