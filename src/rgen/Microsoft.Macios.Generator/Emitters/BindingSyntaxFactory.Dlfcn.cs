@@ -403,7 +403,10 @@ static partial class BindingSyntaxFactory {
 		// use the return type and the special type of the property to decide what getter we are going to us
 		return property.ReturnType switch {
 			// special types
-			{ Name: "CoreGraphics.CGSize" } => GetCGSize (libraryName, symbolName), { Name: "CoreMedia.CMTag" } => GetStruct ("CoreMedia.CMTag", libraryName, symbolName), { Name: "nfloat" } => GetNFloat (libraryName, symbolName), { Name: "System.Drawing.SizeF" } => GetSizeF (libraryName, symbolName),
+			{ Name: "CoreGraphics.CGSize" } => GetCGSize (libraryName, symbolName),
+			{ Name: "CoreMedia.CMTag" } => GetStruct ("CoreMedia.CMTag", libraryName, symbolName),
+			{ Name: "nfloat" } => GetNFloat (libraryName, symbolName),
+			{ Name: "System.Drawing.SizeF" } => GetSizeF (libraryName, symbolName),
 
 			// Billable types 
 			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
@@ -411,10 +414,28 @@ static partial class BindingSyntaxFactory {
 
 			// enum types, decide based on its enum backing field, smart enums have to be done in the binding
 			// manually
-			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => GetByte (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName), { IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => GetByte (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName),
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName),
 
 			// General special types
-			{ SpecialType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName), { SpecialType: SpecialType.System_Byte } => GetByte (libraryName, symbolName), { SpecialType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName), { SpecialType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName), { SpecialType: SpecialType.System_IntPtr } => GetIntPtr (libraryName, symbolName), { SpecialType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName), { SpecialType: SpecialType.System_UIntPtr } => GetUIntPtr (libraryName, symbolName), { SpecialType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName), { SpecialType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName), { SpecialType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName), { SpecialType: SpecialType.System_Double } => GetDouble (libraryName, symbolName), { SpecialType: SpecialType.System_Single } => GetFloat (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_SByte } => GetSByte (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Byte } => GetByte (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Int16 } => GetInt16 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_UInt16 } => GetUInt16 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_IntPtr } => GetIntPtr (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Int32 } => GetInt32 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_UIntPtr } => GetUIntPtr (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_UInt32 } => GetUInt32 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Int64 } => GetInt64 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_UInt64 } => GetUInt64 (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Double } => GetDouble (libraryName, symbolName),
+			{ SpecialType: SpecialType.System_Single } => GetFloat (libraryName, symbolName),
 
 			// We do not support the property
 			_ => throw new NotImplementedException ($"Return type {property.ReturnType} is not implemented."),
