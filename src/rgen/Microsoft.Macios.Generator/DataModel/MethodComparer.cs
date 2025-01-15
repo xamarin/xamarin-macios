@@ -17,7 +17,7 @@ class MethodComparer : IComparer<Method> {
 		var nameComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
 		if (nameComparison != 0)
 			return nameComparison;
-		var returnTypeComparer = new MethodReturnTypeComparer ();
+		var returnTypeComparer = new TypeInfoComparer ();
 		var returnTypeComparison = returnTypeComparer.Compare (x.ReturnType, y.ReturnType);
 		if (returnTypeComparison != 0)
 			return returnTypeComparison;

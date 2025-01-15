@@ -1,15 +1,17 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 #pragma warning disable APL0003
-using Microsoft.Macios.Generator.DataModel;
+using Microsoft.CodeAnalysis;
+using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 
 namespace Microsoft.Macios.Generator.Tests;
 
 static class TestDataFactory {
 
-	public static ReturnType ReturnTypeForString ()
+	public static TypeInfo ReturnTypeForString ()
 		=> new (
-			type: "string",
+			name: "string",
+			specialType: SpecialType.System_String,
 			isNullable: false,
 			isBlittable: false,
 			isSmartEnum: false,
@@ -27,14 +29,16 @@ static class TestDataFactory {
 				"System.IParsable<string>",
 				"System.ISpanParsable<string>"
 			],
+			MetadataName = "String",
 			Parents = ["object"],
 			IsNSObject = false,
 			IsINativeObject = false,
 		};
 
-	public static ReturnType ReturnTypeForInt (bool isNullable = false)
+	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
 		=> new (
-			type: "int",
+			name: "int",
+			specialType: SpecialType.System_Int32,
 			isBlittable: !isNullable,
 			isNullable: isNullable
 		) {
@@ -74,11 +78,59 @@ static class TestDataFactory {
 					"System.Numerics.IMinMaxValue<int>",
 					"System.Numerics.ISignedNumber<int>"
 			],
+			MetadataName = "Int32",
 		};
 
-	public static ReturnType ReturnTypeForBool ()
+	public static TypeInfo ReturnTypeForIntPtr (bool isNullable = false)
 		=> new (
-			type: "bool",
+			name: "nint",
+			specialType: SpecialType.System_IntPtr,
+			isBlittable: !isNullable,
+			isNullable: isNullable
+		) {
+			Parents = ["System.ValueType", "object"],
+			Interfaces = isNullable
+				? []
+				: [
+					"System.IComparable",
+					"System.IComparable<nint>",
+					"System.IEquatable<nint>",
+					"System.IFormattable",
+					"System.IParsable<nint>",
+					"System.ISpanFormattable",
+					"System.ISpanParsable<nint>",
+					"System.IUtf8SpanFormattable",
+					"System.IUtf8SpanParsable<nint>",
+					"System.Numerics.IAdditionOperators<nint, nint, nint>",
+					"System.Numerics.IAdditiveIdentity<nint, nint>",
+					"System.Numerics.IBinaryInteger<nint>",
+					"System.Numerics.IBinaryNumber<nint>",
+					"System.Numerics.IBitwiseOperators<nint, nint, nint>",
+					"System.Numerics.IComparisonOperators<nint, nint, bool>",
+					"System.Numerics.IEqualityOperators<nint, nint, bool>",
+					"System.Numerics.IDecrementOperators<nint>",
+					"System.Numerics.IDivisionOperators<nint, nint, nint>",
+					"System.Numerics.IIncrementOperators<nint>",
+					"System.Numerics.IModulusOperators<nint, nint, nint>",
+					"System.Numerics.IMultiplicativeIdentity<nint, nint>",
+					"System.Numerics.IMultiplyOperators<nint, nint, nint>",
+					"System.Numerics.INumber<nint>",
+					"System.Numerics.INumberBase<nint>",
+					"System.Numerics.ISubtractionOperators<nint, nint, nint>",
+					"System.Numerics.IUnaryNegationOperators<nint, nint>",
+					"System.Numerics.IUnaryPlusOperators<nint, nint>",
+					"System.Numerics.IShiftOperators<nint, int, nint>",
+					"System.Numerics.IMinMaxValue<nint>",
+					"System.Numerics.ISignedNumber<nint>",
+					"System.Runtime.Serialization.ISerializable"
+				],
+			MetadataName = "IntPtr",
+		};
+
+	public static TypeInfo ReturnTypeForBool ()
+		=> new (
+			name: "bool",
+			specialType: SpecialType.System_Boolean,
 			isBlittable: false
 		) {
 			Parents = ["System.ValueType", "object"],
@@ -89,32 +141,33 @@ static class TestDataFactory {
 				"System.IEquatable<bool>",
 				"System.IParsable<bool>",
 				"System.ISpanParsable<bool>"
-			]
+			],
+			MetadataName = "Boolean",
 		};
 
-	public static ReturnType ReturnTypeForVoid ()
-		=> new ("void") {
+	public static TypeInfo ReturnTypeForVoid ()
+		=> new ("void", SpecialType.System_Void) {
 			Parents = ["System.ValueType", "object"],
 		};
 
-	public static ReturnType ReturnTypeForClass (string className)
+	public static TypeInfo ReturnTypeForClass (string className)
 		=> new (
-			type: className,
+			name: className,
 			isReferenceType: true
 		) {
 			Parents = ["object"]
 		};
 
-	public static ReturnType ReturnTypeForStruct (string structName)
+	public static TypeInfo ReturnTypeForStruct (string structName)
 		=> new (
-			type: structName
+			name: structName
 		) {
 			Parents = ["System.ValueType", "object"]
 		};
 
-	public static ReturnType ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
 		=> new (
-			type: enumName,
+			name: enumName,
 			isBlittable: true,
 			isSmartEnum: isSmartEnum
 		) {
@@ -131,9 +184,9 @@ static class TestDataFactory {
 			]
 		};
 
-	public static ReturnType ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
+	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
 		=> new (
-			type: type,
+			name: type,
 			isNullable: isNullable,
 			isBlittable: isBlittable,
 			isArray: true,

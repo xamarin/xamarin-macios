@@ -64,6 +64,12 @@ namespace OSLog {
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	enum OSLogStoreScope : long {
+#if XAMCORE_5_0
+		[NoTV, NoiOS, NoMacCatalyst]
+#endif
+#if !MONOMAC
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		System = 0,
 		CurrentProcessIdentifier = 1,
 	}

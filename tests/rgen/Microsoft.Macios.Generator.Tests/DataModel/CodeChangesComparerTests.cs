@@ -1247,7 +1247,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1393,7 +1393,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1533,7 +1533,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1694,7 +1694,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1957,7 +1957,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2100,7 +2100,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2253,7 +2253,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2396,7 +2396,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2556,7 +2556,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,

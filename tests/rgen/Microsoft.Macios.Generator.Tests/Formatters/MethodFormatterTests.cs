@@ -511,6 +511,50 @@ namespace NS {
 }
 ";
 			yield return [customDelegate, "public partial void TestMethod (NS.MyClass.Callback cb)"];
+
+			const string intReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial int TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [intReturnMethod, "public partial int TestMethod (string myParam, int myParamInt)"];
+
+			const string nullableIntReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial int? TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [nullableIntReturnMethod, "public partial int? TestMethod (string myParam, int myParamInt)"];
+
+			const string intPtrReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial IntPtr TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [intPtrReturnMethod, "public partial IntPtr TestMethod (string myParam, int myParamInt)"];
+
+			const string nullableIntPtrReturnMethod = @"
+using System;
+using ObjCBindings;
+namespace NS;
+[BindingType<Class>]
+public partial class MyClass {
+	public partial IntPtr? TestMethod(string myParam, int myParamInt);
+}
+";
+			yield return [nullableIntPtrReturnMethod, "public partial IntPtr? TestMethod (string myParam, int myParamInt)"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

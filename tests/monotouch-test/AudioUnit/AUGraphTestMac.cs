@@ -61,6 +61,7 @@ namespace Xamarin.Mac.Tests {
 		public void DoTest ()
 		{
 			TestRuntime.AssertNotVirtualMachine ();
+			TestRuntime.IgnoreIfLockedScreen ();
 
 			SetupAUGraph ();
 

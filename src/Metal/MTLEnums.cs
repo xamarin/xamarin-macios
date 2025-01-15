@@ -971,14 +971,39 @@ namespace Metal {
 	/// <summary>Enumerates the hardware feature sets that are available on a device.</summary>
 	[Native]
 	public enum MTLFeatureSet : ulong {
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		[NoTV, NoMac]
 		iOS_GPUFamily1_v1 = 0,
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		[NoTV, NoMac]
 		iOS_GPUFamily1_v2 = 2,
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		[NoTV, NoMac]
 		iOS_GPUFamily2_v1 = 1,
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		[NoTV, NoMac]
 		iOS_GPUFamily2_v2 = 3,
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
+#endif
 		[NoTV, NoMac]
 		iOS_GPUFamily3_v1 = 4,
 		[NoTV, NoMac, NoMacCatalyst]
@@ -1010,28 +1035,13 @@ namespace Metal {
 		[NoiOS, NoTV, NoMacCatalyst]
 		macOS_GPUFamily1_v1 = 10000,
 
-#if !NET
-		[Obsolete ("Use 'macOS_GPUFamily1_v1' instead.")]
-		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
-#endif
-
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		macOS_GPUFamily1_v2 = 10001,
 
-#if !NET
-		[Obsolete ("Use 'macOS_GPUFamily1_v2' instead.")]
-		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
-#endif
-
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		macOS_ReadWriteTextureTier2 = 10002,
-
-#if !NET
-		[Obsolete ("Use 'macOS_ReadWriteTextureTier2' instead.")]
-		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
-#endif
 
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
@@ -1045,9 +1055,10 @@ namespace Metal {
 		[NoMacCatalyst]
 		macOS_GPUFamily2_v1 = 10005,
 
-#if !NET
-		[Obsolete ("Use 'tvOS_GPUFamily1_v1' instead.")]
-		TVOS_GPUFamily1_v1 = 30000,
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#elif __MACCATALYST__
+		[Obsolete ("Not available on the current platform.")]
 #endif
 
 		[NoiOS, NoMac]
