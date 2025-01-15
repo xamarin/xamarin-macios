@@ -11,7 +11,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Emitters;
 
 /// <summary>
-/// Syntaxt factory for the Dlfcn calls.
+/// Syntax factory for the Dlfcn calls.
 /// </summary>
 static partial class BindingSyntaxFactory {
 	readonly static string Dlfcn = "Dlfcn";
@@ -19,7 +19,7 @@ static partial class BindingSyntaxFactory {
 	/// <summary>
 	/// Get the syntax needed to access a library handle.
 	/// </summary>
-	/// <param name="libraryName">The library name whose handle we want to retrienve.</param>
+	/// <param name="libraryName">The library name whose handle we want to retrieve.</param>
 	/// <returns>An argument that points to a library name handle.</returns>
 	static ArgumentSyntax GetLibraryArgument (string libraryName)
 	{
