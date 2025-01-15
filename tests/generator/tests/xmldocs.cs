@@ -172,4 +172,28 @@ namespace XmlDocumentation {
 		/// </summary>
 		Bit3 = 4,
 	}
+
+	/// <summary>Summary for OptionKeys.</summary>
+	[Static]
+	interface OptionKeys {
+		/// <summary>Summary for Option1Key.</summary>
+		[Field ("Option1Key", "TheLibrary")]
+		NSString Option1 { get; }
+	}
+
+	/// <summary>Summary for OptionsA.</summary>
+	[StrongDictionary ("OptionKeys")]
+	interface OptionsA {
+		/// <summary>Summary for Option1.</summary>
+		[Export ("Option1")]
+		string Option1 { get; set; }
+	}
+
+	// no summary here
+	[StrongDictionary ("OptionKeys")]
+	interface OptionsB {
+		/// <summary>Summary for Option1.</summary>
+		[Export ("Option1")]
+		string Option1 { get; set; }
+	}
 }

@@ -56,6 +56,21 @@ namespace Xharness.Jenkins {
 				break;
 			}
 
+			switch (test.TestName) {
+			case "link all":
+				if (test.ProjectConfiguration == "Debug") {
+					// in .NET 9 we add a variation to test original resource bundling (which is opt in in .NET 9),
+					// and in .NET 10 we change the variation to test *not* bundling original resources (because it becomes opt out in .NET 10,
+					// so we don't test it by default).
+					if (jenkins.Harness.DotNetVersion.Major <= 9) {
+						yield return new TestData { Variation = "Debug (bundle original resources)", TestVariation = "bundle-original-resources", Debug = true };
+					} else {
+						yield return new TestData { Variation = "Debug (don't bundle original resources)", TestVariation = "do-not-bundle-original-resources", Debug = true };
+					}
+				}
+				break;
+			}
+
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				if (test.ProjectConfiguration.Contains ("Debug"))
@@ -219,8 +234,13 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetProperty ("_IsPublishing", "true", last: false); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
 							clone.Xml.SetProperty ("IlcTreatWarningsAsErrors", "false", last: false); // We're enabling warnaserror by default, but we're not warning-free for ILC (especially for NUnit), so disable warnaserror for ILC - https://github.com/xamarin/xamarin-macios/issues/19911
 						}
-						if (!string.IsNullOrEmpty (test_variation))
+						if (!string.IsNullOrEmpty (test_variation)) {
 							clone.Xml.SetProperty ("TestVariation", test_variation);
+							foreach (var pr in clone.ProjectReferences) {
+								pr.Xml.SetProperty ("TestVariation", test_variation);
+								pr.Xml.Save (pr.Path);
+							}
+						}
 						clone.Xml.Save (clone.Path);
 					});
 

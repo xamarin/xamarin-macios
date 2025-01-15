@@ -2086,6 +2086,7 @@ MACOS_FRAMEWORKS =          \
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreGraphics            \
+	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
 	CoreMotion		\

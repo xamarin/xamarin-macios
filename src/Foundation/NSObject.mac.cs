@@ -114,6 +114,7 @@ namespace Foundation {
 		// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
 		// static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
 		static IntPtr be = Dlfcn.dlopen (Constants.BrowserEngineKitLibrary, 1);
+		static IntPtr ce = Dlfcn.dlopen (Constants.CoreHapticsLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

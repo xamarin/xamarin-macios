@@ -29,7 +29,7 @@ namespace Xharness {
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 		public bool? Ignore;
 
-		public IEnumerable<TestProject>? ProjectReferences;
+		public IEnumerable<TestProject> ProjectReferences = Array.Empty<TestProject> ();
 
 		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
