@@ -636,7 +636,7 @@ static partial class BindingSyntaxFactory {
 				Setter: WrapThrow ()),
 			{ Name: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
 
-			// Billable types 
+			// Blittable types 
 			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
 				=> (Getter: WrapGenericCall (property.ReturnType.Name, GetBlittableField),
 					Setter: WrapThrow ()),
