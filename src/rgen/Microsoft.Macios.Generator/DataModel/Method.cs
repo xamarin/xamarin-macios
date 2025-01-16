@@ -43,6 +43,11 @@ readonly struct Method : IEquatable<Method> {
 	public ExportData<ObjCBindings.Method> ExportMethodData { get; }
 
 	/// <summary>
+	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
+	/// </summary>
+	public bool MarshalNativeExceptions => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.MarshalNativeExceptions);
+
+	/// <summary>
 	/// Get the attributes added to the constructor.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];

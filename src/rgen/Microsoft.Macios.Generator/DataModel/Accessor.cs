@@ -25,6 +25,9 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// The data of the field attribute used to mark the value as a property binding. 
 	/// </summary>
 	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
+	
+	public bool MarshalNativeExceptions 
+		=> ExportPropertyData is not null && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
 
 	/// <summary>
 	/// List of attribute code changes of the accessor.
@@ -56,6 +59,14 @@ readonly struct Accessor : IEquatable<Accessor> {
 		Attributes = attributes;
 		Modifiers = modifiers;
 	}
+
+	/// <summary>
+	/// Returns if the accessor should marshal native exceptions with the associated property.
+	/// </summary>
+	/// <param name="property">The property associated with the accessor.</param>
+	/// <returns>True if either the accessor or the property were marked with the MarshalNativeExceptions flag.</returns>
+	public bool ShouldMarshalNativeExceptions (in Property property)
+		=> MarshalNativeExceptions || property.MarshalNativeExceptions;
 
 	/// <inheritdoc />
 	public bool Equals (Accessor other)
