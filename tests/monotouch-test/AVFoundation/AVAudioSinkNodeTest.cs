@@ -9,6 +9,8 @@ using AudioToolbox;
 using AVFoundation;
 using Foundation;
 
+using Xamarin.Tests;
+
 namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -61,6 +63,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		void SinkNodeCallbackTest (ManualResetEvent callbackEvent, Func<AVAudioSinkNode> createSinkNode)
 		{
 			TestRuntime.AssertNotVirtualMachine ();
+			TestRuntime.IgnoreIfLockedScreen ();
 
 #if __MACOS__
 			var defaultCaptureDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Audio);

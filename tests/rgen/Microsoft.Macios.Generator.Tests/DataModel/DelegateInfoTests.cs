@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +9,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -31,7 +34,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -71,7 +74,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -117,7 +120,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -165,7 +168,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -217,7 +220,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -263,7 +266,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -317,7 +320,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],

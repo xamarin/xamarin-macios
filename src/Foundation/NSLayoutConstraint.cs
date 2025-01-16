@@ -7,8 +7,6 @@
 // Copyright 2014 Xamarin INc
 //
 
-#if !WATCH
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -145,5 +143,3 @@ namespace UIKit
 #endif // !MONOMAC || NET
 	}
 }
-
-#endif // !WATCH

@@ -78,6 +78,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "AVPlayerInterstitialEvent":
+				switch (selectorName) {
+				case "copyWithZone:":
+					// AVPlayerInterstitialEvent started conforming to NSCopying in Xcode 14
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+				break;
 			case "MKCircle":
 			case "MKPolygon":
 			case "MKPolyline":

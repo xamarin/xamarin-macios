@@ -22,7 +22,6 @@ namespace Network {
 #else
 	[TV (14, 0)]
 	[iOS (14, 0)]
-	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
 #endif
 	public class NWMulticastGroup : NativeObject {

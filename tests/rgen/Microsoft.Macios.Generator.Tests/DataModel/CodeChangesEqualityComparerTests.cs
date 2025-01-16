@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
@@ -107,7 +109,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (equalityComparer.Equals (changes1, changes2));
@@ -123,7 +131,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		var changes2 = new CodeChanges (
@@ -133,7 +147,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name2",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (equalityComparer.Equals (changes1, changes2));

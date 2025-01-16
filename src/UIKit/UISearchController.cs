@@ -2,8 +2,6 @@
 // UISearchController.cs: Simplify the UISearchController
 //
 
-#if !WATCH
-
 using System;
 using Foundation;
 
@@ -37,5 +35,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

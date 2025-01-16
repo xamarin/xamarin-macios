@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 using Property = ObjCBindings.Property;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -353,7 +356,7 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -424,7 +427,7 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("NS.MyEnum", isBlittable: true, isSmartEnum: true),
+							returnType: ReturnTypeForEnum ("NS.MyEnum", isSmartEnum: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -494,7 +497,7 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("NS.MyEnum", isBlittable: true),
+							returnType: ReturnTypeForEnum ("NS.MyEnum"),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -533,7 +536,7 @@ namespace NS;
 
 [BindingType]
 public partial class MyClass {
-	[Export<Property> (""name"", Property.Notification)]
+	[Field<Property> (""name"", Property.Notification)]
 	public partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -560,10 +563,10 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -587,7 +590,9 @@ public partial class MyClass {
 							]
 						) {
 
-							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+							ExportFieldData = new (
+								fieldData: new (symbolName: "name", flags: Property.Notification),
+								libraryName: "NS"),
 						}
 					]
 				}
@@ -600,7 +605,7 @@ namespace NS;
 
 [BindingType]
 public partial class MyClass {
-	[Export<Field> (""CONSTANT"")]
+	[Field<Property> (""CONSTANT"")]
 	public static partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -627,10 +632,10 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Field>", ["CONSTANT"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["CONSTANT"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -655,7 +660,9 @@ public partial class MyClass {
 							]
 						) {
 
-							ExportFieldData = new ("CONSTANT")
+							ExportFieldData = new (
+								fieldData: new ("CONSTANT"),
+								libraryName: "NS"),
 						}
 					]
 				}
@@ -697,7 +704,7 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -766,7 +773,7 @@ public partial class MyClass {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -796,7 +803,7 @@ public partial class MyClass {
 						},
 						new (
 							name: "Surname",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -863,7 +870,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -918,7 +925,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -974,7 +981,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -991,7 +998,7 @@ public partial class MyClass {
 						new (
 							type: "NS.MyClass",
 							name: "SetSurname",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withSurname:"),
 							attributes: [

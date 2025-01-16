@@ -17,7 +17,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCActivationTypeExtensions {
 
@@ -38,7 +37,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCArithmeticOperationExtensions {
 
@@ -59,7 +57,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCPaddingPolicyExtensions {
 
@@ -80,7 +77,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCLossTypeExtensions {
 
@@ -101,7 +97,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCReductionTypeExtensions {
 
@@ -122,7 +117,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCPaddingTypeExtensions {
 
@@ -143,7 +137,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCConvolutionTypeExtensions {
 
@@ -164,7 +157,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCPoolingTypeExtensions {
 
@@ -185,7 +177,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCSoftmaxOperationExtensions {
 
@@ -206,7 +197,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCSampleModeExtensions {
 
@@ -227,7 +217,6 @@ namespace MLCompute {
 #else
 	[iOS (14, 0)]
 	[TV (14, 0)]
-	[NoWatch]
 #endif
 	public static class MLCLstmResultModeExtensions {
 
@@ -248,7 +237,6 @@ namespace MLCompute {
 #else
 	[TV (14, 5)]
 	[iOS (14, 5)]
-	[NoWatch]
 #endif
 	public static class MLCComparisonOperationExtensions {
 
@@ -267,7 +255,6 @@ namespace MLCompute {
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[TV (15, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]

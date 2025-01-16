@@ -38,9 +38,7 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
-#if !WATCH
 using CoreMedia;
-#endif
 #endif
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
@@ -63,11 +61,9 @@ namespace ObjCRuntime {
 			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.OpenGLESLibrary, 0);
 		}
 #endif
-#if !WATCH
 		static public class AudioToolbox {
 			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.AudioToolboxLibrary, 0);
 		}
-#endif
 #endif
 	}
 

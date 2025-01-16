@@ -23,7 +23,6 @@ namespace Network {
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]
@@ -160,7 +159,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ushort nw_quic_get_max_datagram_frame_size (OS_nw_protocol_options options);
@@ -174,7 +172,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_quic_set_max_datagram_frame_size (OS_nw_protocol_options options, ushort max_datagram_frame_size);
@@ -188,7 +185,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public ushort DatagramFrameSize {
 			get => nw_quic_get_max_datagram_frame_size (GetCheckedHandle ());
@@ -204,7 +200,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_quic_get_stream_is_datagram (OS_nw_protocol_options options);
@@ -218,7 +213,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_quic_set_stream_is_datagram (OS_nw_protocol_options options, byte is_datagram);
@@ -232,7 +226,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public bool StreamIsDatagram {
 			get => nw_quic_get_stream_is_datagram (GetCheckedHandle ()) != 0;
@@ -248,7 +241,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ushort nw_quic_get_stream_usable_datagram_frame_size (OS_nw_protocol_metadata metadata);
@@ -262,7 +254,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public ushort StreamUsableDatagramFrameSize => nw_quic_get_stream_usable_datagram_frame_size (GetCheckedHandle ());
 
@@ -275,7 +266,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_quic_get_stream_type (OS_nw_protocol_metadata stream_metadata);
@@ -289,7 +279,6 @@ namespace Network {
 		[TV (16, 0)]
 		[Mac (13, 0)]
 		[iOS (16, 0)]
-		[Watch (9, 0)]
 #endif
 		public NWQuicStreamType StreamType => (NWQuicStreamType) nw_quic_get_stream_type (GetCheckedHandle ());
 

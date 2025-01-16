@@ -175,7 +175,7 @@ namespace Foundation {
 			}
 		}
 
-#if !NET && !WATCH
+#if !NET
 		[Obsolete ("Use 'EvaluateWith' instead.")]
 		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context)
 		{

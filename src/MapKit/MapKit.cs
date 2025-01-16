@@ -20,7 +20,6 @@ using ObjCRuntime;
 
 namespace MapKit {
 
-#if !WATCH
 	// MKTileOverlay.h
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -35,7 +34,6 @@ namespace MapKit {
 		public /* NSInteger */ nint Z;
 		public /* CGFloat */ nfloat ContentScaleFactor;
 	}
-#endif
 
 	// MKGeometry.h
 	// note: CLLocationDegrees is double - see CLLocation.h

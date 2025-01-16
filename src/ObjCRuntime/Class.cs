@@ -753,6 +753,17 @@ namespace ObjCRuntime {
 			return uint.MaxValue;
 		}
 
+		static internal Class [] FromTypes (params Type [] types)
+		{
+			if (types is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (types));
+
+			var classes = new Class [types.Length];
+			for (var i = 0; i < types.Length; i++)
+				classes [i] = new Class (types [i]);
+			return classes;
+		}
+
 		/*
 		Type must have been previously registered.
 		*/

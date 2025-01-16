@@ -414,7 +414,7 @@ namespace Xamarin.Tests {
 			}
 
 			output = new StringBuilder ();
-			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (30)).Result;
 		}
 
 		public static StringBuilder AssertExecute (string executable, params string [] arguments)

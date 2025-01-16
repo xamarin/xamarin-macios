@@ -1536,6 +1536,7 @@ public partial class Generator : IMemberGatherer {
 		if (exceptions.All (v => v is BindingException pe && !pe.Error)) {
 			foreach (var e in exceptions)
 				ErrorHelper.Show (e);
+			return;
 		}
 
 		throw new AggregateException (exceptions);
@@ -1820,6 +1821,7 @@ public partial class Generator : IMemberGatherer {
 
 				print ("namespace {0} {{", dictType.Namespace);
 				indent++;
+				WriteDocumentation (dictType);
 				PrintPlatformAttributes (dictType);
 				PrintExperimentalAttribute (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
@@ -1844,6 +1846,7 @@ public partial class Generator : IMemberGatherer {
 							keyname = keyContainerType + "." + keyname + "!";
 					}
 
+					WriteDocumentation (pi);
 					PrintPlatformAttributes (pi);
 					string modifier = pi.IsInternal (this) ? "internal" : "public";
 
@@ -3431,7 +3434,7 @@ public partial class Generator : IMemberGatherer {
 	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (AttributeManager.IsNullable (mi))
-			ErrorHelper.Show (new BindingException (1118, false, mi));
+			exceptions.Add (ErrorHelper.CreateWarning (1118, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
 			var safe_name = pi.Name.GetSafeParamName ();
@@ -4188,7 +4191,7 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.IsNullable (setter);
 			if (null_allowed)
-				ErrorHelper.Show (new BindingException (1118, false, setter));
+				exceptions.Add (ErrorHelper.CreateWarning (1118, setter));
 			null_allowed |= AttributeManager.IsNullable (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
@@ -4863,6 +4866,9 @@ public partial class Generator : IMemberGatherer {
 		var extensionMethods = optionalInstanceMethods.Concat (requiredInstanceMethods.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 		var extensionProperties = optionalInstanceProperties.Concat (requiredInstanceProperties.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 
+		// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated interface - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
+		print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
+
 		WriteDocumentation (type);
 
 		PrintAttributes (type, platform: true, preserve: true, advice: true);
@@ -5153,12 +5159,16 @@ public partial class Generator : IMemberGatherer {
 		print ("}");
 		print ("");
 
+		print ("#pragma warning restore CS1573");
+
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
 		if (backwardsCompatibleCodeGeneration)
 			include_extensions = extensionMethods.Any () || extensionProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
-			// extension methods
+			// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated extension member - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
+			print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
+													  // extension methods
 			if (BindingTouch.SupportsXmlDocumentation) {
 				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
 				print ($"/// <remarks>");
@@ -5199,6 +5209,7 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 			print ("");
+			print ("#pragma warning restore CS1573");
 		}
 
 		// Add API from base interfaces we also need to implement.
@@ -6257,6 +6268,7 @@ public partial class Generator : IMemberGatherer {
 						print ("static {0}? _{1};", fieldTypeName, field_pi.Name);
 					}
 
+					WriteDocumentation (field_pi);
 					PrintAttributes (field_pi, preserve: true, advice: true);
 					PrintObsoleteAttributes (field_pi);
 					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);

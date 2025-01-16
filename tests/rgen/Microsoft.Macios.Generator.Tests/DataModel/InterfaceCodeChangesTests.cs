@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
@@ -7,11 +9,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using ObjCBindings;
-using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 using Property = ObjCBindings.Property;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -117,7 +119,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new (type: "string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -186,7 +188,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("NS.MyEnum", isSmartEnum: true, isBlittable: true),
+							returnType: ReturnTypeForEnum ("NS.MyEnum", isSmartEnum: true),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -254,7 +256,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("NS.MyEnum", isBlittable: true),
+							returnType: ReturnTypeForEnum ("NS.MyEnum"),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -293,7 +295,7 @@ namespace NS;
 
 [BindingType]
 public partial interface IProtocol {
-	[Export<Property> (""name"", Property.Notification)]
+	[Field<Property> (""name"", Property.Notification)]
 	public partial string Name { get; set; } = string.Empty;
 }
 ";
@@ -318,10 +320,10 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
-								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
+								new ("ObjCBindings.FieldAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.Notification"])
 							],
 							modifiers: [
 								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -344,7 +346,9 @@ public partial interface IProtocol {
 								),
 							]
 						) {
-							ExportPropertyData = new ("name", ArgumentSemantic.None, Property.Notification)
+							ExportFieldData = new (
+								fieldData: new ("name", Property.Notification),
+								libraryName: "NS"),
 						}
 					]
 				}
@@ -384,7 +388,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -451,7 +455,7 @@ public partial interface IProtocol {
 					Properties = [
 						new (
 							name: "Name",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name"])
@@ -481,7 +485,7 @@ public partial interface IProtocol {
 						},
 						new (
 							name: "Surname",
-							returnType: new ("string", isReferenceType: true),
+							returnType: ReturnTypeForString (),
 							symbolAvailability: new (),
 							attributes: [
 								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["surname"])
@@ -546,7 +550,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -599,7 +603,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -653,7 +657,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetName",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withName:"),
 							attributes: [
@@ -670,7 +674,7 @@ public partial interface IProtocol {
 						new (
 							type: "NS.IProtocol",
 							name: "SetSurname",
-							returnType: new ("void"),
+							returnType: ReturnTypeForVoid (),
 							symbolAvailability: new (),
 							exportMethodData: new ("withSurname:"),
 							attributes: [

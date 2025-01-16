@@ -10,8 +10,6 @@
 ## unsorted
 
 !missing-field! AVCoreAnimationBeginTimeAtZero not bound
-!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
-!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
 !missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
@@ -46,3 +44,8 @@
 
 # no tests/samples
 !missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# Missing some MIDI APIs to bind these
+!missing-selector! AVAudioEngine::connectMIDI:to:format:eventListBlock: not bound
+!missing-selector! AVAudioEngine::connectMIDI:toNodes:format:eventListBlock: not bound
+!missing-selector! AVAudioUnitMIDIInstrument::sendMIDIEventList: not bound

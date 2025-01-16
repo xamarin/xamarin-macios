@@ -7,7 +7,7 @@
 // Copyright 2021 Microsoft Corporation
 //
 
-#if !TVOS && !WATCH
+#if !TVOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -26,7 +26,6 @@ namespace AuthenticationServices {
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[NoWatch]
 	[NoTV]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]

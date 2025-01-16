@@ -7,8 +7,6 @@
 // Copyrigh 2013-2014 Xamarin Inc.
 //
 
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -123,5 +121,3 @@ namespace UIKit {
 #endif // !COREBUILD
 	}
 }
-
-#endif // !WATCH

@@ -36,7 +36,6 @@ namespace Network {
 	[TV (16, 0)]
 	[Mac (13, 0)]
 	[iOS (16, 0)]
-	[Watch (9, 0)]
 	[MacCatalyst (16, 0)]
 #endif
 	public class NSProtocolFramerOptions : NWProtocolOptions {

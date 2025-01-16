@@ -10,7 +10,7 @@ namespace HomeKit {
 
 	public partial class HMService {
 
-#if !WATCH && !TVOS
+#if !TVOS
 		public void UpdateAssociatedServiceType (HMServiceType serviceType, Action<NSError> completion)
 		{
 			UpdateAssociatedServiceType (serviceType.GetConstant (), completion);

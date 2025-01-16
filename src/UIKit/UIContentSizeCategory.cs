@@ -1,5 +1,3 @@
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -58,5 +56,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

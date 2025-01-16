@@ -36,9 +36,7 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
-#if !WATCH
 using CoreMedia;
-#endif // !WATCH
 #endif
 
 #if HAS_UIKIT
@@ -338,7 +336,6 @@ namespace Foundation {
 			return value;
 		}
 
-#if !WATCH
 		protected CMTime? GetCMTimeValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
@@ -350,7 +347,6 @@ namespace Foundation {
 
 			return value;
 		}
-#endif // !WATCH
 
 #if HAS_UIKIT
 		protected UIEdgeInsets? GetUIEdgeInsets (NSString key)
@@ -516,13 +512,11 @@ namespace Foundation {
 				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 
-#if !WATCH
 		protected void SetCMTimeValue (NSString key, CMTime? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
 				Dictionary [key] = value!.Value.ToDictionary ();
 		}
-#endif //!WATCH
 
 #if HAS_UIKIT
 		protected void SetUIEdgeInsets (NSString key, UIEdgeInsets? value)

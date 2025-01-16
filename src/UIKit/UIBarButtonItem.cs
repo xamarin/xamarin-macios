@@ -2,8 +2,6 @@
 // Sanitize callbacks
 //
 
-#if !WATCH
-
 using Foundation;
 using ObjCRuntime;
 using System;
@@ -89,5 +87,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

@@ -41,7 +41,7 @@ namespace IntentsUI {
 		GenericAction,
 	}
 
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIAddVoiceShortcutButtonStyle : ulong {
@@ -197,7 +197,7 @@ namespace IntentsUI {
 	}
 
 	/// <summary>A button that is used to add a Siri shortcut.</summary>
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSButton))]
@@ -237,7 +237,7 @@ namespace IntentsUI {
 
 	interface IINUIAddVoiceShortcutButtonDelegate { }
 
-	[NoWatch, NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]

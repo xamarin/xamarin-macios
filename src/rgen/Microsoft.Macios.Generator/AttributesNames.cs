@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 
 namespace Microsoft.Macios.Generator;
@@ -11,9 +13,10 @@ static class AttributesNames {
 	public const string BindingCategoryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Category>";
 	public const string BindingClassAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>";
 	public const string BindingProtocolAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>";
+	public const string BindingStrongDictionaryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.StrongDictionary>";
 	public const string FieldAttribute = "ObjCBindings.FieldAttribute";
 	public const string EnumFieldAttribute = "ObjCBindings.FieldAttribute<ObjCBindings.EnumValue>";
-	public const string ExportFieldAttribute = "ObjCBindings.ExportAttribute<ObjCBindings.Field>";
+	public const string FieldPropertyAttribute = "ObjCBindings.FieldAttribute<ObjCBindings.Property>";
 	public const string ExportPropertyAttribute = "ObjCBindings.ExportAttribute<ObjCBindings.Property>";
 	public const string ExportMethodAttribute = "ObjCBindings.ExportAttribute<ObjCBindings.Method>";
 	public const string SupportedOSPlatformAttribute = "System.Runtime.Versioning.SupportedOSPlatformAttribute";
@@ -24,7 +27,8 @@ static class AttributesNames {
 		BindingAttribute,
 		BindingCategoryAttribute,
 		BindingClassAttribute,
-		BindingProtocolAttribute
+		BindingProtocolAttribute,
+		BindingStrongDictionaryAttribute,
 	];
 
 
@@ -40,6 +44,9 @@ static class AttributesNames {
 		if (type == typeof (ObjCBindings.Protocol)) {
 			return BindingProtocolAttribute;
 		}
+		if (type == typeof (ObjCBindings.StrongDictionary)) {
+			return BindingStrongDictionaryAttribute;
+		}
 
 		return null;
 	}
@@ -48,9 +55,19 @@ static class AttributesNames {
 	{
 		// we cannot use a switch statement because typeof is not a constant value
 		var type = typeof (T);
-		if (type == typeof (ObjCBindings.Field)) {
-			return ExportFieldAttribute;
+		if (type == typeof (ObjCBindings.Property)) {
+			return FieldPropertyAttribute;
 		}
+		if (type == typeof (ObjCBindings.EnumValue)) {
+			return EnumFieldAttribute;
+		}
+		return null;
+	}
+
+	public static string? GetExportAttributeName<T> () where T : Enum
+	{
+		// we cannot use a switch statement because typeof is not a constant value
+		var type = typeof (T);
 		if (type == typeof (ObjCBindings.Property)) {
 			return ExportPropertyAttribute;
 		}

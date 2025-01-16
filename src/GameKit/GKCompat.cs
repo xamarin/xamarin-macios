@@ -12,16 +12,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace GameKit {
-#if WATCH && !NET
-	[Unavailable (PlatformName.WatchOS)]
-	[Obsolete ("This API is not available on this platform.")]
-	public static class GKGameSessionErrorCodeExtensions {
-		[Obsolete ("Always returns null.")]
-		public static NSString? GetDomain (this GKGameSessionErrorCode self) => null;
-	}
-#endif
-
-#if !NET && !WATCH
+#if !NET
 	public partial class GKGameSession {
 
 		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
@@ -55,9 +46,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public interface IGKPeerPickerControllerDelegate : INativeObject, IDisposable
 	{
@@ -72,9 +61,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public static class GKPeerPickerControllerDelegate_Extensions {
 		public static void ConnectionTypeSelected (this IGKPeerPickerControllerDelegate This, GKPeerPickerController picker, GKPeerPickerConnectionType type)
@@ -107,9 +94,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public unsafe class GKPeerPickerControllerDelegate : NSObject, IGKPeerPickerControllerDelegate {
 		public GKPeerPickerControllerDelegate () : base (NSObjectFlag.Empty)
@@ -157,9 +142,7 @@ namespace GameKit {
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[Unavailable (PlatformName.MacOSX)]
-	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 #endif
 	public class GKPeerPickerController : NSObject {
 		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (Constants.TypeUnavailable); } }

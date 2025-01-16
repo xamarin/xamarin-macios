@@ -264,8 +264,8 @@ public class BindingTouch : IDisposable {
 				config.CoreSources.Insert (i - 1, config.Sources [i]);
 		}
 
-		if (config.ApiSources.Count == 0) {
-			Console.WriteLine ("Error: no api file provided");
+		if (config.ApiSources.Count == 0 && string.IsNullOrEmpty (compiled_api_definition_assembly)) {
+			Console.WriteLine ("Error: no api file provided, nor a compiled api definition assembly");
 			ShowHelp (config.OptionSet);
 			return false;
 		}
@@ -273,8 +273,11 @@ public class BindingTouch : IDisposable {
 		if (config.TemporaryFileDirectory is null)
 			config.TemporaryFileDirectory = GetWorkDir ();
 
-		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (config.ApiSources [0]);
-		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
+		var firstApiDefinitionName = string.Empty;
+		if (config.ApiSources.Count > 0) {
+			firstApiDefinitionName = Path.GetFileNameWithoutExtension (config.ApiSources [0]);
+			firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
+		}
 		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
 
