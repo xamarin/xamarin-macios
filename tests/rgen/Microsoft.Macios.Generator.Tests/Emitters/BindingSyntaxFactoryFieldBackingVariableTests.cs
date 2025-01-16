@@ -19,7 +19,6 @@ public class BindingSyntaxFactoryFieldBackingVariableTests : BaseGeneratorTestCl
 	class TestDataFieldPropertyBackingVariable : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			/*
 			const string nsStringFieldProperty = @"
 using System;
 using Foundation;
@@ -63,7 +62,6 @@ namespace CoreGraphics {
 				byteFieldProperty,
 				"byte _GenericGray;"
 			];
-			*/
 
 			const string otherByteFieldProperty = @"
 using System;
