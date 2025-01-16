@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -24,7 +25,7 @@ static class TypeSymbolExtensions {
 		var boundAttributes = symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new ();
+			return new();
 		}
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
@@ -51,7 +52,14 @@ static class TypeSymbolExtensions {
 	public static ImmutableArray<ISymbol> GetParents (this ISymbol symbol)
 	{
 		var result = new List<ISymbol> ();
-		var current = symbol.ContainingSymbol;
+		// when looking for the parents of a symbol we need to make a distinction between a general ISymbol such as
+		// a INamedType symbol and a IMethodSymbol that represents a property accessor. Properties are NOT treated as
+		// containing symbols of their accessors. Accessors are related to their property symbols via the AssociatedSymbol
+		// property. In our code generator we want to include the property symbol as a parent of the accessor to combine
+		// correctly the availability attributes.
+		var current = (symbol is IMethodSymbol { AssociatedSymbol: not null } methodSymbol)
+			? methodSymbol.AssociatedSymbol
+			: symbol.ContainingSymbol;
 		if (current is null)
 			return [];
 
@@ -127,6 +135,7 @@ static class TypeSymbolExtensions {
 		foreach (var parent in GetParents (symbol)) {
 			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
 		}
+
 		return availability;
 	}
 
@@ -136,12 +145,14 @@ static class TypeSymbolExtensions {
 		if (boundAttributes.Length == 0) {
 			return false;
 		}
+
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
 			if (attrName == attribute) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -150,7 +161,7 @@ static class TypeSymbolExtensions {
 		// a type is a smart enum if its type is a enum one AND it was decorated with the
 		// binding type attribute
 		return symbol.TypeKind == TypeKind.Enum
-			   && symbol.HasAttribute (AttributesNames.BindingAttribute);
+		       && symbol.HasAttribute (AttributesNames.BindingAttribute);
 	}
 
 	public static BindingTypeData GetBindingData (this ISymbol symbol)
@@ -160,6 +171,7 @@ static class TypeSymbolExtensions {
 			// no attrs in the symbol, therefore the symbol is supported in all platforms
 			return default;
 		}
+
 		// we are looking for the basic BindingAttribute attr
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
@@ -195,9 +207,11 @@ static class TypeSymbolExtensions {
 	}
 
 	delegate string? GetAttributeNames ();
+
 	delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
 
-	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse) where T : struct
+	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse)
+		where T : struct
 	{
 		var attributes = symbol.GetAttributeData ();
 		if (attributes.Count == 0)
@@ -208,7 +222,7 @@ static class TypeSymbolExtensions {
 		if (attrName is null)
 			return null;
 		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
-			exportAttrDataList.Count != 1)
+		    exportAttrDataList.Count != 1)
 			return null;
 
 		var exportAttrData = exportAttrDataList [0];
@@ -291,7 +305,8 @@ static class TypeSymbolExtensions {
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
 				var layoutAttribute = symbol.GetAttributes ()
-					.FirstOrDefault (attr => attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
+					.FirstOrDefault (attr =>
+						attr.AttributeClass?.ToString () == typeof(StructLayoutAttribute).FullName);
 
 				if (layoutAttribute is not null) {
 					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
@@ -329,7 +344,8 @@ static class TypeSymbolExtensions {
 	/// <param name="interfaces">All implemented interfaces by the type and its parents.</param>
 	/// <param name="isNSObject">If the type inherits from NSObject.</param>
 	public static void GetInheritance (
-		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out ImmutableArray<string> parents, out ImmutableArray<string> interfaces)
+		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out ImmutableArray<string> parents,
+		out ImmutableArray<string> interfaces)
 	{
 		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
 		const string nsObjectClass = "Foundation.NSObject";
