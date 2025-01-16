@@ -56,7 +56,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 		Attributes = attributes;
 		Modifiers = modifiers;
 	}
-	
+
 	/// <summary>
 	/// Retrieve the selector to be used with the associated property.
 	/// </summary>
@@ -67,15 +67,15 @@ readonly struct Accessor : IEquatable<Accessor> {
 		// this is not a property but a field, we cannot retrieve a selector.
 		if (!associatedProperty.IsProperty)
 			return null;
-		
+
 		// There are two possible cases, the current accessor has an export attribute, if that
 		// is the case, we will use the selector in that attribute. Otherwise, we have:
 		//
 		// * getter: return the property selector.
 		// * setter: use the registrar code (it has the right logic) to get the setter.
 		if (ExportPropertyData is null) {
-			return Kind == AccessorKind.Getter 
-				? associatedProperty.ExportPropertyData.Value.Selector 
+			return Kind == AccessorKind.Getter
+				? associatedProperty.ExportPropertyData.Value.Selector
 				: Registrar.Registrar.CreateSetterSelector (associatedProperty.ExportPropertyData.Value.Selector);
 		}
 

@@ -323,7 +323,7 @@ public class AccessorTests {
 		) {
 			ExportFieldData = new (new ("Constant"), "lib"),
 		};
-		
+
 		var accessor = new Accessor (
 			accessorKind: AccessorKind.Getter,
 			symbolAvailability: new (),
@@ -336,7 +336,7 @@ public class AccessorTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
 			]);
-		
+
 		Assert.Null (accessor.GetSelector (property));
 	}
 
@@ -353,7 +353,7 @@ public class AccessorTests {
 		) {
 			ExportPropertyData = new ("label")
 		};
-		
+
 		var accessor = new Accessor (
 			accessorKind: AccessorKind.Getter,
 			symbolAvailability: new (),
@@ -371,7 +371,7 @@ public class AccessorTests {
 		Assert.NotNull (selector);
 		Assert.Equal (property.ExportPropertyData.Value.Selector, selector);
 	}
-	
+
 	[Fact]
 	public void GetGetterSelectorExportData ()
 	{
@@ -404,7 +404,7 @@ public class AccessorTests {
 		Assert.NotNull (selector);
 		Assert.Equal (customSelector, selector);
 	}
-	
+
 	[Fact]
 	public void GetSetterSelectorNoExportData ()
 	{
@@ -418,7 +418,7 @@ public class AccessorTests {
 		) {
 			ExportPropertyData = new ("label")
 		};
-		
+
 		var accessor = new Accessor (
 			accessorKind: AccessorKind.Setter,
 			symbolAvailability: new (),
@@ -436,7 +436,7 @@ public class AccessorTests {
 		Assert.NotNull (selector);
 		Assert.Equal ("setLabel:", selector);
 	}
-	
+
 	[Fact]
 	public void GetSetterSelectorExportData ()
 	{
@@ -450,7 +450,7 @@ public class AccessorTests {
 		) {
 			ExportPropertyData = new ("label")
 		};
-		
+
 		var customSelector = "setCustom:";
 		var accessor = new Accessor (
 			accessorKind: AccessorKind.Setter,
