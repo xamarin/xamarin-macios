@@ -878,9 +878,6 @@ namespace Xamarin.Tests {
 				var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
 				if (actualBundleOriginalResources) {
 					expectedResources = new string [] {
-						$"__{platformPrefix}_content_A.ttc",
-						$"__{platformPrefix}_content_B.otf",
-						$"__{platformPrefix}_content_C.ttf",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0001.png",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0002.png",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0003.png",
