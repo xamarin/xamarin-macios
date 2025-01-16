@@ -169,7 +169,7 @@ public class ParentClass {
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
 			yield return [enumValueNested, getEnumValue, enumParensts];
-			
+
 			Func<SyntaxNode, CSharpSyntaxNode?> getGetterValue =
 				rootNode => rootNode.DescendantNodes ().OfType<AccessorDeclarationSyntax> ().LastOrDefault ();
 			const string propertyGetter = @"

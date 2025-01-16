@@ -25,7 +25,7 @@ static class TypeSymbolExtensions {
 		var boundAttributes = symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new();
+			return new ();
 		}
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
@@ -161,7 +161,7 @@ static class TypeSymbolExtensions {
 		// a type is a smart enum if its type is a enum one AND it was decorated with the
 		// binding type attribute
 		return symbol.TypeKind == TypeKind.Enum
-		       && symbol.HasAttribute (AttributesNames.BindingAttribute);
+			   && symbol.HasAttribute (AttributesNames.BindingAttribute);
 	}
 
 	public static BindingTypeData GetBindingData (this ISymbol symbol)
@@ -222,7 +222,7 @@ static class TypeSymbolExtensions {
 		if (attrName is null)
 			return null;
 		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
-		    exportAttrDataList.Count != 1)
+			exportAttrDataList.Count != 1)
 			return null;
 
 		var exportAttrData = exportAttrDataList [0];
@@ -306,7 +306,7 @@ static class TypeSymbolExtensions {
 				// Check for StructLayout attribute with LayoutKind.Sequential
 				var layoutAttribute = symbol.GetAttributes ()
 					.FirstOrDefault (attr =>
-						attr.AttributeClass?.ToString () == typeof(StructLayoutAttribute).FullName);
+						attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
 
 				if (layoutAttribute is not null) {
 					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
