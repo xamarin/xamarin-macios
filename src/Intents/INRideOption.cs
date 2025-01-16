@@ -4,6 +4,8 @@ using Foundation;
 using Intents;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Intents {
 
 	public partial class INRideOption {

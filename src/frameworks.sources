@@ -1061,47 +1061,22 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
-	Intents/INBillTypeResolutionResult.cs \
 	Intents/INCallRecord.cs \
-	Intents/INCallRecordTypeResolutionResult.cs \
-	Intents/INCarAirCirculationModeResolutionResult.cs \
-	Intents/INCarAudioSourceResolutionResult.cs \
-	Intents/INCarDefrosterResolutionResult.cs \
-	Intents/INCarSeatResolutionResult.cs \
-	Intents/INCarSignalOptionsResolutionResult.cs \
-	Intents/INCompat.cs \
 	Intents/INGetCarLockStatusIntentResponse.cs \
 	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INInteraction.cs \
-	Intents/INMessageAttributeOptionsResolutionResult.cs \
-	Intents/INMessageAttributeResolutionResult.cs \
-	Intents/INPaymentStatusResolutionResult.cs \
 	Intents/INPerson.cs \
 	Intents/INPriceRange.cs \
-	Intents/INRadioTypeResolutionResult.cs \
-	Intents/INRelativeReferenceResolutionResult.cs \
-	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
 	Intents/INPlayMediaIntentResponse.cs \
-	Intents/INSaveProfileInCarIntent.cs \
 	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
-	Intents/INSpeakableString.cs \
 	Intents/INStartWorkoutIntent.cs \
-	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
-	Intents/INWorkoutLocationTypeResolutionResult.cs \
-	Intents/INCarAirCirculationModeResolutionResult.watchOS.cs \
-	Intents/INCarAudioSourceResolutionResult.watchOS.cs \
-	Intents/INCarDefrosterResolutionResult.watchOS.cs \
-	Intents/INCarSeatResolutionResult.watchOS.cs \
-	Intents/INRadioTypeResolutionResult.watchOS.cs \
-	Intents/INRelativeReferenceResolutionResult.watchOS.cs \
-	Intents/INRelativeSettingResolutionResult.watchOS.cs \
 
 # IOSurface
 IOSURFACE_CORE_SOURCES = \

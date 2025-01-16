@@ -2633,6 +2633,7 @@ namespace Intents {
 		Gbtdc,
 
 		[Deprecated (PlatformName.iOS, 17, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 4, message: "Use 'INCarChargingConnectorType.NacsDc' instead.")]
 		[Field ("INCarChargingConnectorTypeTesla")]
 		Tesla,
 
@@ -2830,32 +2831,14 @@ namespace Intents {
 	interface INCallRecordTypeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCallRecordType:")]
-		INCallRecordTypeResolutionResult SuccessWithResolvedCallRecordType (INCallRecordType resolvedCallRecordType);
-
-		[Internal]
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCallRecordTypeResolutionResult SuccessWithResolvedValue (INCallRecordType resolvedValue);
+		INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedCallRecordType);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCallRecordTypeToConfirm:")]
-		INCallRecordTypeResolutionResult ConfirmationRequiredWithCallRecordTypeToConfirm (INCallRecordType callRecordTypeToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCallRecordTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INCallRecordType valueToConfirm);
+		INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType callRecordTypeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2963,29 +2946,14 @@ namespace Intents {
 	interface INCarAirCirculationModeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarAirCirculationMode:")]
-		INCarAirCirculationModeResolutionResult SuccessWithResolvedCarAirCirculationMode (INCarAirCirculationMode resolvedCarAirCirculationMode);
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCarAirCirculationModeResolutionResult SuccessWithResolvedValue (INCarAirCirculationMode resolvedValue);
+		INCarAirCirculationModeResolutionResult GetSuccess (INCarAirCirculationMode resolvedCarAirCirculationMode);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarAirCirculationModeToConfirm:")]
-		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithCarAirCirculationModeToConfirm (INCarAirCirculationMode carAirCirculationModeToConfirm);
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithValueToConfirm (INCarAirCirculationMode valueToConfirm);
+		INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode carAirCirculationModeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3034,23 +3002,14 @@ namespace Intents {
 	interface INCarAudioSourceResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarAudioSource:")]
-		INCarAudioSourceResolutionResult SuccessWithResolvedCarAudioSource (INCarAudioSource resolvedCarAudioSource);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCarAudioSourceResolutionResult SuccessWithResolvedValue (INCarAudioSource resolvedValue);
+		INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedCarAudioSource);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarAudioSourceToConfirm:")]
-		INCarAudioSourceResolutionResult ConfirmationRequiredWithCarAudioSourceToConfirm (INCarAudioSource carAudioSourceToConfirm);
+		INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource carAudioSourceToConfirm);
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
@@ -3106,30 +3065,14 @@ namespace Intents {
 	interface INCarDefrosterResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarDefroster:")]
-		INCarDefrosterResolutionResult SuccessWithResolvedCarDefroster (INCarDefroster resolvedCarDefroster);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCarDefrosterResolutionResult SuccessWithResolvedValue (INCarDefroster resolvedValue);
+		INCarDefrosterResolutionResult GetSuccess (INCarDefroster resolvedCarDefroster);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarDefrosterToConfirm:")]
-		INCarDefrosterResolutionResult ConfirmationRequiredWithCarDefrosterToConfirm (INCarDefroster carDefrosterToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarDefrosterResolutionResult ConfirmationRequiredWithValueToConfirm (INCarDefroster valueToConfirm);
+		INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster carDefrosterToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3178,30 +3121,14 @@ namespace Intents {
 	interface INCarSeatResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarSeat:")]
-		INCarSeatResolutionResult SuccessWithResolvedCarSeat (INCarSeat resolvedCarSeat);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCarSeatResolutionResult SuccessWithResolvedValue (INCarSeat resolvedValue);
+		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedCarSeat);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
-		INCarSeatResolutionResult ConfirmationRequiredWithCarSeatToConfirm (INCarSeat carSeatToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSeatResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSeat valueToConfirm);
+		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat carSeatToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -4603,32 +4530,14 @@ namespace Intents {
 	interface INMessageAttributeOptionsResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttributeOptions:")]
-		INMessageAttributeOptionsResolutionResult SuccessWithResolvedMessageAttributeOptions (INMessageAttributeOptions resolvedMessageAttributeOptions);
-
-		[Internal]
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INMessageAttributeOptionsResolutionResult SuccessWithResolvedValue (INMessageAttributeOptions resolvedValue);
+		INMessageAttributeOptionsResolutionResult GetSuccess (INMessageAttributeOptions resolvedMessageAttributeOptions);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeOptionsToConfirm:")]
 		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithMessageAttributeOptionsToConfirm (INMessageAttributeOptions messageAttributeOptionsToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttributeOptions valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -4677,30 +4586,14 @@ namespace Intents {
 	interface INMessageAttributeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttribute:")]
-		INMessageAttributeResolutionResult SuccessWithResolvedMessageAttribute (INMessageAttribute resolvedMessageAttribute);
-
-		[Internal]
-		[MacCatalyst (13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INMessageAttributeResolutionResult SuccessWithResolvedValue (INMessageAttribute resolvedValue);
+		INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedMessageAttribute);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeToConfirm:")]
-		INMessageAttributeResolutionResult ConfirmationRequiredWithMessageAttributeToConfirm (INMessageAttribute messageAttributeToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INMessageAttributeResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttribute valueToConfirm);
+		INMessageAttributeResolutionResult GetConfirmationRequired (INMessageAttribute messageAttributeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5166,30 +5059,14 @@ namespace Intents {
 	interface INRadioTypeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedRadioType:")]
-		INRadioTypeResolutionResult SuccessWithResolvedRadioType (INRadioType resolvedRadioType);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INRadioTypeResolutionResult SuccessWithResolvedValue (INRadioType resolvedValue);
+		INRadioTypeResolutionResult GetSuccess (INRadioType resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRadioTypeToConfirm:")]
-		INRadioTypeResolutionResult ConfirmationRequiredWithRadioTypeToConfirm (INRadioType radioTypeToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRadioTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INRadioType valueToConfirm);
+		INRadioTypeResolutionResult GetConfirmationRequired (INRadioType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5238,30 +5115,14 @@ namespace Intents {
 	interface INRelativeReferenceResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedRelativeReference:")]
-		INRelativeReferenceResolutionResult SuccessWithResolvedRelativeReference (INRelativeReference resolvedRelativeReference);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INRelativeReferenceResolutionResult SuccessWithResolvedValue (INRelativeReference resolvedValue);
+		INRelativeReferenceResolutionResult GetSuccess (INRelativeReference resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRelativeReferenceToConfirm:")]
-		INRelativeReferenceResolutionResult ConfirmationRequiredWithRelativeReferenceToConfirm (INRelativeReference relativeReferenceToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRelativeReferenceResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeReference valueToConfirm);
+		INRelativeReferenceResolutionResult GetConfirmationRequired (INRelativeReference valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5310,30 +5171,14 @@ namespace Intents {
 	interface INRelativeSettingResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedRelativeSetting:")]
-		INRelativeSettingResolutionResult SuccessWithResolvedRelativeSetting (INRelativeSetting resolvedRelativeSetting);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INRelativeSettingResolutionResult SuccessWithResolvedValue (INRelativeSetting resolvedValue);
+		INRelativeSettingResolutionResult GetSuccess (INRelativeSetting resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRelativeSettingToConfirm:")]
-		INRelativeSettingResolutionResult ConfirmationRequiredWithRelativeSettingToConfirm (INRelativeSetting relativeSettingToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRelativeSettingResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeSetting valueToConfirm);
+		INRelativeSettingResolutionResult GetConfirmationRequired (INRelativeSetting valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -6186,15 +6031,14 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSaveProfileInCarIntent {
-
-		[Deprecated (PlatformName.iOS, 10, 2)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("initWithProfileNumber:profileLabel:"), Internal]
-		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel);
-
 		[MacCatalyst (13, 1)]
-		[Export ("initWithProfileNumber:profileName:"), Internal]
-		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName);
+		[DesignatedInitializer]
+		[Export ("initWithProfileNumber:profileName:")]
+#if XAMCORE_5_0
+		NativeHandle Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName);
+#else
+		NativeHandle Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel);
+#endif
 
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
@@ -7296,17 +7140,15 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetProfileInCarIntent {
-
-		[Deprecated (PlatformName.iOS, 10, 2)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Export ("initWithProfileNumber:profileLabel:defaultProfile:"), Internal]
-		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
-
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
-		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
-		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
+		[Export ("initWithProfileNumber:profileName:defaultProfile:")]
+#if XAMCORE_5_0
+		NativeHandle Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
+#else
+		NativeHandle Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
+#endif
 
 		[MacCatalyst (13, 1)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
@@ -7694,15 +7536,9 @@ namespace Intents {
 	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Export ("initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:")]
-		IntPtr InitWithVocabularyIdentifier (string vocabularyIdentifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
-
-		[NoTV]
-		[MacCatalyst (13, 1)]
-		[Internal]
-		[Export ("initWithIdentifier:spokenPhrase:pronunciationHint:")]
-		IntPtr InitWithIdentifier (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
+		[DesignatedInitializer]
+		NativeHandle Constructor (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[MacCatalyst (13, 1)]
 		[Export ("initWithSpokenPhrase:")]
@@ -8294,30 +8130,14 @@ namespace Intents {
 	interface INWorkoutGoalUnitTypeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedWorkoutGoalUnitType:")]
-		INWorkoutGoalUnitTypeResolutionResult SuccessWithResolvedWorkoutGoalUnitType (INWorkoutGoalUnitType resolvedWorkoutGoalUnitType);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INWorkoutGoalUnitTypeResolutionResult SuccessWithResolvedValue (INWorkoutGoalUnitType resolvedValue);
+		INWorkoutGoalUnitTypeResolutionResult GetSuccess (INWorkoutGoalUnitType resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithWorkoutGoalUnitTypeToConfirm:")]
-		INWorkoutGoalUnitTypeResolutionResult ConfirmationRequiredWithWorkoutGoalUnitTypeToConfirm (INWorkoutGoalUnitType workoutGoalUnitTypeToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INWorkoutGoalUnitTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutGoalUnitType valueToConfirm);
+		INWorkoutGoalUnitTypeResolutionResult GetConfirmationRequired (INWorkoutGoalUnitType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -8364,30 +8184,14 @@ namespace Intents {
 	interface INWorkoutLocationTypeResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedWorkoutLocationType:")]
-		INWorkoutLocationTypeResolutionResult SuccessWithResolvedWorkoutLocationType (INWorkoutLocationType resolvedWorkoutLocationType);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INWorkoutLocationTypeResolutionResult SuccessWithResolvedValue (INWorkoutLocationType resolvedValue);
+		INWorkoutLocationTypeResolutionResult GetSuccess (INWorkoutLocationType resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithWorkoutLocationTypeToConfirm:")]
-		INWorkoutLocationTypeResolutionResult ConfirmationRequiredWithWorkoutLocationTypeToConfirm (INWorkoutLocationType workoutLocationTypeToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INWorkoutLocationTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutLocationType valueToConfirm);
+		INWorkoutLocationTypeResolutionResult GetConfirmationRequired (INWorkoutLocationType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -8629,32 +8433,15 @@ namespace Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBillTypeResolutionResult {
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INBillTypeResolutionResult SuccessWithResolvedValue (INBillType resolvedValue);
-
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedBillType:")]
-		INBillTypeResolutionResult SuccessWithResolvedBillType (INBillType resolvedBillType);
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INBillTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INBillType valueToConfirm);
+		INBillTypeResolutionResult GetSuccess (INBillType resolvedBillType);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithBillTypeToConfirm:")]
-		INBillTypeResolutionResult ConfirmationRequiredWithBillTypeToConfirm (INBillType billTypeToConfirm);
+		INBillTypeResolutionResult GetConfirmationRequired (INBillType billTypeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -8699,30 +8486,14 @@ namespace Intents {
 	interface INCarSignalOptionsResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarSignalOptions:")]
-		INCarSignalOptionsResolutionResult SuccessWithResolvedCarSignalOptions (INCarSignalOptions resolvedCarSignalOptions);
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCarSignalOptionsResolutionResult SuccessWithResolvedValue (INCarSignalOptions resolvedValue);
+		INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedCarSignalOptions);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarSignalOptionsToConfirm:")]
-		INCarSignalOptionsResolutionResult ConfirmationRequiredWithCarSignalOptionsToConfirm (INCarSignalOptions carSignalOptionsToConfirm);
-
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Internal]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSignalOptionsResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSignalOptions valueToConfirm);
+		INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions carSignalOptionsToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -9285,30 +9056,14 @@ namespace Intents {
 	interface INPaymentStatusResolutionResult {
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("successWithResolvedPaymentStatus:")]
-		INPaymentStatusResolutionResult SuccessWithResolvedPaymentStatus (INPaymentStatus resolvedPaymentStatus);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INPaymentStatusResolutionResult SuccessWithResolvedValue (INPaymentStatus resolvedValue);
+		INPaymentStatusResolutionResult GetSuccess (INPaymentStatus resolvedValue);
 
 		[MacCatalyst (13, 1)]
-		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithPaymentStatusToConfirm:")]
-		INPaymentStatusResolutionResult ConfirmationRequiredWithPaymentStatusToConfirm (INPaymentStatus paymentStatusToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INPaymentStatusResolutionResult ConfirmationRequiredWithValueToConfirm (INPaymentStatus valueToConfirm);
+		INPaymentStatusResolutionResult GetConfirmationRequired (INPaymentStatus valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -14268,6 +14023,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Export ("initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability:")]
 		NativeHandle Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
 
@@ -14294,6 +14050,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Export ("recordTypeForRedialing", ArgumentSemantic.Assign)]
 		INCallRecordType RecordTypeForRedialing { get; }
 

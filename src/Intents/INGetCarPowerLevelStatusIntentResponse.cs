@@ -7,11 +7,13 @@
 //
 
 #if IOS && !TVOS
-#if !(NET && __MACOS__)
+#if !__MACOS__
 
 using Foundation;
 using Intents;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace Intents {
 
@@ -30,5 +32,5 @@ namespace Intents {
 	}
 }
 
-#endif // !(NET && __MACOS__)
+#endif // !__MACOS__
 #endif
