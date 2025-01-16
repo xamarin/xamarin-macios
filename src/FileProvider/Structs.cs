@@ -23,8 +23,7 @@ namespace FileProvider {
 	[NoMacCatalyst]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NSFileProviderTypeAndCreator
-	{
+	public struct NSFileProviderTypeAndCreator {
 		public uint Type;
 		public uint Creator;
 
@@ -32,7 +31,7 @@ namespace FileProvider {
 		public string GetTypeAsFourCC ()
 			=> Runtime.ToFourCCString (Type);
 
-		public string GetCreatorAsFourCC()
+		public string GetCreatorAsFourCC ()
 			=> Runtime.ToFourCCString (Creator);
 #endif
 	}

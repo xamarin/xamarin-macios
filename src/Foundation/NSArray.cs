@@ -242,7 +242,7 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (items));
 
 			unsafe {
-				fixed (IntPtr *valuesPtr = items)
+				fixed (IntPtr* valuesPtr = items)
 					return Runtime.GetNSObject<NSArray> (NSArray.FromObjects ((IntPtr) valuesPtr, items.Length))!;
 			}
 		}

@@ -309,7 +309,7 @@ namespace AudioToolbox {
 			unsafe {
 				result = MusicTrackGetDestMIDIEndpoint (Handle, &midiHandle);
 			}
-			outEndpoint = (result == MusicPlayerStatus.Success)? new MidiEndpoint (midiHandle): null;
+			outEndpoint = (result == MusicPlayerStatus.Success) ? new MidiEndpoint (midiHandle) : null;
 			return result;
 		}
 #endif

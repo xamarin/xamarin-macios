@@ -82,7 +82,9 @@ namespace Foundation {
 	public enum NSBundleExecutableArchitecture : long {
 #else
 	/// <summary>The bundle's architecture.</summary>
-	[NoiOS][NoTV][NoMacCatalyst]
+	[NoiOS]
+	[NoTV]
+	[NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif
 		I386 = 0x00000007,

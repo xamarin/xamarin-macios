@@ -148,7 +148,7 @@ namespace CoreVideo {
 #if IOS || __MACCATALYST__ || TVOS
 			if (SystemVersion.CheckiOS (15, 0))
 #endif
-			return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
+				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
 #else
@@ -201,7 +201,7 @@ namespace CoreVideo {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (12, 0))
 #endif
-			return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
+				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
 			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 		}
 

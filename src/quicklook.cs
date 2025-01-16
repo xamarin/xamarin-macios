@@ -33,7 +33,7 @@ using Foundation;
 using CoreGraphics;
 #if MONOMAC
 using AppKit;
-using UIWindowSceneActivationConfiguration=Foundation.NSObject;
+using UIWindowSceneActivationConfiguration = Foundation.NSObject;
 #else
 using UIKit;
 #endif
@@ -315,7 +315,9 @@ namespace QuickLook {
 	}
 #else
 	[Static]
-	[NoiOS][NoMacCatalyst][NoTV]
+	[NoiOS]
+	[NoMacCatalyst]
+	[NoTV]
 	interface QLThumbnailImage {
 		[Internal, Field ("kQLThumbnailOptionScaleFactorKey")]
 		NSString OptionScaleFactorKey { get; }

@@ -20,7 +20,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-			return SuccessWithResolvedBillType (resolvedValue);
+				return SuccessWithResolvedBillType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -30,7 +30,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-			return ConfirmationRequiredWithBillTypeToConfirm (valueToConfirm);
+				return ConfirmationRequiredWithBillTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}
