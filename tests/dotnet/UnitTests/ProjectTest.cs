@@ -232,11 +232,19 @@ namespace Xamarin.Tests {
 			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
-		[TestCase ("iOS", "monotouch")]
-		[TestCase ("tvOS", "monotouch")]
-		[TestCase ("macOS", "xammac")]
-		[TestCase ("MacCatalyst", "monotouch")]
-		public void BuildBundledResources (string platform, string prefix)
+		[TestCase ("iOS", "monotouch", true)]
+		[TestCase ("tvOS", "monotouch", true)]
+		[TestCase ("macOS", "xammac", true)]
+		[TestCase ("MacCatalyst", "monotouch", true)]
+		[TestCase ("iOS", "monotouch", false)]
+		[TestCase ("tvOS", "monotouch", false)]
+		[TestCase ("macOS", "xammac", false)]
+		[TestCase ("MacCatalyst", "monotouch", false)]
+		[TestCase ("iOS", "monotouch", null)]
+		[TestCase ("tvOS", "monotouch", null)]
+		[TestCase ("macOS", "xammac", null)]
+		[TestCase ("MacCatalyst", "monotouch", null)]
+		public void BuildBundledResources (string platform, string prefix, bool? bundleOriginalResources)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "BundledResources";

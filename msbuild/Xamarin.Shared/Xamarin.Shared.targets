@@ -556,6 +556,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="ItemsWithLogicalNames" ItemName="_BundleOriginalResourceWithLogicalName" />
 
 		</CollectPackLibraryResources>
+
+		<!-- make sure we don't bundle the same resource more than once -->
+		<ItemGroup>
+			<_BundleResourceWithLogicalName Remove="@(_BundleOriginalResourceWithLogicalName)" />
+		</ItemGroup>
 	</Target>
 
 	<!--
