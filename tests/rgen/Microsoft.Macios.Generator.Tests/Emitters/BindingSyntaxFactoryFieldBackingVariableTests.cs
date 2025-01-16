@@ -38,7 +38,7 @@ namespace CoreGraphics {
 
 			yield return [
 				nsStringFieldProperty,
-				"Foundation.NSString? _GenericGray;"
+				"static Foundation.NSString? _GenericGray;"
 			];
 
 			const string byteFieldProperty = @"
@@ -60,7 +60,7 @@ namespace CoreGraphics {
 
 			yield return [
 				byteFieldProperty,
-				"byte _GenericGray;"
+				"static byte _GenericGray;"
 			];
 
 			const string otherByteFieldProperty = @"
