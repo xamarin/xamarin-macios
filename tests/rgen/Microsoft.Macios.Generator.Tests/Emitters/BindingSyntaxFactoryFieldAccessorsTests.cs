@@ -37,7 +37,7 @@ namespace CoreGraphics {
 ";
 
 			yield return [nsStringFieldProperty,
-				"Dlfcn.GetStringConstant (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+				"Dlfcn.GetStringConstant (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\")!;"];
 
 			const string byteFieldProperty = @"
 using System;
