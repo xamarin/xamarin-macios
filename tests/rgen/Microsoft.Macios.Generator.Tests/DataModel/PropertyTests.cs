@@ -1025,7 +1025,7 @@ namespace Test {
 						),
 					])
 			];
-			
+
 			const string autoPropertyGetterWithAttribute = @"
 using System.Runtime.Versioning;
 using ObjCBindings;
@@ -1076,7 +1076,7 @@ public class TestClass {
 						),
 					])
 			];
-			
+
 			const string staticAutoPropertyGetterWithAttribute = @"
 using System.Runtime.Versioning;
 using ObjCBindings;
@@ -1128,7 +1128,7 @@ public class TestClass {
 						),
 					])
 			];
-			
+
 			const string partialStaticAutoPropertyGetterWithAttribute = @"
 using System.Runtime.Versioning;
 using ObjCBindings;
