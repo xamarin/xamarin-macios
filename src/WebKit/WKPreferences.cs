@@ -28,7 +28,7 @@ namespace WebKit {
 #elif MONOMAC
 				if (SystemVersion.CheckmacOS (12, 0))
 #endif
-					return _NewGetTextInteractionEnabled ();
+				return _NewGetTextInteractionEnabled ();
 				else
 					return _OldTextInteractionEnabled;
 			}

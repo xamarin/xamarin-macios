@@ -20,7 +20,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-				return SuccessWithResolvedCarSignalOptions (resolvedValue);
+			return SuccessWithResolvedCarSignalOptions (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -30,7 +30,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-				return ConfirmationRequiredWithCarSignalOptionsToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithCarSignalOptionsToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

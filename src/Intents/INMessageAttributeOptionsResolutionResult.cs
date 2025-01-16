@@ -23,7 +23,7 @@ namespace Intents {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return SuccessWithResolvedMessageAttributeOptions (resolvedValue);
+			return SuccessWithResolvedMessageAttributeOptions (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -35,7 +35,7 @@ namespace Intents {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return ConfirmationRequiredWithMessageAttributeOptionsToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithMessageAttributeOptionsToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

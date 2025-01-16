@@ -723,23 +723,23 @@ namespace CoreFoundation {
 #else
 					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif
-						using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 
-							if (cancellationToken.IsCancellationRequested)
-								throw new OperationCanceledException ("Operation was cancelled.");
+						if (cancellationToken.IsCancellationRequested)
+							throw new OperationCanceledException ("Operation was cancelled.");
 
-							cancellationToken.Register (() => {
-								//if user cancels, we invalidte the source, stop the runloop and remove the source
-								loopSource.Invalidate ();
-								runLoop.RemoveSource (loopSource, mode);
-								runLoop.Stop ();
-							});
-							runLoop.AddSource (loopSource, mode);
-							// blocks until stop is called, will be done in the cb set previously
-							runLoop.RunInMode (mode, double.MaxValue, false);
-							// does not raise an error if source is not longer present, so no need to worry
+						cancellationToken.Register (() => {
+							//if user cancels, we invalidte the source, stop the runloop and remove the source
+							loopSource.Invalidate ();
 							runLoop.RemoveSource (loopSource, mode);
-						}
+							runLoop.Stop ();
+						});
+						runLoop.AddSource (loopSource, mode);
+						// blocks until stop is called, will be done in the cb set previously
+						runLoop.RunInMode (mode, double.MaxValue, false);
+						// does not raise an error if source is not longer present, so no need to worry
+						runLoop.RemoveSource (loopSource, mode);
+					}
 #if NET
 					} // matches the unsafe block
 #endif
@@ -787,14 +787,14 @@ namespace CoreFoundation {
 #else
 				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif
-					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-						runLoop.AddSource (loopSource, mode);
-						runLoop.RunInMode (mode, double.MaxValue, false);
-						runLoop.RemoveSource (loopSource, mode);
-					}
-					pacCbData = Marshal.PtrToStructure<PACProxyCallbackData> (pacDataPtr)!;
-					// get data from the struct
-					outError = pacCbData.Error;
+				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					runLoop.AddSource (loopSource, mode);
+					runLoop.RunInMode (mode, double.MaxValue, false);
+					runLoop.RemoveSource (loopSource, mode);
+				}
+				pacCbData = Marshal.PtrToStructure<PACProxyCallbackData> (pacDataPtr)!;
+				// get data from the struct
+				outError = pacCbData.Error;
 #if NET
 				} // unsafe
 #endif

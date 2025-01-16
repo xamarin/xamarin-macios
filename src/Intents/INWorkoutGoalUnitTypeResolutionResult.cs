@@ -20,7 +20,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-				return SuccessWithResolvedWorkoutGoalUnitType (resolvedValue);
+			return SuccessWithResolvedWorkoutGoalUnitType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -30,7 +30,7 @@ namespace Intents {
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
 #endif
-				return ConfirmationRequiredWithWorkoutGoalUnitTypeToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithWorkoutGoalUnitTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}
