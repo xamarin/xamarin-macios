@@ -90,6 +90,16 @@ readonly struct Property : IEquatable<Property> {
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
 
+	public Accessor? GetAccessor (AccessorKind accessorKind)
+	{
+		// careful, do not use FirstOrDefault from LINQ because we are using structs!
+		foreach (var accessor in Accessors) {
+			if (accessor.Kind == accessorKind)
+				return accessor;
+		}
+		return null;
+	}
+	
 	internal Property (string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,

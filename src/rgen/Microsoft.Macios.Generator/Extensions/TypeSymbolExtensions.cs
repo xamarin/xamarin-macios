@@ -22,10 +22,10 @@ static class TypeSymbolExtensions {
 	/// <returns>A dictionary with the attribute names as keys and the related attribute data.</returns>
 	public static Dictionary<string, List<AttributeData>> GetAttributeData (this ISymbol symbol)
 	{
-		var boundAttributes = symbol.GetAttributes ();
+		var boundAttributes= symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new ();
+			return new();
 		}
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
