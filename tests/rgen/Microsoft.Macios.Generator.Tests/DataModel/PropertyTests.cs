@@ -839,14 +839,14 @@ public class TestClass {
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Getter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
 						),
 						new (
 							accessorKind: AccessorKind.Setter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
@@ -899,7 +899,7 @@ public class TestClass {
 						),
 						new (
 							accessorKind: AccessorKind.Setter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
