@@ -281,7 +281,7 @@ namespace CoreHaptics {
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] out NSError error);
 
-		[NoMac, NoTV]
+		[NoMac] // AVAudioSession is not available on macOS.
 		[MacCatalyst (13, 1)]
 		[Export ("initWithAudioSession:error:")]
 		[DesignatedInitializer]

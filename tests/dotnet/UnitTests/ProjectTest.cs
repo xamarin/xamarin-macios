@@ -2843,6 +2843,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth",
 			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
 			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
 			"/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage",
 			"/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation",
 			"/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
