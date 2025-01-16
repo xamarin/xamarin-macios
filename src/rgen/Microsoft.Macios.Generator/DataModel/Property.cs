@@ -79,11 +79,11 @@ readonly struct Property : IEquatable<Property> {
 	/// Get the attributes added to the member.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
-	
+
 	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
-	public bool MarshalNativeExceptions 
+	public bool MarshalNativeExceptions
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
 
 	/// <summary>

@@ -25,8 +25,8 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// The data of the field attribute used to mark the value as a property binding. 
 	/// </summary>
 	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
-	
-	public bool MarshalNativeExceptions 
+
+	public bool MarshalNativeExceptions
 		=> ExportPropertyData is not null && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
 
 	/// <summary>

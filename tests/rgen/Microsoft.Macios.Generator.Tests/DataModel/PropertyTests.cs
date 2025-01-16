@@ -444,7 +444,7 @@ public class TestClass {
 					ExportPropertyData = new (selector: "name"),
 				}
 			];
-			
+
 			const string marshallNativeException = @"
 using System;
 using ObjCBindings;

@@ -328,8 +328,8 @@ public class AccessorTests {
 			accessors: []
 		) {
 			ExportPropertyData = new (
-				selector: "selector", 
-				argumentSemantic: ArgumentSemantic.None, 
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
 				flags: propertyHasFlag ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
 		};
 
@@ -337,8 +337,8 @@ public class AccessorTests {
 			accessorKind: AccessorKind.Getter,
 			symbolAvailability: new (),
 			exportPropertyData: new (
-				selector: "selector", 
-				argumentSemantic: ArgumentSemantic.None, 
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
 				flags: accessorHasFalg ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
 			attributes: [
 				new ("First"),
@@ -351,5 +351,5 @@ public class AccessorTests {
 		Assert.Equal (expectedResult, accessor.ShouldMarshalNativeExceptions (property));
 	}
 
-	
+
 }
