@@ -1025,6 +1025,162 @@ namespace Test {
 						),
 					])
 			];
+			
+			const string autoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				autoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
+			
+			const string staticAutoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public static string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				staticAutoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.StaticKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
+			
+			const string partialStaticAutoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public static partial string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				partialStaticAutoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.StaticKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PartialKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
