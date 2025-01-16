@@ -72,7 +72,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 		// is the case, we will use the selector in that attribute. Otherwise, we have:
 		//
 		// * getter: return the property selector.
-		// * setter: use the registrar code (it has the right logic) ato get the setter.
+		// * setter: use the registrar code (it has the right logic) to get the setter.
 		if (ExportPropertyData is null) {
 			return Kind == AccessorKind.Getter 
 				? associatedProperty.ExportPropertyData.Value.Selector 
