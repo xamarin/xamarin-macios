@@ -70,7 +70,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 	/// <param name="classBlock">Current class block.</param>
 	/// <param name="notificationProperties">An immutable array with all the properties that are marked as notifications
 	/// and that need a helper class to be generated.</param>
-	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedStringBuilder classBlock, 
+	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedStringBuilder classBlock,
 		out ImmutableArray<Property> notificationProperties)
 	{
 		var notificationsBuilder = ImmutableArray.CreateBuilder<Property> ();
@@ -83,7 +83,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 			var getter = property.GetAccessor (AccessorKind.Getter);
 			if (getter is null)
 				continue;
-			
+
 			// provide a backing variable for the property if and only if we are dealing with a reference type
 			if (property.IsReferenceType) {
 				classBlock.AppendLine (FieldPropertyBackingVariable (property).ToString ());
@@ -102,13 +102,13 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 			using (var propertyBlock = classBlock.CreateBlock (property.ToDeclaration ().ToString (), block: true)) {
 				// generate the accessors, we will always have a get, a set is optional depending on the type
 				// if the symbol availability of the accessor is different of the one from the property, write it
-				
+
 				// be very verbose with the availability, makes the life easier to the dotnet analyzer
 				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
 					getterBlock.AppendLine ("throw new NotImplementedException ();");
 				}
-				
+
 				var setter = property.GetAccessor (AccessorKind.Setter);
 				if (setter is null)
 					// we are done with the current property
@@ -120,7 +120,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 					setterBlock.AppendLine ("throw new NotImplementedException ();");
 				}
 			}
-		}	
+		}
 		notificationProperties = notificationsBuilder.ToImmutable ();
 	}
 
@@ -169,9 +169,9 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 					disableDefaultCtor: bindingData.Flags.HasFlag (Class.DisableDefaultCtor));
 			}
 
-			EmitFields (bindingContext.Changes.Name, bindingContext.Changes.Properties, classBlock, 
+			EmitFields (bindingContext.Changes.Name, bindingContext.Changes.Properties, classBlock,
 				out var notificationProperties);
-			
+
 			// emit the notification helper classes, leave this for the very bottom of the class
 			EmitNotifications (notificationProperties, classBlock);
 			classBlock.AppendLine ("// TODO: add binding code here");

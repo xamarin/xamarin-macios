@@ -179,7 +179,7 @@ Because we are using a raw string  we expected:
 
 		Assert.Equal (expected, result);
 	}
-	
+
 	[Theory]
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
@@ -191,7 +191,7 @@ Because we are using a raw string  we expected:
 		var expected = $"{expectedTabs}[Advice (\"Use '{className}.Notifications.{notificationName}' helper method instead.\")]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendNotificationAdvice(className, notificationName);
+			block.AppendNotificationAdvice (className, notificationName);
 			result = block.ToString ();
 		}
 

@@ -99,7 +99,7 @@ readonly struct Property : IEquatable<Property> {
 		}
 		return null;
 	}
-	
+
 	internal Property (string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ImmutableArray<AttributeCodeChange> attributes,

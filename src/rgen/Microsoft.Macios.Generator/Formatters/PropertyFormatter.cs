@@ -9,7 +9,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Generator.Formatters;
 
 static class PropertyFormatter {
-	
+
 	/// <summary>
 	/// Return the declaration represented by the given property.
 	/// </summary>
@@ -25,7 +25,7 @@ static class PropertyFormatter {
 					.WithModifiers (TokenList (property.Modifiers)))).NormalizeWhitespace ();
 		return compilationUnit;
 	}
-	
+
 	/// <summary>
 	/// Return the declaration represented by the given property.
 	/// </summary>

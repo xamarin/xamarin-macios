@@ -85,7 +85,7 @@ static partial class BindingSyntaxFactory {
 
 	static CompilationUnitSyntax ThrowNotSupportedException (string message)
 		=> ThrowException (type: "NotSupportedException", message: message);
-	
+
 	/// <summary>
 	/// Generates the syntax to declare the variable used by a field property.  
 	/// </summary>
@@ -95,7 +95,7 @@ static partial class BindingSyntaxFactory {
 	{
 		var variableType = property.ReturnType.Name;
 		if (property.ReturnType.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
-		    && property.ReturnType.MetadataName is not null) {
+			&& property.ReturnType.MetadataName is not null) {
 			variableType = property.ReturnType.MetadataName;
 		}
 		var compilationUnit = CompilationUnit ().WithMembers (
@@ -110,7 +110,7 @@ static partial class BindingSyntaxFactory {
 								SingletonSeparatedList (
 									VariableDeclarator (
 										Identifier (property.BackingField)))))
-					.WithModifiers (TokenList(Token (SyntaxKind.StaticKeyword))))) // fields are static variables
+					.WithModifiers (TokenList (Token (SyntaxKind.StaticKeyword))))) // fields are static variables
 			.NormalizeWhitespace ();
 		return compilationUnit;
 	}

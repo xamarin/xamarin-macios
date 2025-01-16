@@ -15,7 +15,7 @@ using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 namespace Microsoft.Macios.Generator.Tests.Emitters;
 
 public class BindingSyntaxFactoryFieldBackingVariableTests : BaseGeneratorTestClass {
-	
+
 	class TestDataFieldPropertyBackingVariable : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -85,7 +85,7 @@ namespace CoreGraphics {
 				otherByteFieldProperty,
 				"static byte _GenericGray;"
 			];
-			
+
 			const string sbyteFieldProperty = @"
 using System;
 using Foundation;
@@ -628,7 +628,7 @@ namespace CoreGraphics {
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataFieldPropertyBackingVariable>]
 	void FieldConstantGetterTests (ApplePlatform platform, string inputText, string expectedCall)

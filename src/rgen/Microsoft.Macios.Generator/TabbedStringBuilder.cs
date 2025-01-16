@@ -244,7 +244,7 @@ class TabbedStringBuilder : IDisposable {
 	{
 		string attr =
 			$"[Advice (\"Use '{className}.Notifications.{notification}' helper method instead.\")]";
-		AppendLine (attr);	
+		AppendLine (attr);
 		return this;
 	}
 
