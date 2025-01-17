@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 
 try {
-	var actualArgumentCount = 6;
+	var actualArgumentCount = 5;
 	if (args.Length != actualArgumentCount) {
 		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length} arguments");
 		return 1;
@@ -12,22 +12,20 @@ try {
 
 	args = args.Skip (1).ToArray ();
 
-	var iosframeworks = args [0].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var macosframeworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var watchosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var tvosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var maccatalystframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var idx = 0;
+	var iosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var macosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var tvosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var maccatalystframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var allframeworks = new string [] [] {
 		iosframeworks,
 		macosframeworks,
-		watchosframeworks,
 		tvosframeworks,
 		maccatalystframeworks,
 	};
 	var names = new string [] {
 		"iosframeworks",
 		"macosframeworks",
-		"watchosframeworks",
 		"tvosframeworks",
 		"maccatalystframeworks",
 	};

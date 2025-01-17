@@ -7,8 +7,6 @@
 //  Miguel de Icaza
 //
 
-#if !WATCH
-
 using Foundation;
 
 namespace UIKit {
@@ -27,5 +25,3 @@ namespace UIKit {
 
 	}
 }
-
-#endif // !WATCH

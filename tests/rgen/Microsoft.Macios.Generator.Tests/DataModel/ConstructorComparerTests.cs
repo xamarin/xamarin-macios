@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
@@ -11,8 +13,8 @@ public class ConstructorComparerTests {
 	[Fact]
 	public void CompareDiffType ()
 	{
-		var x = new Constructor ("MyClass", [], [], []);
-		var y = new Constructor ("MyClass2", [], [], []);
+		var x = new Constructor ("MyClass", new (), [], [], []);
+		var y = new Constructor ("MyClass2", new (), [], [], []);
 		Assert.Equal (String.Compare (x.Type, y.Type, StringComparison.Ordinal), comparer.Compare (x, y));
 	}
 
@@ -21,12 +23,14 @@ public class ConstructorComparerTests {
 	{
 		var x = new Constructor ("MyClass",
 			attributes: [],
+			symbolAvailability: new (),
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -39,12 +43,14 @@ public class ConstructorComparerTests {
 	public void CompareDiffModifier ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -58,6 +64,7 @@ public class ConstructorComparerTests {
 	public void CompareAttrsDiffLength ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 				new ("SecondAttr", ["first"]),
@@ -68,6 +75,7 @@ public class ConstructorComparerTests {
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -83,6 +91,7 @@ public class ConstructorComparerTests {
 	public void CompareDiffAttrs ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -92,6 +101,7 @@ public class ConstructorComparerTests {
 			],
 			parameters: []);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("SecondAttr", ["first"]),
 			],
@@ -109,6 +119,7 @@ public class ConstructorComparerTests {
 	{
 
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -117,9 +128,10 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -128,8 +140,8 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
-				new (1, "string", "surname"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
 			]);
 		Assert.Equal (x.Parameters.Length.CompareTo (y.Parameters.Length), comparer.Compare (x, y));
 	}
@@ -138,6 +150,7 @@ public class ConstructorComparerTests {
 	public void CompareDiffParameters ()
 	{
 		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -146,9 +159,10 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (0, "string", "name"),
+				new (position: 0, type: "string", name: "name", isBlittable: false),
 			]);
 		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
 			attributes: [
 				new ("FirstAttr"),
 			],
@@ -157,7 +171,42 @@ public class ConstructorComparerTests {
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 			],
 			parameters: [
-				new (1, "string", "surname"),
+				new (position: 1, type: "string", name: "surname", isBlittable: false),
+			]);
+		var parameterCompare = new ParameterComparer ();
+		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));
+	}
+
+	[Fact]
+	public void CompareDiffParametersSmartEnum ()
+	{
+		var x = new Constructor ("MyClass",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
+					IsSmartEnum = true
+				},
+			]);
+		var y = new Constructor ("MyClass",
+			symbolAvailability: new (),
+			attributes: [
+				new ("FirstAttr"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: [
+				new (position: 0, type: "MyEnum", name: "name", isBlittable: false) {
+					IsSmartEnum = false
+				},
 			]);
 		var parameterCompare = new ParameterComparer ();
 		Assert.Equal (parameterCompare.Compare (x.Parameters [0], y.Parameters [0]), comparer.Compare (x, y));

@@ -170,7 +170,6 @@ namespace Metal {
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[NoiOS]
-		[NoWatch]
 		[NoTV]
 #endif
 		public static void RemoveObserver (NSObject observer)

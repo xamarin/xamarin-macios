@@ -304,7 +304,7 @@ namespace TVUIKit {
 		bool TransitioningToCenterIndexPath { [Bind ("isTransitioningToCenterIndexPath")] get; }
 	}
 
-	[TV (15, 0), NoWatch, NoMac, NoiOS]
+	[TV (15, 0), NoMac, NoiOS]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVMediaItemContentConfiguration : UIContentConfiguration, NSSecureCoding {
@@ -341,7 +341,7 @@ namespace TVUIKit {
 		UIView OverlayView { get; set; }
 	}
 
-	[TV (15, 0), NoWatch, NoMac, NoiOS]
+	[TV (15, 0), NoMac, NoiOS]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor]
 	interface TVMediaItemContentView : UIContentView {

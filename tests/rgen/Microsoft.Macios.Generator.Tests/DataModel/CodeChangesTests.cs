@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,8 +65,7 @@ enum AVMediaCharacteristics {
 	[AllSupportedPlatformsClassData<TestDataSkipEnumValueDeclaration>]
 	public void SkipEnumValueDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipEnumValueDeclaration), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -122,7 +123,7 @@ public class TestClass {
 ";
 			yield return [wrongAttributeInProperty, true];
 
-			const string fieldAttributeInProperty = @"
+			const string exportFieldAttributeInProperty = @"
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -131,6 +132,20 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	[Export<Field> (""name"")]
+	public partial string Name { get;set; }
+}
+";
+			yield return [exportFieldAttributeInProperty, true];
+
+			const string fieldAttributeInProperty = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	[Field<Property> (""name"")]
 	public partial string Name { get;set; }
 }
 ";
@@ -159,8 +174,7 @@ public class TestClass {
 	[AllSupportedPlatformsClassData<TestDataSkipPropertyDeclaration>]
 	public void SkipPropertyDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipPropertyDeclaration), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()
@@ -226,7 +240,7 @@ public class TestClass {
 	public void SkipMethodDeclaration (ApplePlatform platform, string inputText, bool expected)
 	{
 		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (SkipMethodDeclaration), platform, inputText);
+			CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		// get the declarations we want to work with and the semantic model
 		var node = sourceTrees [0].GetRoot ()

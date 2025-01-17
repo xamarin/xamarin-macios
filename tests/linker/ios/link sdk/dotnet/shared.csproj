@@ -12,6 +12,20 @@
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
     <UseNativeHttpHandler>false</UseNativeHttpHandler>
+
+    <!-- warning SYSLIB0014: 'X.Y' is obsolete: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead. -->
+    <!-- We use obsolete APIs all the time, sometimes to test that those APIs work, so ignore this warning. -->
+    <NoWarn>$(NoWarn);SYSLIB0014</NoWarn>
+
+    <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
+    <NoWarn>$(NoWarn);CA1422</NoWarn>
+
+    <!-- trimmer warnings: the linker tests do a lot of trimmer-unsafe things, so ignore any trimmer warnings -->
+    <NoWarn>$(NoWarn);IL2026;IL2032;IL2057;IL2070;IL2075;IL2080;IL2111</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -27,7 +41,7 @@
 
   <ItemGroup>
     <None Include="Info.plist" />
-    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
+    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\$(_PlatformName)\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">

@@ -36,8 +36,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMFormatDescription : NativeObject {
 		[Preserve (Conditional = true)]
@@ -119,6 +117,15 @@ namespace CoreMedia {
 		public CMTimeCodeFormatType TimeCodeFormatType {
 			get {
 				return MediaType == CMMediaType.TimeCode ? (CMTimeCodeFormatType) MediaSubType : 0;
+			}
+		}
+
+		/// <summary>Gets the <see cref="MediaSubType" /> property as a <see cref="CMTaggedBufferGroupFormatType" />.</summary>
+		/// <returns>The <see cref="MediaSubType" /> property as a <see cref="CMTaggedBufferGroupFormatType" />, if this format descripton's <see cref="MediaType" /> is <see cref="CMMediaType.TaggedBufferGroup" />, otherwise 0.</returns>
+		/// <remarks>Only applicable if this format descripton's <see cref="MediaType" /> is <see cref="CMMediaType.TaggedBufferGroup" />, otherwise 0 is returned.</remarks>
+		public CMTaggedBufferGroupFormatType TaggedBufferGroupFormatType {
+			get {
+				return MediaType == CMMediaType.TaggedBufferGroup ? (CMTaggedBufferGroupFormatType) MediaSubType : 0;
 			}
 		}
 
@@ -305,8 +312,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class CMAudioFormatDescription : CMFormatDescription {
 		[Preserve (Conditional = true)]
@@ -323,8 +328,6 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
 		[Preserve (Conditional = true)]

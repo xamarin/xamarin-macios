@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
@@ -10,8 +12,7 @@ namespace Microsoft.Macios.Generator.Tests.DataModel;
 public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 	CodeChanges CreateCodeChanges (ApplePlatform platform, string name, string inputText)
 	{
-		var (compilation, sourceTrees) =
-			CreateCompilation (nameof (CreateCodeChangeNoFieldsNoAttributes), platform, inputText);
+		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
 		var enumDeclaration = sourceTrees [0].GetRoot ()
 			.DescendantNodes ()

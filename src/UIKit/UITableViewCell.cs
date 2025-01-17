@@ -1,5 +1,3 @@
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -19,5 +17,3 @@ namespace UIKit {
 		}
 	} /* class UITableViewCell */
 }
-
-#endif // !WATCH

@@ -74,7 +74,6 @@ namespace CoreFoundation {
 		IntPtr free { get; }
 	}
 
-#if !WATCH
 	/// <summary>Provides the necessary methods needed for accessing the system's global proxy configuration settings and resolving a list of proxies to use for connecting to a URL.</summary>
 	[Partial]
 	interface CFNetwork {
@@ -82,7 +81,6 @@ namespace CoreFoundation {
 		[Field ("kCFErrorDomainCFNetwork", "CFNetwork")]
 		NSString ErrorDomain { get; }
 	}
-#endif
 
 	enum CFStringTransform {
 		[Field ("kCFStringTransformStripCombiningMarks")]

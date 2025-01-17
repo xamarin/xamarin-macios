@@ -6,7 +6,7 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
-#if !TVOS && !WATCH
+#if !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;

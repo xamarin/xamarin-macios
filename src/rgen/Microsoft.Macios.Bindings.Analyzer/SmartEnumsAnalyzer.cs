@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -21,96 +23,102 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	/// <summary>
 	/// All enum values must have a Field attribute
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0002 = new (
-		"RBI0002",
-		new LocalizableResourceString (nameof (Resources.RBI0002Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0002MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0008 = new (
+		"RBI0008",
+		new LocalizableResourceString (nameof (Resources.RBI0008Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0008MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0002Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0008Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
 	/// Do not allow duplicated backing fields
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0003 = new (
-		"RBI0003",
-		new LocalizableResourceString (nameof (Resources.RBI0003Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0003MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0009 = new (
+		"RBI0009",
+		new LocalizableResourceString (nameof (Resources.RBI0009Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0009MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0003Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0009Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
 	/// Fields must be a valid identifier
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0004 = new (
-		"RBI0004",
-		new LocalizableResourceString (nameof (Resources.RBI0004Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0004MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0010 = new (
+		"RBI0010",
+		new LocalizableResourceString (nameof (Resources.RBI0010Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0010MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0004Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0010Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
 	/// If not an apple framework, we should provide the library path
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0005 = new (
-		"RBI0005",
-		new LocalizableResourceString (nameof (Resources.RBI0005Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0005MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0011 = new (
+		"RBI0011",
+		new LocalizableResourceString (nameof (Resources.RBI0011Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0011MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0005Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0011Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
 	/// if apple framework, the library path should be empty
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0006 = new (
-		"RBI0006",
-		new LocalizableResourceString (nameof (Resources.RBI0006Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0006MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0012 = new (
+		"RBI0012",
+		new LocalizableResourceString (nameof (Resources.RBI0012Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0012MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0006Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0012Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 	/// <summary>
 	/// User used the wrong flag for the attribute
 	/// </summary>
-	internal static readonly DiagnosticDescriptor RBI0007 = new (
-		"RBI0007",
-		new LocalizableResourceString (nameof (Resources.RBI0007Title), Resources.ResourceManager, typeof (Resources)),
-		new LocalizableResourceString (nameof (Resources.RBI0007MessageFormat), Resources.ResourceManager,
+	internal static readonly DiagnosticDescriptor RBI0013 = new (
+		"RBI0013",
+		new LocalizableResourceString (nameof (Resources.RBI0013Title), Resources.ResourceManager, typeof (Resources)),
+		new LocalizableResourceString (nameof (Resources.RBI0013MessageFormat), Resources.ResourceManager,
 			typeof (Resources)),
 		"Usage",
 		DiagnosticSeverity.Error,
 		isEnabledByDefault: true,
-		description: new LocalizableResourceString (nameof (Resources.RBI0007Description), Resources.ResourceManager,
+		description: new LocalizableResourceString (nameof (Resources.RBI0013Description), Resources.ResourceManager,
 			typeof (Resources))
 	);
 
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-		[RBI0002, RBI0003, RBI0004, RBI0005, RBI0006, RBI0007];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [
+		RBI0008,
+		RBI0009,
+		RBI0010,
+		RBI0011,
+		RBI0012,
+		RBI0013,
+	];
 
 	public override void Initialize (AnalysisContext context)
 	{
@@ -122,7 +130,10 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 	void AnalysisContext (SyntaxNodeAnalysisContext context)
 		=> this.AnalyzeBindingType (context);
 
-	public ImmutableArray<Diagnostic> Analyze (PlatformName platformName, EnumDeclarationSyntax declarationNode,
+	static readonly HashSet<string> attributes = [AttributesNames.BindingAttribute];
+	public IReadOnlySet<string> AttributeNames => attributes;
+
+	public ImmutableArray<Diagnostic> Analyze (string matchedAttribute, PlatformName platformName, EnumDeclarationSyntax declarationNode,
 		INamedTypeSymbol symbol)
 	{
 		// we want to ensure several things:
@@ -160,7 +171,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 			if (attributes.Count == 0) {
 				//  All enum values are marked with a Field attribute, therefore add a diagnostic
 				bucket.Add (Diagnostic.Create (
-					RBI0002, // Smart enum values must be tagged with an Field<EnumValue> attribute.
+					RBI0008, // Smart enum values must be tagged with an Field<EnumValue> attribute.
 					fieldSymbol.Locations.First (),
 					fieldSymbol.ToDisplayString ()));
 				continue;
@@ -181,7 +192,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					if (backingFields.TryGetValue (fieldData.Value.SymbolName, out var previousEnumValue)) {
 						// All symbol names have to be unique
 						bucket.Add (Diagnostic.Create (
-							RBI0003, // The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'
+							RBI0009, // The backing field '{0}' for the enum value '{1}' is already in use for the enum value '{2}'
 							fieldSyntax.GetLocation (),
 							fieldSymbol.ToDisplayString (), fieldData.Value.SymbolName,
 							fieldSymbol.ToDisplayString ().Trim (), previousEnumValue));
@@ -194,7 +205,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 						// If the Field attribute is not from a known apple library, the library name is set
 						if (string.IsNullOrWhiteSpace (fieldData.Value.LibraryName)) {
 							bucket.Add (Diagnostic.Create (
-								RBI0005, // Non Apple framework bindings must provide a library name.
+								RBI0011, // Non Apple framework bindings must provide a library name.
 								fieldSyntax.GetLocation (),
 								fieldSymbol.ToDisplayString ()));
 						}
@@ -202,7 +213,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 						// If the Field attribute is from a known apple library, the lib should be null
 						if (fieldData.Value.LibraryName is not null) {
 							bucket.Add (Diagnostic.Create (
-								RBI0006, // Do not provide the LibraryName for known Apple frameworks.
+								RBI0012, // Do not provide the LibraryName for known Apple frameworks.
 								fieldSyntax.GetLocation (),
 								fieldSymbol.ToDisplayString ()));
 						}
@@ -212,7 +223,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					switch (errorTuple.Error) {
 					case FieldData<EnumValue>.ParsingError.NotIdentifier:
 						// Backing field is not a valid identifier.
-						bucket.Add (Diagnostic.Create (RBI0004,
+						bucket.Add (Diagnostic.Create (RBI0010,
 							fieldSyntax
 								.GetLocation (), // Smart enum backing field must represent a valid C# identifier to be used.
 							fieldSymbol.ToDisplayString (), errorTuple.Value));
@@ -225,7 +236,7 @@ public class SmartEnumsAnalyzer : DiagnosticAnalyzer, IBindingTypeAnalyzer<EnumD
 					.FirstOrDefault (s => s.StartsWith (AttributesNames.FieldAttribute));
 				if (fieldAttr is not null) {
 					bucket.Add (Diagnostic.Create (
-						RBI0007, // Enum values must be tagged with Field<EnumValue>.
+						RBI0013, // Enum values must be tagged with Field<EnumValue>.
 						fieldSymbol.Locations.First (),
 						fieldAttr, fieldSymbol.ToDisplayString ()));
 				}

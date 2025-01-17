@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+using System;
 using System.Collections.Generic;
 using Microsoft.Macios.Generator.Attributes;
 using Xamarin.Utils;
@@ -36,6 +39,22 @@ readonly partial struct SymbolAvailability {
 		}
 
 		/// <summary>
+		/// Add a new obsoleted version of the platform to the availability struct.
+		/// </summary>
+		/// <param name="platform">Platforms whose availability we are updating.</param>
+		/// <param name="version">The supported versions to add.</param>
+		/// <param name="message">Optional obsolete message.</param>
+		/// <param name="url">Optional documentation url.</param>
+		internal void AddObsoletedVersion (ApplePlatform platform, Version version, string? message, string? url)
+		{
+			if (!supportedPlatforms.Contains (platform))
+				return;
+
+			var builder = GetBuilder (platform);
+			builder.AddObsoletedVersion (version, message, url);
+		}
+
+		/// <summary>
 		/// Adds a new obsoleted version to the SymbolAvailability.
 		/// </summary>
 		/// <param name="obsoletedOsPlatform">The data of a ObsoleteOSPlatformAttribute.</param>
@@ -46,6 +65,20 @@ readonly partial struct SymbolAvailability {
 
 			var builder = GetBuilder (obsoletedOsPlatform.Platform);
 			builder.Add (obsoletedOsPlatform);
+		}
+
+
+		/// <summary>
+		/// Add a new supported version to the SymbolAvailability.
+		/// </summary>
+		/// <param name="platform">Platforms whose availability we are updating.</param>
+		/// <param name="version">The supported versions to add.</param>
+		internal void AddSupportedVersion (ApplePlatform platform, Version version)
+		{
+			if (!supportedPlatforms.Contains (platform))
+				return;
+			var builder = GetBuilder (platform);
+			builder.AddSupportedVersion (version);
 		}
 
 		/// <summary>
@@ -62,7 +95,22 @@ readonly partial struct SymbolAvailability {
 		}
 
 		/// <summary>
-		/// Add a new unsuspported verison to the SymbolAvailability.
+		/// Adds a new version to the list of unsupported versions. If the platform is unsupported, the version is ignored.
+		/// </summary>
+		/// <param name="platform">Platforms whose availability we are updating.</param>
+		/// <param name="version">The new unsupported version.</param>
+		/// <param name="message">The optional message of the unsupported version.</param>
+		internal void AddUnsupportedVersion (ApplePlatform platform, Version version, string? message)
+		{
+			if (!supportedPlatforms.Contains (platform))
+				return;
+
+			var builder = GetBuilder (platform);
+			builder.AddUnsupportedVersion (version, message);
+		}
+
+		/// <summary>
+		/// Add a new unsuspported version to the SymbolAvailability.
 		/// </summary>
 		/// <param name="unsupportedPlatform">The data of a UnsupportedOSPlatformAttribute.</param>
 		public void Add (UnsupportedOSPlatformData unsupportedPlatform)

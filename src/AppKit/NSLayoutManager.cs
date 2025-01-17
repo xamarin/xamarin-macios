@@ -1,6 +1,4 @@
 // Copyright 2015 Xamarin, Inc.
-#if !WATCH
-
 #if !MONOMAC
 using NSFont = UIKit.UIFont;
 #endif
@@ -49,5 +47,3 @@ namespace UIKit {
 #endif // !NET && MONOMAC
 	}
 }
-
-#endif // !WATCH

@@ -1,0 +1,9 @@
+{
+  "author": "Microsoft",
+  "name": "iOS Notification Content Extension",
+  "description": "A project for creating a Notification Content Extension for a .NET iOS application",
+  "postActions/addProjectReference/description": "Add project reference in main app's project file",
+  "postActions/addProjectReference/manualInstructions/default/text": "The final step is to add a reference to this newly created project in the main app's project file, like this:\n\n\t<ItemGroup>\n\t\t<ProjectReference Include=\"iOSNotificationContentExtension1.csproj\">\n\t\t\t<IsAppExtension>true</IsAppExtension>\n\t\t</ProjectReference>\n\t</ItemGroup>\n",
+  "symbols/bundleId/description": "The bundle identifier (CFBundleIdentifier from the Info.plist, or ApplicationId from the project file) for the parent iOS project",
+  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
+}

@@ -67,7 +67,7 @@ namespace GameController {
 		Index4,
 	}
 
-	[iOS (16, 0), Mac (13, 0), NoWatch, TV (16, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), TV (16, 0), MacCatalyst (16, 0)]
 	[Native]
 	public enum GCDevicePhysicalInputElementChange : long {
 		UnknownChange = -1,

@@ -13,7 +13,6 @@
             "args": [
                 "--verbose",
                 "--jenkins:server",
-                "--autoconf",
                 "--rootdir",
                 "..",
             ],

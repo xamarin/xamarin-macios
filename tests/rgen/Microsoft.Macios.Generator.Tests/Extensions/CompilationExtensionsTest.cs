@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using Microsoft.Macios.Generator.Extensions;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -16,7 +18,7 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 	{
 		// get the current compilation for the platform and assert we return the correct one from
 		// the compilation
-		var (compilation, _) = CreateCompilation (nameof (GetCurrentPlatformTests), platform);
+		var (compilation, _) = CreateCompilation (platform);
 		Assert.Equal (expectedPlatform, compilation.GetCurrentPlatform ());
 	}
 }

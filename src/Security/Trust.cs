@@ -143,7 +143,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.iOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[Deprecated (PlatformName.TvOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -160,7 +159,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.iOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[Deprecated (PlatformName.TvOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 #endif
 		public SecTrustResult Evaluate ()
@@ -199,7 +197,6 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
-		[Deprecated (PlatformName.WatchOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 15, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -218,7 +215,6 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
-		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the 'GetCertificateChain' method instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
 #endif
 		public SecCertificate this [nint index] {
@@ -236,7 +232,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -250,7 +245,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[MacCatalyst (15, 0)]
@@ -271,7 +265,6 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyPublicKey (IntPtr /* SecTrustRef */ trust);
@@ -288,7 +281,6 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'GetKey' instead.")]
 #endif
 		public SecKey GetPublicKey ()
 		{
@@ -303,7 +295,6 @@ namespace Security {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -317,7 +308,6 @@ namespace Security {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 		[MacCatalyst (14, 0)]
 #endif
 		public SecKey GetKey ()

@@ -1,0 +1,4 @@
+# SCStreamErrorDomain is from ScreenCaptureKit, but only macOS and Mac Catalyst.
+# However, Apple seems to also have added it to ReplayKit for iOS and tvOS, which is why xtro detects it as such.
+# It doesn't seem useful though in ReplayKit, so just skip binding it.
+!missing-field! SCStreamErrorDomain not bound

@@ -753,6 +753,17 @@ namespace ObjCRuntime {
 			return uint.MaxValue;
 		}
 
+		static internal Class [] FromTypes (params Type [] types)
+		{
+			if (types is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (types));
+
+			var classes = new Class [types.Length];
+			for (var i = 0; i < types.Length; i++)
+				classes [i] = new Class (types [i]);
+			return classes;
+		}
+
 		/*
 		Type must have been previously registered.
 		*/
@@ -852,6 +863,16 @@ namespace ObjCRuntime {
 			}
 			cls = object_getClass (obj);
 			return true;
+		}
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		unsafe extern static int objc_getClassList (IntPtr* buffer, int bufferCount);
+
+		/// <summary>Gets the total number of registered Objective-C classes in the process.</summary>
+		/// <remarks>A side-effect of counting all the registered Objective-C classes, is that all stub (unrealized) classes are also realized and can be used afterwards.</remarks>
+		internal unsafe static int GetClassCount ()
+		{
+			return objc_getClassList (null, 0);
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]

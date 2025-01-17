@@ -17,8 +17,6 @@ namespace AppKit {
 namespace UIKit {
 #endif // iOS, tvOS, WatchOS
 
-#if !WATCH
-
 #if !COREBUILD
 
 	public partial class NSLayoutManager {
@@ -34,8 +32,6 @@ namespace UIKit {
 
 	}
 #endif // COREBUILD
-
-#endif // WATCH
 
 }
 #endif // NET

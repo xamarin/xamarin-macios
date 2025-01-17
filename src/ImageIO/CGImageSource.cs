@@ -41,8 +41,6 @@ using CoreGraphics;
 using NativeHandle = System.IntPtr;
 #endif
 
-using OSStatus = System.Int32;
-
 namespace ImageIO {
 
 #if !COREBUILD
@@ -394,8 +392,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
@@ -405,8 +401,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public nuint GetPrimaryImageIndex ()
 		{
@@ -421,7 +415,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos17.4")]
 		[SupportedOSPlatform ("maccatalyst17.4")]
 #else
-		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4)]
+		[TV (17, 4), Mac (14, 4), iOS (17, 4)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern OSStatus CGImageSourceSetAllowableTypes (IntPtr allowableTypes);
@@ -432,7 +426,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos17.4")]
 		[SupportedOSPlatform ("maccatalyst17.4")]
 #else
-		[Watch (10, 4), TV (17, 4), Mac (14, 4), iOS (17, 4)]
+		[TV (17, 4), Mac (14, 4), iOS (17, 4)]
 #endif
 		public static void SetAllowableTypes (string [] allowableTypes)
 		{

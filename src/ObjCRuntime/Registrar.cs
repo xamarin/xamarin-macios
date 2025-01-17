@@ -882,13 +882,7 @@ namespace Registrar {
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
-#if __WATCHOS__
-					if (Runtime.Arch == Arch.DEVICE) {
-						is_stret = Stret.ArmNeedStret (NativeReturnType, null);
-					} else {
-						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
-					}
-#elif MONOMAC || __MACCATALYST__
+#if MONOMAC || __MACCATALYST__
 					if (Runtime.IsARM64CallingConvention) {
 						is_stret = false;
 					} else {
@@ -1359,12 +1353,6 @@ namespace Registrar {
 		internal const string AssemblyName = "Microsoft.macOS";
 #else
 		internal const string AssemblyName = "Xamarin.Mac";
-#endif
-#elif WATCH
-#if NET
-		internal const string AssemblyName = "Microsoft.watchOS";
-#else
-		internal const string AssemblyName = "Xamarin.WatchOS";
 #endif
 #elif TVOS
 #if NET

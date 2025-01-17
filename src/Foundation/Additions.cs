@@ -1,6 +1,6 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 
 using System;
 
@@ -24,4 +24,4 @@ namespace Foundation {
 	}
 }
 
-#endif // !MONOMAC && !WATCH
+#endif // !MONOMAC

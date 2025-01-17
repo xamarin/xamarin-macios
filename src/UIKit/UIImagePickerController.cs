@@ -8,7 +8,7 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
-#if !TVOS && !WATCH // __TVOS_PROHIBITED, doesn't show up in WatchOS headers
+#if !TVOS // __TVOS_PROHIBITED
 
 using ObjCRuntime;
 using Foundation;
@@ -147,4 +147,4 @@ namespace UIKit {
 	}
 }
 
-#endif // !TVOS && !WATCH
+#endif // !TVOS

@@ -8,6 +8,7 @@
 		<MicrosoftBuildFrameworkPackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildFrameworkPackageVersion>
 		<MicrosoftBuildTasksCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildTasksCorePackageVersion>
 		<MicrosoftBuildUtilitiesCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildUtilitiesCorePackageVersion>
+		<NUnitXmlTestLoggerPackageVersion>3.1.15</NUnitXmlTestLoggerPackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>

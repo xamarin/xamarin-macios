@@ -28,8 +28,6 @@
 //
 //
 
-#if !WATCH
-
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -505,5 +503,3 @@ namespace AVFoundation {
 	}
 #endif
 }
-
-#endif

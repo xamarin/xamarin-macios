@@ -68,7 +68,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		void SourceNodeCallbackTest (TaskCompletionSource<bool> callbackEvent, Func<AVAudioSourceNode> createSourceNode)
 		{
 			TestRuntime.AssertNotVirtualMachine ();
-			TestRuntime.AssertNotSimulator (); // broke in Xcode 16.2 beta 2 https://github.com/xamarin/maccore/issues/2956
 
 #if __MACOS__
 			var defaultCaptureDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Audio);

@@ -170,8 +170,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
@@ -181,8 +179,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[Watch (5, 0)]
 #endif
 		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions? options)
 		{

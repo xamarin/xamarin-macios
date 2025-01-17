@@ -1,4 +1,4 @@
-#if !WATCH && !TV
+#if !TV
 using Foundation;
 
 namespace LocalAuthentication {
@@ -17,4 +17,4 @@ namespace LocalAuthentication {
 		}
 	}
 }
-#endif // !WATCH && !TV
+#endif // !TV

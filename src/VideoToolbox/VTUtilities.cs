@@ -62,7 +62,6 @@ namespace VideoToolbox {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -75,7 +74,6 @@ namespace VideoToolbox {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -90,7 +88,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		unsafe static extern VTStatus VTCopyVideoDecoderExtensionProperties (
@@ -108,7 +106,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 		public static NSDictionary? CopyVideoDecoderExtensionProperties (CMFormatDescription formatDescription, out VTStatus error)
 		{
@@ -127,7 +125,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		unsafe static extern VTStatus VTCopyRAWProcessorExtensionProperties (
@@ -145,7 +143,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos15.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
+		[NoTV, NoiOS, NoMacCatalyst, Mac (15, 0)]
 #endif
 		public static NSDictionary? CopyRawProcessorExtensionProperties (CMFormatDescription formatDescription, out VTStatus error)
 		{
