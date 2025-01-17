@@ -83,6 +83,7 @@ steps:
       githubToken="${{ parameters.gitHubToken }}"
       if [[ -n $githubToken ]]; then
         echo "Executing provisionator"
+        chmod +x ./provisionator-bootstrap.sh
         ./provisionator-bootstrap.sh $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/build-provisioning.csx -v -v -v -v || exit 2
         xcode-select -p
         xcodebuild -version
