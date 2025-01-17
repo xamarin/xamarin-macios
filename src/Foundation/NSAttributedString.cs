@@ -240,7 +240,7 @@ namespace Foundation {
 		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
 		{
 			unsafe {
-				fixed (NSRange *effectiveRangePtr = &effectiveRange) {
+				fixed (NSRange* effectiveRangePtr = &effectiveRange) {
 					return LowLevelGetAttributes (location, (IntPtr) effectiveRangePtr);
 				}
 			}

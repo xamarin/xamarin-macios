@@ -62,7 +62,7 @@ namespace Foundation {
 	internal interface INSObjectFactory {
 		// The method will be implemented via custom linker step if the managed static registrar is used
 		// for NSObject subclasses which have an (NativeHandle) or (IntPtr) constructor.
-		[MethodImpl(MethodImplOptions.NoInlining)]
+		[MethodImpl (MethodImplOptions.NoInlining)]
 		virtual static NSObject _Xamarin_ConstructNSObject (NativeHandle handle) => null;
 	}
 
@@ -79,8 +79,7 @@ namespace Foundation {
 		, IEquatable<NSObject>
 		, IDisposable
 #endif
-		, INSObjectFactory
-	{
+		, INSObjectFactory {
 #if !COREBUILD
 		const string selConformsToProtocol = "conformsToProtocol:";
 		const string selEncodeWithCoder = "encodeWithCoder:";
@@ -225,7 +224,7 @@ namespace Foundation {
 		// This method doesn't necessarily work with NativeAOT, but this is covered by the exception, because the managed static registrar is required for NativeAOT.
 		//
 		// IL2072: 'type' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicConstructors', 'DynamicallyAccessedMemberTypes.NonPublicConstructors' in call to 'System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(Type)'. The return value of method 'ObjCRuntime.Runtime.GetGCHandleTarget(IntPtr)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
-		[UnconditionalSuppressMessage("", "IL2072", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		[UnconditionalSuppressMessage ("", "IL2072", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
 		{
 			// Note that the code in this method doesn't necessarily work with NativeAOT, so assert that never happens by throwing an exception if using the managed static registrar (which is required for NativeAOT)
@@ -672,21 +671,21 @@ namespace Foundation {
 		{
 			var d = new NSAsyncActionDispatcher (action);
 			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-		                                                        NSDispatcher.Selector.Handle, d.Handle, 0);
+																NSDispatcher.Selector.Handle, d.Handle, 0);
 		}
 
 		internal void BeginInvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
 		{
 			var d = new NSAsyncSynchronizationContextDispatcher (cb, state);
 			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
+															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
 		}
 
 		public void InvokeOnMainThread (Action action)
 		{
 			using (var d = new NSActionDispatcher (action)) {
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
+				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 			}
 		}
 
@@ -694,7 +693,7 @@ namespace Foundation {
 		{
 			using (var d = new NSSynchronizationContextDispatcher (cb, state)) {
 				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 			}
 		}
 
