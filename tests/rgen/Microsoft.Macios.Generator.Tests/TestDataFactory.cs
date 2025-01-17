@@ -9,7 +9,7 @@ namespace Microsoft.Macios.Generator.Tests;
 
 static class TestDataFactory {
 	public static TypeInfo ReturnTypeForString (bool isNullable = false)
-		=> new(
+		=> new (
 			name: "string",
 			specialType: SpecialType.System_String,
 			isNullable: isNullable,
@@ -36,7 +36,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
-		=> new(
+		=> new (
 			name: "int",
 			specialType: SpecialType.System_Int32,
 			isBlittable: !isNullable,
@@ -82,7 +82,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForIntPtr (bool isNullable = false)
-		=> new(
+		=> new (
 			name: "nint",
 			specialType: SpecialType.System_IntPtr,
 			isBlittable: !isNullable,
@@ -128,7 +128,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForBool ()
-		=> new(
+		=> new (
 			name: "bool",
 			specialType: SpecialType.System_Boolean,
 			isBlittable: false
@@ -146,29 +146,29 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForVoid ()
-		=> new("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
+		=> new ("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
 
 	public static TypeInfo ReturnTypeForClass (string className, bool isNullable = false)
-		=> new(
+		=> new (
 			name: className,
 			isReferenceType: true,
 			isNullable: isNullable
 		) { Parents = ["object"] };
 
 	public static TypeInfo ReturnTypeForGeneric (string genericName, bool isNullable = false)
-		=> new(
+		=> new (
 			name: genericName,
 			isReferenceType: false,
 			isNullable: isNullable
 		);
 
 	public static TypeInfo ReturnTypeForStruct (string structName)
-		=> new(
+		=> new (
 			name: structName
 		) { Parents = ["System.ValueType", "object"] };
 
 	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
-		=> new(
+		=> new (
 			name: enumName,
 			isBlittable: true,
 			isSmartEnum: isSmartEnum
@@ -188,7 +188,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
-		=> new(
+		=> new (
 			name: type,
 			isNullable: isNullable,
 			isBlittable: isBlittable,
@@ -209,7 +209,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForAction ()
-		=> new(
+		=> new (
 			name: "System.Action",
 			isNullable: false,
 			isBlittable: false,
@@ -217,8 +217,8 @@ static class TestDataFactory {
 			isReferenceType: true
 		) {
 			Parents = [
-				"System.MulticastDelegate", 
-				"System.Delegate", 
+				"System.MulticastDelegate",
+				"System.Delegate",
 				"object"
 			],
 			Interfaces = [
@@ -245,7 +245,7 @@ static class TestDataFactory {
 				"System.Runtime.Serialization.ISerializable",
 			]
 		};
-	
+
 	public static TypeInfo ReturnTypeForFunc (params string [] parameters)
 		=> new (
 			name: $"System.Func<{string.Join (", ", parameters)}>",
@@ -264,7 +264,7 @@ static class TestDataFactory {
 				"System.Runtime.Serialization.ISerializable",
 			]
 		};
-	
+
 	public static TypeInfo ReturnTypeForDelegate (string delegateName)
 		=> new (
 			name: delegateName,

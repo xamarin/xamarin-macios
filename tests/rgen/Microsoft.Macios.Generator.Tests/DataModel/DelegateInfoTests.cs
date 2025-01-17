@@ -127,7 +127,7 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: ReturnTypeForAction("string?"),
+							type: ReturnTypeForAction ("string?"),
 							name: "cb"
 						) {
 							Delegate = new (
@@ -148,7 +148,7 @@ namespace NS {
 					]
 				)
 			];
-			
+
 			const string actionMultiParam = @"
 using System;
 
@@ -174,7 +174,7 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: ReturnTypeForAction("string", "string"),
+							type: ReturnTypeForAction ("string", "string"),
 							name: "cb"
 						) {
 							Delegate = new (
