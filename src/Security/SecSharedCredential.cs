@@ -17,12 +17,12 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe extern static void SecAddSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account, IntPtr /* CFStringRef */ password,
 			BlockLiteral* /* void (^completionHandler)( CFErrorRef error) ) */ completionHandler);
-			
+
 #if !NET
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		internal delegate void DActionArity1V12 (IntPtr block, IntPtr obj);
 #endif
-		
+
 		// This class bridges native block invocations that call into C#
 		static internal class ActionTrampoline {
 #if !NET
@@ -32,14 +32,15 @@ namespace Security {
 #else
 			[UnmanagedCallersOnly]
 #endif
-			internal static unsafe void Invoke (IntPtr block, IntPtr obj) {
-				var descriptor = (BlockLiteral *) block;
+			internal static unsafe void Invoke (IntPtr block, IntPtr obj)
+			{
+				var descriptor = (BlockLiteral*) block;
 				var del = (global::System.Action<NSError?>) (descriptor->Target);
 				if (del is not null) {
-					del ( Runtime.GetNSObject<NSError> (obj));
+					del (Runtime.GetNSObject<NSError> (obj));
 				}
-			} 
-		} 
+			}
+		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
@@ -78,7 +79,7 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		unsafe extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
+		unsafe extern static void SecRequestSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			BlockLiteral* /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 
 #if !NET
@@ -98,11 +99,12 @@ namespace Security {
 #else
 			[UnmanagedCallersOnly]
 #endif
-			internal static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err) {
-				var descriptor = (BlockLiteral *) block;
+			internal static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err)
+			{
+				var descriptor = (BlockLiteral*) block;
 				var del = (global::System.Action<NSArray?, NSError?>) (descriptor->Target);
 				if (del is not null)
-					del ( Runtime.GetNSObject<NSArray> (array), Runtime.GetNSObject<NSError> (err));
+					del (Runtime.GetNSObject<NSArray> (array), Runtime.GetNSObject<NSError> (err));
 			}
 		}
 
@@ -126,7 +128,7 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
+		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo [], NSError> handler)
 		{
 			Action<NSArray, NSError> onComplete = (NSArray a, NSError e) => {
 				var creds = new SecSharedCredentialInfo [a.Count];

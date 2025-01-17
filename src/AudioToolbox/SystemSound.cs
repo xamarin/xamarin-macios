@@ -402,7 +402,7 @@ namespace AudioToolbox {
 														  runLoop.GetHandle (),
 														  IntPtr.Zero, // runLoopMode should be enum runLoopMode.GetHandle (),
 #if NET
-			                                              &SoundCompletionShared,
+														  &SoundCompletionShared,
 #else
 														  SoundCompletionCallback,
 #endif

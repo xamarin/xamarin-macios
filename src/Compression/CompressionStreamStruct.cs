@@ -8,10 +8,10 @@ using ObjCRuntime;
 
 namespace Compression {
 #if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct CompressionStreamStruct {

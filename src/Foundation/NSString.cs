@@ -44,11 +44,11 @@ namespace Foundation {
 
 #if COREBUILD
 	[Protocol]
-	public interface INSCopying {}
+	public interface INSCopying { }
 	[Protocol]
-	public interface INSCoding {}
+	public interface INSCoding { }
 	[Protocol]
-	public interface INSSecureCoding {}
+	public interface INSSecureCoding { }
 #endif
 
 	public partial class NSString : NSObject

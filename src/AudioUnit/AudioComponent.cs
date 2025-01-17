@@ -43,7 +43,7 @@ using UIKit;
 #else
 using AppKit;
 #if !COREBUILD
-using UIImage=AppKit.NSImage;
+using UIImage = AppKit.NSImage;
 #endif
 #endif
 
@@ -512,7 +512,8 @@ namespace AudioUnit {
 		[Mac (13,0)]
 		[iOS (16,0)]
 #endif
-		public NSDictionary? GetConfigurationInfo (out int resultCode) {
+		public NSDictionary? GetConfigurationInfo (out int resultCode)
+		{
 			IntPtr dictPtr;
 			unsafe {
 				resultCode = AudioComponentCopyConfigurationInfo (GetCheckedHandle (), &dictPtr);
@@ -561,7 +562,8 @@ namespace AudioUnit {
 		[iOS (16,0)]
 		[MacCatalyst (16,0)]
 #endif
-		public AudioComponentValidationResult Validate (NSDictionary? validationParameters, out int resultCode) {
+		public AudioComponentValidationResult Validate (NSDictionary? validationParameters, out int resultCode)
+		{
 			AudioComponentValidationResult result;
 			unsafe {
 				resultCode = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetHandle (), &result);
@@ -597,7 +599,7 @@ namespace AudioUnit {
 		{
 			var del = BlockLiteral.GetTarget<Action<AudioComponentValidationResult, NSDictionary?>> (blockPtr);
 			if (del is not null)
-				del (result, Runtime.GetNSObject<NSDictionary>(dictionary));
+				del (result, Runtime.GetNSObject<NSDictionary> (dictionary));
 		}
 
 #if NET
@@ -625,10 +627,11 @@ namespace AudioUnit {
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ValidateAsync (NSDictionary? validationParameters,
-				Action<AudioComponentValidationResult, NSDictionary?> onCompletion, out int resultCode) {
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion, out int resultCode)
+		{
 			if (onCompletion is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
-			
+
 			unsafe {
 #if NET
 				delegate* unmanaged<IntPtr, AudioComponentValidationResult, IntPtr, void> trampoline = &TrampolineAction;
@@ -696,7 +699,7 @@ namespace AudioUnit {
 #else
 		[NoTV]
 #endif
-		public AudioComponentInfo[]? ComponentList {
+		public AudioComponentInfo []? ComponentList {
 			get {
 				var nameHandle = CFString.CreateNative (Name);
 				try {
@@ -707,10 +710,10 @@ namespace AudioUnit {
 						if (nsArray is null)
 							return null;
 						// make things easier for developers since we do not know how to have an implicit conversion from NSObject to AudioComponentInfo
-						var dics = NSArray.FromArray <NSDictionary> (nsArray);
+						var dics = NSArray.FromArray<NSDictionary> (nsArray);
 						var result = new AudioComponentInfo [dics.Length];
 						for (var i = 0; i < result.Length; i++) {
-							result [i] = new AudioComponentInfo (dics[i]);
+							result [i] = new AudioComponentInfo (dics [i]);
 						}
 						return result;
 					}

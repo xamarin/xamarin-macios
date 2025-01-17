@@ -177,8 +177,8 @@ namespace ObjCRuntime {
 			/* unused				= 0x08,*/
 			IsSimulator = 0x10,
 #if NET
-			IsCoreCLR				= 0x20,
-			IsNativeAOT				= 0x40,
+			IsCoreCLR = 0x20,
+			IsNativeAOT = 0x40,
 #endif
 		}
 
@@ -226,8 +226,7 @@ namespace ObjCRuntime {
 		internal static unsafe InitializationOptions* options;
 
 #if NET
-		public static class ClassHandles
-		{
+		public static class ClassHandles {
 			static NativeHandle unused;
 			internal static unsafe void InitializeClassHandles (IntPtr* map)
 			{
@@ -238,7 +237,7 @@ namespace ObjCRuntime {
 				// Rewriter uses those.
 				// In the case of NO class handle rewriting,
 				// this is a no-op
-				fixed (NativeHandle *ptr = &unused) {
+				fixed (NativeHandle* ptr = &unused) {
 					SetHandle (-1, ptr, map);
 				}
 			}
@@ -248,9 +247,9 @@ namespace ObjCRuntime {
 			{
 				if (index < 0)
 					return;
-				
+
 				var nativeHandle = map [index];
-				*handle = (NativeHandle)nativeHandle;
+				*handle = (NativeHandle) nativeHandle;
 			}
 		}
 #endif
@@ -297,10 +296,10 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libcLibrary)]
 		unsafe static extern int _NSGetExecutablePath (byte* buf, int* bufsize);
 
-		unsafe static int _NSGetExecutablePath (byte[] buf, ref int bufsize)
+		unsafe static int _NSGetExecutablePath (byte [] buf, ref int bufsize)
 		{
 			fixed (byte* bufptr = buf)
-				return _NSGetExecutablePath (bufptr, (int *) Unsafe.AsPointer<int> (ref bufsize));
+				return _NSGetExecutablePath (bufptr, (int*) Unsafe.AsPointer<int> (ref bufsize));
 		}
 #endif
 
@@ -460,8 +459,7 @@ namespace ObjCRuntime {
 		static bool OnAssemblyRegistration (AssemblyName assembly_name)
 		{
 			if (AssemblyRegistration is not null) {
-				var args = new AssemblyRegistrationEventArgs
-				{
+				var args = new AssemblyRegistrationEventArgs {
 					Register = true,
 					AssemblyName = assembly_name
 				};
@@ -786,14 +784,13 @@ namespace ObjCRuntime {
 			var attributes = a.GetCustomAttributes (typeof (RequiredFrameworkAttribute), false);
 
 			foreach (var attribute in attributes) {
-				var requiredFramework = (RequiredFrameworkAttribute)attribute;
+				var requiredFramework = (RequiredFrameworkAttribute) attribute;
 				string libPath;
 				string libName = requiredFramework.Name;
 
 				if (libName.Contains (".dylib")) {
 					libPath = ResourcesPath!;
-				}
-				else {
+				} else {
 					libPath = FrameworksPath!;
 					libPath = Path.Combine (libPath, libName);
 					libName = libName.Replace (".frameworks", "");
@@ -802,7 +799,7 @@ namespace ObjCRuntime {
 
 				if (Dlfcn.dlopen (libPath, 0) == IntPtr.Zero)
 					throw new Exception ($"Unable to load required framework: '{requiredFramework.Name}'",
-						new Exception (Dlfcn.dlerror()));
+						new Exception (Dlfcn.dlerror ()));
 			}
 
 			attributes = a.GetCustomAttributes (typeof (DelayedRegistrationAttribute), false);
@@ -1607,7 +1604,7 @@ namespace ObjCRuntime {
 
 				// If type is an NSObject, we prefer the NSObject lookup table
 				if (instance is null && type != typeof (NSObject) && type.IsSubclassOf (typeof (NSObject))) {
-					instance = (T?)(INativeObject?) RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
+					instance = (T?) (INativeObject?) RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
 					if (instance is not null && owns) {
 						Runtime.TryReleaseINativeObject (instance);
 					}
@@ -2146,7 +2143,7 @@ namespace ObjCRuntime {
 					// For other registrars other than managed-static the generic parameter of ConstructNSObject is used
 					// only to cast the return value so we can safely pass NSObject here to satisfy the constraints of the
 					// generic parameter.
-					var rv = (T?)(INativeObject?) ConstructNSObject<NSObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+					var rv = (T?) (INativeObject?) ConstructNSObject<NSObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
 					if (owns)
 						TryReleaseINativeObject (rv);
 					return rv;

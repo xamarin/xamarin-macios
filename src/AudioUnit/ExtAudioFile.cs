@@ -70,10 +70,10 @@ namespace AudioUnit {
 	}
 
 #if NET
-    [SupportedOSPlatform ("ios")]
-    [SupportedOSPlatform ("maccatalyst")]
-    [SupportedOSPlatform ("macos")]
-    [SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	public class ExtAudioFile : IDisposable {
 		IntPtr _extAudioFile;

@@ -70,10 +70,10 @@ namespace CoreGraphics {
 		static IntPtr TapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo)
 		{
 			var gch = GCHandle.FromIntPtr (userInfo);
-			var tapData = (TapData)gch.Target!;
+			var tapData = (TapData) gch.Target!;
 			return tapData.Callback (tapProxyEvent, eventType, eventRef, tapData.UserInfo);
 		}
-		
+
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static unsafe IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
 #else
@@ -126,7 +126,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 #endif
-		
+
 #if !XAMCORE_5_0
 		[Obsolete ("The location parameter is not used. Consider using the overload without the location parameter.", false)]
 		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
@@ -193,14 +193,14 @@ namespace CoreGraphics {
 			return CGEventCreateFromData (IntPtr.Zero, source.Handle);
 		}
 
-		public CGEvent (NSData source) 
+		public CGEvent (NSData source)
 			: base (Create (source), true)
 		{
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventCreate (IntPtr eventSourceHandle);
-		
+
 		public CGEvent (CGEventSource? eventSource)
 			: base (CGEventCreate (eventSource.GetHandle ()), true)
 		{
@@ -220,8 +220,8 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateMouseEvent(IntPtr source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton);
-			
+		extern static IntPtr CGEventCreateMouseEvent (IntPtr source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton);
+
 		public CGEvent (CGEventSource? source, CGEventType mouseType, CGPoint mouseCursorPosition, CGMouseButton mouseButton)
 			: base (CGEventCreateMouseEvent (source.GetHandle (), mouseType, mouseCursorPosition, mouseButton), true)
 		{
@@ -297,8 +297,8 @@ namespace CoreGraphics {
 				return null;
 			return new CGEventSource (esh, true);
 		}
-       
-		
+
+
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static CGPoint CGEventGetLocation (IntPtr handle);
 
@@ -325,7 +325,7 @@ namespace CoreGraphics {
 
 		// Keep this public, as we want to avoid creating instances of the object
 		// just to peek at the flags
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetFlags")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGEventGetFlags")]
 		public extern static CGEventFlags GetFlags (IntPtr eventHandle);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -340,16 +340,16 @@ namespace CoreGraphics {
 			}
 		}
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetIntegerValueField")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGEventGetIntegerValueField")]
 		extern static long GetLong (IntPtr eventHandle, CGEventField eventField);
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetIntegerValueField")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGEventSetIntegerValueField")]
 		extern static void SetLong (IntPtr eventHandle, CGEventField eventField, long value);
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventGetDoubleValueField")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGEventGetDoubleValueField")]
 		extern static double GetDouble (IntPtr eventHandle, CGEventField eventField);
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSetDoubleValueField")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGEventSetDoubleValueField")]
 		extern static void SetDouble (IntPtr eventHandle, CGEventField eventField, double value);
 
 		/// <summary>Get the 64-bit integer value of the specified event field.</summary>
@@ -468,7 +468,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventSetSource (IntPtr handle, IntPtr source);
-       
+
 		public void SetEventSource (CGEventSource eventSource)
 		{
 			if (eventSource is null)
@@ -477,11 +477,11 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static CGEventType  CGEventGetType (IntPtr handle);
+		extern static CGEventType CGEventGetType (IntPtr handle);
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventSetType (IntPtr handle, CGEventType evtType);
-		
+
 		public CGEventType EventType {
 			get {
 				return CGEventGetType (Handle);
@@ -497,7 +497,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventSetTimestamp (IntPtr handle, ulong timeStampp);
-		
+
 #if !NET
 		[Obsolete ("Use 'Timestamp' instead.")]
 		public ulong Timestampe {
@@ -547,15 +547,15 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		unsafe extern static void CGEventKeyboardGetUnicodeString (IntPtr handle, nuint maxLen, nuint* actualLen, ushort *buffer);
+		unsafe extern static void CGEventKeyboardGetUnicodeString (IntPtr handle, nuint maxLen, nuint* actualLen, ushort* buffer);
 
 		public unsafe string GetUnicodeString ()
 		{
 			const int bufferLength = 40;
-			ushort *buffer = stackalloc ushort [bufferLength];
+			ushort* buffer = stackalloc ushort [bufferLength];
 			nuint actual = 0;
 			CGEventKeyboardGetUnicodeString (Handle, bufferLength, &actual, buffer);
-			return new String ((char *) buffer, 0, (int) actual);
+			return new String ((char*) buffer, 0, (int) actual);
 		}
 
 #if NET
@@ -585,10 +585,10 @@ namespace CoreGraphics {
 		{
 			if (evt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
-			
+
 			CGEventTapPostEvent (tapProxyEvent, evt.Handle);
 		}
-		
+
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventPost (CGEventTapLocation location, IntPtr handle);
 
@@ -596,7 +596,7 @@ namespace CoreGraphics {
 		{
 			if (evt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
-			
+
 			CGEventPost (location, evt.Handle);
 		}
 
@@ -609,7 +609,7 @@ namespace CoreGraphics {
 		{
 			if (evt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
-			
+
 			CGEventPostToPSN (processSerialNumber, evt.Handle);
 		}
 
@@ -637,11 +637,11 @@ namespace CoreGraphics {
 		{
 			PostToPid (this, pid);
 		}
-		
+
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		unsafe extern static int /* CGError = int32_t */ CGGetEventTapList (
 			uint /* uint32_t */ maxNumberOfTaps,
-			CGEventTapInformation *tapList,
+			CGEventTapInformation* tapList,
 			uint* /* uint32_t* */ eventTapCount);
 
 		public unsafe CGEventTapInformation []? GetEventTapList ()
@@ -650,7 +650,7 @@ namespace CoreGraphics {
 			if (CGGetEventTapList (0, null, &count) != 0)
 				return null;
 			var result = new CGEventTapInformation [count];
-			fixed (CGEventTapInformation *p = result){
+			fixed (CGEventTapInformation* p = result) {
 				if (CGGetEventTapList (count, p, &count) != 0)
 					return null;
 			}
@@ -674,7 +674,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint = "CGRequestListenEventAccess")]
 		static extern byte CGRequestListenEventAccess ();
 
 #if NET

@@ -94,8 +94,7 @@ namespace Metal {
 
 #if IOS
 	public partial class MTLTileRenderPipelineColorAttachmentDescriptorArray {
-		public MTLTileRenderPipelineColorAttachmentDescriptor this [nuint index]
-		{
+		public MTLTileRenderPipelineColorAttachmentDescriptor this [nuint index] {
 			get {
 				return GetObject (index);
 			}

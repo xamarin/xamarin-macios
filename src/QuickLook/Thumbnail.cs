@@ -52,7 +52,7 @@ namespace QuickLook {
 #else
 		[Deprecated (PlatformName.MacOSX, 15, 0, message: "Use the QuickLookThumbnailing framework instead for creating thumbnails for files.")]
 #endif
-		[DllImport(Constants.QuickLookLibrary)]
+		[DllImport (Constants.QuickLookLibrary)]
 		extern static /* CGImageRef */ IntPtr QLThumbnailImageCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFUrlRef */ IntPtr url, CGSize maxThumbnailSize, /* CFDictionaryRef */ IntPtr options);
 
 #if NET
@@ -76,12 +76,12 @@ namespace QuickLook {
 				dictionary.LowlevelSetObject ((NSNumber) scaleFactor, OptionScaleFactorKey.Handle);
 				dictionary.LowlevelSetObject (iconMode ? CFBoolean.TrueHandle : CFBoolean.FalseHandle, OptionIconModeKey.Handle);
 			}
-			
+
 			var handle = QLThumbnailImageCreate (IntPtr.Zero, url.Handle, maxThumbnailSize, dictionary.GetHandle ());
 			GC.KeepAlive (dictionary);
 			if (handle != IntPtr.Zero)
 				return new CGImage (handle, true);
-			
+
 			return null;
 		}
 	}

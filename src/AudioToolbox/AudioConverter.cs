@@ -583,13 +583,13 @@ namespace AudioToolbox {
 					var packetSize = outputDataPacketSize;
 					int* packetSizePtr = &packetSize;
 					if (packetDescription is null) {
-						var returnOne = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr)packetSizePtr, (IntPtr) outputData, IntPtr.Zero);
+						var returnOne = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr) packetSizePtr, (IntPtr) outputData, IntPtr.Zero);
 						outputDataPacketSize = packetSize;
 						return returnOne;
 					}
 
 					fixed (AudioStreamPacketDescription* pdesc = packetDescription) {
-						var returnTwo = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr)packetSizePtr, (IntPtr) outputData, (IntPtr) pdesc);
+						var returnTwo = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr) packetSizePtr, (IntPtr) outputData, (IntPtr) pdesc);
 						outputDataPacketSize = packetSize;
 						return returnTwo;
 					}

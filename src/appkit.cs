@@ -15040,7 +15040,7 @@ namespace AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 #if NET
-		[Async (ResultTypeName="NSSpellCheckerCandidates")]
+		[Async (ResultTypeName = "NSSpellCheckerCandidates")]
 #else
 		[Async (ResultTypeName = "NSSpellCheckerCanidates")]
 #endif
@@ -19847,7 +19847,7 @@ namespace AppKit {
 		// This came from the NSTextFinderClient protocol in legacy Xamarin, but NSTextView doesn't really implement that protocol,
 		// so when it was removed for .NET, we still need to expose the API from NSTextFinderClient that NSTextView actually has.
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
-		NSArray SelectedRanges { get; set;  }
+		NSArray SelectedRanges { get; set; }
 #endif
 
 		[NoiOS]

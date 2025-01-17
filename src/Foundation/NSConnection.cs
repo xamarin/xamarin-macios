@@ -36,10 +36,8 @@ using ObjCRuntime;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Foundation
-{
-	public partial class NSConnection
-	{
+namespace Foundation {
+	public partial class NSConnection {
 
 		public TProxy GetRootProxy<TProxy> () where TProxy : NSObject
 		{
@@ -65,7 +63,7 @@ namespace Foundation
 			var result = Runtime.TryGetNSObject (handle) as TProxy;
 
 			if (result is null)
-				result = (TProxy)Activator.CreateInstance (typeof (TProxy), new object[] { handle });
+				result = (TProxy) Activator.CreateInstance (typeof (TProxy), new object [] { handle });
 
 			return result;
 		}

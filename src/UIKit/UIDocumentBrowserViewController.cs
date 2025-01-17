@@ -31,10 +31,10 @@ using ObjCRuntime;
 
 namespace UIKit {
 
-	public partial class UIDocumentBrowserViewController
-	{
+	public partial class UIDocumentBrowserViewController {
 
-		static bool CheckSystemVersion () {
+		static bool CheckSystemVersion ()
+		{
 #if IOS
 			return SystemVersion.CheckiOS (12, 0);
 #else

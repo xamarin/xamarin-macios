@@ -33,7 +33,7 @@ namespace Network {
 	public class NWProtocolDefinition : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
 		public NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

@@ -537,7 +537,7 @@ namespace ObjCRuntime {
 		//
 		// IL2026: Using member 'System.Reflection.Module.ResolveMethod(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
 		// IL2026: Using member 'System.Reflection.Module.ResolveType(Int32)' which has 'RequiresUnreferencedCodeAttribute' can break functionality when trimming application code. Trimming changes metadata tokens.
-		[UnconditionalSuppressMessage("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
+		[UnconditionalSuppressMessage ("", "IL2026", Justification = "The APIs this method tries to access are marked by other means, so this is linker-safe.")]
 #endif
 		static MemberInfo? ResolveTokenNonManagedStatic (Assembly assembly, Module? module, uint token)
 		{

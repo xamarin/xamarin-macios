@@ -568,7 +568,7 @@ namespace ObjCRuntime {
 
 		public MacAttribute (byte major, byte minor, byte subminor)
 #if NET
-			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32))
+			: base ((Platform) ((ulong) major << 48 | (ulong) minor << 40 | (ulong) subminor << 32))
 #else
 			: this (major, minor, subminor, false)
 #endif

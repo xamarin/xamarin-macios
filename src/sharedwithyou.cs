@@ -19,12 +19,12 @@ using ObjCRuntime;
 
 #if MONOMAC
 using AppKit;
-using UIViewController=AppKit.NSViewController;
-using UIView=AppKit.NSView;
-using UIMenu=AppKit.NSMenu;
-using UIImage=AppKit.NSImage;
-using ICloudSharingControllerDelegate=AppKit.INSCloudSharingServiceDelegate;
-using UIWindow=AppKit.NSWindow;
+using UIViewController = AppKit.NSViewController;
+using UIView = AppKit.NSView;
+using UIMenu = AppKit.NSMenu;
+using UIImage = AppKit.NSImage;
+using ICloudSharingControllerDelegate = AppKit.INSCloudSharingServiceDelegate;
+using UIWindow = AppKit.NSWindow;
 #else
 using UIKit;
 using ICloudSharingControllerDelegate = UIKit.IUICloudSharingControllerDelegate;

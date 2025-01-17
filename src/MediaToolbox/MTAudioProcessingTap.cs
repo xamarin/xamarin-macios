@@ -44,19 +44,17 @@ using ObjCRuntime;
 using AudioToolbox;
 using CoreMedia;
 
-namespace MediaToolbox
-{
-	public class MTAudioProcessingTap : NativeObject
-	{
+namespace MediaToolbox {
+	public class MTAudioProcessingTap : NativeObject {
 #if !COREBUILD
 		delegate void Action_IntPtr (IntPtr arg);
 
 		// MTAudioProcessingTapCallbacks
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
-		unsafe struct Callbacks
-		{
+		unsafe struct Callbacks {
 #pragma warning disable 169
-			/* int */ int version; // kMTAudioProcessingTapCallbacksVersion_0 == 0
+			/* int */
+			int version; // kMTAudioProcessingTapCallbacksVersion_0 == 0
 			public /* void* */ IntPtr clientInfo;
 #if NET
 			public /* MTAudioProcessingTapInitCallback */ delegate* unmanaged<IntPtr, IntPtr, void**, void> init;
@@ -77,8 +75,8 @@ namespace MediaToolbox
 		// MTAudioProcessingTapInitCallback
 		unsafe delegate void MTAudioProcessingTapInitCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, /* void* */ IntPtr clientInfo, /* void** */ out void* tapStorageOut);
 
-		delegate void MTAudioProcessingTapProcessCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, 
-			IntPtr numberFrames, MTAudioProcessingTapFlags flags, /* AudioBufferList* */ IntPtr bufferListInOut, 
+		delegate void MTAudioProcessingTapProcessCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap,
+			IntPtr numberFrames, MTAudioProcessingTapFlags flags, /* AudioBufferList* */ IntPtr bufferListInOut,
 			out IntPtr numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
 
 		delegate void MTAudioProcessingTapPrepareCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, IntPtr maxFrames, ref AudioStreamBasicDescription processingFormat);
@@ -86,10 +84,10 @@ namespace MediaToolbox
 		static readonly Dictionary<IntPtr, MTAudioProcessingTap> handles = new Dictionary<IntPtr, MTAudioProcessingTap> (Runtime.IntPtrEqualityComparer);
 
 		MTAudioProcessingTapCallbacks callbacks;
-		
+
 		internal static MTAudioProcessingTap? FromHandle (IntPtr handle, bool owns)
 		{
-			lock (handles){
+			lock (handles) {
 				if (handles.TryGetValue (handle, out var ret))
 					return ret;
 				return null;
@@ -98,8 +96,8 @@ namespace MediaToolbox
 
 		[DllImport (Constants.MediaToolboxLibrary)]
 		unsafe extern static /* OSStatus */ MTAudioProcessingTapError MTAudioProcessingTapCreate (
-			/* CFAllocatorRef*/ IntPtr allocator, 
-			/* const MTAudioProcessingTapCallbacks* */ Callbacks* callbacks, 
+			/* CFAllocatorRef*/ IntPtr allocator,
+			/* const MTAudioProcessingTapCallbacks* */ Callbacks* callbacks,
 			MTAudioProcessingTapCreationFlags flags,
 			/* MTAudioProcessingTapRef* */ IntPtr* tapOut);
 
@@ -144,7 +142,7 @@ namespace MediaToolbox
 			// and that will call the InitializeProxy. So using this (short-lived) GCHandle allow us to find back the
 			// original managed instance
 			var gch = GCHandle.Alloc (this);
-			c.clientInfo = (IntPtr)gch;
+			c.clientInfo = (IntPtr) gch;
 
 			IntPtr handle;
 			MTAudioProcessingTapError res;
@@ -183,7 +181,7 @@ namespace MediaToolbox
 
 		[DllImport (Constants.MediaToolboxLibrary)]
 		unsafe extern static /* OSStatus */ MTAudioProcessingTapError MTAudioProcessingTapGetSourceAudio (
-			/* MTAudioProcessingTapRef */ IntPtr tap, IntPtr numberFrames, 
+			/* MTAudioProcessingTapRef */ IntPtr tap, IntPtr numberFrames,
 			/* AudioBufferList* */ IntPtr bufferListInOut,
 			MTAudioProcessingTapFlags* flagsOut, CMTimeRange* timeRangeOut, IntPtr* numberFramesOut);
 
@@ -200,14 +198,14 @@ namespace MediaToolbox
 				r = MTAudioProcessingTapGetSourceAudio (Handle,
 						(IntPtr) frames,
 						(IntPtr) bufferList,
-						(MTAudioProcessingTapFlags *) Unsafe.AsPointer<MTAudioProcessingTapFlags> (ref flags),
-						(CMTimeRange *) Unsafe.AsPointer<CMTimeRange> (ref timeRange),
+						(MTAudioProcessingTapFlags*) Unsafe.AsPointer<MTAudioProcessingTapFlags> (ref flags),
+						(CMTimeRange*) Unsafe.AsPointer<CMTimeRange> (ref timeRange),
 						&result);
 			}
 			framesProvided = (nint) result;
 			return r;
 		}
-			
+
 
 		//
 		// Proxy callbacks
@@ -222,7 +220,7 @@ namespace MediaToolbox
 #endif
 		{
 #if NET
-			void *tempTapStorage = null;
+			void* tempTapStorage = null;
 			*tapStorage = tempTapStorage;
 #else
 			tapStorage = null;
@@ -238,7 +236,7 @@ namespace MediaToolbox
 				apt?.callbacks.Initialize (apt, out tapStorage);
 #endif
 			}
-		}	
+		}
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -328,30 +326,26 @@ namespace MediaToolbox
 
 	// uint32_t -> MTAudioProcessingTap.h
 	[Flags]
-	public enum MTAudioProcessingTapCreationFlags : uint
-	{
-		PreEffects	= (1 << 0),
-		PostEffects	= (1 << 1),
+	public enum MTAudioProcessingTapCreationFlags : uint {
+		PreEffects = (1 << 0),
+		PostEffects = (1 << 1),
 	}
 
 	// uint32_t -> MTAudioProcessingTap.h
 	[Flags]
-	public enum MTAudioProcessingTapFlags : uint
-	{
-		StartOfStream	= (1 << 8),
-		EndOfStream		= (1 << 9),
+	public enum MTAudioProcessingTapFlags : uint {
+		StartOfStream = (1 << 8),
+		EndOfStream = (1 << 9),
 	}
 
 	// used as OSStatus (4 bytes)
 	// Not documented error codes
-	public enum MTAudioProcessingTapError
-	{
-		None				= 0,
-		InvalidArgument		= -12780
+	public enum MTAudioProcessingTapError {
+		None = 0,
+		InvalidArgument = -12780
 	}
 
-	public class MTAudioProcessingTapCallbacks
-	{
+	public class MTAudioProcessingTapCallbacks {
 		public MTAudioProcessingTapCallbacks (MTAudioProcessingTapProcessDelegate process)
 		{
 			if (process is null)
@@ -374,7 +368,7 @@ namespace MediaToolbox
 								  AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
 
 #if COREBUILD
-	public class AudioBufferList {}
+	public class AudioBufferList { }
 #endif
 }
 #endif // HAS_MEDIATOOLBOX

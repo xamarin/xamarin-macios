@@ -31,7 +31,7 @@ namespace Network {
 
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWPrivacyContext (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWPrivacyContext (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
 		public NWPrivacyContext (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

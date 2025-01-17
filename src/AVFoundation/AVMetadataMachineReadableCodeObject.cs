@@ -36,12 +36,12 @@ using System.Runtime.CompilerServices;
 
 namespace AVFoundation {
 	public partial class AVMetadataMachineReadableCodeObject {
-		public CGPoint[]? Corners {
+		public CGPoint []? Corners {
 			get {
 				var arr = WeakCorners;
 				if (arr is null)
 					return null;
-				var rv = new CGPoint[arr.Length];
+				var rv = new CGPoint [arr.Length];
 				for (int i = 0; i < rv.Length; i++) {
 					var dict = arr [i];
 					CGPoint pnt;

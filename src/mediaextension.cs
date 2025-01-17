@@ -11,11 +11,10 @@ using ObjCRuntime;
 using UniformTypeIdentifiers;
 
 namespace MediaExtension {
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Native]
 	[ErrorDomain ("MediaExtensionErrorDomain")]
-	public enum MEError : long
-	{
+	public enum MEError : long {
 		UnsupportedFeature = -19320,
 		AllocationFailure = -19321,
 		InvalidParameter = -19322,
@@ -30,37 +29,33 @@ namespace MediaExtension {
 		ReferenceMissing = -19331,
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Native]
-	public enum MEFileInfoFragmentsStatus : long
-	{
+	public enum MEFileInfoFragmentsStatus : long {
 		CouldNotContainFragments = 0,
 		ContainsFragments = 1,
 		CouldContainButDoesNotContainFragments = 2,
 	}
 
-	[Flags, NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[Flags, NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Native]
-	public enum MEFormatReaderParseAdditionalFragmentsStatus : ulong
-	{
+	public enum MEFormatReaderParseAdditionalFragmentsStatus : ulong {
 		SizeIncreased = 1uL << 0,
 		FragmentAdded = 1uL << 1,
 		FragmentsComplete = 1uL << 2,
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MEFormatReaderInstantiationOptions : NSCopying
-	{
+	interface MEFormatReaderInstantiationOptions : NSCopying {
 		[Export ("allowIncrementalFragmentParsing")]
 		bool AllowIncrementalFragmentParsing { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface MEFormatReaderExtension
-	{
+	interface MEFormatReaderExtension {
 		[Abstract]
 		[Export ("formatReaderWithByteSource:options:error:")]
 		[return: NullAllowed]
@@ -68,14 +63,13 @@ namespace MediaExtension {
 	}
 
 	delegate void MEFormatReaderLoadFileInfoCallback ([NullAllowed] MEFileInfo fileInfo, [NullAllowed] NSError error);
-	delegate void MEFormatReaderLoadMetadataCallback ([NullAllowed] AVMetadataItem[] metadata, [NullAllowed] NSError error);
-	delegate void MEFormatReaderLoadTrackReadersCallback ([NullAllowed] IMETrackReader[] trackReaders, [NullAllowed] NSError error);
+	delegate void MEFormatReaderLoadMetadataCallback ([NullAllowed] AVMetadataItem [] metadata, [NullAllowed] NSError error);
+	delegate void MEFormatReaderLoadTrackReadersCallback ([NullAllowed] IMETrackReader [] trackReaders, [NullAllowed] NSError error);
 	delegate void MEFormatReaderParseAdditionalFragmentsCallback ([NullAllowed] MEFormatReaderParseAdditionalFragmentsStatus fragmentStatus, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface MEFormatReader
-	{
+	interface MEFormatReader {
 		[Abstract]
 		[Export ("loadFileInfoWithCompletionHandler:")]
 		void LoadFileInfo (MEFormatReaderLoadFileInfoCallback completionHandler);
@@ -94,10 +88,9 @@ namespace MediaExtension {
 
 	interface IMEFormatReader { }
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
-	interface MEFileInfo : NSCopying
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	interface MEFileInfo : NSCopying {
 		[Export ("duration", ArgumentSemantic.Assign)]
 		CMTime Duration { get; set; }
 
@@ -110,12 +103,11 @@ namespace MediaExtension {
 	delegate void METrackReaderLoadUneditedDurationCallback ([NullAllowed] CMTime uneditedDuration, [NullAllowed] NSError error);
 	delegate void METrackReaderLoadTotalSampleDataLengthCallback (long totalSampleDataLength, [NullAllowed] NSError error);
 	delegate void METrackReaderLoadEstimatedDataRateCallback (float estimatedDataRate, [NullAllowed] NSError error);
-	delegate void METrackReaderLoadMetadataCallback ([NullAllowed] AVMetadataItem[] metadata, [NullAllowed] NSError error);
+	delegate void METrackReaderLoadMetadataCallback ([NullAllowed] AVMetadataItem [] metadata, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface METrackReader
-	{
+	interface METrackReader {
 		[Abstract]
 		[Export ("loadTrackInfoWithCompletionHandler:")]
 		void LoadTrackInfo (METrackReaderLoadTrackInfoCallback completionHandler);
@@ -147,15 +139,14 @@ namespace MediaExtension {
 
 	interface IMETrackReader { }
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface METrackInfo : NSCopying
-	{
+	interface METrackInfo : NSCopying {
 		[Export ("initWithMediaType:trackID:formatDescriptions:")]
 		[DesignatedInitializer]
 		// It's not clear from the documentation which type the format descriptors are, so keep as an array of NSObject for now.
-		NativeHandle Constructor (CMMediaType mediaType, int trackId, [Params] NSObject[] formatDescriptions);
+		NativeHandle Constructor (CMMediaType mediaType, int trackId, [Params] NSObject [] formatDescriptions);
 
 		[Export ("mediaType")]
 		CMMediaType MediaType { get; }
@@ -169,7 +160,7 @@ namespace MediaExtension {
 		// It's not clear from the documentation which type the format descriptors are, so keep as an array of NSObject for now.
 		// However, name as 'Weak' to leave the good name open for when we know.
 		[Export ("formatDescriptions", ArgumentSemantic.Copy)]
-		NSObject[] WeakFormatDescriptions { get; }
+		NSObject [] WeakFormatDescriptions { get; }
 
 		// Inlined from the OptionalProperties (METrackInfo) category
 		[Export ("naturalTimescale")]
@@ -178,7 +169,7 @@ namespace MediaExtension {
 		// Inlined from the OptionalProperties (METrackInfo) category
 		[Export ("trackEdits", ArgumentSemantic.Copy), NullAllowed]
 		[BindAs (typeof (CMTimeMapping []))]
-		NSValue[] TrackEdits { get; set; }
+		NSValue [] TrackEdits { get; set; }
 
 		// Inlined from the LanguageTagOptionalProperties (METrackInfo) category
 		[NullAllowed, Export ("extendedLanguageTag")]
@@ -206,10 +197,9 @@ namespace MediaExtension {
 	delegate void MESampleCursorLoadSampleBufferCallback ([NullAllowed] CMSampleBuffer newSampleBuffer, [NullAllowed] NSError error);
 	delegate void MESampleCursorLoadPostDecodeProcessingMetadataCallback ([NullAllowed] NSDictionary<NSString, NSObject> postDecodeProcessingMetadata, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface MESampleCursor : INSCopying
-	{
+	interface MESampleCursor : INSCopying {
 		[Abstract]
 		[Export ("presentationTimeStamp")]
 		CMTime PresentationTimeStamp { get; }
@@ -299,11 +289,10 @@ namespace MediaExtension {
 
 	interface IMESampleCursor { }
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MESampleCursorChunk : NSCopying
-	{
+	interface MESampleCursorChunk : NSCopying {
 		[Export ("initWithByteSource:chunkStorageRange:chunkInfo:sampleIndexWithinChunk:")]
 		[DesignatedInitializer]
 #if XAMCORE_5_0
@@ -338,11 +327,10 @@ namespace MediaExtension {
 		nint SampleIndexWithinChunk { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MESampleLocation : NSCopying
-	{
+	interface MESampleLocation : NSCopying {
 		[Export ("initWithByteSource:sampleLocation:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (MEByteSource byteSource, AVSampleCursorStorageRange sampleLocation);
@@ -354,11 +342,10 @@ namespace MediaExtension {
 		MEByteSource ByteSource { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MEEstimatedSampleLocation : INSCopying
-	{
+	interface MEEstimatedSampleLocation : INSCopying {
 		[Export ("initWithByteSource:estimatedSampleLocation:refinementDataLocation:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (MEByteSource byteSource, AVSampleCursorStorageRange estimatedSampleLocation, AVSampleCursorStorageRange refinementDataLocation);
@@ -373,10 +360,9 @@ namespace MediaExtension {
 		MEByteSource ByteSource { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject), Name = "MEHEVCDependencyInfo")]
-	interface MEHevcDependencyInfo : INSCopying
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject), Name = "MEHEVCDependencyInfo")]
+	interface MEHevcDependencyInfo : INSCopying {
 		[Export ("temporalSubLayerAccess")]
 		bool TemporalSubLayerAccess { [Bind ("hasTemporalSubLayerAccess")] get; set; }
 
@@ -418,11 +404,10 @@ namespace MediaExtension {
 	delegate void MEByteSourceReadBytesCallback (nuint bytesRead, [NullAllowed] NSError error);
 	delegate void MEByteSourceReadDataCallback ([NullAllowed] NSData data, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MEByteSource
-	{
+	interface MEByteSource {
 		[Export ("fileName")]
 		string FileName { get; }
 
@@ -433,7 +418,7 @@ namespace MediaExtension {
 		long FileLength { get; }
 
 		[Export ("relatedFileNamesInSameDirectory")]
-		string[] RelatedFileNamesInSameDirectory { get; }
+		string [] RelatedFileNamesInSameDirectory { get; }
 
 		[Export ("readDataOfLength:fromOffset:toDestination:completionHandler:")]
 		unsafe void ReadData (nuint length, long offset, byte* dest, MEByteSourceReadBytesCallback completionHandler);
@@ -455,18 +440,16 @@ namespace MediaExtension {
 	[Flags]
 	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Native]
-	public enum MEDecodeFrameStatus : ulong
-	{
+	public enum MEDecodeFrameStatus : ulong {
 		NoStatus = 0,
 		FrameDropped = 1uL << 0,
 	}
 
 	delegate void MEVideoDecoderDecodeFrameCallback ([NullAllowed] CVImageBuffer imageBuffer, MEDecodeFrameStatus decodeStatus, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface MEVideoDecoder
-	{
+	interface MEVideoDecoder {
 		[Export ("producesRAWOutput")]
 		bool ProducesRawOutput { get; }
 
@@ -484,7 +467,7 @@ namespace MediaExtension {
 		// of (and not call themselves), in which case the manual code would be
 		// useless. Thus there's no strongly typed binding for this property.
 		[Export ("supportedPixelFormatsOrderedByQuality")]
-		NSNumber[] SupportedPixelFormatsOrderedByQuality { get; }
+		NSNumber [] SupportedPixelFormatsOrderedByQuality { get; }
 
 		[Export ("reducedResolution", ArgumentSemantic.Assign)]
 		CGSize ReducedResolution { get; set; }
@@ -494,7 +477,7 @@ namespace MediaExtension {
 		// of (and not call themselves), in which case the manual code would be
 		// useless. Thus there's no strongly typed binding for this property.
 		[Export ("pixelFormatsWithReducedResolutionDecodeSupport")]
-		NSNumber[] PixelFormatsWithReducedResolutionDecodeSupport { get; }
+		NSNumber [] PixelFormatsWithReducedResolutionDecodeSupport { get; }
 
 		[Abstract]
 		[Export ("readyForMoreMediaData")]
@@ -508,9 +491,9 @@ namespace MediaExtension {
 		bool CanAcceptFormatDescription (CMFormatDescription formatDescription);
 	}
 
-	interface IMEVideoDecoder {}
+	interface IMEVideoDecoder { }
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Static]
 	interface MEVideoDecoderFields {
 		[Notification]
@@ -518,10 +501,9 @@ namespace MediaExtension {
 		NSString ReadyForMoreMediaDataDidChangeNotification { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false, Name = "MERAWProcessorExtension")]
-	interface MERawProcessorExtension
-	{
+	interface MERawProcessorExtension {
 		[Abstract]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -532,10 +514,9 @@ namespace MediaExtension {
 		IMERawProcessor CreateProcessor (CMVideoFormatDescription formatDescription, MERawProcessorPixelBufferManager extensionPixelBufferManager, [NullAllowed] out NSError error);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject), Name = "MERAWProcessorPixelBufferManager")]
-	interface MERawProcessorPixelBufferManager
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject), Name = "MERAWProcessorPixelBufferManager")]
+	interface MERawProcessorPixelBufferManager {
 		[Export ("pixelBufferAttributes", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PixelBufferAttributes { get; set; }
 
@@ -544,10 +525,9 @@ namespace MediaExtension {
 		CVPixelBuffer CreatePixelBuffer ([NullAllowed] out NSError error);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject), Name = "MERAWProcessingParameter")]
-	interface MERawProcessingParameter
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject), Name = "MERAWProcessingParameter")]
+	interface MERawProcessingParameter {
 		[Export ("name")]
 		string Name { get; }
 
@@ -561,10 +541,9 @@ namespace MediaExtension {
 		bool Enabled { get; set; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingListElementParameter")]
-	interface MERawProcessingListElementParameter
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingListElementParameter")]
+	interface MERawProcessingListElementParameter {
 		[Export ("initWithName:description:elementID:")]
 		NativeHandle Constructor (string name, string description, nint elementId);
 
@@ -572,11 +551,10 @@ namespace MediaExtension {
 		nint ListElementId { get; }
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingBooleanParameter")]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingBooleanParameter")]
 	[DisableDefaultCtor]
-	interface MERawProcessingBooleanParameter
-	{
+	interface MERawProcessingBooleanParameter {
 		[Export ("initWithName:key:description:initialValue:")]
 		NativeHandle Constructor (string name, string key, string description, bool initialValue);
 
@@ -605,11 +583,10 @@ namespace MediaExtension {
 		bool HasCameraValue ([NullAllowed] out bool cameraValue);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingIntegerParameter")]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingIntegerParameter")]
 	[DisableDefaultCtor]
-	interface MERawProcessingIntegerParameter
-	{
+	interface MERawProcessingIntegerParameter {
 		[Export ("initWithName:key:description:initialValue:maximum:minimum:")]
 		NativeHandle Constructor (string name, string key, string description, nint initialValue, nint maximum, nint minimum);
 
@@ -644,11 +621,10 @@ namespace MediaExtension {
 		bool HasCameraValue ([NullAllowed] out nint cameraValue);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingFloatParameter")]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingFloatParameter")]
 	[DisableDefaultCtor]
-	interface MERawProcessingFloatParameter
-	{
+	interface MERawProcessingFloatParameter {
 		[Export ("initWithName:key:description:initialValue:maximum:minimum:")]
 		NativeHandle Constructor (string name, string key, string description, float initialValue, float maximum, float minimum);
 
@@ -683,28 +659,27 @@ namespace MediaExtension {
 		bool HasCameraValue ([NullAllowed] out float cameraValue);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingListParameter")]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingListParameter")]
 	[DisableDefaultCtor]
-	interface MERawProcessingListParameter
-	{
+	interface MERawProcessingListParameter {
 		[Export ("initWithName:key:description:list:initialValue:")]
-		NativeHandle Constructor (string name, string key, string description, MERawProcessingListElementParameter[] listElements, nint initialValue);
+		NativeHandle Constructor (string name, string key, string description, MERawProcessingListElementParameter [] listElements, nint initialValue);
 
 		[Internal]
 		[Export ("initWithName:key:description:list:initialValue:neutralValue:")]
-		NativeHandle _InitWithNeutralValue (string name, string key, string description, MERawProcessingListElementParameter[] listElements, nint initialValue, nint neutralValue);
+		NativeHandle _InitWithNeutralValue (string name, string key, string description, MERawProcessingListElementParameter [] listElements, nint initialValue, nint neutralValue);
 
 		[Internal]
 		[Export ("initWithName:key:description:list:initialValue:cameraValue:")]
-		NativeHandle _InitWithCameraValue (string name, string key, string description, MERawProcessingListElementParameter[] listElements, nint initialValue, nint cameraValue);
+		NativeHandle _InitWithCameraValue (string name, string key, string description, MERawProcessingListElementParameter [] listElements, nint initialValue, nint cameraValue);
 
 		[Export ("initWithName:key:description:list:initialValue:neutralValue:cameraValue:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string name, string key, string description, MERawProcessingListElementParameter[] listElements, nint initialValue, nint neutralValue, nint cameraValue);
+		NativeHandle Constructor (string name, string key, string description, MERawProcessingListElementParameter [] listElements, nint initialValue, nint neutralValue, nint cameraValue);
 
 		[Export ("listElements")]
-		MERawProcessingListElementParameter[] ListElements { get; }
+		MERawProcessingListElementParameter [] ListElements { get; }
 
 		[Export ("initialValue")]
 		nint InitialValue { get; }
@@ -719,24 +694,22 @@ namespace MediaExtension {
 		bool HasCameraValue ([NullAllowed] out nint cameraValue);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(MERawProcessingParameter), Name = "MERAWProcessingSubGroupParameter")]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (MERawProcessingParameter), Name = "MERAWProcessingSubGroupParameter")]
 	[DisableDefaultCtor]
-	interface MERawProcessingSubGroupParameter
-	{
+	interface MERawProcessingSubGroupParameter {
 		[Export ("initWithName:description:parameters:")]
-		NativeHandle Constructor (string name, string description, MERawProcessingParameter[] parameters);
+		NativeHandle Constructor (string name, string description, MERawProcessingParameter [] parameters);
 
 		[Export ("subGroupParameters")]
-		MERawProcessingParameter[] SubGroupParameters { get; }
+		MERawProcessingParameter [] SubGroupParameters { get; }
 	}
 
 	delegate void MERawProcessorProcessFrameCallback ([NullAllowed] CVPixelBuffer pixelBuffer, [NullAllowed] NSError error);
 
-	[NoTV, NoiOS, Mac (15,0), MacCatalyst (18, 0)]
+	[NoTV, NoiOS, Mac (15, 0), MacCatalyst (18, 0)]
 	[Protocol (BackwardsCompatibleCodeGeneration = false, Name = "MERAWProcessor")]
-	interface MERawProcessor
-	{
+	interface MERawProcessor {
 		[Export ("metalDeviceRegistryID")]
 		ulong MetalDeviceRegistryId { get; set; }
 
@@ -745,7 +718,7 @@ namespace MediaExtension {
 
 		[Abstract]
 		[Export ("processingParameters")]
-		MERawProcessingParameter[] ProcessingParameters { get; }
+		MERawProcessingParameter [] ProcessingParameters { get; }
 
 		[Abstract]
 		[Export ("readyForMoreMediaData")]
@@ -756,10 +729,9 @@ namespace MediaExtension {
 		void ProcessFrame (CVPixelBuffer inputFrame, MERawProcessorProcessFrameCallback completionHandler);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), MacCatalyst (18, 0)]
+	[NoTV, NoiOS, Mac (15, 0), MacCatalyst (18, 0)]
 	[Static]
-	interface MERawProcessorFields
-	{
+	interface MERawProcessorFields {
 		[Notification]
 		[Field ("MERAWProcessorValuesDidChangeNotification")]
 		NSString ValuesDidChangeNotification { get; }
@@ -769,12 +741,11 @@ namespace MediaExtension {
 		NSString ReadyForMoreMediaDataDidChangeNotification { get; }
 	}
 
-	interface IMERawProcessor {}
+	interface IMERawProcessor { }
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
 	[Protocol (BackwardsCompatibleCodeGeneration = false)]
-	interface MEVideoDecoderExtension
-	{
+	interface MEVideoDecoderExtension {
 		[Abstract]
 		[Export ("init")]
 		NativeHandle Constructor ();
@@ -785,10 +756,9 @@ namespace MediaExtension {
 		IMEVideoDecoder CreateVideoDecoder (CMVideoCodecType codecType, CMVideoFormatDescription videoFormatDescription, NSDictionary<NSString, NSObject> videoDecoderSpecifications, MEVideoDecoderPixelBufferManager extensionDecoderPixelBufferManager, [NullAllowed] out NSError error);
 	}
 
-	[NoTV, NoiOS, Mac (15,0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
-	interface MEVideoDecoderPixelBufferManager
-	{
+	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	interface MEVideoDecoderPixelBufferManager {
 		[Export ("pixelBufferAttributes", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PixelBufferAttributes { get; set; }
 
@@ -801,9 +771,8 @@ namespace MediaExtension {
 	}
 
 	[NoTV, NoiOS, Mac (15, 0), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
-	interface MEDecodeFrameOptions
-	{
+	[BaseType (typeof (NSObject))]
+	interface MEDecodeFrameOptions {
 		[Export ("doNotOutputFrame")]
 		bool DoNotOutputFrame { get; set; }
 

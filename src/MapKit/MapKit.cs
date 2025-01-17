@@ -466,7 +466,7 @@ namespace MapKit {
 	}
 
 #if COREBUILD
-	public partial class MKMapLaunchOptions :NSObject {
+	public partial class MKMapLaunchOptions : NSObject {
 	}
 #endif
 }

@@ -32,7 +32,7 @@ namespace Network {
 	public class NWPath : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
 		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

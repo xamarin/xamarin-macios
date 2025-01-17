@@ -46,8 +46,7 @@ using ObjCRuntime;
 
 namespace ObjCRuntime {
 
-	static class BackingField
-	{
+	static class BackingField {
 		public static T Get<T> (ref T value, IntPtr handle, Converter<IntPtr, T> c)
 			where T : class, INativeObject, IDisposable
 		{

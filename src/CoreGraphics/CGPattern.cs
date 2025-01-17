@@ -102,7 +102,8 @@ namespace CoreGraphics {
 #if NET
 		static CGPatternCallbacks callbacks;
 
-		static CGPattern () {
+		static CGPattern ()
+		{
 			unsafe {
 				callbacks = new CGPatternCallbacks () {
 					version = 0,

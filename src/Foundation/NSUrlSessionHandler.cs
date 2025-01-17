@@ -603,7 +603,7 @@ namespace Foundation {
 			set {
 				// I believe it's possible to implement support for MaxAutomaticRedirections (it just has to be done)
 				if (value != int.MaxValue)
-					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections."); ;
 			}
 		}
 
@@ -657,7 +657,7 @@ namespace Foundation {
 			set {
 				if (value is not null)
 					throw new PlatformNotSupportedException ();
-			} 
+			}
 		}
 
 		// There doesn't seem to be a trivial way to specify the protocols to accept (or not)
@@ -696,8 +696,7 @@ namespace Foundation {
 			return true;
 		}
 
-		sealed class ServerCertificateCustomValidationCallbackHelper
-		{
+		sealed class ServerCertificateCustomValidationCallbackHelper {
 			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; private set; }
 
 			public ServerCertificateCustomValidationCallbackHelper (Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
@@ -707,7 +706,7 @@ namespace Foundation {
 
 			public bool Invoke (HttpRequestMessage request, SecTrust secTrust)
 			{
-				X509Certificate2[] certificates = ConvertCertificates (secTrust);
+				X509Certificate2 [] certificates = ConvertCertificates (secTrust);
 				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
 				using X509Chain chain = CreateChain (certificates);
 				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
@@ -715,7 +714,7 @@ namespace Foundation {
 				return Callback (request, certificate, chain, sslPolicyErrors);
 			}
 
-			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
+			X509Certificate2 [] ConvertCertificates (SecTrust secTrust)
 			{
 				var certificates = new X509Certificate2 [secTrust.Count];
 
@@ -748,7 +747,7 @@ namespace Foundation {
 				}
 			}
 
-			X509Chain CreateChain (X509Certificate2[] certificates)
+			X509Chain CreateChain (X509Certificate2 [] certificates)
 			{
 				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
 				var chain = new X509Chain ();
@@ -761,7 +760,7 @@ namespace Foundation {
 			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
 			{
 				var sslPolicyErrors = SslPolicyErrors.None;
-				
+
 				try {
 					if (certificate is null) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
@@ -802,7 +801,7 @@ namespace Foundation {
 			get => true;
 			set {
 				if (!value)
-					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies."); ;
 			}
 		}
 #endif // NET

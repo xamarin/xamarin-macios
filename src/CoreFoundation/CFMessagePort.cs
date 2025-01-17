@@ -264,12 +264,12 @@ namespace CoreFoundation {
 			if (context is not null) {
 #if NET
 				unsafe {
-				if (context.Retain is not null)
-					contextProxy.retain = &RetainProxy;
-				if (context.Release is not null)
-					contextProxy.release = &ReleaseProxy;
-				if (context.CopyDescription is not null)
-					contextProxy.copyDescription = &CopyDescriptionProxy;
+					if (context.Retain is not null)
+						contextProxy.retain = &RetainProxy;
+					if (context.Release is not null)
+						contextProxy.release = &ReleaseProxy;
+					if (context.CopyDescription is not null)
+						contextProxy.copyDescription = &CopyDescriptionProxy;
 				}
 #else
 				if (context.Retain is not null)

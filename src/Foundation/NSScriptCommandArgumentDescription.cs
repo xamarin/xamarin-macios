@@ -30,16 +30,16 @@ namespace Foundation {
 	public partial class NSScriptCommandArgumentDescription {
 		public string Name { get; set; }
 
-		public bool IsOptional { 
+		public bool IsOptional {
 			get {
 				return Optional is not null && Optional == "Yes";
 			}
- 			set {
+			set {
 				Optional = (value) ? "Yes" : "No";
 			}
 		}
 
-		public NSScriptCommandArgumentDescription (string name, string eventCode, string type, bool isOptional=false)
+		public NSScriptCommandArgumentDescription (string name, string eventCode, string type, bool isOptional = false)
 		{
 			if (String.IsNullOrEmpty (name))
 				throw new ArgumentException ("name cannot be null or empty.");
@@ -58,7 +58,7 @@ namespace Foundation {
 		}
 
 	}
-	
+
 #endif
 
 }

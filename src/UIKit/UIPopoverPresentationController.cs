@@ -22,7 +22,7 @@ namespace UIKit {
 				return Class.Lookup (p);
 			}
 			set {
-				PopoverBackgroundViewClass =  (value is null) ? IntPtr.Zero : 
+				PopoverBackgroundViewClass = (value is null) ? IntPtr.Zero :
 					Class.GetHandle (value);
 			}
 		}

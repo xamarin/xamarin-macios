@@ -371,7 +371,7 @@ namespace MediaPlayer {
 		[Export ("addItemWithProductID:completionHandler:")]
 		[Async]
 #if IOS
-		void AddItem (string productID, [NullAllowed] Action<MPMediaEntity[], NSError> completionHandler);
+		void AddItem (string productID, [NullAllowed] Action<MPMediaEntity [], NSError> completionHandler);
 #else
 		void AddItem (string productID, [NullAllowed] Action<MPMediaItem [], NSError> completionHandler);
 #endif
@@ -824,7 +824,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 #if NET
-	[TV (16,0)]
+	[TV (16, 0)]
 	[MacCatalyst (13, 1)]
 #else
 	[Obsoleted (PlatformName.TvOS, 14, 0, message: "Removed in Xcode 12.")]
@@ -1250,7 +1250,7 @@ namespace MediaPlayer {
 
 		[Export ("value")]
 #if NET
-		NSObject Value { get;  }
+		NSObject Value { get; }
 #else
 		NSObject value { get; }
 #endif

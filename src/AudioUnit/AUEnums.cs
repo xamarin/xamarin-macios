@@ -505,16 +505,16 @@ namespace AudioUnit {
 		Mixer3DGain = 3,
 		Mixer3DPlaybackRate = 4,
 #if MONOMAC
-		Mixer3DReverbBlend					= 5,
-		Mixer3DGlobalReverbGain				= 6,
-		Mixer3DOcclusionAttenuation			= 7,
-		Mixer3DObstructionAttenuation		= 8,
-		Mixer3DMinGain						= 9,
-		Mixer3DMaxGain						= 10,
-		Mixer3DPreAveragePower				= 1000,
-		Mixer3DPrePeakHoldLevel				= 2000,
-		Mixer3DPostAveragePower				= 3000,
-		Mixer3DPostPeakHoldLevel			= 4000,
+		Mixer3DReverbBlend = 5,
+		Mixer3DGlobalReverbGain = 6,
+		Mixer3DOcclusionAttenuation = 7,
+		Mixer3DObstructionAttenuation = 8,
+		Mixer3DMinGain = 9,
+		Mixer3DMaxGain = 10,
+		Mixer3DPreAveragePower = 1000,
+		Mixer3DPrePeakHoldLevel = 2000,
+		Mixer3DPostAveragePower = 3000,
+		Mixer3DPostPeakHoldLevel = 4000,
 #else
 		Mixer3DEnable = 5,
 		Mixer3DMinGain = 6,
@@ -563,8 +563,8 @@ namespace AudioUnit {
 		// AUTimePitch, AUTimePitch (offline), AUPitch units
 		TimePitchRate = 0,
 #if MONOMAC
-		TimePitchPitch						= 1,
-		TimePitchEffectBlend				= 2,
+		TimePitchPitch = 1,
+		TimePitchEffectBlend = 2,
 #endif
 
 		// AUNewTimePitch
@@ -969,24 +969,24 @@ namespace AudioUnit {
 		AudioFilePlayer = 0x6166706C, // 'afpl'
 
 #if MONOMAC
-		HALOutput 				= 0x6168616C, // 'ahal'
-		DefaultOutput 			= 0x64656620, // 'def '
-		SystemOutput 			= 0x73797320, // 'sys '
-		DLSSynth 				= 0x646C7320, // 'dls '
-		TimePitch 				= 0x746D7074, // 'tmpt'
-		GraphicEQ 				= 0x67726571, // 'greq'
-		MultiBandCompressor 	= 0x6D636D70, // 'mcmp'
-		MatrixReverb 			= 0x6D726576, // 'mrev'
-		Pitch 					= 0x746D7074, // 'tmpt'
-		AUFilter 				= 0x66696C74, // 'filt
-		NetSend 				= 0x6E736E64, // 'nsnd'
-		RogerBeep 				= 0x726F6772, // 'rogr'
-		StereoMixer 			= 0x736D7872, // 'smxr'
-		SphericalHeadPanner 	= 0x73706872, // 'sphr'
-		VectorPanner 			= 0x76626173, // 'vbas'
-		SoundFieldPanner 		= 0x616D6269, // 'ambi'
-		HRTFPanner 				= 0x68727466, // 'hrtf'
-		NetReceive 				= 0x6E726376, // 'nrcv'
+		HALOutput = 0x6168616C, // 'ahal'
+		DefaultOutput = 0x64656620, // 'def '
+		SystemOutput = 0x73797320, // 'sys '
+		DLSSynth = 0x646C7320, // 'dls '
+		TimePitch = 0x746D7074, // 'tmpt'
+		GraphicEQ = 0x67726571, // 'greq'
+		MultiBandCompressor = 0x6D636D70, // 'mcmp'
+		MatrixReverb = 0x6D726576, // 'mrev'
+		Pitch = 0x746D7074, // 'tmpt'
+		AUFilter = 0x66696C74, // 'filt
+		NetSend = 0x6E736E64, // 'nsnd'
+		RogerBeep = 0x726F6772, // 'rogr'
+		StereoMixer = 0x736D7872, // 'smxr'
+		SphericalHeadPanner = 0x73706872, // 'sphr'
+		VectorPanner = 0x76626173, // 'vbas'
+		SoundFieldPanner = 0x616D6269, // 'ambi'
+		HRTFPanner = 0x68727466, // 'hrtf'
+		NetReceive = 0x6E726376, // 'nrcv'
 #endif
 	}
 

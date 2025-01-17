@@ -58,10 +58,10 @@ namespace GameKit {
 	delegate void GKEntriesForPlayersHandler (GKLeaderboardEntry localPlayerEntry, GKLeaderboardEntry [] entries, NSError error);
 
 #if MONOMAC
-	delegate void GKImageLoadedHandler  (NSImage image, NSError error);
+	delegate void GKImageLoadedHandler (NSImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (NSViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
-	delegate void GKChallengeComposeHandler2 (NSViewController composeController, bool issuedChallenge, GKPlayer[] sentPlayers);
+	delegate void GKChallengeComposeHandler2 (NSViewController composeController, bool issuedChallenge, GKPlayer [] sentPlayers);
 #else
 	delegate void GKImageLoadedHandler (UIImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
@@ -765,8 +765,8 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
-	[BaseType (typeof (GKGameCenterViewController), Events=new Type [] { typeof (GKLeaderboardViewControllerDelegate)}, Delegates=new string [] {"WeakDelegate"})]
-	interface GKLeaderboardViewController 
+	[BaseType (typeof (GKGameCenterViewController), Events = new Type [] { typeof (GKLeaderboardViewControllerDelegate) }, Delegates = new string [] { "WeakDelegate" })]
+	interface GKLeaderboardViewController
 #else
 	[BaseType (typeof (GKGameCenterViewController), Events = new Type [] { typeof (GKLeaderboardViewControllerDelegate) }, Delegates = new string [] { "WeakDelegate" })]
 	interface GKLeaderboardViewController : UIAppearance
@@ -1466,7 +1466,7 @@ namespace GameKit {
 
 	[MacCatalyst (13, 1)]
 #if MONOMAC
-	[BaseType (typeof (NSViewController), Delegates=new string [] { "WeakMatchmakerDelegate" }, Events=new Type [] {typeof(GKMatchmakerViewControllerDelegate)})]
+	[BaseType (typeof (NSViewController), Delegates = new string [] { "WeakMatchmakerDelegate" }, Events = new Type [] { typeof (GKMatchmakerViewControllerDelegate) })]
 #else
 	[BaseType (typeof (UINavigationController), Delegates = new string [] { "WeakMatchmakerDelegate" }, Events = new Type [] { typeof (GKMatchmakerViewControllerDelegate) })]
 #endif
@@ -1839,8 +1839,8 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
-	[BaseType (typeof (GKGameCenterViewController), Events=new Type [] { typeof (GKAchievementViewControllerDelegate)}, Delegates=new string [] {"WeakDelegate"})]
-	interface GKAchievementViewController 
+	[BaseType (typeof (GKGameCenterViewController), Events = new Type [] { typeof (GKAchievementViewControllerDelegate) }, Delegates = new string [] { "WeakDelegate" })]
+	interface GKAchievementViewController
 #else
 	[BaseType (typeof (GKGameCenterViewController), Events = new Type [] { typeof (GKAchievementViewControllerDelegate) }, Delegates = new string [] { "WeakDelegate" })]
 	interface GKAchievementViewController : UIAppearance
@@ -1885,7 +1885,7 @@ namespace GameKit {
 	[NoTV]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 #if MONOMAC
-	[BaseType (typeof (NSViewController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
+	[BaseType (typeof (NSViewController), Events = new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate) }, Delegates = new string [] { "WeakComposeViewDelegate" })]
 	interface GKFriendRequestComposeViewController : GKViewController {
 		[Export ("initWithNibName:bundle:")]
 		[NoiOS]

@@ -4063,7 +4063,7 @@ namespace SceneKit {
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
 #if NET
-		Func<float,float> TimingFunction { get; set; }
+		Func<float, float> TimingFunction { get; set; }
 #else
 		Func<float, float> TimingFunction2 { get; set; }
 #endif

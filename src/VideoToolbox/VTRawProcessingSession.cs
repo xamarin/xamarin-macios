@@ -111,7 +111,7 @@ namespace VideoToolbox {
 		[DllImport (Constants.VideoToolboxLibrary)]
 		unsafe static extern VTStatus VTRAWProcessingSessionSetParameterChangedHander (
 			IntPtr /* VTRAWProcessingSessionRef */ session,
-			BlockLiteral * /* VTRAWProcessingParameterChangeHandler */ parameterChangeHandler
+			BlockLiteral* /* VTRAWProcessingParameterChangeHandler */ parameterChangeHandler
 			);
 
 		/// <summary>Provide a callback that will be called when the VTRawProcessingPlugin changes the set of processing parameters.</summary>
@@ -145,7 +145,7 @@ namespace VideoToolbox {
 			IntPtr /* VTRAWProcessingSessionRef */ session,
 			IntPtr /* CVPixelBufferRef */ inputPixelBuffer,
 			IntPtr /* CM_NULLABLE CFDictionaryRef */ frameOptions,
-			BlockLiteral * /* VTRAWProcessingOutputHandler */ outputHandler
+			BlockLiteral* /* VTRAWProcessingOutputHandler */ outputHandler
 			);
 
 		/// <summary>Use this function to submit RAW frames for processing using sequence and frame level parameters.</summary>

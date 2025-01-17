@@ -162,11 +162,11 @@ namespace CoreGraphics {
 		{
 #if NET
 			return new CGAffineTransform (a.A * b.A + a.B * b.C,
-						      a.A * b.B + a.B * b.D,
-						      a.C * b.A + a.D * b.C,
-						      a.C * b.B + a.D * b.D,
-						      a.Tx * b.A + a.Ty * b.C + b.Tx,
-						      a.Tx * b.B + a.Ty * b.D + b.Ty);
+							  a.A * b.B + a.B * b.D,
+							  a.C * b.A + a.D * b.C,
+							  a.C * b.B + a.D * b.D,
+							  a.Tx * b.A + a.Ty * b.C + b.Tx,
+							  a.Tx * b.B + a.Ty * b.D + b.Ty);
 #else
 #pragma warning disable CS0618 // Type or member is obsolete
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
@@ -388,11 +388,11 @@ namespace CoreGraphics {
 		{
 #if NET
 			return new CGAffineTransform (a.A * b.A + a.B * b.C,
-						      a.A * b.B + a.B * b.D,
-						      a.C * b.A + a.D * b.C,
-						      a.C * b.B + a.D * b.D,
-						      a.Tx * b.A + a.Ty * b.C + b.Tx,
-						      a.Tx * b.B + a.Ty * b.D + b.Ty);
+							  a.A * b.B + a.B * b.D,
+							  a.C * b.A + a.D * b.C,
+							  a.C * b.B + a.D * b.D,
+							  a.Tx * b.A + a.Ty * b.C + b.Tx,
+							  a.Tx * b.B + a.Ty * b.D + b.Ty);
 #else
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
 							  a.xx * b.yx + a.yx * b.yy,
@@ -426,7 +426,7 @@ namespace CoreGraphics {
 		{
 #if NET
 			return new CGPoint (A * point.X + C * point.Y + Tx,
-					    B * point.X + D * point.Y + Ty);
+						B * point.X + D * point.Y + Ty);
 #else
 			return new CGPoint (xx * point.X + xy * point.Y + x0,
 						yx * point.X + yy * point.Y + y0);
