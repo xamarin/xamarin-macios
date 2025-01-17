@@ -126,7 +126,7 @@ resources:
     - repository: yaml-templates
       type: github
       name: xamarin/yaml-templates
-      ref: refs/heads/dev/bond/disable-tasks    # UNDONE: DO NOT MERGE TO MAIN
+      ref: refs/heads/main
       endpoint: xamarin
 
     - repository: sdk-insertions
