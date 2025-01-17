@@ -92,7 +92,7 @@ steps:
       fi
     env:
       AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}      # Avoid having Provisionator retrieve the token from the keychain, which can lead to hangs on certain build agents; instead Provisionator will obtain the GitHub token from this environment variable
-    workingDirectory: bot-provisioning
+    workingDirectory: $(Build.Sources)/xamarin-macios/bot-provisioning
     timeoutInMinutes: 250
     displayName: Provision
 
