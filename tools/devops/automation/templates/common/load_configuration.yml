@@ -85,6 +85,9 @@ steps:
       $config = Import-BuildConfiguration -ConfigFile $configPath
       $testMatrix = $config.TEST_MATRIX
       Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
+
+      $simulatorTestMatrix = $config.SIMULATOR_TEST_MATRIX
+      Write-Host "##vso[task.setvariable variable=SIMULATOR_TEST_MATRIX;isOutput=true]$simulatorTestMatrix"
     name: test_matrix
     displayName: 'Create tests strategy matrix'
 

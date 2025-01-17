@@ -88,7 +88,6 @@ stages:
 
   jobs:
   - job: "tests"
-    condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     displayName: 'T:' 
     timeoutInMinutes: 180
     variables:
@@ -111,7 +110,8 @@ stages:
       workspace:
         clean: all
     strategy:
-      matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
+      matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.SIMULATOR_TEST_MATRIX'] ]
+    condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     steps:
 
     - bash: |
