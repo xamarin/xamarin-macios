@@ -117,7 +117,7 @@ public class ParentClass{
 	}
 }
 ";
-			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
+			Func<SyntaxNode, CSharpSyntaxNode?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
 			var nestedMethodNestedClassParents = new [] { "ChildClass", "ParentClass" };
 			yield return [nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
@@ -152,7 +152,7 @@ namespace Test {
 			yield return [nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
 
 
-			Func<SyntaxNode, MemberDeclarationSyntax?> getEnumValue =
+			Func<SyntaxNode, CSharpSyntaxNode?> getEnumValue =
 				rootNode => rootNode.DescendantNodes ().OfType<EnumMemberDeclarationSyntax> ().LastOrDefault ();
 			const string enumValueNested = @"
 using System;
@@ -169,6 +169,26 @@ public class ParentClass {
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
 			yield return [enumValueNested, getEnumValue, enumParensts];
+
+			Func<SyntaxNode, CSharpSyntaxNode?> getGetterValue =
+				rootNode => rootNode.DescendantNodes ().OfType<AccessorDeclarationSyntax> ().LastOrDefault ();
+			const string propertyGetter = @"
+using System;
+
+namespace Test;
+
+public class ParentClass {
+	public class ChildClass {
+		public int Property {
+			get {
+				return 0;
+			}
+		}
+	}
+}
+";
+			var getterParents = new [] { "Property", "ChildClass", "ParentClass" };
+			yield return [propertyGetter, getGetterValue, getterParents];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -177,7 +197,7 @@ public class ParentClass {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetParents>]
 	public void GetParentTests (ApplePlatform platform, string inputText,
-		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
+		Func<SyntaxNode, CSharpSyntaxNode?> getNode, string [] expectedParents)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
