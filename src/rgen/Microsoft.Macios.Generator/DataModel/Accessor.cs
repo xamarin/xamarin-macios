@@ -57,6 +57,31 @@ readonly struct Accessor : IEquatable<Accessor> {
 		Modifiers = modifiers;
 	}
 
+	/// <summary>
+	/// Retrieve the selector to be used with the associated property.
+	/// </summary>
+	/// <param name="associatedProperty">The property associated with the accessor.</param>
+	/// <returns>The selector to use for the accessor.</returns>
+	public string? GetSelector (in Property associatedProperty)
+	{
+		// this is not a property but a field, we cannot retrieve a selector.
+		if (!associatedProperty.IsProperty)
+			return null;
+
+		// There are two possible cases, the current accessor has an export attribute, if that
+		// is the case, we will use the selector in that attribute. Otherwise, we have:
+		//
+		// * getter: return the property selector.
+		// * setter: use the registrar code (it has the right logic) to get the setter.
+		if (ExportPropertyData is null) {
+			return Kind == AccessorKind.Getter
+				? associatedProperty.ExportPropertyData.Value.Selector
+				: Registrar.Registrar.CreateSetterSelector (associatedProperty.ExportPropertyData.Value.Selector);
+		}
+
+		return ExportPropertyData.Value.Selector;
+	}
+
 	/// <inheritdoc />
 	public bool Equals (Accessor other)
 	{
