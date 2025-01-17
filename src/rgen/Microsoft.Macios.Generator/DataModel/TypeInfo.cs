@@ -70,6 +70,23 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// Returns if the return type is void.
 	/// </summary>
 	public bool IsVoid => SpecialType == SpecialType.System_Void;
+	
+	/// <summary>
+	/// True if the type is for an iterface.
+	/// </summary>
+	public bool IsInterface { get; init; }
+	
+	/// <summary>
+	/// True if the type represents an interger that was built using one of the keywords, like byte, int, nint etc.
+	///
+	/// This can be used to decide if we should use the name of the matadata name to cast the value.
+	/// </summary>
+	public bool IsNativeIntegerType { get; init; }
+	
+	/// <summary>
+	/// True if an enumerator was marked with the NativeAttribute.
+	/// </summary>
+	public bool IsNativeEnum { get; init; }
 
 	readonly bool isNSObject = false;
 
@@ -131,6 +148,9 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		IsSmartEnum = symbol.IsSmartEnum ();
 		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
+		IsInterface = symbol.TypeKind == TypeKind.Interface;
+		IsNativeIntegerType = symbol.IsNativeIntegerType;
+		IsNativeEnum = symbol.HasAttribute (AttributesNames.NativeEnumAttribute);
 
 		// data that we can get from the symbol without being INamedType
 		symbol.GetInheritance (
@@ -182,6 +202,12 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 			return false;
 		if (EnumUnderlyingType != other.EnumUnderlyingType)
 			return false;
+		if (IsInterface != other.IsInterface)
+			return false;
+		if (IsNativeIntegerType != other.IsNativeIntegerType)
+			return false;
+		if (IsNativeEnum != other.IsNativeEnum)
+			return false;
 
 		// compare base classes and interfaces, order does not matter at all
 		var listComparer = new CollectionComparer<string> ();
@@ -230,6 +256,9 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
+		sb.Append ($"IsInterface: {IsInterface}, ");
+		sb.Append ($"IsNativeIntegerType: {IsNativeIntegerType}, ");
+		sb.Append ($"IsNativeEnum: {IsNativeEnum}, ");
 		sb.Append ($"EnumUnderlyingType: '{EnumUnderlyingType?.ToString () ?? "null"}', ");
 		sb.Append ("Parents: [");
 		sb.AppendJoin (", ", parents);
