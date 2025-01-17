@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using ObjCRuntime;
 
@@ -27,6 +28,27 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 	/// Argument semantics to use with the selector.
 	/// </summary>
 	public ArgumentSemantic ArgumentSemantic { get; } = ArgumentSemantic.None;
+	
+	/// <summary>
+	/// Get the native prefix to be used in the custom marshal directive.
+	///
+	/// Should only be present with the CustomeMarshalDirective flag.
+	/// </summary >
+	public string? NativePrefix { get; init; }
+	
+	/// <summary>
+	/// Get the native sufix to be used in the custom marshal directive.
+	///
+	/// Should only be present with the CustomeMarshalDirective flag.
+	/// </summary >
+	public string? NativeSuffix { get; init; }
+	
+	/// <summary>
+	/// Get the library to be used in the custom marshal directive.
+	///
+	/// Should only be present with the CustomeMarshalDirective flag.
+	/// </summary >
+	public string? Library { get; init; }
 
 	public ExportData () { }
 
@@ -62,6 +84,12 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 		string? selector = null;
 		ArgumentSemantic argumentSemantic = ArgumentSemantic.None;
 		T? flags = default;
+		
+		// custom marshal directive values
+		string? nativePrefix = null;
+		string? nativeSuffix = null;
+		string? library = null;
+		
 		switch (count) {
 		case 1:
 			selector = (string?) attributeData.ConstructorArguments [0].Value!;
@@ -106,14 +134,35 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 			case "Flags":
 				flags = (T) value.Value!;
 				break;
+			case "NativePrefix":
+				nativePrefix = (string?) value.Value!;
+				break;
+			case "NativeSuffix":
+				nativeSuffix = (string?) value.Value!;
+				break;
+			case "Library":
+				library = (string?) value.Value!;
+				break;
 			default:
 				data = null;
 				return false;
 			}
 		}
 
-		data = flags is not null ?
-			new (selector, argumentSemantic, flags) : new (selector, argumentSemantic);
+		if (flags is not null) {
+			data = new (selector, argumentSemantic, flags) {
+				NativePrefix = nativePrefix,
+				NativeSuffix = nativeSuffix,
+				Library = library
+			};
+			return true;
+		}
+
+		data = new(selector, argumentSemantic) {
+			NativePrefix = nativePrefix, 
+			NativeSuffix = nativeSuffix, 
+			Library = library
+		};
 		return true;
 	}
 
@@ -124,10 +173,18 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 			return false;
 		if (ArgumentSemantic != other.ArgumentSemantic)
 			return false;
-		if (Flags is not null && other.Flags is not null) {
-			return Flags.Equals (other.Flags);
-		}
-		return false;
+		if (NativePrefix != other.NativePrefix)
+			return false;
+		if (NativeSuffix != other.NativeSuffix)
+			return false;
+		if (Library != other.Library)
+			return false;
+		return (Flags, other.Flags) switch {
+			(null, null) => true,
+			(null, _) => false,
+			(_, null) => false,
+			(_, _) => Flags!.Equals (other.Flags)
+		};
 	}
 
 	/// <inheritdoc />
@@ -155,6 +212,21 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		return $"{{ Type: '{typeof (T).FullName}', Selector: '{Selector ?? "null"}', ArgumentSemantic: '{ArgumentSemantic}', Flags: '{Flags}' }}";
+		var sb = new StringBuilder ("{ Type: '");
+		sb.Append (typeof (T).FullName);
+		sb.Append ("', Selector: '");
+		sb.Append (Selector ?? "null");
+		sb.Append ("', ArgumentSemantic: '");
+		sb.Append (ArgumentSemantic);
+		sb.Append ("', Flags: '");
+		sb.Append (Flags);
+		sb.Append ("', NativePrefix: '");
+		sb.Append (NativePrefix ?? "null");
+		sb.Append ("', NativeSuffix: '");
+		sb.Append (NativeSuffix ?? "null");
+		sb.Append ("', Library: '");
+		sb.Append (Library ?? "null");
+		sb.Append ("' }");
+		return sb.ToString ();
 	}
 }

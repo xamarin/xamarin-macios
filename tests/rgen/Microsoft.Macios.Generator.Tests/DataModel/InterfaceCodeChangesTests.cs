@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using ObjCBindings;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -415,6 +416,78 @@ public partial interface IProtocol {
 							]
 						) {
 							ExportPropertyData = new ("name")
+						}
+					]
+				}
+			];
+			
+			const string customMarshallingProperty = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Protocol>]
+public partial interface MyClass {
+	[Export<Property> (""name"", Flags = Property.CustomMarshalDirective, NativePrefix = ""xamarin_"", Library = ""__Internal"")]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				customMarshallingProperty,
+				new CodeChanges (
+					bindingInfo: new (new BindingTypeData<Protocol> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = null,
+					Interfaces = [],
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							returnType: ReturnTypeForString (),
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.CustomMarshalDirective", "xamarin_", "__Internal"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+							]
+						) {
+							ExportPropertyData = new (
+								selector: "name", 
+								argumentSemantic: ArgumentSemantic.None, 
+								flags: Property.Default | Property.CustomMarshalDirective) {
+								NativePrefix = "xamarin_",
+								Library = "__Internal"
+							}
 						}
 					]
 				}

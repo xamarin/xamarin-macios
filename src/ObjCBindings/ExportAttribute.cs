@@ -27,6 +27,30 @@ namespace ObjCBindings {
 		///  </summary >
 		public ArgumentSemantic ArgumentSemantic { get; set; } = ArgumentSemantic.None;
 
+		/// <summary>
+		/// Get/Set the native prefix to be used in the custom marshal directive.
+		///
+		/// The generator will only respect this value if the CustomMarshalDirective flag is set.
+		/// If the flag is not set the analyzer will raise an compiling error.
+		/// </summary >
+		public string? NativePrefix { get; set; } = null;
+
+		/// <summary>
+		/// Get/Set the native suffix to be used in the custom marshal directive.
+		///
+		/// The generator will only respect this value if the CustomMarshalDirective flag is set.
+		/// If the flag is not set the analyzer will raise an compiling error.
+		/// </summary >
+		public string? NativeSuffix { get; set; } = null;
+
+		/// <summary>
+		/// Get/Set the library to be used in the custom marshal directive.
+		///
+		/// The generator will only respect this value if the CustomMarshalDirective flag is set.
+		/// If the flag is not set the analyzer will raise an compiling error.
+		/// </summary >
+		public string? Library { get; set; } = null;
+
 		protected ExportAttribute () { }
 
 		/// <summary>
