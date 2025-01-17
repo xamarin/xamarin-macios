@@ -463,7 +463,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGAffineTransformComponents CGAffineTransformDecompose (CGAffineTransform transform);
@@ -479,7 +479,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGAffineTransform CGAffineTransformMakeWithComponents (CGAffineTransformComponents components);

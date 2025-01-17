@@ -1,8 +1,11 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xamarin.Tests;
@@ -42,7 +45,7 @@ public class BaseGeneratorTestClass {
 	protected GeneratorDriverRunResult RunGenerators (Compilation compilation)
 		=> Driver.RunGenerators (compilation).GetRunResult ();
 
-	protected CompilationResult CreateCompilation (string name, ApplePlatform platform, params string [] sources)
+	protected CompilationResult CreateCompilation (ApplePlatform platform, [CallerMemberName] string name = "", params string [] sources)
 	{
 		// get the dotnet bcl and fully load it for the test.
 		var references = Directory.GetFiles (Configuration.DotNetBclDir, "*.dll")
@@ -68,7 +71,7 @@ public class BaseGeneratorTestClass {
 	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 	{
 		// We need to create a compilation with the required source code.
-		var (compilation, _) = CreateCompilation (nameof (CompareGeneratedCode), platform, inputText);
+		var (compilation, _) = CreateCompilation (platform, sources: inputText);
 
 		// Run generators and retrieve all results.
 		var runResult = RunGenerators (compilation);

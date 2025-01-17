@@ -66,7 +66,6 @@ namespace AVFoundation {
 		HighAutoLevel,
 	}
 
-#if !WATCH
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -630,5 +629,4 @@ namespace AVFoundation {
 		}
 #endif
 	}
-#endif // !WATCH
 }

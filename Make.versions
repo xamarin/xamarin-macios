@@ -1,8 +1,5 @@
 #
-# A release branch requires updating the following six variables at the bottom of this file:
-#
-# IOS_PACKAGE_VERSION (major/minor/revision #)
-# MAC_PACKAGE_VERSION (major/minor/revision #)
+# A release branch requires updating the following four variables further down in this file:
 #
 # IOS_NUGET_VERSION (major/minor/patch #)
 # TVOS_NUGET_VERSION (major/minor/patch #)
@@ -11,45 +8,6 @@
 #
 # Update version numbers on main as well, to the next version
 #
-
-#
-# ** Version numbers **
-#
-# Versions are defined as: Major.Minor.Revison.Build
-#
-# Major/minor (first/second numbers - max 2 digits each):
-# - Bump for major/minor releases.
-#
-# Revision (third number - max 2 digits):
-# - Reset to 0 after a major or minor bump (do not use 99 for Xcode preview
-#   branches (use 0 instead), because otherwise we can't bump it further if
-#   needed).
-# - Bump for service releases and previews.
-# - Bump if commit distance becomes > 999.
-# - Can also be bumped for other reasons (in particular there's no correlation
-#   between Preview/Service Release #X and Revision #Y).
-#   - Bumping revision to a high enough number to make it clear that there's
-#     no correlation is a valid reason to bump.
-# - The revision must be bumped at the same time for both iOS and Mac
-#   (otherwise the commit distance will differ).
-# - Also bump if the [IOS|MAC]_PACKAGE_VERSION lines change for any other
-#   reason (otherwise we end up with repeating version numbers, since the
-#   commit distance would restart at 0, while the other numbers wouldn't
-#   change).
-# - Any other problem can also usually be solved by bumping the revision.
-# - Do not refactor the revision to a separate variable, because the reason
-#   bumping the revision is a general solution for many problems is that it
-#   also resets the commit distance (which wouldn't happen if the revision was
-#   refactored to a separate variable).
-#
-# Build (fourth number - max 3 digits):
-# - Automatically calculated as the number of commits since the last time any
-#   of the other three numbers changed (technically since the corresponding
-#   line changed in git).
-#
-
-IOS_PACKAGE_VERSION=17.99.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=9.99.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -62,8 +20,6 @@ MAC_PACKAGE_VERSION=9.99.0.$(MAC_COMMIT_DISTANCE)
 #
 # IMPORTANT: There must be *no* managed API differences unless the two first
 # numbers (major.minor) changes.
-
-# WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 
 IOS_NUGET_OS_VERSION=18.2
 TVOS_NUGET_OS_VERSION=18.2

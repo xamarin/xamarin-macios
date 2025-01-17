@@ -21,7 +21,6 @@ using Foundation;
 using CoreGraphics;
 using CoreFoundation;
 using PMObject = System.IntPtr;
-using OSStatus = System.Int32;
 
 #if !NET
 using NativeHandle = System.IntPtr;

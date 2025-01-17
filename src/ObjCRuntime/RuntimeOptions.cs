@@ -191,10 +191,6 @@ namespace ObjCRuntime {
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
 				return new NSUrlSessionHandler ();
 			}
-#elif __WATCHOS__
-			if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
-				Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
-			return new NSUrlSessionHandler ();
 #else
 			switch (handler_name) {
 			case CFNetworkHandlerValue:

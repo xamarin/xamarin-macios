@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -17,14 +19,15 @@ namespace Microsoft.Macios.Generator.Context;
 /// </summary>
 class RootBindingContext {
 	public PlatformName CurrentPlatform { get; set; }
-	public Compilation Compilation { get; set; }
+	public Compilation Compilation => this.SemanticModel.Compilation;
+	public SemanticModel SemanticModel { get; set; }
 
 	public Dictionary<string, string> Libraries { get; } = new ();
 
-	public RootBindingContext (Compilation compilation)
+	public RootBindingContext (SemanticModel semanticModel)
 	{
-		Compilation = compilation;
-		CurrentPlatform = compilation.GetCurrentPlatform ();
+		SemanticModel = semanticModel;
+		CurrentPlatform = Compilation.GetCurrentPlatform ();
 	}
 
 	// TODO: clean code coming from the old generator
@@ -103,4 +106,6 @@ class RootBindingContext {
 			.Select (f => f.Name)
 			.Any (s => IsLibraryName (s, name));
 	}
+
+	public static implicit operator RootBindingContext (SemanticModel semanticModel) => new (semanticModel);
 }

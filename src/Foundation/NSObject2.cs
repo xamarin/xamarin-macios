@@ -42,9 +42,7 @@ using ObjCRuntime;
 using Xamarin.Bundler;
 #if MONOTOUCH
 using UIKit;
-#if !WATCH
 using CoreAnimation;
-#endif
 #endif
 using CoreGraphics;
 #endif
@@ -569,12 +567,17 @@ namespace Foundation {
 			return false;
 		}
 
+		/// <summary>Calls the 'release' selector on this object.</summary>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void DangerousRelease ()
 		{
 			DangerousRelease (handle);
 		}
 
+		/// <summary>Calls the 'release' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to release.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		internal static void DangerousRelease (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -586,6 +589,10 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'retain' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to retain.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		internal static void DangerousRetain (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -597,6 +604,9 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'autorelease' selector on an Objective-C object.</summary>
+		/// <param name="handle">The Objective-C object to autorelease.</param>
+		/// <remarks>It's safe to call this function with <see cref="NativeHandle.Zero" />.</remarks>
 		internal static void DangerousAutorelease (NativeHandle handle)
 		{
 #if MONOMAC
@@ -606,25 +616,21 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Calls the 'retain' selector on this object.</summary>
+		/// <returns>This object.</returns>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousRetain ()
 		{
-#if MONOMAC
-			Messaging.void_objc_msgSend (handle, Selector.RetainHandle);
-#else
-			Messaging.void_objc_msgSend (handle, Selector.GetHandle (Selector.Retain));
-#endif
+			DangerousRetain (handle);
 			return this;
 		}
 
+		/// <summary>Calls the 'autorelease' selector on this object.</summary>
+		/// <returns>This object.</returns>
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject DangerousAutorelease ()
 		{
-#if MONOMAC
-			Messaging.void_objc_msgSend (handle, Selector.AutoreleaseHandle);
-#else
-			Messaging.void_objc_msgSend (handle, Selector.GetHandle (Selector.Autorelease));
-#endif
+			DangerousAutorelease (handle);
 			return this;
 		}
 
@@ -861,10 +867,8 @@ namespace Foundation {
 					return NSValue.FromCGAffineTransform ((CGAffineTransform) obj);
 				else if (t == typeof (UIEdgeInsets))
 					return NSValue.FromUIEdgeInsets ((UIEdgeInsets) obj);
-#if !WATCH
 				else if (t == typeof (CATransform3D))
 					return NSValue.FromCATransform3D ((CATransform3D) obj);
-#endif
 #endif
 				// last chance for types like CGPath, CGColor... that are not NSObject but are CFObject
 				// see https://bugzilla.xamarin.com/show_bug.cgi?id=8458

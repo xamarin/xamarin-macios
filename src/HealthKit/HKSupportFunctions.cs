@@ -14,7 +14,7 @@ namespace HealthKit {
 	[SupportedOSPlatform ("macos15.0")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Watch (11, 0), NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[NoTV, Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 	public static class HKStateOfMindValence {
 		[DllImport (Constants.HealthKitLibrary)]

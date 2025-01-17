@@ -324,7 +324,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -340,7 +339,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -356,7 +354,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -372,7 +369,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -388,7 +384,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -404,7 +399,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -420,7 +414,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -436,7 +429,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -452,7 +444,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -468,7 +459,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -484,7 +474,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -500,7 +489,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -516,7 +504,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -532,7 +519,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -548,7 +534,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -564,7 +549,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -580,7 +564,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -596,7 +579,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -612,7 +594,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -628,7 +609,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -644,7 +624,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -660,7 +639,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -676,7 +654,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -692,7 +669,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -708,7 +684,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -724,7 +699,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -740,7 +714,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -756,7 +729,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -772,7 +744,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -788,7 +759,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -804,7 +774,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -820,7 +789,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -836,7 +804,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -852,7 +819,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -868,7 +834,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -884,7 +849,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -900,7 +864,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -916,7 +879,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -932,7 +894,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -948,7 +909,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -964,7 +924,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -980,7 +939,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -996,7 +954,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1012,7 +969,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1028,7 +984,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1044,7 +999,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1060,7 +1014,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1076,7 +1029,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1092,7 +1044,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1108,7 +1059,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1124,7 +1074,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1140,7 +1089,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1156,7 +1104,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1172,7 +1119,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1188,7 +1134,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1204,7 +1149,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1220,7 +1164,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1236,7 +1179,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1252,7 +1194,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1268,7 +1209,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1284,7 +1224,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1300,7 +1239,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1316,7 +1254,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1332,7 +1269,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1348,7 +1284,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1364,7 +1299,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1380,7 +1314,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1396,7 +1329,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1412,7 +1344,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1428,7 +1359,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1444,7 +1374,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1460,7 +1389,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1476,7 +1404,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1492,7 +1419,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1508,7 +1434,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1524,7 +1449,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1540,7 +1464,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1556,7 +1479,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1572,7 +1494,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1588,7 +1509,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1604,7 +1524,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1620,7 +1539,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1636,7 +1554,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1652,7 +1569,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1668,7 +1584,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1684,7 +1599,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1700,7 +1614,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1716,7 +1629,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1732,7 +1644,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1748,7 +1659,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1764,7 +1674,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1780,7 +1689,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1796,7 +1704,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1812,7 +1719,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1828,7 +1734,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1844,7 +1749,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1860,7 +1764,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1876,7 +1779,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1892,7 +1794,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1908,7 +1809,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1924,7 +1824,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1940,7 +1839,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1956,7 +1854,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1972,7 +1869,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -1988,7 +1884,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2004,7 +1899,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2020,7 +1914,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2036,7 +1929,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2052,7 +1944,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2068,7 +1959,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2084,7 +1974,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2100,7 +1989,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2116,7 +2004,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2132,7 +2019,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2148,7 +2034,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2164,7 +2049,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2180,7 +2064,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2196,7 +2079,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2212,7 +2094,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2228,7 +2109,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2244,7 +2124,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2260,7 +2139,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2276,7 +2154,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2292,7 +2169,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2308,7 +2184,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2324,7 +2199,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2340,7 +2214,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2356,7 +2229,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2372,7 +2244,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2388,7 +2259,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2404,7 +2274,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2420,7 +2289,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2436,7 +2304,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2452,7 +2319,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2468,7 +2334,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2484,7 +2349,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2500,7 +2364,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2516,7 +2379,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2532,7 +2394,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2548,7 +2409,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2564,7 +2424,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2580,7 +2439,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2596,7 +2454,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif
@@ -2612,7 +2469,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
 		[NoTV]
 		[NoiOS]
 #endif

@@ -11,7 +11,6 @@ namespace PushKit {
 	/// <summary>Holds the <see cref="P:PushKit.PKPushCredentials.Token" /> that holds the user's credentials.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushCredentials_Class/index.html">Apple documentation for <c>PKPushCredentials</c></related>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -26,7 +25,6 @@ namespace PushKit {
 	/// <summary>Contains a dictionary of data for a push operation.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushPayload_Class/index.html">Apple documentation for <c>PKPushPayload</c></related>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -41,7 +39,6 @@ namespace PushKit {
 	/// <summary>Allows the developer to register for remote pushes.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushRegistry_Class/index.html">Apple documentation for <c>PKPushRegistry</c></related>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -72,20 +69,17 @@ namespace PushKit {
 	interface PKPushType {
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Watch (9, 0)]
 		[NoMac]
 		[Field ("PKPushTypeVoIP")]
 		NSString Voip { get; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use directly from watchOS instead.")]
-		[Watch (6, 0)]
 		[NoMac]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use directly from watchOS instead.")]
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
@@ -102,7 +96,6 @@ namespace PushKit {
 	/// <summary>Completion handler for registering a push operation.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/PushKit/Reference/PKPushRegistryDelegate_Protocol/index.html">Apple documentation for <c>PKPushRegistryDelegate</c></related>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
@@ -112,7 +105,6 @@ namespace PushKit {
 		[Export ("pushRegistry:didUpdatePushCredentials:forType:"), EventArgs ("PKPushRegistryUpdated"), EventName ("CredentialsUpdated")]
 		void DidUpdatePushCredentials (PKPushRegistry registry, PKPushCredentials credentials, string type);
 
-		[NoWatch]
 		[NoMac]
 #if !NET
 		[Abstract] // now optional in iOS 11

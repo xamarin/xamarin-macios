@@ -29,7 +29,6 @@ partial class Frameworks {
 		"CallKit",
 		"CarPlay",
 		"CFNetwork",
-		"Chip",
 		"Cinematic",
 		"ClassKit",
 		"CloudKit",
@@ -71,7 +70,6 @@ partial class Frameworks {
 		"HealthKit",
 		"HealthKitUI",
 		"HomeKit",
-		"iAd",
 		"IdentityLookup",
 		"IdentityLookupUI",
 		"ImageIO",
@@ -145,7 +143,6 @@ partial class Frameworks {
 		"Vision",
 		"VisionKit",
 		"WatchConnectivity",
-		"WatchKit",
 		"WebKit",
 		"XKit",
 	};
@@ -170,7 +167,6 @@ partial class Frameworks {
 		"BusinessChat",
 		"CallKit",
 		"CFNetwork",
-		"Chip",
 		"Cinematic",
 		"ClassKit",
 		"CloudKit",
@@ -183,6 +179,7 @@ partial class Frameworks {
 		"CoreData",
 		"CoreFoundation",
 		"CoreGraphics",
+		"CoreHaptics",
 		"CoreImage",
 		"CoreLocation",
 		"CoreMedia",
@@ -254,7 +251,6 @@ partial class Frameworks {
 		"PhotosUI",
 		"PrintCore",
 		"PushKit",
-		"QTKit",
 		"QuartzComposer",
 		"QuickLook",
 		"QuickLookThumbnailing",
@@ -291,63 +287,6 @@ partial class Frameworks {
 		"XKit",
 	};
 	// GENERATED FILE - DO NOT EDIT
-	internal readonly HashSet<string> watchosframeworks = new HashSet<string> {
-		"Accelerate",
-		"Accessibility",
-		"AuthenticationServices",
-		"AVFoundation",
-		"CallKit",
-		"Chip",
-		"ClockKit",
-		"CloudKit",
-		"Compression",
-		"Contacts",
-		"CoreBluetooth",
-		"CoreData",
-		"CoreFoundation",
-		"CoreGraphics",
-		"CoreLocation",
-		"CoreMedia",
-		"CoreMidi",
-		"CoreML",
-		"CoreMotion",
-		"CoreText",
-		"CoreVideo",
-		"CryptoTokenKit",
-		"DeviceCheck",
-		"EventKit",
-		"Foundation",
-		"GameKit",
-		"HealthKit",
-		"HomeKit",
-		"ImageIO",
-		"Intents",
-		"LocalAuthentication",
-		"MapKit",
-		"MediaPlayer",
-		"MobileCoreServices",
-		"NaturalLanguage",
-		"NearbyInteraction",
-		"Network",
-		"OSLog",
-		"PassKit",
-		"PushKit",
-		"SafetyKit",
-		"SceneKit",
-		"Security",
-		"ShazamKit",
-		"SoundAnalysis",
-		"SpriteKit",
-		"StoreKit",
-		"Symbols",
-		"UIKit",
-		"UniformTypeIdentifiers",
-		"UserNotifications",
-		"WatchConnectivity",
-		"WatchKit",
-		"XKit",
-	};
-	// GENERATED FILE - DO NOT EDIT
 	internal readonly HashSet<string> tvosframeworks = new HashSet<string> {
 		"Accelerate",
 		"Accessibility",
@@ -361,7 +300,6 @@ partial class Frameworks {
 		"BackgroundTasks",
 		"BrowserEngineKit",
 		"CFNetwork",
-		"Chip",
 		"Cinematic",
 		"CloudKit",
 		"Compression",
@@ -595,10 +533,8 @@ partial class Frameworks {
 	bool? _CallKit;
 	bool? _CarPlay;
 	bool? _CFNetwork;
-	bool? _Chip;
 	bool? _Cinematic;
 	bool? _ClassKit;
-	bool? _ClockKit;
 	bool? _CloudKit;
 	bool? _Compression;
 	bool? _Contacts;
@@ -645,7 +581,6 @@ partial class Frameworks {
 	bool? _HealthKit;
 	bool? _HealthKitUI;
 	bool? _HomeKit;
-	bool? _iAd;
 	bool? _IdentityLookup;
 	bool? _IdentityLookupUI;
 	bool? _ImageCaptureCore;
@@ -697,7 +632,6 @@ partial class Frameworks {
 	bool? _PrintCore;
 	bool? _PushKit;
 	bool? _PushToTalk;
-	bool? _QTKit;
 	bool? _QuartzComposer;
 	bool? _QuickLook;
 	bool? _QuickLookThumbnailing;
@@ -738,7 +672,6 @@ partial class Frameworks {
 	bool? _Vision;
 	bool? _VisionKit;
 	bool? _WatchConnectivity;
-	bool? _WatchKit;
 	bool? _WebKit;
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
@@ -768,10 +701,8 @@ partial class Frameworks {
 	public bool HaveCallKit { get { if (!_CallKit.HasValue) _CallKit = GetValue ("CallKit"); return _CallKit.Value; } }
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
 	public bool HaveCFNetwork { get { if (!_CFNetwork.HasValue) _CFNetwork = GetValue ("CFNetwork"); return _CFNetwork.Value; } }
-	public bool HaveChip { get { if (!_Chip.HasValue) _Chip = GetValue ("Chip"); return _Chip.Value; } }
 	public bool HaveCinematic { get { if (!_Cinematic.HasValue) _Cinematic = GetValue ("Cinematic"); return _Cinematic.Value; } }
 	public bool HaveClassKit { get { if (!_ClassKit.HasValue) _ClassKit = GetValue ("ClassKit"); return _ClassKit.Value; } }
-	public bool HaveClockKit { get { if (!_ClockKit.HasValue) _ClockKit = GetValue ("ClockKit"); return _ClockKit.Value; } }
 	public bool HaveCloudKit { get { if (!_CloudKit.HasValue) _CloudKit = GetValue ("CloudKit"); return _CloudKit.Value; } }
 	public bool HaveCompression { get { if (!_Compression.HasValue) _Compression = GetValue ("Compression"); return _Compression.Value; } }
 	public bool HaveContacts { get { if (!_Contacts.HasValue) _Contacts = GetValue ("Contacts"); return _Contacts.Value; } }
@@ -818,7 +749,6 @@ partial class Frameworks {
 	public bool HaveHealthKit { get { if (!_HealthKit.HasValue) _HealthKit = GetValue ("HealthKit"); return _HealthKit.Value; } }
 	public bool HaveHealthKitUI { get { if (!_HealthKitUI.HasValue) _HealthKitUI = GetValue ("HealthKitUI"); return _HealthKitUI.Value; } }
 	public bool HaveHomeKit { get { if (!_HomeKit.HasValue) _HomeKit = GetValue ("HomeKit"); return _HomeKit.Value; } }
-	public bool HaveiAd { get { if (!_iAd.HasValue) _iAd = GetValue ("iAd"); return _iAd.Value; } }
 	public bool HaveIdentityLookup { get { if (!_IdentityLookup.HasValue) _IdentityLookup = GetValue ("IdentityLookup"); return _IdentityLookup.Value; } }
 	public bool HaveIdentityLookupUI { get { if (!_IdentityLookupUI.HasValue) _IdentityLookupUI = GetValue ("IdentityLookupUI"); return _IdentityLookupUI.Value; } }
 	public bool HaveImageCaptureCore { get { if (!_ImageCaptureCore.HasValue) _ImageCaptureCore = GetValue ("ImageCaptureCore"); return _ImageCaptureCore.Value; } }
@@ -870,7 +800,6 @@ partial class Frameworks {
 	public bool HavePrintCore { get { if (!_PrintCore.HasValue) _PrintCore = GetValue ("PrintCore"); return _PrintCore.Value; } }
 	public bool HavePushKit { get { if (!_PushKit.HasValue) _PushKit = GetValue ("PushKit"); return _PushKit.Value; } }
 	public bool HavePushToTalk { get { if (!_PushToTalk.HasValue) _PushToTalk = GetValue ("PushToTalk"); return _PushToTalk.Value; } }
-	public bool HaveQTKit { get { if (!_QTKit.HasValue) _QTKit = GetValue ("QTKit"); return _QTKit.Value; } }
 	public bool HaveQuartzComposer { get { if (!_QuartzComposer.HasValue) _QuartzComposer = GetValue ("QuartzComposer"); return _QuartzComposer.Value; } }
 	public bool HaveQuickLook { get { if (!_QuickLook.HasValue) _QuickLook = GetValue ("QuickLook"); return _QuickLook.Value; } }
 	public bool HaveQuickLookThumbnailing { get { if (!_QuickLookThumbnailing.HasValue) _QuickLookThumbnailing = GetValue ("QuickLookThumbnailing"); return _QuickLookThumbnailing.Value; } }
@@ -911,7 +840,6 @@ partial class Frameworks {
 	public bool HaveVision { get { if (!_Vision.HasValue) _Vision = GetValue ("Vision"); return _Vision.Value; } }
 	public bool HaveVisionKit { get { if (!_VisionKit.HasValue) _VisionKit = GetValue ("VisionKit"); return _VisionKit.Value; } }
 	public bool HaveWatchConnectivity { get { if (!_WatchConnectivity.HasValue) _WatchConnectivity = GetValue ("WatchConnectivity"); return _WatchConnectivity.Value; } }
-	public bool HaveWatchKit { get { if (!_WatchKit.HasValue) _WatchKit = GetValue ("WatchKit"); return _WatchKit.Value; } }
 	public bool HaveWebKit { get { if (!_WebKit.HasValue) _WebKit = GetValue ("WebKit"); return _WebKit.Value; } }
 	public bool HaveXKit { get { if (!_XKit.HasValue) _XKit = GetValue ("XKit"); return _XKit.Value; } }
 }

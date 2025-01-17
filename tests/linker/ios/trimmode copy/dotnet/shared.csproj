@@ -10,6 +10,13 @@
     <_TrimmerDefaultAction>copy</_TrimmerDefaultAction> <!-- https://github.com/dotnet/linker/issues/2981 -->
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\dont link</ThisTestDirectory>
+
+    <!-- trimmer warnings: the linker tests do a lot of trimmer-unsafe things, so ignore any trimmer warnings -->
+    <NoWarn>$(NoWarn);IL2057</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -35,9 +42,6 @@
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />
     <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />
-    <Compile Include="$(ThisTestDirectory)\..\..\CommonDontLinkTest.cs">
-      <Link>CommonDontLinkTest.cs</Link>
-    </Compile>
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>

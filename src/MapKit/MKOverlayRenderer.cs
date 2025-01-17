@@ -1,5 +1,3 @@
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -21,5 +19,3 @@ namespace MapKit {
 		public static extern nfloat MKRoadWidthAtZoomScale (/* MKZoomScale */ nfloat zoomScale);
 	}
 }
-
-#endif // !WATCH

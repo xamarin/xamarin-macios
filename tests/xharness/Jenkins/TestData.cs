@@ -12,7 +12,6 @@ namespace Xharness.Jenkins {
 		public bool Profiling;
 		public string LinkMode;
 		public string Defines;
-		public string Undefines;
 		public bool? Ignored;
 		public bool EnableSGenConc;
 		public bool UseLlvm;
@@ -21,5 +20,6 @@ namespace Xharness.Jenkins {
 		public string RuntimeIdentifier;
 		public string Registrar;
 		public bool PublishAot; // NativeAOT
+		public string TestVariation;
 	}
 }

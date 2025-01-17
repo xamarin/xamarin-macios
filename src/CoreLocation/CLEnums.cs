@@ -113,13 +113,12 @@ namespace CoreLocation {
 		AutomotiveNavigation,
 		Fitness,
 		OtherNavigation,
-		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Airborne,
 	}
 
 	[Native]
-	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
+	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum CLAccuracyAuthorization : long {
 		FullAccuracy,

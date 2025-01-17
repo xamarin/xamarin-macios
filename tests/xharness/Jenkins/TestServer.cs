@@ -16,14 +16,15 @@ namespace Xharness.Jenkins {
 
 		public Task RunAsync (Jenkins jenkins, HtmlReportWriter htmlReportWriter)
 		{
-			var server = new HttpListener ();
+			HttpListener server;
 
 			// Try and find an unused port
 			int attemptsLeft = 50;
 			int port = 51234; // Try this port first, to try to not vary between runs just because.
 			Random r = new Random ((int) DateTime.Now.Ticks);
-			while (attemptsLeft-- > 0) {
+			do {
 				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
+				server = new HttpListener ();
 				server.Prefixes.Clear ();
 				server.Prefixes.Add ("http://*:" + newPort + "/");
 				try {
@@ -34,7 +35,7 @@ namespace Xharness.Jenkins {
 					jenkins.MainLog.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
 					port = 0;
 				}
-			}
+			} while (attemptsLeft-- > 0);
 			jenkins.MainLog.WriteLine ($"Created server on localhost:{port}");
 
 			var tcs = new TaskCompletionSource<bool> ();
@@ -278,8 +279,16 @@ namespace Xharness.Jenkins {
 								jenkins.GenerateReport ();
 							}
 
-							if (serveFile is null)
+							if (serveFile is null) {
 								serveFile = Path.Combine (Path.GetDirectoryName (jenkins.LogDirectory), request.Url.LocalPath.Substring (1));
+								serveFile = Path.GetFullPath (serveFile);
+								if (!serveFile.StartsWith (Path.GetDirectoryName (Path.GetFullPath (jenkins.LogDirectory)) + Path.DirectorySeparatorChar)) {
+									Console.WriteLine ($"400: {request.Url.LocalPath}");
+									response.StatusCode = 400;
+									response.OutputStream.WriteByte ((byte) '?');
+									break;
+								}
+							}
 							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];

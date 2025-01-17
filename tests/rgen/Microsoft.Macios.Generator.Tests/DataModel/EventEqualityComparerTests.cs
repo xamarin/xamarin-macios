@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
@@ -24,34 +26,55 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 			new (
 				name: "SecondEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -65,24 +88,38 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "AVFoundation.AVVideo",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -96,24 +133,38 @@ public class EventEqualityComparerTests {
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Event> y = [
 			new (
 				name: "FirstEvent",
 				type: "System.EventHandler",
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 

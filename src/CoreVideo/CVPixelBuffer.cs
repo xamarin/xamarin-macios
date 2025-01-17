@@ -58,6 +58,13 @@ namespace CoreVideo {
 		{
 		}
 
+		internal static CVPixelBuffer? Create (NativeHandle handle, bool owns)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+			return new CVPixelBuffer (handle, owns);
+		}
+
 		static IntPtr Create (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary? pixelBufferAttributes)
 		{
 			if (width <= 0)
@@ -110,7 +117,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[NoMacCatalyst]
@@ -124,7 +130,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8, 0)]
 		[TV (15, 0)]
 		[iOS (15, 0)]
 		[NoMacCatalyst]

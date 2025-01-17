@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 
 using AVFoundation;
@@ -230,6 +231,15 @@ partial class TestRuntime {
 		}
 	}
 #endif
+
+	public static void AssertNotInterpreter (string message = "This test does not run when using the interpreter")
+	{
+		if (IsCoreCLR)
+			return;
+
+		if (RuntimeFeature.IsDynamicCodeSupported)
+			NUnit.Framework.Assert.Ignore (message);
+	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
@@ -1479,21 +1489,43 @@ partial class TestRuntime {
 		if (!CheckXcodeVersion (6, 0))
 			return; // The API to check/request permission isn't available in earlier versions, the dialog will just pop up.
 
-		if (AVAudioSession.SharedInstance ().RecordPermission == AVAudioSessionRecordPermission.Undetermined) {
+		if (!CheckXcodeVersion (15, 0)) {
+#pragma warning disable CA1422 // warning CA1422: This call site is reachable on: 'iOS' 12.2 and later, 'maccatalyst' 12.2 and later. 'AVAudioSession.RecordPermission' is obsoleted on: 'ios' 17.0 and later (Please use 'AVAudioApplication.RecordPermission' instead.), 'maccatalyst' 17.0 and later (Please use 'AVAudioApplication.RecordPermission' instead.).
+			if (AVAudioSession.SharedInstance ().RecordPermission == AVAudioSessionRecordPermission.Undetermined) {
+				if (IgnoreTestThatRequiresSystemPermissions ())
+					NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the microphone.");
+
+				AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) => {
+					Console.WriteLine ("Microphone permission {0}", granted ? "granted" : "denied");
+				});
+			}
+
+			switch (AVAudioSession.SharedInstance ().RecordPermission) { // iOS 8+
+			case AVAudioSessionRecordPermission.Denied:
+				if (assert_granted)
+					NUnit.Framework.Assert.Fail ("This test requires permission to access the microphone.");
+				break;
+			}
+#pragma warning restore CA1422
+			return;
+		}
+
+		if (AVAudioApplication.SharedInstance.RecordPermission == AVAudioApplicationRecordPermission.Undetermined) {
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the microphone.");
 
-			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) => {
+			AVAudioApplication.RequestRecordPermission ((bool granted) => {
 				Console.WriteLine ("Microphone permission {0}", granted ? "granted" : "denied");
 			});
 		}
 
-		switch (AVAudioSession.SharedInstance ().RecordPermission) { // iOS 8+
-		case AVAudioSessionRecordPermission.Denied:
+		switch (AVAudioApplication.SharedInstance.RecordPermission) {
+		case AVAudioApplicationRecordPermission.Denied:
 			if (assert_granted)
 				NUnit.Framework.Assert.Fail ("This test requires permission to access the microphone.");
 			break;
 		}
+
 #endif // !MONOMAC && !__TVOS__
 	}
 #endif // !__WATCHOS__
@@ -1869,6 +1901,18 @@ partial class TestRuntime {
 			Assert.IsNull (ex, message);
 			break;
 		}
+	}
+
+	// this only applies to macOS, we can't determine it for other platforms.
+	public static void IgnoreIfLockedScreen ()
+	{
+#if __MACOS__
+		var props = global::CoreGraphics.CGSession.GetProperties ();
+		var value = props?.Dictionary [(NSString) "CGSSessionScreenIsLocked"]; // This key isn't documented, so no binding for it.
+		var isLocked = (value as NSNumber)?.BoolValue;
+		if (isLocked == true)
+			Assert.Ignore ("The screen is locked.");
+#endif
 	}
 }
 

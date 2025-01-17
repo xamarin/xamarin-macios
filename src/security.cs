@@ -36,14 +36,12 @@ namespace Security {
 		NSString AppleIPsec { get; }
 
 		[NoiOS]
-		[NoWatch]
 		[NoTV]
 		[NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITClient")]
 		NSString ApplePKINITClient { get; }
 
 		[NoiOS]
-		[NoWatch]
 		[NoTV]
 		[NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITServer")]
@@ -97,7 +95,6 @@ namespace Security {
 
 	/// <summary>Represents shared user name and password for a Website.</summary>
 	[Static]
-	[NoWatch]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
@@ -142,7 +139,6 @@ namespace Security {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -651,15 +647,15 @@ namespace Security {
 		[Field ("kSecImportExportPassphrase")]
 		NSString Passphrase { get; }
 
-		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecImportExportKeychain")]
 		NSString Keychain { get; }
 
-		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecImportExportAccess")]
 		NSString Access { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("kSecImportToMemoryOnly")]
 		NSString ToMemoryOnly { get; }
 
@@ -700,19 +696,19 @@ namespace Security {
 		[Field ("kSecMatchSubjectContains")]
 		IntPtr MatchSubjectContains { get; }
 
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 		[Field ("kSecMatchHostOrSubdomainOfHost")]
 		IntPtr MatchHostOrSubdomainOfHost { get; }
 
-		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectStartsWith")]
 		IntPtr MatchSubjectStartsWith { get; }
 
-		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectEndsWith")]
 		IntPtr MatchSubjectEndsWith { get; }
 
-		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectWholeString")]
 		IntPtr MatchSubjectWholeString { get; }
 
@@ -754,7 +750,6 @@ namespace Security {
 
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kSecUseDataProtectionKeychain")]
 		IntPtr UseDataProtectionKeychain { get; }
@@ -762,7 +757,6 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseOperationPrompt")]
@@ -784,14 +778,13 @@ namespace Security {
 		[Field ("kSecUseAuthenticationContext")]
 		IntPtr UseAuthenticationContext { get; }
 
-		[TV (17, 0), NoWatch, NoMacCatalyst, NoMac, NoiOS]
+		[TV (17, 0), NoMacCatalyst, NoMac, NoiOS]
 		[Field ("kSecUseUserIndependentKeychain")]
 		IntPtr UseUserIndependentKeychain { get; }
 	}
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[Static]
 	[Internal]
@@ -802,7 +795,6 @@ namespace Security {
 
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 	[NoMacCatalyst]
 	[Static]
 	[Internal]
@@ -1068,47 +1060,47 @@ namespace Security {
 		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA512AESGCM")]
 		EciesEncryptionCofactorVariableIvx963Sha512AesGcm,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754")]
 		EcdsaSignatureDigestRfc4754,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA1")]
 		EcdsaSignatureDigestRfc4754Sha1,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA224")]
 		EcdsaSignatureDigestRfc4754Sha224,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA256")]
 		EcdsaSignatureDigestRfc4754Sha256,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA384")]
 		EcdsaSignatureDigestRfc4754Sha384,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA512")]
 		EcdsaSignatureDigestRfc4754Sha512,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA1")]
 		EcdsaSignatureMessageRfc4754Sha1,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA224")]
 		EcdsaSignatureMessageRfc4754Sha224,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA256")]
 		EcdsaSignatureMessageRfc4754Sha256,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA384")]
 		EcdsaSignatureMessageRfc4754Sha384,
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA512")]
 		EcdsaSignatureMessageRfc4754Sha512,
 	}
@@ -1117,7 +1109,6 @@ namespace Security {
 	enum SslSessionConfig {
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Field ("kSSLSessionConfig_default")]
@@ -1134,7 +1125,6 @@ namespace Security {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Field ("kSSLSessionConfig_RC4_fallback")]
@@ -1145,7 +1135,6 @@ namespace Security {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Field ("kSSLSessionConfig_TLSv1_RC4_fallback")]
@@ -1162,7 +1151,6 @@ namespace Security {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -1171,7 +1159,6 @@ namespace Security {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -1200,7 +1187,6 @@ namespace Security {
 	}
 
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Internal]
 	[Static]
@@ -1220,7 +1206,6 @@ namespace Security {
 	}
 
 	[NoTV]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
 	interface SecSharedCredentialInfo {

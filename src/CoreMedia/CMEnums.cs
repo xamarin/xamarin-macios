@@ -18,7 +18,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify valid types of media.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMMediaType : uint {
 		Video = 1986618469, // 'vide'
@@ -30,11 +29,12 @@ namespace CoreMedia {
 		TimeCode = 1953325924, // 'tmcd'
 							   // note: the 4CC was obsoleted, i.e. Metadata is a new 4CC
 		Metadata = 0x6D657461, // 'meta'
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		TaggedBufferGroup = ('t' << 24) + ('b' << 16) + ('g' << 8) + 'r', // 'tbgr',
 	}
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify a closed-captioning standard.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMClosedCaptionFormatType : uint {
 		CEA608 = 0x63363038, // 'c608',
@@ -44,7 +44,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify valid types of multiplexed media.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMMuxedStreamType : uint {
 		MPEG1System = 0x6D703173, // 'mp1s',
@@ -55,7 +54,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify a subtitling standard.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMSubtitleFormatType : uint {
 		Text3G = 0x74783367, // 'tx3g'
@@ -64,7 +62,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify types of timed metadata.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMMetadataFormatType : uint {
 		ICY = 0x69637920, // 'icy '
@@ -75,7 +72,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify the type of a time code.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMTimeCodeFormatType : uint {
 		TimeCode32 = 0x746D6364, // 'tmcd',
@@ -86,7 +82,6 @@ namespace CoreMedia {
 
 	// uint32_t -> CMTime.h
 	/// <summary>An enumeration whose values specify the rounding method to be used with a <see cref="T:CoreMedia.CMTime" />.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMTimeRoundingMethod : uint {
 		RoundHalfAwayFromZero = 1,
@@ -100,7 +95,6 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify types of video codecs.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMVideoCodecType : uint {
 		YUV422YpCbCr8 = 0x32767579,
@@ -116,7 +110,7 @@ namespace CoreMedia {
 		Mpeg4Video = 0x6d703476,
 		Mpeg2Video = 0x6d703276,
 		Mpeg1Video = 0x6d703176,
-		[iOS (14, 0), TV (14, 0), Watch (7, 0)]
+		[iOS (14, 0), TV (14, 0)]
 		[MacCatalyst (14, 0)]
 		VP9 = 0x76703039,
 		DvcNtsc = 0x64766320,
@@ -138,7 +132,6 @@ namespace CoreMedia {
 		Hevc = 0x68766331,
 		[iOS (14, 5)]
 		[TV (14, 5)]
-		[Watch (7, 4)]
 		[MacCatalyst (14, 5)]
 		DolbyVisionHevc = 0x64766831,
 		DisparityHevc = 0x64697368,
@@ -147,7 +140,6 @@ namespace CoreMedia {
 
 	// UInt32 enum => CMFormatDescription.h
 	/// <summary>Enumerates pixel formats.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMPixelFormat : uint {
 		AlphaRedGreenBlue32bits = 32,
@@ -170,7 +162,6 @@ namespace CoreMedia {
 
 	/// <summary>Enumerates attachment propagation policies.</summary>
 	///     <remarks>This setting controls whether <see cref="M:CoreMedia.CMAttachmentBearer.PropagateAttachments(CoreMedia.ICMAttachmentBearer,CoreMedia.ICMAttachmentBearer)" /> will propagate a given attachment.</remarks>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMAttachmentMode : uint {
 		ShouldNotPropagate = 0,
@@ -179,7 +170,6 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMBlockBuffer.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMBlockBuffer" />s.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMBlockBufferError : int {
 		None = 0,
@@ -197,7 +187,6 @@ namespace CoreMedia {
 	// uint32_t -> CMBlockBuffer.h
 	/// <summary>An enumeration of flags to be used with <see cref="M:CoreMedia.CMBlockBuffer.CreateEmpty(System.UInt32,CoreMedia.CMBlockBufferFlags,CoreMedia.CMBlockBufferError@)" />.</summary>
 	[Flags]
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMBlockBufferFlags : uint {
 		AssureMemoryNow = (1 << 0),
@@ -208,7 +197,6 @@ namespace CoreMedia {
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMFormatDescription" />s.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMFormatDescriptionError : int {
 		None = 0,
@@ -219,7 +207,6 @@ namespace CoreMedia {
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMSampleBuffer" />s.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMSampleBufferError : int {
 		None = 0,
@@ -240,7 +227,6 @@ namespace CoreMedia {
 		Invalidated = -12744,
 	}
 
-#if !WATCH
 	public enum LensStabilizationStatus {
 		Active,
 		OutOfRange,
@@ -248,11 +234,9 @@ namespace CoreMedia {
 		Off,
 		None,
 	}
-#endif
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMClock" />s.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMClockError : int {
 		None = 0,
@@ -264,7 +248,6 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	/// <summary>An enumeration whose values specify errors relating to <see cref="T:CoreMedia.CMTimebase" />s.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMTimebaseError : int {
 		None = 0,
@@ -277,7 +260,6 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	/// <summary>An enumeration whose values specify errors returned by <see cref="M:CoreMedia.CMClockOrTimebase.GetRelativeRateAndAnchorTime(CoreMedia.CMClockOrTimebase,CoreMedia.CMClockOrTimebase,System.Double@,CoreMedia.CMTime@,CoreMedia.CMTime@)" />.</summary>
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CMSyncError : int {
 		None = 0,

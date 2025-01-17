@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !WATCH // __WATCHOS_PROHIBITED
-
 using System;
 
 // Disable until we get around to enable + fix any issues.
@@ -39,5 +37,3 @@ namespace Foundation {
 		}
 	}
 }
-
-#endif // !WATCH

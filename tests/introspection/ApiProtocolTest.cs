@@ -210,6 +210,11 @@ namespace Introspection {
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput":
 				case "ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -426,6 +431,11 @@ namespace Introspection {
 				case "UIHoverGestureRecognizer":
 				// Xcode 16.2 Conformance not in headers
 				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -645,6 +655,11 @@ namespace Introspection {
 					return true;
 				// Xcode 16.2 Conformance not in headers
 				case "SCSensitivityAnalysis":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "SCStreamConfiguration":
 					return true;
 				}
 				break;
@@ -729,10 +744,6 @@ namespace Introspection {
 					return true;
 				break;
 #endif
-			case "NSExtensionRequestHandling":
-				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
-					return true;
-				break;
 			case "QLPreviewItem":
 				if (type.Name == "NSUrl")
 					return true;

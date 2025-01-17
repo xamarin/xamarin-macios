@@ -15,11 +15,6 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 		}
 
-		public bool RestoreNugets {
-			get => BuildProject.RestoreNugets;
-			set => BuildProject.RestoreNugets = value;
-		}
-
 		public override bool SupportsParallelExecution => BuildProject.SupportsParallelExecution;
 	}
 }

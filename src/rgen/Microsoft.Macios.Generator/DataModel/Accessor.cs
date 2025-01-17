@@ -1,8 +1,12 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -11,6 +15,16 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// The kind of accessor.
 	/// </summary>
 	public AccessorKind Kind { get; }
+
+	/// <summary>
+	/// The platform availability of the enum value.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
+
+	/// <summary>
+	/// The data of the field attribute used to mark the value as a property binding. 
+	/// </summary>
+	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
 
 	/// <summary>
 	/// List of attribute code changes of the accessor.
@@ -26,12 +40,19 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// Create a new code change in a property accessor.
 	/// </summary>
 	/// <param name="accessorKind">The kind of accessor.</param>
+	/// <param name="symbolAvailability">The os availability of the symbol.</param>
+	/// <param name="exportPropertyData">The data of the export attribute found in the accessor.</param>
 	/// <param name="attributes">The list of attributes attached to the accessor.</param>
 	/// <param name="modifiers">The list of visibility modifiers of the accessor.</param>
-	public Accessor (AccessorKind accessorKind, ImmutableArray<AttributeCodeChange> attributes,
+	public Accessor (AccessorKind accessorKind,
+		SymbolAvailability symbolAvailability,
+		ExportData<ObjCBindings.Property>? exportPropertyData,
+		ImmutableArray<AttributeCodeChange> attributes,
 		ImmutableArray<SyntaxToken> modifiers)
 	{
 		Kind = accessorKind;
+		SymbolAvailability = symbolAvailability;
+		ExportPropertyData = exportPropertyData;
 		Attributes = attributes;
 		Modifiers = modifiers;
 	}
@@ -41,6 +62,11 @@ readonly struct Accessor : IEquatable<Accessor> {
 	{
 		if (Kind != other.Kind)
 			return false;
+		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+		if (ExportPropertyData != other.ExportPropertyData)
+			return false;
+
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
 			return false;
@@ -57,7 +83,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine ((int) Kind, Attributes, Modifiers);
+		return HashCode.Combine ((int) Kind, SymbolAvailability, ExportPropertyData, Attributes, Modifiers);
 	}
 
 	public static bool operator == (Accessor left, Accessor right)
@@ -73,7 +99,7 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder ($"{{ Kind: {Kind}, Modifiers: [");
+		var sb = new StringBuilder ($"{{ Kind: {Kind}, Supported Platforms: {SymbolAvailability}, ExportData: {ExportPropertyData?.ToString () ?? "null"} Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
 		sb.Append ("], Attributes: [");
 		sb.AppendJoin (", ", Attributes);

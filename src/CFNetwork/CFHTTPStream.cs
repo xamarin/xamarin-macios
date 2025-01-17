@@ -142,7 +142,6 @@ namespace CoreServices {
 			}
 		}
 
-#if !WATCHOS
 		public void SetProxy (CFProxySettings proxySettings)
 		{
 			if (proxySettings is null)
@@ -150,6 +149,5 @@ namespace CoreServices {
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}
-#endif // !WATCHOS
 	}
 }

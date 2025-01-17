@@ -29,8 +29,6 @@ namespace Security {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Watch (5, 0)]
 #endif
 	public class SecProtocolMetadata : NativeObject {
 #if !NET
@@ -64,7 +62,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -81,7 +78,6 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #endif
 		public SslProtocol NegotiatedProtocolVersion => sec_protocol_metadata_get_negotiated_protocol_version (GetCheckedHandle ());
@@ -94,7 +90,6 @@ namespace Security {
 #else
 		[TV (13, 0)]
 		[iOS (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern TlsProtocolVersion sec_protocol_metadata_get_negotiated_tls_protocol_version (IntPtr handle);
@@ -107,7 +102,6 @@ namespace Security {
 #else
 		[TV (13, 0)]
 		[iOS (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public TlsProtocolVersion NegotiatedTlsProtocolVersion => sec_protocol_metadata_get_negotiated_tls_protocol_version (GetCheckedHandle ());
 
@@ -119,7 +113,6 @@ namespace Security {
 #else
 		[TV (13, 0)]
 		[iOS (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern TlsCipherSuite sec_protocol_metadata_get_negotiated_tls_ciphersuite (IntPtr handle);
@@ -132,14 +125,12 @@ namespace Security {
 #else
 		[TV (13, 0)]
 		[iOS (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public TlsCipherSuite NegotiatedTlsCipherSuite => sec_protocol_metadata_get_negotiated_tls_ciphersuite (GetCheckedHandle ());
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
@@ -148,7 +139,6 @@ namespace Security {
 #if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		public SslCipherSuite NegotiatedCipherSuite => sec_protocol_metadata_get_negotiated_ciphersuite (GetCheckedHandle ());
 #endif
@@ -375,7 +365,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -388,7 +377,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -400,7 +388,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif
@@ -430,7 +417,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6, 0)]
 		[TV (13, 0)]
 		[iOS (13, 0)]
 #endif

@@ -255,7 +255,8 @@ class BuildConfiguration {
         "BUILD_REPOSITORY_PROVIDER",
         "BUILD_REPOSITORY_URI",
         "BUILD_SOURCEBRANCH",
-        "BUILD_SOURCEBRANCHNAME"
+        "BUILD_SOURCEBRANCHNAME",
+        "BUILD_SOURCEVERSION"
     )
 
     <#
@@ -312,7 +313,7 @@ class BuildConfiguration {
 
     [void] SetLabelsFromPR ([PSCustomObject] $prInfo, [bool]$isPR) {
         if ($prInfo) {
-            Write-Deubg "Setting VSTS labels from $($prInfo.labels)"
+            Write-Debug "Setting VSTS labels from $($prInfo.labels)"
             foreach ($l in [BuildConfiguration]::labelsOfInterest) {
                 $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
                 # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
@@ -335,29 +336,42 @@ class BuildConfiguration {
         .SYNOPSIS
             Retrieve the change id and export it as an enviroment variable.
     #>
-    [string] ExportChangeId ([object] $configuration) {
+    [string] ExportPRId ([object] $configuration) {
         # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
         # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
         # we could use a regexp but then we would have two problems instead of one
-        $changeId = $null
+        $prId = $null
         if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH) {
-            # use the source branch information from the configuration object
-            $changeId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
-        } else {
-            Write-Debug "Retrieving change id from the environment since it could not be found in the config."
-            # retrieve the change ide form the BUILD_SOURCEBRANCH enviroment variable. 
-            $changeId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+            # there are two possible situations, the build is a PR manually triggered or a PR triggered by a commit to a
+            # dev/* branch. In the first case we can get the PR id from the source branch, in the second case we need to
+            # get the PR id associated to the current commit. 
+            if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
+                Write-Host "Getting the change id from the parent build source branch"
+                $prId = $configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.Replace("refs/pull/", "").Replace("/merge", "")
+            } elseif ($Env:BUILD_SOURCEBRANCH.StartsWith("refs/pull")) {
+                Write-Host "Getting the change id from the current build source branch"
+                $prId = "$Env:BUILD_SOURCEBRANCH".Replace("refs/pull/", "").Replace("/merge", "")
+            } else {
+                Write-Host "Getting the change id from the current build source version with the Github API"
+                # use the github command to retrieve the associate PR id
+                $prIDs = Get-GitHubPRsForHash -Hash $configuration.PARENT_BUILD_BUILD_SOURCEVERSION
+                Write-Host "PR IDs: $prIDs"
+                if ($prIDs.Length -gt 0) {
+                    $prId = $prIDs[0]
+                }
+            }
         }
 
         # we can always fail (regexp error or not env varaible)
-        if ($changeId) {
+        if ($prId) {
             # add a var with the change id, which can be later consumed by some of the old scripts from
             # jenkins
-            Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
+            Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$prId"
         } else {
             Write-Debug "Not setting the change id because it could not be calculated."
         }
-        return $changeId
+        Write-Host "Change id: $prId"
+        return $prId
     }
 
     [PSCustomObject] Import([string] $configFile) {
@@ -507,12 +521,12 @@ class BuildConfiguration {
             $tags.Add("cronjob")
         }
 
-        if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
+        if ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH.StartsWith("refs/heads/dev/") -or $configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.PARENT_BUILD_BUILD_SOURCEBRANCH -eq "merge")) ) {
           Write-Host "Configuring build from PR."
 
           # retrieve the PR data to be able to fwd the labels from github
-          $changeId = $this.ExportChangeId($configuration)
-          $prInfo = Get-GitHubPRInfo -ChangeId $changeId
+          $prId = $this.ExportPRId($configuration)
+          $prInfo = Get-GitHubPRInfo -ChangeId $prId
           Write-Host $prInfo
 
           # make peoples life better, loop over the labels and add them as tags in the vsts build

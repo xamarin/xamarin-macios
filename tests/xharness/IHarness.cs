@@ -22,8 +22,7 @@ namespace Xharness {
 		IResultParser ResultParser { get; }
 		AppBundleLocator AppBundleLocator { get; }
 		ITunnelBore TunnelBore { get; }
-		List<iOSTestProject> IOSTestProjects { get; }
-		List<MacTestProject> MacTestProjects { get; }
+		List<TestProject> TestProjects { get; }
 		bool INCLUDE_IOS { get; }
 		bool INCLUDE_TVOS { get; }
 		bool INCLUDE_MAC { get; }
@@ -31,6 +30,7 @@ namespace Xharness {
 		string JENKINS_RESULTS_DIRECTORY { get; }
 		string DOTNET_DIR { get; set; }
 		string DOTNET_TFM { get; }
+		Version DotNetVersion { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; }
 		double Timeout { get; }

@@ -2,8 +2,6 @@
 
 #nullable enable
 
-#if !WATCHOS
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -211,5 +209,3 @@ namespace GameController {
 
 	}
 }
-
-#endif

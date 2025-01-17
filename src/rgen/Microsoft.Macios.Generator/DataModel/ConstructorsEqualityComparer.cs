@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -16,7 +18,7 @@ class ConstructorsEqualityComparer : EqualityComparer<ImmutableArray<Constructor
 
 		// create a dictionary compare that will take a special comparer for the list of constructors
 		var dictionaryComparer =
-			new DictionaryComparer<int, List<Constructor>> (new ListComparer<Constructor> (new ConstructorComparer ()));
+			new DictionaryComparer<int, List<Constructor>> (new CollectionComparer<Constructor> (new ConstructorComparer ()));
 		return dictionaryComparer.Equals (xConstructors, yConstructors);
 	}
 

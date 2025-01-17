@@ -102,7 +102,7 @@ namespace UIKit {
 				throw new ArgumentException (String.Format ("No resource named `{0}' found", name));
 
 			byte [] buffer = new byte [stream.Length];
-			stream.Read (buffer, 0, buffer.Length);
+			stream.ReadExactly (buffer, 0, buffer.Length);
 			unsafe {
 				fixed (byte* p = buffer) {
 					var data = NSData.FromBytes ((IntPtr) p, (uint) stream.Length);
@@ -115,7 +115,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
+		[TV (17, 0), iOS (17, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern /* NSData */ IntPtr UIImageHEICRepresentation (/* UIImage */ IntPtr image);
@@ -125,7 +125,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
+		[TV (17, 0), iOS (17, 0)]
 #endif
 		public NSData? HeicRepresentation
 			=> Runtime.GetNSObject<NSData> (UIImageHEICRepresentation (Handle));

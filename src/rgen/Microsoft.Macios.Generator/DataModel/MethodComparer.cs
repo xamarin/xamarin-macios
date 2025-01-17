@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 class MethodComparer : IComparer<Method> {
 
+	/// <inheritdoc/>
 	public int Compare (Method x, Method y)
 	{
 		var typeComparison = String.Compare (x.Type, y.Type, StringComparison.Ordinal);
@@ -14,7 +17,8 @@ class MethodComparer : IComparer<Method> {
 		var nameComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
 		if (nameComparison != 0)
 			return nameComparison;
-		var returnTypeComparison = String.Compare (x.ReturnType, y.ReturnType, StringComparison.Ordinal);
+		var returnTypeComparer = new TypeInfoComparer ();
+		var returnTypeComparison = returnTypeComparer.Compare (x.ReturnType, y.ReturnType);
 		if (returnTypeComparison != 0)
 			return returnTypeComparison;
 		var modifiersLengthCompare = x.Modifiers.Length.CompareTo (y.Modifiers.Length);
@@ -34,7 +38,8 @@ class MethodComparer : IComparer<Method> {
 		if (attributesLengthCompare != 0)
 			return attributesLengthCompare;
 
-		// sort by the attributes
+		// sort by the attributes, this allows us not to do a compare against the platform availability
+		// since that is generated via the attrs
 		var attributeComparer = new AttributeComparer ();
 		var xAttributes = x.Attributes.Order (attributeComparer).ToArray ();
 		var yAttributes = y.Attributes.Order (attributeComparer).ToArray ();

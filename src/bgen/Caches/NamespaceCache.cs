@@ -49,8 +49,6 @@ public class NamespaceCache {
 			UINamespaces.Add ("GameKit");
 		if (Frameworks.HaveNewsstandKit)
 			UINamespaces.Add ("NewsstandKit");
-		if (Frameworks.HaveiAd)
-			UINamespaces.Add ("iAd");
 		if (Frameworks.HaveQuickLook)
 			UINamespaces.Add ("QuickLook");
 		if (Frameworks.HaveEventKitUI)
@@ -101,10 +99,6 @@ public class NamespaceCache {
 			ImplicitNamespaces.Add ("AVFoundation");
 		if (Frameworks.HaveOpenGL)
 			ImplicitNamespaces.Add ("OpenGL");
-#if !NET
-		if (Frameworks.HaveQTKit)
-			ImplicitNamespaces.Add ("QTKit");
-#endif
 		if (Frameworks.HaveAppKit)
 			ImplicitNamespaces.Add ("AppKit");
 		if (Frameworks.HaveCloudKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.iOS)

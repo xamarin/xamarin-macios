@@ -461,6 +461,10 @@ namespace Introspection {
 				return CMClock.HostTimeClock;
 			case "CMTimebase":
 				return new CMTimebase (CMClock.HostTimeClock);
+			case "CMTagCollection":
+				return CMTagCollection.Create ();
+			case "CMTaggedBufferGroup":
+				return CMTaggedBufferGroup.Create (new CMTagCollection [0], new CMSampleBuffer [0], out var _);
 			case "CVPixelBufferPool":
 				return new CVPixelBufferPool (
 					new CVPixelBufferPoolSettings (),

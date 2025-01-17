@@ -156,13 +156,6 @@ namespace Introspection {
 			switch (type.Namespace) {
 			case "SafetyKit":
 				return true; // SafetyKit requires a custom entitlement, and will throw exceptions if it's not present.
-#if __IOS__
-			case "WatchKit":
-				return true; // WatchKit has been removed from iOS.
-#elif MONOMAC
-			case "QTKit":
-				return true; // QTKit has been removed from macos.
-#endif
 			}
 
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
@@ -547,6 +540,12 @@ namespace Introspection {
 				// This class uses another overload to get instantiated
 				if (cstr == "Void .ctor(Vision.VNRequestCompletionHandler)")
 					return true;
+				break;
+			case "AVSpeechSynthesisProviderAudioUnit":
+				if (cstr == "Void .ctor(AudioUnit.AudioComponentDescription, AudioUnit.AudioComponentInstantiationOptions, Foundation.NSError ByRef)") {
+					// This constructor is exposed using a factory method.
+					return true;
+				}
 				break;
 			}
 
