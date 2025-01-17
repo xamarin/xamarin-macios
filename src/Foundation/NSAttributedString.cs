@@ -237,7 +237,6 @@ namespace Foundation {
 			return Runtime.GetNSObject<NSDictionary> (LowLevelGetAttributes (location, out effectiveRange));
 		}
 
-#if NET
 		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
 		{
 			unsafe {
@@ -246,7 +245,6 @@ namespace Foundation {
 				}
 			}
 		}
-#endif
 
 		public NSAttributedString (string str, CTStringAttributes? attributes)
 			: this (str, attributes?.Dictionary)
