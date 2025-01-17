@@ -11,6 +11,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -66,7 +67,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "inName"),
 					]
 				)
 			];
@@ -96,8 +97,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false),
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 0, type: ReturnTypeForString (), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
 					]
 				)
 			];
@@ -127,10 +128,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
 					]
 				)
 			];
@@ -163,13 +162,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
-						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string"), name: "inSurnames") {
 							IsParams = true,
-							IsArray = true,
 						},
 					]
 				)
@@ -203,13 +199,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
-						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string"), name: "inSurnames") {
 							IsParams = false,
-							IsArray = true
 						},
 					]
 				)
@@ -243,14 +236,9 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
-						new (position: 2, type: "string", name: "inSurnames", isBlittable: false) {
-							IsNullable = true,
-							IsArray = true
-						},
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string", isNullable: true), name: "inSurnames"),
 					]
 				)
 			];
@@ -283,14 +271,9 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
-						new (position: 2, type: "string?", name: "inSurnames", isBlittable: false) {
-							IsNullable = false,
-							IsArray = true
-						},
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string?"), name: "inSurnames"),
 					]
 				)
 			];
@@ -323,14 +306,9 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName", false) {
-							IsNullable = true,
-						},
-						new (1, "int", "inAge", true),
-						new (2, "string?", "inSurnames", false) {
-							IsNullable = true,
-							IsArray = true
-						},
+						new (0, ReturnTypeForString (isNullable: true), "inName"),
+						new (1, ReturnTypeForInt (), "inAge"),
+						new (2, ReturnTypeForArray ("string?", isNullable: true), "inSurnames"),
 					]
 				)
 			];
@@ -363,13 +341,10 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
-						},
-						new (position: 1, type: "int", name: "inAge", isBlittable: true),
-						new (position: 2, type: "string[]", name: "inSurnames", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string[]"), name: "inSurnames") {
 							IsParams = false,
-							IsArray = true
 						},
 					]
 				)
@@ -398,8 +373,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName") {
 							IsOptional = true,
 						},
 					]
@@ -429,9 +403,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "T", name: "inName", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForGeneric ("T", isNullable: true), name: "inName") {
 							IsOptional = true,
-							IsNullable = true,
 						},
 					]
 				)
@@ -466,14 +439,12 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "inName", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName") {
 							IsOptional = true,
 						},
 					]
 				)
 			];
-
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()

@@ -634,7 +634,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false),
+								new (position: 0, type: ReturnTypeForString (), name: "name"),
 							]
 						),
 					]
@@ -687,7 +687,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false),
+								new (position: 0, type: ReturnTypeForString (), name: "name"),
 							]
 						),
 					]
@@ -741,7 +741,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false),
+								new (position: 0, type: ReturnTypeForString (), name: "name"),
 							]
 						),
 						new (
@@ -758,7 +758,7 @@ public partial interface IProtocol {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "inSurname", isBlittable: false),
+								new (position: 0, type: ReturnTypeForString (), name: "inSurname"),
 							]
 						),
 					]
