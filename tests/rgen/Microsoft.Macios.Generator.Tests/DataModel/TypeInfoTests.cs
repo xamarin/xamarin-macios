@@ -68,7 +68,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string nullableIntMethodNoParams = @"
 using System;
 
@@ -93,7 +93,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string intArrayMethodNoParams = @"
 using System;
 
@@ -350,7 +350,7 @@ namespace NS {
 					parameters: []
 				)
 			];
-			
+
 			const string nativeEnumMethod = @"
 using System;
 using ObjCRuntime;
@@ -373,7 +373,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForEnum("NS.MyEnum", isNativeEnum: true),
+					returnType: ReturnTypeForEnum ("NS.MyEnum", isNativeEnum: true),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],

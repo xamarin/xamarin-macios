@@ -70,19 +70,19 @@ readonly struct TypeInfo : IEquatable<TypeInfo> {
 	/// Returns if the return type is void.
 	/// </summary>
 	public bool IsVoid => SpecialType == SpecialType.System_Void;
-	
+
 	/// <summary>
 	/// True if the type is for an iterface.
 	/// </summary>
 	public bool IsInterface { get; init; }
-	
+
 	/// <summary>
 	/// True if the type represents an interger that was built using one of the keywords, like byte, int, nint etc.
 	///
 	/// This can be used to decide if we should use the name of the matadata name to cast the value.
 	/// </summary>
 	public bool IsNativeIntegerType { get; init; }
-	
+
 	/// <summary>
 	/// True if an enumerator was marked with the NativeAttribute.
 	/// </summary>

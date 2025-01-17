@@ -158,7 +158,7 @@ static class TestDataFactory {
 		) {
 			Parents = ["object"]
 		};
-	
+
 	public static TypeInfo ReturnTypeForInterface (string interfaceName)
 		=> new (
 			name: interfaceName,
