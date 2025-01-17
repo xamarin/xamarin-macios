@@ -76,6 +76,25 @@ steps:
       github_token: ${{ parameters.gitHubToken }}
     timeoutInMinutes: 250
     retryCountOnTaskFailure: ${{ parameters.retryCount }}  # mono does give issues sometimes to download, we will retry
+    enabled: false    # UNDONE: Use below script instead to provision until
+
+  - bash: |
+      echo "PROVISIONATOR_CHANNEL: ${PROVISIONATOR_CHANNEL}"
+      githubToken="${{ parameters.gitHubToken }}"
+      if [[ -n $githubToken ]]; then
+        echo "Executing provisionator"
+        ./provisionator-bootstrap.sh $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/build-provisioning.csx -v -v -v -v || exit 2
+        xcode-select -p
+        xcodebuild -version
+      else
+        echo "ERROR: GitHub.Token build variable not set"
+        exit 1
+      fi
+    env:
+      AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}      # Avoid having Provisionator retrieve the token from the keychain, which can lead to hangs on certain build agents; instead Provisionator will obtain the GitHub token from this environment variable
+    workingDirectory: bot-provisioning
+    timeoutInMinutes: 250
+    displayName: Provision
 
   # Use the env variables that were set by the label parsing in the configure step
   # print some useful logging to allow to know what is going on AND allow make some
