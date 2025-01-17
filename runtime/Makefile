@@ -142,11 +142,16 @@ $(foreach platform,$(DOTNET_NATIVEAOT_PLATFORMS),$(foreach rid,$(DOTNET_$(platfo
 
 # a few lookup tables, because the data we have is not always in the format we need it
 DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_iphonesimulator_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_iphoneos_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_tvsimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_tvsimulator_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_tvos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_tvos_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_maccatalyst_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
-DOTNET_mac_DYLIB_FLAGS=-lcoreclr
+DOTNET_maccatalyst_CORECLR_DYLIB_FLAGS=-lcoreclr
+DOTNET_mac_CORECLR_DYLIB_FLAGS=-lcoreclr
 
 #
 # DotNetInstallLibTemplate lipos or copies libraries into the destination directories
@@ -187,7 +192,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 define DotNetLibXamarinTemplate
 
 DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/packages/microsoft.netcore.app.runtime$(7).$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native
-DOTNET$(6)_$(2)_DYLIB_FLAGS = $(DOTNET_$(1)_DYLIB_FLAGS) -Wl,-install_name,libxamarin$(5).dylib -framework Foundation -framework CFNetwork -lz -L$(abspath $(DOTNET$(6)_$(2)_LIBDIR))
+DOTNET$(6)_$(2)_DYLIB_FLAGS = $(DOTNET_$(1)$(6)_DYLIB_FLAGS) -Wl,-install_name,libxamarin$(5).dylib -framework Foundation -framework CFNetwork -lz -L$(abspath $(DOTNET$(6)_$(2)_LIBDIR))
 
 DOTNET_$(2)_$(4)_OBJECTS   = $$(patsubst %,.libs/$(2)/%$(5).o,   $(MONOTOUCH_SOURCE_STEMS)) $$(patsubst %,.libs/$(2)/%$(5).o,   $(MONOTOUCH_$(shell echo $(2) | sed 's/.*-//' | tr a-z A-Z)_SOURCE_STEMS))
 

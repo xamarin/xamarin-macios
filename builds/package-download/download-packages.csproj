@@ -26,6 +26,16 @@
 
     <!-- and get the emscripten workload(s) as well -->
     <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(Emscriptennet7WorkloadVersion)]" Condition="'$(TrackingDotNetRuntimeSeparately)' != ''" />
+
+    <!-- remove some CoreCLR packages we don't have yet -->
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.ios-arm64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.iossimulator-x64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.iossimulator-arm64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.tvos-arm64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.tvossimulator-x64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.tvossimulator-arm64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.maccatalyst-x64" />
+    <PackageDownload Remove="Microsoft.NETCore.App.Runtime.maccatalyst-arm64" />
   </ItemGroup>
 
   <Import Project="all-package-references.csproj" />
