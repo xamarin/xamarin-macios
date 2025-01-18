@@ -131,13 +131,9 @@ all-local:: xharness
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
-.stamp-src-project-files:
-	@$(MAKE) -C $(TOP)/src project-files
-	@touch $@
-
 -include xharness/xharness.csproj.inc
 $(XHARNESS_EXECUTABLE): MSBUILD_EXE_PATH=
-$(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
+$(XHARNESS_EXECUTABLE): $(xharness_dependencies) test.config test-system.config $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(DOTNET) build "/bl:$@.binlog" $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export DOTNET:=$(DOTNET)

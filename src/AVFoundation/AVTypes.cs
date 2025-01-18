@@ -291,7 +291,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-#if !WATCH
 	public static class AVUtilities {
 
 		[DllImport (Constants.AVFoundationLibrary)]
@@ -302,7 +301,6 @@ namespace AVFoundation {
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);
 		}
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("macos")]
@@ -311,7 +309,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -391,7 +388,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -520,7 +516,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -537,7 +532,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -630,7 +624,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos15.0")]
 #else
 	[iOS (15, 0)]
-	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -674,37 +667,24 @@ namespace AVFoundation {
 	}
 #endif // !XAMCORE_5_0 && !__IOS__ && !__TVOS__
 
-#if MONOMAC
-
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[Native]
 	public enum AVCaptionUnitsType : long {
 		Unspecified = 0,
 		Cells,
 		Percent,
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
@@ -719,20 +699,15 @@ namespace AVFoundation {
 		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, /* AVCaptionUnitsType */ nuint units);
 
 		public static AVCaptionDimension Create (nfloat dimension, AVCaptionUnitsType units)
-			=> AVCaptionDimensionMake (dimension, (nuint) (long)units);
+			=> AVCaptionDimensionMake (dimension, (nuint) (long) units);
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionPoint {
 		public AVCaptionDimension X;
@@ -742,20 +717,15 @@ namespace AVFoundation {
 		static extern AVCaptionPoint AVCaptionPointMake (AVCaptionDimension x, AVCaptionDimension y);
 
 		public static AVCaptionPoint Create (AVCaptionDimension x, AVCaptionDimension y)
-			=> AVCaptionPointMake (x,y);
+			=> AVCaptionPointMake (x, y);
 	}
+#endif // __TVOS__
 
-#if NET
+#if !__TVOS__
 	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
-	[NoMacCatalyst]
-#endif
+	[SupportedOSPlatform ("ios18.0")]
+	[SupportedOSPlatform ("maccatalyst18.0")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionSize {
 		public AVCaptionDimension Width;
@@ -767,7 +737,5 @@ namespace AVFoundation {
 		public static AVCaptionSize Create (AVCaptionDimension width, AVCaptionDimension height)
 			=> AVCaptionSizeMake (width, height);
 	}
-
-#endif
-
+#endif // __TVOS__
 }

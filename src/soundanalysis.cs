@@ -21,7 +21,7 @@ using NativeHandle = System.IntPtr;
 namespace SoundAnalysis {
 
 	[ErrorDomain ("SNErrorDomain")]
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	enum SNErrorCode : long {
@@ -32,14 +32,14 @@ namespace SoundAnalysis {
 		InvalidFile,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum SNTimeDurationConstraintType : long {
 		Enumerated = 1,
 		Range = 2,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -67,7 +67,7 @@ namespace SoundAnalysis {
 
 	delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -97,7 +97,7 @@ namespace SoundAnalysis {
 		void CancelAnalysis ();
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -110,7 +110,7 @@ namespace SoundAnalysis {
 		double Confidence { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -122,13 +122,13 @@ namespace SoundAnalysis {
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("classificationForIdentifier:")]
 		[return: NullAllowed]
 		SNClassification GetClassification (string identifier);
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -140,40 +140,40 @@ namespace SoundAnalysis {
 		[Export ("initWithMLModel:error:")]
 		NativeHandle Constructor (MLModel mlModel, [NullAllowed] out NSError error);
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithClassifierIdentifier:error:")]
 		NativeHandle Constructor (string classifierIdentifier, [NullAllowed] out NSError error);
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("knownClassifications", ArgumentSemantic.Copy)]
 		string [] KnownClassifications { get; }
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("windowDuration", ArgumentSemantic.Assign)]
 		CMTime WindowDuration { get; set; }
 
-		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("windowDurationConstraint", ArgumentSemantic.Strong)]
 		SNTimeDurationConstraint WindowDurationConstraint { get; }
 	}
 
 	interface ISNRequest { }
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNRequest { }
 
 	interface ISNResult { }
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResult { }
 
 	interface ISNResultsObserving { }
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResultsObserving {
@@ -189,13 +189,13 @@ namespace SoundAnalysis {
 		void DidComplete (ISNRequest request);
 	}
 
-	[iOS (15, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 	enum SNClassifierIdentifier {
 		[Field ("SNClassifierIdentifierVersion1")]
 		Version1,
 	}
 
-	[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNTimeDurationConstraint /* privately conforms to NSCoding, NSCopying, and NSSecureCoding */

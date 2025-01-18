@@ -52,7 +52,20 @@ namespace Introspection {
 				// this is from a strongly typed dictionary, and "Weak" here means nullable (bool) as opposed to a plain bool - and this is fixed in XAMCORE_5_0 so that the Enabled property is nullable and thus we won't need the WeakEnabled version anymore.
 				return property.DeclaringType.Name == "CTFontDescriptorAttributes";
 #endif
+			case "WeakDynamicRangePolicy":
+				switch (property.DeclaringType.Name) {
+				case "AVAssetImageGenerator":
+					// This is a weakly typed version of a NSString enum property, so not overridable [Export] (the property is [Sealed])
+					return true;
+				}
+				return false;
 			}
+
+			switch (property.DeclaringType.Name) {
+			case "CHHapticPatternDefinition":
+				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
+			}
+
 			return false;
 		}
 

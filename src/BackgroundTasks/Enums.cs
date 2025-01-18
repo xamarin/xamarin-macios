@@ -14,7 +14,7 @@ using ObjCRuntime;
 
 namespace BackgroundTasks {
 
-	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[TV (13, 0), NoMac, iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("BGTaskSchedulerErrorDomain")]

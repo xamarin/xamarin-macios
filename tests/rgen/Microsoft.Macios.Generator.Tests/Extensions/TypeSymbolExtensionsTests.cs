@@ -117,7 +117,7 @@ public class ParentClass{
 	}
 }
 ";
-			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
+			Func<SyntaxNode, CSharpSyntaxNode?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
 			var nestedMethodNestedClassParents = new [] { "ChildClass", "ParentClass" };
 			yield return [nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
@@ -152,7 +152,7 @@ namespace Test {
 			yield return [nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
 
 
-			Func<SyntaxNode, MemberDeclarationSyntax?> getEnumValue =
+			Func<SyntaxNode, CSharpSyntaxNode?> getEnumValue =
 				rootNode => rootNode.DescendantNodes ().OfType<EnumMemberDeclarationSyntax> ().LastOrDefault ();
 			const string enumValueNested = @"
 using System;
@@ -169,6 +169,26 @@ public class ParentClass {
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
 			yield return [enumValueNested, getEnumValue, enumParensts];
+
+			Func<SyntaxNode, CSharpSyntaxNode?> getGetterValue =
+				rootNode => rootNode.DescendantNodes ().OfType<AccessorDeclarationSyntax> ().LastOrDefault ();
+			const string propertyGetter = @"
+using System;
+
+namespace Test;
+
+public class ParentClass {
+	public class ChildClass {
+		public int Property {
+			get {
+				return 0;
+			}
+		}
+	}
+}
+";
+			var getterParents = new [] { "Property", "ChildClass", "ParentClass" };
+			yield return [propertyGetter, getGetterValue, getterParents];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -177,7 +197,7 @@ public class ParentClass {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetParents>]
 	public void GetParentTests (ApplePlatform platform, string inputText,
-		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
+		Func<SyntaxNode, CSharpSyntaxNode?> getNode, string [] expectedParents)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
@@ -432,20 +452,8 @@ public partial class MyClass {
 	public static partial string Name { get; set; } = string.Empty;
 }
 ";
-			yield return [noAttrPropertyClass, Field.Default, null!];
+			yield return [noAttrPropertyClass, Property.Default, null!];
 
-			const string fieldPropertyClass = @"
-using ObjCBindings;
-
-namespace NS;
-
-[BindingType]
-public partial class MyClass {
-	[Export<Field> (""CONSTANT"")]
-	public static partial string Name { get; set; } = string.Empty;
-}
-";
-			yield return [fieldPropertyClass, Field.Default, new ExportData<Field> ("CONSTANT")];
 			const string singlePropertyClass = @"
 using ObjCBindings;
 
@@ -499,6 +507,47 @@ public partial class MyClass {
 		Assert.NotNull (symbol);
 		var exportData = symbol.GetExportData<T> ();
 		Assert.Equal (expectedData, exportData);
+	}
+
+	class TestDataGetFieldData : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string fieldPropertyClass = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType]
+public partial class MyClass {
+	[Field<Property> (""CONSTANT"")]
+	public static partial string Name { get; set; } = string.Empty;
+}
+";
+			yield return [fieldPropertyClass, Property.Default, new FieldData<Property> ("CONSTANT")];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataGetFieldData>]
+	void GetFieldData<T> (ApplePlatform platform, string inputText, T @enum, FieldData<T>? expectedData)
+		where T : Enum
+	{
+		Assert.NotNull (@enum);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<PropertyDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		Assert.NotNull (semanticModel);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		var fieldData = symbol.GetFieldData<T> ();
+		Assert.Equal (expectedData, fieldData);
 	}
 
 	class TestDataIsBlittablePrimitiveType : IEnumerable<object []> {

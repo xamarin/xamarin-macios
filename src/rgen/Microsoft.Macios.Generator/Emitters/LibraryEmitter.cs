@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
-using Microsoft.Macios.Generator.DataModel;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -18,16 +17,31 @@ class LibraryEmitter (
 	public string SymbolName => "Libraries";
 	INamedTypeSymbol? LibrarySymbol { get; } = context.Compilation.GetTypeByMetadataName ("ObjCRuntime.Libraries");
 
-	bool IsSymbolPresent (string className)
-		=> LibrarySymbol is not null &&
+	/// <summary>
+	/// Verify if the symbol is already defined by the runtime
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	bool IsSymbolPresent (string name)
+	{
+		var className = name.Replace (".", string.Empty);
+		return LibrarySymbol is not null &&
 		   LibrarySymbol.GetMembers ().OfType<INamedTypeSymbol> ()
 			   .Any (v => v.Name == className);
+	}
 
 	public IEnumerable<string> UsingStatements { get; } = [];
 
-	public bool TryEmit ([NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
+	public bool TryEmit (ImmutableArray<(string LibraryName, string? LibraryPath)> libraries,
+		[NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{
 		diagnostics = null;
+		// we do not want to generate the library partial class if we already contain all the symbols,
+		// this happens because we are using rgen while bgen is still a thing. Filter those libraries out
+		var filteredLibs = libraries.Where (info => !IsSymbolPresent (info.LibraryName)).ToArray ();
+		if (filteredLibs.Length == 0) {
+			return true;
+		}
 
 		builder.AppendLine ("using Foundation;");
 		builder.AppendLine ("using ObjCBindings;");
@@ -43,13 +57,9 @@ class LibraryEmitter (
 
 		builder.AppendGeneratedCodeAttribute ();
 		using (var classBlock = builder.CreateBlock ($"static partial class {SymbolName}", true)) {
-			foreach (var (name, path) in context.Libraries.OrderBy (v => v.Key,
+			foreach (var (name, path) in filteredLibs.OrderBy (v => v.LibraryName,
 						 StringComparer.Ordinal)) {
-				// verify if the symbol is already defined by the runtime
 				var className = name.Replace (".", string.Empty);
-				if (IsSymbolPresent (className))
-					continue;
-
 				using (var nestedClass =
 					   classBlock.CreateBlock ($"static public class {className}", true)) {
 					if (name == "__Internal") {

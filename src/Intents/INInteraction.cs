@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if IOS || WATCH
+#if IOS
 using System;
 using Foundation;
 using ObjCRuntime;

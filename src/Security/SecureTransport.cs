@@ -10,7 +10,6 @@ namespace Security {
 	/// <summary>Enumerates SSL protocols.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TlsProtocolVersion' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TlsProtocolVersion' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'TlsProtocolVersion' instead.")]
 	public enum SslProtocol {
@@ -31,7 +30,7 @@ namespace Security {
 		All = 6,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_protocol_version_t)
 	[NativeName ("tls_protocol_version_t")]
@@ -44,14 +43,13 @@ namespace Security {
 		Dtls12 = 65277,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
 	[NativeName ("tls_ciphersuite_t")]
 	public enum TlsCipherSuite : ushort {
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
 		[Deprecated (PlatformName.iOS, 18, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
 		[Deprecated (PlatformName.TvOS, 18, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		RsaWith3desEdeCbcSha = 10,
@@ -63,7 +61,6 @@ namespace Security {
 		RsaWithAes256CbcSha256 = 61,
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
 		[Deprecated (PlatformName.iOS, 18, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
 		[Deprecated (PlatformName.TvOS, 18, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		EcdheEcdsaWith3desEdeCbcSha = 49160,
@@ -71,7 +68,6 @@ namespace Security {
 		EcdheEcdsaWithAes256CbcSha = 49162,
 		[Deprecated (PlatformName.MacOSX, 15, 0)]
 		[Deprecated (PlatformName.iOS, 18, 0)]
-		[Deprecated (PlatformName.WatchOS, 11, 0)]
 		[Deprecated (PlatformName.TvOS, 18, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 18, 0)]
 		EcdheRsaWith3desEdeCbcSha = 49170,
@@ -92,7 +88,7 @@ namespace Security {
 		Chacha20Poly1305Sha256 = 4867
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_group_t)
 	[NativeName ("tls_ciphersuite_group_t")]
@@ -101,7 +97,7 @@ namespace Security {
 		Compatibility,
 		Legacy,
 		Ats,
-		AtsCompatibility
+		AtsCompatibility,
 	}
 
 	// subset of OSStatus (int)
@@ -193,7 +189,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslSessionOption {
 		BreakOnServerAuth,
@@ -227,12 +222,11 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslAuthenticate {
 		Never,
 		Always,
-		Try
+		Try,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -241,7 +235,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslProtocolSide {
 		Server,
@@ -254,11 +247,10 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslConnectionType {
 		Stream,
-		Datagram
+		Datagram,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -267,7 +259,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslSessionState {
 		Invalid = -1,
@@ -275,7 +266,7 @@ namespace Security {
 		Handshake,
 		Connected,
 		Closed,
-		Aborted
+		Aborted,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -283,12 +274,11 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslSessionStrengthPolicy {
 		Default,
 		ATSv1,
-		ATSv1NoPFS
+		ATSv1NoPFS,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -297,13 +287,12 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: Constants.UseNetworkInstead)]
 	public enum SslClientCertificateState {
 		None,
 		Requested,
 		Sent,
-		Rejected
+		Rejected,
 	}
 
 #if !NET
@@ -312,7 +301,6 @@ namespace Security {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TlsCipherSuite' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'TlsCipherSuite' instead.")]
 #if MONOMAC || __MACCATALYST__
 	public enum SslCipherSuite : uint {
 #else
@@ -479,11 +467,14 @@ namespace Security {
 
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TlsCipherSuiteGroup' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	// typedef CF_ENUM(int, SSLCiphersuiteGroup)
 	public enum SslCipherSuiteGroup {
-		Default, Compatibility, Legacy, Ats, AtsCompatibility,
+		Default,
+		Compatibility,
+		Legacy,
+		Ats,
+		AtsCompatibility,
 	}
 }

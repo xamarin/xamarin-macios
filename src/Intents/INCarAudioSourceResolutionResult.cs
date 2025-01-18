@@ -17,9 +17,7 @@ namespace Intents {
 
 		public static INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedValue)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return SuccessWithResolvedCarAudioSource (resolvedValue);
 			else
@@ -29,9 +27,7 @@ namespace Intents {
 
 		public static INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource valueToConfirm)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return ConfirmationRequiredWithCarAudioSourceToConfirm (valueToConfirm);
 			else

@@ -1,4 +1,4 @@
-#if !WATCH && !TVOS
+#if !TVOS
 
 using System;
 

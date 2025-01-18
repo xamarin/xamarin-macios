@@ -7,8 +7,6 @@
 // Copyright 2013 Xamarin Inc
 //
 
-#if !WATCH
-
 using System.Collections;
 using System.Collections.Generic;
 
@@ -45,5 +43,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // WATCH

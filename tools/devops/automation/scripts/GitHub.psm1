@@ -259,20 +259,26 @@ class GitHubComments {
         # if the object has a list of pr ids, we are a pr, else check the resource trigger
         if ($this.PRIds.Length -gt 0) {
             return $true
-        }
-
-        if ($Env:BUILD_REASON -eq "PullRequest") {
-            return $true;
-        }
-
-        if (($Env:BUILD_REASON -eq "ResourceTrigger")) {
-            $sourceBranch = $Env:BUILD_SOURCEBRANCH
-            if ($sourceBranch.StartsWith("refs/pull/") -and $sourceBranch.EndsWith("/merge")) {
-                return $true
+        } else {
+            # we might have gotten here because of the trigger type. This means that we are in a PR BUT
+            # we did not get the PR ids, but those can be found in the diff evirtoment vars
+            if ($Env:BUILD_REASON -eq "PullRequest") {
+                # set the PR ids to the PR we have in the VSTS env vars
+                $this.PRIds = @($Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER)
+                return $true;
             }
-        }
 
-        return $false
+            if (($Env:BUILD_REASON -eq "ResourceTrigger")) {
+                $sourceBranch = $Env:BUILD_SOURCEBRANCH
+                if ($sourceBranch.StartsWith("refs/pull/") -and $sourceBranch.EndsWith("/merge")) {
+                    # Set the PRs parsing the source branch
+                    $this.PRIds = @($sourceBranch.Replace("refs/pull/", "").Replace("/merge", ""))
+                    return $true
+                }
+            }
+
+            return $false
+        }
     }
 
     [void] WriteCommentHeader(

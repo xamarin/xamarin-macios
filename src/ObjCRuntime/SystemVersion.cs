@@ -64,11 +64,6 @@ namespace ObjCRuntime {
 		{
 			return UIKit.UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
 		}
-#elif __WATCHOS__
-		internal static bool CheckwatchOS (int major, int minor)
-		{
-			return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor);
-		}
 #else
 #error Unknown platform
 #endif

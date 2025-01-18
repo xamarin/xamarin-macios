@@ -58,7 +58,7 @@ namespace CoreNFC {
 		NdefReaderSessionErrorZeroLengthMessage = 403,
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Enumerates the kinds of NFC tags that can be read (currently only ISO-15693).</summary>
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -75,7 +75,7 @@ namespace CoreNFC {
 		MiFare = 4,
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Enumerates the kinds of content-type available to <see cref="T:CoreNFC.NFCNdefPayload" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NFCTypeNameFormat : byte { // uint8_t
@@ -88,7 +88,7 @@ namespace CoreNFC {
 		Unchanged = 0x06,
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>A <see cref="T:CoreNFC.NFCReaderSession" /> for reading ISO-15693 vicinity cards.</summary>
 	[Deprecated (PlatformName.iOS, 17, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 17, 0)]
@@ -112,7 +112,7 @@ namespace CoreNFC {
 		void RestartPolling ();
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Subclass of <see cref="T:CoreNFC.NFCTagCommandConfiguration" /> that contains further configuration for commands to ISO-15693 tags.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693CustomCommandConfiguration")]
@@ -134,7 +134,7 @@ namespace CoreNFC {
 		NativeHandle Constructor (nuint manufacturerCode, nuint customCommandCode, [NullAllowed] NSData requestParameters, nuint maximumRetries, double retryInterval);
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693ReadMultipleBlocksConfiguration")]
 	interface NFCIso15693ReadMultipleBlocksConfiguration {
@@ -161,7 +161,7 @@ namespace CoreNFC {
 	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
 	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Implements <see cref="T:CoreNFC.INFCTag" /> with data associated with an ISO-15693 vicinity card.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCISO15693Tag")]
@@ -625,7 +625,7 @@ namespace CoreNFC {
 	/// <summary>The delegate-object interface for <see cref="T:CoreNFC.NFCReaderSession" /> objects.</summary>
 	interface INFCReaderSessionDelegate { }
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Delegate object for <see cref="T:CoreNFC.NFCReaderSession" /> objects.</summary>
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -715,7 +715,7 @@ namespace CoreNFC {
 #endif
 	}
 
-	//[NoTV, NoWatch, NoMac]
+	//[NoTV, NoMac]
 	/// <summary>Parameters for sending a command to an NFC tag.</summary>
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

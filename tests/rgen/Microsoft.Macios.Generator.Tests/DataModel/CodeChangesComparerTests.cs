@@ -5,6 +5,7 @@ using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -191,7 +192,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -207,7 +214,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		var changes2 = new CodeChanges (
@@ -217,7 +230,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name2",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (comparer.Equals (changes1, changes2));
@@ -1229,7 +1248,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1243,8 +1262,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -1260,7 +1278,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				)
 			]
@@ -1375,7 +1393,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1389,9 +1407,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
-							ReferenceKind = ReferenceKind.Out,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 						},
 					]
 				),
@@ -1515,7 +1531,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1529,8 +1545,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -1546,7 +1561,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				)
 			]
@@ -1669,14 +1684,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				),
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1690,8 +1705,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -1823,7 +1837,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false),
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input"),
 					]
 				),
 			]
@@ -1939,7 +1953,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -1953,8 +1967,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -2082,7 +2095,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2096,8 +2109,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -2113,7 +2125,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				)
 			]
@@ -2228,14 +2240,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				),
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2249,8 +2261,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -2378,7 +2389,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2392,8 +2403,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -2409,7 +2419,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				)
 			]
@@ -2531,14 +2541,14 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false)
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input")
 					]
 				),
 				new (
 					type: "NS.MyClass",
 					name: "TryGetString",
 					returnType: new (
-						type: "bool",
+						name: "bool",
 						isNullable: false,
 						isBlittable: false,
 						isSmartEnum: false,
@@ -2552,8 +2562,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]

@@ -9,7 +9,6 @@
 
 #nullable enable
 
-#if !WATCH
 using System;
 
 using Foundation;
@@ -231,4 +230,3 @@ namespace UIKit {
 		public UIFontFeature (CTFontFeatureCJKRomanSpacing.Selector featureSelector) : this (FontFeatureGroup.CJKRomanSpacing, (int) featureSelector, featureSelector) { }
 	}
 }
-#endif

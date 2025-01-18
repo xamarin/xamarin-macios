@@ -7,7 +7,7 @@
 // Copyright 2022 Microsoft Corp.
 //
 
-#if IOS || WATCH || __MACCATALYST__
+#if IOS || __MACCATALYST__
 
 #nullable enable
 
@@ -30,7 +30,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+		[iOS (16,0), NoMac, NoTV, MacCatalyst (16,0)]
 #endif // NET
 		[DllImport (Constants.NearbyInteractionLibrary)]
 		static extern NativeHandle /* NSString */ NIAlgorithmConvergenceStatusReasonDescription (NativeHandle /* NIAlgorithmConvergenceStatusReason */ reason);
@@ -41,7 +41,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+		[iOS (16,0), NoMac, NoTV, MacCatalyst (16,0)]
 #endif // NET
 		public static NSString GetConvergenceStatusReason (NIAlgorithmConvergenceStatusReason reason)
 		{
@@ -49,4 +49,4 @@ namespace NearbyInteraction {
 		}
 	}
 }
-#endif // IOS || WATCH || __MACCATALYST__
+#endif // IOS || __MACCATALYST__

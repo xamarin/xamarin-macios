@@ -3,10 +3,20 @@
 <Project>
 	<ItemGroup>
 		<TestVariations Include="interpreter" Description="Run with the interpreter ('UseInterpreter=true')" />
+		<TestVariations Include="bundle-original-resources" Description="Bundle original resources ('BundleOriginalResources=true')" />
+		<TestVariations Include="do-not-bundle-original-resources" Description="Do not original resources ('BundleOriginalResources=false')" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TestVariation)' == 'interpreter'">
 		<UseInterpreter>true</UseInterpreter>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TestVariation)' == 'bundle-original-resources'">
+		<BundleOriginalResources>true</BundleOriginalResources>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TestVariation)' == 'do-not-bundle-original-resources'">
+		<BundleOriginalResources>false</BundleOriginalResources>
 	</PropertyGroup>
 
 	<Target Name="ValidateTestVariation" Condition="'$(TestVariation)' != ''" BeforeTargets="Build">

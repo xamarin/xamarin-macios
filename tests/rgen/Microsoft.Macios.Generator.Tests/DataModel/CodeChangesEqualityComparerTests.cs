@@ -3,6 +3,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -109,7 +110,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (equalityComparer.Equals (changes1, changes2));
@@ -125,7 +132,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		var changes2 = new CodeChanges (
@@ -135,7 +148,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ()) {
 			EnumMembers = [
-				new EnumMember (name: "name2", fieldData: new (), symbolAvailability: new (), attributes: [])
+				new EnumMember (
+					name: "name2",
+					libraryName: "Test",
+					libraryPath: "/path/to/library",
+					fieldData: new (),
+					symbolAvailability: new (),
+					attributes: [])
 			],
 		};
 		Assert.False (equalityComparer.Equals (changes1, changes2));
@@ -774,7 +793,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					])
 			],
 		};
@@ -858,7 +877,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					])
 			],
 		};
@@ -936,7 +955,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					])
 			],
 		};
@@ -1019,7 +1038,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					]),
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
@@ -1097,7 +1116,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					]),
 			],
 		};
@@ -1184,7 +1203,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					]),
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
@@ -1268,7 +1287,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [],
 					modifiers: [],
 					parameters: [
-						new (position: 0, type: "string", name: "name", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "name"),
 					]),
 			],
 		};

@@ -8,8 +8,6 @@
 //
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -156,5 +154,3 @@ namespace CoreVideo {
 			/* CVMetalTextureRef __nullable * __nonnull */ IntPtr* textureOut);
 	}
 }
-
-#endif // __WATCHOS__

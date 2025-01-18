@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
@@ -50,7 +52,14 @@ static class TypeSymbolExtensions {
 	public static ImmutableArray<ISymbol> GetParents (this ISymbol symbol)
 	{
 		var result = new List<ISymbol> ();
-		var current = symbol.ContainingSymbol;
+		// when looking for the parents of a symbol we need to make a distinction between a general ISymbol such as
+		// a INamedType symbol and a IMethodSymbol that represents a property accessor. Properties are NOT treated as
+		// containing symbols of their accessors. Accessors are related to their property symbols via the AssociatedSymbol
+		// property. In our code generator we want to include the property symbol as a parent of the accessor to combine
+		// correctly the availability attributes.
+		var current = (symbol is IMethodSymbol { AssociatedSymbol: not null } methodSymbol)
+			? methodSymbol.AssociatedSymbol
+			: symbol.ContainingSymbol;
 		if (current is null)
 			return [];
 
@@ -126,6 +135,7 @@ static class TypeSymbolExtensions {
 		foreach (var parent in GetParents (symbol)) {
 			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
 		}
+
 		return availability;
 	}
 
@@ -135,12 +145,14 @@ static class TypeSymbolExtensions {
 		if (boundAttributes.Length == 0) {
 			return false;
 		}
+
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
 			if (attrName == attribute) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -159,6 +171,7 @@ static class TypeSymbolExtensions {
 			// no attrs in the symbol, therefore the symbol is supported in all platforms
 			return default;
 		}
+
 		// we are looking for the basic BindingAttribute attr
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
@@ -193,22 +206,19 @@ static class TypeSymbolExtensions {
 		return default;
 	}
 
-	/// <summary>
-	/// Retrieve the data of an export attribute on a symbol.
-	/// </summary>
-	/// <param name="symbol">The tagged symbol.</param>
-	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
-	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
-	/// <remarks>If the passed enum is unknown or not supproted as an enum for the export attribute, null will be
-	/// returned.</remarks>
-	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
+	delegate string? GetAttributeNames ();
+
+	delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
+
+	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse)
+		where T : struct
 	{
 		var attributes = symbol.GetAttributeData ();
 		if (attributes.Count == 0)
 			return null;
 
 		// retrieve the name of the attribute based on the flag
-		var attrName = AttributesNames.GetFieldAttributeName<T> ();
+		var attrName = getAttributeNames ();
 		if (attrName is null)
 			return null;
 		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
@@ -220,10 +230,32 @@ static class TypeSymbolExtensions {
 		if (fieldSyntax is null)
 			return null;
 
-		if (ExportData<T>.TryParse (exportAttrData, out var exportData))
+		if (tryParse (exportAttrData, out var exportData))
 			return exportData.Value;
 		return null;
 	}
+
+	/// <summary>
+	/// Retrieve the data of an export attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
+	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
+	/// <remarks>If the passed enum is unknown or not supported as an enum for the export attribute, null will be
+	/// returned.</remarks>
+	public static ExportData<T>? GetExportData<T> (this ISymbol symbol) where T : Enum
+		=> GetAttribute<ExportData<T>> (symbol, AttributesNames.GetExportAttributeName<T>, ExportData<T>.TryParse);
+
+	/// <summary>
+	/// Retrieve the data of a field attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
+	/// <returns>The data of the export attribute if present or null if it was not found.</returns>
+	/// <remarks>If the passed enum is unknown or not supported as an enum for the field attribute, null will be
+	/// returned.</remarks>
+	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
+		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
 
 	/// <summary>
 	/// Returns if a type is blittable or not.
@@ -273,7 +305,8 @@ static class TypeSymbolExtensions {
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
 				var layoutAttribute = symbol.GetAttributes ()
-					.FirstOrDefault (attr => attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
+					.FirstOrDefault (attr =>
+						attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
 
 				if (layoutAttribute is not null) {
 					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
@@ -300,5 +333,47 @@ static class TypeSymbolExtensions {
 			// any other types are not blittable
 			return false;
 		}
+	}
+
+	/// <summary>
+	/// Returns the parents and all the implemented interfaces (including those of the parents).
+	/// </summary>
+	/// <param name="symbol">The symbol whose inheritance we want to retrieve.</param>
+	/// <param name="isNativeObject">If the type implements the INativeObject interface.</param>
+	/// <param name="parents">An immutable array of the parents in order from closest to furthest.</param>
+	/// <param name="interfaces">All implemented interfaces by the type and its parents.</param>
+	/// <param name="isNSObject">If the type inherits from NSObject.</param>
+	public static void GetInheritance (
+		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out ImmutableArray<string> parents,
+		out ImmutableArray<string> interfaces)
+	{
+		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
+		const string nsObjectClass = "Foundation.NSObject";
+
+		isNSObject = false;
+		isNativeObject = false;
+
+		// parents will be returned directly in a Immutable array via a builder since the order is important
+		// interfaces will use a hash set because we do not want duplicates.
+		var parentsBuilder = ImmutableArray.CreateBuilder<string> ();
+		// init the set with all the interfaces of the current symbol
+		var interfacesSet = new HashSet<string> (symbol.Interfaces.Select (i => i.ToDisplayString ()));
+
+		var currentType = symbol.BaseType;
+		while (currentType is not null) {
+			// check if we reach the NSObject as a parent
+			var parentName = currentType.ToDisplayString ().Trim ();
+			isNSObject |= parentName == nsObjectClass;
+			parentsBuilder.Add (parentName);
+
+			// union with the current interfaces
+			interfacesSet.UnionWith (currentType.Interfaces.Select (i => i.ToDisplayString ()));
+
+			currentType = currentType.BaseType;
+		}
+
+		isNativeObject = interfacesSet.Contains (nativeObjectInterface);
+		parents = parentsBuilder.ToImmutable ();
+		interfaces = [.. interfacesSet];
 	}
 }

@@ -316,7 +316,7 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 #else
-		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern byte MACaptionAppearanceIsCustomized (nint /* MACaptionAppearanceDomain */ domain);
@@ -330,7 +330,7 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 #else
-		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0), Watch (11, 0)]
+		[TV (18, 0), iOS (18, 0), MacCatalyst (18, 0), Mac (15, 0)]
 #endif
 		public static bool IsCustomized (MACaptionAppearanceDomain domain)
 		{
