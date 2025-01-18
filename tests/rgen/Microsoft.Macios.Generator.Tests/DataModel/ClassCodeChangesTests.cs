@@ -734,7 +734,7 @@ public partial class MyClass {
 					]
 				}
 			];
-			
+
 			const string customMarshallingProperty = @"
 using ObjCBindings;
 
@@ -796,8 +796,8 @@ public partial class MyClass {
 							]
 						) {
 							ExportPropertyData = new (
-								selector: "name", 
-								argumentSemantic: ArgumentSemantic.None, 
+								selector: "name",
+								argumentSemantic: ArgumentSemantic.None,
 								flags: Property.Default | Property.CustomMarshalDirective) {
 								NativePrefix = "xamarin_",
 								Library = "__Internal"

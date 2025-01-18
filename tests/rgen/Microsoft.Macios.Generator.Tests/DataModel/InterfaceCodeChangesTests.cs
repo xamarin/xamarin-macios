@@ -420,7 +420,7 @@ public partial interface IProtocol {
 					]
 				}
 			];
-			
+
 			const string customMarshallingProperty = @"
 using ObjCBindings;
 
@@ -482,8 +482,8 @@ public partial interface MyClass {
 							]
 						) {
 							ExportPropertyData = new (
-								selector: "name", 
-								argumentSemantic: ArgumentSemantic.None, 
+								selector: "name",
+								argumentSemantic: ArgumentSemantic.None,
 								flags: Property.Default | Property.CustomMarshalDirective) {
 								NativePrefix = "xamarin_",
 								Library = "__Internal"
