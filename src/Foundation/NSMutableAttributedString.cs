@@ -27,8 +27,6 @@
 //
 //
 
-#if !WATCH // This file needs some work before it can get included in WatchOS
-
 using System;
 #if !MONOMAC
 using UIKit;
@@ -103,5 +101,3 @@ namespace Foundation {
 #endif
 	}
 }
-
-#endif // !WATCH

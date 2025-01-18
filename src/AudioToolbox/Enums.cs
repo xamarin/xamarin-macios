@@ -5,7 +5,6 @@ using ObjCRuntime;
 #nullable enable
 
 namespace AudioToolbox {
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum AudioSettingsFlags : uint {
@@ -15,7 +14,6 @@ namespace AudioToolbox {
 		UserInterfaceParameter = (1u << 3),
 	}
 
-	[NoWatch]
 	[TV (14, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
@@ -25,7 +23,6 @@ namespace AudioToolbox {
 		ExternalSpeakers = 3,
 	}
 
-	[NoWatch]
 	[TV (14, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
@@ -34,7 +31,6 @@ namespace AudioToolbox {
 		Bypass = 1,
 	}
 
-	[NoWatch]
 	[TV (14, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
@@ -45,7 +41,6 @@ namespace AudioToolbox {
 		AmbienceBed = 3,
 	}
 
-	[NoWatch]
 	[TV (16, 0)]
 	[Mac (13, 0)]
 	[iOS (16, 0)]

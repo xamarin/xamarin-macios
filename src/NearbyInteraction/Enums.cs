@@ -13,7 +13,7 @@ using System;
 
 namespace NearbyInteraction {
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[ErrorDomain ("NIErrorDomain")]
 	[Native]
@@ -30,7 +30,7 @@ namespace NearbyInteraction {
 		ActiveExtendedDistanceSessionsLimitExceeded = -5880,
 	}
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum NINearbyObjectRemovalReason : long {
@@ -38,7 +38,7 @@ namespace NearbyInteraction {
 		PeerEnded,
 	}
 
-	[iOS (16, 0), NoMac, Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), NoMac, NoTV, MacCatalyst (16, 0)]
 	[Native]
 	public enum NIAlgorithmConvergenceStatus : long {
 		Unknown,
@@ -46,7 +46,7 @@ namespace NearbyInteraction {
 		Converged,
 	}
 
-	[iOS (16, 0), NoMac, Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), NoMac, NoTV, MacCatalyst (16, 0)]
 	[Native]
 	public enum NINearbyObjectVerticalDirectionEstimate : long {
 		Unknown = 0,

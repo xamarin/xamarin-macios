@@ -1,10 +1,6 @@
 
 ## from iOS 4.0 to 5.1
 
-## iOS Only. Available on OSX but probably private selector mostly decorated with NS_AVAILABLE_IOS
-!missing-field! AVMediaCharacteristicEasyToRead not bound
-!missing-field! AVVideoDecompressionPropertiesKey not bound
-
 ## unsorted
 !unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
 !unknown-native-enum! AVCaptureLensStabilizationStatus bound
@@ -27,16 +23,24 @@
 !missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion not bound
 
 
-# This fields are use for a notifications that returns a AVAudioSessionRouteDescription
-# which cannot be found on macOS
-
 # not applicable to macOS
 !extra-enum-value! Managed value -11818 for AVError.SessionWasInterrupted not found in native headers
 !extra-enum-value! Managed value -11819 for AVError.MediaServicesWereReset not found in native headers
 !extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
 !extra-enum-value! Managed value -11847 for AVError.OperationInterrupted not found in native headers
 
-## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
-## so these selectors have been bound manually
-!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
-!missing-selector! AVAudioPlayer::initWithData:error: not bound
+# There are two enum values with the same value, one available on macOS and the other one isn't - xtro reports an error about the one that is available, because xtro incorrectly maps the value to the enum value that isn't.
+!extra-enum-value! Managed value 1 for AVAudioSessionRouteSharingPolicy.LongFormAudio is available for the current platform while the value in the native header is not
+
+# Removed in XAMCORE_5_0
+!extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1970168948 for AVAudioSessionRecordPermission.Undetermined is available for the current platform while the value in the native header is not
+!unknown-field! AVAudioSessionInterruptionNotification bound
+!unknown-field! AVAudioSessionInterruptionOptionKey bound
+!unknown-field! AVAudioSessionInterruptionTypeKey bound
+!unknown-field! AVAudioSessionMediaServicesWereLostNotification bound
+!unknown-field! AVAudioSessionMediaServicesWereResetNotification bound
+
+# isEqual: is already exposed from NSObject, no need to expose again
+!missing-selector! AVCaptionRegion::isEqual: not bound

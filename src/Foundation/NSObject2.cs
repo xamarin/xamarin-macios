@@ -42,9 +42,7 @@ using ObjCRuntime;
 using Xamarin.Bundler;
 #if MONOTOUCH
 using UIKit;
-#if !WATCH
 using CoreAnimation;
-#endif
 #endif
 using CoreGraphics;
 #endif
@@ -869,10 +867,8 @@ namespace Foundation {
 					return NSValue.FromCGAffineTransform ((CGAffineTransform) obj);
 				else if (t == typeof (UIEdgeInsets))
 					return NSValue.FromUIEdgeInsets ((UIEdgeInsets) obj);
-#if !WATCH
 				else if (t == typeof (CATransform3D))
 					return NSValue.FromCATransform3D ((CATransform3D) obj);
-#endif
 #endif
 				// last chance for types like CGPath, CGColor... that are not NSObject but are CFObject
 				// see https://bugzilla.xamarin.com/show_bug.cgi?id=8458

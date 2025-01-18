@@ -6,23 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace ObjCBindings {
 
 	/// <summary>
-	/// The exported constant/field is a class/interface property field.
-	/// </summary>
-	[Flags]
-	[Experimental ("APL0003")]
-	public enum Field {
-		/// <summary>
-		/// Use the default values.
-		/// </summary>
-		Default = 0,
-
-		/// <summary>
-		/// Field represents a notification in ObjC.
-		/// </summary>
-		Notification = 1 << 2,
-	}
-
-	/// <summary>
 	/// Field flag that states that the field is used as a Enum value.
 	/// </summary>
 	[Flags]

@@ -6,8 +6,6 @@
 // Copyright 2014 Xamarin
 //
 
-#if !WATCH
-
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
@@ -26,5 +24,3 @@ namespace UIKit {
 		}
 	}
 }
-
-#endif // !WATCH

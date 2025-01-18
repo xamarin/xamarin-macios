@@ -33,9 +33,7 @@ using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-#if !WATCH
 using CoreImage;
-#endif
 #if !COREBUILD
 using Keys = ImageIO.CGImageProperties;
 #endif
@@ -168,7 +166,6 @@ namespace CoreGraphics {
 			}
 		}
 
-#if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
 				return (CIImageOrientation?) GetInt32Value (Keys.Orientation);
@@ -177,7 +174,6 @@ namespace CoreGraphics {
 				SetNumberValue (Keys.Orientation, (int?) value);
 			}
 		}
-#endif
 
 		public int? PixelHeight {
 			get {
@@ -457,7 +453,6 @@ namespace CoreGraphics {
 		{
 		}
 
-#if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
 				return (CIImageOrientation?) GetInt32Value (Keys.TIFFOrientation);
@@ -466,7 +461,6 @@ namespace CoreGraphics {
 				SetNumberValue (Keys.TIFFOrientation, (int?) value);
 			}
 		}
-#endif
 
 		public int? XResolution {
 			get {

@@ -164,17 +164,17 @@ namespace ReplayKit {
 		void StopRecording (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("exportClipToURL:duration:completionHandler:")]
 		void ExportClip (NSUrl url, double duration, [NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("startClipBufferingWithCompletionHandler:")]
 		void StartClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 
 		[Async]
-		[TV (15, 4), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 4), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("stopClipBufferingWithCompletionHandler:")]
 		void StopClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 	}
@@ -376,11 +376,8 @@ namespace ReplayKit {
 		[Export ("updateServiceInfo:")]
 		void UpdateServiceInfo (NSDictionary<NSString, INSCoding> serviceInfo);
 
-		// NSInvalidArgumentException -[RPBroadcastHandler updateBroadcastURL:]: unrecognized selector sent to instance 0x608001a4b160
-		//	https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
-		//
-		//[Export ("updateBroadcastURL:")]
-		//void UpdateBroadcastUrl (NSUrl broadcastUrl);
+		[Export ("updateBroadcastURL:")]
+		void UpdateBroadcastUrl (NSUrl broadcastUrl);
 	}
 
 	/// <related type="externalDocumentation" href="https://developer.apple.com/reference/ReplayKit/RPBroadcastMP4ClipHandler">Apple documentation for <c>RPBroadcastMP4ClipHandler</c></related>

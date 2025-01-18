@@ -31,23 +31,23 @@ using NativeHandle = System.IntPtr;
 
 namespace NearbyInteraction {
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NIConfiguration : NSCopying, NSSecureCoding { }
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NIDiscoveryToken : NSCopying, NSSecureCoding {
-		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("deviceCapabilities", ArgumentSemantic.Copy)]
 		INIDeviceCapability DeviceCapabilities { get; }
 	}
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NIConfiguration))]
 	[DisableDefaultCtor]
@@ -58,16 +58,16 @@ namespace NearbyInteraction {
 		[Export ("initWithPeerToken:")]
 		NativeHandle Constructor (NIDiscoveryToken peerToken);
 
-		[NoWatch, iOS (16, 0), MacCatalyst (16, 0), NoTV, NoMac]
+		[iOS (16, 0), MacCatalyst (16, 0), NoTV, NoMac]
 		[Export ("cameraAssistanceEnabled")]
 		bool CameraAssistanceEnabled { [Bind ("isCameraAssistanceEnabled")] get; set; }
 
-		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("extendedDistanceMeasurementEnabled")]
 		bool ExtendedDistanceMeasurementEnabled { [Bind ("isExtendedDistanceMeasurementEnabled")] get; set; }
 	}
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -87,20 +87,20 @@ namespace NearbyInteraction {
 		[Field ("NINearbyObjectDistanceNotAvailable")]
 		float DistanceNotAvailable { get; }
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Field ("NINearbyObjectAngleNotAvailable")]
 		float AngleNotAvailable { get; }
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("verticalDirectionEstimate")]
 		NINearbyObjectVerticalDirectionEstimate VerticalDirectionEstimate { get; }
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("horizontalAngle")]
 		float HorizontalAngle { get; }
 	}
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NISession {
@@ -134,16 +134,16 @@ namespace NearbyInteraction {
 		void Invalidate ();
 
 		[NoMacCatalyst] // We don't have ARKit bindings for Mac Catalyst (because ARKit doesn't work on Mac Catalyst), so we can't bind this method.
-		[NoWatch, NoTV, NoMac, iOS (16, 0)]
+		[NoTV, NoMac, iOS (16, 0)]
 		[Export ("setARSession:")]
 		void SetARSession (ARSession session);
 
-		[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("worldTransformForObject:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MatrixFloat4x4 GetWorldTransform (NINearbyObject @object);
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Static]
 		[Export ("deviceCapabilities")]
 		INIDeviceCapability DeviceCapabilities { get; }
@@ -151,7 +151,7 @@ namespace NearbyInteraction {
 
 	interface INISessionDelegate { }
 
-	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
+	[NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
@@ -176,20 +176,20 @@ namespace NearbyInteraction {
 		[Export ("session:didInvalidateWithError:")]
 		void DidSessionInvalidate (NISession session, NSError error);
 
-		[Watch (8, 0), NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
+		[NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("session:didGenerateShareableConfigurationData:forObject:")]
 		void DidGenerateShareableConfigurationData (NISession session, NSData shareableConfigurationData, NINearbyObject @object);
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("session:didUpdateAlgorithmConvergence:forObject:")]
 		void DidUpdateAlgorithmConvergence (NISession session, NIAlgorithmConvergence convergence, [NullAllowed] NINearbyObject @object);
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("sessionDidStartRunning:")]
 		void DidSessionStartRunning (NISession session);
 	}
 
-	[Watch (8, 0), NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NIConfiguration))]
 	[DisableDefaultCtor]
 	interface NINearbyAccessoryConfiguration {
@@ -199,16 +199,16 @@ namespace NearbyInteraction {
 		[Export ("initWithData:error:")]
 		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
 
-		[iOS (16, 0), NoMac, NoWatch, NoTV, MacCatalyst (16, 0)]
+		[iOS (16, 0), NoMac, NoTV, MacCatalyst (16, 0)]
 		[Export ("initWithAccessoryData:bluetoothPeerIdentifier:error:")]
 		NativeHandle Constructor (NSData accessoryData, NSUuid identifier, [NullAllowed] out NSError error);
 
-		[iOS (16, 0), NoMac, NoWatch, NoTV, MacCatalyst (16, 0)]
+		[iOS (16, 0), NoMac, NoTV, MacCatalyst (16, 0)]
 		[Export ("cameraAssistanceEnabled")]
 		bool CameraAssistanceEnabled { [Bind ("isCameraAssistanceEnabled")] get; set; }
 	}
 
-	[iOS (16, 0), NoMac, Watch (9, 0), NoTV, MacCatalyst (16, 0)]
+	[iOS (16, 0), NoMac, NoTV, MacCatalyst (16, 0)]
 	public enum NIAlgorithmConvergenceStatusReason {
 		[Field ("NIAlgorithmConvergenceStatusReasonInsufficientHorizontalSweep")]
 		InsufficientHorizontalSweep,
@@ -225,7 +225,7 @@ namespace NearbyInteraction {
 
 	interface INIDeviceCapability { }
 
-	[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
 	interface NIDeviceCapability {
 		[Abstract]
@@ -240,7 +240,7 @@ namespace NearbyInteraction {
 		[Export ("supportsCameraAssistance")]
 		bool SupportsCameraAssistance { get; }
 
-		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -248,7 +248,7 @@ namespace NearbyInteraction {
 		bool SupportsExtendedDistanceMeasurement { get; }
 	}
 
-	[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+	[NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NIAlgorithmConvergence : NSCopying, NSSecureCoding {

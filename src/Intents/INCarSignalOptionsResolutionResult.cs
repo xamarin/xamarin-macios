@@ -19,8 +19,6 @@ namespace Intents {
 		{
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
-#elif WATCH
-			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
 			return SuccessWithResolvedCarSignalOptions (resolvedValue);
 			else
@@ -31,8 +29,6 @@ namespace Intents {
 		{
 #if IOS
 			if (SystemVersion.CheckiOS (11, 0))
-#elif WATCH
-			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
 			return ConfirmationRequiredWithCarSignalOptionsToConfirm (valueToConfirm);
 			else

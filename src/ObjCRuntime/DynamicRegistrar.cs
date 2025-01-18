@@ -430,8 +430,6 @@ namespace Registrar {
 			get {
 #if __TVOS__
 				return "tvOS";
-#elif __WATCHOS__
-				return "watchOS";
 #elif __IOS__
 				return "iOS";
 #elif MONOMAC

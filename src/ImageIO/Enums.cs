@@ -64,7 +64,7 @@ namespace ImageIO {
 		Paeth = 0x80
 	}
 
-	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CGImageAnimationStatus {
 		Ok = 0,
@@ -76,7 +76,7 @@ namespace ImageIO {
 	}
 
 	// Yes, no [Native] here
-	[iOS (14, 1), TV (14, 2), Watch (7, 1)]
+	[iOS (14, 1), TV (14, 2)]
 	[MacCatalyst (14, 1)]
 	public enum CGImagePropertyTgaCompression : uint {
 		None = 0,

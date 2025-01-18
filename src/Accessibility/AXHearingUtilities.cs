@@ -18,7 +18,7 @@ using ObjCRuntime;
 namespace Accessibility {
 
 	// accessibility.cs already provide the following attributes on the type
-	// [iOS (15,0), NoMac, NoTV, Watch (8,0), MacCatalyst (15,0)]
+	// [iOS (15,0), NoMac, NoTV, MacCatalyst (15,0)]
 	public static partial class AXHearingUtilities {
 
 		[DllImport (Constants.AccessibilityLibrary)]

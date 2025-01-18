@@ -11,6 +11,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -33,7 +34,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -61,7 +62,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new ("myMethod"),
 					attributes: [
@@ -89,14 +90,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -125,14 +119,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "NS.CustomType",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForClass ("NS.CustomType"),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -158,14 +145,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -173,7 +153,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "input", isBlittable: false),
+						new (position: 0, type: ReturnTypeForString (), name: "input"),
 					]
 				)
 			];
@@ -193,14 +173,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -208,9 +181,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "input", isBlittable: false) {
-							IsArray = true
-						}
+						new (position: 0, type: ReturnTypeForArray ("string"), name: "input")
 					]
 				)
 			];
@@ -230,14 +201,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -245,10 +209,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "input", isBlittable: false) {
-							IsArray = true,
-							IsNullable = true,
-						}
+						new (position: 0, type: ReturnTypeForArray ("string", isNullable: true), name: "input")
 					]
 				)
 			];
@@ -268,14 +229,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -283,10 +237,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "input", isBlittable: false) {
-							IsArray = true,
-							IsNullable = false,
-						}
+						new (position: 0, type: ReturnTypeForArray ("string?"), name: "input")
 					]
 				)
 			];
@@ -306,14 +257,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -321,10 +265,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string?", name: "input", isBlittable: false) {
-							IsArray = true,
-							IsNullable = true,
-						}
+						new (position: 0, type: ReturnTypeForArray ("string?", isNullable: true), name: "input")
 					]
 				)
 			];
@@ -344,14 +285,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -359,9 +293,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string[]", name: "input", isBlittable: false) {
-							IsArray = true
-						}
+						new (position: 0, type: ReturnTypeForArray ("string[]"), name: "input")
 					]
 				)
 			];
@@ -384,7 +316,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -392,7 +324,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.CustomType", name: "input", isBlittable: false),
+						new (position: 0, type: ReturnTypeForClass ("NS.CustomType"), name: "input"),
 					]
 				)
 			];
@@ -413,14 +345,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -428,10 +353,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "input", isBlittable: false),
-						new (position: 1, type: "string", name: "second", isBlittable: false) {
-							IsNullable = true,
-						}
+						new (position: 0, type: ReturnTypeForString (), name: "input"),
+						new (position: 1, type: ReturnTypeForString (isNullable: true), name: "second")
 					]
 				)
 			];
@@ -453,7 +376,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: new ("bool"),
+					returnType: ReturnTypeForBool (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -461,8 +384,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 						},
 					]
@@ -492,7 +414,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -500,7 +422,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.MyStruct", name: "data", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForStruct ("NS.MyStruct"), name: "data") {
 							ReferenceKind = ReferenceKind.In,
 						},
 					]
@@ -529,7 +451,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -537,7 +459,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "NS.MyStruct", name: "data", isBlittable: false) {
+						new (position: 0, type: ReturnTypeForStruct ("NS.MyStruct"), name: "data") {
 							ReferenceKind = ReferenceKind.Ref,
 						},
 					]
@@ -563,14 +485,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new (
-						type: "string",
-						isNullable: false,
-						isBlittable: false,
-						isSmartEnum: false,
-						isArray: false,
-						isReferenceType: true
-					),
+					returnType: ReturnTypeForString (),
 					symbolAvailability: builder.ToImmutable (),
 					exportMethodData: new (),
 					attributes: [
@@ -580,10 +495,8 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "input", isBlittable: false),
-						new (position: 1, type: "string", name: "second", isBlittable: false) {
-							IsNullable = true,
-						}
+						new (position: 0, type: ReturnTypeForString (), name: "input"),
+						new (position: 1, type: ReturnTypeForString (isNullable: true), name: "second")
 					]
 				)
 			];
@@ -607,7 +520,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "TryGetString",
-					returnType: new ("bool"),
+					returnType: ReturnTypeForBool (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [
@@ -616,8 +529,7 @@ namespace NS {
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (position: 0, type: "string", name: "example", isBlittable: false) {
-							IsNullable = true,
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "example") {
 							ReferenceKind = ReferenceKind.Out,
 							Attributes = [
 								new (name: "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", arguments: ["true"])

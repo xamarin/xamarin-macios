@@ -92,7 +92,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 #endif
 		public bool? CreateLinearizedPdf { get; set; }
 #if NET
@@ -103,7 +102,6 @@ namespace CoreGraphics {
 #else
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Watch (7, 0)]
 #endif
 		public bool? CreatePdfA2u { get; set; }
 
@@ -312,7 +310,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextBeginTag (/* CGContextRef* */ IntPtr context, CGPdfTagType tagType, /* CFDictionaryRef* _Nullable */ IntPtr tagProperties);
@@ -325,7 +322,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public void BeginTag (CGPdfTagType tagType, NSDictionary tagProperties)
 		{
@@ -340,7 +336,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public void BeginTag (CGPdfTagType tagType, CGPdfTagProperties tagProperties)
 		{
@@ -356,7 +351,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextEndTag (/* CGContextRef* */ IntPtr context);
@@ -369,7 +363,6 @@ namespace CoreGraphics {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public void EndTag ()
 		{
@@ -382,7 +375,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextSetParentTree (/* CGContextRef cg_nullable */ IntPtr context, /* CGPDFDictionaryRef */ IntPtr parentTreeDictionary);
@@ -393,7 +386,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public void SetParentTree (CGPDFDictionary parentTreeDictionary)
 		{
@@ -406,7 +399,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextSetIDTree (/* CGContextRef cg_nullable */ IntPtr context, /* CGPDFDictionaryRef */ IntPtr IDTreeDictionary);
@@ -417,7 +410,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public void SetIdTree (CGPDFDictionary idTreeDictionary)
 		{
@@ -430,7 +423,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextSetPageTagStructureTree (/* CGContextRef cg_nullable */ IntPtr context, /* CFDictionaryRef */ IntPtr pageTagStructureTreeDictionary);
@@ -441,7 +434,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public void SetPageTagStructureTree (NSDictionary pageTagStructureTreeDictionary)
 		{

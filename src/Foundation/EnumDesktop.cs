@@ -28,7 +28,7 @@ using System;
 using ObjCRuntime;
 
 namespace Foundation {
-	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 	[Internal]
 	internal enum NSAttributedStringDataType {
 		RTF,
@@ -39,14 +39,14 @@ namespace Foundation {
 
 	// NSTask.h:typedef NS_ENUM(NSInteger, NSTaskTerminationReason)
 	[Native]
-	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 	public enum NSTaskTerminationReason : long {
 		Exit = 1,
 		UncaughtSignal = 2
 	}
 
 	// The following constants where taken from MonoDevelop Carbon.cs MacInterop file
-	[NoiOS, NoTV, NoWatch]
+	[NoiOS, NoTV]
 	[MacCatalyst (13, 1)]
 	public enum AEEventID : uint {
 		OpenApplication = 1868656752, // 'oapp'
@@ -60,7 +60,7 @@ namespace Foundation {
 		GetUrl = 1196773964, // 'GURL'
 	}
 
-	[NoiOS, NoTV, NoWatch]
+	[NoiOS, NoTV]
 	[MacCatalyst (13, 1)]
 	public enum AEEventClass : uint {
 		Mouse = 1836021107, // 'mous'
@@ -85,7 +85,7 @@ namespace Foundation {
 	}
 
 	// Added from NSUserNotification.h
-	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 	[Native]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	public enum NSUserNotificationActivationType : long {
@@ -96,7 +96,7 @@ namespace Foundation {
 		AdditionalActionClicked = 4
 	}
 
-	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[NoiOS, NoTV, NoMacCatalyst]
 	[Native]
 	[Flags]
 	public enum NSAppleEventSendOptions : ulong {

@@ -7,7 +7,6 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 	// keys names got changed at some point, but they all refer to a CMSampleBuffer (there is not CMSample obj)
-	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	enum CMSampleBufferAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
@@ -87,7 +86,7 @@ namespace CoreMedia {
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		ForceKeyFrame,
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
 		Hdr10PlusPerFrameData,

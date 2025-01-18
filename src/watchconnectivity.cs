@@ -41,7 +41,6 @@ namespace WatchConnectivity {
 		[Export ("activateSession")]
 		void ActivateSession ();
 
-#if !WATCH
 		[Export ("paired")]
 		bool Paired { [Bind ("isPaired")] get; }
 
@@ -54,7 +53,6 @@ namespace WatchConnectivity {
 		[Export ("watchDirectoryURL")]
 		[NullAllowed]
 		NSUrl WatchDirectoryUrl { get; }
-#endif
 
 		[Export ("reachable")]
 		bool Reachable { [Bind ("isReachable")] get; }
@@ -81,10 +79,8 @@ namespace WatchConnectivity {
 		[Export ("transferUserInfo:")]
 		WCSessionUserInfoTransfer TransferUserInfo (NSDictionary<NSString, NSObject> userInfo);
 
-#if !WATCH
 		[Export ("transferCurrentComplicationUserInfo:")]
 		WCSessionUserInfoTransfer TransferCurrentComplicationUserInfo (NSDictionary<NSString, NSObject> userInfo);
-#endif
 
 		[Export ("outstandingUserInfoTransfers", ArgumentSemantic.Copy)]
 		WCSessionUserInfoTransfer [] OutstandingUserInfoTransfers { get; }
@@ -104,11 +100,9 @@ namespace WatchConnectivity {
 		[Export ("hasContentPending")]
 		bool HasContentPending { get; }
 
-		[NoWatch]
 		[Export ("remainingComplicationUserInfoTransfers")]
 		nuint RemainingComplicationUserInfoTransfers { get; }
 
-		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("companionAppInstalled")]
 		bool CompanionAppInstalled { [Bind ("isCompanionAppInstalled")] get; }
@@ -128,11 +122,8 @@ namespace WatchConnectivity {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WCSessionDelegate {
-
-#if !WATCH
 		[Export ("sessionWatchStateDidChange:")]
 		void SessionWatchStateDidChange (WCSession session);
-#endif
 
 		[Export ("sessionReachabilityDidChange:")]
 		void SessionReachabilityDidChange (WCSession session);
@@ -173,18 +164,15 @@ namespace WatchConnectivity {
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch]
 		[Export ("sessionDidBecomeInactive:")]
 		void DidBecomeInactive (WCSession session);
 
 #if NET
 		[Abstract] // OS 10 beta 1 SDK made this required
 #endif
-		[NoWatch]
 		[Export ("sessionDidDeactivate:")]
 		void DidDeactivate (WCSession session);
 
-		[Watch (6, 0)]
 		[NoiOS]
 		[Export ("sessionCompanionAppInstalledDidChange:")]
 		void CompanionAppInstalledDidChange (WCSession session);
@@ -221,7 +209,6 @@ namespace WatchConnectivity {
 		[Export ("cancel")]
 		void Cancel ();
 
-		[Watch (5, 0)]
 		[Export ("progress")]
 		NSProgress Progress { get; }
 	}
@@ -233,10 +220,8 @@ namespace WatchConnectivity {
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class yourself.
 	interface WCSessionUserInfoTransfer : NSSecureCoding {
 
-#if !WATCH
 		[Export ("currentComplicationInfo")]
 		bool CurrentComplicationInfo { [Bind ("isCurrentComplicationInfo")] get; }
-#endif
 
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> UserInfo { get; }

@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !NET
+#if !NET
 
 using System;
 using System.Drawing;
@@ -19,7 +19,7 @@ using AVFoundation;
 using CoreFoundation;
 
 namespace Intents {
-	[Register("INCarAudioSourceResolutionResult", true)]
+	[Register ("INCarAudioSourceResolutionResult", true)]
 	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarAudioSourceResolutionResult : INIntentResolutionResult {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
@@ -53,4 +53,4 @@ namespace Intents {
 		}
 	} /* class INCarAudioSourceResolutionResult */
 }
-#endif // __WATCHOS__ && !NET
+#endif // !NET

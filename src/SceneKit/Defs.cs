@@ -33,7 +33,7 @@ namespace SceneKit {
 		Line,
 		Point,
 		[MacCatalyst (13, 1)]
-		Polygon
+		Polygon,
 	}
 
 	/// <summary>Enumerates techniques for calculating transparency.</summary>
@@ -57,7 +57,8 @@ namespace SceneKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNCullMode : long {
-		Back, Front
+		Back,
+		Front,
 	}
 
 	/// <summary>Enumeration of texture filtering modes.</summary>
@@ -66,7 +67,7 @@ namespace SceneKit {
 	public enum SCNFilterMode : long {
 		None,
 		Nearest,
-		Linear
+		Linear,
 	}
 
 	/// <summary>Enumerates texture-wrapping techniques.</summary>
@@ -77,7 +78,7 @@ namespace SceneKit {
 		Repeat,
 		// added in iOS 8, removed in 8.3 (mistake?) but added back in 9.0 betas
 		ClampToBorder,
-		Mirror
+		Mirror,
 	}
 
 	/// <summary>Enumerates the states of an SCNSceneSource.</summary>
@@ -88,7 +89,7 @@ namespace SceneKit {
 		Parsing = 4,
 		Validating = 8,
 		Processing = 12,
-		Complete = 16
+		Complete = 16,
 	}
 
 	/// <summary>Enumerates the ways a <see cref="T:SceneKit.SCNShape" /> can be chamfered; on its front, back, or both sides.</summary>
@@ -97,7 +98,7 @@ namespace SceneKit {
 	public enum SCNChamferMode : long {
 		Both,
 		Front,
-		Back
+		Back,
 	}
 
 	/// <summary>Enumeration of valid interpolation formulae for <see cref="P:SceneKit.SCNMorpher.CalculationMode" />.</summary>
@@ -105,7 +106,7 @@ namespace SceneKit {
 	[Native]
 	public enum SCNMorpherCalculationMode : long {
 		Normalized,
-		Additive
+		Additive,
 	}
 
 	/// <summary>Enumerates rate curves for use with <see cref="T:SceneKit.SCNAction" /> objects.</summary>
@@ -115,7 +116,7 @@ namespace SceneKit {
 		Linear,
 		EaseIn,
 		EaseOut,
-		EaseInEaseOut
+		EaseInEaseOut,
 	}
 
 	/// <summary>Enumeration controlling when shadows are calculated.</summary>
@@ -124,7 +125,7 @@ namespace SceneKit {
 	public enum SCNShadowMode : long {
 		Forward,
 		Deferred,
-		Modulated
+		Modulated,
 	}
 
 	/// <summary>An enumeration specifying whether the <see cref="T:SceneKit.SCNPhysicsBody" /> is dynamic, kinematic, or static. Used with <see cref="M:SceneKit.SCNPhysicsBody.CreateBody(SceneKit.SCNPhysicsBodyType,SceneKit.SCNPhysicsShape)" />.</summary>
@@ -133,7 +134,7 @@ namespace SceneKit {
 	public enum SCNPhysicsBodyType : long {
 		Static,
 		Dynamic,
-		Kinematic
+		Kinematic,
 	}
 
 	/// <summary>Enumerates values specifying whether an <see cref="T:SceneKit.SCNPhysicsField" /> affects objects inside or outside its border.</summary>
@@ -141,7 +142,7 @@ namespace SceneKit {
 	[Native]
 	public enum SCNPhysicsFieldScope : long {
 		InsideExtent,
-		OutsideExtent
+		OutsideExtent,
 	}
 
 	/// <summary>Enumeration specifying the order in which particles emitted by a <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Scene%20Kit%20SCNParticle%20Scene&amp;scope=Xamarin" title="T:SceneKit.SCNParticleScene">T:SceneKit.SCNParticleScene</a></format> are rendered.</summary>
@@ -155,7 +156,7 @@ namespace SceneKit {
 		ProjectedDepth,
 		Distance,
 		OldestFirst,
-		YoungestFirst
+		YoungestFirst,
 	}
 
 	/// <summary>Enumeration of the ways in which overlapping particles emitted by a <see cref="T:SceneKit.SCNParticleSystem" /> will be rendered.</summary>
@@ -167,7 +168,7 @@ namespace SceneKit {
 		Multiply,
 		Screen,
 		Alpha,
-		Replace
+		Replace,
 	}
 
 	/// <summary>Enumerates the alignment of particles emitted by a <see cref="T:SceneKit.SCNParticleSystem" />. Used with <see cref="P:SceneKit.SCNParticleSystem.OrientationMode" />.</summary>
@@ -177,7 +178,7 @@ namespace SceneKit {
 		BillboardScreenAligned,
 		BillboardViewAligned,
 		Free,
-		BillboardYAligned
+		BillboardYAligned,
 	}
 
 	/// <summary>Enumeration of the initial location of particles emitted by a <see cref="T:SceneKit.SCNParticleSystem" />.</summary>
@@ -186,7 +187,7 @@ namespace SceneKit {
 	public enum SCNParticleBirthLocation : long {
 		Surface,
 		Volume,
-		Vertex
+		Vertex,
 	}
 
 	/// <summary>Enumerates the initial direction of particles emitted by a <see cref="T:SceneKit.SCNParticleSystem" />.</summary>
@@ -195,7 +196,7 @@ namespace SceneKit {
 	public enum SCNParticleBirthDirection : long {
 		Constant,
 		SurfaceNormal,
-		Random
+		Random,
 	}
 
 	/// <summary>Enumeration of playing modes for <see cref="T:SceneKit.SCNParticleSystem" />'s whose particles are rendered as a sequence of images.</summary>
@@ -204,7 +205,7 @@ namespace SceneKit {
 	public enum SCNParticleImageSequenceAnimationMode : long {
 		Repeat,
 		Clamp,
-		AutoReverse
+		AutoReverse,
 	}
 
 	/// <summary>Enumerates how a particle property is animated (over the lifetime of the particle, as the particle travels over a distance, or based on another property). Used with <see cref="P:SceneKit.SCNParticlePropertyController.InputMode" />.</summary>
@@ -213,7 +214,7 @@ namespace SceneKit {
 	public enum SCNParticleInputMode : long {
 		OverLife,
 		OverDistance,
-		OverOtherProperty
+		OverOtherProperty,
 	}
 
 	/// <summary>Enumerates moments when the modifier specified in <see cref="M:SceneKit.SCNParticleSystem.AddModifier(Foundation.NSString[],SceneKit.SCNParticleModifierStage,SceneKit.SCNParticleModifierHandler)" /> should be applied.</summary>
@@ -223,7 +224,7 @@ namespace SceneKit {
 		PreDynamics,
 		PostDynamics,
 		PreCollision,
-		PostCollision
+		PostCollision,
 	}
 
 	/// <summary>Enumeration of lifecycle events for particles emitted by a <see cref="T:SceneKit.SCNParticleSystem" />. Used with <see cref="M:SceneKit.SCNParticleSystem.HandleEvent(SceneKit.SCNParticleEvent,Foundation.NSString[],SceneKit.SCNParticleEventHandler)" />.</summary>
@@ -232,7 +233,7 @@ namespace SceneKit {
 	public enum SCNParticleEvent : long {
 		Birth,
 		Death,
-		Collision
+		Collision,
 	}
 
 	// Utility enum
@@ -245,7 +246,7 @@ namespace SceneKit {
 		VertexCrease,
 		EdgeCrease,
 		BoneWeights,
-		BoneIndices
+		BoneIndices,
 	}
 
 	// Utility enum
@@ -255,14 +256,16 @@ namespace SceneKit {
 		Play,
 		PlayRepeatedly,
 		DoNotPlay,
-		PlayUsingSceneTimeBase
+		PlayUsingSceneTimeBase,
 	}
 
 	// Utility enum
 	/// <summary>Enumerates values that control which physics search results are returned.</summary>
 	public enum SCNPhysicsSearchMode {
 		Unknown = -1,
-		Any, Closest, All,
+		Any,
+		Closest,
+		All,
 	}
 
 	/// <summary>Enumerates values that control antialiasing behavior.</summary>
@@ -289,7 +292,7 @@ namespace SceneKit {
 		None = 0,
 		Default = 1 << 0,
 		Static = 1 << 1,
-		All = UInt64.MaxValue
+		All = UInt64.MaxValue,
 	}
 
 	/// <summary>Enumeration of axes' locks available to nodes constrained by <see cref="T:SceneKit.SCNBillboardConstraint" />.</summary>
@@ -299,7 +302,7 @@ namespace SceneKit {
 		X = 1 << 0,
 		Y = 1 << 1,
 		Z = 1 << 2,
-		All = (X | Y | Z)
+		All = (X | Y | Z),
 	}
 
 	/// <summary>Enumerates possible loading policies for <see cref="T:SceneKit.SCNReferenceNode" /> objects.</summary>
@@ -307,7 +310,7 @@ namespace SceneKit {
 	[Native]
 	public enum SCNReferenceLoadingPolicy : long {
 		Immediate = 0,
-		OnDemand = 1
+		OnDemand = 1,
 	}
 
 	/// <summary>Enumeration of the ways SceneKit can blend colors from a material with colors that already exist in the render target.</summary>
@@ -363,7 +366,7 @@ namespace SceneKit {
 		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLCore32,
 		[NoiOS][NoTV][NoMacCatalyst]
-		OpenGLCore41
+		OpenGLCore41,
 #endif
 	}
 
@@ -381,7 +384,7 @@ namespace SceneKit {
 	[Native]
 	public enum SCNMovabilityHint : long {
 		Fixed,
-		Movable
+		Movable,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -415,7 +418,6 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNTessellationSmoothingMode : long {
@@ -447,7 +449,7 @@ namespace SceneKit {
 		Focusable,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeType : long {
@@ -455,7 +457,7 @@ namespace SceneKit {
 		Radiance = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeUpdateType : long {
@@ -463,7 +465,7 @@ namespace SceneKit {
 		Realtime = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightAreaType : long {

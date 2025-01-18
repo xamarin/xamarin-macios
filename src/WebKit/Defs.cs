@@ -23,7 +23,7 @@ namespace WebKit {
 		BackForward,
 		Reload,
 		FormResubmitted,
-		Other = -1
+		Other = -1,
 	}
 
 	/// <summary>Contains values that enumerate whether to cancel or allow navigation actions.</summary>
@@ -53,7 +53,7 @@ namespace WebKit {
 	[Native]
 	public enum WKUserScriptInjectionTime : long {
 		AtDocumentStart,
-		AtDocumentEnd
+		AtDocumentEnd,
 	}
 
 	/// <summary>Enumerates WebKit errors.</summary>
@@ -92,7 +92,8 @@ namespace WebKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKSelectionGranularity : long {
-		Dynamic, Character
+		Dynamic,
+		Character,
 	}
 
 	/// <summary>Enumerates the kinds of data that are detected and converted to links.</summary>
@@ -110,7 +111,7 @@ namespace WebKit {
 		FlightNumber = 1 << 5,
 		LookupSuggestion = 1 << 6,
 		SpotlightSuggestion = LookupSuggestion,
-		All = UInt64.MaxValue
+		All = UInt64.MaxValue,
 	}
 
 	/// <summary>Enumerates media types.</summary>
@@ -121,7 +122,7 @@ namespace WebKit {
 		None = 0,
 		Audio = 1 << 0,
 		Video = 1 << 1,
-		All = UInt64.MaxValue
+		All = UInt64.MaxValue,
 	}
 
 	[iOS (15, 0), NoTV, MacCatalyst (15, 0)]
