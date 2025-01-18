@@ -14,7 +14,7 @@ using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 
 namespace Microsoft.Macios.Generator.Tests.Emitters;
 
-public class BindingSyntaxFactoryTests : BaseGeneratorTestClass {
+public class BindingSyntaxFactoryFieldAccessorsTests : BaseGeneratorTestClass {
 
 	class TestDataFieldConstantGetter : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()

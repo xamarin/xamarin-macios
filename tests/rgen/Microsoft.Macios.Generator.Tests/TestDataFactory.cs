@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 #pragma warning disable APL0003
 using Microsoft.CodeAnalysis;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
@@ -7,12 +8,11 @@ using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 namespace Microsoft.Macios.Generator.Tests;
 
 static class TestDataFactory {
-
-	public static TypeInfo ReturnTypeForString ()
+	public static TypeInfo ReturnTypeForString (bool isNullable = false)
 		=> new (
 			name: "string",
 			specialType: SpecialType.System_String,
-			isNullable: false,
+			isNullable: isNullable,
 			isBlittable: false,
 			isSmartEnum: false,
 			isArray: false,
@@ -46,7 +46,7 @@ static class TestDataFactory {
 			Interfaces = isNullable
 				? []
 				: [
-				"System.IComparable",
+					"System.IComparable",
 					"System.IComparable<int>",
 					"System.IConvertible",
 					"System.IEquatable<int>",
@@ -77,7 +77,7 @@ static class TestDataFactory {
 					"System.Numerics.IShiftOperators<int, int, int>",
 					"System.Numerics.IMinMaxValue<int>",
 					"System.Numerics.ISignedNumber<int>"
-			],
+				],
 			MetadataName = "Int32",
 		};
 
@@ -146,24 +146,26 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForVoid ()
-		=> new ("void", SpecialType.System_Void) {
-			Parents = ["System.ValueType", "object"],
-		};
+		=> new ("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
 
-	public static TypeInfo ReturnTypeForClass (string className)
+	public static TypeInfo ReturnTypeForClass (string className, bool isNullable = false)
 		=> new (
 			name: className,
-			isReferenceType: true
-		) {
-			Parents = ["object"]
-		};
+			isReferenceType: true,
+			isNullable: isNullable
+		) { Parents = ["object"] };
+
+	public static TypeInfo ReturnTypeForGeneric (string genericName, bool isNullable = false)
+		=> new (
+			name: genericName,
+			isReferenceType: false,
+			isNullable: isNullable
+		);
 
 	public static TypeInfo ReturnTypeForStruct (string structName)
 		=> new (
 			name: structName
-		) {
-			Parents = ["System.ValueType", "object"]
-		};
+		) { Parents = ["System.ValueType", "object"] };
 
 	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
 		=> new (
@@ -203,6 +205,82 @@ static class TestDataFactory {
 				"System.Collections.IStructuralComparable",
 				"System.Collections.IStructuralEquatable",
 				"System.ICloneable"
+			]
+		};
+
+	public static TypeInfo ReturnTypeForAction ()
+		=> new (
+			name: "System.Action",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForAction (params string [] parameters)
+		=> new (
+			name: $"System.Action<{string.Join (", ", parameters)}>",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForFunc (params string [] parameters)
+		=> new (
+			name: $"System.Func<{string.Join (", ", parameters)}>",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForDelegate (string delegateName)
+		=> new (
+			name: delegateName,
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
 			]
 		};
 }

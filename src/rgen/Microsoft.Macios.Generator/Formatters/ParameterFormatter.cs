@@ -37,21 +37,21 @@ static class ParameterFormatter {
 	}
 	static TypeSyntax GetIdentifierSyntax (this in ParameterDataModel parameter)
 	{
-		if (parameter.IsArray) {
+		if (parameter.Type.IsArray) {
 			// could be a params array or simply an array
-			var arrayType = ArrayType (IdentifierName (parameter.Type))
+			var arrayType = ArrayType (IdentifierName (parameter.Type.Name))
 				.WithRankSpecifiers (SingletonList (
 					ArrayRankSpecifier (
 						SingletonSeparatedList<ExpressionSyntax> (OmittedArraySizeExpression ()))));
-			return parameter.IsNullable
+			return parameter.Type.IsNullable
 				? NullableType (arrayType)
 				: arrayType;
 		}
 
 		// dealing with a non-array type
-		return parameter.IsNullable
-			? NullableType (IdentifierName (parameter.Type))
-			: IdentifierName (parameter.Type);
+		return parameter.Type.IsNullable
+			? NullableType (IdentifierName (parameter.Type.Name))
+			: IdentifierName (parameter.Type.Name);
 	}
 
 	public static ParameterSyntax ToDeclaration (this in ParameterDataModel parameter)

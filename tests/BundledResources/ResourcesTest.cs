@@ -9,6 +9,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 using Foundation;
@@ -41,10 +42,14 @@ namespace BundledResources {
 			if (!hasResources) {
 				Assert.That (resources.Length, Is.EqualTo (0), "No resources");
 			} else {
-				Assert.That (resources.Length, Is.GreaterThanOrEqualTo (2), "Resources");
-				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08.png"), "res-basn3p08.png");
-				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08__with__loc.png"), "res-basn3p08_with_loc.png");
-				Assert.That (resources, Contains.Item ("__monotouch_content_xamvideotest.mp4"), "res-xamvideotest.mp4");
+				var expectedResources = new string [] {
+					"basn3p08.png",
+					"basn3p08__with__loc.png",
+					"xamvideotest.mp4",
+				};
+				var oldPrefixed = expectedResources.Select (v => $"__monotouch_content_{v}").ToArray ();
+				var newPrefixed = expectedResources.Select (v => $"__monotouch_item_BundleResource_{v}").ToArray ();
+				Assert.That (resources, Is.EquivalentTo (oldPrefixed).Or.EquivalentTo (newPrefixed), "Resources");
 			}
 		}
 	}
