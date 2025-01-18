@@ -28,8 +28,6 @@ namespace Network {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class NWPath : NativeObject {
 		[Preserve (Conditional = true)]
@@ -270,7 +268,6 @@ namespace Network {
 #else
 		[iOS (14, 2)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 2)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -284,7 +281,6 @@ namespace Network {
 #else
 		[iOS (14, 2)]
 		[TV (14, 2)]
-		[Watch (7, 1)]
 		[MacCatalyst (14, 2)]
 #endif
 		public NWPathUnsatisfiedReason GetUnsatisfiedReason ()

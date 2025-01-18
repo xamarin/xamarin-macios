@@ -29,7 +29,6 @@ namespace CoreBluetooth {
 	// NSInteger -> CBCentralManager.h
 	/// <summary>Enumerates possible states of a <see cref="T:CoreBluetooth.CBCentralManager" />.</summary>
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CBManagerState' instead.")]
 	[Native]
@@ -45,7 +44,6 @@ namespace CoreBluetooth {
 	// NSInteger -> CBPeripheralManager.h
 	/// <summary>Enumerates the possible states of the <see cref="T:CoreBluetooth.CBPeripheralManager" />.</summary>
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
-	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CBManagerState' instead.")]
 	[Native]
@@ -184,7 +182,7 @@ namespace CoreBluetooth {
 		High
 	}
 
-	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBConnectionEvent : long {
@@ -192,14 +190,14 @@ namespace CoreBluetooth {
 		Connected = 1,
 	}
 
-	[Flags, iOS (13, 0), TV (13, 0), Watch (6, 0), NoMac]
+	[Flags, iOS (13, 0), TV (13, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBCentralManagerFeature : ulong {
 		ExtendedScanAndConnect = 1uL << 0,
 	}
 
-	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBManagerAuthorization : long {

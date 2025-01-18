@@ -127,7 +127,7 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 		readonly NSUrlSessionConfiguration.SessionConfigurationType sessionType;
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC
 		NSObject? notificationToken;  // needed to make sure we do not hang if not using a background session
 		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
@@ -178,7 +178,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-#if !MONOMAC && !__WATCHOS__ && !NET8_0
+#if !MONOMAC && !NET8_0
 
 		void AddNotification ()
 		{
@@ -227,7 +227,7 @@ namespace Foundation {
 						data.CancellationTokenSource.Cancel ();
 					inflightRequests.Remove (task);
 				}
-#if !MONOMAC && !__WATCHOS__ && !NET8_0
+#if !MONOMAC && !NET8_0
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
 					RemoveNotification ();
@@ -243,7 +243,7 @@ namespace Foundation {
 		protected override void Dispose (bool disposing)
 		{
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__ && !NET8_0
+#if !MONOMAC && !NET8_0
 				// remove the notification if present, method checks against null
 				RemoveNotification ();
 #endif
@@ -422,19 +422,13 @@ namespace Foundation {
 			// errors that exists in both share the same error code, so we can use a single switch/case
 			// this also ease watchOS integration as if does not expose CFNetwork but (I would not be 
 			// surprised if it)could return some of it's error codes
-#if __WATCHOS__
-			if (error.Domain == NSError.NSUrlErrorDomain) {
-#else
 			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == NSError.CFNetworkErrorDomain)) {
-#endif
 				// Apple docs: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/URL_Loading_System_Error_Codes
 				// .NET docs: http://msdn.microsoft.com/en-us/library/system.net.webexceptionstatus(v=vs.110).aspx
 				switch ((NSUrlError) (long) error.Code) {
 				case NSUrlError.Cancelled:
 				case NSUrlError.UserCancelledAuthentication:
-#if !__WATCHOS__
 				case (NSUrlError) NSNetServicesStatus.CancelledError:
-#endif
 					// No more processing is required so just return.
 					return new OperationCanceledException (error.LocalizedDescription, innerException);
 				}
@@ -521,7 +515,7 @@ namespace Foundation {
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__ && !NET8_0
+#if !MONOMAC && !NET8_0
 				// Add the notification whenever needed
 				AddNotification ();
 #endif
@@ -743,8 +737,6 @@ namespace Foundation {
 					if (!isSecTrustGetCertificateChainSupported.HasValue) {
 #if MONOMAC
 						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckmacOS (12, 0);
-#elif WATCH
-						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckWatchOS (8, 0);
 #elif IOS || TVOS || MACCATALYST
 						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
 #else

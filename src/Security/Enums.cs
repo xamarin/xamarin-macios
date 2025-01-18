@@ -415,13 +415,11 @@ namespace Security {
 
 		[Obsolete ("Don't use hash algorithm.")]
 		[NoTV]
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		PKCS1MD2 = 0x8000,
 
 		[Obsolete ("Don't use hash algorithm.")]
 		[NoTV]
-		[NoWatch]
 		[MacCatalyst (13, 1)]
 		PKCS1MD5 = 0x8001,
 
@@ -471,7 +469,6 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIAllow")]
 		Allow,
@@ -479,7 +476,6 @@ namespace Security {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIFail")]
 		Fail,

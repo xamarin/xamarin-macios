@@ -6,7 +6,6 @@
 // Copyright 2017 Xamarin Inc.
 //
 
-#if !WATCH
 using System;
 using Foundation;
 using Metal;
@@ -26,4 +25,3 @@ namespace CoreVideo {
 		}
 	}
 }
-#endif

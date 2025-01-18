@@ -1,4 +1,3 @@
-#if !WATCH
 using System;
 
 using Foundation;
@@ -56,4 +55,3 @@ namespace GameKit {
 		}
 	}
 }
-#endif // !WATCH

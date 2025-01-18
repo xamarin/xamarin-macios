@@ -65,8 +65,6 @@ namespace SpriteKit {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public static SKNode? Create (string filename, Type [] types, out NSError error)
 		{
@@ -90,8 +88,6 @@ namespace SpriteKit {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (5, 0)]
 #endif
 		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)
 		{

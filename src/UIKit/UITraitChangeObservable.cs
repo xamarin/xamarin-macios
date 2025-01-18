@@ -28,10 +28,8 @@ namespace UIKit {
 		{
 			if (traits is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
-			var traitsClasses = new Class [traits.Length];
-			for (var i = 0; i < traits.Length; i++)
-				traitsClasses [i] = new Class (traits [i]);
-			return traitsClasses;
+
+			return Class.FromTypes (traits);
 		}
 
 		/// <summary>

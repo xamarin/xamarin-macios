@@ -9,6 +9,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -17,7 +18,6 @@ public class DelegateInfoTests : BaseGeneratorTestClass {
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-
 			const string actionNoParam = @"
 using System;
 
@@ -33,7 +33,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -43,9 +43,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Action",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForAction (),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Action",
@@ -73,7 +72,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -83,9 +82,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Action<string>",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForAction ("string"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Action<string>",
@@ -119,7 +117,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -129,9 +127,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Action<string?>",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForAction ("string?"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Action<string?>",
@@ -167,7 +164,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -177,9 +174,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Action<string, string>",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForAction ("string", "string"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Action<string, string>",
@@ -219,7 +215,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -229,9 +225,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Func<string, string>",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForFunc ("string", "string"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Func<string, string>",
@@ -265,7 +260,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -275,9 +270,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "System.Func<string, string, string>",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForFunc ("string", "string", "string"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "System.Func<string, string, string>",
@@ -319,7 +313,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: new ("void"),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [],
@@ -329,9 +323,8 @@ namespace NS {
 					parameters: [
 						new (
 							position: 0,
-							type: "NS.MyClass.Callback",
-							name: "cb",
-							isBlittable: false
+							type: ReturnTypeForDelegate ("NS.MyClass.Callback"),
+							name: "cb"
 						) {
 							Delegate = new (
 								type: "NS.MyClass.Callback",

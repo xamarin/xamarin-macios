@@ -11,9 +11,7 @@ using System;
 
 using CoreGraphics;
 using Foundation;
-#if !WATCH
 using Metal;
-#endif
 
 #nullable enable
 
@@ -76,12 +74,10 @@ namespace SceneKit {
 			return FromData (data, SemanticToToken (semantic), vectorCount, floatComponents, componentsPerVector, bytesPerComponent, offset, stride);
 		}
 
-#if !WATCH
 		public static SCNGeometrySource FromMetalBuffer (IMTLBuffer mtlBuffer, MTLVertexFormat vertexFormat, SCNGeometrySourceSemantics semantic, nint vertexCount, nint offset, nint stride)
 		{
 			return FromMetalBuffer (mtlBuffer, vertexFormat, SemanticToToken (semantic), vertexCount, offset, stride);
 		}
-#endif
 	}
 
 }
