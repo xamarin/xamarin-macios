@@ -125,6 +125,7 @@ static class TestDataFactory {
 					"System.Runtime.Serialization.ISerializable"
 				],
 			MetadataName = "IntPtr",
+			IsNativeIntegerType = !isNullable,
 		};
 
 	public static TypeInfo ReturnTypeForBool ()
@@ -162,12 +163,21 @@ static class TestDataFactory {
 			isNullable: isNullable
 		);
 
+	public static TypeInfo ReturnTypeForInterface (string interfaceName)
+		=> new (
+			name: interfaceName,
+			isReferenceType: true
+		) {
+			Parents = [],
+			IsInterface = true,
+		};
+
 	public static TypeInfo ReturnTypeForStruct (string structName)
 		=> new (
 			name: structName
 		) { Parents = ["System.ValueType", "object"] };
 
-	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false)
 		=> new (
 			name: enumName,
 			isBlittable: true,
@@ -184,6 +194,7 @@ static class TestDataFactory {
 				"System.IFormattable",
 				"System.ISpanFormattable"
 			],
+			IsNativeEnum = isNativeEnum,
 			EnumUnderlyingType = SpecialType.System_Int32,
 		};
 
