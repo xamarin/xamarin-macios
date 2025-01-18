@@ -37,8 +37,8 @@ static partial class BindingSyntaxFactory {
 			SingletonList<MemberDeclarationSyntax> (
 				GlobalStatement (
 					ExpressionStatement (
-						suppressNullableWarning 
-							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation) 
+						suppressNullableWarning
+							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
 							: invocation))));
 		return compilationUnit;
 	}

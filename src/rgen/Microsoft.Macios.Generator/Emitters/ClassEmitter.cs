@@ -103,7 +103,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 				// generate the accessors, we will always have a get, a set is optional depending on the type
 				// if the symbol availability of the accessor is different of the one from the property, write it
 				var backingField = property.BackingField;
-				
+
 				// be very verbose with the availability, makes the life easier to the dotnet analyzer
 				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
