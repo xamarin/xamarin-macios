@@ -32,8 +32,6 @@ namespace Security {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Watch (5, 0)]
 #endif
 	public class SecTrust2 : NativeObject {
 		[Preserve (Conditional = true)]

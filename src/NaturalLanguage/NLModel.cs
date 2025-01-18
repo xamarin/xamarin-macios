@@ -16,7 +16,6 @@ namespace NaturalLanguage {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7, 0)]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -33,7 +32,6 @@ namespace NaturalLanguage {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7, 0)]
 		[TV (14, 0)]
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]

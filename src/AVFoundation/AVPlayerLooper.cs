@@ -18,8 +18,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !WATCH
-
 using Foundation;
 using CoreFoundation;
 using AudioToolbox;
@@ -45,4 +43,3 @@ namespace AVFoundation {
 #endif
 	}
 }
-#endif // !WATCH

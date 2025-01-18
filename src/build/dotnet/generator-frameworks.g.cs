@@ -179,6 +179,7 @@ partial class Frameworks {
 		"CoreData",
 		"CoreFoundation",
 		"CoreGraphics",
+		"CoreHaptics",
 		"CoreImage",
 		"CoreLocation",
 		"CoreMedia",

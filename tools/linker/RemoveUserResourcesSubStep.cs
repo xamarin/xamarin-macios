@@ -11,17 +11,12 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 
 	public class RemoveUserResourcesSubStep : ExceptionalSubStep {
-
-		const string iOS_Content = "__monotouch_content_";
-		const string iOS_Page = "__monotouch_page_";
-		const string Mac_Content = "__xammac_content_";
-		const string Mac_Page = "__xammac_page_";
-
-		string Content;
-		string Page;
+		string [] prefixes = Array.Empty<string> ();
 
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly; }
@@ -41,12 +36,18 @@ namespace Xamarin.Linker {
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
 			case ApplePlatform.MacCatalyst:
-				Content = iOS_Content;
-				Page = iOS_Page;
+				prefixes = new string [] {
+					"__monotouch_content_",
+					"__monotouch_page_",
+					"__monotouch_item_",
+				};
 				break;
 			case ApplePlatform.MacOSX:
-				Content = Mac_Content;
-				Page = Mac_Page;
+				prefixes = new string [] {
+					"__xammac_content_",
+					"__xammac_page_",
+					"__xammac_item_",
+				};
 				break;
 			default:
 				Report (ErrorHelper.CreateError (71, Errors.MX0071, LinkContext.App.Platform, LinkContext.App.ProductName));
@@ -63,7 +64,7 @@ namespace Xamarin.Linker {
 			if (!module.HasResources)
 				return;
 
-			HashSet<string> libraries = null;
+			HashSet<string>? libraries = null;
 			if (assembly.HasCustomAttributes) {
 				foreach (var ca in assembly.CustomAttributes) {
 					if (!ca.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
@@ -104,16 +105,15 @@ namespace Xamarin.Linker {
 			if (Simulator)
 				return false;
 
-			if (resourceName.StartsWith (Content, StringComparison.OrdinalIgnoreCase))
-				return true;
-
-			if (resourceName.StartsWith (Page, StringComparison.OrdinalIgnoreCase))
-				return true;
+			foreach (var prefix in prefixes) {
+				if (resourceName.StartsWith (prefix, StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
 
 			return false;
 		}
 
-		static bool IsNativeLibrary (string resourceName, HashSet<string> libraries)
+		static bool IsNativeLibrary (string resourceName, HashSet<string>? libraries)
 		{
 			if (libraries is null)
 				return false;

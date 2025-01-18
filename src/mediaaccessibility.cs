@@ -75,7 +75,7 @@ namespace MediaAccessibility {
 	delegate void MAMusicHapticTrackAvailabilityCallback (bool musicHapticsAvailable);
 	delegate void MAMusicHapticTrackStatusObserver (string internationalStandardRecordingCode, bool musicHapticsActive);
 
-	[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MAMusicHapticsManager {

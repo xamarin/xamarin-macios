@@ -12,3 +12,14 @@
 
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+
+## I have no idea where these come from, I can't find them neither online, nor in any headers.
+!missing-selector! AVAudioSession::isAVAudioSessionAvailable not bound
+!missing-selector! AVAudioSession::preferredAVAudioSessionMode not bound
+!missing-selector! AVAudioSession::setPreferredAVAudioSessionMode:error: not bound
+
+# Introspection says this selector isn't there on Mac Catalyst, so not binding it.
+!missing-selector! AVAudioSession::setPrefersEchoCancelledInput:error: not bound
+
+# isEqual: is already exposed from NSObject, no need to expose again
+!missing-selector! AVCaptionRegion::isEqual: not bound

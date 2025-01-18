@@ -104,7 +104,7 @@ namespace Foundation {
 		}
 #endif // XAMCORE_5_0 || __MACOS__
 
-#if !TVOS && !WATCH
+#if !TVOS
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
 #if NET
@@ -123,7 +123,7 @@ namespace Foundation {
 				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.ReadAccessUrlDocumentOption, value);
 			}
 		}
-#endif // !TVOS && !WATCH
+#endif // !TVOS
 
 #if __MACOS__
 #if NET

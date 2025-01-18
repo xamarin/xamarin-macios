@@ -55,7 +55,7 @@ namespace Security {
 		GenericPassword,
 		Certificate,
 		Key,
-		Identity
+		Identity,
 	}
 
 	// manually mapped to KeysAccessible
@@ -89,14 +89,42 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #endif
 		AlwaysThisDeviceOnly,
-		WhenPasscodeSetThisDeviceOnly
+		WhenPasscodeSetThisDeviceOnly,
 	}
 
 	public enum SecProtocol {
 		Invalid = -1,
-		Ftp, FtpAccount, Http, Irc, Nntp, Pop3, Smtp, Socks, Imap, Ldap, AppleTalk, Afp, Telnet, Ssh,
-		Ftps, Https, HttpProxy, HttpsProxy, FtpProxy, Smb, Rtsp, RtspProxy, Daap, Eppc, Ipp,
-		Nntps, Ldaps, Telnets, Imaps, Ircs, Pop3s,
+		Ftp,
+		FtpAccount,
+		Http,
+		Irc,
+		Nntp,
+		Pop3,
+		Smtp,
+		Socks,
+		Imap,
+		Ldap,
+		AppleTalk,
+		Afp,
+		Telnet,
+		Ssh,
+		Ftps,
+		Https,
+		HttpProxy,
+		HttpsProxy,
+		FtpProxy,
+		Smb,
+		Rtsp,
+		RtspProxy,
+		Daap,
+		Eppc,
+		Ipp,
+		Nntps,
+		Ldaps,
+		Telnets,
+		Imaps,
+		Ircs,
+		Pop3s,
 	}
 
 	public enum SecAuthenticationType {
@@ -712,8 +740,6 @@ namespace Security {
 			var kind = SecClass.FromSecKind (secKind);
 #if MONOMAC
 			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
-#elif WATCH
-			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
@@ -1071,7 +1097,7 @@ namespace Security {
 			}
 		}
 
-#if !WATCH && !TVOS
+#if !TVOS
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
@@ -1438,7 +1464,6 @@ namespace Security {
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Watch (6, 0)]
 #endif
 		public bool UseDataProtectionKeychain {
 			get {

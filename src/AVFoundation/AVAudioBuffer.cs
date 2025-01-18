@@ -5,8 +5,6 @@
 //   Miguel de Icaza
 //
 
-#if !WATCH
-
 using Foundation;
 using System;
 using AudioToolbox;
@@ -28,5 +26,3 @@ namespace AVFoundation {
 		}
 	}
 }
-
-#endif

@@ -44,8 +44,6 @@ namespace Introspection {
 			// NSString manually bound as smart enum CLSContextTopic
 			case "CLSContext":
 				return property.Name == "WeakTopic";
-			case "CHHapticPatternDefinition":
-				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
 			}
 			return base.Skip (property);
 		}

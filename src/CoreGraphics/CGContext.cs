@@ -1425,7 +1425,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 #else
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGContextDrawConicGradient (/* CGContext */ IntPtr context, /*[NullAllowed] CGGradient*/ IntPtr gradient, CGPoint center, nfloat angle);
@@ -1439,7 +1439,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern byte CGContextSetEDRTargetHeadroom (/* CGContextRef __nonnull */ IntPtr context, /* float */ float headroom);
@@ -1450,7 +1450,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern float CGContextGetEDRTargetHeadroom (/* CGContextRef __nonnull */ IntPtr context);
@@ -1463,7 +1463,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public float GetEdrTargetHeadroom ()
 		{
@@ -1479,7 +1479,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public bool SetEdrTargetHeadroom (float value)
 		{
@@ -1492,7 +1492,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* bool */ byte CGContextDrawImageApplyingToneMapping (/* CGContextRef __nonnull */ IntPtr context, CGRect r, /* CGImageRef */ IntPtr image, CGToneMapping method, /* CFDictionaryRef  __nullable */ IntPtr options);
@@ -1509,7 +1509,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public bool DrawImageApplyingToneMapping (CGRect rect, CGImage image, CGToneMapping method, NSDictionary? options)
 		{
@@ -1529,7 +1529,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos15.0")]
 		[SupportedOSPlatform ("tvos18.0")]
 #else
-		[Watch (11, 0), TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
+		[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 #endif
 		public bool DrawImageApplyingToneMapping (CGRect rect, CGImage image, CGToneMapping method, CGToneMappingOptions? options)
 		{

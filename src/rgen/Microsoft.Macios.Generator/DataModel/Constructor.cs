@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -51,20 +52,20 @@ readonly struct Constructor : IEquatable<Constructor> {
 		Parameters = parameters;
 	}
 
-	public static bool TryCreate (ConstructorDeclarationSyntax declaration, SemanticModel semanticModel,
+	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Constructor? change)
 	{
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol constructor) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol constructor) {
 			change = null;
 			return false;
 		}
 
-		var attributes = declaration.GetAttributeCodeChanges (semanticModel);
+		var attributes = declaration.GetAttributeCodeChanges (context.SemanticModel);
 		var parametersBucket = ImmutableArray.CreateBuilder<Parameter> ();
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in constructor.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}

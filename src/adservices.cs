@@ -7,7 +7,6 @@ namespace AdServices {
 	[iOS (14, 3)]
 	[MacCatalyst (14, 3)]
 	[NoTV]
-	[NoWatch]
 	[Native]
 	[ErrorDomain ("AAAttributionErrorDomain")]
 	enum AAAttributionErrorCode : long {
@@ -19,7 +18,6 @@ namespace AdServices {
 	[iOS (14, 3)]
 	[MacCatalyst (14, 3)]
 	[NoTV]
-	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AAAttribution {

@@ -232,11 +232,19 @@ namespace Xamarin.Tests {
 			Assert.That (resourceBundle, Does.Exist, "Bundle existence");
 		}
 
-		[TestCase ("iOS", "monotouch")]
-		[TestCase ("tvOS", "monotouch")]
-		[TestCase ("macOS", "xammac")]
-		[TestCase ("MacCatalyst", "monotouch")]
-		public void BuildBundledResources (string platform, string prefix)
+		[TestCase ("iOS", "monotouch", true)]
+		[TestCase ("tvOS", "monotouch", true)]
+		[TestCase ("macOS", "xammac", true)]
+		[TestCase ("MacCatalyst", "monotouch", true)]
+		[TestCase ("iOS", "monotouch", false)]
+		[TestCase ("tvOS", "monotouch", false)]
+		[TestCase ("macOS", "xammac", false)]
+		[TestCase ("MacCatalyst", "monotouch", false)]
+		[TestCase ("iOS", "monotouch", null)]
+		[TestCase ("tvOS", "monotouch", null)]
+		[TestCase ("macOS", "xammac", null)]
+		[TestCase ("MacCatalyst", "monotouch", null)]
+		public void BuildBundledResources (string platform, string prefix, bool? bundleOriginalResources)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var assemblyName = "BundledResources";
@@ -870,9 +878,6 @@ namespace Xamarin.Tests {
 				var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
 				if (actualBundleOriginalResources) {
 					expectedResources = new string [] {
-						$"__{platformPrefix}_content_A.ttc",
-						$"__{platformPrefix}_content_B.otf",
-						$"__{platformPrefix}_content_C.ttf",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0001.png",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0002.png",
 						$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_sarcher__attack__0003.png",
@@ -2809,6 +2814,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth",
 			"/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
 			"/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+			"/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
 			"/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage",
 			"/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation",
 			"/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",

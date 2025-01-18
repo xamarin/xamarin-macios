@@ -27,6 +27,10 @@ readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 		Flags = flags;
 	}
 
+	internal FieldData (string symbolName, T? flags) : this (symbolName, null, flags) { }
+
+	internal FieldData (string symbolName) : this (symbolName, null, default) { }
+
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out FieldData<T>? data)
 		=> TryParse (attributeData, out data, out _);
@@ -52,21 +56,19 @@ readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 			if (!attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
 				return false;
 			}
-			switch (attributeData.ConstructorArguments [1].Value) {
-			// there are two possible cases here:
-			// 1. The second argument is a string
-			// 2. The second argument is an enum
-			case T enumValue:
-				flags = enumValue;
-				break;
-			case string lib:
-				libraryName = lib;
-				break;
-			default:
-				// unexpected value :/
-				error = new (ParsingError.UnknownConstructor, attributeData.ConstructorArguments.Length);
+
+			if (attributeData.ConstructorArguments [1].Value is string) {
+				libraryName = (string?) attributeData.ConstructorArguments [1].Value!;
+			} else {
+				flags = (T) attributeData.ConstructorArguments [1].Value!;
+			}
+			break;
+		case 3:
+			if (!attributeData.ConstructorArguments [0].TryGetIdentifier (out symbolName)) {
 				return false;
 			}
+			libraryName = (string?) attributeData.ConstructorArguments [1].Value!;
+			flags = (T) attributeData.ConstructorArguments [2].Value!;
 			break;
 		default:
 			// 0 should not be an option.

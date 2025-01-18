@@ -11,7 +11,7 @@ using ObjCRuntime;
 namespace Foundation {
 #if false // https://github.com/xamarin/xamarin-macios/issues/15577
 #if !NET
-	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[TV (13,0), iOS (13,0)]
 #else
 	[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif

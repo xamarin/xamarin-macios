@@ -27,8 +27,6 @@
 
 #nullable enable
 
-#if !WATCH
-
 using System;
 
 using Foundation;
@@ -75,5 +73,3 @@ namespace StoreKit {
 #endif
 	}
 }
-
-#endif // !MONOMAC

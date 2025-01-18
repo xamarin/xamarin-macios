@@ -123,7 +123,7 @@ public class TestClass {
 ";
 			yield return [wrongAttributeInProperty, true];
 
-			const string fieldAttributeInProperty = @"
+			const string exportFieldAttributeInProperty = @"
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -132,6 +132,20 @@ using ObjCBindings;
 [BindingType]
 public class TestClass {
 	[Export<Field> (""name"")]
+	public partial string Name { get;set; }
+}
+";
+			yield return [exportFieldAttributeInProperty, true];
+
+			const string fieldAttributeInProperty = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+[BindingType]
+public class TestClass {
+	[Field<Property> (""name"")]
 	public partial string Name { get;set; }
 }
 ";
