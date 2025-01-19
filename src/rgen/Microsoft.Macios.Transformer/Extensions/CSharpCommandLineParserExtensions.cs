@@ -11,11 +11,11 @@ static class CSharpCommandLineParserExtensions {
 
 	public static CSharpCommandLineArguments ParseRsp (this CSharpCommandLineParser self, string rspFile, string workingDirectory, string? sdkDirectory)
 	{
-		var args = new [] { $"@{rspFile}"};
+		var args = new [] { $"@{rspFile}" };
 		var parseResult = self.Parse (
 			args: args,
 			baseDirectory: workingDirectory,
-			sdkDirectory: Path.GetDirectoryName (typeof(object).GetTypeInfo ().Assembly.ManifestModule
+			sdkDirectory: Path.GetDirectoryName (typeof (object).GetTypeInfo ().Assembly.ManifestModule
 				.FullyQualifiedName)//sdkDirectory
 		);
 
@@ -29,5 +29,5 @@ static class CSharpCommandLineParserExtensions {
 
 		return parseResult;
 	}
-	
+
 }

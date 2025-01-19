@@ -25,7 +25,7 @@ public class Program {
 			new [] { "--working-directory", "-w" },
 			"Absolute path to an existing working directory"
 		);
-		
+
 		var sdkPathOption = new Option<string> (
 			new [] { "--sdk", "-s" },
 			"Absolute path to the sdk directory"
@@ -44,32 +44,32 @@ public class Program {
 
 		// Set handler for parsing and executing
 		rootCmd.SetHandler (async (rspPath, destPath, workingDirectory, sdkPath, force) => {
-				// Convert local to absolute, expand ~
-				rspPath = ToAbsolutePath (rspPath);
-				workingDirectory = ToAbsolutePath (workingDirectory);
-				destPath = ToAbsolutePath (destPath);
-				sdkPath = ToAbsolutePath (sdkPath);
-				
-				ValidateRsp (rspPath);
-				ValidateSdk (sdkPath);
-				ValidateWorkingDirectory (workingDirectory);
-				PrepareDestination (destPath, force);
+			// Convert local to absolute, expand ~
+			rspPath = ToAbsolutePath (rspPath);
+			workingDirectory = ToAbsolutePath (workingDirectory);
+			destPath = ToAbsolutePath (destPath);
+			sdkPath = ToAbsolutePath (sdkPath);
 
-				// Parse the .rsp file with Roslyn's CSharpCommandLineParser
-				var args = new string [] { $"@{rspPath}" };
-				var parseResult = CSharpCommandLineParser.Default.Parse (args, workingDirectory, null);
-				Console.WriteLine ($"RSP parsed. Errors: {parseResult.Errors.Length}");
-				foreach (var resultError in parseResult.Errors) {
-					Console.WriteLine (resultError);
-				}
+			ValidateRsp (rspPath);
+			ValidateSdk (sdkPath);
+			ValidateWorkingDirectory (workingDirectory);
+			PrepareDestination (destPath, force);
 
-				await Transformer.Execute (
-					destinationDirectory: destPath,
-					rspFile: rspPath, 
-					workingDirectory: workingDirectory, 
-					sdkDirectory: sdkPath
-				);
-			},
+			// Parse the .rsp file with Roslyn's CSharpCommandLineParser
+			var args = new string [] { $"@{rspPath}" };
+			var parseResult = CSharpCommandLineParser.Default.Parse (args, workingDirectory, null);
+			Console.WriteLine ($"RSP parsed. Errors: {parseResult.Errors.Length}");
+			foreach (var resultError in parseResult.Errors) {
+				Console.WriteLine (resultError);
+			}
+
+			await Transformer.Execute (
+				destinationDirectory: destPath,
+				rspFile: rspPath,
+				workingDirectory: workingDirectory,
+				sdkDirectory: sdkPath
+			);
+		},
 			rspOption, destinationOption, workingDirectoryOption, sdkPathOption, forceOption
 		);
 
@@ -98,7 +98,7 @@ public class Program {
 		if (string.IsNullOrWhiteSpace (path) || !Directory.Exists (path))
 			throw new DirectoryNotFoundException ("Working directory does not exist.");
 	}
-	
+
 	static void ValidateSdk (string path)
 	{
 		if (string.IsNullOrWhiteSpace (path) || !Directory.Exists (path))

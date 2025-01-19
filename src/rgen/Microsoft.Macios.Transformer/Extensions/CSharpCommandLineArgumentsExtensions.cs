@@ -17,7 +17,7 @@ public static class CSharpCommandLineArgumentsExtensions {
 				: Path.Combine (workingDirectory, r.Reference);
 			return path;
 		});
-		var sdkReferences= Directory.GetFiles(sdkDirectory, "*.dll");;
+		var sdkReferences = Directory.GetFiles (sdkDirectory, "*.dll"); ;
 
 		return rspReferences
 			.Union (sdkReferences)

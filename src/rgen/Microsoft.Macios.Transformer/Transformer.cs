@@ -32,33 +32,33 @@ class Transformer {
 			namespaceFilter = new HashSet<string> (namespaces);
 	}
 
-	internal async Task<Hub> CreateHub()
+	internal async Task<Hub> CreateHub ()
 	{
 		// create the hub that will manage the channels
 		var hub = new Hub ();
-		
+
 		// use as many threads as the system allows
 		var topicConfiguration = new TopicConfiguration { Mode = ChannelDeliveryMode.AtLeastOnceSync };
-		
+
 		// create the channels, because the app is alreay asyc there is nothing to deal with threads.
 		var categories = new CategoryTransformer (destinationDirectory);
-		await hub.CreateAsync (nameof(CategoryTransformer), topicConfiguration, categories, categories);
-		
+		await hub.CreateAsync (nameof (CategoryTransformer), topicConfiguration, categories, categories);
+
 		var classes = new ClassTransformer (destinationDirectory);
-		await hub.CreateAsync (nameof(ClassTransformer), topicConfiguration, classes, classes);
-		
+		await hub.CreateAsync (nameof (ClassTransformer), topicConfiguration, classes, classes);
+
 		var protocols = new ProtocolTransformer (destinationDirectory);
-		await hub.CreateAsync (nameof(ProtocolTransformer), topicConfiguration, protocols, protocols);
-		
+		await hub.CreateAsync (nameof (ProtocolTransformer), topicConfiguration, protocols, protocols);
+
 		var smartEnums = new SmartEnumTransformer (destinationDirectory);
-		await hub.CreateAsync (nameof(SmartEnumTransformer), topicConfiguration, smartEnums, smartEnums);
-		
+		await hub.CreateAsync (nameof (SmartEnumTransformer), topicConfiguration, smartEnums, smartEnums);
+
 		var strongDictionaries = new StrongDictionaryTransformer (destinationDirectory);
-		await hub.CreateAsync (nameof(StrongDictionaryTransformer), topicConfiguration, strongDictionaries, strongDictionaries);
+		await hub.CreateAsync (nameof (StrongDictionaryTransformer), topicConfiguration, strongDictionaries, strongDictionaries);
 
 		return hub;
 	}
-	
+
 	internal async Task Execute ()
 	{
 		// few things to do here:
@@ -69,10 +69,10 @@ class Transformer {
 		//    operation, we keep the symbol and use it to create our data mode.
 		// 3. Create the data model for the transformation.
 		// 4. Base on the data model push the data model object to a channel to be consumed.
-		
+
 		// create the hub that will manage the channels
 		var hub = await CreateHub ();
-		
+
 		// with the hub created, loop over the syntax trees and create the messages to be sent to the hub
 		foreach (var tree in sources) {
 			var model = compilation.GetSemanticModel (tree);
@@ -80,9 +80,9 @@ class Transformer {
 			var declarations = tree.GetRoot ()
 				.DescendantNodes ()
 				.OfType<BaseTypeDeclarationSyntax> ().ToArray ();
-			
-			Console.WriteLine($"Found {declarations.Length} interfaces in {tree.FilePath}");
-			
+
+			Console.WriteLine ($"Found {declarations.Length} interfaces in {tree.FilePath}");
+
 			// loop over the declarations and send them to the hub
 			foreach (var declaration in declarations) {
 				var symbol = model.GetDeclaredSymbol (declaration);
@@ -98,27 +98,27 @@ class Transformer {
 
 				if (namespaceFilter is not null && !namespaceFilter.Contains (namespaceName)) {
 					// TODO we could do this better by looking at the tree
-					Console.WriteLine($"Skipping {symbol.Name} because namespace {namespaceName} was not included in the transformation");
+					Console.WriteLine ($"Skipping {symbol.Name} because namespace {namespaceName} was not included in the transformation");
 					// filtered out
 					continue;
 				}
-			
+
 				// create the destination directory if needed, this is the only location we should be creating directories
 				var currentDirectory = Path.Combine (destinationDirectory, namespaceName);
 				Directory.CreateDirectory (currentDirectory);
-			
+
 				var message = (tree.FilePath, symbol.Name);
 				// push the message to the hub, we are doing this to all channels, this will need to be filered in the 
 				// future
-				Console.WriteLine($"Publishing message to all channels: {message}");
-				await hub.PublishAsync (nameof(CategoryTransformer), message);
-				await hub.PublishAsync (nameof(ClassTransformer), message);
-				await hub.PublishAsync (nameof(ProtocolTransformer), message);
-				await hub.PublishAsync (nameof(SmartEnumTransformer), message);
-				await hub.PublishAsync (nameof(StrongDictionaryTransformer), message);
+				Console.WriteLine ($"Publishing message to all channels: {message}");
+				await hub.PublishAsync (nameof (CategoryTransformer), message);
+				await hub.PublishAsync (nameof (ClassTransformer), message);
+				await hub.PublishAsync (nameof (ProtocolTransformer), message);
+				await hub.PublishAsync (nameof (SmartEnumTransformer), message);
+				await hub.PublishAsync (nameof (StrongDictionaryTransformer), message);
 			}
-		}	
-		
+		}
+
 		// all messages have been sent, wait for them to be consumed, at that point all transformations have been
 		// completed
 		await hub.CloseAllAsync ();
@@ -127,7 +127,7 @@ class Transformer {
 
 	public static Task Execute (string destinationDirectory, string rspFile, string workingDirectory, string sdkDirectory)
 	{
-		Console.WriteLine("Executing transformation");
+		Console.WriteLine ("Executing transformation");
 		// the transformation works as follows. We first need to parse the rsp file to create a compilation
 		// to do so we relay on the csharp compiler, there is not much we really need to do. If the parsing 
 		// is wrong, we throw an exception. 
@@ -137,24 +137,24 @@ class Transformer {
 		// add NET to the preprocessor directives
 		var preprocesorDirectives = parseResult.ParseOptions.PreprocessorSymbolNames.ToList ();
 		preprocesorDirectives.Add ("NET");
-		
+
 		// fixing the parsing options, we must have an issue in the rsp
 		var updatedParseOptions = parseResult.ParseOptions
 			.WithLanguageVersion (LanguageVersion.Latest)
 			.WithPreprocessorSymbols (preprocesorDirectives)
 			.WithDocumentationMode (DocumentationMode.None);
-		
+
 		var references = parseResult.GetReferences (workingDirectory, sdkDirectory);
 		var parsedSource = parseResult.GetSourceFiles (updatedParseOptions);
-		
+
 		var compilation = CSharpCompilation.Create (
 			assemblyName: $"{parseResult.CompilationName}-transformer",
 			syntaxTrees: parsedSource,
 			references: references,
 			options: parseResult.CompilationOptions);
-		
+
 		var diagnostics = compilation.GetDiagnostics ();
-		Console.WriteLine($"Diganostics legth {diagnostics.Length}");
+		Console.WriteLine ($"Diganostics legth {diagnostics.Length}");
 		// collect all the compilation errors, ignoring the warnings, if any error is found, we throw an exception
 		var errors = diagnostics.Where (d => d.Severity == DiagnosticSeverity.Error).ToArray ();
 		if (errors.Length > 0) {
@@ -162,7 +162,7 @@ class Transformer {
 			foreach (var resultError in errors) {
 				sb.AppendLine ($"{resultError}");
 			}
-			Console.WriteLine(sb);
+			Console.WriteLine (sb);
 			throw new Exception ($"Error during workspace compilation: {sb}");
 		}
 
