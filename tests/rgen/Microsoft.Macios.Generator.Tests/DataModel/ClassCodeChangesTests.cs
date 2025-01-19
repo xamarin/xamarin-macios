@@ -735,6 +735,78 @@ public partial class MyClass {
 				}
 			];
 
+			const string customMarshallingProperty = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"", Flags = Property.CustomMarshalDirective, NativePrefix = ""xamarin_"", Library = ""__Internal"")]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				customMarshallingProperty,
+				new CodeChanges (
+					bindingInfo: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							returnType: ReturnTypeForString (),
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.CustomMarshalDirective", "xamarin_", "__Internal"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+							]
+						) {
+							ExportPropertyData = new (
+								selector: "name",
+								argumentSemantic: ArgumentSemantic.None,
+								flags: Property.Default | Property.CustomMarshalDirective) {
+								NativePrefix = "xamarin_",
+								Library = "__Internal"
+							}
+						}
+					]
+				}
+			];
+
 			const string multiPropertyClass = @"
 using ObjCBindings;
 

@@ -49,6 +49,16 @@ namespace ObjCBindings {
 		/// </summary>
 		MarshalNativeExceptions = 1 << 4,
 
+
+		/// <summary>
+		/// Instruct the generator to use a custom marshal directive for the method. When this flag is applied the 
+		/// following name parameters must be provided:
+		/// - NativePrefix: The prefix to be used in the native method name.
+		/// - NativeSuffix: The suffix to be used in the native method name.
+		/// - Library: The library to be used in the custom marshal directive.
+		/// </summary>
+		CustomMarshalDirective = 1 << 5,
+
 	}
 
 	/// <summary>
@@ -77,6 +87,15 @@ namespace ObjCBindings {
 		/// will go through a custom trampoline which catches ObjectiveC exceptions and marshals them into managed exceptions.
 		/// </summary>
 		MarshalNativeExceptions = 1 << 4,
+
+		/// <summary>
+		/// Instruct the generator to use a custom marshal directive for the method. When this flag is applied the 
+		/// following name parameters must be provided:
+		/// - NativePrefix: The prefix to be used in the native method name.
+		/// - NativeSuffix: The suffix to be used in the native method name.
+		/// - Library: The library to be used in the custom marshal directive.
+		/// </summary>
+		CustomMarshalDirective = 1 << 5,
 
 	}
 }
