@@ -102,11 +102,22 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 			using (var propertyBlock = classBlock.CreateBlock (property.ToDeclaration ().ToString (), block: true)) {
 				// generate the accessors, we will always have a get, a set is optional depending on the type
 				// if the symbol availability of the accessor is different of the one from the property, write it
+				var backingField = property.BackingField;
 
 				// be very verbose with the availability, makes the life easier to the dotnet analyzer
 				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
-					getterBlock.AppendLine ("throw new NotImplementedException ();");
+					// fields with a reference type have a backing fields, while value types do not
+					if (property.IsReferenceType) {
+						getterBlock.AppendRaw (
+$@"if ({backingField} is null)
+	{backingField} = {FieldConstantGetter (property)}
+return {backingField};
+");
+					} else {
+						// directly return the call from the getter
+						getterBlock.AppendLine ($"return {FieldConstantGetter (property)}");
+					}
 				}
 
 				var setter = property.GetAccessor (AccessorKind.Setter);
@@ -117,7 +128,12 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 				propertyBlock.AppendLine (); // add space between getter and setter since we have the attrs
 				propertyBlock.AppendMemberAvailability (setter.Value.SymbolAvailability);
 				using (var setterBlock = propertyBlock.CreateBlock ("set", block: true)) {
-					setterBlock.AppendLine ("throw new NotImplementedException ();");
+					if (property.IsReferenceType) {
+						// set the backing field
+						setterBlock.AppendLine ($"{backingField} = value;");
+					}
+					// call the native code
+					setterBlock.AppendLine ($"{FieldConstantSetter (property, "value")}");
 				}
 			}
 		}
