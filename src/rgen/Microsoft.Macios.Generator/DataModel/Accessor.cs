@@ -26,6 +26,9 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// </summary>
 	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
 
+	public bool MarshalNativeExceptions
+		=> ExportPropertyData is not null && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
+
 	/// <summary>
 	/// List of attribute code changes of the accessor.
 	/// </summary>
@@ -56,6 +59,39 @@ readonly struct Accessor : IEquatable<Accessor> {
 		Attributes = attributes;
 		Modifiers = modifiers;
 	}
+
+	/// <summary>
+	/// Retrieve the selector to be used with the associated property.
+	/// </summary>
+	/// <param name="associatedProperty">The property associated with the accessor.</param>
+	/// <returns>The selector to use for the accessor.</returns>
+	public string? GetSelector (in Property associatedProperty)
+	{
+		// this is not a property but a field, we cannot retrieve a selector.
+		if (!associatedProperty.IsProperty)
+			return null;
+
+		// There are two possible cases, the current accessor has an export attribute, if that
+		// is the case, we will use the selector in that attribute. Otherwise, we have:
+		//
+		// * getter: return the property selector.
+		// * setter: use the registrar code (it has the right logic) to get the setter.
+		if (ExportPropertyData is null) {
+			return Kind == AccessorKind.Getter
+				? associatedProperty.ExportPropertyData.Value.Selector
+				: Registrar.Registrar.CreateSetterSelector (associatedProperty.ExportPropertyData.Value.Selector);
+		}
+
+		return ExportPropertyData.Value.Selector;
+	}
+
+	/// <summary>
+	/// Returns if the accessor should marshal native exceptions with the associated property.
+	/// </summary>
+	/// <param name="property">The property associated with the accessor.</param>
+	/// <returns>True if either the accessor or the property were marked with the MarshalNativeExceptions flag.</returns>
+	public bool ShouldMarshalNativeExceptions (in Property property)
+		=> MarshalNativeExceptions || property.MarshalNativeExceptions;
 
 	/// <inheritdoc />
 	public bool Equals (Accessor other)

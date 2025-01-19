@@ -511,7 +511,7 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 
 ifeq ($(4),64)
-PLATFORM_$(1)_CSPROJ = $(DOTNET_BUILD_DIR)/$(1)/platform/Microsoft.$(1).csproj
+PLATFORM_$(1)_CSPROJ = $(DOTNET_BUILD_DIR)/$(1)/csproj/platform/Microsoft.$(1).csproj
 CSPROJECTS += $$(PLATFORM_$(1)_CSPROJ)
 $$(PLATFORM_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp Makefile $(RSP_TO_CSPROJ) $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp
 	$$(Q) rm -f $$@

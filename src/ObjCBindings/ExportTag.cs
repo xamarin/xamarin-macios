@@ -71,6 +71,13 @@ namespace ObjCBindings {
 		/// Generate a notification for the property.
 		/// </summary>
 		Notification = 1 << 3,
+
+		/// <summary>
+		/// Make a method support native (Objective-C) exceptions. Instead of calling objc_msgSend directly, the invocation 
+		/// will go through a custom trampoline which catches ObjectiveC exceptions and marshals them into managed exceptions.
+		/// </summary>
+		MarshalNativeExceptions = 1 << 4,
+
 	}
 }
 

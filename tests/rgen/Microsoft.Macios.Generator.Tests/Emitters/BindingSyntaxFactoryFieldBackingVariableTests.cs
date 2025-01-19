@@ -14,9 +14,9 @@ using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 
 namespace Microsoft.Macios.Generator.Tests.Emitters;
 
-public class BindingSyntaxFactoryTests : BaseGeneratorTestClass {
+public class BindingSyntaxFactoryFieldBackingVariableTests : BaseGeneratorTestClass {
 
-	class TestDataFieldConstantGetter : IEnumerable<object []> {
+	class TestDataFieldPropertyBackingVariable : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			const string nsStringFieldProperty = @"
@@ -36,8 +36,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nsStringFieldProperty,
-				"Dlfcn.GetStringConstant (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				nsStringFieldProperty,
+				"static Foundation.NSString? _GenericGray;"
+			];
 
 			const string byteFieldProperty = @"
 using System;
@@ -56,8 +58,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [byteFieldProperty,
-				"Dlfcn.GetByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				byteFieldProperty,
+				"static byte _GenericGray;"
+			];
 
 			const string otherByteFieldProperty = @"
 using System;
@@ -75,8 +79,10 @@ namespace CoreGraphics {
 	}
 }
 ";
-			yield return [otherByteFieldProperty,
-				"Dlfcn.GetByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherByteFieldProperty,
+				"static byte _GenericGray;"
+			];
 
 			const string sbyteFieldProperty = @"
 using System;
@@ -95,8 +101,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [sbyteFieldProperty,
-				"Dlfcn.GetSByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				sbyteFieldProperty,
+				"static sbyte _GenericGray;"
+			];
 
 			const string otherSbyteFieldProperty = @"
 using System;
@@ -115,8 +123,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherSbyteFieldProperty,
-				"Dlfcn.GetSByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherSbyteFieldProperty,
+				"static sbyte _GenericGray;"
+			];
 
 			const string int16FieldProperty = @"
 using System;
@@ -135,8 +145,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [int16FieldProperty,
-				"Dlfcn.GetInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				int16FieldProperty,
+				"static short _GenericGray;"
+			];
 
 			const string otherInt16FieldProperty = @"
 using System;
@@ -155,8 +167,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherInt16FieldProperty,
-				"Dlfcn.GetInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherInt16FieldProperty,
+				"static short _GenericGray;"
+			];
 
 			const string uint16FieldProperty = @"
 using System;
@@ -175,8 +189,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [uint16FieldProperty,
-				"Dlfcn.GetUInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				uint16FieldProperty,
+				"static ushort _GenericGray;"
+			];
 
 			const string otherUint16FieldProperty = @"
 using System;
@@ -195,8 +211,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherUint16FieldProperty,
-				"Dlfcn.GetUInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherUint16FieldProperty,
+				"static ushort _GenericGray;"
+			];
 
 			const string int32FieldProperty = @"
 using System;
@@ -215,8 +233,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [int32FieldProperty,
-				"Dlfcn.GetInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				int32FieldProperty,
+				"static int _GenericGray;"
+			];
 
 			const string otherInt32FieldProperty = @"
 using System;
@@ -235,8 +255,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherInt32FieldProperty,
-				"Dlfcn.GetInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherInt32FieldProperty,
+				"static int _GenericGray;"
+			];
 
 			const string uint32FieldProperty = @"
 using System;
@@ -255,8 +277,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [uint32FieldProperty,
-				"Dlfcn.GetUInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				uint32FieldProperty,
+				"static uint _GenericGray;"
+			];
 
 			const string otherUint32FieldProperty = @"
 using System;
@@ -275,8 +299,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherUint32FieldProperty,
-				"Dlfcn.GetUInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherUint32FieldProperty,
+				"static uint _GenericGray;"
+			];
 
 			const string doubleFieldProperty = @"
 using System;
@@ -295,8 +321,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [doubleFieldProperty,
-				"Dlfcn.GetDouble (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				doubleFieldProperty,
+				"static double _GenericGray;"
+			];
 
 			const string otherDoubleFieldProperty = @"
 using System;
@@ -315,8 +343,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherDoubleFieldProperty,
-				"Dlfcn.GetDouble (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherDoubleFieldProperty,
+				"static double _GenericGray;"
+			];
 
 			const string floatFieldProperty = @"
 using System;
@@ -335,8 +365,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [floatFieldProperty,
-				"Dlfcn.GetFloat (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				floatFieldProperty,
+				"static float _GenericGray;"
+			];
 
 			const string otherFloatFieldProperty = @"
 using System;
@@ -355,8 +387,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [otherFloatFieldProperty,
-				"Dlfcn.GetFloat (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				otherFloatFieldProperty,
+				"static float _GenericGray;"
+			];
 
 			const string intPtrFieldProperty = @"
 using System;
@@ -375,8 +409,11 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [intPtrFieldProperty,
-				"Dlfcn.GetIntPtr (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				intPtrFieldProperty,
+				"static IntPtr _GenericGray;"
+			];
+
 
 			const string uintPtrFieldProperty = @"
 using System;
@@ -395,8 +432,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [uintPtrFieldProperty,
-				"Dlfcn.GetUIntPtr (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				uintPtrFieldProperty,
+				"static UIntPtr _GenericGray;"
+			];
 
 			const string nintFieldProperty = @"
 using System;
@@ -415,8 +454,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nintFieldProperty,
-				"Dlfcn.GetIntPtr (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				nintFieldProperty,
+				"static IntPtr _GenericGray;"
+			];
 
 			const string nuintFieldProperty = @"
 using System;
@@ -435,8 +476,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nuintFieldProperty,
-				"Dlfcn.GetUIntPtr (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				nuintFieldProperty,
+				"static UIntPtr _GenericGray;"
+			];
 
 			const string nfloatFieldProperty = @"
 using System;
@@ -455,8 +498,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nfloatFieldProperty,
-				"Dlfcn.GetNFloat (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				nfloatFieldProperty,
+				"static nfloat? _GenericGray;"
+			];
 
 			const string cgsizeFieldProperty = @"
 using System;
@@ -476,8 +521,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [cgsizeFieldProperty,
-				"Dlfcn.GetCGSize (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				cgsizeFieldProperty,
+				"static CoreGraphics.CGSize _GenericGray;"
+			];
 
 			const string cmtagFieldProperty = @"
 using System;
@@ -497,8 +544,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [cmtagFieldProperty,
-				"Dlfcn.GetStruct<CoreMedia.CMTag> (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"];
+			yield return [
+				cmtagFieldProperty,
+				"static CoreMedia.CMTag _GenericGray;"
+			];
 
 			const string nsArrayFieldProperty = @"
 using System;
@@ -518,8 +567,10 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nsArrayFieldProperty,
-				"Runtime.GetNSObject<Foundation.NSArray> (Dlfcn.GetIndirect (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\"))!;"];
+			yield return [
+				nsArrayFieldProperty,
+				"static Foundation.NSArray? _GenericGray;"
+			];
 
 			const string nsNumberFieldProperty = @"
 using System;
@@ -539,38 +590,12 @@ namespace CoreGraphics {
 }
 ";
 
-			yield return [nsNumberFieldProperty,
-				"Runtime.GetNSObject<Foundation.NSNumber> (Dlfcn.GetIndirect (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\"))!;"];
-
-			const string sbyteEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : sbyte{
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
 			yield return [
-				sbyteEnumFieldProperty,
-				"Dlfcn.GetSByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
+				nsNumberFieldProperty,
+				"static Foundation.NSNumber? _GenericGray;"
 			];
 
-			const string byteEnumFieldProperty = @"
+			const string enumFieldProperty = @"
 using System;
 using Foundation;
 using CoreMedia;
@@ -579,7 +604,7 @@ using ObjCBindings;
 namespace CoreGraphics {
 
 	public enum CGColorSpaceGenericGray : byte{
-		First, 
+		First,
 		Second,
 	}
 
@@ -594,223 +619,8 @@ namespace CoreGraphics {
 ";
 
 			yield return [
-				byteEnumFieldProperty,
-				"Dlfcn.GetByte (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string shortEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : short {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				shortEnumFieldProperty,
-				"Dlfcn.GetInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string ushortEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : ushort {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				ushortEnumFieldProperty,
-				"Dlfcn.GetUInt16 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string intEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : int {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				intEnumFieldProperty,
-				"Dlfcn.GetInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string uintEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : uint {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				uintEnumFieldProperty,
-				"Dlfcn.GetUInt32 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string longEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : long {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				longEnumFieldProperty,
-				"Dlfcn.GetInt64 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string ulongEnumFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	public enum CGColorSpaceGenericGray : ulong {
-		First, 
-		Second,
-	}
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CGColorSpaceGenericGray GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				ulongEnumFieldProperty,
-				"Dlfcn.GetUInt64 (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\");"
-			];
-
-			const string cmTimeFieldProperty = @"
-using System;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial CMTime GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				cmTimeFieldProperty,
-				"*((CoreMedia.CMTime*) Dlfcn.dlsym (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\"));"
-			];
-
-			const string whiteFieldProperty = @"
-using System;
-using AVFoundation;
-using Foundation;
-using CoreMedia;
-using ObjCBindings;
-
-namespace CoreGraphics {
-
-	[BindingType<Class>]
-	public partial class CGColorSpaceNames {
-
-		[Field<Property> (""kCGColorSpaceGenericGray"")]
-		public partial AVCaptureWhiteBalanceGains GenericGray { get; }
-
-	}
-}
-";
-
-			yield return [
-				whiteFieldProperty,
-				"*((AVFoundation.AVCaptureWhiteBalanceGains*) Dlfcn.dlsym (Libraries.CoreGraphics.Handle, \"kCGColorSpaceGenericGray\"));"
+				enumFieldProperty,
+				"static CoreGraphics.CGColorSpaceGenericGray _GenericGray;"
 			];
 		}
 
@@ -818,7 +628,7 @@ namespace CoreGraphics {
 	}
 
 	[Theory]
-	[AllSupportedPlatformsClassData<TestDataFieldConstantGetter>]
+	[AllSupportedPlatformsClassData<TestDataFieldPropertyBackingVariable>]
 	void FieldConstantGetterTests (ApplePlatform platform, string inputText, string expectedCall)
 	{
 		var (compilation, sourceTrees) =
@@ -833,8 +643,6 @@ namespace CoreGraphics {
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
 		var context = new RootBindingContext (semanticModel);
 		Assert.True (Property.TryCreate (node, context, out var property));
-		var compilationUnit = FieldConstantGetter (property.Value).ToString ();
-		var str = compilationUnit.ToString ();
-		Assert.Equal (expectedCall, FieldConstantGetter (property.Value).ToString ());
+		Assert.Equal (expectedCall, FieldPropertyBackingVariable (property.Value).ToString ());
 	}
 }
