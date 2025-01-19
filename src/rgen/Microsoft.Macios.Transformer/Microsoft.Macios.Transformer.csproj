@@ -9,14 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Marille" Version="0.5.3" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Microsoft.Macios.Generator\Microsoft.Macios.Generator.csproj" PrivateAssets="all" />
-        <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
 </Project>
