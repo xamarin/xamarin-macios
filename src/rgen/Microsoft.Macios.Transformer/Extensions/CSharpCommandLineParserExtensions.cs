@@ -15,8 +15,7 @@ static class CSharpCommandLineParserExtensions {
 		var parseResult = self.Parse (
 			args: args,
 			baseDirectory: workingDirectory,
-			sdkDirectory: Path.GetDirectoryName (typeof (object).GetTypeInfo ().Assembly.ManifestModule
-				.FullyQualifiedName)//sdkDirectory
+			sdkDirectory: sdkDirectory
 		);
 
 		if (parseResult.Errors.Length > 0) {
