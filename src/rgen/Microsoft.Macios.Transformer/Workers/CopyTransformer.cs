@@ -6,12 +6,13 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Workers;
 
-public class ClassTransformer (string destinationDirectory) : ITransformer<(string Path, string SymbolName)> {
+public class CopyTransformer (string destinationDirectory) : ITransformer<(string Path, string SymbolName)> {
 
-	public ValueTask DisposeAsync () => ValueTask.CompletedTask;
+	public bool UseBackgroundThread { get => true; }
+
 	public Task ConsumeAsync ((string Path, string SymbolName) message, CancellationToken token = new ())
 	{
-		Console.WriteLine ($"ClassTransformer: Transforming class {message.SymbolName} for path {message.Path} to {destinationDirectory}");
+		Console.WriteLine ($"CopyTransformer: Transforming class {message.SymbolName} for path {message.Path} to {destinationDirectory}");
 		return Task.Delay (10);
 	}
 
@@ -28,6 +29,6 @@ public class ClassTransformer (string destinationDirectory) : ITransformer<(stri
 
 	public void Dispose () { }
 
+	public ValueTask DisposeAsync () => ValueTask.CompletedTask;
 
-	public bool UseBackgroundThread { get => true; }
 }
