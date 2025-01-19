@@ -63,7 +63,7 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
             <Link>Generator/Extensions/CompilationExtensions.cs</Link>
         </Compile>
-        <Compile Include="..\Microsoft.Macios.Generator\Extensions\TypeSymbolExtensions.Core.cs">
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs">
             <Link>Generator/Extensions/TypeSymbolExtensions.Core.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypedConstantExtensions.cs" >
