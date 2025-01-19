@@ -66,7 +66,7 @@ class Transformer {
 		if (symbol.TypeKind == TypeKind.Enum) {
 			// simplest case, an error domain	
 			if (attrs.ContainsKey (AttributesNames.ErrorDomainAttribute))
-				return nameof(ErrorDomainTransformer);
+				return nameof (ErrorDomainTransformer);
 
 			// in this case, we need to check if the enum is a smart enum. 
 			// Smart enum: One of the enum members contains a FieldAttribute. Does NOT have to be ALL
@@ -74,26 +74,26 @@ class Transformer {
 			foreach (var enumField in enumMembers) {
 				var fieldAttrs = enumField.GetAttributeData ();
 				if (fieldAttrs.ContainsKey (AttributesNames.FieldAttribute)) {
-					return nameof(SmartEnumTransformer);
+					return nameof (SmartEnumTransformer);
 				}
 			}
 
 			// we have either a native enum of a regular enum, we will use the copy worker
-			return nameof(CopyTransformer);
+			return nameof (CopyTransformer);
 		}
-		
+
 		if (attrs.ContainsKey (AttributesNames.BaseTypeAttribute)) {
 			// if can be a class or a protocol, check if the protocol attribute is present
 			if (attrs.ContainsKey (AttributesNames.ProtocolAttribute) ||
-				attrs.ContainsKey (AttributesNames.ModelAttribute)) 
-				return nameof(ProtocolTransformer);
+				attrs.ContainsKey (AttributesNames.ModelAttribute))
+				return nameof (ProtocolTransformer);
 			if (attrs.ContainsKey (AttributesNames.CategoryAttribute))
-				return nameof(CategoryTransformer);
-			return nameof(ClassTransformer);
+				return nameof (CategoryTransformer);
+			return nameof (ClassTransformer);
 		}
-		
+
 		if (attrs.ContainsKey (AttributesNames.StrongDictionaryAttribute))
-			return nameof(StrongDictionaryTransformer);
+			return nameof (StrongDictionaryTransformer);
 
 		return null;
 	}

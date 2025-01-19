@@ -108,8 +108,8 @@ public enum UIApplicationCategoryDefaultErrorCode : long {
 }
 ";
 
-			yield return [(errorDomain, path), nameof(ErrorDomainTransformer)];
-			
+			yield return [(errorDomain, path), nameof (ErrorDomainTransformer)];
+
 			const string smartEnum = @"
 using System;
 using Foundation;
@@ -136,7 +136,7 @@ public enum UIAccessibilityTraits : long {
 }
 ";
 
-			yield return [(smartEnum, path), nameof(SmartEnumTransformer)];
+			yield return [(smartEnum, path), nameof (SmartEnumTransformer)];
 
 			const string normalEnum = @"
 using System;
@@ -155,7 +155,7 @@ public enum UIAccessibilityTraits : long {
 }
 ";
 
-			yield return [(normalEnum, path), nameof(CopyTransformer)];
+			yield return [(normalEnum, path), nameof (CopyTransformer)];
 
 			const string category = @"
 using System;
@@ -175,7 +175,7 @@ interface NSObject_UIAccessibilityHitTest {
 }
 ";
 
-			yield return [(category, path), nameof(CategoryTransformer)];
+			yield return [(category, path), nameof (CategoryTransformer)];
 
 			const string baseType = @"
 using System;
@@ -199,7 +199,7 @@ interface UIZoomTransitionInteractionContext {
 }
 ";
 
-			yield return [(baseType, path), nameof(ClassTransformer)];
+			yield return [(baseType, path), nameof (ClassTransformer)];
 
 			const string protocol = @"
 using System;
@@ -228,7 +228,7 @@ interface UITextFormattingViewControllerDelegate {
 }
 ";
 
-			yield return [(protocol, path), nameof(ProtocolTransformer)];
+			yield return [(protocol, path), nameof (ProtocolTransformer)];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

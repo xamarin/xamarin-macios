@@ -9,7 +9,7 @@ using Microsoft.Macios.Generator.Availability;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class TypeSymbolExtensions {
-	
+
 	/// <summary>
 	/// Return the symbol availability WITHOUT taking into account the parent symbols availability.
 	/// </summary>
@@ -58,7 +58,7 @@ static partial class TypeSymbolExtensions {
 
 		return builder.ToImmutable ();
 	}
-	
+
 	/// <summary>
 	/// Returns the symbol availability taking into account the parent symbols availability.
 	///
@@ -77,7 +77,7 @@ static partial class TypeSymbolExtensions {
 
 		return availability;
 	}
-	
+
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
 		// a type is a smart enum if its type is a enum one AND it was decorated with the
@@ -127,7 +127,7 @@ static partial class TypeSymbolExtensions {
 
 		return default;
 	}
-	
+
 	/// <summary>
 	/// Retrieve the data of an export attribute on a symbol.
 	/// </summary>

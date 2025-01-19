@@ -67,7 +67,7 @@ static partial class TypeSymbolExtensions {
 
 		return [.. result];
 	}
-	
+
 	public static bool HasAttribute (this ISymbol symbol, string attribute)
 	{
 		var boundAttributes = symbol.GetAttributes ();
@@ -84,7 +84,7 @@ static partial class TypeSymbolExtensions {
 
 		return false;
 	}
-	
+
 	delegate string? GetAttributeNames ();
 
 	delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
@@ -113,7 +113,7 @@ static partial class TypeSymbolExtensions {
 			return exportData.Value;
 		return null;
 	}
-	
+
 	/// <summary>
 	/// Returns if a type is blittable or not.
 	/// </summary>
