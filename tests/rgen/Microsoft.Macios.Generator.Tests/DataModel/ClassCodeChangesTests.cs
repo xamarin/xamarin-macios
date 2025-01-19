@@ -312,9 +312,8 @@ public partial class MyClass {
 							parameters: [
 								new (
 									position: 0,
-									type: "string",
-									name: "name",
-									isBlittable: false
+									type: ReturnTypeForString (),
+									name: "name"
 								)
 							]
 						),
@@ -881,7 +880,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false)
+								new (position: 0, type: ReturnTypeForString (), name: "name")
 							]
 						),
 					]
@@ -936,7 +935,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false)
+								new (position: 0, type: ReturnTypeForString (), name: "name")
 							]
 						),
 					]
@@ -992,7 +991,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "name", isBlittable: false)
+								new (position: 0, type: ReturnTypeForString (), name: "name")
 							]
 						),
 						new (
@@ -1009,7 +1008,7 @@ public partial class MyClass {
 								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
 							],
 							parameters: [
-								new (position: 0, type: "string", name: "inSurname", isBlittable: false)
+								new (position: 0, type: ReturnTypeForString (), name: "inSurname")
 							]
 						),
 					]

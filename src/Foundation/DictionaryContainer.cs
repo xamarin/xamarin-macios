@@ -43,20 +43,14 @@ using CoreMedia;
 using UIKit;
 #endif
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 #nullable enable
 
 namespace Foundation {
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public abstract class DictionaryContainer {
 #if !COREBUILD
 		protected DictionaryContainer ()
@@ -247,11 +241,7 @@ namespace Foundation {
 			return value as NSDictionary<TKey, TValue>;
 		}
 
-#if NET
 		protected T? GetStrongDictionary<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (NSString key)
-#else
-		protected T? GetStrongDictionary<T> (NSString key)
-#endif
 			where T : DictionaryContainer
 		{
 			return GetStrongDictionary (key, dict =>

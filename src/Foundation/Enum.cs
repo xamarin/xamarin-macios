@@ -77,14 +77,9 @@ namespace Foundation {
 
 #if MONOMAC
 
-#if !NET
-	[Native]
-	public enum NSBundleExecutableArchitecture : long {
-#else
 	/// <summary>The bundle's architecture.</summary>
 	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
-#endif
 		I386 = 0x00000007,
 		PPC = 0x00000012,
 		X86_64 = 0x01000007,
@@ -252,10 +247,6 @@ namespace Foundation {
 	public enum NSDataReadingOptions : ulong {
 		Mapped = 1 << 0,
 		Uncached = 1 << 1,
-#if !NET
-		[Obsolete ("This option is unavailable.")]
-		Coordinated = 1 << 2,
-#endif
 		MappedAlways = 1 << 3,
 	}
 
@@ -592,10 +583,6 @@ namespace Foundation {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
-#if !NET
-		[Obsolete ("Use 'None' instead.")]
-		SkipsNone = 0,
-#endif
 		None = 0,
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants = 1 << 1,
@@ -808,10 +795,6 @@ namespace Foundation {
 		Json5Allowed = 8,
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		TopLevelDictionaryAssumed = 16,
-#if !NET
-		[Obsolete ("Use 'FragmentsAllowed. instead.")]
-		AllowFragments = FragmentsAllowed,
-#endif
 	}
 
 	[Flags]
@@ -889,7 +872,6 @@ namespace Foundation {
 		LongestEffectiveRangeNotRequired = 1 << 20,
 	}
 
-#if NET || !MONOMAC
 	// macOS has defined this in AppKit as well, but starting with .NET we're going
 	// to use this one only.
 	[Native]
@@ -905,7 +887,6 @@ namespace Foundation {
 		PatternDashDotDot = 0x0400,
 		ByWord = 0x8000,
 	}
-#endif
 
 	// There's an AppKit.NSWritingDirection, which is deprecated.
 	// There's also an UIKit.UITextWritingDirection, which is deprecated too.
@@ -976,17 +957,6 @@ namespace Foundation {
 		Default,
 		All,
 	}
-
-#if !NET
-	[Flags]
-	[Native]
-	public enum NSDateComponentsWrappingBehavior : ulong {
-		None = 0,
-		WrapCalendarComponents = 1 << 0,
-
-		// Did not add the new enums here, we moved them elsewhere, and provided overloads.
-	}
-#endif
 
 	[Flags]
 	[Native]

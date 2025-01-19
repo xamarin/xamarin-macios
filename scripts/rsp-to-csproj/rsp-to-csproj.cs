@@ -175,6 +175,10 @@ foreach (var a in arguments) {
 		break;
 	case "noconfig": // this is already passed to csc by default
 		break;
+	case "reportanalyzer":
+		if (!properties.Contains (("ReportAnalyzer", "true")))
+			properties.Add (new ("ReportAnalyzer", "true"));
+		break;
 	default:
 		ReportError ($"Didn't understand argument '{a}'");
 		break;

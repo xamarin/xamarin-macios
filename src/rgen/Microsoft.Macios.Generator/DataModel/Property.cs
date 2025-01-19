@@ -81,6 +81,12 @@ readonly struct Property : IEquatable<Property> {
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
 	/// <summary>
+	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
+	/// </summary>
+	public bool MarshalNativeExceptions
+		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
+
+	/// <summary>
 	/// Get the modifiers of the property.
 	/// </summary>
 	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
@@ -89,6 +95,16 @@ readonly struct Property : IEquatable<Property> {
 	/// Get the list of accessor changes of the property.
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
+
+	public Accessor? GetAccessor (AccessorKind accessorKind)
+	{
+		// careful, do not use FirstOrDefault from LINQ because we are using structs!
+		foreach (var accessor in Accessors) {
+			if (accessor.Kind == accessorKind)
+				return accessor;
+		}
+		return null;
+	}
 
 	internal Property (string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,

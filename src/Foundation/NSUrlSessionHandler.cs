@@ -58,9 +58,6 @@ namespace System.Net.Http {
 namespace Foundation {
 #endif
 
-#if !NET
-	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
-#endif
 	public delegate bool NSUrlSessionHandlerTrustOverrideForUrlCallback (NSUrlSessionHandler sender, string url, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
@@ -305,21 +302,6 @@ namespace Foundation {
 			}
 		}
 
-#if !NET
-		NSUrlSessionHandlerTrustOverrideCallback? trustOverride;
-
-		[Obsolete ("Use the 'TrustOverrideForUrl' property instead.")]
-		public NSUrlSessionHandlerTrustOverrideCallback? TrustOverride {
-			get {
-				return trustOverride;
-			}
-			set {
-				EnsureModifiability ();
-				trustOverride = value;
-			}
-		}
-#endif
-
 		NSUrlSessionHandlerTrustOverrideForUrlCallback? trustOverrideForUrl;
 
 		public NSUrlSessionHandlerTrustOverrideForUrlCallback? TrustOverrideForUrl {
@@ -502,9 +484,6 @@ namespace Foundation {
 			return nsrequest;
 		}
 
-#if (SYSTEM_NET_HTTP || MONOMAC) && !NET
-		internal
-#endif
 		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			Volatile.Write (ref sentRequest, true);
@@ -545,7 +524,6 @@ namespace Foundation {
 			return await inflightData.CompletionSource.Task.ConfigureAwait (false);
 		}
 
-#if NET
 		// Properties that will be called by the default HttpClientHandler
 
 		// NSUrlSession handler automatically handles decompression, and there doesn't seem to be a way to turn it off.
@@ -603,7 +581,7 @@ namespace Foundation {
 			set {
 				// I believe it's possible to implement support for MaxAutomaticRedirections (it just has to be done)
 				if (value != int.MaxValue)
-					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections."); ;
 			}
 		}
 
@@ -657,7 +635,7 @@ namespace Foundation {
 			set {
 				if (value is not null)
 					throw new PlatformNotSupportedException ();
-			} 
+			}
 		}
 
 		// There doesn't seem to be a trivial way to specify the protocols to accept (or not)
@@ -696,8 +674,7 @@ namespace Foundation {
 			return true;
 		}
 
-		sealed class ServerCertificateCustomValidationCallbackHelper
-		{
+		sealed class ServerCertificateCustomValidationCallbackHelper {
 			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; private set; }
 
 			public ServerCertificateCustomValidationCallbackHelper (Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
@@ -707,7 +684,7 @@ namespace Foundation {
 
 			public bool Invoke (HttpRequestMessage request, SecTrust secTrust)
 			{
-				X509Certificate2[] certificates = ConvertCertificates (secTrust);
+				X509Certificate2 [] certificates = ConvertCertificates (secTrust);
 				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
 				using X509Chain chain = CreateChain (certificates);
 				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
@@ -715,7 +692,7 @@ namespace Foundation {
 				return Callback (request, certificate, chain, sslPolicyErrors);
 			}
 
-			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
+			X509Certificate2 [] ConvertCertificates (SecTrust secTrust)
 			{
 				var certificates = new X509Certificate2 [secTrust.Count];
 
@@ -748,7 +725,7 @@ namespace Foundation {
 				}
 			}
 
-			X509Chain CreateChain (X509Certificate2[] certificates)
+			X509Chain CreateChain (X509Certificate2 [] certificates)
 			{
 				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
 				var chain = new X509Chain ();
@@ -761,7 +738,7 @@ namespace Foundation {
 			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
 			{
 				var sslPolicyErrors = SslPolicyErrors.None;
-				
+
 				try {
 					if (certificate is null) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
@@ -802,10 +779,9 @@ namespace Foundation {
 			get => true;
 			set {
 				if (!value)
-					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies."); ;
 			}
 		}
-#endif // NET
 
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate {
 			readonly NSUrlSessionHandler sessionHandler;
@@ -1053,17 +1029,6 @@ namespace Foundation {
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
 				var trustSec = false;
 				var usedCallback = false;
-#if !NET
-				var trustCallback = sessionHandler.TrustOverride;
-				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null;
-				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
-					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
-					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
-					usedCallback = true;
-				}
-#else
 				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
 					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
 					if (trustCallbackForUrl is not null) {
@@ -1073,7 +1038,6 @@ namespace Foundation {
 						usedCallback = true;
 					}
 				}
-#endif
 
 				if (usedCallback) {
 					if (trustSec) {
@@ -1089,7 +1053,7 @@ namespace Foundation {
 					}
 					return;
 				}
-#if NET
+
 				if (sessionHandler.ClientCertificateOptions == ClientCertificateOption.Manual && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodClientCertificate) {
 					var certificate = CertificateHelper.GetEligibleClientCertificate (sessionHandler.ClientCertificates);
 					if (certificate is not null) {
@@ -1100,7 +1064,6 @@ namespace Foundation {
 						return;
 					}
 				}
-#endif
 
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
@@ -1307,9 +1270,6 @@ namespace Foundation {
 				return content.CopyToAsync (stream, bufferSize, cancellationToken);
 			}
 
-#if !NET
-			internal
-#endif
 			protected override bool TryComputeLength (out long length)
 			{
 				if (!content.CanSeek) {
@@ -1565,16 +1525,9 @@ namespace Foundation {
 			}
 
 			[Preserve (Conditional = true)]
-#if NET
 			public override void Schedule (NSRunLoop aRunLoop, NSString nsMode)
-#else
-			public override void Schedule (NSRunLoop aRunLoop, string mode)
-#endif
 			{
 				var cfRunLoop = aRunLoop.GetCFRunLoop ();
-#if !NET
-				var nsMode = new NSString (mode);
-#endif
 
 				cfRunLoop.AddSource (source, nsMode);
 
@@ -1587,17 +1540,9 @@ namespace Foundation {
 			}
 
 			[Preserve (Conditional = true)]
-#if NET
 			public override void Unschedule (NSRunLoop aRunLoop, NSString nsMode)
-#else
-			public override void Unschedule (NSRunLoop aRunLoop, string mode)
-#endif
 			{
 				var cfRunLoop = aRunLoop.GetCFRunLoop ();
-#if !NET
-				var nsMode = new NSString (mode);
-#endif
-
 				cfRunLoop.RemoveSource (source, nsMode);
 			}
 
@@ -1607,7 +1552,6 @@ namespace Foundation {
 			}
 		}
 
-#if NET
 		static class CertificateHelper {
 			// Based on https://github.com/dotnet/runtime/blob/c2848c582f5d6ae42c89f5bfe0818687ab3345f0/src/libraries/Common/src/System/Net/Security/CertificateHelper.cs
 			// with the NetEventSource code removed and namespace changed.
@@ -1673,6 +1617,5 @@ namespace Foundation {
 				return (ku.KeyUsages & RequiredUsages) == RequiredUsages;
 			}
 		}
-#endif
 	}
 }

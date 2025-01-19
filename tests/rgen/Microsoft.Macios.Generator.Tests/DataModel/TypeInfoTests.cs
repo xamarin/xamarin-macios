@@ -322,6 +322,67 @@ namespace NS {
 					parameters: []
 				)
 			];
+
+			const string interfaceMethod = @"
+using System;
+using System.Collections.Generic;
+
+namespace NS {
+	public interface IInterface {}
+
+	public class MyClass {
+		public IInterface MyMethod () {}
+	}
+}
+";
+			yield return [
+				interfaceMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForInterface ("NS.IInterface"),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				)
+			];
+
+			const string nativeEnumMethod = @"
+using System;
+using ObjCRuntime;
+using System.Collections.Generic;
+
+namespace NS {
+	[Native]
+	public enum MyEnum : int {
+		One,
+		Two
+	}
+
+	public class MyClass {
+		public MyEnum MyMethod () {}
+	}
+}
+";
+			yield return [
+				nativeEnumMethod,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForEnum ("NS.MyEnum", isNativeEnum: true),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				)
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

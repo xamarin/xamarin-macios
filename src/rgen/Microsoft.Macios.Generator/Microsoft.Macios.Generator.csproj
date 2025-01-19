@@ -34,6 +34,9 @@
         <Compile Include="..\..\bgen\Extensions\PlatformNameExtensions.cs" >
             <Link>external\PlatformNameExtensions.cs</Link>
         </Compile>
+        <Compile Include="..\..\ObjCRuntime\Registrar.core.cs" >
+            <Link>external\Registrar.core.cs</Link>
+        </Compile>
         <Compile Update="Resources.Designer.cs">
           <DesignTime>True</DesignTime>
           <AutoGen>True</AutoGen>

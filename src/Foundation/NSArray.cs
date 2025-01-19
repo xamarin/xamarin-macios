@@ -32,10 +32,6 @@ using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
@@ -232,7 +228,6 @@ namespace Foundation {
 			}
 		}
 
-#if NET
 		/// <summary>Create an <see cref="NSArray" /> from the specified pointers.</summary>
 		/// <param name="items">Array of pointers (to <see cref="NSObject" /> instances).</param>
 		/// <remarks>If the <paramref name="items" /> array is null, an <see cref="ArgumentNullException" /> is thrown.</remarks>
@@ -242,11 +237,10 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (items));
 
 			unsafe {
-				fixed (IntPtr *valuesPtr = items)
+				fixed (IntPtr* valuesPtr = items)
 					return Runtime.GetNSObject<NSArray> (NSArray.FromObjects ((IntPtr) valuesPtr, items.Length))!;
 			}
 		}
-#endif
 
 		static public NSArray FromIntPtrs (NativeHandle [] vals)
 		{
@@ -274,15 +268,7 @@ namespace Foundation {
 
 		internal static NativeHandle GetAtIndex (NativeHandle handle, nuint i)
 		{
-#if NET
 			return Messaging.NativeHandle_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
-#else
-#if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_XHandle, (UIntPtr) i);
-#else
-			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
-#endif
-#endif
 		}
 
 		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]

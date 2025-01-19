@@ -3,6 +3,7 @@
 using System.Collections.Immutable;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -116,8 +117,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			)
 		];
@@ -131,7 +132,7 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
 				]
 			)
 		];
@@ -151,8 +152,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			)
 		];
@@ -166,8 +167,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -187,8 +188,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			),
 			new (
@@ -200,8 +201,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -215,8 +216,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -236,8 +237,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -251,8 +252,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -272,8 +273,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			),
 			new (
@@ -285,8 +286,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -300,8 +301,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			),
 			new (
@@ -313,8 +314,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -335,8 +336,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			),
 			new (
@@ -348,8 +349,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			)
 		];
@@ -363,8 +364,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "int", name: "name", isBlittable: false),
-					new (position: 1, type: "int", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForInt (), name: "name"),
+					new (position: 1, type: ReturnTypeForInt (), name: "surname"),
 				]
 			),
 			new (
@@ -376,8 +377,8 @@ public class MethodEqualityComparerTests {
 				attributes: [],
 				modifiers: [],
 				parameters: [
-					new (position: 0, type: "string", name: "name", isBlittable: false),
-					new (position: 1, type: "string", name: "surname", isBlittable: false),
+					new (position: 0, type: ReturnTypeForString (), name: "name"),
+					new (position: 1, type: ReturnTypeForString (), name: "surname"),
 				]
 			),
 		];

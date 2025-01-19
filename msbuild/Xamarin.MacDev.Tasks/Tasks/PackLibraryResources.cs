@@ -49,7 +49,14 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var results = new List<ITaskItem> ();
 
+			var hashOriginalResources = new HashSet<string> (BundleOriginalResourcesWithLogicalNames.Select (v => v.ItemSpec));
+
 			foreach (var item in BundleResourcesWithLogicalNames) {
+				if (hashOriginalResources.Contains (item.ItemSpec)) {
+					Log.LogMessage (MessageImportance.Low, $"Skipping BundleResourcesWithLogicalNames={item.ItemSpec}, because it's also specified in BundleOriginalResourcesWithLogicalNames");
+					continue;
+				}
+
 				var logicalName = item.GetMetadata ("LogicalName");
 
 				if (string.IsNullOrEmpty (logicalName)) {

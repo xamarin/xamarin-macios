@@ -184,6 +184,24 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
+	public void AppendNotificationAdviceTests (uint tabCount, string expectedTabs)
+	{
+		var className = "TestClass";
+		var notificationName = "DidWriteAttribute";
+		var expected = $"{expectedTabs}[Advice (\"Use '{className}.Notifications.{notificationName}' helper method instead.\")]\n";
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			block.AppendNotificationAdvice (className, notificationName);
+			result = block.ToString ();
+		}
+
+		Assert.Equal (expected, result);
+	}
+
+	[Theory]
+	[InlineData (0, "")]
+	[InlineData (1, "\t")]
+	[InlineData (5, "\t\t\t\t\t")]
 	public void AppendDesignatedInitializer (uint tabCount, string expectedTabs)
 	{
 		var expected = $"{expectedTabs}[DesignatedInitializer]\n";
