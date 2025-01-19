@@ -23,7 +23,7 @@ static partial class BindingSyntaxFactory {
 	}
 
 	static CompilationUnitSyntax StaticInvocationExpression (string staticClassName, string methodName,
-		SyntaxNodeOrToken [] argumentList)
+		SyntaxNodeOrToken [] argumentList, bool suppressNullableWarning = false)
 	{
 		var invocation = InvocationExpression (
 			MemberAccessExpression (
@@ -36,7 +36,10 @@ static partial class BindingSyntaxFactory {
 		var compilationUnit = CompilationUnit ().WithMembers (
 			SingletonList<MemberDeclarationSyntax> (
 				GlobalStatement (
-					ExpressionStatement (invocation))));
+					ExpressionStatement (
+						suppressNullableWarning
+							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
+							: invocation))));
 		return compilationUnit;
 	}
 
