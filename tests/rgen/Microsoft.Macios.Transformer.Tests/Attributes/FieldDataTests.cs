@@ -9,7 +9,7 @@ using Microsoft.Macios.Transformer.Attributes;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Microsoft.Macios.Transformer.Tests;
+namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class FieldDataTests : BaseTransformerTestClass {
 

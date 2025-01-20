@@ -4,13 +4,13 @@
 using System.Collections;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
-using Microsoft.Macios.Generator.Extensions;
-using ObjCRuntime;
 
-namespace Microsoft.Macios.Transformer.Tests.DataModel;
+namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class ExportDataTests : BaseTransformerTestClass {
 
