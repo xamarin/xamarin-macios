@@ -15,4 +15,38 @@
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Microsoft.Macios.Transformer.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="../Microsoft.Macios.Generator/DictionaryComparer.cs" >
+            <Link>DictionaryComparer.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/ObsoletedOSPlatformData.cs" >
+            <Link>Attributes/ObsoletedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/SupportedOSPlatformData.cs" >
+            <Link>Attributes/SupportedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/UnsupportedOSPlatformData.cs" >
+            <Link>Attributes/UnsupportedOSPlatformData.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/*.cs" >
+            <Link>Availability/*.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs" >
+            <Link>Extensions/StringExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs" >
+            <Link>Extensions/TypeSymbolExtensions.Core.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Microsoft.Macios.Binding.Common\Microsoft.Macios.Binding.Common.csproj" />
+    </ItemGroup>
+
 </Project>

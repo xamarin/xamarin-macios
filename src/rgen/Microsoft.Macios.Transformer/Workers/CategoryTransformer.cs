@@ -2,10 +2,13 @@
 // Licensed under the MIT License.
 
 using Marille;
+using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Workers;
 
-public class CategoryTransformer (string destinationDirectory) : IWorker<(string Path, string SymbolName)>, IErrorWorker<(string Path, string Example)> {
+public class CategoryTransformer (string destinationDirectory) : ITransformer<(string Path, string SymbolName)> {
+
+	public bool UseBackgroundThread { get => true; }
 
 	public Task ConsumeAsync ((string Path, string SymbolName) message, CancellationToken token = new ())
 	{
@@ -13,15 +16,20 @@ public class CategoryTransformer (string destinationDirectory) : IWorker<(string
 		return Task.Delay (10);
 	}
 
-	public void Dispose () { }
-
-	public ValueTask DisposeAsync () => ValueTask.CompletedTask;
-
-	public Task ConsumeAsync ((string Path, string Example) message, Exception exception,
+	public Task ConsumeAsync ((string Path, string SymbolName) message, Exception exception,
 		CancellationToken token = new CancellationToken ())
 	{
 		return Task.CompletedTask;
 	}
 
-	public bool UseBackgroundThread { get => true; }
+	public (string Path, string SymbolName) CreateMessage (SyntaxTree treeNode, ISymbol symbol)
+	{
+		return (treeNode.FilePath, symbol.Name);
+	}
+
+	public void Dispose () { }
+
+	public ValueTask DisposeAsync () => ValueTask.CompletedTask;
+
+
 }
