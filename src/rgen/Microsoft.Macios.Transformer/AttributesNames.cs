@@ -17,6 +17,7 @@ static class AttributesNames {
 	public const string DisableDefaultCtorAttribute = "DisableDefaultCtorAttribute";
 	public const string DisposeAttribute = "DisposeAttribute";
 	public const string ErrorDomainAttribute = "ErrorDomainAttribute";
+	public const string ExportAttribute = "Foundation.ExportAttribute";
 	public const string FieldAttribute = "Foundation.FieldAttribute";
 	public const string AdviceAttribute = "Foundation.AdviceAttribute";
 	public const string ModelAttribute = "Foundation.ModelAttribute";
