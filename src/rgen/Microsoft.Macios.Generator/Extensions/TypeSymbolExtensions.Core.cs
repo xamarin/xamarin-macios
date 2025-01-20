@@ -113,7 +113,7 @@ static partial class TypeSymbolExtensions {
 			return exportData.Value;
 		return null;
 	}
-	
+
 	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
 		=> GetAttribute (symbol, () => attributeName, tryParse);
 

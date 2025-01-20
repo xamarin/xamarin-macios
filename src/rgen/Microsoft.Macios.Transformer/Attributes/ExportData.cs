@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 public struct ExportData : IEquatable<ExportData> {
-	
+
 	/// <summary>
 	/// The exported native selector.
 	/// </summary>
@@ -29,7 +29,7 @@ public struct ExportData : IEquatable<ExportData> {
 		Selector = selector;
 		ArgumentSemantic = argumentSemantic;
 	}
-	
+
 	/// <summary>
 	/// Try to parse the attribute data to retrieve the information of an ExportAttribute&lt;T&gt;.
 	/// </summary>
@@ -81,7 +81,7 @@ public struct ExportData : IEquatable<ExportData> {
 			}
 		}
 
-		data = new(selector, argumentSemantic);
+		data = new (selector, argumentSemantic);
 		return true;
 	}
 
@@ -113,10 +113,10 @@ public struct ExportData : IEquatable<ExportData> {
 	{
 		return !(x == y);
 	}
-	
+
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		return $"{{ Selector: '{Selector ?? "null" }', ArgumentSemantic: {ArgumentSemantic} }}";
+		return $"{{ Selector: '{Selector ?? "null"}', ArgumentSemantic: {ArgumentSemantic} }}";
 	}
 }

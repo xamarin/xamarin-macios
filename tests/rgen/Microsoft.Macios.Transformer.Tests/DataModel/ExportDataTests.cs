@@ -13,8 +13,8 @@ using ObjCRuntime;
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
 public class ExportDataTests : BaseTransformerTestClass {
-	
-	
+
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -61,7 +61,7 @@ interface UIFeedbackGenerator : UIInteraction {
 			yield return [(Source: selectorWithArgumentSemantic, Path: "/some/random/path.cs"), new ExportData (selector: "prepare", argumentSemantic: ArgumentSemantic.Retain)];
 
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
