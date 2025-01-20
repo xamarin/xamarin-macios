@@ -51,9 +51,6 @@ struct ExportData : IEquatable<ExportData> {
 			selector = (string?) attributeData.ConstructorArguments [0].Value!;
 			break;
 		case 2:
-			// there are two possible cases in this situation.
-			// 1. The second argument is an ArgumentSemantic
-			// 2. The second argument is a T
 			selector = (string?) attributeData.ConstructorArguments [0].Value!;
 			argumentSemantic = (ArgumentSemantic) attributeData.ConstructorArguments [1].Value!;
 			break;
