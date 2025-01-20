@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace Microsoft.Macios.Generator;
 
 partial class TabbedStringBuilder {
-	
+
 	public TabbedStringBuilder AppendExportData<T> (in ExportData<T> exportData) where T : Enum
 	{
 		// Try to write the smaller amount of data. We are using the old ExportAttribute until we make the final move

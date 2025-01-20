@@ -221,7 +221,7 @@ partial class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
-	
+
 	public TabbedStringBuilder AppendNotificationAdvice (in string className, in string notification)
 	{
 		string attr =
