@@ -10,7 +10,7 @@ using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-[StructLayout(LayoutKind.Auto)]
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct Accessor : IEquatable<Accessor> {
 	/// <summary>
 	/// The kind of accessor.
@@ -31,7 +31,7 @@ readonly partial struct Accessor : IEquatable<Accessor> {
 	/// List of modifiers of the accessor.
 	/// </summary>
 	public ImmutableArray<SyntaxToken> Modifiers { get; }
-	
+
 	/// <inheritdoc />
 	public bool Equals (Accessor other)
 	{

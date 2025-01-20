@@ -10,7 +10,7 @@ using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-[StructLayout(LayoutKind.Auto)]
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct Method : IEquatable<Method> {
 
 	/// <summary>
@@ -47,7 +47,7 @@ readonly partial struct Method : IEquatable<Method> {
 	/// Parameters list.
 	/// </summary>
 	public ImmutableArray<Parameter> Parameters { get; } = [];
-	
+
 	/// <inheritdoc/>
 	public bool Equals (Method other)
 	{

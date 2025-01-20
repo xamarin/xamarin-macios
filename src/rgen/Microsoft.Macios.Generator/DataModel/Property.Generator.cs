@@ -12,7 +12,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Property {
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a field binding. 
 	/// </summary>
@@ -37,13 +37,13 @@ readonly partial struct Property {
 	/// </summary>
 	[MemberNotNullWhen (true, nameof (ExportPropertyData))]
 	public bool IsProperty => ExportPropertyData is not null;
-	
+
 	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
-	
+
 	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
 	{
 		// grab the last port of the namespace

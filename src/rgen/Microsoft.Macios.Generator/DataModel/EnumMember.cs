@@ -15,7 +15,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Structure that represents a change that was made by the user on enum members that has to be
 /// reflected in the generated code.
 /// </summary>
-[StructLayout(LayoutKind.Auto)]
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct EnumMember : IEquatable<EnumMember> {
 	/// <summary>
 	/// Get the name of the member.
@@ -31,7 +31,7 @@ readonly partial struct EnumMember : IEquatable<EnumMember> {
 	/// Get the attributes added to the member.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; }
-	
+
 	/// <summary>
 	/// Create a new change that happened on a member.
 	/// </summary>

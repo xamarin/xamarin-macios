@@ -4,12 +4,12 @@
 namespace Microsoft.Macios.Transformer.Attributes;
 
 public struct FieldData : IEquatable<FieldData> {
-	
+
 	public bool Equals (FieldData other)
 	{
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
-	
+
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
@@ -19,7 +19,7 @@ public struct FieldData : IEquatable<FieldData> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
 
 	public static bool operator == (FieldData x, FieldData y)

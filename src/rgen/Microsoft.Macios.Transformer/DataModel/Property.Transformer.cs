@@ -7,7 +7,7 @@ using Microsoft.Macios.Transformer.Attributes;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Property {
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a field binding. 
 	/// </summary>

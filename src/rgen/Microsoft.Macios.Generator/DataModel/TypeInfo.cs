@@ -134,7 +134,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		IsArray = isArray;
 		IsReferenceType = isReferenceType;
 	}
-	
+
 	/// <inheritdoc/>
 	public bool Equals (TypeInfo other)
 	{

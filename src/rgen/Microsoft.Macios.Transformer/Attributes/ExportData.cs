@@ -4,12 +4,12 @@
 namespace Microsoft.Macios.Transformer.Attributes;
 
 public struct ExportData : IEquatable<ExportData> {
-	
+
 	public bool Equals (ExportData other)
 	{
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
-	
+
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
@@ -19,7 +19,7 @@ public struct ExportData : IEquatable<ExportData> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
 
 	public static bool operator == (ExportData x, ExportData y)

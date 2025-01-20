@@ -15,7 +15,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Structure that represents a set of changes that were made by the user that need to be applied to the
 /// generated code.
 /// </summary>
-[StructLayout(LayoutKind.Auto)]
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct CodeChanges {
 
 	readonly string name = string.Empty;
@@ -154,7 +154,7 @@ readonly partial struct CodeChanges {
 		get => methods;
 		init => methods = value;
 	}
-	
+
 	/// <inheritdoc/>
 	public override string ToString ()
 	{

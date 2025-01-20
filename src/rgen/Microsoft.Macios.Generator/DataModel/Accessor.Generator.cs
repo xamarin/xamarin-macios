@@ -9,7 +9,7 @@ using Microsoft.Macios.Generator.Availability;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Accessor {
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a property binding. 
 	/// </summary>
@@ -17,7 +17,7 @@ readonly partial struct Accessor {
 
 	public bool MarshalNativeExceptions
 		=> ExportPropertyData is not null && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
-	
+
 	/// <summary>
 	/// Create a new code change in a property accessor.
 	/// </summary>
@@ -71,5 +71,5 @@ readonly partial struct Accessor {
 	/// <returns>True if either the accessor or the property were marked with the MarshalNativeExceptions flag.</returns>
 	public bool ShouldMarshalNativeExceptions (in Property property)
 		=> MarshalNativeExceptions || property.MarshalNativeExceptions;
-	
+
 }

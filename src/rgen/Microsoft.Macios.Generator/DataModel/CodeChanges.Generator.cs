@@ -15,7 +15,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct CodeChanges {
-	
+
 	/// <summary>
 	/// Represents the type of binding that the code changes are for.
 	/// </summary>
@@ -26,7 +26,7 @@ readonly partial struct CodeChanges {
 	/// Represents the binding data that will be used to generate the code.
 	/// </summary>
 	public BindingInfo BindingInfo => bindingInfo;
-	
+
 	/// <summary>
 	/// Returns all the library names and paths that are needed by the native code represented by the code change.
 	/// </summary>

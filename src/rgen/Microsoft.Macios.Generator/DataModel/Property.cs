@@ -13,7 +13,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly struct that represent the changes that a user has made in a property.
 /// </summary>
-[StructLayout(LayoutKind.Auto)]
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Name of the property.
@@ -46,12 +46,12 @@ readonly partial struct Property : IEquatable<Property> {
 	/// The platform availability of the property.
 	/// </summary>
 	public SymbolAvailability SymbolAvailability { get; }
-	
+
 	/// <summary>
 	/// Get the attributes added to the member.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
-	
+
 	/// <summary>
 	/// Get the modifiers of the property.
 	/// </summary>
@@ -140,7 +140,7 @@ readonly partial struct Property : IEquatable<Property> {
 	{
 		return !left.Equals (right);
 	}
-	
+
 	/// <inheritdoc />
 	public override string ToString ()
 	{

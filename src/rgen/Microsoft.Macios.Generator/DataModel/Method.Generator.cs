@@ -14,7 +14,7 @@ using ObjCRuntime;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Method {
-	
+
 	/// <summary>
 	/// The data of the export attribute used to mark the value as a property binding. 
 	/// </summary>
@@ -24,7 +24,7 @@ readonly partial struct Method {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.MarshalNativeExceptions);
-	
+
 	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
@@ -41,7 +41,7 @@ readonly partial struct Method {
 		Modifiers = modifiers;
 		Parameters = parameters;
 	}
-	
+
 	public static bool TryCreate (MethodDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Method? change)
 	{
@@ -65,7 +65,7 @@ readonly partial struct Method {
 		// in the old binding code.
 		var exportData = method.GetExportData<ObjCBindings.Method> ()
 						 ?? new (null, ArgumentSemantic.None, ObjCBindings.Method.Default);
-		
+
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
@@ -75,7 +75,7 @@ readonly partial struct Method {
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			parameters: parametersBucket.ToImmutableArray ());
-	
+
 		return true;
 	}
 }

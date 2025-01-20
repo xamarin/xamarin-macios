@@ -11,7 +11,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Constructor {
-	
+
 	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Constructor? change)
 	{

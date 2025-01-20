@@ -96,7 +96,7 @@ readonly partial struct Event : IEquatable<Event> {
 	{
 		return !left.Equals (right);
 	}
-	
+
 	/// <inheritdoc />
 	public override string ToString ()
 	{

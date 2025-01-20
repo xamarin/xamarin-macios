@@ -7,13 +7,13 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// This struct works as a union to store the possible BindingTypeData that can be present in the bindings.
 /// </summary>
 readonly struct BindingInfo : IEquatable<BindingInfo> {
-	
+
 	/// <inheritdoc />
 	public bool Equals (BindingInfo other)
 	{
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
-	
+
 	/// <inheritdoc />
 	public override bool Equals (object? obj)
 	{
@@ -25,7 +25,7 @@ readonly struct BindingInfo : IEquatable<BindingInfo> {
 	{
 		throw new NotImplementedException ();
 	}
-	
+
 	public static bool operator == (BindingInfo x, BindingInfo y)
 	{
 		return x.Equals (y);

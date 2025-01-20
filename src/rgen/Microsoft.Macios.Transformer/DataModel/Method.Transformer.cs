@@ -9,7 +9,7 @@ using Microsoft.Macios.Transformer.Attributes;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Method {
-	
+
 	/// <summary>
 	/// The data of the export attribute used to mark the value as a property binding. 
 	/// </summary>
@@ -19,7 +19,7 @@ readonly partial struct Method {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => throw new NotImplementedException ();
-	
+
 	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData exportMethodData,

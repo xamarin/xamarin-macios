@@ -7,7 +7,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct TypeInfo {
-	
+
 	internal TypeInfo (ITypeSymbol symbol) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
@@ -50,5 +50,5 @@ readonly partial struct TypeInfo {
 		}
 
 	}
-	
+
 }

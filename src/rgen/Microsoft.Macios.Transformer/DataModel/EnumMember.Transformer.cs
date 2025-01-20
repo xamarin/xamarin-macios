@@ -8,12 +8,12 @@ using Microsoft.Macios.Transformer.Attributes;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct EnumMember {
-	
+
 	/// <summary>
 	/// The data of the field attribute used to mark the value as a binding.
 	/// </summary>
 	public FieldData? FieldInfo { get; }
-	
+
 	/// <summary>
 	/// Create a new change that happened on a member.
 	/// </summary>
@@ -32,5 +32,5 @@ readonly partial struct EnumMember {
 	{
 		throw new NotImplementedException ();
 	}
-	
+
 }

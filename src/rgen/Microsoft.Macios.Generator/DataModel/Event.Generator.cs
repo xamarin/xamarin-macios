@@ -11,7 +11,7 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Event {
-	
+
 	public static bool TryCreate (EventDeclarationSyntax declaration, RootBindingContext context,
 		[NotNullWhen (true)] out Event? change)
 	{
