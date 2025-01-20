@@ -85,11 +85,11 @@ static partial class TypeSymbolExtensions {
 		return false;
 	}
 
-	delegate string? GetAttributeNames ();
+	internal delegate string? GetAttributeNames ();
 
-	delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
+	internal delegate bool TryParse<T> (AttributeData data, [NotNullWhen (true)] out T? value) where T : struct;
 
-	static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse)
+	internal static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParse<T> tryParse)
 		where T : struct
 	{
 		var attributes = symbol.GetAttributeData ();
@@ -113,6 +113,9 @@ static partial class TypeSymbolExtensions {
 			return exportData.Value;
 		return null;
 	}
+	
+	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
+		=> GetAttribute (symbol, () => attributeName, tryParse);
 
 	/// <summary>
 	/// Returns if a type is blittable or not.
