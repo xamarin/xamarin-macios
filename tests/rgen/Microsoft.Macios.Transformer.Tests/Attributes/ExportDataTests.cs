@@ -4,19 +4,21 @@
 using System.Collections;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
 using Xamarin.Tests;
 using Xamarin.Utils;
+using Microsoft.Macios.Generator.Extensions;
+using ObjCRuntime;
 
-namespace Microsoft.Macios.Transformer.Tests;
+namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
-public class FieldDataTests : BaseTransformerTestClass {
+public class ExportDataTests : BaseTransformerTestClass {
+
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			const string symbolOnly = @"
+			const string selectorOnly = @"
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -31,13 +33,13 @@ namespace Test;
 [BaseType (typeof (NSObject))]
 interface UIFeedbackGenerator : UIInteraction {
 
-	[Field (""prepare"")]
-	void Prepare { get; }
+	[Export (""prepare"")]
+	void Prepare ();
 }
 ";
-			yield return [(Source: symbolOnly, Path: "/some/random/path.cs"), new FieldData ("prepare")];
+			yield return [(Source: selectorOnly, Path: "/some/random/path.cs"), new ExportData (selector: "prepare")];
 
-			const string symbolAndLibrary = @"
+			const string selectorWithArgumentSemantic = @"
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -52,32 +54,12 @@ namespace Test;
 [BaseType (typeof (NSObject))]
 interface UIFeedbackGenerator : UIInteraction {
 
-	[Field (""prepare"", ""LibraryName"")]
-	void Prepare { get; }
+	[Export (""prepare"", ArgumentSemantic.Retain)]
+	void Prepare ();
 }
 ";
-			yield return [(Source: symbolAndLibrary, Path: "/some/random/path.cs"), new FieldData ("prepare", "LibraryName")];
+			yield return [(Source: selectorWithArgumentSemantic, Path: "/some/random/path.cs"), new ExportData (selector: "prepare", argumentSemantic: ArgumentSemantic.Retain)];
 
-			const string symbolAndLibraryNamed = @"
-using System;
-using Foundation;
-using ObjCRuntime;
-using UIKit;
-
-namespace Test;
-
-[NoTV]
-[MacCatalyst (13, 1)]
-[DisableDefaultCtor]
-[Abstract]
-[BaseType (typeof (NSObject))]
-interface UIFeedbackGenerator : UIInteraction {
-
-	[Field (""prepare"", LibraryName = ""LibraryName"")]
-	void Prepare { get; }
-}
-";
-			yield return [(Source: symbolAndLibraryNamed, Path: "/some/random/path.cs"), new FieldData ("prepare", "LibraryName")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -85,7 +67,7 @@ interface UIFeedbackGenerator : UIInteraction {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
-	public void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, FieldData expectedData)
+	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, ExportData expectedData)
 	{
 		// create a compilation used to create the transformer
 		var compilation = CreateCompilation (platform, sources: source);
@@ -96,13 +78,13 @@ interface UIFeedbackGenerator : UIInteraction {
 		Assert.NotNull (semanticModel);
 
 		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
+			.DescendantNodes ().OfType<MethodDeclarationSyntax> ()
 			.FirstOrDefault ();
 		Assert.NotNull (declaration);
 
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
-		var fieldData = symbol.GetAttribute<FieldData> (AttributesNames.FieldAttribute, FieldData.TryParse);
-		Assert.Equal (expectedData, fieldData);
+		var exportData = symbol.GetAttribute<ExportData> (AttributesNames.ExportAttribute, ExportData.TryParse);
+		Assert.Equal (expectedData, exportData);
 	}
 }

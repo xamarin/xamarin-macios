@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-public struct FieldData : IEquatable<FieldData> {
+struct FieldData : IEquatable<FieldData> {
 
 	public string SymbolName { get; }
 	public string? LibraryName { get; }
