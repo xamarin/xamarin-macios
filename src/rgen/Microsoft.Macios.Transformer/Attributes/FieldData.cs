@@ -7,18 +7,18 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 public struct FieldData : IEquatable<FieldData> {
-	
+
 	public string SymbolName { get; }
 	public string? LibraryName { get; }
-	
+
 	internal FieldData (string symbolName, string? libraryName)
 	{
 		SymbolName = symbolName;
 		LibraryName = libraryName;
 	}
-	
+
 	internal FieldData (string symbolName) : this (symbolName, null) { }
-	
+
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out FieldData? data)
 	{
@@ -88,7 +88,7 @@ public struct FieldData : IEquatable<FieldData> {
 	{
 		return !(x == y);
 	}
-	
+
 	public override string ToString ()
 	{
 		return $"{{ SymbolName: '{SymbolName}' LibraryName: '{LibraryName ?? "null"}' }}";

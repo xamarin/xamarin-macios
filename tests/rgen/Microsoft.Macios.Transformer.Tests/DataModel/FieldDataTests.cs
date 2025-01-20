@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests;
 
 public class FieldDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -57,7 +57,7 @@ interface UIFeedbackGenerator : UIInteraction {
 }
 ";
 			yield return [(Source: symbolAndLibrary, Path: "/some/random/path.cs"), new FieldData ("prepare", "LibraryName")];
-			
+
 			const string symbolAndLibraryNamed = @"
 using System;
 using Foundation;
