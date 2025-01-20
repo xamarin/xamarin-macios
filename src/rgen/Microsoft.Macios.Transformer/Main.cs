@@ -8,8 +8,8 @@ using Serilog.Templates;
 using static System.Console;
 
 public class Program {
-	static internal readonly LoggingLevelSwitch LogLevelSwitch = new(LogEventLevel.Information);
-	public static ILogger logger = Log.ForContext<Program>();
+	static internal readonly LoggingLevelSwitch LogLevelSwitch = new (LogEventLevel.Information);
+	public static ILogger logger = Log.ForContext<Program> ();
 
 	public static int Main (string [] args)
 	{
@@ -38,14 +38,14 @@ public class Program {
 			new [] { "--sdk", "-s" },
 			"Absolute path to the sdk directory"
 		);
-		
+
 		var verbosityOption = new Option<Verbosity> (["--verbosity", "-v"],
 			getDefaultValue: () => Verbosity.Normal) {
 			IsRequired = false,
 			Arity = ArgumentArity.ZeroOrOne,
-			Description = "Set the verbosity level" 
+			Description = "Set the verbosity level"
 		};
-		
+
 		// Create root command and add options
 		var rootCmd = new RootCommand ("command to convert outdated bindings to be rgen compatible") {
 			rspOption,
@@ -64,46 +64,46 @@ public class Program {
 
 		// Set handler for parsing and executing
 		rootCmd.SetHandler (async (rspPath, destPath, workingDirectory, sdkPath, force, verbosity) => {
-				WriteLine ($"Microsoft.Macios.Transformer v{typeof (Program).Assembly.GetName ().Version}, (c) Microsoft Corporation. All rights reserved.\n");
-				
-				// Convert local to absolute, expand ~
-				rspPath = ToAbsolutePath (rspPath);
-				workingDirectory = ToAbsolutePath (workingDirectory);
-				destPath = ToAbsolutePath (destPath);
-				sdkPath = ToAbsolutePath (sdkPath);
+			WriteLine ($"Microsoft.Macios.Transformer v{typeof (Program).Assembly.GetName ().Version}, (c) Microsoft Corporation. All rights reserved.\n");
 
-				ValidateRsp (rspPath);
-				ValidateSdk (sdkPath);
-				ValidateWorkingDirectory (workingDirectory);
-				ValidateVerbosity (verbosity);
-				PrepareDestination (destPath, force);
-				
-				// logging options
-				Log.Logger = new LoggerConfiguration ()
-					.MinimumLevel.ControlledBy (LogLevelSwitch)
-					.Enrich.WithThreadName ()
-					.Enrich.WithThreadId ()
-					.Enrich.FromLogContext ()
-					.WriteTo.Console (new ExpressionTemplate(
-						"[{@t:HH:mm:ss} {@l:u3} {Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)} (Thread: {ThreadId})] {@m}\n"))
-					.CreateLogger ();
+			// Convert local to absolute, expand ~
+			rspPath = ToAbsolutePath (rspPath);
+			workingDirectory = ToAbsolutePath (workingDirectory);
+			destPath = ToAbsolutePath (destPath);
+			sdkPath = ToAbsolutePath (sdkPath);
 
-				// Parse the .rsp file with Roslyn's CSharpCommandLineParser
-				var args = new [] { $"@{rspPath}" };
-				var parseResult = CSharpCommandLineParser.Default.Parse (args, workingDirectory, null);
-				logger.Information ("RSP parsed. Errors: {ParserErrorLength}", parseResult.Errors.Length);
-				foreach (var resultError in parseResult.Errors) {
-					logger.Error ("{Error}", resultError);
-					WriteLine (resultError);
-				}
+			ValidateRsp (rspPath);
+			ValidateSdk (sdkPath);
+			ValidateWorkingDirectory (workingDirectory);
+			ValidateVerbosity (verbosity);
+			PrepareDestination (destPath, force);
 
-				await Transformer.Execute (
-					destinationDirectory: destPath,
-					rspFile: rspPath,
-					workingDirectory: workingDirectory,
-					sdkDirectory: sdkPath
-				);
-			},
+			// logging options
+			Log.Logger = new LoggerConfiguration ()
+				.MinimumLevel.ControlledBy (LogLevelSwitch)
+				.Enrich.WithThreadName ()
+				.Enrich.WithThreadId ()
+				.Enrich.FromLogContext ()
+				.WriteTo.Console (new ExpressionTemplate (
+					"[{@t:HH:mm:ss} {@l:u3} {Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)} (Thread: {ThreadId})] {@m}\n"))
+				.CreateLogger ();
+
+			// Parse the .rsp file with Roslyn's CSharpCommandLineParser
+			var args = new [] { $"@{rspPath}" };
+			var parseResult = CSharpCommandLineParser.Default.Parse (args, workingDirectory, null);
+			logger.Information ("RSP parsed. Errors: {ParserErrorLength}", parseResult.Errors.Length);
+			foreach (var resultError in parseResult.Errors) {
+				logger.Error ("{Error}", resultError);
+				WriteLine (resultError);
+			}
+
+			await Transformer.Execute (
+				destinationDirectory: destPath,
+				rspFile: rspPath,
+				workingDirectory: workingDirectory,
+				sdkDirectory: sdkPath
+			);
+		},
 			rspOption, destinationOption, workingDirectoryOption, sdkPathOption, forceOption, verbosityOption
 		);
 
@@ -149,7 +149,7 @@ public class Program {
 			Verbosity.Detailed => LogEventLevel.Verbose,
 			Verbosity.Diagnostic => LogEventLevel.Verbose,
 			_ => LogEventLevel.Information,
-		};	
+		};
 	}
 
 	static void PrepareDestination (string path, bool force)

@@ -19,7 +19,7 @@ namespace Microsoft.Macios.Transformer;
 /// to be able to process the different transformations per binding type.
 /// </summary>
 class Transformer {
-	readonly static ILogger logger = Log.ForContext<Transformer>();
+	readonly static ILogger logger = Log.ForContext<Transformer> ();
 	readonly string destinationDirectory;
 	readonly Compilation compilation;
 	readonly HashSet<string>? namespaceFilter;
@@ -68,12 +68,12 @@ class Transformer {
 		var attrs = symbol.GetAttributeData ();
 		logger.Debug ("Symbol '{SymbolName}' has [{Attributes}] attributes", symbol.Name, string.Join (", ", attrs.Keys));
 		logger.Debug ("Symbol '{SymbolName}' kind is '{SymbolKind}'", symbol.Name, symbol.TypeKind);
-		
+
 		if (symbol.TypeKind == TypeKind.Enum) {
 			// simplest case, an error domain	
 			if (attrs.ContainsKey (AttributesNames.ErrorDomainAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is an error domain", symbol.Name);
-				return nameof(ErrorDomainTransformer);
+				return nameof (ErrorDomainTransformer);
 			}
 
 			// in this case, we need to check if the enum is a smart enum. 
@@ -95,14 +95,14 @@ class Transformer {
 		if (attrs.ContainsKey (AttributesNames.BaseTypeAttribute)) {
 			// if can be a class or a protocol, check if the protocol attribute is present
 			if (attrs.ContainsKey (AttributesNames.ProtocolAttribute) ||
-			    attrs.ContainsKey (AttributesNames.ModelAttribute)) {
+				attrs.ContainsKey (AttributesNames.ModelAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is a protocol", symbol.Name);
-				return nameof(ProtocolTransformer);
+				return nameof (ProtocolTransformer);
 			}
 
 			if (attrs.ContainsKey (AttributesNames.CategoryAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is a category", symbol.Name);
-				return nameof(CategoryTransformer);
+				return nameof (CategoryTransformer);
 			}
 
 			logger.Debug ("Symbol '{SymbolName}' is a class", symbol.Name);
@@ -111,7 +111,7 @@ class Transformer {
 
 		if (attrs.ContainsKey (AttributesNames.StrongDictionaryAttribute)) {
 			logger.Debug ("Symbol '{SymbolName}' is a strong dictionary", symbol.Name);
-			return nameof(StrongDictionaryTransformer);
+			return nameof (StrongDictionaryTransformer);
 		}
 
 		logger.Warning ("Symbol '{SymbolName}' could not be matched to a transformer", symbol.Name);

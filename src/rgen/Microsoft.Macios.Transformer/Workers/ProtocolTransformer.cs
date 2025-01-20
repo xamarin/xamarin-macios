@@ -9,11 +9,11 @@ namespace Microsoft.Macios.Transformer.Workers;
 
 public class ProtocolTransformer (string destinationDirectory) : ITransformer<(string Path, string SymbolName)> {
 
-	readonly static ILogger logger = Log.ForContext<ProtocolTransformer>();
+	readonly static ILogger logger = Log.ForContext<ProtocolTransformer> ();
 	public bool UseBackgroundThread { get => true; }
 	public Task ConsumeAsync ((string Path, string SymbolName) message, CancellationToken token = new ())
 	{
-		logger.Information ("Transforming {SymbolName} for path {Path} to {DestinationDirectory}", 
+		logger.Information ("Transforming {SymbolName} for path {Path} to {DestinationDirectory}",
 			message.SymbolName, message.Path, destinationDirectory);
 		return Task.Delay (10);
 	}
@@ -21,7 +21,7 @@ public class ProtocolTransformer (string destinationDirectory) : ITransformer<(s
 	public Task ConsumeAsync ((string Path, string SymbolName) message, Exception exception,
 		CancellationToken token = new CancellationToken ())
 	{
-		logger.Error (exception, "Error transforming {SymbolName} for path {Path} to {DestinationDirectory}:", 
+		logger.Error (exception, "Error transforming {SymbolName} for path {Path} to {DestinationDirectory}:",
 			message.SymbolName, message.Path, destinationDirectory);
 		return Task.CompletedTask;
 	}
