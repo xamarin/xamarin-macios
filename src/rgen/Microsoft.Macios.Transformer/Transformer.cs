@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Extensions;
 using Microsoft.Macios.Transformer.Workers;
+using Serilog;
 
 namespace Microsoft.Macios.Transformer;
 
@@ -18,6 +19,7 @@ namespace Microsoft.Macios.Transformer;
 /// to be able to process the different transformations per binding type.
 /// </summary>
 class Transformer {
+	readonly static ILogger logger = Log.ForContext<Transformer> ();
 	readonly string destinationDirectory;
 	readonly Compilation compilation;
 	readonly HashSet<string>? namespaceFilter;
@@ -54,6 +56,7 @@ class Transformer {
 		var configuration = new TopicConfiguration { Mode = ChannelDeliveryMode.AtLeastOnceSync };
 		foreach (var (topicName, transformer) in transformers) {
 			await hub.CreateAsync (topicName, configuration, transformer, transformer);
+			logger.Information ("Created new topic '{TopicName}'", topicName);
 		}
 
 		return hub;
@@ -63,10 +66,15 @@ class Transformer {
 	{
 		// get the attrs, based on those return the correct topic to use
 		var attrs = symbol.GetAttributeData ();
+		logger.Debug ("Symbol '{SymbolName}' has [{Attributes}] attributes", symbol.Name, string.Join (", ", attrs.Keys));
+		logger.Debug ("Symbol '{SymbolName}' kind is '{SymbolKind}'", symbol.Name, symbol.TypeKind);
+
 		if (symbol.TypeKind == TypeKind.Enum) {
 			// simplest case, an error domain	
-			if (attrs.ContainsKey (AttributesNames.ErrorDomainAttribute))
+			if (attrs.ContainsKey (AttributesNames.ErrorDomainAttribute)) {
+				logger.Debug ("Symbol '{SymbolName}' is an error domain", symbol.Name);
 				return nameof (ErrorDomainTransformer);
+			}
 
 			// in this case, we need to check if the enum is a smart enum. 
 			// Smart enum: One of the enum members contains a FieldAttribute. Does NOT have to be ALL
@@ -74,27 +82,39 @@ class Transformer {
 			foreach (var enumField in enumMembers) {
 				var fieldAttrs = enumField.GetAttributeData ();
 				if (fieldAttrs.ContainsKey (AttributesNames.FieldAttribute)) {
+					logger.Debug ("Symbol '{SymbolName}' is a smart enum", symbol.Name);
 					return nameof (SmartEnumTransformer);
 				}
 			}
 
 			// we have either a native enum of a regular enum, we will use the copy worker
+			logger.Debug ("Symbol '{SymbolName}' is a regular enum", symbol.Name);
 			return nameof (CopyTransformer);
 		}
 
 		if (attrs.ContainsKey (AttributesNames.BaseTypeAttribute)) {
 			// if can be a class or a protocol, check if the protocol attribute is present
 			if (attrs.ContainsKey (AttributesNames.ProtocolAttribute) ||
-				attrs.ContainsKey (AttributesNames.ModelAttribute))
+				attrs.ContainsKey (AttributesNames.ModelAttribute)) {
+				logger.Debug ("Symbol '{SymbolName}' is a protocol", symbol.Name);
 				return nameof (ProtocolTransformer);
-			if (attrs.ContainsKey (AttributesNames.CategoryAttribute))
+			}
+
+			if (attrs.ContainsKey (AttributesNames.CategoryAttribute)) {
+				logger.Debug ("Symbol '{SymbolName}' is a category", symbol.Name);
 				return nameof (CategoryTransformer);
+			}
+
+			logger.Debug ("Symbol '{SymbolName}' is a class", symbol.Name);
 			return nameof (ClassTransformer);
 		}
 
-		if (attrs.ContainsKey (AttributesNames.StrongDictionaryAttribute))
+		if (attrs.ContainsKey (AttributesNames.StrongDictionaryAttribute)) {
+			logger.Debug ("Symbol '{SymbolName}' is a strong dictionary", symbol.Name);
 			return nameof (StrongDictionaryTransformer);
+		}
 
+		logger.Warning ("Symbol '{SymbolName}' could not be matched to a transformer", symbol.Name);
 		return null;
 	}
 
@@ -108,8 +128,8 @@ class Transformer {
 
 		if (namespaceFilter is not null && !namespaceFilter.Contains (symbolNamespace)) {
 			// TODO we could do this better by looking at the tree
-			Console.WriteLine (
-				$"Skipping {symbol.Name} because namespace {symbolNamespace} was not included in the transformation");
+			logger.Information ("Skipping '{SymbolName}' because namespace it was not included in the transformation",
+				symbol.Name, symbolNamespace);
 			// filtered out
 			return true;
 		}
@@ -140,19 +160,22 @@ class Transformer {
 				.DescendantNodes ()
 				.OfType<BaseTypeDeclarationSyntax> ().ToArray ();
 
-			Console.WriteLine ($"Found {declarations.Length} interfaces in {tree.FilePath}");
+			logger.Debug ("Found '{Declarations}' interfaces in '{FilePath}'", declarations.Length, tree.FilePath);
 
 			// loop over the declarations and send them to the hub
 			foreach (var declaration in declarations) {
 				var symbol = model.GetDeclaredSymbol (declaration);
 				if (symbol is null) {
 					// skip the transformation because the symbol is null
+					logger.Warning ("Could not get the symbol for '{Declaration}'", declaration.Identifier);
 					continue;
 				}
 
-				if (Skip (tree, symbol, out var outputDirectory))
+				if (Skip (tree, symbol, out var outputDirectory)) {
 					// matched the filter
+					logger.Information ("Skipping '{SymbolName}' because it was filtered out", symbol.Name);
 					continue;
+				}
 
 				// create the destination directory if needed, this is the only location we should be creating directories
 				Directory.CreateDirectory (outputDirectory);
@@ -160,6 +183,7 @@ class Transformer {
 				var topicName = SelectTopic (symbol);
 				if (topicName is not null && transformers.TryGetValue (topicName, out var transformer)) {
 					await hub.PublishAsync (topicName, transformer.CreateMessage (tree, symbol));
+					logger.Information ("Published '{SymbolName}' to '{TopicName}'", symbol.Name, topicName);
 				}
 			}
 		}
@@ -172,7 +196,7 @@ class Transformer {
 	public static Task Execute (string destinationDirectory, string rspFile, string workingDirectory,
 		string sdkDirectory)
 	{
-		Console.WriteLine ("Executing transformation");
+		logger.Information ("Executing transformation");
 		// the transformation works as follows. We first need to parse the rsp file to create a compilation
 		// to do so we relay on the csharp compiler, there is not much we really need to do. If the parsing 
 		// is wrong, we throw an exception. 
@@ -190,7 +214,9 @@ class Transformer {
 			.WithDocumentationMode (DocumentationMode.None);
 
 		var references = parseResult.GetReferences (workingDirectory, sdkDirectory);
+		logger.Information ("References {References}", references.Length);
 		var parsedSource = parseResult.GetSourceFiles (updatedParseOptions);
+		logger.Information ("Parsed {Files} files", parsedSource.Length);
 
 		var compilation = CSharpCompilation.Create (
 			assemblyName: $"{parseResult.CompilationName}-transformer",
@@ -199,7 +225,7 @@ class Transformer {
 			options: parseResult.CompilationOptions);
 
 		var diagnostics = compilation.GetDiagnostics ();
-		Console.WriteLine ($"Diagnostics length {diagnostics.Length}");
+		logger.Debug ("Total diagnostics length {DiagnosticsLength}", diagnostics.Length);
 		// collect all the compilation errors, ignoring the warnings, if any error is found, we throw an exception
 		var errors = diagnostics.Where (d => d.Severity == DiagnosticSeverity.Error).ToArray ();
 		if (errors.Length > 0) {
@@ -207,6 +233,7 @@ class Transformer {
 			foreach (var resultError in errors) {
 				sb.AppendLine ($"{resultError}");
 			}
+			logger.Error ("Error during workspace compilation: {Error}", sb);
 			throw new Exception ($"Error during workspace compilation: {sb}");
 		}
 
