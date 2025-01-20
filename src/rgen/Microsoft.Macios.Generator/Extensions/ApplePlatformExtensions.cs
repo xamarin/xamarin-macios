@@ -6,7 +6,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator.Extensions;
 
 public static class ApplePlatformExtensions {
-	
+
 	/// <summary>
 	/// Return the platform define for the given ApplePlatform for use in #if directives.
 	/// </summary>

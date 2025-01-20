@@ -64,7 +64,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// <param name="version">Version being tested.</param>
 	/// <returns>True if the version is default.</returns>
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
-	
+
 
 	PlatformAvailability (ApplePlatform platform, Version? supportedVersion,
 		SortedDictionary<Version, string?> unsupportedVersions,

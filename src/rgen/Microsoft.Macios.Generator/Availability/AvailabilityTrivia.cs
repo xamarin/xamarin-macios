@@ -13,7 +13,7 @@ readonly struct AvailabilityTrivia {
 	/// Retrieve the trivia to add before the symbol declaration.
 	/// </summary>
 	public string? Start { get; }
-	
+
 	/// <summary>
 	/// Retrieve the trivia to add after the symbol declaration.
 	/// </summary>
@@ -29,13 +29,13 @@ readonly struct AvailabilityTrivia {
 			var platformDefine = platformAvailability.Platform.ToPlatformDefine ();
 			if (platformDefine is null)
 				continue;
-			
+
 			if (platformAvailability.IsSupported)
 				supportedPlatforms.Add (platformDefine);
 			else
 				unsupportedPlatforms.Add (platformDefine);
 		}
-		
+
 		// if all platforms are supported, we don't need any trivia
 		if (unsupportedPlatforms.Count == 0) {
 			// all platforms are supported
@@ -53,7 +53,7 @@ readonly struct AvailabilityTrivia {
 			// we have more unsupported platforms than supported ones
 			// we will use #if to include the supported platforms
 			Start = $"#if {string.Join (" || ", supportedPlatforms)}";
-			End = "#endif";	
-		} 
-	}	
+			End = "#endif";
+		}
+	}
 }

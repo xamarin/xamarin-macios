@@ -9,7 +9,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Availability;
 
 public class AvailabilityTriviaTests {
-	
+
 	[Fact]
 	public void AllSupportedPlatforms ()
 	{
@@ -26,7 +26,8 @@ public class AvailabilityTriviaTests {
 	}
 
 	[Fact]
-	public void SomeUnsupportedVersions () {
+	public void SomeUnsupportedVersions ()
+	{
 		SymbolAvailability.Builder builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios12.0"));
 		builder.Add (new UnsupportedOSPlatformData ("ios9.0"));
@@ -39,9 +40,10 @@ public class AvailabilityTriviaTests {
 		Assert.Null (trivia.End);
 		Assert.Null (availability.Trivia);
 	}
-	
+
 	[Fact]
-	public void SingleFullyUnsupportedPlatform () {
+	public void SingleFullyUnsupportedPlatform ()
+	{
 		SymbolAvailability.Builder builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new UnsupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos12.0"));
@@ -53,9 +55,10 @@ public class AvailabilityTriviaTests {
 		Assert.Equal ("#endif", trivia.End);
 		Assert.NotNull (availability.Trivia);
 	}
-	
+
 	[Fact]
-	public void DoubleUnsupportedPlatform () {
+	public void DoubleUnsupportedPlatform ()
+	{
 		SymbolAvailability.Builder builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos12.0"));
@@ -67,12 +70,13 @@ public class AvailabilityTriviaTests {
 		Assert.Equal ("#endif", trivia.End);
 		Assert.NotNull (availability.Trivia);
 	}
-	
+
 	[Fact]
-	public void SingleSupportedPlatform () {
+	public void SingleSupportedPlatform ()
+	{
 		SymbolAvailability.Builder builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
-		builder.Add (new UnsupportedOSPlatformData( "tvos"));
+		builder.Add (new UnsupportedOSPlatformData ("tvos"));
 		builder.Add (new UnsupportedOSPlatformData ("macos"));
 		builder.Add (new UnsupportedOSPlatformData ("maccatalyst"));
 		var availability = builder.ToImmutable ();
