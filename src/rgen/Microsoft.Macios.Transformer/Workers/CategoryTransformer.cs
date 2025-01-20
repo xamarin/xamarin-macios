@@ -3,22 +3,27 @@
 
 using Marille;
 using Microsoft.CodeAnalysis;
+using Serilog;
 
 namespace Microsoft.Macios.Transformer.Workers;
 
 public class CategoryTransformer (string destinationDirectory) : ITransformer<(string Path, string SymbolName)> {
 
+	readonly static ILogger logger = Log.ForContext<CategoryTransformer> ();
 	public bool UseBackgroundThread { get => true; }
 
 	public Task ConsumeAsync ((string Path, string SymbolName) message, CancellationToken token = new ())
 	{
-		Console.WriteLine ($"CategoryTransformer: Transforming class {message.SymbolName} for path {message.Path} to {destinationDirectory}");
+		logger.Information ("Transforming {SymbolName} for path {Path} to {DestinationDirectory}",
+			message.SymbolName, message.Path, destinationDirectory);
 		return Task.Delay (10);
 	}
 
 	public Task ConsumeAsync ((string Path, string SymbolName) message, Exception exception,
 		CancellationToken token = new CancellationToken ())
 	{
+		logger.Error (exception, "Error transforming {SymbolName} for path {Path} to {DestinationDirectory}:",
+			message.SymbolName, message.Path, destinationDirectory);
 		return Task.CompletedTask;
 	}
 

@@ -12,6 +12,11 @@
         <PackageReference Include="Marille" Version="0.5.3" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
+        <PackageReference Include="Serilog" Version="4.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+        <PackageReference Include="Serilog.Expressions" Version="4.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
@@ -24,6 +29,9 @@
     <ItemGroup>
         <Compile Include="../Microsoft.Macios.Generator/DictionaryComparer.cs" >
             <Link>DictionaryComparer.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/CollectionComparer.cs" >
+            <Link>CollectionComparer.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/ObsoletedOSPlatformData.cs" >
             <Link>Attributes/ObsoletedOSPlatformData.cs</Link>
@@ -40,12 +48,28 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ApplePlatformExtensions.cs" >
             <Link>Extensions/ApplePlatformExtensions.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/ParameterSyntaxExtensions.cs" >
+            <Link>Extensions/ParameterSyntaxExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs" >
             <Link>Extensions/StringExtensions.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs" >
             <Link>Extensions/TypeSymbolExtensions.Core.cs</Link>
         </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="../Microsoft.Macios.Generator/DataModel/*.cs" >
+            <Link>DataModel/*.cs</Link>
+        </Compile>
+        <!-- Remove those files that are just used by the generator -->
+        <None Remove="../Microsoft.Macios.Generator/DataModel/BindingInfo.cs" />
+        <Compile Remove="../Microsoft.Macios.Generator/DataModel/BindingInfo.cs" />
+        <None Remove="../Microsoft.Macios.Generator/DataModel/FieldInfo.cs" />
+        <Compile Remove="../Microsoft.Macios.Generator/DataModel/FieldInfo.cs" />
+        <None Remove="../Microsoft.Macios.Generator/DataModel/*.Generator.cs" />
+        <Compile Remove="../Microsoft.Macios.Generator/DataModel/*.Generator.cs" />
     </ItemGroup>
 
     <ItemGroup>
