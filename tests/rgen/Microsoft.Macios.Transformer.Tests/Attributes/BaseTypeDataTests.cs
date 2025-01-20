@@ -12,12 +12,12 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class BaseTypeDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			var path = "/some/random/path.cs";	
-			
+			var path = "/some/random/path.cs";
+
 			const string simpleBaseType = @"
 using System;
 using Foundation;
@@ -37,7 +37,7 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			yield return [(Source: simpleBaseType, Path: path), new BaseTypeData("Foundation.NSObject")];
+			yield return [(Source: simpleBaseType, Path: path), new BaseTypeData ("Foundation.NSObject")];
 
 			const string baseTypeWithName = @"
 using System;
@@ -59,8 +59,8 @@ interface UIFeedbackGenerator : UIInteraction {
 }
 ";
 			yield return [
-				(Source: baseTypeWithName, Path: path), 
-				new BaseTypeData("Foundation.NSObject") {
+				(Source: baseTypeWithName, Path: path),
+				new BaseTypeData ("Foundation.NSObject") {
 					Name = "MyObjcName",
 				}];
 
@@ -87,12 +87,12 @@ interface NSAnimation : NSCoding, NSCopying {
 ";
 			yield return [
 				(Source: baseTypeWithEvents, Path: path),
-				new BaseTypeData("Foundation.NSObject") {
+				new BaseTypeData ("Foundation.NSObject") {
 					Delegates = ["WeakDelegate"],
 					Events = ["Test.NSAnimationDelegate"]
 				}
 			];
-			
+
 			const string singleton = @"
 using System;
 using Foundation;
@@ -113,8 +113,8 @@ interface UIFeedbackGenerator : UIInteraction {
 }
 ";
 			yield return [
-				(Source: singleton, Path: path), 
-				new BaseTypeData("Foundation.NSObject") {
+				(Source: singleton, Path: path),
+				new BaseTypeData ("Foundation.NSObject") {
 					Singleton = true
 				}];
 
@@ -135,8 +135,8 @@ interface UIActionSheet {
 }
 ";
 			yield return [
-				(Source: keepRefUntil, Path: path), 
-				new BaseTypeData("Foundation.NSObject") {
+				(Source: keepRefUntil, Path: path),
+				new BaseTypeData ("Foundation.NSObject") {
 					KeepRefUntil = "Dismissed",
 				}];
 
@@ -160,12 +160,12 @@ interface UIFeedbackGenerator : UIInteraction {
 }
 ";
 			yield return [
-				(Source: isStubClass, Path: path), 
-				new BaseTypeData("Foundation.NSObject") {
+				(Source: isStubClass, Path: path),
+				new BaseTypeData ("Foundation.NSObject") {
 					IsStubClass = true
 				}];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -183,7 +183,7 @@ interface UIFeedbackGenerator : UIInteraction {
 
 		var declaration = syntaxTree.GetRoot ()
 			.DescendantNodes ().OfType<BaseTypeDeclarationSyntax> ()
-			.LastOrDefault();
+			.LastOrDefault ();
 		Assert.NotNull (declaration);
 
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);

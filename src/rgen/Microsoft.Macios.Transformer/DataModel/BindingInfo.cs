@@ -9,9 +9,9 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// This struct works as a union to store the possible BindingTypeData that can be present in the bindings.
 /// </summary>
 readonly struct BindingInfo : IEquatable<BindingInfo> {
-	
+
 	public BaseTypeData BaseTypeData { get; }
-	
+
 	public BindingInfo (BaseTypeData baseTypeData)
 	{
 		BaseTypeData = baseTypeData;

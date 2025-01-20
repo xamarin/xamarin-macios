@@ -9,7 +9,7 @@ using Microsoft.Macios.Generator;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct BaseTypeData : IEquatable<BaseTypeData> {
-	
+
 	public string BaseType { get; } // is a type in the attribute, but we do not care for the transformation
 	public string? Name { get; init; } = null;
 	public string [] Events { get; init; } = []; // it is a collection of types, but we do not care for the transformation
@@ -82,7 +82,7 @@ readonly struct BaseTypeData : IEquatable<BaseTypeData> {
 			}
 		}
 
-		data = new(baseType) {
+		data = new (baseType) {
 			Name = name,
 			Events = events,
 			Delegates = delegates,
@@ -96,7 +96,7 @@ readonly struct BaseTypeData : IEquatable<BaseTypeData> {
 	public bool Equals (BaseTypeData other)
 	{
 		var stringCollectionComparer = new CollectionComparer<string?> (StringComparer.Ordinal);
-		
+
 		if (BaseType != other.BaseType)
 			return false;
 		if (Name != other.Name)
@@ -128,7 +128,7 @@ readonly struct BaseTypeData : IEquatable<BaseTypeData> {
 			hash.Add (e);
 		}
 		foreach (var d in Delegates) {
-			hash.Add (d);	
+			hash.Add (d);
 		}
 		hash.Add (Singleton);
 		hash.Add (KeepRefUntil);
@@ -144,7 +144,7 @@ readonly struct BaseTypeData : IEquatable<BaseTypeData> {
 	{
 		return !(x == y);
 	}
-	
+
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ($"{{ BaseType: {BaseType}, Name: {Name ?? "null"}, ");
