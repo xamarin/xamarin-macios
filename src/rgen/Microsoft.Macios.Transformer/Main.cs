@@ -69,7 +69,6 @@ public class Program {
 				$"Microsoft.Macios.Transformer v{typeof (Program).Assembly.GetName ().Version}, (c) Microsoft Corporation. All rights reserved.\n");
 
 			// Convert local to absolute, expand ~
-			//rspPath = ToAbsolutePath (rspPath);
 			workingDirectory = ToAbsolutePath (workingDirectory);
 			destPath = ToAbsolutePath (destPath);
 			sdkPath = ToAbsolutePath (sdkPath);
