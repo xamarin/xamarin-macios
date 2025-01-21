@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-
 using Xamarin.Utils;
 
 #nullable disable // until we get around to fixing this file
@@ -44,6 +44,7 @@ namespace Xamarin.Tests {
 		public static string DOTNET_DIR;
 
 		static Version xcode_version;
+
 		public static Version XcodeVersion {
 			get {
 				if (xcode_version is null)
@@ -53,6 +54,7 @@ namespace Xamarin.Tests {
 		}
 
 		static bool? use_system; // if the system-installed XI/XM should be used instead of the local one.
+
 		public static bool UseSystem {
 			get {
 				if (!use_system.HasValue)
@@ -65,6 +67,7 @@ namespace Xamarin.Tests {
 		}
 
 		static bool? is_vsts; // if the system-installed XI/XM should be used instead of the local one.
+
 		public static bool IsVsts {
 			get {
 				if (!is_vsts.HasValue)
@@ -147,14 +150,18 @@ namespace Xamarin.Tests {
 						tests_dir = file;
 						break;
 					}
+
 					dir = Path.GetDirectoryName (dir);
 				}
+
 				if (tests_dir is null)
-					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
+					throw new Exception (
+						$"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
 				// Run make
 				ExecutionHelper.Execute ("make", new string [] { "-C", tests_dir, "test.config" });
 				test_config = FindConfigFiles ("test.config");
 			}
+
 			if (test_config.Any ())
 				ParseConfigFiles (test_config);
 			ParseConfigFiles (FindConfigFiles ("configure.inc"));
@@ -207,10 +214,14 @@ namespace Xamarin.Tests {
 				return result;
 
 			var output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
+			var rv = ExecutionHelper.Execute ("/usr/bin/make",
+				new string [] {
+					"-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}"
+				}, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
-			result = output.ToString ().Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
+			result = output.ToString ().Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+				.Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
 			if (result is null)
 				throw new Exception ($"Could not find the variable '{variable}' to evaluate.");
 			return result.Substring (variable.Length + 1);
@@ -233,7 +244,8 @@ namespace Xamarin.Tests {
 			using (var fs = new StringReader (ReadPListAsXml (plist))) {
 				using (var reader = System.Xml.XmlReader.Create (fs, settings)) {
 					doc.Load (reader);
-					return doc.DocumentElement.SelectSingleNode ($"//dict/key[text()='{key}']/following-sibling::string[1]/text()").Value;
+					return doc.DocumentElement
+						.SelectSingleNode ($"//dict/key[text()='{key}']/following-sibling::string[1]/text()").Value;
 				}
 			}
 		}
@@ -278,7 +290,8 @@ namespace Xamarin.Tests {
 			DotNetExecutable = GetVariable ("DOTNET", null);
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 			EnableXamarin = !string.IsNullOrEmpty (GetVariable ("ENABLE_XAMARIN", ""));
-			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true", StringComparison.OrdinalIgnoreCase);
+			XcodeIsStable = string.Equals (GetVariable ("XCODE_IS_STABLE", ""), "true",
+				StringComparison.OrdinalIgnoreCase);
 			DOTNET_DIR = GetVariable ("DOTNET_DIR", "");
 
 			XcodeVersionString = GetVariable ("XCODE_VERSION", GetXcodeVersion (xcode_root));
@@ -316,19 +329,23 @@ namespace Xamarin.Tests {
 							throw new FormatException (".git worktree file is not valid");
 						}
 					}
+
 					if (Directory.Exists (path))
 						found = true;
 
 					if (!found) {
 						dir = Path.GetDirectoryName (dir);
 						if (dir is null)
-							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+							throw new Exception (
+								$"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 						path = Path.Combine (dir, ".git");
 					}
 				}
+
 				path = Path.GetDirectoryName (path);
 				if (!Directory.Exists (path))
-					throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+					throw new Exception (
+						$"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 				return path;
 			}
 		}
@@ -419,9 +436,11 @@ namespace Xamarin.Tests {
 
 		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
 		{
-			var workloadVersion = Environment.GetEnvironmentVariable ($"{platform.AsString ().ToUpper ()}_WORKLOAD_VERSION");
-			return string.IsNullOrEmpty (workloadVersion) ?
-				GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty) : workloadVersion;
+			var workloadVersion =
+				Environment.GetEnvironmentVariable ($"{platform.AsString ().ToUpper ()}_WORKLOAD_VERSION");
+			return string.IsNullOrEmpty (workloadVersion)
+				? GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty)
+				: workloadVersion;
 		}
 
 		// This is only applicable for .NET
@@ -521,8 +540,8 @@ namespace Xamarin.Tests {
 		public static IEnumerable<string> GetBaseLibraryImplementations ()
 		{
 			foreach (var platform in GetIncludedPlatforms ())
-				foreach (var lib in GetBaseLibraryImplementations (platform))
-					yield return lib;
+			foreach (var lib in GetBaseLibraryImplementations (platform))
+				yield return lib;
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
@@ -580,11 +599,14 @@ namespace Xamarin.Tests {
 			var testsTemporaryDirectory = Cache.CreateTemporaryDirectory ($"{Path.GetFileName (directory)}");
 
 			// Only copy files in git, we want a clean copy
-			var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output, working_directory: directory, timeout: TimeSpan.FromSeconds (15));
+			var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output,
+				working_directory: directory, timeout: TimeSpan.FromSeconds (15));
 			if (rv != 0)
-				throw new Exception ($"Failed to list test files. 'git ls-files' in {directory} failed with exit code {rv}.");
+				throw new Exception (
+					$"Failed to list test files. 'git ls-files' in {directory} failed with exit code {rv}.");
 
-			var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToArray ();
+			var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+				.ToArray ();
 			foreach (var file in files) {
 				var src = Path.Combine (directory, file);
 				var tgt = Path.Combine (testsTemporaryDirectory, file);
@@ -593,7 +615,8 @@ namespace Xamarin.Tests {
 				File.Copy (src, tgt);
 				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
 					var initialContents = File.ReadAllText (tgt);
-					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)",
+						Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
 					if (initialContents != fixedContents)
 						File.WriteAllText (tgt, fixedContents);
 				}
@@ -689,16 +712,19 @@ namespace Xamarin.Tests {
 		}
 
 		static bool? is_apfs;
+
 		static bool IsAPFS {
 			get {
 				if (!is_apfs.HasValue) {
 					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
 						is_apfs = false;
 					} else {
-						var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+						var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" },
+							out var output, TimeSpan.FromSeconds (10));
 						is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
 					}
 				}
+
 				return is_apfs.Value;
 			}
 		}
@@ -714,17 +740,19 @@ namespace Xamarin.Tests {
 
 		// Return true if the current machine can run ARM64 binaries.
 		static bool? canRunArm64;
+
 		public static bool CanRunArm64 {
 			get {
 				if (!canRunArm64.HasValue) {
 					int rv = 0;
-					IntPtr size = (IntPtr) sizeof (int);
+					IntPtr size = (IntPtr) sizeof(int);
 					if (sysctlbyname ("hw.optional.arm64", ref rv, ref size, IntPtr.Zero, IntPtr.Zero) == 0) {
 						canRunArm64 = rv == 1;
 					} else {
 						canRunArm64 = false;
 					}
 				}
+
 				return canRunArm64.Value;
 			}
 		}
@@ -739,6 +767,7 @@ namespace Xamarin.Tests {
 				arguments.Add ("-arch");
 				arguments.Add (arch);
 			}
+
 			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
 			return symbols.Where ((v) => {
 				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
@@ -759,6 +788,22 @@ namespace Xamarin.Tests {
 		{
 			return CallNM (file, "-gujA", arch);
 		}
+
+		public static bool TryGetApiDefinitionRsp (TargetFramework framework, 
+			[NotNullWhen (true)] out string rspPath)
+		{
+			rspPath = null;
+			var platform = framework.Platform switch {
+				ApplePlatform.iOS => "ios", 
+				ApplePlatform.TVOS => "tvos", 
+				ApplePlatform.MacOSX => "macos", 
+				ApplePlatform.MacCatalyst => "maccatalyst", 
+				_ => null,
+			};
+			if (platform is null)
+				return false;
+			rspPath = Path.Combine (SourceRoot, "src", "build", "dotnet", platform, $"apidefinition-{platform}.rsp");
+			return true;
+		}
 	}
 }
-
