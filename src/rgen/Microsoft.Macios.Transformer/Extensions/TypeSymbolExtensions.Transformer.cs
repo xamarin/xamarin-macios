@@ -18,7 +18,7 @@ static partial class TypeSymbolExtensions {
 		ApplePlatform.MacOSX,
 		ApplePlatform.MacCatalyst
 	];
-	
+
 	/// <summary>
 	/// Return the symbol availability WITHOUT taking into account the parent symbols availability.
 	/// </summary>
@@ -40,25 +40,25 @@ static partial class TypeSymbolExtensions {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
 			if (string.IsNullOrEmpty (attrName))
 				continue;
-			
+
 			if (XamarinAvailabilityData.TryParseSupportedOSData (attrName, attributeData, out var availabilityData)) {
 				builder.Add (availabilityData.Value);
 			}
 
 			if (XamarinAvailabilityData.TryParseUnsupportedOSData (attrName, attributeData,
-				    out var unsupportedOsPlatformData)) {
+					out var unsupportedOsPlatformData)) {
 				builder.Add (unsupportedOsPlatformData.Value);
 			}
 		}
-		
+
 		// if a platform was not ignore or had a specific version, then it is supported, loop over what we got
 		// and add the missing platforms with the default version
 		var supportedPlatforms = builder.PlatformAvailabilities.ToArray ()
 			.Select (a => a.Platform);
-		
+
 		// add data to all not added platforms
 		foreach (var platform in allSupportedPlatforms.Except (supportedPlatforms)) {
-			builder.Add (new SupportedOSPlatformData(platform, new Version()));
+			builder.Add (new SupportedOSPlatformData (platform, new Version ()));
 		}
 
 		return builder.ToImmutable ();

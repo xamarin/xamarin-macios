@@ -85,9 +85,9 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			
+
 			builder.Add (new SupportedOSPlatformData ("ios"));
-			builder.Add (new SupportedOSPlatformData("tvos"));
+			builder.Add (new SupportedOSPlatformData ("tvos"));
 			builder.Add (new SupportedOSPlatformData ("macos"));
 			builder.Add (new SupportedOSPlatformData ("maccatalyst13.1"));
 			yield return [(Source: onePlatformSpecificVersion, Path: path), builder.ToImmutable ()];
@@ -110,10 +110,10 @@ interface UIFeedbackGenerator : UIInteraction {
 }
 ";
 
-			builder.Add (new UnsupportedOSPlatformData("ios"));
-			builder.Add (new UnsupportedOSPlatformData("tvos"));
+			builder.Add (new UnsupportedOSPlatformData ("ios"));
+			builder.Add (new UnsupportedOSPlatformData ("tvos"));
 			builder.Add (new SupportedOSPlatformData ("macos"));
-			builder.Add (new UnsupportedOSPlatformData("maccatalyst"));
+			builder.Add (new UnsupportedOSPlatformData ("maccatalyst"));
 			yield return [(Source: allPlatformsRemovedButOne, Path: path), builder.ToImmutable ()];
 		}
 
@@ -126,13 +126,13 @@ interface UIFeedbackGenerator : UIInteraction {
 	{
 		var compilation = CreateCompilation (platform, sources: source);
 		var x = compilation.GetDiagnostics ();
-		var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(t => t.FilePath == source.Path);
+		var syntaxTree = compilation.SyntaxTrees.FirstOrDefault (t => t.FilePath == source.Path);
 		Assert.NotNull (syntaxTree);
 		var declaration = syntaxTree.GetRoot ()
 			.DescendantNodes ().OfType<BaseTypeDeclarationSyntax> ()
 			.FirstOrDefault ();
 		Assert.NotNull (declaration);
-		
+
 		var semanticModel = compilation.GetSemanticModel (syntaxTree);
 		Assert.NotNull (semanticModel);
 

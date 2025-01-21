@@ -33,7 +33,7 @@ readonly partial struct SymbolAvailability {
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Returns the PlatformAvailability for the given platform. If we did not have a builder for the
 		/// platform, a new one is created and added to the dictionary.

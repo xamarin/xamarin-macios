@@ -58,7 +58,7 @@ static partial class TypeSymbolExtensions {
 
 		return builder.ToImmutable ();
 	}
-	
+
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
 		// a type is a smart enum if its type is a enum one AND it was decorated with the

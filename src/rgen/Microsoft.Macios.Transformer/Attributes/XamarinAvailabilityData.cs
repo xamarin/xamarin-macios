@@ -23,7 +23,7 @@ static class XamarinAvailabilityData {
 		{ AttributesNames.NoMacAttribute, ApplePlatform.MacOSX },
 		{ AttributesNames.NoMacCatalystAttribute, ApplePlatform.MacCatalyst },
 	};
-	
+
 	public static bool TryParseSupportedOSData (string attributeName, AttributeData attributeData,
 		[NotNullWhen (true)] out SupportedOSPlatformData? data)
 	{
@@ -32,12 +32,12 @@ static class XamarinAvailabilityData {
 			// not a supported attribute
 			return false;
 		}
-		
+
 		var count = attributeData.ConstructorArguments.Length;
 		int major = 0;
 		int? minor = null;
 		int? subminor = null;
-		
+
 		// custom marshal directive values
 
 		switch (count) {
@@ -45,11 +45,11 @@ static class XamarinAvailabilityData {
 			major = (byte) attributeData.ConstructorArguments [0].Value!;
 			break;
 		case 2:
-			major = (byte) attributeData.ConstructorArguments [0].Value!; 
+			major = (byte) attributeData.ConstructorArguments [0].Value!;
 			minor = (byte) attributeData.ConstructorArguments [1].Value!;
 			break;
 		case 3:
-			major = (byte) attributeData.ConstructorArguments [0].Value!; 
+			major = (byte) attributeData.ConstructorArguments [0].Value!;
 			minor = (byte) attributeData.ConstructorArguments [1].Value!;
 			subminor = (byte) attributeData.ConstructorArguments [2].Value!;
 			break;
@@ -59,9 +59,9 @@ static class XamarinAvailabilityData {
 		}
 
 		data = (major, minor, subminor) switch {
-			(_, null, null) => new(platform, new($"{major}")),
-			(_, not null, null) => new(platform, new(major, minor.Value)),
-			(_,not null, not null) => new(platform, new(major, minor.Value, subminor.Value)),
+			(_, null, null) => new (platform, new ($"{major}")),
+			(_, not null, null) => new (platform, new (major, minor.Value)),
+			(_, not null, not null) => new (platform, new (major, minor.Value, subminor.Value)),
 			_ => throw new ArgumentOutOfRangeException ("Could not parse the version")
 		};
 		return true;

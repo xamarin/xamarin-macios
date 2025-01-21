@@ -237,7 +237,7 @@ static partial class TypeSymbolExtensions {
 		parents = parentsBuilder.ToImmutable ();
 		interfaces = [.. interfacesSet];
 	}
-	
+
 	/// <summary>
 	/// Returns the symbol availability taking into account the parent symbols availability.
 	///
