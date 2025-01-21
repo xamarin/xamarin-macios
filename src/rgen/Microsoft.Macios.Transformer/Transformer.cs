@@ -25,7 +25,7 @@ class Transformer {
 	readonly string destinationDirectory;
 	readonly ImmutableArray<(ApplePlatform Platform, Compilation Compilation)> compilations;
 	readonly HashSet<string>? namespaceFilter;
-	readonly Dictionary<string, ITransformer<(string Path, string SymbolName)>> transformers = new();
+	readonly Dictionary<string, ITransformer<(string Path, string SymbolName)>> transformers = new ();
 
 	internal Transformer (string destination,
 		ImmutableArray<(ApplePlatform Platform, Compilation Compilation)> compilationsResult,
@@ -78,7 +78,7 @@ class Transformer {
 			// simplest case, an error domain	
 			if (attrs.ContainsKey (AttributesNames.ErrorDomainAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is an error domain", symbol.Name);
-				return nameof(ErrorDomainTransformer);
+				return nameof (ErrorDomainTransformer);
 			}
 
 			// in this case, we need to check if the enum is a smart enum. 
@@ -88,35 +88,35 @@ class Transformer {
 				var fieldAttrs = enumField.GetAttributeData ();
 				if (fieldAttrs.ContainsKey (AttributesNames.FieldAttribute)) {
 					logger.Debug ("Symbol '{SymbolName}' is a smart enum", symbol.Name);
-					return nameof(SmartEnumTransformer);
+					return nameof (SmartEnumTransformer);
 				}
 			}
 
 			// we have either a native enum of a regular enum, we will use the copy worker
 			logger.Debug ("Symbol '{SymbolName}' is a regular enum", symbol.Name);
-			return nameof(CopyTransformer);
+			return nameof (CopyTransformer);
 		}
 
 		if (attrs.ContainsKey (AttributesNames.BaseTypeAttribute)) {
 			// if can be a class or a protocol, check if the protocol attribute is present
 			if (attrs.ContainsKey (AttributesNames.ProtocolAttribute) ||
-			    attrs.ContainsKey (AttributesNames.ModelAttribute)) {
+				attrs.ContainsKey (AttributesNames.ModelAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is a protocol", symbol.Name);
-				return nameof(ProtocolTransformer);
+				return nameof (ProtocolTransformer);
 			}
 
 			if (attrs.ContainsKey (AttributesNames.CategoryAttribute)) {
 				logger.Debug ("Symbol '{SymbolName}' is a category", symbol.Name);
-				return nameof(CategoryTransformer);
+				return nameof (CategoryTransformer);
 			}
 
 			logger.Debug ("Symbol '{SymbolName}' is a class", symbol.Name);
-			return nameof(ClassTransformer);
+			return nameof (ClassTransformer);
 		}
 
 		if (attrs.ContainsKey (AttributesNames.StrongDictionaryAttribute)) {
 			logger.Debug ("Symbol '{SymbolName}' is a strong dictionary", symbol.Name);
-			return nameof(StrongDictionaryTransformer);
+			return nameof (StrongDictionaryTransformer);
 		}
 
 		logger.Warning ("Symbol '{SymbolName}' could not be matched to a transformer", symbol.Name);
@@ -271,7 +271,7 @@ class Transformer {
 		}
 
 		ImmutableArray<(ApplePlatform Platform, Compilation Compilation)> compilationTuples = [
-			..compilations
+			.. compilations
 				.Select (c => c.ToTuple ())
 		];
 		// create a new transformer with the compilation result and the syntax trees
