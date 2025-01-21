@@ -540,8 +540,8 @@ namespace Xamarin.Tests {
 		public static IEnumerable<string> GetBaseLibraryImplementations ()
 		{
 			foreach (var platform in GetIncludedPlatforms ())
-			foreach (var lib in GetBaseLibraryImplementations (platform))
-				yield return lib;
+				foreach (var lib in GetBaseLibraryImplementations (platform))
+					yield return lib;
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
@@ -745,7 +745,7 @@ namespace Xamarin.Tests {
 			get {
 				if (!canRunArm64.HasValue) {
 					int rv = 0;
-					IntPtr size = (IntPtr) sizeof(int);
+					IntPtr size = (IntPtr) sizeof (int);
 					if (sysctlbyname ("hw.optional.arm64", ref rv, ref size, IntPtr.Zero, IntPtr.Zero) == 0) {
 						canRunArm64 = rv == 1;
 					} else {
@@ -789,15 +789,15 @@ namespace Xamarin.Tests {
 			return CallNM (file, "-gujA", arch);
 		}
 
-		public static bool TryGetApiDefinitionRsp (TargetFramework framework, 
+		public static bool TryGetApiDefinitionRsp (TargetFramework framework,
 			[NotNullWhen (true)] out string rspPath)
 		{
 			rspPath = null;
 			var platform = framework.Platform switch {
-				ApplePlatform.iOS => "ios", 
-				ApplePlatform.TVOS => "tvos", 
-				ApplePlatform.MacOSX => "macos", 
-				ApplePlatform.MacCatalyst => "maccatalyst", 
+				ApplePlatform.iOS => "ios",
+				ApplePlatform.TVOS => "tvos",
+				ApplePlatform.MacOSX => "macos",
+				ApplePlatform.MacCatalyst => "maccatalyst",
 				_ => null,
 			};
 			if (platform is null)
