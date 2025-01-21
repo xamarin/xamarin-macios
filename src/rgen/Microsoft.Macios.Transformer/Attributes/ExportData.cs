@@ -7,7 +7,7 @@ using ObjCRuntime;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-public struct ExportData : IEquatable<ExportData> {
+struct ExportData : IEquatable<ExportData> {
 
 	/// <summary>
 	/// The exported native selector.
@@ -31,7 +31,7 @@ public struct ExportData : IEquatable<ExportData> {
 	}
 
 	/// <summary>
-	/// Try to parse the attribute data to retrieve the information of an ExportAttribute&lt;T&gt;.
+	/// Try to parse the attribute data to retrieve the information of an ExportAttribute.
 	/// </summary>
 	/// <param name="attributeData">The attribute data to be parsed.</param>
 	/// <param name="data">The parsed data. Null if we could not parse the attribute data.</param>
