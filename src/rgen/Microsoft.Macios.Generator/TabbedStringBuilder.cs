@@ -2,16 +2,9 @@
 // Licensed under the MIT License.
 using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Mail;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
-using Microsoft.Macios.Generator.DataModel;
-using ObjCRuntime;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator;
@@ -29,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// }
 /// </example>
 /// </summary>
-class TabbedStringBuilder : IDisposable {
+partial class TabbedStringBuilder : IDisposable {
 	readonly StringBuilder sb;
 	readonly uint tabCount;
 	readonly bool isBlock;
@@ -226,17 +219,6 @@ class TabbedStringBuilder : IDisposable {
 			}
 		}
 
-		return this;
-	}
-
-	public TabbedStringBuilder AppendExportData<T> (in ExportData<T> exportData) where T : Enum
-	{
-		// Try to write the smaller amount of data. We are using the old ExportAttribute until we make the final move
-		if (exportData.ArgumentSemantic != ArgumentSemantic.None) {
-			AppendLine ($"[Export (\"{exportData.Selector}\", ArgumentSemantic.{exportData.ArgumentSemantic})]");
-		} else {
-			AppendLine ($"[Export (\"{exportData.Selector}\")]");
-		}
 		return this;
 	}
 

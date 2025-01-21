@@ -33,6 +33,9 @@
         <Compile Include="../Microsoft.Macios.Generator/CollectionComparer.cs" >
             <Link>CollectionComparer.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/TabbedStringBuilder.cs" >
+            <Link>TabbedStringBuilder.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/ObsoletedOSPlatformData.cs" >
             <Link>Attributes/ObsoletedOSPlatformData.cs</Link>
         </Compile>
@@ -44,6 +47,9 @@
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Availability/*.cs" >
             <Link>Availability/*.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/ApplePlatformExtensions.cs" >
+            <Link>Extensions/ApplePlatformExtensions.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ParameterSyntaxExtensions.cs" >
             <Link>Extensions/ParameterSyntaxExtensions.cs</Link>
