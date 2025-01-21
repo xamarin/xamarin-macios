@@ -45,6 +45,9 @@
         <Compile Include="../Microsoft.Macios.Generator/Availability/*.cs" >
             <Link>Availability/*.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/ApplePlatformExtensions.cs" >
+            <Link>Extensions/ApplePlatformExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ParameterSyntaxExtensions.cs" >
             <Link>Extensions/ParameterSyntaxExtensions.cs</Link>
         </Compile>
