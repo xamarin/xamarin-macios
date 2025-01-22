@@ -53,10 +53,10 @@
     
     <Target Name="BuildTestLibraries" BeforeTargets="BeforeBuild">
         <Message Text="Processing platform: %(Platform.Identity)" /> 
-        <Exec Command="make -j8 -C $(RootDirectory) $(DotnetBuildDirectory)/ios/apidefinition-ios.dll"/>
-        <Exec Command="make -j8 -C $(RootDirectory) $(DotnetBuildDirectory)/macos/apidefinition-macos.dll"/>
-        <Exec Command="make -j8 -C $(RootDirectory) $(DotnetBuildDirectory)/tvos/apidefinition-tvos.dll"/>
-        <Exec Command="make -j8 -C $(RootDirectory) $(DotnetBuildDirectory)/maccatalyst/apidefinition-maccatalyst.dll"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetBuildDirectory)/ios/apidefinition-ios.dll"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetBuildDirectory)/macos/apidefinition-macos.dll"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetBuildDirectory)/tvos/apidefinition-tvos.dll"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetBuildDirectory)/maccatalyst/apidefinition-maccatalyst.dll"/>
     </Target>
 
 </Project>
