@@ -7,8 +7,8 @@
         <IsPackable>false</IsPackable>
 
         <!-- Ensure we do have the api-definitions -->
-        <RootDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootDirectory>
-        <DotnetBuildDirectory>src/build/dotnet</DotnetBuildDirectory>
+        <SourceDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\src'))</SourceDirectory>
+        <DotnetBuildDirectory>build/dotnet</DotnetBuildDirectory>
     </PropertyGroup>
 
     <ItemGroup>
