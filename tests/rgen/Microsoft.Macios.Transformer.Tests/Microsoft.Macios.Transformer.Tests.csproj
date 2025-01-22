@@ -8,7 +8,7 @@
 
         <!-- Ensure we do have the api-definitions -->
         <RootDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootDirectory>
-        <DotnetBuildDirectory>$(RootDirectory)/src/build/dotnet</DotnetBuildDirectory>
+        <DotnetBuildDirectory>src/build/dotnet</DotnetBuildDirectory>
     </PropertyGroup>
 
     <ItemGroup>
