@@ -121,7 +121,7 @@ partial class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
-	
+
 	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
 		WriteTabs ().Append (handler.ToStringAndClear ());
@@ -133,7 +133,7 @@ partial class TabbedStringBuilder : IDisposable {
 		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
 	}
-	
+
 
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
@@ -156,7 +156,7 @@ partial class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append the generated code attribute to the current string builder. Added for convenience.
 	/// </summary>

@@ -7,7 +7,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Generator;
 
 partial class TabbedStringBuilder {
-	
+
 	public TabbedStringBuilder AppendMemberAvailability (in SymbolAvailability allPlatformsAvailability)
 	{
 		foreach (var availability in allPlatformsAvailability.PlatformAvailabilities) {

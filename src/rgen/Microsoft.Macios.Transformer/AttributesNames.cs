@@ -112,9 +112,9 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string ManualAttribute = "ManualAttribute";
 
-	[BindingFlag] 
+	[BindingFlag]
 	public const string MarshalNativeExceptionsAttribute = "MarshalNativeExceptionsAttribute";
-	
+
 	/// <summary>
 	/// Mark a class or interface to be a model.
 	/// </summary>
@@ -176,61 +176,61 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
 	public const string OverrideAttribute = "OverrideAttribute";
-	
+
 	/// <summary>
 	///  Indicates that this array should be turned into a params
 	/// </summary>
 	[BindingFlag (AttributeTargets.Parameter)]
 	public const string ParamsAttribute = "ParamsAttribute";
-	
+
 	/// <summary>
 	///  When applied to a type generate a partial class even if the type does not subclass NSObject
 	/// useful for Core* types that declare Fields
 	/// </summary>
 	[BindingFlag (AttributeTargets.Interface)]
 	public const string PartialAttribute = "PartialAttribute";
-	
+
 	[BindingFlag]
 	public const string PlainStringAttribute = "PlainStringAttribute";
-	
+
 	/// <summary>
 	/// When this attribute is applied to the interface definition it will flag the default constructor as private.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Interface)]
 	public const string PrivateDefaultCtorAttribute = "PrivateDefaultCtorAttribute";
-	
+
 	[BindingFlag (AttributeTargets.Property)]
 	public const string ProbePresenceAttribute = "ProbePresenceAttribute";
-	
+
 	/// <summary>
 	/// Use this attribute to instruct the binding generator that the binding for this particular method should be
 	/// flagged with an protected keyword.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
 	public const string ProtectedAttribute = "ProtectedAttribute";
-	
+
 	[BindingFlag (AttributeTargets.Interface | AttributeTargets.Class)]
 	public const string ProtocolAttribute = "Foundation.ProtocolAttribute";
-	
+
 	/// <summary>
 	/// This attribute is applied to return values to flag them as being proxy objects
 	/// </summary>
 	[BindingFlag (AttributeTargets.ReturnValue)]
 	public const string ProxyAttribute = "ProxyAttribute";
-	
+
 	/// <summary>
 	/// Use the [AutoReleaseAttribute] on methods and properties to wrap the method invocation to the method
 	/// in an NSAutoReleasePool
 	/// </summary>
 	[BindingFlag (AttributeTargets.ReturnValue)]
 	public const string ReleaseAttribute = "ReleaseAttribute";
-	
+
 	/// <summary>
 	/// Instructs the generator to flag the generated method as sealed
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string SealedAttribute = "SealedAttribute";
-	
+
 	/// <summary>
 	/// When this attribute is applied to a class it will just generate a static class, one that does not derive
 	/// from NSObject.
@@ -238,14 +238,14 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Class)]
 	public const string StaticAttribute = "StaticAttribute";
 	public const string StrongDictionaryAttribute = "StrongDictionaryAttribute";
-	
+
 	/// <summary>
 	/// Used to mark if a type is not a wrapper type.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string SyntheticAttribute = "SyntheticAttribute";
 	public const string TVAttribute = "TVAttribute";
-	
+
 	/// <summary>
 	/// hen applied, instructs the generator to use this object as the
 	/// target, instead of the implicit Handle 
@@ -253,7 +253,7 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string TargetAttribute = "TargetAttribute";
 	public const string ThreadSafeAttribute = "ThreadSafeAttribute";
-	
+
 	/// <summary>
 	/// If this attribute is applied to a property, we do not generate a
 	/// backing field.
@@ -261,7 +261,7 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Property)]
 	public const string TransientAttribute = "TransientAttribute";
 	public const string UnavailableAttribute = "UnavailableAttribute";
-	
+
 	[BindingFlag (AttributeTargets.Assembly | AttributeTargets.Method | AttributeTargets.Interface)]
 	public const string ZeroCopyStringsAttribute = "ZeroCopyStringsAttribute";
 	public const string iOSAttribute = "ObjCRuntime.iOSAttribute";
