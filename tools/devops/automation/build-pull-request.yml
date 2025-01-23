@@ -154,6 +154,8 @@ trigger:
   branches:
     include:
     - refs/heads/dev/*
+    - refs/heads/darc-*
+    - refs/heads/backport-pr-*
 
 pr:
   autoCancel: true

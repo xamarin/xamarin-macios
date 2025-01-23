@@ -35,12 +35,13 @@
     <Skip Include="Build\System.Text.Json.dll" />
     <Skip Include="Build\System.Threading.Tasks.Dataflow.dll" />
     <Skip Include="Build\System.Threading.Tasks.Extensions.dll" />
+    <!-- They are now signed by their origin build https://github.com/xamarin/XamarinVS/pull/14522 -->
+    <Skip Include="imobiledevice-*\*.dll" />
+    <Skip Include="imobiledevice-*\*.exe" />
   </ItemGroup>
 
   <ItemGroup>
     <ThirdParty Include="BouncyCastle.Crypto.dll" />
-    <ThirdParty Include="imobiledevice-*\*.dll" />
-    <ThirdParty Include="imobiledevice-*\*.exe" />
     <!-- Build.zip -->
     <ThirdParty Include="Mono.Cecil*.dll" />
 

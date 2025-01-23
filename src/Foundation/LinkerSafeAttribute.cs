@@ -29,10 +29,8 @@ using System.ComponentModel;
 
 namespace Foundation {
 
-#if NET
 	[Obsolete ("Replace with '[assembly: System.Reflection.AssemblyMetadata (\"IsTrimmable\", \"True\")]'.")]
 	[EditorBrowsable (EditorBrowsableState.Never)]
-#endif
 	[AttributeUsage (AttributeTargets.Assembly)]
 	public sealed class LinkerSafeAttribute : Attribute {
 

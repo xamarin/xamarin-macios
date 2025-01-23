@@ -3,14 +3,15 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly struct Accessor : IEquatable<Accessor> {
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct Accessor : IEquatable<Accessor> {
 	/// <summary>
 	/// The kind of accessor.
 	/// </summary>
@@ -22,11 +23,6 @@ readonly struct Accessor : IEquatable<Accessor> {
 	public SymbolAvailability SymbolAvailability { get; }
 
 	/// <summary>
-	/// The data of the field attribute used to mark the value as a property binding. 
-	/// </summary>
-	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
-
-	/// <summary>
 	/// List of attribute code changes of the accessor.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; }
@@ -35,27 +31,6 @@ readonly struct Accessor : IEquatable<Accessor> {
 	/// List of modifiers of the accessor.
 	/// </summary>
 	public ImmutableArray<SyntaxToken> Modifiers { get; }
-
-	/// <summary>
-	/// Create a new code change in a property accessor.
-	/// </summary>
-	/// <param name="accessorKind">The kind of accessor.</param>
-	/// <param name="symbolAvailability">The os availability of the symbol.</param>
-	/// <param name="exportPropertyData">The data of the export attribute found in the accessor.</param>
-	/// <param name="attributes">The list of attributes attached to the accessor.</param>
-	/// <param name="modifiers">The list of visibility modifiers of the accessor.</param>
-	public Accessor (AccessorKind accessorKind,
-		SymbolAvailability symbolAvailability,
-		ExportData<ObjCBindings.Property>? exportPropertyData,
-		ImmutableArray<AttributeCodeChange> attributes,
-		ImmutableArray<SyntaxToken> modifiers)
-	{
-		Kind = accessorKind;
-		SymbolAvailability = symbolAvailability;
-		ExportPropertyData = exportPropertyData;
-		Attributes = attributes;
-		Modifiers = modifiers;
-	}
 
 	/// <inheritdoc />
 	public bool Equals (Accessor other)

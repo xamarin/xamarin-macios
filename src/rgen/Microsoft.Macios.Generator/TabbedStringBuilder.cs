@@ -2,14 +2,9 @@
 // Licensed under the MIT License.
 using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Mail;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Macios.Generator.Availability;
-using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator;
@@ -27,7 +22,7 @@ namespace Microsoft.Macios.Generator;
 /// }
 /// </example>
 /// </summary>
-class TabbedStringBuilder : IDisposable {
+partial class TabbedStringBuilder : IDisposable {
 	readonly StringBuilder sb;
 	readonly uint tabCount;
 	readonly bool isBlock;
@@ -224,6 +219,14 @@ class TabbedStringBuilder : IDisposable {
 			}
 		}
 
+		return this;
+	}
+
+	public TabbedStringBuilder AppendNotificationAdvice (in string className, in string notification)
+	{
+		string attr =
+			$"[Advice (\"Use '{className}.Notifications.{notification}' helper method instead.\")]";
+		AppendLine (attr);
 		return this;
 	}
 
