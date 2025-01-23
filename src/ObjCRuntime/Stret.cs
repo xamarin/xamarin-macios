@@ -191,7 +191,7 @@ namespace ObjCRuntime {
 		// IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields' in call to 'System.Type.GetFields(BindingFlags)'. The parameter 'type' of method 'ObjCRuntime.Stret.GetValueTypeSize(Type, List<Type>, Boolean, Object)' does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to.
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "Computing the size of a struct is safe, because the trimmer can't remove fields that would affect the size of a marshallable struct (it could affect marshalling behavior).")]
 #endif
-		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits, Generator generator)
+		internal static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits, Generator generator)
 		{
 			int size = 0;
 			int maxElementSize = 1;

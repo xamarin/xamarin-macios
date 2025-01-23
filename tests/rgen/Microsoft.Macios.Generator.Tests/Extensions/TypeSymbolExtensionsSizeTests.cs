@@ -257,5 +257,237 @@ public class TestClass {
 		var result64 = symbol.Type.TryGetBuiltInTypeSize (false, out var returnTypeSize64);
 		Assert.Equal(expectedResult64, result64);
 		Assert.Equal(expectedTypeSize64, returnTypeSize64);
-	} 
+	}
+
+	class TestDataGetValueTypeSizeTests : IEnumerable<object []> {
+		
+		[StructLayout (LayoutKind.Sequential)]
+		public struct AVSampleCursorSyncInfo {
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IsFullSync;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IsPartialSync;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IsDroppable;
+		}	
+	
+		[StructLayout (LayoutKind.Sequential)]
+		public struct AVSampleCursorDependencyInfo {
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IndicatesWhetherItHasDependentSamples;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool HasDependentSamples;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IndicatesWhetherItDependsOnOthers;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool DependsOnOthers;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool IndicatesWhetherItHasRedundantCoding;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool HasRedundantCoding;
+		}
+	
+		[StructLayout (LayoutKind.Sequential)]
+		public struct AVSampleCursorStorageRange {
+			public long Offset;
+			public long Length;
+		}
+		
+		[StructLayout (LayoutKind.Sequential)]
+		public struct AVSampleCursorChunkInfo {
+			public long SampleCount;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool HasUniformSampleSizes;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool HasUniformSampleDurations;
+
+			[MarshalAs (UnmanagedType.I1)]
+			public bool HasUniformFormatDescriptions;
+		}
+		
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			// duplicate the definition of the above structs and ensure that we do get the same values
+			const string avSampleCursorSyncInfo = @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace NS;
+
+[StructLayout (LayoutKind.Sequential)]
+public struct AVSampleCursorSyncInfo {
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IsFullSync;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IsPartialSync;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IsDroppable;
+}	
+";
+			yield return [
+				avSampleCursorSyncInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorSyncInfo), 
+					fieldTypes: new (), 
+					is_64_bits: false, 
+					generator: new object ()), 
+				false];
+			
+			yield return [
+				avSampleCursorSyncInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorSyncInfo), 
+					fieldTypes: new (), 
+					is_64_bits: true, 
+					generator: new object ()), 
+				true];
+
+			const string avSampleCursorDependencyInfo = @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace NS;
+
+[StructLayout (LayoutKind.Sequential)]
+public struct AVSampleCursorDependencyInfo {
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IndicatesWhetherItHasDependentSamples;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool HasDependentSamples;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IndicatesWhetherItDependsOnOthers;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool DependsOnOthers;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool IndicatesWhetherItHasRedundantCoding;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool HasRedundantCoding;
+}
+";
+			
+			yield return [
+				avSampleCursorDependencyInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorDependencyInfo), 
+					fieldTypes: new (), 
+					is_64_bits: false, 
+					generator: new object ()), 
+				false];
+			
+			yield return [
+				avSampleCursorDependencyInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorDependencyInfo), 
+					fieldTypes: new (), 
+					is_64_bits: true, 
+					generator: new object ()), 
+				true];
+
+			const string avsampleCursorStorageRange = @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace NS;
+
+[StructLayout (LayoutKind.Sequential)]
+public struct AVSampleCursorStorageRange {
+	public long Offset;
+	public long Length;
+}
+";
+			
+			yield return [
+				avsampleCursorStorageRange, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorStorageRange), 
+					fieldTypes: new (), 
+					is_64_bits: false, 
+					generator: new object ()), 
+				false];
+			
+			yield return [
+				avsampleCursorStorageRange, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorStorageRange), 
+					fieldTypes: new (), 
+					is_64_bits: true, 
+					generator: new object ()), 
+				true];
+
+			const string avsampleCursorChunkInfo = @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace NS;
+
+
+[StructLayout (LayoutKind.Sequential)]
+public struct AVSampleCursorChunkInfo {
+	public long SampleCount;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool HasUniformSampleSizes;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool HasUniformSampleDurations;
+
+	[MarshalAs (UnmanagedType.I1)]
+	public bool HasUniformFormatDescriptions;
+}
+";
+			
+			yield return [
+				avsampleCursorChunkInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorChunkInfo), 
+					fieldTypes: new (), 
+					is_64_bits: false, 
+					generator: new object ()), 
+				false];
+			
+			yield return [
+				avsampleCursorChunkInfo, 
+				Stret.GetValueTypeSize (
+					type: typeof(AVSampleCursorChunkInfo), 
+					fieldTypes: new (), 
+					is_64_bits: true, 
+					generator: new object ()), 
+				true];
+		}
+		
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataGetValueTypeSizeTests>]
+	public void GetValueTypeSizeTests (ApplePlatform platform, string inputText, int expectedSize, bool is64Bits)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ().OfType<StructDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		var x = symbol.GetValueTypeSize (new (), false);
+		Assert.Equal (expectedSize, symbol.GetValueTypeSize (new (), is64Bits));
+	}
 }
