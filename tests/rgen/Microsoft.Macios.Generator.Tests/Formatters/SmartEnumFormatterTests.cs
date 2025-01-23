@@ -73,7 +73,7 @@ internal enum AVCaptureDeviceType {
 		Assert.NotNull (declaration);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		Assert.NotNull (semanticModel);
-		var changes = CodeChanges.FromDeclaration (declaration, semanticModel);
+		var changes = Binding.FromDeclaration (declaration, semanticModel);
 		Assert.NotNull (changes);
 		var classDeclaration = changes.ToSmartEnumExtensionDeclaration (className);
 		Assert.NotNull (classDeclaration);

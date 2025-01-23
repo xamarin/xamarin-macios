@@ -7,19 +7,19 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer equalityComparer = new ();
+public class BindingEqualityComparerTests : BaseGeneratorTestClass {
+	readonly BindingEqualityComparer equalityComparer = new ();
 
 	[Fact]
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name2",
 			@namespace: ["NS"],
@@ -31,13 +31,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentBindingType ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -49,13 +49,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributesLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -71,7 +71,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributes ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -81,7 +81,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -97,13 +97,13 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembersLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -125,7 +125,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembers ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -141,7 +141,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					attributes: [])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -163,7 +163,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentPropertyLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -172,7 +172,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			EnumMembers = [],
 			Properties = []
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -219,7 +219,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSamePropertiesDiffOrder ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -287,7 +287,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -361,7 +361,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentProperties ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -429,7 +429,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -503,7 +503,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentConstructorLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -572,7 +572,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 			],
 			Constructors = [],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -649,7 +649,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentConstructors ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -720,7 +720,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: [])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -803,7 +803,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameConstructors ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -881,7 +881,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 					])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -965,7 +965,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameConstructorsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1043,7 +1043,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1126,7 +1126,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameDiffModifiers ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1208,7 +1208,7 @@ public class CodeChangesEqualityComparerTests : BaseGeneratorTestClass {
 				new (type: "MyClass", symbolAvailability: new (), attributes: [], modifiers: [], parameters: []),
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
