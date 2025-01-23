@@ -40,7 +40,8 @@ static class TestDataFactory {
 			name: "int",
 			specialType: SpecialType.System_Int32,
 			isBlittable: !isNullable,
-			isNullable: isNullable
+			isNullable: isNullable,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
 			Interfaces = isNullable
@@ -86,7 +87,8 @@ static class TestDataFactory {
 			name: "nint",
 			specialType: SpecialType.System_IntPtr,
 			isBlittable: !isNullable,
-			isNullable: isNullable
+			isNullable: isNullable,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
 			Interfaces = isNullable
@@ -132,7 +134,8 @@ static class TestDataFactory {
 		=> new (
 			name: "bool",
 			specialType: SpecialType.System_Boolean,
-			isBlittable: false
+			isBlittable: false,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
 			Interfaces = [
@@ -147,7 +150,7 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForVoid ()
-		=> new ("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
+		=> new ("void", SpecialType.System_Void, isStruct: true) { Parents = ["System.ValueType", "object"], };
 
 	public static TypeInfo ReturnTypeForClass (string className, bool isNullable = false)
 		=> new (
@@ -174,7 +177,8 @@ static class TestDataFactory {
 
 	public static TypeInfo ReturnTypeForStruct (string structName)
 		=> new (
-			name: structName
+			name: structName,
+			isStruct: true
 		) { Parents = ["System.ValueType", "object"] };
 
 	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false)
