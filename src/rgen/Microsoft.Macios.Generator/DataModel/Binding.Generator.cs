@@ -14,7 +14,7 @@ using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly partial struct CodeChanges {
+readonly partial struct Binding {
 
 	/// <summary>
 	/// Represents the type of binding that the code changes are for.
@@ -146,7 +146,7 @@ readonly partial struct CodeChanges {
 	/// <param name="namespace">The namespace that contains the named type.</param>
 	/// <param name="fullyQualifiedSymbol">The fully qualified name of the symbol.</param>
 	/// <param name="symbolAvailability">The platform availability of the named symbol.</param>
-	internal CodeChanges (BindingInfo bindingInfo, string name, ImmutableArray<string> @namespace,
+	internal Binding (BindingInfo bindingInfo, string name, ImmutableArray<string> @namespace,
 		string fullyQualifiedSymbol, SymbolAvailability symbolAvailability)
 	{
 		this.bindingInfo = bindingInfo;
@@ -157,11 +157,11 @@ readonly partial struct CodeChanges {
 	}
 
 	/// <summary>
-	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given enum declaration.
+	/// Creates a new instance of the <see cref="Binding"/> struct for a given enum declaration.
 	/// </summary>
 	/// <param name="enumDeclaration">The enum declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	CodeChanges (EnumDeclarationSyntax enumDeclaration, RootBindingContext context)
+	Binding (EnumDeclarationSyntax enumDeclaration, RootBindingContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: enumDeclaration,
@@ -207,11 +207,11 @@ readonly partial struct CodeChanges {
 	}
 
 	/// <summary>
-	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given class declaration.
+	/// Creates a new instance of the <see cref="Binding"/> struct for a given class declaration.
 	/// </summary>
 	/// <param name="classDeclaration">The class declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	CodeChanges (ClassDeclarationSyntax classDeclaration, RootBindingContext context)
+	Binding (ClassDeclarationSyntax classDeclaration, RootBindingContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: classDeclaration,
@@ -239,11 +239,11 @@ readonly partial struct CodeChanges {
 	}
 
 	/// <summary>
-	/// Creates a new instance of the <see cref="CodeChanges"/> struct for a given interface declaration.
+	/// Creates a new instance of the <see cref="Binding"/> struct for a given interface declaration.
 	/// </summary>
 	/// <param name="interfaceDeclaration">The interface declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	CodeChanges (InterfaceDeclarationSyntax interfaceDeclaration, RootBindingContext context)
+	Binding (InterfaceDeclarationSyntax interfaceDeclaration, RootBindingContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: interfaceDeclaration,
@@ -275,13 +275,13 @@ readonly partial struct CodeChanges {
 	/// <param name="baseTypeDeclarationSyntax">The declaration syntax whose change we want to calculate.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
 	/// <returns>A code change or null if it could not be calculated.</returns>
-	public static CodeChanges? FromDeclaration (BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
+	public static Binding? FromDeclaration (BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
 		RootBindingContext context)
 		=> baseTypeDeclarationSyntax switch {
-			EnumDeclarationSyntax enumDeclarationSyntax => new CodeChanges (enumDeclarationSyntax, context),
-			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new CodeChanges (interfaceDeclarationSyntax,
+			EnumDeclarationSyntax enumDeclarationSyntax => new Binding (enumDeclarationSyntax, context),
+			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new Binding (interfaceDeclarationSyntax,
 				context),
-			ClassDeclarationSyntax classDeclarationSyntax => new CodeChanges (classDeclarationSyntax, context),
+			ClassDeclarationSyntax classDeclarationSyntax => new Binding (classDeclarationSyntax, context),
 			_ => null
 		};
 }

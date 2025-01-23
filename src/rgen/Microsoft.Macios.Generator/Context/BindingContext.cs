@@ -14,9 +14,9 @@ readonly struct BindingContext {
 	/// <summary>
 	/// Current code changes for the binding context.
 	/// </summary>
-	public CodeChanges Changes { get; }
+	public Binding Changes { get; }
 
-	public BindingContext (TabbedStringBuilder builder, CodeChanges changes)
+	public BindingContext (TabbedStringBuilder builder, Binding changes)
 	{
 		Builder = builder;
 		Changes = changes;
