@@ -19,7 +19,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 
 	readonly string fullyQualifiedName = string.Empty;
 	/// <summary>
-	/// Type of the parameter.
+	/// The fully qualified name of the type.
 	/// </summary>
 	public string FullyQualifiedName {
 		get => fullyQualifiedName;
