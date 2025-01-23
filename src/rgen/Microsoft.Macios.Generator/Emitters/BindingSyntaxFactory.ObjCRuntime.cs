@@ -26,7 +26,7 @@ static partial class BindingSyntaxFactory {
 
 		// the name of the objcSend method is calculated in the following way	
 		// {CustomMarshallPrefix}_{MarshallTypeOfReturnType}_{objcSendMsg}{stret?_stret}_{string.Join('_', MarshallTypeArgs)}{nativeException?_exception}{CustomMarsahllPostfix}
-		// we will sue a sb to make things easy to follow
+		// we will use a sb to make things easy to follow
 		var sb = new StringBuilder ();
 
 		// first, decide if the user created a custom marshalling by checking the flags of the export data
@@ -70,9 +70,9 @@ static partial class BindingSyntaxFactory {
 	public static (string? Getter, string? Setter) GetObjCMessageSendMethods (in Property property, bool isSuper = false, bool isStret = false)
 	{
 		if (property.IsProperty) {
-			// the getter and the setter depend of the accessors that have been ser for the property, we do not want
-			// to calculate things that we wont use. The export data used will aslo depend if the getter/setter has a
-			// export attr attached
+			// the getter and the setter depend of the accessors that have been set for the property, we do not want
+			// to calculate things that we won't use. The export data used will also depend if the getter/setter has a
+			// export attribute attached
 			var getter = property.GetAccessor (AccessorKind.Getter);
 			string? getterMsgSend = null;
 			if (getter is not null) {
