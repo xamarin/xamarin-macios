@@ -230,31 +230,25 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	{
 		var type = this switch {
 			// special cases based on name
-			{ Name: "nfloat" or "NFloat" } => "nfloat", 
-			{ Name: "nint" or "nuint" } => MetadataName,
+			{ Name: "nfloat" or "NFloat" } => "nfloat", { Name: "nint" or "nuint" } => MetadataName,
 			// special string case
 			{ SpecialType: SpecialType.System_String } => NativeHandle, // use a NSString when we get a string
 
 			// NSObject should use the native handle
-			{ IsNSObject: true } => NativeHandle, 
-			{ IsINativeObject: true } => NativeHandle,
+			{ IsNSObject: true } => NativeHandle, { IsINativeObject: true } => NativeHandle,
 
 			// structs will use their name
-			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", 
-			{ IsStruct: true } => Name,
+			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", { IsStruct: true } => Name,
 
 			// enums:
 			// IsSmartEnum: We are using a nsstring, so it should be a native handle.
 			// IsNativeEnum: Depends on the enum backing field kind.
 			// GeneralEnum: Depends on the EnumUnderlyingType
 
-			{ IsSmartEnum: true } => NativeHandle, 
-			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => IntPtr, 
-			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => UIntPtr, 
-			{ IsEnum: true, EnumUnderlyingType: not null } => EnumUnderlyingType.GetKeyword (),
+			{ IsSmartEnum: true } => NativeHandle, { IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => IntPtr, { IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => UIntPtr, { IsEnum: true, EnumUnderlyingType: not null } => EnumUnderlyingType.GetKeyword (),
 
 			// special type that is a keyword (none would be a ref type)
-			{ SpecialType: SpecialType.System_Void } => SpecialType.GetKeyword (), 
+			{ SpecialType: SpecialType.System_Void } => SpecialType.GetKeyword (),
 
 			// This should not happen in bindings because all of the types should either be native objects
 			// nsobjects, or structs 
