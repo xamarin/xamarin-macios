@@ -277,6 +277,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"IsReferenceType: {IsReferenceType}, ");
+		sb.Append ($"IsStruct: {IsStruct}, ");
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
