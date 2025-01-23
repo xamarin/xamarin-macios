@@ -10,7 +10,7 @@ class TypeInfoComparer : IComparer<TypeInfo> {
 	/// <inheritdoc/>
 	public int Compare (TypeInfo x, TypeInfo y)
 	{
-		var returnTypeComparison = String.Compare (x.Name, y.Name, StringComparison.Ordinal);
+		var returnTypeComparison = String.Compare (x.FullyQualifiedName, y.FullyQualifiedName, StringComparison.Ordinal);
 		if (returnTypeComparison != 0)
 			return returnTypeComparison;
 		var isNullableComparison = x.IsNullable.CompareTo (y.IsNullable);

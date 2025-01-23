@@ -22,10 +22,18 @@ readonly partial struct Property : IEquatable<Property> {
 
 	public string BackingField { get; private init; }
 
+	readonly TypeInfo returnType;
+
 	/// <summary>
 	/// Representation of the property type.
 	/// </summary>
-	public TypeInfo ReturnType { get; } = default;
+	public TypeInfo ReturnType {
+		get => returnType;
+		private init {
+			returnType = value;
+			ValueParameter = new Parameter(0, returnType, "value");
+		}
+	}
 
 	/// <summary>
 	/// Returns if the property type is bittable.
@@ -61,6 +69,8 @@ readonly partial struct Property : IEquatable<Property> {
 	/// Get the list of accessor changes of the property.
 	/// </summary>
 	public ImmutableArray<Accessor> Accessors { get; } = [];
+
+	public Parameter ValueParameter { get; private init; }
 
 	public Accessor? GetAccessor (AccessorKind accessorKind)
 	{

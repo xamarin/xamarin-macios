@@ -17,7 +17,7 @@ static class TypeInfoFormatter {
 		// reduce the surprise factor for a customer debugging the generated code.
 		var name = typeInfo.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
 			? typeInfo.MetadataName! // we know is not null
-			: typeInfo.Name;
+			: typeInfo.FullyQualifiedName;
 
 		if (typeInfo.IsArray) {
 			// could be a params array or simply an array

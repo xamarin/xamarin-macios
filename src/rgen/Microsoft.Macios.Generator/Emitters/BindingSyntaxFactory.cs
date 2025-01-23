@@ -96,7 +96,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>The variable declaration syntax.</returns>
 	public static CompilationUnitSyntax FieldPropertyBackingVariable (in Property property)
 	{
-		var variableType = property.ReturnType.Name;
+		var variableType = property.ReturnType.FullyQualifiedName;
 		if (property.ReturnType.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
 			&& property.ReturnType.MetadataName is not null) {
 			variableType = property.ReturnType.MetadataName;

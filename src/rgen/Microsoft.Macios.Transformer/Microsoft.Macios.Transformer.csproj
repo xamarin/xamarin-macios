@@ -54,6 +54,9 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ParameterSyntaxExtensions.cs" >
             <Link>Extensions/ParameterSyntaxExtensions.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/SpecialTypeExtensions.cs" >
+            <Link>Extensions/SpecialTypeExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs" >
             <Link>Extensions/StringExtensions.cs</Link>
         </Compile>
