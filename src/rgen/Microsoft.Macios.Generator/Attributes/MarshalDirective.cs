@@ -17,7 +17,7 @@ static class ExportDataExtensions {
 				ObjCBindings.Property.CustomMarshalDirective),
 			_ => false,
 		};
-	
+
 	public static CustomMarshalDirective? ToCustomMarshalDirective<T> (this ExportData<T> self) where T : Enum
 	{
 		var present = self switch {
@@ -33,5 +33,5 @@ static class ExportDataExtensions {
 
 		return null;
 	}
-	
+
 }

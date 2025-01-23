@@ -14,7 +14,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Readonly structure that represents a change in a method return type.
 /// </summary>
 readonly partial struct TypeInfo : IEquatable<TypeInfo> {
-	
+
 	public static TypeInfo Void = new ("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
 
 	readonly string fullyQualifiedName = string.Empty;
@@ -26,8 +26,8 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		init {
 			fullyQualifiedName = value;
 			var index = fullyQualifiedName.LastIndexOf ('.');
-			Name = index != -1 
-				? fullyQualifiedName.Substring (index + 1) 
+			Name = index != -1
+				? fullyQualifiedName.Substring (index + 1)
 				: fullyQualifiedName;
 		}
 	}
@@ -80,7 +80,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	/// Returns if the return type is a reference type.
 	/// </summary>
 	public bool IsReferenceType { get; }
-	
+
 	/// <summary>
 	/// Returns if the type is a struct.
 	/// </summary>
@@ -225,43 +225,36 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	const string NativeHandle = "NativeHandle";
 	const string IntPtr = "IntPtr";
 	const string UIntPtr = "UIntPtr";
-	
+
 	public string? ToMarshallType (ReferenceKind referenceKind)
 	{
 		var type = this switch {
 			// special cases based on name
-			{ Name: "nfloat" or "NFloat" } => "nfloat",
-			{ Name: "nint" or "nuint"} => MetadataName, 
+			{ Name: "nfloat" or "NFloat" } => "nfloat", { Name: "nint" or "nuint" } => MetadataName,
 			// special string case
-			{ SpecialType: SpecialType.System_String} => NativeHandle, // use a NSString when we get a string
-			
+			{ SpecialType: SpecialType.System_String } => NativeHandle, // use a NSString when we get a string
+
 			// NSObject should use the native handle
-			{ IsNSObject: true } => NativeHandle, 
-			{ IsINativeObject: true } => NativeHandle,
-			
+			{ IsNSObject: true } => NativeHandle, { IsINativeObject: true } => NativeHandle,
+
 			// structs will use their name
-			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double",
-			{ IsStruct: true } => Name,
-			
+			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", { IsStruct: true } => Name,
+
 			// enums:
 			// IsSmartEnum: We are using a nsstring, so it should be a native handle.
 			// IsNativeEnum: Depends if the enum backing field kind.
 			// GeneralEnum: Depends on the EnumUnderlyingType
-			
-			{ IsSmartEnum: true } => NativeHandle,
-			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => IntPtr,
-			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => UIntPtr,
-			{ IsEnum: true, EnumUnderlyingType: not null } => EnumUnderlyingType.GetKeyword (), 
-			
+
+			{ IsSmartEnum: true } => NativeHandle, { IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => IntPtr, { IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => UIntPtr, { IsEnum: true, EnumUnderlyingType: not null } => EnumUnderlyingType.GetKeyword (),
+
 			// special type that is a keyword (none would be a ref type)
-			{ SpecialType: SpecialType.System_Void } => SpecialType.GetKeyword (),
-			{ SpecialType: not SpecialType.None } => MetadataName,
-			
-			
+			{ SpecialType: SpecialType.System_Void } => SpecialType.GetKeyword (), { SpecialType: not SpecialType.None } => MetadataName,
+
+
 			// This should not happen in bindings because all of the types should either be native objects
 			// nsobjects, or structs 
 			{ IsReferenceType: false } => Name,
-			
+
 			_ => null,
 		};
 		return type;

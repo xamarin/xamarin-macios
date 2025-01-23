@@ -18,10 +18,10 @@ public class EnumExtensionTests {
 	[InlineData (ObjCBindings.Method.CustomMarshalDirective, true)]
 	[InlineData (StringComparison.Ordinal, false)]
 	public void HasCustomMarshalDirective<T> (T enumValue, bool expected) where T : Enum
-		=> Assert.Equal(enumValue.HasCustomMarshalDirective (), expected);
-	
+		=> Assert.Equal (enumValue.HasCustomMarshalDirective (), expected);
+
 	[Theory]
 	[InlineData (ObjCBindings.Property.Notification, false)]
 	public void HasMarshalNativeExceptions<T> (T enumValue, bool expected) where T : Enum
-		=> Assert.Equal(enumValue.HasMarshalNativeExceptions (), expected);
+		=> Assert.Equal (enumValue.HasMarshalNativeExceptions (), expected);
 }

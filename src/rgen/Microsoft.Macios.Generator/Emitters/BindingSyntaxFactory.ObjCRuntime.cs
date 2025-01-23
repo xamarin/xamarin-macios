@@ -12,7 +12,7 @@ using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
-static partial class BindingSyntaxFactory{
+static partial class BindingSyntaxFactory {
 	readonly static string objc_msgSend = "objc_msgSend";
 	readonly static string objc_msgSendSuper = "objc_msgSendSuper";
 
@@ -23,12 +23,12 @@ static partial class BindingSyntaxFactory{
 		if (flags is null)
 			// flags are not set, should be a bug, but we will return null
 			return null;
-		
+
 		// the name of the objcSend method is calculated in the following way	
 		// {CustomMarshallPrefix}_{MarshallTypeOfReturnType}_{objcSendMsg}{stret?_stret}_{string.Join('_', MarshallTypeArgs)}{nativeException?_exception}{CustomMarsahllPostfix}
 		// we will sue a sb to make things easy to follow
 		var sb = new StringBuilder ();
-		
+
 		// first, decide if the user created a custom marshalling by checking the flags of the export data
 		CustomMarshalDirective? customMarshalDirective = null;
 		if (flags.HasCustomMarshalDirective ()) {
@@ -43,7 +43,7 @@ static partial class BindingSyntaxFactory{
 
 		// return types do not have a reference kind
 		sb.Append (returnType.ToMarshallType (ReferenceKind.None));
-		sb.Append ('_');	
+		sb.Append ('_');
 		// append the msg method based if it is for super or not, do not append '_' intimidatingly, since if we do
 		// not have parameters, we are done
 		sb.Append (isSuper ? objc_msgSendSuper : objc_msgSend);
@@ -53,11 +53,11 @@ static partial class BindingSyntaxFactory{
 		// loop over params and get their native handler name
 		if (parameters.Length > 0) {
 			sb.Append ('_');
-			sb.AppendJoin ('_', parameters.Select ( p => p.Type.ToMarshallType (p.ReferenceKind)));
+			sb.AppendJoin ('_', parameters.Select (p => p.Type.ToMarshallType (p.ReferenceKind)));
 		}
 
 		// check if we do have a custom marshall exception set for the export
-		
+
 		// check any possible custom postfix naming
 		if (customMarshalDirective?.NativeSuffix is not null) {
 			sb.Append (customMarshalDirective.NativeSuffix);
@@ -76,17 +76,17 @@ static partial class BindingSyntaxFactory{
 			var getter = property.GetAccessor (AccessorKind.Getter);
 			string? getterMsgSend = null;
 			if (getter is not null) {
-				var  getterExportData = getter.Value.ExportPropertyData ?? property.ExportPropertyData;
+				var getterExportData = getter.Value.ExportPropertyData ?? property.ExportPropertyData;
 				if (getterExportData is not null) {
 					getterMsgSend = GetObjCMessageSendMethodName (getterExportData.Value, property.ReturnType, [],
 						isSuper, isStret);
 				}
 			}
-			
+
 			var setter = property.GetAccessor (AccessorKind.Setter);
 			string? setterMsgSend = null;
 			if (setter is not null) {
-				var  setterExportData = setter.Value.ExportPropertyData ?? property.ExportPropertyData;
+				var setterExportData = setter.Value.ExportPropertyData ?? property.ExportPropertyData;
 				if (setterExportData is not null) {
 					setterMsgSend = GetObjCMessageSendMethodName (setterExportData.Value, TypeInfo.Void,
 						[property.ValueParameter], isSuper, isStret);
@@ -99,6 +99,6 @@ static partial class BindingSyntaxFactory{
 	}
 
 	public static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
-		=> 	GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper, isStret);
-	
+		=> GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper, isStret);
+
 }

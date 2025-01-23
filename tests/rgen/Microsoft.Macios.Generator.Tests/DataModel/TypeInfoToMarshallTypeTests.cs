@@ -30,7 +30,7 @@ public class Example {
 }
 ";
 			yield return [nfloatProperty, "nfloat"];
-			
+
 			const string otherNfloatProperty = @"
 using System;
 using System.Runtime.InteropServices;
@@ -56,9 +56,9 @@ public class Example {
 	public string Texturing { get; set; }
 }
 ";
-			
+
 			yield return [systemString, "NativeHandle"];
-			
+
 			const string nsstring = @"
 using System;
 using Foundation;
@@ -70,11 +70,11 @@ public class Example {
 	public NSString Texturing { get; set; }
 }
 ";
-			
+
 			yield return [nsstring, "NativeHandle"];
-			
+
 			//const string nsobject 
-			
+
 			const string nativeEnumInt64 = @"
 using System;
 using ObjCRuntime;
@@ -93,7 +93,7 @@ public class Example {
 }
 ";
 			yield return [nativeEnumInt64, "IntPtr"];
-			
+
 			const string nativeEnumUInt64 = @"
 using System;
 using ObjCRuntime;
@@ -149,7 +149,7 @@ public class Example {
 ";
 
 			yield return [normalEnum, "ulong"];
-			
+
 			const string boolProperty = @"
 using System;
 
@@ -188,7 +188,7 @@ public class Example {
 ";
 			yield return [structureProperty, "Point"];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 

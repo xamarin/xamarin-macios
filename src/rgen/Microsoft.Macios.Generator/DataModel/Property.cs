@@ -31,7 +31,7 @@ readonly partial struct Property : IEquatable<Property> {
 		get => returnType;
 		private init {
 			returnType = value;
-			ValueParameter = new Parameter(0, returnType, "value");
+			ValueParameter = new Parameter (0, returnType, "value");
 		}
 	}
 

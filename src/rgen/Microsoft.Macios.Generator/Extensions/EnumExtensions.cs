@@ -6,7 +6,7 @@ using System;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static class EnumExtensions {
-	
+
 	public static bool HasCustomMarshalDirective (this Enum self)
 	{
 		return self switch {
@@ -16,8 +16,9 @@ static class EnumExtensions {
 			_ => false
 		};
 	}
-	
-	public static bool HasMarshalNativeExceptions (this Enum self) {
+
+	public static bool HasMarshalNativeExceptions (this Enum self)
+	{
 		return self switch {
 			// cast two the flags we know that could have the value and return it
 			ObjCBindings.Method methodFlag => methodFlag.HasFlag (ObjCBindings.Method.MarshalNativeExceptions),

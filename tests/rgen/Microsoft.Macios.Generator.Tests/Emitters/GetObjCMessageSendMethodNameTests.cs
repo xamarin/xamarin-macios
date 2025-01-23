@@ -36,7 +36,7 @@ class ARAnchor {
 }
 ";
 			yield return [propertyNSObjectGetter, "NativeHandle_objc_msgSend", null!, false, false];
-			
+
 			const string propertyNSObjectGetterSetter = @"
 using System;
 using ARKit;
@@ -71,9 +71,9 @@ class ARAnchor {
 	public string Name { get; }
 }
 ";
-			
+
 			yield return [propertyNSStringGetter, "NativeHandle_objc_msgSend", null!, false, false];
-			
+
 			const string propertyNSStringGetterSetter = @"
 using System;
 using ARKit;
@@ -90,7 +90,7 @@ class ARAnchor {
 	public string Name { get; set; }
 }
 ";
-			
+
 			yield return [propertyNSStringGetterSetter, "NativeHandle_objc_msgSend", "void_objc_msgSend_NativeHandle", false, false];
 
 			const string customMarshall = @"
@@ -117,7 +117,7 @@ class ARAnchor {
 	}
 }
 ";
-		
+
 			yield return [customMarshall, "xamarin_simd__NMatrix4_objc_msgSend", null!, false, false];
 
 			const string floatPropertyGetterSetter = @"
@@ -191,7 +191,7 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [nativeEnumUnsigned, "UIntPtr_objc_msgSend", "void_objc_msgSend_UIntPtr", false, false];
 
 			const string boolProperty = @"
@@ -212,9 +212,9 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [boolProperty, "bool_objc_msgSend", "void_objc_msgSend_bool", false, false];
-			
+
 			const string nfloatProperty = @"
 using System;
 using ARKit;
@@ -233,7 +233,7 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [nfloatProperty, "nfloat_objc_msgSend", "void_objc_msgSend_nfloat", false, false];
 
 			const string nintProperty = @"
@@ -254,9 +254,9 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [nintProperty, "IntPtr_objc_msgSend", "void_objc_msgSend_IntPtr", false, false];
-			
+
 			const string nuintProperty = @"
 using System;
 using ARKit;
@@ -275,9 +275,9 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [nuintProperty, "UIntPtr_objc_msgSend", "void_objc_msgSend_UIntPtr", false, false];
-			
+
 			const string cgsizeProperty = @"
 using System;
 using ARKit;
@@ -296,9 +296,9 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [cgsizeProperty, "CGSize_objc_msgSend", "void_objc_msgSend_CGSize", false, false];
-			
+
 			const string doubleProperty = @"
 using System;
 using ARKit;
@@ -317,13 +317,13 @@ class ARAnchor {
 
 }
 ";
-			
+
 			yield return [doubleProperty, "Double_objc_msgSend", "void_objc_msgSend_Double", false, false];
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	class TestDataGetObjCMessageSendMethodNameSuper : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -331,30 +331,30 @@ class ARAnchor {
 			foreach (var args in simple) {
 				// modify the first argument to be the correct msg send 
 				args [1] = ((string) args [1]).Replace ("objc_msgSend", "objc_msgSendSuper");
-				if (args[2] is not null)
+				if (args [2] is not null)
 					args [2] = ((string) args [2]).Replace ("objc_msgSend", "objc_msgSendSuper");
 				args [3] = true;
 				yield return args;
 			}
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
-	class TestDataGetObjCMessageSendMethodNameStret: IEnumerable<object []> {
+
+	class TestDataGetObjCMessageSendMethodNameStret : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			var simple = new TestDataGetObjCMessageSendMethodName ();
 			foreach (var args in simple) {
 				// modify the first argument to be the correct msg send 
 				args [1] = ((string) args [1]).Replace ("objc_msgSend", "objc_msgSend_stret");
-				if (args[2] is not null)
+				if (args [2] is not null)
 					args [2] = ((string) args [2]).Replace ("objc_msgSend", "objc_msgSend_stret");
 				args [4] = true;
 				yield return args;
 			}
 		}
-		
+
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 

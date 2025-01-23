@@ -11,7 +11,7 @@ static class SpecialTypeExtensions {
 
 	public static string? GetKeyword (this SpecialType? self)
 		=> self?.GetKeyword ();
-	
+
 	/// <summary>
 	/// Return the keyword for a given special type.
 	/// </summary>
