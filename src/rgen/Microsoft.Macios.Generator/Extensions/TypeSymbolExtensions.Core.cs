@@ -117,7 +117,7 @@ static partial class TypeSymbolExtensions {
 
 	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
 		=> GetAttribute (symbol, () => attributeName, tryParse);
-	
+
 	/// <summary>
 	/// Return the layout kind used by the symbol.
 	/// </summary>
@@ -133,23 +133,23 @@ static partial class TypeSymbolExtensions {
 		if (layoutAttribute is not null) {
 			return (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
 		}
-		
+
 		// the default is auto, another lyaout would have been set in the attr
 		return LayoutKind.Auto;
 	}
 
-	
+
 	/// <summary>
 	/// Return all the fields that determine the size of a struct. 
 	/// </summary>
 	/// <param name="symbol">The symbol whose fields to retireve.</param>
 	/// <returns>an array with all the none static fields of a struct.</returns>
-	public static IFieldSymbol[] GetStrutFields (this ITypeSymbol symbol)
+	public static IFieldSymbol [] GetStrutFields (this ITypeSymbol symbol)
 		=> symbol.GetMembers ()
 			.OfType<IFieldSymbol> ()
 			.Where (field => !field.IsStatic)
-			.ToArray();
-	
+			.ToArray ();
+
 	/// <summary>
 	/// Returns if a type is blittable or not.
 	/// </summary>
@@ -260,8 +260,8 @@ static partial class TypeSymbolExtensions {
 	/// </summary>
 	/// <param name="symbol">The symbol under test.</param>
 	/// <returns>True if the symbol is nested.</returns>
-	internal static bool IsNested (this ITypeSymbol symbol) => symbol.ContainingType != null;
-	
+	internal static bool IsNested (this ITypeSymbol symbol) => symbol.ContainingType is not null;
+
 	/// <summary>
 	/// Try to get the size of a built-in type.
 	/// </summary>
@@ -277,25 +277,17 @@ static partial class TypeSymbolExtensions {
 		}
 
 		var symbolInfo = (
-			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (), 
-			Name: symbol.Name, 
+			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (),
+			Name: symbol.Name,
 			SpecialType: symbol.SpecialType
 		);
-		var (currentSize, result) = symbolInfo switch {
-			{ SpecialType: SpecialType.System_Void } => (0, true),
-			{ ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true),
-			{ ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true),
-			{ ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true),	
-			{ ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true),
-			{ ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true),
-			{ ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true),
-			{ ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits? 8 : 4, true),
+		var (currentSize, result) = symbolInfo switch { { SpecialType: SpecialType.System_Void } => (0, true), { ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true), { ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true), { ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true), { ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true), { ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits ? 8 : 4, true),
 			_ => (0, false)
 		};
 		size = currentSize;
 		return result;
 	}
-	
+
 	static int AlignAndAdd (int size, int add, ref int maxElementSize)
 	{
 		maxElementSize = Math.Max (maxElementSize, add);
@@ -312,17 +304,17 @@ static partial class TypeSymbolExtensions {
 		// SIMD types are not handled correctly here (they need 16-bit alignment).
 		// However we don't annotate those types in any way currently, so first we'd need to 
 		// add the proper attributes so that the generator can distinguish those types from other types.
-		
-		if (type.TryGetBuiltInTypeSize(is64Bits, out var typeSize) && typeSize > 0) {
+
+		if (type.TryGetBuiltInTypeSize (is64Bits, out var typeSize) && typeSize > 0) {
 			fieldSymbols.Add (type);
 			size = AlignAndAdd (size, typeSize, ref maxElementSize);
 			return;
 		}
-		
+
 		// composite struct
 		foreach (var field in type.GetStrutFields ()) {
 			var marshalAs = field.GetMarshalAs ();
-			if (marshalAs is null) { 
+			if (marshalAs is null) {
 				GetValueTypeSize (originalSymbol, field.Type, fieldSymbols, is64Bits, ref size, ref maxElementSize);
 				continue;
 			}
@@ -378,7 +370,7 @@ static partial class TypeSymbolExtensions {
 		if (type.GetStructLayout () == LayoutKind.Explicit) {
 			// Find the maximum of "field size + field offset" for each field.
 			foreach (var field in type.GetStrutFields ()) {
-				var fieldOffset= field.GetFieldOffset ();
+				var fieldOffset = field.GetFieldOffset ();
 				var elementSize = 0;
 				GetValueTypeSize (type, field.Type, fieldTypes, is64Bits, ref elementSize, ref maxElementSize);
 				size = Math.Max (size, elementSize + fieldOffset);
@@ -386,13 +378,13 @@ static partial class TypeSymbolExtensions {
 		} else {
 			GetValueTypeSize (type, type, fieldTypes, is64Bits, ref size, ref maxElementSize);
 		}
-		
+
 		if (size % maxElementSize != 0)
 			size += (maxElementSize - size % maxElementSize);
 
 		return size;
 	}
-	
+
 	/// <summary>
 	/// Return the parents and all the implemented interfaces (including those of the parents).
 	/// </summary>
@@ -434,5 +426,5 @@ static partial class TypeSymbolExtensions {
 		parents = parentsBuilder.ToImmutable ();
 		interfaces = [.. interfacesSet];
 	}
-	
+
 }
