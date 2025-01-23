@@ -150,6 +150,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		var obsoleteComparer = new DictionaryComparer<Version, (string?, string?)> ();
 		var unsupportedComparer = new DictionaryComparer<Version, string?> ();
 
+		var x = Equals (SupportedVersion, other.SupportedVersion);
 		return Platform == other.Platform &&
 			   Equals (SupportedVersion, other.SupportedVersion) &&
 			   unsupportedComparer.Equals (unsupported, other.unsupported) &&
