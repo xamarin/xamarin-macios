@@ -81,7 +81,7 @@ interface UIFeedbackGenerator : UIInteraction {
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
 
-		var transformer = new Transformer (targetDirectory, compilation, targetNamespaces);
+		var transformer = new Transformer (targetDirectory, [(platform, compilation)], targetNamespaces);
 		if (expectedDestination is not null)
 			expectedDestination = Path.Combine (targetDirectory, expectedDestination);
 		Assert.Equal (expectedResult, transformer.Skip (syntaxTree, symbol, out var destination));
