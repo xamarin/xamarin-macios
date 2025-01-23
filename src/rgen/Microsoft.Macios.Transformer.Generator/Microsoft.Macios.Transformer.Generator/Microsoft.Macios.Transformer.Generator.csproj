@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+        <RootNamespace>Microsoft.Macios.Transformer.Generator</RootNamespace>
+        <PackageId>Microsoft.Macios.Transformer.Generator</PackageId>
+        <!-- There is a bug in the roslyn analyzer for roslyn analyzers.... -->
+        <NoWarn>RS2007;RS1041;APL0003</NoWarn>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\..\Microsoft.Macios.Generator\TabbedStringBuilder.cs">
+        <Link>TabbedStringBuilder.cs</Link>
+      </Compile>
+    </ItemGroup>
+    
+
+</Project>
