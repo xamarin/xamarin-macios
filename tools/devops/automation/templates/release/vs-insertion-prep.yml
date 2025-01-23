@@ -52,6 +52,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
+      timeoutInMinutes: 120
       use1ESTemplate: true
       uploadBinlogs: true
       uploadPrefix: ${{ parameters.uploadPrefix }}

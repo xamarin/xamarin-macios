@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
@@ -306,5 +307,24 @@ static partial class TypeSymbolExtensions {
 		parents = parentsBuilder.ToImmutable ();
 		interfaces = [.. interfacesSet];
 	}
-	
+
+	/// <summary>
+	/// Returns the symbol availability taking into account the parent symbols availability.
+	///
+	/// That means that the attributes used on the current symbol are merged with the attributes used
+	/// in all the symbol parents following the correct child-parent order.
+	/// </summary>
+	/// <param name="symbol">The symbol whose availability we want to retrieve.</param>
+	/// <returns>A symbol availability structure for the symbol.</returns>
+	public static SymbolAvailability GetSupportedPlatforms (this ISymbol symbol)
+	{
+		var availability = GetAvailabilityForSymbol (symbol);
+		// get the parents and return the merge
+		foreach (var parent in GetParents (symbol)) {
+			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
+		}
+
+		return availability;
+	}
+
 }
