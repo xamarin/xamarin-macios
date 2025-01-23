@@ -230,7 +230,7 @@ namespace ObjCRuntime {
 		{
 			return IsBuiltInType (type, true /* doesn't matter */, out var _);
 		}
-		
+
 		internal static bool IsBuiltInType (Type type, bool is_64_bits, out int type_size)
 		{
 			type_size = 0;

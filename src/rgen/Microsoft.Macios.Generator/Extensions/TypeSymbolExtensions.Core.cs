@@ -118,7 +118,7 @@ static partial class TypeSymbolExtensions {
 
 	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
 		=> GetAttribute (symbol, () => attributeName, tryParse);
-	
+
 	/// <summary>
 	/// Return the layout kind used by the symbol.
 	/// </summary>
@@ -134,7 +134,7 @@ static partial class TypeSymbolExtensions {
 		if (layoutAttribute is not null) {
 			return (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
 		}
-		
+
 		// the default is auto, another lyaout would have been set in the attr
 		return LayoutKind.Auto;
 	}
@@ -215,7 +215,7 @@ static partial class TypeSymbolExtensions {
 	/// <returns></returns>
 	public static int GetFieldOffset (this IFieldSymbol symbol)
 	{
-		
+
 		var offsetAttribute = symbol.GetAttributes ()
 			.FirstOrDefault (attr =>
 				attr.AttributeClass?.ToString () == typeof (FieldOffsetAttribute).FullName);
@@ -230,8 +230,8 @@ static partial class TypeSymbolExtensions {
 	/// </summary>
 	/// <param name="symbol">The symbol under test.</param>
 	/// <returns>True if the symbol is nested.</returns>
-	internal static bool IsNested (this ITypeSymbol symbol) => symbol.ContainingType != null;
-	
+	internal static bool IsNested (this ITypeSymbol symbol) => symbol.ContainingType is not null;
+
 	/// <summary>
 	/// Try to get the size of a built-in type.
 	/// </summary>
@@ -247,19 +247,11 @@ static partial class TypeSymbolExtensions {
 		}
 
 		var symbolInfo = (
-			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (), 
-			Name: symbol.Name, 
+			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (),
+			Name: symbol.Name,
 			SpecialType: symbol.SpecialType
 		);
-		var (currentSize, result) = symbolInfo switch {
-			{ SpecialType: SpecialType.System_Void } => (0, true),
-			{ ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true),
-			{ ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true),
-			{ ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true),	
-			{ ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true),
-			{ ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true),
-			{ ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true),
-			{ ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits? 8 : 4, true),
+		var (currentSize, result) = symbolInfo switch { { SpecialType: SpecialType.System_Void } => (0, true), { ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true), { ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true), { ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true), { ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true), { ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits ? 8 : 4, true),
 			_ => (0, false)
 		};
 		size = currentSize;
