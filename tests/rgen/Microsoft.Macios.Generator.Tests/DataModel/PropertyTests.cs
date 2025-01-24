@@ -43,24 +43,24 @@ public class PropertyTests : BaseGeneratorTestClass {
 		var property = new Property (
 			name: "MyProperty",
 			returnType: ReturnTypeForString (),
-			symbolAvailability: new(),
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			accessors: []
 		) {
-			ExportPropertyData = new("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
 		};
 		Assert.True (property.IsThreadSafe);
-		
+
 		property = new Property (
 			name: "MyProperty",
 			returnType: ReturnTypeForString (),
-			symbolAvailability: new(),
+			symbolAvailability: new (),
 			attributes: [],
 			modifiers: [],
 			accessors: []
 		) {
-			ExportPropertyData = new("myProperty", ArgumentSemantic.None, ObjCBindings.Property.Default)
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.Default)
 		};
 		Assert.False (property.IsThreadSafe);
 	}

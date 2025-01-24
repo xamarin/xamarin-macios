@@ -27,16 +27,16 @@ public class ClassBindingTests : BaseGeneratorTestClass {
 	public void IsThreadSafe ()
 	{
 		var binding = new Binding (
-			bindingInfo: new(new BindingTypeData<Class> (Class.IsThreadSafe)),
+			bindingInfo: new (new BindingTypeData<Class> (Class.IsThreadSafe)),
 			name: "MyClass",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.MyClass",
-			symbolAvailability: new()
+			symbolAvailability: new ()
 		) {
 			Base = "object",
 			Interfaces = ImmutableArray<string>.Empty,
 			Attributes = [
-				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 			],
 			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 			Modifiers = [
@@ -45,18 +45,18 @@ public class ClassBindingTests : BaseGeneratorTestClass {
 			]
 		};
 		Assert.True (binding.IsThreadSafe);
-		
+
 		binding = new Binding (
-			bindingInfo: new(new BindingTypeData<Class> ()),
+			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "MyClass",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.MyClass",
-			symbolAvailability: new()
+			symbolAvailability: new ()
 		) {
 			Base = "object",
 			Interfaces = ImmutableArray<string>.Empty,
 			Attributes = [
-				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 			],
 			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 			Modifiers = [
@@ -66,7 +66,7 @@ public class ClassBindingTests : BaseGeneratorTestClass {
 		};
 		Assert.False (binding.IsThreadSafe);
 	}
-	
+
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{

@@ -26,7 +26,7 @@ readonly partial struct Binding {
 	/// Represents the binding data that will be used to generate the code.
 	/// </summary>
 	public BindingInfo BindingInfo => bindingInfo;
-	
+
 	/// <summary>
 	/// Returns if the binding has been declared to be thread safe.
 	/// </summary>

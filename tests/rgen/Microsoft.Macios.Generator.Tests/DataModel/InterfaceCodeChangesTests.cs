@@ -21,21 +21,21 @@ namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class InterfaceCodeChangesTests : BaseGeneratorTestClass {
 	readonly BindingEqualityComparer comparer = new ();
-	
+
 	[Fact]
 	public void IsThreadSafe ()
 	{
 		var binding = new Binding (
-			bindingInfo: new(new BindingTypeData<Protocol> (Protocol.IsThreadSafe)),
+			bindingInfo: new (new BindingTypeData<Protocol> (Protocol.IsThreadSafe)),
 			name: "MyClass",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.MyClass",
-			symbolAvailability: new()
+			symbolAvailability: new ()
 		) {
 			Base = "object",
 			Interfaces = ImmutableArray<string>.Empty,
 			Attributes = [
-				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 			],
 			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 			Modifiers = [
@@ -44,18 +44,18 @@ public class InterfaceCodeChangesTests : BaseGeneratorTestClass {
 			]
 		};
 		Assert.True (binding.IsThreadSafe);
-		
+
 		binding = new Binding (
-			bindingInfo: new(new BindingTypeData<Protocol> ()),
+			bindingInfo: new (new BindingTypeData<Protocol> ()),
 			name: "MyClass",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.MyClass",
-			symbolAvailability: new()
+			symbolAvailability: new ()
 		) {
 			Base = "object",
 			Interfaces = ImmutableArray<string>.Empty,
 			Attributes = [
-				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
 			],
 			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
 			Modifiers = [

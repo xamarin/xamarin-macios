@@ -27,8 +27,8 @@ public class MethodTests : BaseGeneratorTestClass {
 			type: "NS.MyClass",
 			name: "MyMethod",
 			returnType: ReturnTypeForVoid (),
-			symbolAvailability: new(),
-			exportMethodData: new("selector", ArgumentSemantic.None, ObjCBindings.Method.IsThreadSafe),
+			symbolAvailability: new (),
+			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.IsThreadSafe),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -36,13 +36,13 @@ public class MethodTests : BaseGeneratorTestClass {
 			parameters: []
 		);
 		Assert.True (method.IsThreadSafe);
-		
+
 		method = new Method (
 			type: "NS.MyClass",
 			name: "MyMethod",
 			returnType: ReturnTypeForVoid (),
-			symbolAvailability: new(),
-			exportMethodData: new("selector", ArgumentSemantic.None, ObjCBindings.Method.Default),
+			symbolAvailability: new (),
+			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.Default),
 			attributes: [],
 			modifiers: [
 				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
