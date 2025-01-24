@@ -29,7 +29,9 @@ using Generator = System.Object;
 #endif
 using System.Runtime.InteropServices;
 
+#if !RGEN
 using Foundation;
+#endif
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
@@ -41,7 +43,7 @@ namespace ObjCRuntime {
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
 			return members <= 4;
 		}
-
+#if !RGEN
 		static bool IsHomogeneousAggregateBaseType_Armv7k (Type t, Generator generator)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
@@ -77,6 +79,7 @@ namespace ObjCRuntime {
 
 			return true;
 		}
+#endif
 
 #if BGENERATOR
 		public static bool ArmNeedStret (Type returnType, Generator generator)
@@ -228,7 +231,7 @@ namespace ObjCRuntime {
 			return IsBuiltInType (type, true /* doesn't matter */, out var _);
 		}
 
-		static bool IsBuiltInType (Type type, bool is_64_bits, out int type_size)
+		internal static bool IsBuiltInType (Type type, bool is_64_bits, out int type_size)
 		{
 			type_size = 0;
 

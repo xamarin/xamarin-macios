@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -119,6 +120,26 @@ static partial class TypeSymbolExtensions {
 		=> GetAttribute (symbol, () => attributeName, tryParse);
 
 	/// <summary>
+	/// Return the layout kind used by the symbol.
+	/// </summary>
+	/// <param name="symbol">The struct symbol whose layout we need to retrieve.</param>
+	/// <returns>The layout kind used by the symbol.</returns>
+	public static LayoutKind GetStructLayout (this ITypeSymbol symbol)
+	{
+		// Check for StructLayout attribute with LayoutKind.Sequential
+		var layoutAttribute = symbol.GetAttributes ()
+			.FirstOrDefault (attr =>
+				attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
+
+		if (layoutAttribute is not null) {
+			return (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
+		}
+
+		// the default is auto, another lyaout would have been set in the attr
+		return LayoutKind.Auto;
+	}
+
+	/// <summary>
 	/// Returns if a type is blittable or not.
 	/// </summary>
 	/// <param name="symbol"></param>
@@ -165,16 +186,7 @@ static partial class TypeSymbolExtensions {
 			// if we are dealing with a structure, we have to check the layout type and all its children
 			if (symbol.TypeKind == TypeKind.Struct) {
 				// Check for StructLayout attribute with LayoutKind.Sequential
-				var layoutAttribute = symbol.GetAttributes ()
-					.FirstOrDefault (attr =>
-						attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
-
-				if (layoutAttribute is not null) {
-					var layoutKind = (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
-					if (layoutKind == LayoutKind.Auto) {
-						return false;
-					}
-				} else {
+				if (symbol.GetStructLayout () == LayoutKind.Auto) {
 					return false;
 				}
 
@@ -194,6 +206,56 @@ static partial class TypeSymbolExtensions {
 			// any other types are not blittable
 			return false;
 		}
+	}
+
+	/// <summary>
+	/// Return the offset of a field in a Explicitly layout struct.
+	/// </summary>
+	/// <param name="symbol">A Field symbol.</param>
+	/// <returns></returns>
+	public static int GetFieldOffset (this IFieldSymbol symbol)
+	{
+
+		var offsetAttribute = symbol.GetAttributes ()
+			.FirstOrDefault (attr =>
+				attr.AttributeClass?.ToString () == typeof (FieldOffsetAttribute).FullName);
+
+		return offsetAttribute is not null
+				? (int) offsetAttribute.ConstructorArguments [0].Value! : 0;
+	}
+
+	/// <summary>
+	/// Indicate whether the current symbol represents a type whose definition is nested inside the definition of
+	/// another symbol.
+	/// </summary>
+	/// <param name="symbol">The symbol under test.</param>
+	/// <returns>True if the symbol is nested.</returns>
+	internal static bool IsNested (this ITypeSymbol symbol) => symbol.ContainingType is not null;
+
+	/// <summary>
+	/// Try to get the size of a built-in type.
+	/// </summary>
+	/// <param name="symbol">The symbol under test.</param>
+	/// <param name="is64bits">The platform target.</param>
+	/// <param name="size">The size of the native type.</param>
+	/// <returns>True if we could calculate the size.</returns>
+	internal static bool TryGetBuiltInTypeSize (this ITypeSymbol symbol, bool is64bits, out int size)
+	{
+		if (symbol.IsNested ()) {
+			size = 0;
+			return false;
+		}
+
+		var symbolInfo = (
+			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (),
+			Name: symbol.Name,
+			SpecialType: symbol.SpecialType
+		);
+		var (currentSize, result) = symbolInfo switch { { SpecialType: SpecialType.System_Void } => (0, true), { ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true), { ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true), { ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true), { ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true), { ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits ? 8 : 4, true),
+			_ => (0, false)
+		};
+		size = currentSize;
+		return result;
 	}
 
 	/// <summary>
@@ -256,4 +318,5 @@ static partial class TypeSymbolExtensions {
 
 		return availability;
 	}
+
 }
