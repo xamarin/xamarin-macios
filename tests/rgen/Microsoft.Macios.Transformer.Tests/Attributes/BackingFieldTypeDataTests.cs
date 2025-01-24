@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class BackingFieldTypeDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -39,7 +39,7 @@ public enum ASAuthorizationProviderExtensionEncryptionAlgorithm {
 }
 ";
 			yield return [(Source: nsnumberBackingFieldType, Path: path), new BackingFieldTypeData ("Foundation.NSNumber")];
-			
+
 			const string nsstringBackingFieldType = @"
 using System;
 using Foundation;

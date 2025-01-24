@@ -7,14 +7,14 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct BackingFieldTypeData : IEquatable<BackingFieldTypeData> {
-	
+
 	public string TypeName { get; }
-	
+
 	public BackingFieldTypeData (string typeName)
 	{
 		TypeName = typeName;
 	}
-	
+
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out BackingFieldTypeData? data)
 	{
@@ -47,11 +47,11 @@ readonly struct BackingFieldTypeData : IEquatable<BackingFieldTypeData> {
 				return false;
 			}
 		}
-		
-		data = new(backingField);
+
+		data = new (backingField);
 		return true;
 	}
-	
+
 	public bool Equals (BackingFieldTypeData other)
 	{
 		return TypeName == other.TypeName;
@@ -66,7 +66,7 @@ readonly struct BackingFieldTypeData : IEquatable<BackingFieldTypeData> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 		=> TypeName.GetHashCode ();
-		
+
 
 	public static bool operator == (BackingFieldTypeData x, BackingFieldTypeData y)
 	{
