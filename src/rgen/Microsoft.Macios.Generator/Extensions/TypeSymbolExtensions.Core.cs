@@ -144,7 +144,7 @@ static partial class TypeSymbolExtensions {
 	/// </summary>
 	/// <param name="symbol">The symbol whose fields to retireve.</param>
 	/// <returns>an array with all the none static fields of a struct.</returns>
-	public static IFieldSymbol [] GetStrutFields (this ITypeSymbol symbol)
+	public static IFieldSymbol [] GetStructFields (this ITypeSymbol symbol)
 		=> symbol.GetMembers ()
 			.OfType<IFieldSymbol> ()
 			.Where (field => !field.IsStatic)
@@ -202,7 +202,7 @@ static partial class TypeSymbolExtensions {
 				}
 
 				// Recursively check all fields of the struct
-				var instanceFields = symbol.GetStrutFields ();
+				var instanceFields = symbol.GetStructFields ();
 				foreach (var member in instanceFields) {
 					if (!member.Type.IsBlittable ()) {
 						return false;
@@ -322,7 +322,7 @@ static partial class TypeSymbolExtensions {
 		}
 
 		// composite struct
-		foreach (var field in type.GetStrutFields ()) {
+		foreach (var field in type.GetStructFields ()) {
 			var marshalAs = field.GetMarshalAs ();
 			if (marshalAs is null) {
 				GetValueTypeSize (originalSymbol, field.Type, fieldSymbols, is64Bits, ref size, ref maxElementSize);
@@ -379,7 +379,7 @@ static partial class TypeSymbolExtensions {
 
 		if (type.GetStructLayout () == LayoutKind.Explicit) {
 			// Find the maximum of "field size + field offset" for each field.
-			foreach (var field in type.GetStrutFields ()) {
+			foreach (var field in type.GetStructFields ()) {
 				var fieldOffset = field.GetFieldOffset ();
 				var elementSize = 0;
 				GetValueTypeSize (type, field.Type, fieldTypes, is64Bits, ref elementSize, ref maxElementSize);
