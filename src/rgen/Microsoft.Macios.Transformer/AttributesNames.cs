@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
+#pragma warning disable format
 using Microsoft.Macios.Transformer.Generator;
 
 namespace Microsoft.Macios.Transformer;
@@ -13,7 +15,8 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
 	public const string AbstractAttribute = "AbstractAttribute";
 
-	[BindingFlag] public const string AdvancedAttribute = "AdvancedAttribute";
+	[BindingFlag] 
+	public const string AdvancedAttribute = "AdvancedAttribute";
 	public const string AdviceAttribute = "Foundation.AdviceAttribute";
 
 	/// <summary>
@@ -41,7 +44,8 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Interface)]
 	public const string CategoryAttribute = "CategoryAttribute";
 
-	[BindingFlag] public const string CheckDisposedAttribute = "CheckDisposedAttribute";
+	[BindingFlag] 
+	public const string CheckDisposedAttribute = "CheckDisposedAttribute";
 	public const string CoreImageFilterAttribute = "CoreImageFilterAttribute";
 	public const string DefaultCtorVisibilityAttribute = "DefaultCtorVisibilityAttribute";
 
@@ -74,7 +78,8 @@ static class AttributesNames {
 	public const string ExperimentalAttribute = "System.Diagnostics.CodeAnalysis.ExperimentalAttribute";
 	public const string ExportAttribute = "Foundation.ExportAttribute";
 
-	[BindingFlag] public const string FactoryAttribute = "FactoryAttribute";
+	[BindingFlag] 
+	public const string FactoryAttribute = "FactoryAttribute";
 	public const string FieldAttribute = "Foundation.FieldAttribute";
 	public const string FlagsAttribute = "System.FlagsAttribute";
 
