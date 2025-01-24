@@ -29,6 +29,7 @@ readonly partial struct TypeInfo {
 		symbol.GetInheritance (
 			isNSObject: out isNSObject,
 			isNativeObject: out isINativeObject,
+			isDictionaryContainer: out isDictionaryContainer,
 			parents: out parents,
 			interfaces: out interfaces);
 

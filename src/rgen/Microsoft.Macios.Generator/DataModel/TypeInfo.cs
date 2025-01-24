@@ -123,6 +123,13 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		get => isINativeObject;
 		init => isINativeObject = value;
 	}
+	
+	readonly bool isDictionaryContainer = false;
+
+	public bool IsDictionaryContainer {
+		get => isDictionaryContainer;
+		init => isDictionaryContainer = value;
+	}
 
 	readonly ImmutableArray<string> parents = [];
 	public ImmutableArray<string> Parents {
@@ -284,6 +291,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsStruct: {IsStruct}, ");
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
+		sb.Append ($"IsDictionaryContainer: {IsDictionaryContainer}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
 		sb.Append ($"IsInterface: {IsInterface}, ");
 		sb.Append ($"IsNativeIntegerType: {IsNativeIntegerType}, ");
