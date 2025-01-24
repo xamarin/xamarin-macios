@@ -150,11 +150,11 @@ static partial class TypeSymbolExtensions {
 	/// returned.</remarks>
 	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
 		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
-	
+
 	public static bool X86NeedStret (ITypeSymbol returnType)
 	{
 		if (!returnType.IsValueType || returnType.SpecialType == SpecialType.System_Enum ||
-		    returnType.TryGetBuiltInTypeSize ())
+			returnType.TryGetBuiltInTypeSize ())
 			return false;
 
 		var fieldTypes = new List<ITypeSymbol> ();
@@ -169,13 +169,13 @@ static partial class TypeSymbolExtensions {
 	public static bool X86_64NeedStret (ITypeSymbol returnType)
 	{
 		if (!returnType.IsValueType || returnType.SpecialType == SpecialType.System_Enum ||
-		    returnType.TryGetBuiltInTypeSize ())
+			returnType.TryGetBuiltInTypeSize ())
 			return false;
 
 		var fieldTypes = new List<ITypeSymbol> ();
 		return GetValueTypeSize (returnType, fieldTypes, true) > 16;
 	}
-	
+
 	public static bool ArmNeedStret (ITypeSymbol returnType, Compilation compilation)
 	{
 		var currentPlatform = compilation.GetCurrentPlatform ();
@@ -185,7 +185,7 @@ static partial class TypeSymbolExtensions {
 
 		ITypeSymbol t = returnType;
 
-		if (!t.IsValueType || t.SpecialType == SpecialType.System_Enum || t.TryGetBuiltInTypeSize())
+		if (!t.IsValueType || t.SpecialType == SpecialType.System_Enum || t.TryGetBuiltInTypeSize ())
 			return false;
 
 		var fieldTypes = new List<ITypeSymbol> ();
@@ -215,7 +215,7 @@ static partial class TypeSymbolExtensions {
 
 		return true;
 	}
-	
+
 	/// <summary>
 	/// Return if a given ITypeSymbol requires to use the objc_MsgSend_stret variants.
 	/// </summary>

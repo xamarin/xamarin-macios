@@ -23,7 +23,7 @@ static partial class TypeSymbolExtensions {
 		var boundAttributes = symbol.GetAttributes ();
 		if (boundAttributes.Length == 0) {
 			// return an empty dictionary if there are no attributes
-			return new();
+			return new ();
 		}
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
@@ -102,7 +102,7 @@ static partial class TypeSymbolExtensions {
 		if (attrName is null)
 			return null;
 		if (!attributes.TryGetValue (attrName, out var exportAttrDataList) ||
-		    exportAttrDataList.Count != 1)
+			exportAttrDataList.Count != 1)
 			return null;
 
 		var exportAttrData = exportAttrDataList [0];
@@ -129,7 +129,7 @@ static partial class TypeSymbolExtensions {
 		// Check for StructLayout attribute with LayoutKind.Sequential
 		var layoutAttribute = symbol.GetAttributes ()
 			.FirstOrDefault (attr =>
-				attr.AttributeClass?.ToString () == typeof(StructLayoutAttribute).FullName);
+				attr.AttributeClass?.ToString () == typeof (StructLayoutAttribute).FullName);
 
 		if (layoutAttribute is not null) {
 			return (LayoutKind) layoutAttribute.ConstructorArguments [0].Value!;
@@ -227,7 +227,7 @@ static partial class TypeSymbolExtensions {
 	{
 		var offsetAttribute = symbol.GetAttributes ()
 			.FirstOrDefault (attr =>
-				attr.AttributeClass?.ToString () == typeof(FieldOffsetAttribute).FullName);
+				attr.AttributeClass?.ToString () == typeof (FieldOffsetAttribute).FullName);
 
 		return offsetAttribute is not null
 			? (int) offsetAttribute.ConstructorArguments [0].Value!
@@ -243,7 +243,7 @@ static partial class TypeSymbolExtensions {
 	{
 		var marshalAsAttribute = symbol.GetAttributes ()
 			.FirstOrDefault (attr =>
-				attr.AttributeClass?.ToString () == typeof(MarshalAsAttribute).FullName);
+				attr.AttributeClass?.ToString () == typeof (MarshalAsAttribute).FullName);
 		if (marshalAsAttribute is null)
 			return null;
 		var type = (UnmanagedType) marshalAsAttribute.ConstructorArguments [0].Value!;
