@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct CoreImageFilterPropertyData : IEquatable<CoreImageFilterPropertyData> {
-	
+
 	public string Name { get; }
 
 	public CoreImageFilterPropertyData (string name)
@@ -21,7 +21,7 @@ readonly struct CoreImageFilterPropertyData : IEquatable<CoreImageFilterProperty
 		data = null;
 		var count = attributeData.ConstructorArguments.Length;
 		string name;
-		
+
 		switch (count) {
 		case 1:
 			name = (string) attributeData.ConstructorArguments [0].Value!;
@@ -47,7 +47,7 @@ readonly struct CoreImageFilterPropertyData : IEquatable<CoreImageFilterProperty
 			}
 		}
 
-		data = new(name);
+		data = new (name);
 		return true;
 	}
 

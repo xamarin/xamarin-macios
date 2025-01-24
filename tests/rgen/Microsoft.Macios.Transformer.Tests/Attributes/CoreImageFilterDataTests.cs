@@ -33,8 +33,8 @@ interface CIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 	int NumberOfFolds { get; set; }
 }
 ";
-			
-			yield return [(Source: simpleCoreImageFilter, Path: path), new CoreImageFilterData () {}];
+
+			yield return [(Source: simpleCoreImageFilter, Path: path), new CoreImageFilterData () { }];
 
 			const string coreImageFilterWithProperties = @"
 using CoreImage;
@@ -55,7 +55,7 @@ interface CICompositingFilter : CIAccordionFoldTransitionProtocol {
 	CIImage BackgroundImage { get; set; }
 }
 ";
-			
+
 			yield return [(Source: coreImageFilterWithProperties, Path: path), new CoreImageFilterData () { IntPtrCtorVisibility = MethodAttributes.Family }];
 
 			const string allProperties = @"
@@ -77,8 +77,8 @@ interface CICompositingFilter : CIAccordionFoldTransitionProtocol {
 	CIImage BackgroundImage { get; set; }
 }
 ";
-			
-			yield return [(Source: allProperties, Path: path), 
+
+			yield return [(Source: allProperties, Path: path),
 				new CoreImageFilterData () {
 					IntPtrCtorVisibility = MethodAttributes.Family,
 					DefaultCtorVisibility = MethodAttributes.Private,
