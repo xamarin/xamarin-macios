@@ -7,16 +7,16 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct BindData : IEquatable<BindData> {
-	
+
 	public string Selector { get; }
 	public bool Virtual { get; init; }
-	
+
 	public BindData (string selector, bool isVirtual = false)
 	{
 		Selector = selector;
 		Virtual = isVirtual;
 	}
-	
+
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out BindData? data)
 	{
@@ -54,10 +54,10 @@ readonly struct BindData : IEquatable<BindData> {
 			}
 		}
 
-		data = new(selector) { Virtual = @virtual, };
+		data = new (selector) { Virtual = @virtual, };
 		return true;
 	}
-	
+
 	public bool Equals (BindData other)
 	{
 		if (Selector != other.Selector)
@@ -74,7 +74,7 @@ readonly struct BindData : IEquatable<BindData> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 		=> HashCode.Combine (Selector, Virtual);
-		
+
 
 	public static bool operator == (BindData x, BindData y)
 	{
@@ -85,7 +85,7 @@ readonly struct BindData : IEquatable<BindData> {
 	{
 		return !(x == y);
 	}
-	
+
 	/// <inheritdoc />
 	public override string ToString ()
 	{

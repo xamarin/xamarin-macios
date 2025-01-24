@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class BindDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -36,9 +36,9 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			
+
 			yield return [(Sorunce: simpleBind, Path: path), new BindData ("someSelector")];
-			
+
 			var virtualBind = @"
 using System;
 using Foundation;
@@ -58,7 +58,7 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			
+
 			yield return [(Sorunce: virtualBind, Path: path), new BindData ("someSelector", true)];
 		}
 
