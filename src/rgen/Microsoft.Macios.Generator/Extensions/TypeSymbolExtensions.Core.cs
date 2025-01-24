@@ -343,8 +343,7 @@ static partial class TypeSymbolExtensions {
 			case UnmanagedType.ByValArray:
 				var types = new List<ITypeSymbol> ();
 				var arrayTypeSymbol = (field as IArrayTypeSymbol)!;
-				GetValueTypeSize (originalSymbol, arrayTypeSymbol.ElementType, types, is64Bits, ref typeSize,
-					ref maxElementSize);
+				GetValueTypeSize (originalSymbol, arrayTypeSymbol.ElementType, types, is64Bits, ref typeSize, ref maxElementSize);
 				multiplier = sizeConst;
 				break;
 			case UnmanagedType.U1:
@@ -366,10 +365,8 @@ static partial class TypeSymbolExtensions {
 				typeSize = 8;
 				break;
 			default:
-				throw new Exception (
-					$"Unhandled MarshalAs attribute: {marshalAs.Value} on field {field.ToDisplayString ()}");
+				throw new Exception ($"Unhandled MarshalAs attribute: {marshalAs.Value} on field {field.ToDisplayString ()}");
 			}
-
 			fieldSymbols.Add (field.Type);
 			size = AlignAndAdd (size, typeSize, ref maxElementSize);
 			size += (multiplier - 1) * size;
