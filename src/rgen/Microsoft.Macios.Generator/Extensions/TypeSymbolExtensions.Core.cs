@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
@@ -139,13 +140,12 @@ static partial class TypeSymbolExtensions {
 		return LayoutKind.Auto;
 	}
 
-
 	/// <summary>
 	/// Return all the fields that determine the size of a struct. 
 	/// </summary>
 	/// <param name="symbol">The symbol whose fields to retireve.</param>
 	/// <returns>an array with all the none static fields of a struct.</returns>
-	public static IFieldSymbol [] GetStrutFields (this ITypeSymbol symbol)
+	public static IFieldSymbol [] GetStructFields (this ITypeSymbol symbol)
 		=> symbol.GetMembers ()
 			.OfType<IFieldSymbol> ()
 			.Where (field => !field.IsStatic)
@@ -203,7 +203,7 @@ static partial class TypeSymbolExtensions {
 				}
 
 				// Recursively check all fields of the struct
-				var instanceFields = symbol.GetStrutFields ();
+				var instanceFields = symbol.GetStructFields ();
 				foreach (var member in instanceFields) {
 					if (!member.Type.IsBlittable ()) {
 						return false;
@@ -279,11 +279,13 @@ static partial class TypeSymbolExtensions {
 		}
 		
 #pragma warning disable format
+
 		var symbolInfo = (
 			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (),
 			Name: symbol.Name,
 			SpecialType: symbol.SpecialType
 		);
+
 		var (currentSize, result) = symbolInfo switch { 
 			{ SpecialType: SpecialType.System_Void } => (0, true), 
 			{ ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), 
@@ -328,7 +330,7 @@ static partial class TypeSymbolExtensions {
 		}
 
 		// composite struct
-		foreach (var field in type.GetStrutFields ()) {
+		foreach (var field in type.GetStructFields ()) {
 			var marshalAs = field.GetMarshalAs ();
 			if (marshalAs is null) {
 				GetValueTypeSize (originalSymbol, field.Type, fieldSymbols, is64Bits, ref size, ref maxElementSize);
@@ -375,7 +377,7 @@ static partial class TypeSymbolExtensions {
 	}
 
 	/// <summary>
-	/// Return the size oa a blittable structure that can be used in a PInvoke
+	/// Return the size of a blittable structure that can be used in a PInvoke
 	/// </summary>
 	/// <param name="type">The type symbol whose size we want to get.</param>
 	/// <param name="fieldTypes">The fileds of the struct.</param>
@@ -388,7 +390,7 @@ static partial class TypeSymbolExtensions {
 
 		if (type.GetStructLayout () == LayoutKind.Explicit) {
 			// Find the maximum of "field size + field offset" for each field.
-			foreach (var field in type.GetStrutFields ()) {
+			foreach (var field in type.GetStructFields ()) {
 				var fieldOffset = field.GetFieldOffset ();
 				var elementSize = 0;
 				GetValueTypeSize (type, field.Type, fieldTypes, is64Bits, ref elementSize, ref maxElementSize);
@@ -405,7 +407,7 @@ static partial class TypeSymbolExtensions {
 	}
 
 	/// <summary>
-	/// Return the parents and all the implemented interfaces (including those of the parents).
+	/// Returns the parents and all the implemented interfaces (including those of the parents).
 	/// </summary>
 	/// <param name="symbol">The symbol whose inheritance we want to retrieve.</param>
 	/// <param name="isNativeObject">If the type implements the INativeObject interface.</param>
@@ -445,4 +447,24 @@ static partial class TypeSymbolExtensions {
 		parents = parentsBuilder.ToImmutable ();
 		interfaces = [.. interfacesSet];
 	}
+
+	/// <summary>
+	/// Returns the symbol availability taking into account the parent symbols availability.
+	///
+	/// That means that the attributes used on the current symbol are merged with the attributes used
+	/// in all the symbol parents following the correct child-parent order.
+	/// </summary>
+	/// <param name="symbol">The symbol whose availability we want to retrieve.</param>
+	/// <returns>A symbol availability structure for the symbol.</returns>
+	public static SymbolAvailability GetSupportedPlatforms (this ISymbol symbol)
+	{
+		var availability = GetAvailabilityForSymbol (symbol);
+		// get the parents and return the merge
+		foreach (var parent in GetParents (symbol)) {
+			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
+		}
+
+		return availability;
+	}
+
 }

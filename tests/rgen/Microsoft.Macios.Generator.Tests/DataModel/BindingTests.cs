@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class CodeChangesTests : BaseGeneratorTestClass {
+public class BindingTests : BaseGeneratorTestClass {
 	class TestDataSkipEnumValueDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -74,7 +74,7 @@ enum AVMediaCharacteristics {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		Assert.Equal (expected, CodeChanges.Skip (node, semanticModel));
+		Assert.Equal (expected, Binding.Skip (node, semanticModel));
 	}
 
 
@@ -183,7 +183,7 @@ public class TestClass {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		Assert.Equal (expected, CodeChanges.Skip (node, semanticModel));
+		Assert.Equal (expected, Binding.Skip (node, semanticModel));
 	}
 
 	class TestDataSkipMethodDeclaration : IEnumerable<object []> {
@@ -249,6 +249,6 @@ public class TestClass {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		Assert.Equal (expected, CodeChanges.Skip (node, semanticModel));
+		Assert.Equal (expected, Binding.Skip (node, semanticModel));
 	}
 }

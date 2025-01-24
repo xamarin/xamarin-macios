@@ -60,25 +60,6 @@ static partial class TypeSymbolExtensions {
 		return builder.ToImmutable ();
 	}
 
-	/// <summary>
-	/// Returns the symbol availability taking into account the parent symbols availability.
-	///
-	/// That means that the attributes used on the current symbol are merged with the attributes used
-	/// in all the symbol parents following the correct child-parent order.
-	/// </summary>
-	/// <param name="symbol">The symbol whose availability we want to retrieve.</param>
-	/// <returns>A symbol availability structure for the symbol.</returns>
-	public static SymbolAvailability GetSupportedPlatforms (this ISymbol symbol)
-	{
-		var availability = GetAvailabilityForSymbol (symbol);
-		// get the parents and return the merge
-		foreach (var parent in GetParents (symbol)) {
-			availability = availability.MergeWithParent (GetAvailabilityForSymbol (parent));
-		}
-
-		return availability;
-	}
-
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
 		// a type is a smart enum if its type is a enum one AND it was decorated with the

@@ -17,7 +17,7 @@ using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 namespace Microsoft.Macios.Generator.Emitters;
 
 class ClassEmitter : ICodeEmitter {
-	public string GetSymbolName (in CodeChanges codeChanges) => codeChanges.Name;
+	public string GetSymbolName (in Binding binding) => binding.Name;
 
 	public IEnumerable<string> UsingStatements => [
 		"System",
