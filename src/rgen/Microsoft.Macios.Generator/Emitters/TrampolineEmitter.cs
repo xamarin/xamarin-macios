@@ -11,7 +11,7 @@ namespace Microsoft.Macios.Generator.Emitters;
 
 class TrampolineEmitter : ICodeEmitter {
 	public string SymbolNamespace => string.Empty;
-	public string GetSymbolName (in CodeChanges codeChanges) => string.Empty;
+	public string GetSymbolName (in Binding binding) => string.Empty;
 	public IEnumerable<string> UsingStatements { get; } = [];
 	public bool TryEmit (in BindingContext bindingContext, [NotNullWhen (false)] out ImmutableArray<Diagnostic>? diagnostics)
 	{

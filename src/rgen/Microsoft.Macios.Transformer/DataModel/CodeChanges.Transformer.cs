@@ -3,7 +3,7 @@
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-readonly partial struct CodeChanges {
+readonly partial struct Binding {
 
 	/// <summary>
 	/// Represents the type of binding that the code changes are for.
@@ -12,7 +12,7 @@ readonly partial struct CodeChanges {
 
 	public BindingInfo BindingInfo => throw new NotImplementedException ();
 
-	public CodeChanges ()
+	public Binding ()
 	{
 		FullyQualifiedSymbol = "";
 		IsStatic = false;

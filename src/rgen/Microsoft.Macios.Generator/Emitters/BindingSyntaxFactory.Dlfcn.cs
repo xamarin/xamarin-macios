@@ -597,7 +597,7 @@ static partial class BindingSyntaxFactory {
 		if (!property.IsField)
 			throw new NotSupportedException ("Cannot retrieve getter for non field property.");
 
-		var fieldType = property.ReturnType.Name;
+		var fieldType = property.ReturnType.FullyQualifiedName;
 		var underlyingEnumType = property.ReturnType.EnumUnderlyingType.GetKeyword ();
 
 		Func<string, string, CompilationUnitSyntax> WrapGenericCall (string genericType,
@@ -621,12 +621,12 @@ static partial class BindingSyntaxFactory {
 #pragma warning disable format
 		if (property.ReturnType.IsNSObject) {
 			return property.ReturnType switch { 
-				{ Name: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString), 
-				{ Name: "Foundation.NSArray" } => (
-					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
+				{ FullyQualifiedName: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString), 
+				{ FullyQualifiedName: "Foundation.NSArray" } => (
+					Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetNSObjectField),
 					Setter: SetArray),
 				_ => (
-					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
+					Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetNSObjectField),
 					Setter: SetObject)
 			};
 		}
@@ -634,15 +634,15 @@ static partial class BindingSyntaxFactory {
 		// use the return type and the special type of the property to decide what getter we are going to us
 		return property.ReturnType switch {
 			// special types
-			{ Name: "CoreGraphics.CGSize" } => (Getter: GetCGSize, Setter: SetCGSize),
-			{ Name: "CoreMedia.CMTag" } => (
+			{ FullyQualifiedName: "CoreGraphics.CGSize" } => (Getter: GetCGSize, Setter: SetCGSize),
+			{ FullyQualifiedName: "CoreMedia.CMTag" } => (
 				Getter: WrapGenericCall ("CoreMedia.CMTag", GetStruct),
 				Setter: WrapThrow ()),
-			{ Name: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
+			{ FullyQualifiedName: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
 
 			// Blittable types 
-			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
-				=> (Getter: WrapGenericCall (property.ReturnType.Name, GetBlittableField),
+			{ FullyQualifiedName: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
+				=> (Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetBlittableField),
 					Setter: WrapThrow ()),
 
 			// enum types, decide based on its enum backing field, smart enums have to be done in the binding
