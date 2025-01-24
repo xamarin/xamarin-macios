@@ -268,7 +268,7 @@ static partial class TypeSymbolExtensions {
 	/// <param name="interfaces">All implemented interfaces by the type and its parents.</param>
 	/// <param name="isNSObject">If the type inherits from NSObject.</param>
 	public static void GetInheritance (
-		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out bool isDictionaryContainer, 
+		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out bool isDictionaryContainer,
 		out ImmutableArray<string> parents,
 		out ImmutableArray<string> interfaces)
 	{

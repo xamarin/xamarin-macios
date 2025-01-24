@@ -28,11 +28,11 @@ namespace NS;
 public class TestClass {}
 ";
 			yield return [
-				simpleClass, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+				simpleClass,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new string [] { }];
 
 			const string genericClass = @"
@@ -43,11 +43,11 @@ namespace NS;
 public class TestClass<T> where T Enum {}
 ";
 			yield return [
-				genericClass, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+				genericClass,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new string [] { }];
 
 			const string singleParent = @"
@@ -60,11 +60,11 @@ public class TestClass : Parent {}
 ";
 
 			yield return [
-				singleParent, 
-				false, 
-				false, 
-				false, 
-				new [] { "NS.Parent", "object" }, 
+				singleParent,
+				false,
+				false,
+				false,
+				new [] { "NS.Parent", "object" },
 				new string [] { }];
 
 			const string genericParent = @"
@@ -77,11 +77,11 @@ public class TestClass : Parent<string> {}
 ";
 
 			yield return [
-				genericParent, 
-				false, 
-				false, 
-				false, 
-				new [] { "NS.Parent<string>", "object" }, 
+				genericParent,
+				false,
+				false,
+				false,
+				new [] { "NS.Parent<string>", "object" },
 				new string [] { }];
 
 			const string multiParent = @"
@@ -94,11 +94,11 @@ public class Parent1 : Parent0 {}
 public class TestClass : Parent1 {}
 ";
 
-			yield return [multiParent, 
-				false, 
-				false, 
-				false, 
-				new [] { "NS.Parent1", "NS.Parent0", "object" }, 
+			yield return [multiParent,
+				false,
+				false,
+				false,
+				new [] { "NS.Parent1", "NS.Parent0", "object" },
 				new string [] { }];
 
 			const string singleInterface = @"
@@ -111,11 +111,11 @@ public class TestClass : IInterface {}
 ";
 
 			yield return [
-				singleInterface, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+				singleInterface,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new [] { "NS.IInterface" }];
 
 			const string genericInterface = @"
@@ -128,11 +128,11 @@ public class TestClass : IInterface<string> {}
 ";
 
 			yield return [
-				genericInterface, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+				genericInterface,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new [] { "NS.IInterface<string>" }];
 
 			const string severalInterfaces = @"
@@ -146,11 +146,11 @@ public class TestClass : IInterface1, IInterface2  {}
 ";
 
 			yield return [
-				severalInterfaces, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+				severalInterfaces,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new [] { "NS.IInterface1", "NS.IInterface2" }];
 
 			const string severalGenericInterfaces = @"
@@ -162,11 +162,11 @@ public interface IInterface1<T> where T : object {}
 public class TestClass : IInterface1<string>, IInterface1<int>  {}
 ";
 
-			yield return [severalGenericInterfaces, 
-				false, 
-				false, 
-				false, 
-				new [] { "object" }, 
+			yield return [severalGenericInterfaces,
+				false,
+				false,
+				false,
+				new [] { "object" },
 				new [] { "NS.IInterface1<string>", "NS.IInterface1<int>" }];
 
 			const string parentSingleInterface = @"
@@ -180,11 +180,11 @@ public class TestClass : Parent {}
 ";
 
 			yield return [
-				parentSingleInterface, 
-				false, 
-				false, 
-				false, 
-				new [] { "NS.Parent", "object" }, 
+				parentSingleInterface,
+				false,
+				false,
+				false,
+				new [] { "NS.Parent", "object" },
 				new [] { "NS.IInterface" }];
 
 			const string nsObjectChild = @"
@@ -207,7 +207,7 @@ public partial class AVCaptureDataOutputSynchronizer : NSObject
 			yield return [nsObjectChild,
 				true,
 				true,
-				false, 
+				false,
 				new [] { "Foundation.NSObject", "object" },
 				new [] {
 				"ObjCRuntime.INativeObject",
@@ -239,7 +239,7 @@ public partial class Child : AVCaptureDataOutputSynchronizer {}
 			yield return [nsObjectNestedChild,
 				true,
 				true,
-				false, 
+				false,
 				new [] { "NS.AVCaptureDataOutputSynchronizer", "Foundation.NSObject", "object" },
 				new [] {
 				"ObjCRuntime.INativeObject",
@@ -269,7 +269,7 @@ public partial class AVCaptureDataOutputSynchronizer : INativeObject
 			yield return [nativeObjectInterface,
 				false,
 				true,
-				false, 
+				false,
 				new [] { "object" },
 				new [] {
 				"ObjCRuntime.INativeObject",
@@ -283,11 +283,11 @@ using ObjCRuntime;
 namespace NS;
 public partial class SKCloudServiceSetupOptions : DictionaryContainer { }
 ";
-			
+
 			yield return [dictionaryContainer,
 				false,
 				false,
-				true, 
+				true,
 				new [] { "Foundation.DictionaryContainer", "object" },
 				new string [] { }];
 		}
@@ -298,7 +298,7 @@ public partial class SKCloudServiceSetupOptions : DictionaryContainer { }
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataInheritanceClasses>]
 	void GetInheritance (ApplePlatform platform, string inputText,
-		bool expectedIsNSObject, bool expectedIsNativeObject, bool expectedDictionaryContainer, 
+		bool expectedIsNSObject, bool expectedIsNativeObject, bool expectedDictionaryContainer,
 		string [] expectedParents, string [] expectedInterfaces)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);

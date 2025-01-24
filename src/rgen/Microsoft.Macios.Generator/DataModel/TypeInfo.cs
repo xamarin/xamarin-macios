@@ -123,7 +123,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		get => isINativeObject;
 		init => isINativeObject = value;
 	}
-	
+
 	readonly bool isDictionaryContainer = false;
 
 	public bool IsDictionaryContainer {
