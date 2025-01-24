@@ -70,7 +70,7 @@ public enum ASAuthorizationProviderExtensionEncryptionAlgorithm {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
-	void TryeCreateTests (ApplePlatform platform, (string Source, string Path) source, BackingFieldTypeData expectedData)
+	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, BackingFieldTypeData expectedData)
 	{
 		// create a compilation used to create the transformer
 		var compilation = CreateCompilation (platform, sources: source);

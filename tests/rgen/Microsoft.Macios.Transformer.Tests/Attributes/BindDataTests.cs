@@ -67,7 +67,7 @@ interface UIFeedbackGenerator : UIInteraction {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
-	void TryeCreateTests (ApplePlatform platform, (string Source, string Path) source,
+	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source,
 		BindData expectedData)
 	{
 		// create a compilation used to create the transformer
