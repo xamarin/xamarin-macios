@@ -366,7 +366,7 @@ static partial class TypeSymbolExtensions {
 	}
 
 	/// <summary>
-	/// Return the size oa a blittable structure that can be used in a PInvoke
+	/// Return the size of a blittable structure that can be used in a PInvoke
 	/// </summary>
 	/// <param name="type">The type symbol whose size we want to get.</param>
 	/// <param name="fieldTypes">The fileds of the struct.</param>
