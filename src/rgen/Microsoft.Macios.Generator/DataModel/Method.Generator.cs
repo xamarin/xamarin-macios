@@ -21,6 +21,11 @@ readonly partial struct Method {
 	public ExportData<ObjCBindings.Method> ExportMethodData { get; }
 
 	/// <summary>
+	/// Returns if the method was marked as thread safe.
+	/// </summary>
+	public bool IsThreadSafe => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.IsThreadSafe);
+	
+	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.MarshalNativeExceptions);

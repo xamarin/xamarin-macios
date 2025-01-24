@@ -26,6 +26,11 @@ readonly partial struct Binding {
 	/// Represents the binding data that will be used to generate the code.
 	/// </summary>
 	public BindingInfo BindingInfo => bindingInfo;
+	
+	/// <summary>
+	/// Returns if the binding has been declared to be thread safe.
+	/// </summary>
+	public bool IsThreadSafe => bindingInfo.IsThreadSafe;
 
 	/// <summary>
 	/// Returns all the library names and paths that are needed by the native code represented by the code change.

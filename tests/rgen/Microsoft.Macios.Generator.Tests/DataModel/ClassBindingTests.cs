@@ -23,6 +23,50 @@ namespace Microsoft.Macios.Generator.Tests.DataModel;
 public class ClassBindingTests : BaseGeneratorTestClass {
 	readonly BindingEqualityComparer comparer = new ();
 
+	[Fact]
+	public void IsThreadSafe ()
+	{
+		var binding = new Binding (
+			bindingInfo: new(new BindingTypeData<Class> (Class.IsThreadSafe)),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.True (binding.IsThreadSafe);
+		
+		binding = new Binding (
+			bindingInfo: new(new BindingTypeData<Class> ()),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.False (binding.IsThreadSafe);
+	}
+	
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{

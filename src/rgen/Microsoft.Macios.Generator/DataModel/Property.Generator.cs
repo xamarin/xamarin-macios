@@ -37,6 +37,12 @@ readonly partial struct Property {
 	/// </summary>
 	[MemberNotNullWhen (true, nameof (ExportPropertyData))]
 	public bool IsProperty => ExportPropertyData is not null;
+	
+	/// <summary>
+	/// Returns if the property was marked as thread safe.
+	/// </summary>
+	public bool IsThreadSafe => 
+		IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.IsThreadSafe);
 
 	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.

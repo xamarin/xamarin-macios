@@ -3,6 +3,7 @@
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,6 +21,50 @@ namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class InterfaceCodeChangesTests : BaseGeneratorTestClass {
 	readonly BindingEqualityComparer comparer = new ();
+	
+	[Fact]
+	public void IsThreadSafe ()
+	{
+		var binding = new Binding (
+			bindingInfo: new(new BindingTypeData<Protocol> (Protocol.IsThreadSafe)),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.True (binding.IsThreadSafe);
+		
+		binding = new Binding (
+			bindingInfo: new(new BindingTypeData<Protocol> ()),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.False (binding.IsThreadSafe);
+	}
 
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
