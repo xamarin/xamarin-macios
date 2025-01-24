@@ -275,15 +275,25 @@ static partial class TypeSymbolExtensions {
 			size = 0;
 			return false;
 		}
-
+		
+#pragma warning disable format
 		var symbolInfo = (
 			ContainingNamespace: symbol.ContainingNamespace.ToDisplayString (),
 			Name: symbol.Name,
 			SpecialType: symbol.SpecialType
 		);
-		var (currentSize, result) = symbolInfo switch { { SpecialType: SpecialType.System_Void } => (0, true), { ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true), { ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true), { ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true), { ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true), { ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true), { ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits ? 8 : 4, true),
+		var (currentSize, result) = symbolInfo switch { 
+			{ SpecialType: SpecialType.System_Void } => (0, true), 
+			{ ContainingNamespace: "ObjCRuntime", Name: "NativeHandle" } => (is64bits ? 8 : 4, true), 
+			{ ContainingNamespace: "System.Runtime.InteropServices", Name: "NFloat" } => (is64bits ? 8 : 4, true), 
+			{ ContainingNamespace: "System", Name: "Char" or "Boolean" or "SByte" or "Byte" } => (1, true), 
+			{ ContainingNamespace: "System", Name: "Int16" or "UInt16" } => (2, true), 
+			{ ContainingNamespace: "System", Name: "Single" or "Int32" or "UInt32" } => (4, true), 
+			{ ContainingNamespace: "System", Name: "Double" or "Int64" or "UInt64" } => (8, true), 
+			{ ContainingNamespace: "System", Name: "IntPtr" or "UIntPtr" or "nuint" or "nint" } => (is64bits ? 8 : 4, true),
 			_ => (0, false)
 		};
+#pragma warning restore format
 		size = currentSize;
 		return result;
 	}
