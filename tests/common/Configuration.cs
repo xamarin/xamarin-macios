@@ -805,5 +805,22 @@ namespace Xamarin.Tests {
 			rspPath = Path.Combine (SourceRoot, "src", "build", "dotnet", platform, $"apidefinition-{platform}.rsp");
 			return true;
 		}
+
+		public static bool TryGetPlatformPreprocessorSymbolsRsp (TargetFramework framework,
+			[NotNullWhen (true)] out string rspPath)
+		{
+			rspPath = null;
+			var platform = framework.Platform switch {
+				ApplePlatform.iOS => "ios",
+				ApplePlatform.TVOS => "tvos",
+				ApplePlatform.MacOSX => "macos",
+				ApplePlatform.MacCatalyst => "maccatalyst",
+				_ => null,
+			};
+			if (platform is null)
+				return false;
+			rspPath = Path.Combine (SourceRoot, "src", "rsp", "dotnet", $"{platform}-defines-dotnet.rsp");
+			return true;
+		}
 	}
 }
