@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class ErrorDomainDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -36,8 +36,8 @@ public enum AVKitError : long {
         RecordingFailed = -1200,
 }
 ";
-			yield return [(Sorunce: simpleErrorDomain, Path: path), new ErrorDomainData("AVKitErrorDomain")];
-			
+			yield return [(Sorunce: simpleErrorDomain, Path: path), new ErrorDomainData ("AVKitErrorDomain")];
+
 			const string errorWithLibDomain = @"
 using System;
 using Foundation;
@@ -57,7 +57,7 @@ public enum AVKitError : long {
         RecordingFailed = -1200,
 }
 ";
-			yield return [(Sorunce: errorWithLibDomain, Path: path), new ErrorDomainData("AVKitErrorDomain", "AVKit")];
+			yield return [(Sorunce: errorWithLibDomain, Path: path), new ErrorDomainData ("AVKitErrorDomain", "AVKit")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

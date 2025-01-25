@@ -7,11 +7,11 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
-	
+
 	public string ErrorDomain { get; }
 	public string? LibraryName { get; }
-	
-	
+
+
 	public ErrorDomainData (string domain)
 	{
 		ErrorDomain = domain;
@@ -24,13 +24,13 @@ readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
 	}
 
 	public static bool TryParse (AttributeData attributeData,
-		[NotNullWhen (true)] out ErrorDomainData ? data)
+		[NotNullWhen (true)] out ErrorDomainData? data)
 	{
 		data = null;
 		var count = attributeData.ConstructorArguments.Length;
 		string errorDomain;
 		string? libraryName = null;
-		
+
 		switch (count) {
 		case 1:
 			errorDomain = (string) attributeData.ConstructorArguments [0].Value!;
@@ -43,12 +43,12 @@ readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
 			// 0 should not be an option..
 			return false;
 		}
-		
+
 		if (attributeData.NamedArguments.Length == 0) {
 			data = new (errorDomain, libraryName);
 			return true;
 		}
-		
+
 		foreach (var (argumentName, value) in attributeData.NamedArguments) {
 			switch (argumentName) {
 			case "ErrorDomain":
@@ -63,10 +63,10 @@ readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
 			}
 		}
 
-		data = new(errorDomain, libraryName); 
+		data = new (errorDomain, libraryName);
 		return true;
 	}
-	
+
 	public bool Equals (ErrorDomainData other)
 	{
 		if (ErrorDomain != other.ErrorDomain)
