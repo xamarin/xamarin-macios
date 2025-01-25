@@ -1,9 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+#pragma warning disable APL0003
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xunit;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
@@ -469,4 +471,45 @@ public class AccessorTests {
 		Assert.NotNull (selector);
 		Assert.Equal (customSelector, selector);
 	}
+
+	[Theory]
+	[InlineData (false, false, false)]
+	[InlineData (false, true, true)]
+	[InlineData (true, false, true)]
+	[InlineData (true, true, true)]
+	public void ShouldMarshalNativeExceptionsBothFalse (bool propertyHasFlag, bool accessorHasFalg, bool expectedResult)
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new (
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
+				flags: propertyHasFlag ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
+		};
+
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Getter,
+			symbolAvailability: new (),
+			exportPropertyData: new (
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
+				flags: accessorHasFalg ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+		Assert.Equal (expectedResult, accessor.ShouldMarshalNativeExceptions (property));
+	}
+
+
 }
