@@ -7,11 +7,11 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct NativeData : IEquatable<NativeData> {
-	
+
 	public string? NativeName { get; }
-	
-	public NativeData () {}
-	
+
+	public NativeData () { }
+
 	public NativeData (string? nativeName)
 	{
 		NativeName = nativeName;
@@ -53,10 +53,10 @@ readonly struct NativeData : IEquatable<NativeData> {
 			}
 		}
 
-		data = new(nativeName);
+		data = new (nativeName);
 		return true;
 	}
-	
+
 	public bool Equals (NativeData other)
 		=> NativeName == other.NativeName;
 

@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class NativeDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -31,7 +31,7 @@ public enum AVAudioQuality : long {
 	Max = 0x7F,
 }
 ";
-			
+
 			yield return [(Sorunce: simnpleNativeEnum, Path: path), new NativeData ()];
 
 			var nativeEnumWithName = @"
@@ -48,9 +48,9 @@ public enum AVAudioQuality : long {
 	Max = 0x7F,
 }
 ";
-			
+
 			yield return [(Sorunce: nativeEnumWithName, Path: path), new NativeData ("Test")];
-			
+
 			var nativeEnumWithNameNamed = @"
 using System;
 using Foundation;
@@ -65,13 +65,13 @@ public enum AVAudioQuality : long {
 	Max = 0x7F,
 }
 ";
-			
+
 			yield return [(Sorunce: nativeEnumWithNameNamed, Path: path), new NativeData ("Test")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source,
@@ -96,5 +96,5 @@ public enum AVAudioQuality : long {
 			AttributesNames.NativeAttribute, NativeData.TryParse);
 		Assert.Equal (expectedData, exportData);
 	}
-	
+
 }
