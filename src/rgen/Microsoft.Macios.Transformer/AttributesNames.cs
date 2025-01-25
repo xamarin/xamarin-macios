@@ -48,9 +48,11 @@ static class AttributesNames {
 	public const string CheckDisposedAttribute = "CheckDisposedAttribute";
 	public const string CoreImageFilterAttribute = "CoreImageFilterAttribute";
 	public const string CoreImageFilterPropertyAttribute = "CoreImageFilterPropertyAttribute";
+	[BindingFlag (AttributeTargets.Interface)]
 	public const string DefaultCtorVisibilityAttribute = "DefaultCtorVisibilityAttribute";
 
-	[BindingFlag (AttributeTargets.Field)] public const string DefaultEnumValueAttribute = "DefaultEnumValueAttribute";
+	[BindingFlag (AttributeTargets.Field)]
+	public const string DefaultEnumValueAttribute = "DefaultEnumValueAttribute";
 	public const string DeprecatedAttribute = "DeprecatedAttribute";
 
 	[BindingFlag (AttributeTargets.Interface)]
@@ -82,6 +84,7 @@ static class AttributesNames {
 	[BindingFlag] 
 	public const string FactoryAttribute = "FactoryAttribute";
 	public const string FieldAttribute = "Foundation.FieldAttribute";
+	[BindingFlag (AttributeTargets.Enum)]
 	public const string FlagsAttribute = "System.FlagsAttribute";
 
 	/// <summary>
