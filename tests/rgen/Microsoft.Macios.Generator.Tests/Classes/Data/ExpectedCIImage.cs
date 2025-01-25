@@ -59,7 +59,9 @@ public partial class CIImage
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException ();
+			if (_DidProcessEditingNotification is null)
+				_DidProcessEditingNotification = Dlfcn.GetStringConstant (Libraries.TestNamespace.Handle, "kCIFormatLA8")!;
+			return _DidProcessEditingNotification;
 		}
 	}
 
@@ -77,7 +79,7 @@ public partial class CIImage
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException ();
+			return Dlfcn.GetInt32 (Libraries.TestNamespace.Handle, "kCIFormatABGR8");
 		}
 	}
 
@@ -95,7 +97,7 @@ public partial class CIImage
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException ();
+			return Dlfcn.GetInt32 (Libraries.TestNamespace.Handle, "kCIFormatLA8");
 		}
 
 		[SupportedOSPlatform ("macos14.0")]
@@ -104,7 +106,7 @@ public partial class CIImage
 		[SupportedOSPlatform ("maccatalyst17.0")]
 		set
 		{
-			throw new NotImplementedException ();
+			Dlfcn.SetInt32 (Libraries.TestNamespace.Handle, "kCIFormatLA8", value);
 		}
 	}
 
@@ -122,7 +124,7 @@ public partial class CIImage
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException ();
+			return Dlfcn.GetInt32 (Libraries.TestNamespace.Handle, "FormatRGBA16Int");
 		}
 	}
 	// TODO: add binding code here

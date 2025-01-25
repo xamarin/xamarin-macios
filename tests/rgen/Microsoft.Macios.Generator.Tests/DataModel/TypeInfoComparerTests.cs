@@ -15,7 +15,7 @@ public class TypeInfoComparerTests {
 	{
 		var x = new TypeInfo ("string");
 		var y = new TypeInfo ("int");
-		Assert.Equal (String.Compare (x.Name, y.Name, StringComparison.Ordinal), compare.Compare (x, y));
+		Assert.Equal (String.Compare (x.FullyQualifiedName, y.FullyQualifiedName, StringComparison.Ordinal), compare.Compare (x, y));
 	}
 
 	[Fact]

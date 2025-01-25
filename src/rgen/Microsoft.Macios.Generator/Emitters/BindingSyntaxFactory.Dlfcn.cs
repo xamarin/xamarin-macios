@@ -52,15 +52,17 @@ static partial class BindingSyntaxFactory {
 	/// </summary>
 	/// <param name="libraryName">The name of the library that contains the field.</param>
 	/// <param name="fieldName">The field name literal.</param>
+	/// <param name="suppressNullableWarning">If the ! operator should be used.</param>
 	/// <param name="methodName">The method name for the invocation.</param>
 	/// <returns>The syntax needed to get a constant.</returns>
-	static CompilationUnitSyntax GetConstant (string libraryName, string fieldName, [CallerMemberName] string methodName = "")
+	static CompilationUnitSyntax GetConstant (string libraryName, string fieldName, bool suppressNullableWarning = false,
+		[CallerMemberName] string methodName = "")
 	{
 		var arguments = new SyntaxNodeOrToken [] {
 			GetLibraryArgument (libraryName), Token (SyntaxKind.CommaToken),
 			GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, fieldName),
 		};
-		return StaticInvocationExpression (Dlfcn, methodName, arguments);
+		return StaticInvocationExpression (Dlfcn, methodName, arguments, suppressNullableWarning: suppressNullableWarning);
 	}
 
 	/// <summary>
@@ -105,7 +107,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
 	public static CompilationUnitSyntax GetStringConstant (string libraryName, string fieldName)
-		=> GetConstant (libraryName, fieldName);
+		=> GetConstant (libraryName, fieldName, suppressNullableWarning: true);
 
 
 	/// <summary>
@@ -595,7 +597,7 @@ static partial class BindingSyntaxFactory {
 		if (!property.IsField)
 			throw new NotSupportedException ("Cannot retrieve getter for non field property.");
 
-		var fieldType = property.ReturnType.Name;
+		var fieldType = property.ReturnType.FullyQualifiedName;
 		var underlyingEnumType = property.ReturnType.EnumUnderlyingType.GetKeyword ();
 
 		Func<string, string, CompilationUnitSyntax> WrapGenericCall (string genericType,
@@ -615,30 +617,32 @@ static partial class BindingSyntaxFactory {
 				setterCall (libraryName, fieldName, variableName, underlyingEnumType);
 		}
 
+		// keep the formatting to make it more readable
+#pragma warning disable format
 		if (property.ReturnType.IsNSObject) {
-			return property.ReturnType switch { { Name: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString), { Name: "Foundation.NSArray" } => (
-																																	   Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
-																																	   Setter: SetArray),
+			return property.ReturnType switch { 
+				{ FullyQualifiedName: "Foundation.NSString" } => (Getter: GetStringConstant, Setter: SetString), 
+				{ FullyQualifiedName: "Foundation.NSArray" } => (
+					Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetNSObjectField),
+					Setter: SetArray),
 				_ => (
-					Getter: WrapGenericCall (property.ReturnType.Name, GetNSObjectField),
+					Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetNSObjectField),
 					Setter: SetObject)
 			};
 		}
 
-		// keep the formatting to make it more readable
-#pragma warning disable format
 		// use the return type and the special type of the property to decide what getter we are going to us
 		return property.ReturnType switch {
 			// special types
-			{ Name: "CoreGraphics.CGSize" } => (Getter: GetCGSize, Setter: SetCGSize),
-			{ Name: "CoreMedia.CMTag" } => (
+			{ FullyQualifiedName: "CoreGraphics.CGSize" } => (Getter: GetCGSize, Setter: SetCGSize),
+			{ FullyQualifiedName: "CoreMedia.CMTag" } => (
 				Getter: WrapGenericCall ("CoreMedia.CMTag", GetStruct),
 				Setter: WrapThrow ()),
-			{ Name: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
+			{ FullyQualifiedName: "nfloat" } => (Getter: GetNFloat, Setter: SetNFloat),
 
 			// Blittable types 
-			{ Name: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
-				=> (Getter: WrapGenericCall (property.ReturnType.Name, GetBlittableField),
+			{ FullyQualifiedName: "CoreMedia.CMTime" or "AVFoundation.AVCaptureWhiteBalanceGains" }
+				=> (Getter: WrapGenericCall (property.ReturnType.FullyQualifiedName, GetBlittableField),
 					Setter: WrapThrow ()),
 
 			// enum types, decide based on its enum backing field, smart enums have to be done in the binding

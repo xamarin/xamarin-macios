@@ -9,19 +9,19 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class CodeChangesComparerTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer comparer = new ();
+public class BindingComparerTests : BaseGeneratorTestClass {
+	readonly BindingEqualityComparer comparer = new ();
 
 	[Fact]
 	public void CompareDifferentFullyQualifiedSymbol ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -33,7 +33,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentBase ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -41,7 +41,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ()) {
 			Base = "Base1"
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -55,7 +55,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentInterface ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -63,7 +63,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			symbolAvailability: new ()) {
 			Interfaces = ["IBase1"]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -77,13 +77,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentNameSymbol ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name2",
 			@namespace: ["NS"],
@@ -95,13 +95,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentNamespaceSymbol ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS1"],
 			fullyQualifiedSymbol: "NS.name1",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name1",
 			@namespace: ["NS2"],
@@ -113,13 +113,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentBindingType ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.Protocol, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -131,13 +131,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributesLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -153,7 +153,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentAttributes ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -163,7 +163,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				new AttributeCodeChange (name: "name", arguments: ["arg1", "arg2"])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -179,13 +179,13 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembersLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
 			fullyQualifiedSymbol: "NS.name",
 			symbolAvailability: new ());
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -207,7 +207,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMembers ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -223,7 +223,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					attributes: [])
 			],
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -245,7 +245,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentPropertyLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -254,7 +254,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 			EnumMembers = [],
 			Properties = []
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -301,7 +301,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSamePropertiesDiffOrder ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"], fullyQualifiedSymbol: "NS.name", symbolAvailability: new ()) {
@@ -367,7 +367,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -441,7 +441,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentProperties ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -509,7 +509,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -582,7 +582,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentEventsLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -666,7 +666,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -740,7 +740,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameEventsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -846,7 +846,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -960,7 +960,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentEvents ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1044,7 +1044,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 					]),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1137,7 +1137,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMethodsLength ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1283,7 +1283,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1420,7 +1420,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareSameMethodsDiffOrder ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1566,7 +1566,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1719,7 +1719,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 	[Fact]
 	public void CompareDifferentMethods ()
 	{
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1842,7 +1842,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				),
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -1984,7 +1984,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -2130,7 +2130,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -2278,7 +2278,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 		var builder = SymbolAvailability.CreateBuilder ();
 		builder.Add (new SupportedOSPlatformData ("ios"));
 		builder.Add (new SupportedOSPlatformData ("tvos"));
-		var changes1 = new CodeChanges (
+		var changes1 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
@@ -2424,7 +2424,7 @@ public class CodeChangesComparerTests : BaseGeneratorTestClass {
 				)
 			]
 		};
-		var changes2 = new CodeChanges (
+		var changes2 = new Binding (
 			bindingInfo: new (BindingType.SmartEnum, new ()),
 			name: "name",
 			@namespace: ["NS"],
