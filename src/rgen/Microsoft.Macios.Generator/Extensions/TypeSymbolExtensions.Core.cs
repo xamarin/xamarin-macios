@@ -116,7 +116,8 @@ static partial class TypeSymbolExtensions {
 		return null;
 	}
 
-	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
+	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse)
+		where T : struct
 		=> GetAttribute (symbol, () => attributeName, tryParse);
 
 	/// <summary>
@@ -229,7 +230,8 @@ static partial class TypeSymbolExtensions {
 				attr.AttributeClass?.ToString () == typeof (FieldOffsetAttribute).FullName);
 
 		return offsetAttribute is not null
-				? (int) offsetAttribute.ConstructorArguments [0].Value! : 0;
+			? (int) offsetAttribute.ConstructorArguments [0].Value!
+			: 0;
 	}
 
 	/// <summary>
@@ -300,6 +302,9 @@ static partial class TypeSymbolExtensions {
 		return result;
 	}
 
+	static bool TryGetBuiltInTypeSize (this ITypeSymbol type)
+		=> TryGetBuiltInTypeSize (type, true /* doesn't matter */, out _);
+
 	static int AlignAndAdd (int size, int add, ref int maxElementSize)
 	{
 		maxElementSize = Math.Max (maxElementSize, add);
@@ -309,7 +314,8 @@ static partial class TypeSymbolExtensions {
 	}
 
 
-	static void GetValueTypeSize (this ITypeSymbol originalSymbol, ITypeSymbol type, List<ITypeSymbol> fieldSymbols, bool is64Bits, ref int size,
+	static void GetValueTypeSize (this ITypeSymbol originalSymbol, ITypeSymbol type, List<ITypeSymbol> fieldSymbols,
+		bool is64Bits, ref int size,
 		ref int maxElementSize)
 	{
 		// FIXME:
@@ -330,6 +336,7 @@ static partial class TypeSymbolExtensions {
 				GetValueTypeSize (originalSymbol, field.Type, fieldSymbols, is64Bits, ref size, ref maxElementSize);
 				continue;
 			}
+
 			var (marshalAsType, sizeConst) = marshalAs.Value;
 			var multiplier = 1;
 			switch (marshalAsType) {
@@ -364,7 +371,6 @@ static partial class TypeSymbolExtensions {
 			size = AlignAndAdd (size, typeSize, ref maxElementSize);
 			size += (multiplier - 1) * size;
 		}
-
 	}
 
 	/// <summary>
