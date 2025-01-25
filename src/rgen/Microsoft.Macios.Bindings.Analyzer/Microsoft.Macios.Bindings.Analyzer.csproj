@@ -60,11 +60,17 @@
         <Compile Include="../Microsoft.Macios.Generator/Attributes/UnsupportedOSPlatformData.cs" >
             <Link>Generator/Attributes/UnsupportedOSPlatformData.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/ApplePlatformExtensions.cs" >
+            <Link>Generator/Extensions/ApplePlatformExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
             <Link>Generator/Extensions/CompilationExtensions.cs</Link>
         </Compile>
-        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.cs" >
-            <Link>Generator/Extensions/TypeSymbolExtensions.cs</Link>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs">
+            <Link>Generator/Extensions/TypeSymbolExtensions.Core.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Generator.cs">
+            <Link>Generator/Extensions/TypeSymbolExtensions.Generator.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypedConstantExtensions.cs" >
             <Link>Generator/Extensions/TypedConstantExtensions.cs</Link>
@@ -72,17 +78,8 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs" >
             <Link>Generator/Extensions/StringExtensions.cs</Link>
         </Compile>
-        <Compile Include="../Microsoft.Macios.Generator/Availability/PlatformAvailability.cs" >
-            <Link>Generator/Availability/PlatformAvailability.cs</Link>
-        </Compile>
-        <Compile Include="../Microsoft.Macios.Generator/Availability/PlatformAvailabilityBuilder.cs" >
-            <Link>Generator/Availability/PlatformAvailabilityBuilder.cs</Link>
-        </Compile>
-        <Compile Include="../Microsoft.Macios.Generator/Availability/SymbolAvailability.cs" >
-            <Link>Generator/Availability/SymbolAvailability.cs</Link>
-        </Compile>
-        <Compile Include="../Microsoft.Macios.Generator/Availability/SymbolAvailabilityBuilder.cs" >
-            <Link>Generator/Availability/SymbolAvailabilityBuilder.cs</Link>
+        <Compile Include="../Microsoft.Macios.Generator/Availability/*.cs" >
+            <Link>Generator/Availability/*.cs</Link>
         </Compile>
         <Compile Update="Resources.Designer.cs">
           <DesignTime>True</DesignTime>

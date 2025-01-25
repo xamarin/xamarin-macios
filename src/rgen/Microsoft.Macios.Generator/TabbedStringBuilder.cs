@@ -2,17 +2,8 @@
 // Licensed under the MIT License.
 using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Mail;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Macios.Generator.Attributes;
-using Microsoft.Macios.Generator.Availability;
-using Microsoft.Macios.Generator.DataModel;
-using ObjCRuntime;
-using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator;
 
@@ -29,7 +20,7 @@ namespace Microsoft.Macios.Generator;
 /// }
 /// </example>
 /// </summary>
-class TabbedStringBuilder : IDisposable {
+partial class TabbedStringBuilder : IDisposable {
 	readonly StringBuilder sb;
 	readonly uint tabCount;
 	readonly bool isBlock;
@@ -131,6 +122,8 @@ class TabbedStringBuilder : IDisposable {
 		return this;
 	}
 
+#if NET9_0
+	
 	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
 		WriteTabs ().Append (handler.ToStringAndClear ());
@@ -142,6 +135,7 @@ class TabbedStringBuilder : IDisposable {
 		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
 	}
+	
 
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
@@ -164,6 +158,8 @@ class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
+	
+#endif
 
 	/// <summary>
 	/// Append the generated code attribute to the current string builder. Added for convenience.
@@ -180,63 +176,6 @@ class TabbedStringBuilder : IDisposable {
 			AppendLine (attr);
 		}
 
-		return this;
-	}
-
-	public TabbedStringBuilder AppendMemberAvailability (in SymbolAvailability allPlatformsAvailability)
-	{
-		foreach (var availability in allPlatformsAvailability.PlatformAvailabilities) {
-			var platformName = availability.Platform.AsString ().ToLower ();
-			if (availability.SupportedVersion is not null) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (availability.SupportedVersion))
-					? string.Empty
-					: availability.SupportedVersion.ToString ();
-				AppendLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
-			}
-
-			// loop over the unsupported versions of the platform 
-			foreach (var (version, message) in availability.UnsupportedVersions) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
-				if (message is null) {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
-				} else {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
-				}
-			}
-
-			// loop over the obsolete versions of the platform 
-			foreach (var (version, obsoleteInfo) in availability.ObsoletedVersions) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
-
-				switch (obsoleteInfo) {
-				case (null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
-					break;
-				case (not null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
-					break;
-				case (null, not null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
-					break;
-				case (not null, not null):
-					AppendLine (
-						$"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\", Url=\"{obsoleteInfo.Url}\")]");
-					break;
-				}
-			}
-		}
-
-		return this;
-	}
-
-	public TabbedStringBuilder AppendExportData<T> (in ExportData<T> exportData) where T : Enum
-	{
-		// Try to write the smaller amount of data. We are using the old ExportAttribute until we make the final move
-		if (exportData.ArgumentSemantic != ArgumentSemantic.None) {
-			AppendLine ($"[Export (\"{exportData.Selector}\", ArgumentSemantic.{exportData.ArgumentSemantic})]");
-		} else {
-			AppendLine ($"[Export (\"{exportData.Selector}\")]");
-		}
 		return this;
 	}
 

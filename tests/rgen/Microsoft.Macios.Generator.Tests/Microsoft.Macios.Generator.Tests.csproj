@@ -7,6 +7,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>NU1608</NoWarn>
         <RootNamespace>Microsoft.Macios.Generator.Tests</RootNamespace>
+        <DefineConstants>RGEN</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +28,9 @@
     </ItemGroup>
     
     <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCRuntime\Stret.cs">
+          <Link>external\ObjCRuntime\Stret.cs</Link>
+        </Compile>
         <Compile Include="..\..\common\Configuration.cs" >
             <Link>external\Configuration.cs</Link>
         </Compile>

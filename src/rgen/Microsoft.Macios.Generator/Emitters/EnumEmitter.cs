@@ -12,12 +12,12 @@ namespace Microsoft.Macios.Generator.Emitters;
 
 class EnumEmitter : ICodeEmitter {
 
-	public string GetSymbolName (in CodeChanges codeChanges) => $"{codeChanges.Name}Extensions";
+	public string GetSymbolName (in Binding binding) => $"{binding.Name}Extensions";
 	public IEnumerable<string> UsingStatements => ["Foundation", "ObjCRuntime", "System"];
 
-	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in CodeChanges codeChanges, int index)
+	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in Binding binding, int index)
 	{
-		var enumField = codeChanges.EnumMembers [index];
+		var enumField = binding.EnumMembers [index];
 		if (enumField.FieldInfo is null)
 			return;
 
@@ -33,36 +33,36 @@ class EnumEmitter : ICodeEmitter {
 		}
 	}
 
-	bool TryEmit (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
+	bool TryEmit (TabbedStringBuilder classBlock, in Binding binding)
 	{
 		// keep track of the field symbols, they have to be unique, if we find a duplicate we return false and
 		// abort the code generation
 		var backingFields = new HashSet<string> ();
-		for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
-			if (codeChanges.EnumMembers [index].FieldInfo is null)
+		for (var index = 0; index < binding.EnumMembers.Length; index++) {
+			if (binding.EnumMembers [index].FieldInfo is null)
 				continue;
-			if (!backingFields.Add (codeChanges.EnumMembers [index].FieldInfo!.Value.FieldData.SymbolName)) {
+			if (!backingFields.Add (binding.EnumMembers [index].FieldInfo!.Value.FieldData.SymbolName)) {
 				return false;
 			}
 			classBlock.AppendLine ();
-			EmitEnumFieldAtIndex (classBlock, codeChanges, index);
+			EmitEnumFieldAtIndex (classBlock, binding, index);
 		}
 		return true;
 	}
 
-	void EmitExtensionMethods (TabbedStringBuilder classBlock, in CodeChanges codeChanges)
+	void EmitExtensionMethods (TabbedStringBuilder classBlock, in Binding binding)
 	{
-		if (codeChanges.EnumMembers.Length == 0)
+		if (binding.EnumMembers.Length == 0)
 			return;
 
 		// smart enum require 4 diff methods to be able to retrieve the values
 
 		// Get constant
-		using (var getConstantBlock = classBlock.CreateBlock ($"public static NSString? GetConstant (this {codeChanges.Name} self)", true)) {
+		using (var getConstantBlock = classBlock.CreateBlock ($"public static NSString? GetConstant (this {binding.Name} self)", true)) {
 			getConstantBlock.AppendLine ("IntPtr ptr = IntPtr.Zero;");
 			using (var switchBlock = getConstantBlock.CreateBlock ("switch ((int) self)", true)) {
-				for (var index = 0; index < codeChanges.EnumMembers.Length; index++) {
-					var enumMember = codeChanges.EnumMembers [index];
+				for (var index = 0; index < binding.EnumMembers.Length; index++) {
+					var enumMember = binding.EnumMembers [index];
 					if (enumMember.FieldInfo is null)
 						continue;
 					var (fieldData, _, _) = enumMember.FieldInfo.Value;
@@ -77,15 +77,15 @@ class EnumEmitter : ICodeEmitter {
 
 		classBlock.AppendLine ();
 		// Get value
-		using (var getValueBlock = classBlock.CreateBlock ($"public static {codeChanges.Name} GetValue (NSString constant)", true)) {
+		using (var getValueBlock = classBlock.CreateBlock ($"public static {binding.Name} GetValue (NSString constant)", true)) {
 			getValueBlock.AppendLine ("if (constant is null)");
 			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
-			foreach (var enumMember in codeChanges.EnumMembers) {
+			foreach (var enumMember in binding.EnumMembers) {
 				if (enumMember.FieldInfo is null)
 					continue;
 				var (fieldData, _, _) = enumMember.FieldInfo.Value;
 				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
-				getValueBlock.AppendLine ($"\treturn {codeChanges.Name}.{enumMember.Name};");
+				getValueBlock.AppendLine ($"\treturn {binding.Name}.{enumMember.Name};");
 			}
 
 			getValueBlock.AppendLine (
@@ -95,7 +95,7 @@ class EnumEmitter : ICodeEmitter {
 		classBlock.AppendLine ();
 		// To ConstantArray
 		classBlock.AppendRaw (
-@$"internal static NSString?[]? ToConstantArray (this {codeChanges.Name}[]? values)
+@$"internal static NSString?[]? ToConstantArray (this {binding.Name}[]? values)
 {{
 	if (values is null)
 		return null;
@@ -110,11 +110,11 @@ class EnumEmitter : ICodeEmitter {
 		classBlock.AppendLine ();
 		// ToEnumArray
 		classBlock.AppendRaw (
-@$"internal static {codeChanges.Name}[]? ToEnumArray (this NSString[]? values)
+@$"internal static {binding.Name}[]? ToEnumArray (this NSString[]? values)
 {{
 	if (values is null)
 		return null;
-	var rv = new global::System.Collections.Generic.List<{codeChanges.Name}> ();
+	var rv = new global::System.Collections.Generic.List<{binding.Name}> ();
 	for (var i = 0; i < values.Length; i++) {{
 		var value = values [i];
 		rv.Add (GetValue (value));

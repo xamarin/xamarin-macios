@@ -23,7 +23,7 @@ static partial class BindingSyntaxFactory {
 	}
 
 	static CompilationUnitSyntax StaticInvocationExpression (string staticClassName, string methodName,
-		SyntaxNodeOrToken [] argumentList)
+		SyntaxNodeOrToken [] argumentList, bool suppressNullableWarning = false)
 	{
 		var invocation = InvocationExpression (
 			MemberAccessExpression (
@@ -36,7 +36,10 @@ static partial class BindingSyntaxFactory {
 		var compilationUnit = CompilationUnit ().WithMembers (
 			SingletonList<MemberDeclarationSyntax> (
 				GlobalStatement (
-					ExpressionStatement (invocation))));
+					ExpressionStatement (
+						suppressNullableWarning
+							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
+							: invocation))));
 		return compilationUnit;
 	}
 
@@ -93,7 +96,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>The variable declaration syntax.</returns>
 	public static CompilationUnitSyntax FieldPropertyBackingVariable (in Property property)
 	{
-		var variableType = property.ReturnType.Name;
+		var variableType = property.ReturnType.FullyQualifiedName;
 		if (property.ReturnType.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
 			&& property.ReturnType.MetadataName is not null) {
 			variableType = property.ReturnType.MetadataName;
