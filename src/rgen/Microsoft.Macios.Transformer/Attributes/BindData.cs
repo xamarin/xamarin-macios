@@ -24,7 +24,6 @@ readonly struct BindData : IEquatable<BindData> {
 		var count = attributeData.ConstructorArguments.Length;
 		string selector;
 		bool @virtual = false;
-		// custom marshal directive values
 
 		switch (count) {
 		case 1:
