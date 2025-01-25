@@ -38,6 +38,34 @@ public class PropertyTests : BaseGeneratorTestClass {
 	}
 
 	[Fact]
+	public void IsThreadSafeProperty ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+		};
+		Assert.True (property.IsThreadSafe);
+
+		property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.Default)
+		};
+		Assert.False (property.IsThreadSafe);
+	}
+
+	[Fact]
 	public void CompareDiffName ()
 	{
 		var x = new Property (
