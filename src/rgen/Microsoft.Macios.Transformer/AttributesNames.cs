@@ -47,6 +47,7 @@ static class AttributesNames {
 	[BindingFlag] 
 	public const string CheckDisposedAttribute = "CheckDisposedAttribute";
 	public const string CoreImageFilterAttribute = "CoreImageFilterAttribute";
+	public const string CoreImageFilterPropertyAttribute = "CoreImageFilterPropertyAttribute";
 	public const string DefaultCtorVisibilityAttribute = "DefaultCtorVisibilityAttribute";
 
 	[BindingFlag (AttributeTargets.Field)] public const string DefaultEnumValueAttribute = "DefaultEnumValueAttribute";
