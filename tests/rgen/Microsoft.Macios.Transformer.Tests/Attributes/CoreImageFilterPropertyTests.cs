@@ -11,55 +11,32 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class BindDataTests : BaseTransformerTestClass {
-
+public class CoreImageFilterPropertyTests : BaseTransformerTestClass {
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			var path = "/some/random/path.cs";
-			var simpleBind = @"
-using System;
+			const string path = "/some/random/path.cs";
+
+			const string coreImageFilterWithProperties = @"
+using CoreImage;
 using Foundation;
 using ObjCRuntime;
-using UIKit;
+using Mono.Cecil;
 
-namespace Test;
+namespace NS;
 
-[NoTV]
-[MacCatalyst (13, 1)]
-[DisableDefaultCtor]
-[Abstract]
-[BaseType (typeof (NSObject))]
-interface UIFeedbackGenerator : UIInteraction {
+[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
+[BaseType (typeof (CIFilter))]
+interface CICompositingFilter : CIAccordionFoldTransitionProtocol { 
 
-	[Bind (""someSelector"")]
-	void Prepare ();
+	[CoreImageFilterProperty (""inputBackgroundImage"")]
+	CIImage BackgroundImage { get; set; }
 }
 ";
-
-			yield return [(Sorunce: simpleBind, Path: path), new BindData ("someSelector")];
-
-			var virtualBind = @"
-using System;
-using Foundation;
-using ObjCRuntime;
-using UIKit;
-
-namespace Test;
-
-[NoTV]
-[MacCatalyst (13, 1)]
-[DisableDefaultCtor]
-[Abstract]
-[BaseType (typeof (NSObject))]
-interface UIFeedbackGenerator : UIInteraction {
-
-	[Bind (""someSelector"", Virtual = true)]
-	void Prepare ();
-}
-";
-
-			yield return [(Sorunce: virtualBind, Path: path), new BindData ("someSelector", true)];
+			yield return [
+				(Source: coreImageFilterWithProperties, Path: path),
+				new CoreImageFilterPropertyData ("inputBackgroundImage")
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -68,7 +45,7 @@ interface UIFeedbackGenerator : UIInteraction {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source,
-		BindData expectedData)
+		CoreImageFilterPropertyData expectedData)
 	{
 		// create a compilation used to create the transformer
 		var compilation = CreateCompilation (platform, sources: source);
@@ -79,14 +56,15 @@ interface UIFeedbackGenerator : UIInteraction {
 		Assert.NotNull (semanticModel);
 
 		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<MethodDeclarationSyntax> ()
+			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
 			.LastOrDefault ();
 		Assert.NotNull (declaration);
 
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
-		var exportData = symbol.GetAttribute<BindData> (
-			AttributesNames.BindAttribute, BindData.TryParse);
+		var exportData =
+			symbol.GetAttribute<CoreImageFilterPropertyData> (AttributesNames.CoreImageFilterPropertyAttribute,
+				CoreImageFilterPropertyData.TryParse);
 		Assert.Equal (expectedData, exportData);
 	}
 }
