@@ -53,7 +53,7 @@ static class CompilationExtensions {
 	{
 		CSharpSyntaxTree? firstTree = (CSharpSyntaxTree?) self.SyntaxTrees.FirstOrDefault ();
 
-		return firstTree is null ? ImmutableArray<string>.Empty : [..firstTree.Options.PreprocessorSymbolNames];
+		return firstTree is null ? ImmutableArray<string>.Empty : [.. firstTree.Options.PreprocessorSymbolNames];
 	}
 
 
@@ -86,7 +86,7 @@ static class CompilationExtensions {
 	{
 		lock (uiNamespaceLock) {
 			if (force || uiNamespacesCache is null) {
-				uiNamespacesCache = new();
+				uiNamespacesCache = new ();
 				// build the hash set based on the current definitions used in the compilation
 				var preprocessorSymbols = self.GetPreprocessorSymbols ();
 				foreach (var ns in uiNamespaces) {

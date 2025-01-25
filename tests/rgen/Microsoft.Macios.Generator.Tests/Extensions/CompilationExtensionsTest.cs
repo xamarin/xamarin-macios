@@ -30,7 +30,7 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
-				ApplePlatform.iOS, 
+				ApplePlatform.iOS,
 				new [] {
 					"UIKit",
 					"Twitter",
@@ -44,46 +44,46 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 					"GameKit",
 					"MapKit"
 				}];
-			
+
 			yield return [
-				ApplePlatform.TVOS, 
+				ApplePlatform.TVOS,
 				new [] {
-					"UIKit", 
-					"PhotosUI", 
-					"GameKit", 
+					"UIKit",
+					"PhotosUI",
+					"GameKit",
 					"MapKit",
 				}];
-			
+
 			yield return [
-				ApplePlatform.MacOSX, 
+				ApplePlatform.MacOSX,
 				new [] {
-					"AppKit", 
+					"AppKit",
 					"QuickLook",
 					"PhotosUI",
 					"GameKit",
 					"MapKit",
 				}];
-			
+
 			yield return [
-				ApplePlatform.MacCatalyst, 
+				ApplePlatform.MacCatalyst,
 				new [] {
-					"AppKit", 
-					"UIKit", 
-					"QuickLook", 
-					"EventKitUI", 
-					"MessageUI", 
-					"PhotosUI", 
-					"HealthKitUI", 
-					"GameKit", 
+					"AppKit",
+					"UIKit",
+					"QuickLook",
+					"EventKitUI",
+					"MessageUI",
+					"PhotosUI",
+					"HealthKitUI",
+					"GameKit",
 					"MapKit",
 				}];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
-	[ClassData (typeof(TestDataGetUINamespaces))]
+	[ClassData (typeof (TestDataGetUINamespaces))]
 	public void GetUINamespacesTests (ApplePlatform platform, string [] expectedNamespaces)
 	{
 		var collectionComparer = new CollectionComparer<string> (StringComparer.Ordinal);

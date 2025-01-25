@@ -54,7 +54,7 @@ public class BaseGeneratorTestClass {
 				args, null, null);
 			var frameworkDefines = parseResult.ParseOptions.PreprocessorSymbolNames.ToList ();
 			// add the platform ones that are not in this rsp
-			frameworkDefines.AddRange (platformDefines[targetFramework]);
+			frameworkDefines.AddRange (platformDefines [targetFramework]);
 			return frameworkDefines;
 		}
 
