@@ -49,6 +49,16 @@ namespace ObjCBindings {
 		/// </summary>
 		MarshalNativeExceptions = 1 << 4,
 
+
+		/// <summary>
+		/// Instruct the generator to use a custom marshal directive for the method. When this flag is applied the 
+		/// following name parameters must be provided:
+		/// - NativePrefix: The prefix to be used in the native method name.
+		/// - NativeSuffix: The suffix to be used in the native method name.
+		/// - Library: The library to be used in the custom marshal directive.
+		/// </summary>
+		CustomMarshalDirective = 1 << 5,
+
 	}
 
 	/// <summary>
@@ -71,6 +81,37 @@ namespace ObjCBindings {
 		/// Generate a notification for the property.
 		/// </summary>
 		Notification = 1 << 3,
+
+		/// <summary>
+		/// Make a method support native (Objective-C) exceptions. Instead of calling objc_msgSend directly, the invocation 
+		/// will go through a custom trampoline which catches ObjectiveC exceptions and marshals them into managed exceptions.
+		/// </summary>
+		MarshalNativeExceptions = 1 << 4,
+
+		/// <summary>
+		/// Instruct the generator to use a custom marshal directive for the method. When this flag is applied the 
+		/// following name parameters must be provided:
+		/// - NativePrefix: The prefix to be used in the native method name.
+		/// - NativeSuffix: The suffix to be used in the native method name.
+		/// - Library: The library to be used in the custom marshal directive.
+		/// </summary>
+		CustomMarshalDirective = 1 << 5,
+
+		/// <summary>
+		/// Apply to strings parameters that are merely retained or assigned,
+		/// not copied this is an exception as it is advised in the coding
+		/// standard for Objective-C to avoid this, but a few properties do use
+		/// this.  Use this falg for properties flagged with `retain' or
+		/// `assign', which look like this:
+		///
+		/// @property (retain) NSString foo;
+		/// @property (assign) NSString assigned;
+		///
+		/// This forced the generator to create an NSString before calling the
+		/// API instead of using the fast string marshalling code.
+		/// </summary>
+		DisableZeroCopy = 1 << 6,
+
 	}
 }
 

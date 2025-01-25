@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,7 +14,8 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly structure that represents a change in a parameter.
 /// </summary>
-readonly struct Parameter : IEquatable<Parameter> {
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>

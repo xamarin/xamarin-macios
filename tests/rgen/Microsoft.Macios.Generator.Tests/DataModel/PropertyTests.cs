@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -441,6 +442,44 @@ public class TestClass {
 					]
 				) {
 					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string marshallNativeException = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"", Property.MarshalNativeExceptions)]
+	public string Name { get; }
+}
+";
+			yield return [
+				marshallNativeException,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: new (),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.MarshalNativeExceptions"])
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new (selector: "name", ArgumentSemantic.None, ObjCBindings.Property.MarshalNativeExceptions),
 				}
 			];
 

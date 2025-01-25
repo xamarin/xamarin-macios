@@ -24,7 +24,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly CodeChangesEqualityComparer equalityComparer = new ();
+	static readonly BindingEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -45,16 +45,16 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				static (ctx, _) => GetChangesForSourceGen (ctx))
 			.Where (tuple => tuple.BindingAttributeFound);
 
-		var codeChanges = provider
-			.Select (static (tuple, _) => tuple.Changes)
+		var bindings = provider
+			.Select (static (tuple, _) => tuple.Bindings)
 			.WithComparer (equalityComparer);
 
 		// ideally we could do a distinct, because each code change can return the same libs, this makes the library
 		// generation more common than what we would like, but it is the smallest code generation.
 		var libraryProvider = provider
-			.Select ((tuple, _) => (tuple.RootBindingContext, tuple.Changes.LibraryPaths));
+			.Select ((tuple, _) => (tuple.RootBindingContext, tuple.Bindings.LibraryPaths));
 
-		context.RegisterSourceOutput (context.CompilationProvider.Combine (codeChanges.Collect ()),
+		context.RegisterSourceOutput (context.CompilationProvider.Combine (bindings.Collect ()),
 			((ctx, t) => GenerateCode (ctx, t.Right)));
 
 		context.RegisterSourceOutput (context.CompilationProvider.Combine (libraryProvider.Collect ()),
@@ -71,7 +71,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		_ => false,
 	};
 
-	static (RootBindingContext RootBindingContext, CodeChanges Changes, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
+	static (RootBindingContext RootBindingContext, Binding Bindings, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
 		var bindingContext = new RootBindingContext (context.SemanticModel);
 		// we do know that the context node has to be one of the base type declarations
@@ -85,14 +85,14 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			return (bindingContext, default, false);
 		}
 
-		var codeChanges = CodeChanges.FromDeclaration (declarationSyntax, bindingContext);
+		var binding = Binding.FromDeclaration (declarationSyntax, bindingContext);
 		// if code changes are null, return the default value and a false to later ignore the change
-		return codeChanges is not null
-			? (bindingContext, codeChanges.Value, isBindingType)
+		return binding is not null
+			? (bindingContext, binding.Value, isBindingType)
 			: (bindingContext, default, false);
 	}
 
-	static void GenerateCode (SourceProductionContext context, in ImmutableArray<CodeChanges> changesList)
+	static void GenerateCode (SourceProductionContext context, in ImmutableArray<Binding> bindingsList)
 	{
 		// The process is as follows, get all the changes we have received from the incremental generator,
 		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
@@ -101,20 +101,20 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var sb = new TabbedStringBuilder (new ());
-		foreach (var change in changesList) {
+		foreach (var binding in bindingsList) {
 			// init sb and add the header
 			sb.Clear ();
 			sb.WriteHeader ();
-			if (EmitterFactory.TryCreate (change, out var emitter)) {
+			if (EmitterFactory.TryCreate (binding, out var emitter)) {
 				// write the using statements
-				CollectUsingStatements (change, sb, emitter);
+				CollectUsingStatements (binding, sb, emitter);
 
-				var bindingContext = new BindingContext (sb, change);
+				var bindingContext = new BindingContext (sb, binding);
 				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToString ();
-					var namespacePath = Path.Combine (change.Namespace.ToArray ());
-					var fileName = emitter.GetSymbolName (change);
+					var namespacePath = Path.Combine (binding.Namespace.ToArray ());
+					var fileName = emitter.GetSymbolName (binding);
 					context.AddSource ($"{Path.Combine (namespacePath, fileName)}.g.cs",
 						SourceText.From (code, Encoding.UTF8));
 				} else {
@@ -128,7 +128,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 					Diagnostics
 						.RBI0000, // An unexpected error ocurred while processing '{0}'. Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 					null,
-					change.FullyQualifiedSymbol));
+					binding.FullyQualifiedSymbol));
 			}
 		}
 	}
@@ -175,14 +175,14 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// that will be used to generate the code. This way we ensure that we have all the namespaces needed by the
 	/// generated code.
 	/// </summary>
-	/// <param name="codeChanges">The code changes for a given named type.</param>
+	/// <param name="binding">The code changes for a given named type.</param>
 	/// <param name="sb">String builder that will be used for the generated code.</param>
 	/// <param name="emitter">The emitter that will generate the code. Provides any extra needed namespace.</param>
-	static void CollectUsingStatements (in CodeChanges codeChanges, TabbedStringBuilder sb, ICodeEmitter emitter)
+	static void CollectUsingStatements (in Binding binding, TabbedStringBuilder sb, ICodeEmitter emitter)
 	{
 		// collect all using from the syntax tree, add them to a hash to make sure that we don't have duplicates
 		// and add those usings that we do know we need for bindings.
-		var usingDirectivesToKeep = new SortedSet<string> (codeChanges.UsingDirectives) {
+		var usingDirectivesToKeep = new SortedSet<string> (binding.UsingDirectives) {
 			// add the using statements that we know we need and print them to the sb
 		};
 

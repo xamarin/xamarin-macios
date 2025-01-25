@@ -20,8 +20,8 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class ClassCodeChangesTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer comparer = new ();
+public class ClassBindingTests : BaseGeneratorTestClass {
+	readonly BindingEqualityComparer comparer = new ();
 
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -45,7 +45,7 @@ public partial class MyClass {
 
 			yield return [
 				emptyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -79,7 +79,7 @@ public partial class MyClass : NSObject {
 
 			yield return [
 				emptyClassWithBase,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -115,7 +115,7 @@ public partial class MyClass : NSObject, IMyInterface {
 
 			yield return [
 				emptyClassWithBaseWithInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -149,7 +149,7 @@ internal partial class MyClass {
 
 			yield return [
 				internalClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -187,7 +187,7 @@ public partial class MyClass {
 
 			yield return [
 				emptyClassAvailability,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -225,7 +225,7 @@ public partial class MyClass {
 
 			yield return [
 				singleConstructorClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -275,7 +275,7 @@ public partial class MyClass {
 
 			yield return [
 				multiConstructorClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -335,7 +335,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -406,7 +406,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertySmartEnumClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -476,7 +476,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertyEnumClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -542,7 +542,7 @@ public partial class MyClass {
 
 			yield return [
 				notificationPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -611,7 +611,7 @@ public partial class MyClass {
 
 			yield return [
 				fieldPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -683,7 +683,7 @@ public partial class MyClass {
 
 			yield return [
 				multiPropertyClassMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -735,6 +735,78 @@ public partial class MyClass {
 				}
 			];
 
+			const string customMarshallingProperty = @"
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"", Flags = Property.CustomMarshalDirective, NativePrefix = ""xamarin_"", Library = ""__Internal"")]
+	public partial string Name { get; set; } = string.Empty;
+}
+";
+
+			yield return [
+				customMarshallingProperty,
+				new Binding (
+					bindingInfo: new (new BindingTypeData<Class> ()),
+					name: "MyClass",
+					@namespace: ["NS"],
+					fullyQualifiedSymbol: "NS.MyClass",
+					symbolAvailability: new ()
+				) {
+					Base = "object",
+					Interfaces = ImmutableArray<string>.Empty,
+					Attributes = [
+						new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+					],
+					UsingDirectives = new HashSet<string> { "ObjCBindings" },
+					Modifiers = [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "Name",
+							returnType: ReturnTypeForString (),
+							symbolAvailability: new (),
+							attributes: [
+								new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.CustomMarshalDirective", "xamarin_", "__Internal"])
+							],
+							modifiers: [
+								SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+								SyntaxFactory.Token (SyntaxKind.PartialKeyword),
+							],
+							accessors: [
+								new (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+								new (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: new (),
+									exportPropertyData: null,
+									attributes: [],
+									modifiers: []
+								),
+							]
+						) {
+							ExportPropertyData = new (
+								selector: "name",
+								argumentSemantic: ArgumentSemantic.None,
+								flags: Property.Default | Property.CustomMarshalDirective) {
+								NativePrefix = "xamarin_",
+								Library = "__Internal"
+							}
+						}
+					]
+				}
+			];
+
 			const string multiPropertyClass = @"
 using ObjCBindings;
 
@@ -752,7 +824,7 @@ public partial class MyClass {
 
 			yield return [
 				multiPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -848,7 +920,7 @@ public partial class MyClass {
 
 			yield return [
 				singleMethodClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -903,7 +975,7 @@ public partial class MyClass {
 
 			yield return [
 				multiMethodClassMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -959,7 +1031,7 @@ public partial class MyClass {
 ";
 			yield return [
 				multiMethodClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1030,7 +1102,7 @@ public partial class MyClass {
 
 			yield return [
 				singleEventClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1093,7 +1165,7 @@ public partial class MyClass {
 
 			yield return [
 				multiEventClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1171,7 +1243,7 @@ public partial class MyClass {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataCodeChangesFromClassDeclaration>]
-	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
+	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, Binding expected)
 	{
 		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
@@ -1182,7 +1254,7 @@ public partial class MyClass {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var changes = CodeChanges.FromDeclaration (node, semanticModel);
+		var changes = Binding.FromDeclaration (node, semanticModel);
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes.Value, comparer);
 	}
@@ -1190,7 +1262,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsStaticPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1199,7 +1271,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsStatic);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1217,7 +1289,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsPartialPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1226,7 +1298,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsPartial);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1244,7 +1316,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsAbstractPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1253,7 +1325,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsAbstract);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
