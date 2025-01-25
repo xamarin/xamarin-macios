@@ -408,18 +408,22 @@ static partial class TypeSymbolExtensions {
 	/// </summary>
 	/// <param name="symbol">The symbol whose inheritance we want to retrieve.</param>
 	/// <param name="isNativeObject">If the type implements the INativeObject interface.</param>
+	/// <param name="isDictionaryContainer">If the type inherits from Foundation.DictionaryContainer.</param>
 	/// <param name="parents">An immutable array of the parents in order from closest to furthest.</param>
 	/// <param name="interfaces">All implemented interfaces by the type and its parents.</param>
 	/// <param name="isNSObject">If the type inherits from NSObject.</param>
 	public static void GetInheritance (
-		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out ImmutableArray<string> parents,
+		this ITypeSymbol symbol, out bool isNSObject, out bool isNativeObject, out bool isDictionaryContainer,
+		out ImmutableArray<string> parents,
 		out ImmutableArray<string> interfaces)
 	{
 		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
 		const string nsObjectClass = "Foundation.NSObject";
+		const string dictionaryContainerClass = "Foundation.DictionaryContainer";
 
 		isNSObject = false;
 		isNativeObject = false;
+		isDictionaryContainer = false;
 
 		// parents will be returned directly in a Immutable array via a builder since the order is important
 		// interfaces will use a hash set because we do not want duplicates.
@@ -432,6 +436,7 @@ static partial class TypeSymbolExtensions {
 			// check if we reach the NSObject as a parent
 			var parentName = currentType.ToDisplayString ().Trim ();
 			isNSObject |= parentName == nsObjectClass;
+			isDictionaryContainer |= parentName == dictionaryContainerClass;
 			parentsBuilder.Add (parentName);
 
 			// union with the current interfaces
