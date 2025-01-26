@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 #pragma warning disable format
+using Microsoft.Macios.Transformer.Attributes;
 using Microsoft.Macios.Transformer.Generator;
 
 namespace Microsoft.Macios.Transformer;
@@ -33,8 +34,10 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string AutoreleaseAttribute = "AutoreleaseAttribute";
 
+	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.Enum)]
 	public const string BackingFieldTypeAttribute = "BackingFieldTypeAttribute";
 	public const string BaseTypeAttribute = "BaseTypeAttribute";
+	[BindingAttribute(typeof(BindData), AttributeTargets.Method )]
 	public const string BindAttribute = "BindAttribute";
 
 	/// <summary>
@@ -46,8 +49,13 @@ static class AttributesNames {
 
 	[BindingFlag] 
 	public const string CheckDisposedAttribute = "CheckDisposedAttribute";
+	
+	[BindingAttribute(typeof(CoreImageFilterData), AttributeTargets.Interface)]
 	public const string CoreImageFilterAttribute = "CoreImageFilterAttribute";
+	
+	[BindingAttribute(typeof(CoreImageFilterPropertyData), AttributeTargets.Property)]
 	public const string CoreImageFilterPropertyAttribute = "CoreImageFilterPropertyAttribute";
+	
 	[BindingFlag (AttributeTargets.Interface)]
 	public const string DefaultCtorVisibilityAttribute = "DefaultCtorVisibilityAttribute";
 
@@ -77,13 +85,21 @@ static class AttributesNames {
 
 	public const string DisposeAttribute = "DisposeAttribute";
 	public const string EditorBrowsableAttribute = "System.ComponentModel.EditorBrowsableAttribute";
+	
+	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Enum)]
 	public const string ErrorDomainAttribute = "ErrorDomainAttribute";
+	
 	public const string ExperimentalAttribute = "System.Diagnostics.CodeAnalysis.ExperimentalAttribute";
+	
+	[BindingAttribute(typeof(ExportData), AttributeTargets.Method | AttributeTargets.Property)]
 	public const string ExportAttribute = "Foundation.ExportAttribute";
 
 	[BindingFlag] 
 	public const string FactoryAttribute = "FactoryAttribute";
+	
+	[BindingAttribute(typeof(FieldData), AttributeTargets.Field | AttributeTargets.Property)]
 	public const string FieldAttribute = "Foundation.FieldAttribute";
+	
 	[BindingFlag (AttributeTargets.Enum)]
 	public const string FlagsAttribute = "System.FlagsAttribute";
 
