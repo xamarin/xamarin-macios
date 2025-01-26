@@ -145,7 +145,9 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string ModelAttribute = "Foundation.ModelAttribute";
+	[BindingAttribute(typeof(NativeData), AttributeTargets.Enum)]
 	public const string NativeAttribute = "ObjCRuntime.NativeAttribute";
+	[BindingAttribute(typeof(NativeData), AttributeTargets.Enum | AttributeTargets.Struct)]
 	public const string NativeNameAttribute = "ObjCRuntime.NativeNameAttribute";
 
 	/// <summary>
