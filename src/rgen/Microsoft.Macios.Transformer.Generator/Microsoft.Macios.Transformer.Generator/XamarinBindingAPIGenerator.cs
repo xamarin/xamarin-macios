@@ -107,8 +107,8 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 			modelBlock.AppendLine ();
 			modelBlock.AppendLine ("readonly Dictionary<string, List<AttributeData>>? _attributesDictionary = null;");
 			using (var dictionaryPropertyBlock =
-			       modelBlock.CreateBlock ("public Dictionary<string, List<AttributeData>>? AttributesDictionary",
-				       block: true)) {
+				   modelBlock.CreateBlock ("public Dictionary<string, List<AttributeData>>? AttributesDictionary",
+					   block: true)) {
 				dictionaryPropertyBlock.AppendLine ("get => _attributesDictionary;");
 				using (var initBlock = dictionaryPropertyBlock.CreateBlock ("private init", block: true)) {
 					initBlock.AppendLine ("_attributesDictionary = value;");
@@ -138,7 +138,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 		// loop over attrs, if we find the BindingFlagAttribute, return the target
 		foreach (var attr in attrData) {
 			if (attr.AttributeClass?.Name == BindingFlagData.Name
-			    && BindingFlagData.TryParse (attr, out var data)) {
+				&& BindingFlagData.TryParse (attr, out var data)) {
 				return data.Value.Target;
 			}
 		}
@@ -152,7 +152,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 		// loop over attrs, if we find the BindingFlagAttribute, return the target
 		foreach (var attr in attrData) {
 			if (attr.AttributeClass?.Name == BindingAttributeData.Name
-			    && BindingAttributeData.TryParse (attr, out var data)) {
+				&& BindingAttributeData.TryParse (attr, out var data)) {
 				return data;
 			}
 		}
@@ -184,7 +184,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 		}
 
 		// all flags are collected, generate the code
-		var sb = new TabbedStringBuilder (new());
+		var sb = new TabbedStringBuilder (new ());
 		GenerateDictionaryExtension (sb, flags, dataAttributes);
 
 		// Add the source code to the compilation.
@@ -224,8 +224,8 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 			// loop over the flags and generate a helper static method to retrieve it from a attribute data dict
 			foreach (var (methodName, attributeName) in flags) {
 				using (var methodBlock = classBlock.CreateBlock (
-					       $"public static bool {methodName} (this Dictionary<string, List<AttributeData>> self)",
-					       block: true)) {
+						   $"public static bool {methodName} (this Dictionary<string, List<AttributeData>> self)",
+						   block: true)) {
 					methodBlock.AppendLine ($"return self.ContainsKey ({attributeName.AttributeFullName});");
 				}
 
@@ -236,16 +236,16 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 			foreach (var (methodName, attributeInfo) in dataAttributes) {
 				// property to check if the attribute is present
 				using (var methodBlock = classBlock.CreateBlock (
-					       $"public static bool {methodName} (this Dictionary<string, List<AttributeData>> self)",
-					       block: true)) {
+						   $"public static bool {methodName} (this Dictionary<string, List<AttributeData>> self)",
+						   block: true)) {
 					methodBlock.AppendLine ($"return self.ContainsKey ({attributeInfo.AttributeFullName});");
 				}
 
 				classBlock.AppendLine ();
 				// property to access the attribute
 				using (var methodBlock = classBlock.CreateBlock (
-					       $"public static {attributeInfo.Data.DataModelType}? Get{attributeInfo.AttributeName} (this Dictionary<string, List<AttributeData>> self)",
-					       block: true)) {
+						   $"public static {attributeInfo.Data.DataModelType}? Get{attributeInfo.AttributeName} (this Dictionary<string, List<AttributeData>> self)",
+						   block: true)) {
 					methodBlock.AppendRaw (
 $@"if (self.{methodName} ()) {{
 	var data = self.GetAttribute<{attributeInfo.Data.DataModelType}> ({attributeInfo.AttributeFullName}, {attributeInfo.Data.DataModelType}.TryParse);
