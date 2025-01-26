@@ -68,15 +68,16 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 	}
 
 	static string [] GetFlagsForTarget (Dictionary<string, (string AttributeFullName, AttributeTargets Targets)> flags,
-		AttributeTargets targets)
-		=> flags.Where (kv => kv.Value.Targets.HasFlag (targets))
+		AttributeTargets[] targets)
+		=> flags.Where (kv => targets.Any (t => kv.Value.Targets.HasFlag (t)))
 			.Select (kv => kv.Key)
 			.ToArray ();
 
-	static (string AttributeFullName, string AttributeName, BindingAttributeData Data)[] GetAttributesForTarget (
+	static (string AttributeFullName, string AttributeName, BindingAttributeData Data) [] GetAttributesForTarget (
 		Dictionary<string, (string AttributeFullName, string AttributeName, BindingAttributeData Data)> dataAttribute,
-		AttributeTargets targets)
-		=> dataAttribute.Where (kv => kv.Value.Data.Target.HasFlag (targets))
+		AttributeTargets [] targets)
+		// return all the attributes that have at least one of the targets
+		=> dataAttribute.Where (kv => targets.Any (t => kv.Value.Data.Target.HasFlag (t)))
 			.Select (kv => kv.Value)
 			.ToArray ();
 	
@@ -167,7 +168,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 	static void GenerateModelExtension (TabbedStringBuilder sb, string dataModel,
 		Dictionary<string, (string AttributeFullName, AttributeTargets Targets)> flags, 
 		Dictionary<string, (string AttributeFullName, string AttributeName, BindingAttributeData Data)> attributes, 
-		AttributeTargets targets,
+		AttributeTargets[] targets,
 		SourceProductionContext context)
 	{
 		var methodFlags = GetFlagsForTarget (flags, targets);
@@ -238,13 +239,13 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 
 #pragma warning disable format
 		// generate the extra methods for the data model, group the fields by the model type based on the target
-		var models = new (string Model, AttributeTargets Target) [] {
-			("EnumMember", AttributeTargets.Field), 
-			("Parameter", AttributeTargets.Parameter),
-			("Property", AttributeTargets.Property),
-			("Method", AttributeTargets.Method),
-			("Binding", AttributeTargets.Interface),
-			("TypeInfo", AttributeTargets.Parameter)
+		var models = new (string Model, AttributeTargets[] Targets) [] {
+			("EnumMember", [AttributeTargets.Field]), 
+			("Parameter", [AttributeTargets.Parameter]),
+			("Property", [AttributeTargets.Property]),
+			("Method", [AttributeTargets.Method]),
+			("Binding", [AttributeTargets.Interface, AttributeTargets.Class, AttributeTargets.Enum, AttributeTargets.Struct]),
+			("TypeInfo", [AttributeTargets.Parameter])
 		};
 #pragma warning restore format 
 		
