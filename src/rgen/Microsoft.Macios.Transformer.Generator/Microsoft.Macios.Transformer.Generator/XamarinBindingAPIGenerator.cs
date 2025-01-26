@@ -40,7 +40,7 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 		context.RegisterPostInitializationOutput (ctx => ctx.AddSource (
 			"BindingFlagAttribute.g.cs",
 			SourceText.From (BindingFlagData.Source, Encoding.UTF8)));
-		
+
 		context.RegisterPostInitializationOutput (ctx => ctx.AddSource (
 			"BindingAttributeAttribute.g.cs",
 			SourceText.From (BindingAttributeData.Source, Encoding.UTF8)));
@@ -90,10 +90,10 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 		sb.AppendLine ($"readonly bool _{flagName} = false;");
 		using (var flagPropertyBlock = sb.CreateBlock ($"public bool {flagName}", block: true)) {
 			flagPropertyBlock.AppendLine ($"get => _{flagName};");
-			flagPropertyBlock.AppendLine ($"private init => _{flagName} = value;");	
+			flagPropertyBlock.AppendLine ($"private init => _{flagName} = value;");
 		}
 	}
-	
+
 	static void WriteDataModelExtension (TabbedStringBuilder sb, string dataModel, string [] flags)
 	{
 		sb.Clear ();
@@ -113,7 +113,7 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 				modelBlock.AppendLine ();
 				WriteFlagProperty (modelBlock, flag);
 			}
-			
+
 			// property to store the dictionary
 			modelBlock.AppendLine ();
 			modelBlock.AppendLine ("readonly Dictionary<string, List<AttributeData>>? _attributesDictionary = null;");
@@ -121,7 +121,7 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 				dictionaryPropertyBlock.AppendLine ("get => _attributesDictionary;");
 				using (var initBlock = dictionaryPropertyBlock.CreateBlock ("private init", block: true)) {
 					initBlock.AppendLine ("_attributesDictionary = value;");
-					using (var ifBlock = initBlock.CreateBlock ("if (_attributesDictionary != null)", block: true)) {
+					using (var ifBlock = initBlock.CreateBlock ("if (_attributesDictionary is not null)", block: true)) {
 						foreach (var flag in flags) {
 							ifBlock.AppendLine ($"_{flag} = _attributesDictionary.{flag} ();");
 						}
@@ -146,8 +146,8 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 		var attrData = symbol.GetAttributes ();
 		// loop over attrs, if we find the BindingFlagAttribute, return the target
 		foreach (var attr in attrData) {
-			if (attr.AttributeClass?.Name == BindingFlagAttributeName 
-			    && BindingFlagData.TryParse (attr, out var data)) {
+			if (attr.AttributeClass?.Name == BindingFlagAttributeName
+				&& BindingFlagData.TryParse (attr, out var data)) {
 				return data.Value.Target;
 			}
 		}

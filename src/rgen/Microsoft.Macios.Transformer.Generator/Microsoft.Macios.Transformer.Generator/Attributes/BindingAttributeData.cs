@@ -23,21 +23,21 @@ public class BindingAttributeAttribute(Type dataModelType, AttributeTargets targ
 	public BindingAttributeAttribute (Type dataModelType) : this (dataModelType, AttributeTargets.All) { }
 }
 ";
-	
+
 	public string DataModelType { get; } // is a type in the attribute, but we do not care for the transformation
 	public AttributeTargets Target { get; }
-	
+
 	public BindingAttributeData (string dataModelType)
 	{
 		DataModelType = dataModelType;
 	}
-	
+
 	public BindingAttributeData (string dataModelType, AttributeTargets targets)
 	{
 		DataModelType = dataModelType;
 		Target = targets;
 	}
-	
+
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out BindingAttributeData? data)
 	{
