@@ -8,9 +8,9 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Custom code changes comparer used for the Roslyn code generation to invalidate caching.
 /// </summary>
-class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
+class BindingEqualityComparer : EqualityComparer<Binding> {
 	/// <inheritdoc />
-	public override bool Equals (CodeChanges x, CodeChanges y)
+	public override bool Equals (Binding x, Binding y)
 	{
 
 		// order does not matter in the using directives, use a comparer that sorts them
@@ -82,7 +82,7 @@ class CodeChangesEqualityComparer : EqualityComparer<CodeChanges> {
 	}
 
 	/// <inheritdoc />
-	public override int GetHashCode (CodeChanges obj)
+	public override int GetHashCode (Binding obj)
 	{
 		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.EnumMembers);
 	}

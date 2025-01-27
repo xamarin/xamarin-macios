@@ -16,7 +16,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// generated code.
 /// </summary>
 [StructLayout (LayoutKind.Auto)]
-readonly partial struct CodeChanges {
+readonly partial struct Binding {
 
 	readonly string name = string.Empty;
 	/// <summary>

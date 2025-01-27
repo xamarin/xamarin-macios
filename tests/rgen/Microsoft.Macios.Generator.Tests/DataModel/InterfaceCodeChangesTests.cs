@@ -3,6 +3,7 @@
 #pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,7 +20,51 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class InterfaceCodeChangesTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer comparer = new ();
+	readonly BindingEqualityComparer comparer = new ();
+
+	[Fact]
+	public void IsThreadSafe ()
+	{
+		var binding = new Binding (
+			bindingInfo: new (new BindingTypeData<Protocol> (Protocol.IsThreadSafe)),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new ()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.True (binding.IsThreadSafe);
+
+		binding = new Binding (
+			bindingInfo: new (new BindingTypeData<Protocol> ()),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new ()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.False (binding.IsThreadSafe);
+	}
 
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -38,7 +83,7 @@ public partial interface IProtocol {
 
 			yield return [
 				emptyInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -70,7 +115,7 @@ internal partial interface IProtocol {
 
 			yield return [
 				internalInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -102,7 +147,7 @@ public partial interface IProtocol {
 
 			yield return [
 				singlePropertyInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -171,7 +216,7 @@ public partial interface IProtocol {
 
 			yield return [
 				singlePropertySmartEnumInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -239,7 +284,7 @@ public partial interface IProtocol {
 
 			yield return [
 				singlePropertyEnumInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -303,7 +348,7 @@ public partial interface IProtocol {
 
 			yield return [
 				notificationPropertyInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -371,7 +416,7 @@ public partial interface IProtocol {
 
 			yield return [
 				multiPropertyInterfaceMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -435,7 +480,7 @@ public partial interface MyClass {
 
 			yield return [
 				customMarshallingProperty,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -510,7 +555,7 @@ public partial interface IProtocol {
 
 			yield return [
 				multiPropertyInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -604,7 +649,7 @@ public partial interface IProtocol {
 
 			yield return [
 				singleMethodInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -657,7 +702,7 @@ public partial interface IProtocol {
 
 			yield return [
 				multiMethodInterfaceMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -711,7 +756,7 @@ public partial interface IProtocol {
 ";
 			yield return [
 				multiMethodInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -780,7 +825,7 @@ public partial interface IProtocol {
 
 			yield return [
 				singleEventInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -841,7 +886,7 @@ public partial interface IProtocol {
 
 			yield return [
 				multiEventInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Protocol> ()),
 					name: "IProtocol",
 					@namespace: ["NS"],
@@ -917,7 +962,7 @@ public partial interface IProtocol {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataCodeChangesFromClassDeclaration>]
-	void CodeChangesFromInterfaceDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
+	void CodeChangesFromInterfaceDeclaration (ApplePlatform platform, string inputText, Binding expected)
 	{
 		var (compilation, sourceTrees) =
 			CreateCompilation (platform, sources: inputText);
@@ -929,7 +974,7 @@ public partial interface IProtocol {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var changes = CodeChanges.FromDeclaration (node, semanticModel);
+		var changes = Binding.FromDeclaration (node, semanticModel);
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes.Value, comparer);
 	}

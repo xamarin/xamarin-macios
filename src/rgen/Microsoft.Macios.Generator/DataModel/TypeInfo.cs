@@ -3,20 +3,38 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
 /// Readonly structure that represents a change in a method return type.
 /// </summary>
+[StructLayout (LayoutKind.Auto)]
 readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 
+	public static TypeInfo Void = new ("void", SpecialType.System_Void) { Parents = ["System.ValueType", "object"], };
+
+	readonly string fullyQualifiedName = string.Empty;
 	/// <summary>
-	/// Type of the parameter.
+	/// The fully qualified name of the type.
 	/// </summary>
-	public string Name { get; }
+	public string FullyQualifiedName {
+		get => fullyQualifiedName;
+		init {
+			fullyQualifiedName = value;
+			var index = fullyQualifiedName.LastIndexOf ('.');
+			Name = index != -1
+				? fullyQualifiedName.Substring (index + 1)
+				: fullyQualifiedName;
+		}
+	}
+
+	public string Name { get; private init; } = string.Empty;
 
 	/// <summary>
 	/// The metadata name of the type. This is normally the same as name except
@@ -66,6 +84,11 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	public bool IsReferenceType { get; }
 
 	/// <summary>
+	/// Returns if the type is a struct.
+	/// </summary>
+	public bool IsStruct { get; }
+
+	/// <summary>
 	/// Returns if the return type is void.
 	/// </summary>
 	public bool IsVoid => SpecialType == SpecialType.System_Void;
@@ -101,6 +124,13 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		init => isINativeObject = value;
 	}
 
+	readonly bool isDictionaryContainer = false;
+
+	public bool IsDictionaryContainer {
+		get => isDictionaryContainer;
+		init => isDictionaryContainer = value;
+	}
+
 	readonly ImmutableArray<string> parents = [];
 	public ImmutableArray<string> Parents {
 		get => parents;
@@ -116,7 +146,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 
 	internal TypeInfo (string name, SpecialType specialType)
 	{
-		Name = name;
+		FullyQualifiedName = name;
 		SpecialType = specialType;
 	}
 
@@ -126,19 +156,21 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		bool isBlittable = false,
 		bool isSmartEnum = false,
 		bool isArray = false,
-		bool isReferenceType = false) : this (name, specialType)
+		bool isReferenceType = false,
+		bool isStruct = false) : this (name, specialType)
 	{
 		IsNullable = isNullable;
 		IsBlittable = isBlittable;
 		IsSmartEnum = isSmartEnum;
 		IsArray = isArray;
 		IsReferenceType = isReferenceType;
+		IsStruct = isStruct;
 	}
 
 	/// <inheritdoc/>
 	public bool Equals (TypeInfo other)
 	{
-		if (Name != other.Name)
+		if (FullyQualifiedName != other.FullyQualifiedName)
 			return false;
 		if (SpecialType != other.SpecialType)
 			return false;
@@ -153,6 +185,8 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		if (IsArray != other.IsArray)
 			return false;
 		if (IsReferenceType != other.IsReferenceType)
+			return false;
+		if (IsStruct != other.IsStruct)
 			return false;
 		if (IsVoid != other.IsVoid)
 			return false;
@@ -184,7 +218,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Name, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
+		return HashCode.Combine (FullyQualifiedName, IsNullable, IsBlittable, IsSmartEnum, IsArray, IsReferenceType, IsVoid);
 	}
 
 	public static bool operator == (TypeInfo left, TypeInfo right)
@@ -197,11 +231,56 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		return !left.Equals (right);
 	}
 
+	const string NativeHandle = "NativeHandle";
+	const string IntPtr = "IntPtr";
+	const string UIntPtr = "UIntPtr";
+
+	public string? ToMarshallType (ReferenceKind referenceKind)
+	{
+#pragma warning disable format
+		var type = this switch {
+			// special cases based on name
+			{ Name: "nfloat" or "NFloat" } => "nfloat", 
+			{ Name: "nint" or "nuint" } => MetadataName,
+			// special string case
+			{ SpecialType: SpecialType.System_String } => NativeHandle, // use a NSString when we get a string
+
+			// NSObject should use the native handle
+			{ IsNSObject: true } => NativeHandle, 
+			{ IsINativeObject: true } => NativeHandle,
+
+			// structs will use their name
+			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", 
+			{ IsStruct: true } => Name,
+
+			// enums:
+			// IsSmartEnum: We are using a nsstring, so it should be a native handle.
+			// IsNativeEnum: Depends on the enum backing field kind.
+			// GeneralEnum: Depends on the EnumUnderlyingType
+
+			{ IsSmartEnum: true } => NativeHandle, 
+			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => IntPtr, 
+			{ IsNativeEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => UIntPtr, 
+			{ IsEnum: true, EnumUnderlyingType: not null } => EnumUnderlyingType.GetKeyword (),
+
+			// special type that is a keyword (none would be a ref type)
+			{ SpecialType: SpecialType.System_Void } => SpecialType.GetKeyword (),
+
+			// This should not happen in bindings because all of the types should either be native objects
+			// nsobjects, or structs 
+			{ IsReferenceType: false } => Name,
+
+			_ => null,
+		};
+#pragma warning restore format
+		return type;
+	}
+
 	/// <inheritdoc/>
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ("{");
-		sb.Append ($"Name: '{Name}', ");
+		sb.Append ($"Name: '{FullyQualifiedName}', ");
 		sb.Append ($"MetadataName: '{MetadataName}', ");
 		sb.Append ($"SpecialType: '{SpecialType}', ");
 		sb.Append ($"IsNullable: {IsNullable}, ");
@@ -209,8 +288,10 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
 		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"IsReferenceType: {IsReferenceType}, ");
+		sb.Append ($"IsStruct: {IsStruct}, ");
 		sb.Append ($"IsVoid : {IsVoid}, ");
 		sb.Append ($"IsNSObject : {IsNSObject}, ");
+		sb.Append ($"IsDictionaryContainer: {IsDictionaryContainer}, ");
 		sb.Append ($"IsNativeObject: {IsINativeObject}, ");
 		sb.Append ($"IsInterface: {IsInterface}, ");
 		sb.Append ($"IsNativeIntegerType: {IsNativeIntegerType}, ");

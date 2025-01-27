@@ -39,7 +39,7 @@ static class ParameterFormatter {
 	{
 		if (parameter.Type.IsArray) {
 			// could be a params array or simply an array
-			var arrayType = ArrayType (IdentifierName (parameter.Type.Name))
+			var arrayType = ArrayType (IdentifierName (parameter.Type.FullyQualifiedName))
 				.WithRankSpecifiers (SingletonList (
 					ArrayRankSpecifier (
 						SingletonSeparatedList<ExpressionSyntax> (OmittedArraySizeExpression ()))));
@@ -50,8 +50,8 @@ static class ParameterFormatter {
 
 		// dealing with a non-array type
 		return parameter.Type.IsNullable
-			? NullableType (IdentifierName (parameter.Type.Name))
-			: IdentifierName (parameter.Type.Name);
+			? NullableType (IdentifierName (parameter.Type.FullyQualifiedName))
+			: IdentifierName (parameter.Type.FullyQualifiedName);
 	}
 
 	public static ParameterSyntax ToDeclaration (this in ParameterDataModel parameter)

@@ -171,11 +171,11 @@ interface UIFeedbackGenerator : UIInteraction {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
-	void TryeCreateTests (ApplePlatform platform, (string Source, string Path) source, BaseTypeData expectedData)
+	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, BaseTypeData expectedData)
 	{
 		// create a compilation used to create the transformer
 		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.FirstOrDefault ();
+		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
 		Assert.NotNull (syntaxTree);
 
 		var semanticModel = compilation.GetSemanticModel (syntaxTree);

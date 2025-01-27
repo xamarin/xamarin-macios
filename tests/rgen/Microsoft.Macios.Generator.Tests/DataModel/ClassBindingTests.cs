@@ -20,8 +20,52 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
-public class ClassCodeChangesTests : BaseGeneratorTestClass {
-	readonly CodeChangesEqualityComparer comparer = new ();
+public class ClassBindingTests : BaseGeneratorTestClass {
+	readonly BindingEqualityComparer comparer = new ();
+
+	[Fact]
+	public void IsThreadSafe ()
+	{
+		var binding = new Binding (
+			bindingInfo: new (new BindingTypeData<Class> (Class.IsThreadSafe)),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new ()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.True (binding.IsThreadSafe);
+
+		binding = new Binding (
+			bindingInfo: new (new BindingTypeData<Class> ()),
+			name: "MyClass",
+			@namespace: ["NS"],
+			fullyQualifiedSymbol: "NS.MyClass",
+			symbolAvailability: new ()
+		) {
+			Base = "object",
+			Interfaces = ImmutableArray<string>.Empty,
+			Attributes = [
+				new ("ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>")
+			],
+			UsingDirectives = new HashSet<string> { "Foundation", "ObjCRuntime", "ObjCBindings" },
+			Modifiers = [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PartialKeyword)
+			]
+		};
+		Assert.False (binding.IsThreadSafe);
+	}
 
 	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -45,7 +89,7 @@ public partial class MyClass {
 
 			yield return [
 				emptyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -79,7 +123,7 @@ public partial class MyClass : NSObject {
 
 			yield return [
 				emptyClassWithBase,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -115,7 +159,7 @@ public partial class MyClass : NSObject, IMyInterface {
 
 			yield return [
 				emptyClassWithBaseWithInterface,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -149,7 +193,7 @@ internal partial class MyClass {
 
 			yield return [
 				internalClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -187,7 +231,7 @@ public partial class MyClass {
 
 			yield return [
 				emptyClassAvailability,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -225,7 +269,7 @@ public partial class MyClass {
 
 			yield return [
 				singleConstructorClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -275,7 +319,7 @@ public partial class MyClass {
 
 			yield return [
 				multiConstructorClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -335,7 +379,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -406,7 +450,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertySmartEnumClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -476,7 +520,7 @@ public partial class MyClass {
 
 			yield return [
 				singlePropertyEnumClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -542,7 +586,7 @@ public partial class MyClass {
 
 			yield return [
 				notificationPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -611,7 +655,7 @@ public partial class MyClass {
 
 			yield return [
 				fieldPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -683,7 +727,7 @@ public partial class MyClass {
 
 			yield return [
 				multiPropertyClassMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -749,7 +793,7 @@ public partial class MyClass {
 
 			yield return [
 				customMarshallingProperty,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -824,7 +868,7 @@ public partial class MyClass {
 
 			yield return [
 				multiPropertyClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -920,7 +964,7 @@ public partial class MyClass {
 
 			yield return [
 				singleMethodClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -975,7 +1019,7 @@ public partial class MyClass {
 
 			yield return [
 				multiMethodClassMissingExport,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1031,7 +1075,7 @@ public partial class MyClass {
 ";
 			yield return [
 				multiMethodClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1102,7 +1146,7 @@ public partial class MyClass {
 
 			yield return [
 				singleEventClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1165,7 +1209,7 @@ public partial class MyClass {
 
 			yield return [
 				multiEventClass,
-				new CodeChanges (
+				new Binding (
 					bindingInfo: new (new BindingTypeData<Class> ()),
 					name: "MyClass",
 					@namespace: ["NS"],
@@ -1243,7 +1287,7 @@ public partial class MyClass {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataCodeChangesFromClassDeclaration>]
-	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, CodeChanges expected)
+	void CodeChangesFromClassDeclaration (ApplePlatform platform, string inputText, Binding expected)
 	{
 		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
@@ -1254,7 +1298,7 @@ public partial class MyClass {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var changes = CodeChanges.FromDeclaration (node, semanticModel);
+		var changes = Binding.FromDeclaration (node, semanticModel);
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes.Value, comparer);
 	}
@@ -1262,7 +1306,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsStaticPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1271,7 +1315,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsStatic);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1289,7 +1333,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsPartialPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1298,7 +1342,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsPartial);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1316,7 +1360,7 @@ public partial class MyClass {
 	[Fact]
 	public void IsAbstractPropertyTest ()
 	{
-		var changes = new CodeChanges (
+		var changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],
@@ -1325,7 +1369,7 @@ public partial class MyClass {
 
 		Assert.False (changes.IsAbstract);
 
-		changes = new CodeChanges (
+		changes = new Binding (
 			bindingInfo: new (new BindingTypeData<Class> ()),
 			name: "name1",
 			@namespace: ["NS"],

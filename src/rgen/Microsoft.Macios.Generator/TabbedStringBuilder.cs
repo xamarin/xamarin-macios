@@ -4,8 +4,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.Macios.Generator.Availability;
-using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator;
 
@@ -124,6 +122,8 @@ partial class TabbedStringBuilder : IDisposable {
 		return this;
 	}
 
+#if NET9_0
+	
 	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
 	{
 		WriteTabs ().Append (handler.ToStringAndClear ());
@@ -135,6 +135,7 @@ partial class TabbedStringBuilder : IDisposable {
 		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
 	}
+	
 
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
@@ -157,6 +158,28 @@ partial class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
+#else
+	/// <summary>
+	/// Append a new raw literal by prepending the correct indentation.
+	/// </summary>
+	/// <param name="rawString">The raw string to append.</param>
+	/// <returns>The current builder.</returns>
+	public TabbedStringBuilder AppendRaw (string rawString)
+	{
+		// we will split the raw string in lines and then append them so that the
+		// tabbing is correct
+		var lines = rawString.Split (['\n'], StringSplitOptions.None);
+		for (var index = 0; index < lines.Length; index++) {
+			var line = lines [index];
+			if (index == lines.Length - 1) {
+				Append (line);
+			} else {
+				AppendLine (line);
+			}
+		}
+		return this;
+	}
+#endif
 
 	/// <summary>
 	/// Append the generated code attribute to the current string builder. Added for convenience.
@@ -171,52 +194,6 @@ partial class TabbedStringBuilder : IDisposable {
 		} else {
 			const string attr = "[BindingImpl (BindingImplOptions.GeneratedCode)]";
 			AppendLine (attr);
-		}
-
-		return this;
-	}
-
-	public TabbedStringBuilder AppendMemberAvailability (in SymbolAvailability allPlatformsAvailability)
-	{
-		foreach (var availability in allPlatformsAvailability.PlatformAvailabilities) {
-			var platformName = availability.Platform.AsString ().ToLower ();
-			if (availability.SupportedVersion is not null) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (availability.SupportedVersion))
-					? string.Empty
-					: availability.SupportedVersion.ToString ();
-				AppendLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
-			}
-
-			// loop over the unsupported versions of the platform 
-			foreach (var (version, message) in availability.UnsupportedVersions) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
-				if (message is null) {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
-				} else {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
-				}
-			}
-
-			// loop over the obsolete versions of the platform 
-			foreach (var (version, obsoleteInfo) in availability.ObsoletedVersions) {
-				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
-
-				switch (obsoleteInfo) {
-				case (null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
-					break;
-				case (not null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
-					break;
-				case (null, not null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
-					break;
-				case (not null, not null):
-					AppendLine (
-						$"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\", Url=\"{obsoleteInfo.Url}\")]");
-					break;
-				}
-			}
 		}
 
 		return this;
