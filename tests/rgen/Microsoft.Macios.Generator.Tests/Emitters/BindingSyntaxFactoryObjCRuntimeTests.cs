@@ -13,7 +13,7 @@ namespace Microsoft.Macios.Generator.Tests.Emitters;
 
 public class BindingSyntaxFactoryObjCRuntimeTests {
 
-	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
+	class TestDataCastToNativeTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 
@@ -51,7 +51,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataCodeChangesFromClassDeclaration))]
+	[ClassData (typeof (TestDataCastToNativeTests))]
 	void CastToNativeTests (Parameter parameter, string? expectedCast)
 	{
 		var expression = CastToNative (parameter);
@@ -61,5 +61,18 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.NotNull (expression);
 			Assert.Equal (expectedCast, expression?.ToString ());
 		}
+	}
+
+	[Fact]
+	void CastToByteTests ()
+	{
+		var boolParameter = new Parameter (0, ReturnTypeForBool (), "myParameter");
+		var conditionalExpr = CastToByte (boolParameter);
+		Assert.NotNull (conditionalExpr);
+		Assert.Equal ("myParameter ? (byte) 1 : (byte) 0", conditionalExpr.ToString ());
+
+		var intParameter = new Parameter (1, ReturnTypeForInt (), "myParameter");
+		conditionalExpr = CastToByte (intParameter);
+		Assert.Null (conditionalExpr);
 	}
 }
