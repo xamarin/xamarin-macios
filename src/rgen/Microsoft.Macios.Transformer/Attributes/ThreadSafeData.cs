@@ -7,11 +7,11 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct ThreadSafeData : IEquatable<ThreadSafeData> {
-	
+
 	public bool Safe { get; } = true;
-	
-	public ThreadSafeData () : this (true) {}
-	
+
+	public ThreadSafeData () : this (true) { }
+
 	public ThreadSafeData (bool safe)
 	{
 		Safe = safe;
@@ -23,7 +23,7 @@ readonly struct ThreadSafeData : IEquatable<ThreadSafeData> {
 		data = null;
 		var count = attributeData.ConstructorArguments.Length;
 		if (count == 0) {
-			data = new();
+			data = new ();
 			return true;
 		}
 		bool safe = true;

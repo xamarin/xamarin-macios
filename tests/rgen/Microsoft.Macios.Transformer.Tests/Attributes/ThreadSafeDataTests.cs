@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class ThreadSafeDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -37,8 +37,8 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			
-			yield return [(Source: threadSageMethod, Path: path), new ThreadSafeData()];
+
+			yield return [(Source: threadSageMethod, Path: path), new ThreadSafeData ()];
 
 			const string notThreadSafeMethod = @"
 using System;
@@ -59,8 +59,8 @@ interface UIFeedbackGenerator : UIInteraction {
 	void Prepare ();
 }
 ";
-			
-			yield return [(Source: notThreadSafeMethod, Path: path), new ThreadSafeData(false)];
+
+			yield return [(Source: notThreadSafeMethod, Path: path), new ThreadSafeData (false)];
 
 		}
 
