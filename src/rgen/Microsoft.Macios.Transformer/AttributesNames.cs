@@ -279,6 +279,11 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string TargetAttribute = "TargetAttribute";
+	
+	/// <summary>
+	/// Flags the object as being thread safe.
+	/// </summary>
+	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.All)]
 	public const string ThreadSafeAttribute = "ThreadSafeAttribute";
 
 	/// <summary>
