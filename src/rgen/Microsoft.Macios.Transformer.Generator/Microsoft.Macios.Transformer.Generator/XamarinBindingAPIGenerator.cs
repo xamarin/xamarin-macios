@@ -68,7 +68,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 	}
 
 	static string [] GetFlagsForTarget (Dictionary<string, (string AttributeFullName, AttributeTargets Targets)> flags,
-		AttributeTargets[] targets)
+		AttributeTargets [] targets)
 		=> flags.Where (kv => targets.Any (t => kv.Value.Targets.HasFlag (t)))
 			.Select (kv => kv.Key)
 			.ToArray ();
@@ -166,9 +166,9 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 	}
 
 	static void GenerateModelExtension (TabbedStringBuilder sb, string dataModel,
-		Dictionary<string, (string AttributeFullName, AttributeTargets Targets)> flags, 
-		Dictionary<string, (string AttributeFullName, string AttributeName, BindingAttributeData Data)> attributes, 
-		AttributeTargets[] targets,
+		Dictionary<string, (string AttributeFullName, AttributeTargets Targets)> flags,
+		Dictionary<string, (string AttributeFullName, string AttributeName, BindingAttributeData Data)> attributes,
+		AttributeTargets [] targets,
 		SourceProductionContext context)
 	{
 		var methodFlags = GetFlagsForTarget (flags, targets);
