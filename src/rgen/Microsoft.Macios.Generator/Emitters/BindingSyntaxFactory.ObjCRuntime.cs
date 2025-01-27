@@ -23,9 +23,9 @@ static partial class BindingSyntaxFactory {
 	/// <summary>
 	/// Returns the expression needed to cast a parameter to its native type.
 	/// </summary>
-	/// <param name="parameter">The parameter whose castin we need to generate. The type info has to be
-	/// and enum and be marked as native. If it is not the method returns null</param>
-	/// <returns></returns>
+	/// <param name="parameter">The parameter whose casting we need to generate. The type info has to be
+	/// and enum and be marked as native. If it is not, the method returns null</param>
+	/// <returns>The cast C# expression.</returns>
 	internal static CastExpressionSyntax? CastToNative (in Parameter parameter)
 	{
 		// not an enum and not a native value. we cannot calculate the casting expression.
@@ -45,6 +45,35 @@ static partial class BindingSyntaxFactory {
 				IdentifierName (parameter.Name)
 					.WithLeadingTrivia (Space))
 				.WithLeadingTrivia (Space)); // (backingfield) (variable) cast
+		return castExpression;
+	}
+
+	/// <summary>
+	/// Returns the expression needed to cast an enum parameter to its primitive type to be used in marshaling.
+	/// </summary>
+	/// <param name="parameter">The parameter whose castin we need to generated. The type info has to be
+	/// an enumerator. If it is not, the method returns null.</param>
+	/// <returns>The cast C# expression.</returns>
+	internal static CastExpressionSyntax? CastToPrimitive (in Parameter parameter)
+	{
+		if (!parameter.Type.IsEnum) {
+			return null;
+		}
+
+		if (parameter.Type.IsNativeEnum) {
+			// return the native casting
+			return CastToNative (parameter);
+		}
+		
+		// returns the enum primitive to be used
+		var marshalType = parameter.Type.ToMarshallType ();
+		if (marshalType is null)
+			return null;
+		
+		// (byte) parameter
+		var castExpression = CastExpression (
+			type: IdentifierName (marshalType), 
+			expression: IdentifierName(parameter.Name).WithLeadingTrivia (Space));
 		return castExpression;
 	}
 
