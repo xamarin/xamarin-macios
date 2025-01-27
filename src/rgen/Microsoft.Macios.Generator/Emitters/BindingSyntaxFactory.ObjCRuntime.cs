@@ -51,7 +51,7 @@ static partial class BindingSyntaxFactory {
 	/// <summary>
 	/// Returns the expression needed to cast an enum parameter to its primitive type to be used in marshaling.
 	/// </summary>
-	/// <param name="parameter">The parameter whose castin we need to generated. The type info has to be
+	/// <param name="parameter">The parameter for which we need to generate the casting. The type info has to be
 	/// an enumerator. If it is not, the method returns null.</param>
 	/// <returns>The cast C# expression.</returns>
 	internal static CastExpressionSyntax? CastToPrimitive (in Parameter parameter)
