@@ -264,6 +264,12 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class)]
 	public const string StaticAttribute = "StaticAttribute";
+	
+	/// <summary>
+	/// When this attribute is applied to an interface, it directs the generator to
+	/// create a strongly typed DictionaryContainer for the specified fields. 
+	/// </summary>
+	[BindingAttribute(typeof(StrongDictionaryData), AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Property)]
 	public const string StrongDictionaryAttribute = "StrongDictionaryAttribute";
 
 	/// <summary>
