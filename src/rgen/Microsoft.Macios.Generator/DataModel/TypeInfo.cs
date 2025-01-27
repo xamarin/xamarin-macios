@@ -235,7 +235,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	const string IntPtr = "IntPtr";
 	const string UIntPtr = "UIntPtr";
 
-	public string? ToMarshallType (ReferenceKind referenceKind)
+	public string? ToMarshallType ()
 	{
 #pragma warning disable format
 		var type = this switch {
