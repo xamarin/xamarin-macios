@@ -28,15 +28,15 @@ static partial class BindingSyntaxFactory {
 	internal static CastExpressionSyntax? CastToNative (in Parameter parameter)
 	{
 		// not an enum and not a native value. we cannot calculate the casting expression.
-		if (!parameter.Type.IsEnum || !parameter.Type.IsNativeEnum) 
+		if (!parameter.Type.IsEnum || !parameter.Type.IsNativeEnum)
 			return null;
-		
+
 		// build a casting expression based on the marshall type of the typeinfo
 		var marshalType = parameter.Type.ToMarshallType ();
-		if (marshalType == null)
+		if (marshalType is null)
 			// cannot calculate the marshal, return null
 			return null;
-		
+
 		var enumBackingValue = parameter.Type.EnumUnderlyingType.Value.GetKeyword ();
 		var castExpression = CastExpression (IdentifierName (marshalType), // (IntPtr/UIntPtr) cast
 			CastExpression (
