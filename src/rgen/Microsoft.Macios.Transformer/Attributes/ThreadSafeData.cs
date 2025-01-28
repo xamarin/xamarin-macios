@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct ThreadSafeData : IEquatable<ThreadSafeData> {
+readonly record struct ThreadSafeData {
 
 	public bool Safe { get; } = true;
 
@@ -40,29 +40,4 @@ readonly struct ThreadSafeData : IEquatable<ThreadSafeData> {
 		return true;
 	}
 
-	public bool Equals (ThreadSafeData other)
-		=> Safe == other.Safe;
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is ThreadSafeData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (Safe);
-
-	public static bool operator == (ThreadSafeData x, ThreadSafeData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (ThreadSafeData x, ThreadSafeData y)
-	{
-		return !(x == y);
-	}
-
-	public override string ToString ()
-		=> $"{{ ThreadSafe: {Safe} }}";
 }

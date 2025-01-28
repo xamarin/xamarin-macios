@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct SnippetData : IEquatable<SnippetData> {
+readonly record struct SnippetData {
 
 	public string Code { get; }
 
@@ -64,34 +64,4 @@ readonly struct SnippetData : IEquatable<SnippetData> {
 		data = new (code, optimizable);
 		return true;
 	}
-
-	public bool Equals (SnippetData other)
-	{
-		if (Code != other.Code)
-			return false;
-		return Optimizable == other.Optimizable;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is SnippetData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (Code, Optimizable);
-
-	public static bool operator == (SnippetData x, SnippetData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (SnippetData x, SnippetData y)
-	{
-		return !(x == y);
-	}
-
-	public override string ToString ()
-		=> $"{{ Code: '{Code}' Optimizable: {Optimizable} }}";
 }

@@ -7,7 +7,7 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct CoreImageFilterData : IEquatable<CoreImageFilterData> {
+readonly record struct CoreImageFilterData {
 
 	public MethodAttributes DefaultCtorVisibility { get; init; }
 
@@ -55,40 +55,5 @@ readonly struct CoreImageFilterData : IEquatable<CoreImageFilterData> {
 			StringCtorVisibility = stringVisibility,
 		};
 		return true;
-	}
-
-	public bool Equals (CoreImageFilterData other)
-	{
-		if (DefaultCtorVisibility != other.DefaultCtorVisibility)
-			return false;
-		if (IntPtrCtorVisibility != other.IntPtrCtorVisibility)
-			return false;
-		return StringCtorVisibility == other.StringCtorVisibility;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is CoreImageFilterData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (DefaultCtorVisibility, IntPtrCtorVisibility, StringCtorVisibility);
-
-	public static bool operator == (CoreImageFilterData x, CoreImageFilterData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (CoreImageFilterData x, CoreImageFilterData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ DefaultCtorVisibility: {DefaultCtorVisibility}, IntPtrCtorVisibility: {IntPtrCtorVisibility}, StringCtorVisibility: {StringCtorVisibility} }}";
 	}
 }
