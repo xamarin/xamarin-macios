@@ -177,8 +177,6 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 				new Parameter (0, ReturnTypeForArray ("NSString", isNullable: true), "myParam"),
 				"using var nsa_myParam = myParam is null ? null : NSArray.FromNSObjects (myParam);",
 				true];
-
-
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -189,6 +187,59 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	void GetNSArrayAuxVariableTests (in Parameter parameter, string? expectedDeclaration, bool withUsing)
 	{
 		var declaration = GetNSArrayAuxVariable (in parameter, withUsing: withUsing);
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
+
+	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			// nsobject type
+			yield return [
+				new Parameter (0, ReturnTypeForNSObject ("MyNSObject"), "myParam"),
+				"var myParam__handle__ = myParam.GetHandle ();",
+				false
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForNSObject ("MyNSObject"), "myParam"),
+				"var myParam__handle__ = myParam!.GetNonNullHandle ( nameof (myParam));",
+				true
+			];
+
+			// interface type
+			yield return [
+				new Parameter (0, ReturnTypeForINativeObject ("MyNativeObject"), "myParam"),
+				"var myParam__handle__ = myParam.GetHandle ();",
+				false
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForINativeObject ("MyNativeObject"), "myParam"),
+				"var myParam__handle__ = myParam!.GetNonNullHandle ( nameof (myParam));",
+				true
+			];
+
+			// value type
+			yield return [
+				new Parameter (0, ReturnTypeForBool (), "myParam"),
+				null!,
+				false
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataCodeChangesFromClassDeclaration))]
+	void GetHandleAuxVariableTests (in Parameter parameter, string? expectedDeclaration, bool withNullAllowed)
+	{
+		var declaration = GetHandleAuxVariable (parameter, withNullAllowed: withNullAllowed);
 		if (expectedDeclaration is null) {
 			Assert.Null (declaration);
 		} else {

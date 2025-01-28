@@ -299,4 +299,28 @@ static class TestDataFactory {
 				"System.Runtime.Serialization.ISerializable",
 			]
 		};
+
+	public static TypeInfo ReturnTypeForNSObject (string nsObjectName, bool isNullable = false)
+		=> new (
+			name: nsObjectName,
+			isNullable: isNullable,
+			isArray: false
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = ["Foundation.NSObject", "object"],
+			Interfaces = ["ObjCRuntime.INativeObject"]
+		};
+
+	public static TypeInfo ReturnTypeForINativeObject (string nativeObjectName, bool isNullable = false)
+		=> new (
+			name: nativeObjectName,
+			isNullable: isNullable,
+			isArray: false
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = ["object"],
+			Interfaces = ["ObjCRuntime.INativeObject"]
+		};
 }
