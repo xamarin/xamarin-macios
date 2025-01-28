@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class StrongDictionaryDataTests : BaseTransformerTestClass {
+public class StrongDictionaryDataTests : AttributeParsingTestClass {
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -43,23 +43,6 @@ interface AVCapturePhotoSettingsThumbnailFormat {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, StrongDictionaryData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<BaseTypeDeclarationSyntax> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var attribute = symbol.GetAttribute<StrongDictionaryData> (AttributesNames.StrongDictionaryAttribute, StrongDictionaryData.TryParse);
-		Assert.Equal (expectedData, attribute);
-	}
+		=> AssertTryCreate<StrongDictionaryData, BaseTypeDeclarationSyntax> (platform, source, AttributesNames.StrongDictionaryAttribute,
+			expectedData, StrongDictionaryData.TryParse, lastOrDefault: true);
 }

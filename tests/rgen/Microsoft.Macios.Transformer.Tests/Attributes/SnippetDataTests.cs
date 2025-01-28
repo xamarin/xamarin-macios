@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class SnippetDataTests : BaseTransformerTestClass {
+public class SnippetDataTests : AttributeParsingTestClass {
 	class TestDataTryCreate : IEnumerable<object []> {
 
 		public IEnumerator<object []> GetEnumerator ()
@@ -40,23 +40,6 @@ interface NSButton { }
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, SnippetData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<BaseTypeDeclarationSyntax> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var attribute = symbol.GetAttribute<SnippetData> (AttributesNames.DisposeAttribute, SnippetData.TryParse);
-		Assert.Equal (expectedData, attribute);
-	}
+		=> AssertTryCreate<SnippetData, BaseTypeDeclarationSyntax> (platform, source, AttributesNames.DisposeAttribute,
+			expectedData, SnippetData.TryParse, lastOrDefault: true);
 }

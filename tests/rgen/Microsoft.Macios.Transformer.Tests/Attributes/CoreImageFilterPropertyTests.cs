@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class CoreImageFilterPropertyTests : BaseTransformerTestClass {
+public class CoreImageFilterPropertyTests : AttributeParsingTestClass {
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -46,25 +46,6 @@ interface CICompositingFilter : CIAccordionFoldTransitionProtocol {
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source,
 		CoreImageFilterPropertyData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
-			.LastOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var exportData =
-			symbol.GetAttribute<CoreImageFilterPropertyData> (AttributesNames.CoreImageFilterPropertyAttribute,
-				CoreImageFilterPropertyData.TryParse);
-		Assert.Equal (expectedData, exportData);
-	}
+		=> AssertTryCreate<CoreImageFilterPropertyData, PropertyDeclarationSyntax> (platform, source, AttributesNames.CoreImageFilterPropertyAttribute,
+			expectedData, CoreImageFilterPropertyData.TryParse, lastOrDefault: true);
 }

@@ -12,7 +12,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class ExportDataTests : BaseTransformerTestClass {
+public class ExportDataTests : AttributeParsingTestClass {
 
 
 	class TestDataTryCreate : IEnumerable<object []> {
@@ -68,23 +68,6 @@ interface UIFeedbackGenerator : UIInteraction {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, ExportData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<MethodDeclarationSyntax> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var exportData = symbol.GetAttribute<ExportData> (AttributesNames.ExportAttribute, ExportData.TryParse);
-		Assert.Equal (expectedData, exportData);
-	}
+		=> AssertTryCreate<ExportData, MethodDeclarationSyntax> (platform, source, AttributesNames.ExportAttribute,
+			expectedData, ExportData.TryParse, lastOrDefault: false);
 }
