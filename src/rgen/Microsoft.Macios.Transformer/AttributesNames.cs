@@ -184,6 +184,13 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method)]
 	public const string NoMethodAttribute = "NoMethodAttribute";
 
+	/// <summary>
+	/// When applied, flags the [Flags] as a notification and generates the
+	/// code to strongly type the notification.
+	/// </summary>
+	[BindingAttribute(typeof(NotificationData), AttributeTargets.Property)]
+	public const string NotificationAttribute = "NotificationAttribute";
+	
 	public const string NoTVAttribute = "NoTVAttribute";
 	public const string NoiOSAttribute = "NoiOSAttribute";
 

@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
 using Xamarin.Tests;
 using Xamarin.Utils;
