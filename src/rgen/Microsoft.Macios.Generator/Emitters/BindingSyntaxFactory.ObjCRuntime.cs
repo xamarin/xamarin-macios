@@ -13,6 +13,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using Parameter = Microsoft.Macios.Generator.DataModel.Parameter;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -76,8 +77,70 @@ static partial class BindingSyntaxFactory {
 			whenFalse: castZero);
 	}
 
+	/// <summary>
+	/// Returns the aux nsarray variable for an array object. This method will do the following:
+	/// 1. Check if the object is nullable or not.
+	/// 2. Use the correct NSArray method depending on the content of the array. 
+	/// </summary>
+	/// <param name="parameter">The parameter whose aux variable we want to generate.</param>
+	/// <param name="withUsing">If the using clause should be added to the declaration.</param>
+	/// <returns>The variable declaration for the NSArray aux variable of the parameter.</returns>
+	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter,
+		bool withUsing = false)
+	{
+		if (!parameter.Type.IsArray)
+			return null;
+		var nsArrayFactoryMethod = parameter.Type.Name switch {
+			"string" => "FromStrings",
+			_ => "FromNSObjects" // the general assumption is that we are working with nsobjects unless we have a bind form
+		};
+		// syntax that calls the NSArray factory method using the parameter: NSArray.FromNSObjects (targetTensors);
+		var factoryInvocation = InvocationExpression (MemberAccessExpression (SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName ("NSArray"), IdentifierName (nsArrayFactoryMethod).WithTrailingTrivia (Space)))
+			.WithArgumentList (
+				ArgumentList (SingletonSeparatedList<ArgumentSyntax> (
+					Argument (IdentifierName (parameter.Name)))));
+
+		// variable name
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.NSArray);
+		if (variableName is null)
+			return null;
+		var declarator = VariableDeclarator (Identifier (variableName));
+		// we have the basic constructs, now depending on if the variable is nullable or not, we need to write the initializer 	
+		if (parameter.Type.IsNullable) {
+			// writes the param ? null : NSArray expression
+			var nullCheck = ConditionalExpression (
+				IsPatternExpression (
+					IdentifierName (parameter.Name).WithLeadingTrivia (Space).WithTrailingTrivia (Space),
+					ConstantPattern (LiteralExpression (SyntaxKind.NullLiteralExpression).WithLeadingTrivia (Space)
+						.WithTrailingTrivia (Space))),
+				LiteralExpression (
+					SyntaxKind.NullLiteralExpression).WithLeadingTrivia (Space).WithTrailingTrivia (Space),
+				factoryInvocation.WithLeadingTrivia (Space));
+
+			// translates to = x ? null : NSArray.FromNSObject (parameterName), notice we added the '=' here
+			declarator = declarator.WithInitializer (EqualsValueClause (nullCheck).WithLeadingTrivia (Space));
+		} else {
+			// translates to = NSArray.FromNSObject (parameterName);
+			declarator = declarator.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space))
+				.WithLeadingTrivia (Space));
+		}
+
+		// complicated way to write 'var auxVariableName = '
+		var variableDeclaration = VariableDeclaration (IdentifierName (
+				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithTrailingTrivia (Space)
+			.WithVariables (SingletonSeparatedList (declarator));
+		var statement = LocalDeclarationStatement (variableDeclaration);
+		// add using if requested
+		return withUsing
+			? statement.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space))
+			: statement;
+	}
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
-		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false) where T : Enum
+		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
+		where T : Enum
 	{
 		var flags = exportData.Flags;
 		if (flags is null)
@@ -110,6 +173,7 @@ static partial class BindingSyntaxFactory {
 		if (isStret) {
 			sb.Append ("_stret");
 		}
+
 		// loop over params and get their native handler name
 		if (parameters.Length > 0) {
 			sb.Append ('_');
@@ -124,10 +188,12 @@ static partial class BindingSyntaxFactory {
 		} else if (flags.HasMarshalNativeExceptions ()) {
 			sb.Append ("_exception");
 		}
+
 		return sb.ToString ();
 	}
 
-	public static (string? Getter, string? Setter) GetObjCMessageSendMethods (in Property property, bool isSuper = false, bool isStret = false)
+	public static (string? Getter, string? Setter) GetObjCMessageSendMethods (in Property property,
+		bool isSuper = false, bool isStret = false)
 	{
 		if (property.IsProperty) {
 			// the getter and the setter depend of the accessors that have been set for the property, we do not want
@@ -152,6 +218,7 @@ static partial class BindingSyntaxFactory {
 						[property.ValueParameter], isSuper, isStret);
 				}
 			}
+
 			return (Getter: getterMsgSend, Setter: setterMsgSend);
 		}
 
@@ -159,6 +226,6 @@ static partial class BindingSyntaxFactory {
 	}
 
 	public static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
-		=> GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper, isStret);
-
+		=> GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper,
+			isStret);
 }
