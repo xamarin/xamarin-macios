@@ -181,7 +181,8 @@ static class TestDataFactory {
 			isStruct: true
 		) { Parents = ["System.ValueType", "object"] };
 
-	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false,
+		SpecialType underlyingType = SpecialType.System_Int32)
 		=> new (
 			name: enumName,
 			isBlittable: true,
@@ -199,7 +200,7 @@ static class TestDataFactory {
 				"System.ISpanFormattable"
 			],
 			IsNativeEnum = isNativeEnum,
-			EnumUnderlyingType = SpecialType.System_Int32,
+			EnumUnderlyingType = underlyingType,
 		};
 
 	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
