@@ -64,16 +64,16 @@ static partial class BindingSyntaxFactory {
 			// return the native casting
 			return CastToNative (parameter);
 		}
-		
+
 		// returns the enum primitive to be used
 		var marshalType = parameter.Type.ToMarshallType ();
 		if (marshalType is null)
 			return null;
-		
+
 		// (byte) parameter
 		var castExpression = CastExpression (
-			type: IdentifierName (marshalType), 
-			expression: IdentifierName(parameter.Name).WithLeadingTrivia (Space));
+			type: IdentifierName (marshalType),
+			expression: IdentifierName (parameter.Name).WithLeadingTrivia (Space));
 		return castExpression;
 	}
 
