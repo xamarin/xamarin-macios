@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class StrongDictionaryDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -33,8 +33,8 @@ interface AVCapturePhotoSettingsThumbnailFormat {
 	NSNumber Height { get; set; }
 }
 ";
-			
-			yield return [(Source: strongDictionary, Path: "/some/random/path.cs"), new StrongDictionaryData("AVCapturePhotoSettingsThumbnailFormatKeys")];
+
+			yield return [(Source: strongDictionary, Path: "/some/random/path.cs"), new StrongDictionaryData ("AVCapturePhotoSettingsThumbnailFormatKeys")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

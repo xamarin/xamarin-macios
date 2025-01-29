@@ -7,15 +7,15 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly struct StrongDictionaryData : IEquatable<StrongDictionaryData> {
-	
+
 	public string TypeWithKeys { get; }
 	public string? Suffix { get; }
-	
+
 	public StrongDictionaryData (string typeWithKeys)
 	{
 		TypeWithKeys = typeWithKeys;
 	}
-	
+
 	public StrongDictionaryData (string typeWithKeys, string? suffix)
 	{
 		TypeWithKeys = typeWithKeys;
@@ -60,7 +60,7 @@ readonly struct StrongDictionaryData : IEquatable<StrongDictionaryData> {
 		data = new (typeWithKeys, suffix);
 		return true;
 	}
-	
+
 	public bool Equals (StrongDictionaryData other)
 	{
 		if (TypeWithKeys != other.TypeWithKeys)
