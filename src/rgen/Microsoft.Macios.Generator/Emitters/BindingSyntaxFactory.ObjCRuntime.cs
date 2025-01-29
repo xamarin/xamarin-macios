@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
@@ -45,6 +46,34 @@ static partial class BindingSyntaxFactory {
 					.WithLeadingTrivia (Space))
 				.WithLeadingTrivia (Space)); // (backingfield) (variable) cast
 		return castExpression;
+	}
+
+	/// <summary>
+	/// Returns the expression needed to cast a bool to a byte to be used in a native call. 
+	/// </summary>
+	/// <param name="parameter">The parameter to cast.</param>
+	/// <returns>A conditional expression that casts a bool to a byte.</returns>
+	internal static ConditionalExpressionSyntax? CastToByte (in Parameter parameter)
+	{
+		if (parameter.Type.SpecialType != SpecialType.System_Boolean)
+			return null;
+		// (byte) 1
+		var castOne = CastExpression (
+				PredefinedType (Token (SyntaxKind.ByteKeyword)),
+				LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (1)).WithLeadingTrivia (Space).WithTrailingTrivia (Space)
+				);
+		// (byte) 0
+		var castZero = CastExpression (
+				PredefinedType (Token (SyntaxKind.ByteKeyword)),
+				LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space)
+				).WithLeadingTrivia (Space);
+
+		// with this exact space count
+		// foo ? (byte) 1 : (byte) 0
+		return ConditionalExpression (
+			condition: IdentifierName (parameter.Name).WithTrailingTrivia (Space),
+			whenTrue: castOne.WithLeadingTrivia (Space),
+			whenFalse: castZero);
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
