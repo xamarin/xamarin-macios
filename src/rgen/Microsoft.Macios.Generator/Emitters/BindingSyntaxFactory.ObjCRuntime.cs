@@ -11,8 +11,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
-using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using Parameter = Microsoft.Macios.Generator.DataModel.Parameter;
 
 namespace Microsoft.Macios.Generator.Emitters;
@@ -165,6 +165,67 @@ static partial class BindingSyntaxFactory {
 		return withUsing
 			? statement.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space))
 			: statement;
+	}
+
+	/// <summary>
+	/// Returns the aux variable for a handle object. This method will do the following:
+	/// 1. Check if the object is nullable or not.
+	/// 2. Use the correct GetHandle method depending on the content of the object.
+	/// </summary>
+	internal static LocalDeclarationStatementSyntax? GetHandleAuxVariable (in Parameter parameter,
+		bool withNullAllowed = false)
+	{
+		if (!parameter.Type.IsNSObject && !parameter.Type.IsINativeObject)
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.Handle);
+		if (variableName is null)
+			return null;
+		// decide about the factory based on the need of a null check 
+		InvocationExpressionSyntax factoryInvocation;
+		if (withNullAllowed) {
+			// generates: zone!.GetNonNullHandle (nameof (zone));
+			factoryInvocation = InvocationExpression (
+					MemberAccessExpression (SyntaxKind.SimpleMemberAccessExpression,
+						PostfixUnaryExpression (
+							SyntaxKind.SuppressNullableWarningExpression,
+							IdentifierName (parameter.Name)),
+						IdentifierName ("GetNonNullHandle").WithTrailingTrivia (Space)))
+				.WithArgumentList (ArgumentList (
+					SingletonSeparatedList<ArgumentSyntax> (Argument (
+						InvocationExpression (
+								IdentifierName (Identifier (TriviaList (Space), SyntaxKind.NameOfKeyword, "nameof",
+									"nameof",
+									TriviaList (Space))))
+							.WithArgumentList (ArgumentList (
+								SingletonSeparatedList<ArgumentSyntax> (
+									Argument (IdentifierName (parameter.Name)))))))));
+		} else {
+			// generates: zone.GetHandle ();
+			factoryInvocation = InvocationExpression (
+				MemberAccessExpression (SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName (parameter.Name),
+					IdentifierName ("GetHandle").WithTrailingTrivia (Space)));
+		}
+
+		// generates: variable = {FactoryCall}
+		var declarator = VariableDeclarator (Identifier (variableName))
+			.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)).WithLeadingTrivia (Space));
+		// generates the final statement: 
+		// var x = zone.GetHandle ();
+		// or 
+		// var x = zone!.GetNonNullHandle (nameof (constantValues));
+		return LocalDeclarationStatement (
+			VariableDeclaration (
+				IdentifierName (
+					Identifier (
+						TriviaList (),
+						SyntaxKind.VarKeyword,
+						"var",
+						"var",
+						TriviaList ()))).WithVariables (
+				SingletonSeparatedList (declarator.WithLeadingTrivia (Space))
+			));
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
