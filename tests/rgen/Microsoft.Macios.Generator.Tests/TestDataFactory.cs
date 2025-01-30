@@ -300,16 +300,23 @@ static class TestDataFactory {
 			]
 		};
 
-	public static TypeInfo ReturnTypeForNSObject (string nsObjectName, bool isNullable = false)
+	public static TypeInfo ReturnTypeForNSObject (string? nsObjectName = null, bool isNullable = false)
 		=> new (
-			name: nsObjectName,
+			name: nsObjectName ?? "Foundation.NSObject",
 			isNullable: isNullable,
-			isArray: false
+			isArray: false,
+			isReferenceType: true
 		) {
 			IsNSObject = true,
 			IsINativeObject = true,
-			Parents = ["Foundation.NSObject", "object"],
-			Interfaces = ["ObjCRuntime.INativeObject"]
+			Parents = nsObjectName is null ? ["object"] : ["Foundation.NSObject", "object"],
+			Interfaces = [
+				"ObjCRuntime.INativeObject",
+				$"System.IEquatable<{nsObjectName ?? "Foundation.NSObject"}>",
+				"System.IDisposable",
+				"Foundation.INSObjectFactory",
+				"Foundation.INSObjectProtocol"
+			]
 		};
 
 	public static TypeInfo ReturnTypeForINativeObject (string nativeObjectName, bool isNullable = false)

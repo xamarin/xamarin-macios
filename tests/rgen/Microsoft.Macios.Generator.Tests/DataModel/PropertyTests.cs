@@ -1248,6 +1248,88 @@ public class TestClass {
 						),
 					])
 			];
+
+			const string nsObjectProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject Name { get; }
+}
+";
+			yield return [
+				nsObjectProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForNSObject (),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string nsObjectArrayProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject[] Name { get; }
+}
+";
+			yield return [
+				nsObjectArrayProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForArray ("Foundation.NSObject"),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()

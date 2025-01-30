@@ -3,11 +3,14 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
+using ObjCRuntime;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -49,6 +52,50 @@ readonly partial struct Property {
 	/// </summary>
 	public bool MarshalNativeExceptions
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
+
+	/// <summary>
+	/// True if the property should be generated without a backing field.
+	/// </summary>
+	public bool IsTransient => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.Transient);
+
+	readonly bool? needsBackingField = null;
+	/// <summary>
+	/// States if the property, when generated, needs a backing field.
+	/// </summary>
+	public bool NeedsBackingField {
+		get {
+			if (needsBackingField is not null)
+				return needsBackingField.Value;
+			var isWrapped = ReturnType.IsWrapped ||
+							ReturnType is { IsArray: true, ArrayElementTypeIsWrapped: true };
+			return isWrapped && !IsTransient;
+		}
+		// Added to allow testing. This way we can set the correct expectation in the test factory
+		init => needsBackingField = value;
+	}
+
+	readonly bool? requiresDirtyCheck = null;
+	/// <summary>
+	/// States if the property, when generated, should have a dirty check.
+	/// </summary>
+	public bool RequiresDirtyCheck {
+		get {
+			if (requiresDirtyCheck is not null)
+				return requiresDirtyCheck.Value;
+			if (!IsProperty)
+				return false;
+			switch (ExportPropertyData.Value.ArgumentSemantic) {
+			case ArgumentSemantic.Copy:
+			case ArgumentSemantic.Retain:
+			case ArgumentSemantic.None:
+				return NeedsBackingField;
+			default:
+				return false;
+			}
+		}
+		// Added to allow testing. This way we can set the correct expectation in the test factory
+		init => requiresDirtyCheck = value;
+	}
 
 	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
 	{
@@ -121,5 +168,35 @@ readonly partial struct Property {
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
 		return true;
+	}
+
+	/// <inheritdoc />
+	public bool Equals (Property other)
+	{
+		if (!CoreEquals (other))
+			return false;
+		if (IsTransient != other.IsTransient)
+			return false;
+		if (NeedsBackingField != other.NeedsBackingField)
+			return false;
+		return RequiresDirtyCheck == other.RequiresDirtyCheck;
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		var sb = new StringBuilder (
+			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}', ");
+		sb.Append ($"IsTransient: '{IsTransient}', ");
+		sb.Append ($"NeedsBackingField: '{NeedsBackingField}', ");
+		sb.Append ($"RequiresDirtyCheck: '{RequiresDirtyCheck}', ");
+		sb.Append ("Attributes: [");
+		sb.AppendJoin (",", Attributes);
+		sb.Append ("], Modifiers: [");
+		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
+		sb.Append ("], Accessors: [");
+		sb.AppendJoin (",", Accessors);
+		sb.Append (']');
+		return sb.ToString ();
 	}
 }

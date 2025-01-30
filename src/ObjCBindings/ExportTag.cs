@@ -127,6 +127,13 @@ namespace ObjCBindings {
 		/// </summary>
 		IsThreadSafe = 1 << 7,
 
+		/// <summary>
+		/// If this falgs is applied to a property, we do not generate a
+		/// backing field.   See bugzilla #3359 and Assistly 7032 for some
+		/// background information
+		/// </summary>
+		Transient = 1 << 8,
+
 	}
 }
 
