@@ -83,7 +83,13 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Parameter | AttributeTargets.Property)]
 	public const string DisableZeroCopyAttribute = "DisableZeroCopyAttribute";
 
+	/// <summary>
+	/// Code to run from a generated Dispose method, before any generated code is executed
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Interface | AttributeTargets.Class)]
 	public const string DisposeAttribute = "DisposeAttribute";
+	
 	public const string EditorBrowsableAttribute = "System.ComponentModel.EditorBrowsableAttribute";
 	
 	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Enum)]
@@ -221,6 +227,20 @@ static class AttributesNames {
 	public const string PlainStringAttribute = "PlainStringAttribute";
 
 	/// <summary>
+	/// PostSnippet code is inserted before returning, before paramters are disposed/released
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PostSnippetAttribute = "PostSnippetAttribute";
+	
+	/// <summary>
+	/// PreSnippet code is inserted after the parameters have been validated/marshalled
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PreSnippetAttribute = "PreSnippetAttribute";
+
+	/// <summary>
 	/// When this attribute is applied to the interface definition it will flag the default constructor as private.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Interface)]
@@ -228,6 +248,13 @@ static class AttributesNames {
 
 	[BindingFlag (AttributeTargets.Property)]
 	public const string ProbePresenceAttribute = "ProbePresenceAttribute";
+	
+	/// <summary>
+	/// PrologueSnippet code is inserted before any code is generated
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PrologueSnippetAttribute = "PrologueSnippetAttribute";
 
 	/// <summary>
 	/// Use this attribute to instruct the binding generator that the binding for this particular method should be
