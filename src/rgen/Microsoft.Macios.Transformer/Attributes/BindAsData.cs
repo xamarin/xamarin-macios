@@ -48,10 +48,10 @@ readonly record struct BindAsData {
 		foreach (var (argumentName, value) in attributeData.NamedArguments) {
 			switch (argumentName) {
 			case "Type":
-				type = ((INamedTypeSymbol) value.Value!).ToDisplayString ();
+				type = ((ITypeSymbol) value.Value!).ToDisplayString ();
 				break;
 			case "OriginalType":
-				originalType = ((INamedTypeSymbol) value.Value!).ToDisplayString ();
+				originalType = ((ITypeSymbol) value.Value!).ToDisplayString ();
 				break;
 			default:
 				data = null;
