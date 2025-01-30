@@ -43,6 +43,9 @@ static class AttributesNames {
 	[BindingAttribute(typeof(BindData), AttributeTargets.Method )]
 	public const string BindAttribute = "BindAttribute";
 
+	[BindingAttribute(typeof(BindAsData), AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter)]
+	public const string BindAsAttribute = "ObjCRuntime.BindAsAttribute";
+
 	/// <summary>
 	/// Use this attribute on a type definition to bind Objective-C categories and to expose those as C# extension
 	/// methods to mirror the way Objective-C exposes the functionality.
