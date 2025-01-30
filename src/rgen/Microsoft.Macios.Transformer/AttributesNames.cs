@@ -33,6 +33,9 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string AutoreleaseAttribute = "AutoreleaseAttribute";
+	
+	[BindingAttribute(typeof(AsyncData), AttributeTargets.Method)]
+	public const string AsyncAttribute = "AsyncAttribute";
 
 	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.Enum)]
 	public const string BackingFieldTypeAttribute = "BackingFieldTypeAttribute";
