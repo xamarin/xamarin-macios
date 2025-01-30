@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct CoreImageFilterPropertyData : IEquatable<CoreImageFilterPropertyData> {
+readonly record struct CoreImageFilterPropertyData {
 
 	public string Name { get; }
 
@@ -49,35 +49,5 @@ readonly struct CoreImageFilterPropertyData : IEquatable<CoreImageFilterProperty
 
 		data = new (name);
 		return true;
-	}
-
-	public bool Equals (CoreImageFilterPropertyData other)
-		=> Name == other.Name;
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is CoreImageFilterPropertyData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (Name);
-
-
-	public static bool operator == (CoreImageFilterPropertyData x, CoreImageFilterPropertyData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (CoreImageFilterPropertyData x, CoreImageFilterPropertyData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ Name: '{Name}' }}";
 	}
 }

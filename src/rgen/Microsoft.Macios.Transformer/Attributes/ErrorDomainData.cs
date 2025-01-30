@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
+readonly record struct ErrorDomainData {
 
 	public string ErrorDomain { get; }
 	public string? LibraryName { get; }
@@ -65,38 +65,5 @@ readonly struct ErrorDomainData : IEquatable<ErrorDomainData> {
 
 		data = new (errorDomain, libraryName);
 		return true;
-	}
-
-	public bool Equals (ErrorDomainData other)
-	{
-		if (ErrorDomain != other.ErrorDomain)
-			return false;
-		return LibraryName == other.LibraryName;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is ErrorDomainData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (ErrorDomain, LibraryName);
-
-	public static bool operator == (ErrorDomainData x, ErrorDomainData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (ErrorDomainData x, ErrorDomainData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ ErrorDomain: '{ErrorDomain}', LibraryName: '{LibraryName}' }}";
 	}
 }

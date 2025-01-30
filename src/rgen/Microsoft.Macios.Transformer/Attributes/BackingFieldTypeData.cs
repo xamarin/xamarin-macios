@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct BackingFieldTypeData : IEquatable<BackingFieldTypeData> {
+readonly record struct BackingFieldTypeData {
 
 	public string TypeName { get; }
 
@@ -50,37 +50,5 @@ readonly struct BackingFieldTypeData : IEquatable<BackingFieldTypeData> {
 
 		data = new (backingField);
 		return true;
-	}
-
-	public bool Equals (BackingFieldTypeData other)
-	{
-		return TypeName == other.TypeName;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is BackingFieldTypeData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> TypeName.GetHashCode ();
-
-
-	public static bool operator == (BackingFieldTypeData x, BackingFieldTypeData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (BackingFieldTypeData x, BackingFieldTypeData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ BackingFieldType: '{TypeName}' }}";
 	}
 }

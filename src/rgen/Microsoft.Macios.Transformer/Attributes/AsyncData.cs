@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct AsyncData : IEquatable<AsyncData> {
+readonly record struct AsyncData {
 	/// <summary>
 	/// Diff the constructor used in the bindings.
 	/// </summary>
@@ -117,38 +117,4 @@ readonly struct AsyncData : IEquatable<AsyncData> {
 
 		return false;
 	}
-
-	public bool Equals (AsyncData other)
-	{
-		if (ResultType != other.ResultType)
-			return false;
-		if (MethodName != other.MethodName)
-			return false;
-		if (ResultTypeName != other.ResultTypeName)
-			return false;
-		return PostNonResultSnippet == other.PostNonResultSnippet;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is AsyncData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (ResultType, MethodName, ResultTypeName, PostNonResultSnippet);
-
-	public static bool operator == (AsyncData x, AsyncData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (AsyncData x, AsyncData y)
-	{
-		return !(x == y);
-	}
-
-	public override string ToString ()
-		=> $"{{ ResultType: '{ResultType ?? "null"}', MethodName: '{MethodName ?? "null"}', ResultTypeName: '{ResultTypeName ?? "null"}', PostNonResultSnippet: '{PostNonResultSnippet ?? "null"}' }}";
 }

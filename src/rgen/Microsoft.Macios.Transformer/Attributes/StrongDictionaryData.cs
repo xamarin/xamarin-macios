@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct StrongDictionaryData : IEquatable<StrongDictionaryData> {
+readonly record struct StrongDictionaryData {
 
 	public string TypeWithKeys { get; }
 	public string? Suffix { get; }
@@ -60,34 +60,4 @@ readonly struct StrongDictionaryData : IEquatable<StrongDictionaryData> {
 		data = new (typeWithKeys, suffix);
 		return true;
 	}
-
-	public bool Equals (StrongDictionaryData other)
-	{
-		if (TypeWithKeys != other.TypeWithKeys)
-			return false;
-		return Suffix == other.Suffix;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is StrongDictionaryData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (TypeWithKeys, Suffix);
-
-	public static bool operator == (StrongDictionaryData x, StrongDictionaryData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (StrongDictionaryData x, StrongDictionaryData y)
-	{
-		return !(x == y);
-	}
-
-	public override string ToString ()
-		=> $"{{ TypeWithKeys: '{TypeWithKeys}' Suffix: '{Suffix}' }}";
 }

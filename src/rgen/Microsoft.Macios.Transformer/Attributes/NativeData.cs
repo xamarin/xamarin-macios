@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct NativeData : IEquatable<NativeData> {
+readonly record struct NativeData {
 
 	public string? NativeName { get; }
 
@@ -55,35 +55,5 @@ readonly struct NativeData : IEquatable<NativeData> {
 
 		data = new (nativeName);
 		return true;
-	}
-
-	public bool Equals (NativeData other)
-		=> NativeName == other.NativeName;
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is NativeData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (NativeName);
-
-
-	public static bool operator == (NativeData x, NativeData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (NativeData x, NativeData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ NativeName: '{NativeName}' }}";
 	}
 }
