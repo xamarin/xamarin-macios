@@ -14,7 +14,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
 public class BindAsDataTests : BaseTransformerTestClass {
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -39,13 +39,13 @@ interface UIFeedbackGenerator {
 	NSValue [] SupportedMaxPhotoDimensions { get; }
 }
 ";
-			
+
 			yield return [
-				PropertyDeclaration (IdentifierName ("string"), Identifier ("Hello")), 
-				(Source: bindAsProperty, Path: path), 
-				new BindAsData("CoreMedia.CMVideoDimensions[]")];
-				
-			
+				PropertyDeclaration (IdentifierName ("string"), Identifier ("Hello")),
+				(Source: bindAsProperty, Path: path),
+				new BindAsData ("CoreMedia.CMVideoDimensions[]")];
+
+
 			const string bindAsReturnMethod = @"
 using System;
 using Foundation;
@@ -65,11 +65,11 @@ interface UIFeedbackGenerator {
 	NSString [] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue [] tokenRanges);
 }
 ";
-			
+
 			yield return [
-				MethodDeclaration (PredefinedType(Token(SyntaxKind.StringKeyword)), Identifier ("Hello")),
-				(Source: bindAsReturnMethod, Path: path), 
-				new BindAsData("Foundation.NSLinguisticTag[]")];
+				MethodDeclaration (PredefinedType (Token (SyntaxKind.StringKeyword)), Identifier ("Hello")),
+				(Source: bindAsReturnMethod, Path: path),
+				new BindAsData ("Foundation.NSLinguisticTag[]")];
 
 
 			const string parameterBindAs = @"
@@ -94,8 +94,8 @@ interface UIFeedbackGenerator {
 					.WithType (PredefinedType (Token (SyntaxKind.StringKeyword)));
 			yield return [
 				parameter,
-				(Source: parameterBindAs, Path: path), 
-				new BindAsData("ushort?")];
+				(Source: parameterBindAs, Path: path),
+				new BindAsData ("ushort?")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -104,7 +104,7 @@ interface UIFeedbackGenerator {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests<T> (ApplePlatform platform, T _, (string Source, string Path) source, BindAsData expectedData)
-		where T : CSharpSyntaxNode 
+		where T : CSharpSyntaxNode
 	{
 		// create a compilation used to create the transformer
 		var compilation = CreateCompilation (platform, sources: source);

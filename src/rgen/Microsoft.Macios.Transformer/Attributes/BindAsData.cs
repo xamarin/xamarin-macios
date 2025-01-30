@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Transformer.Attributes;
 
 readonly record struct BindAsData {
-	
+
 	public string Type { get; init; }
 	public string? OriginalType { get; init; }
 
@@ -20,7 +20,7 @@ readonly record struct BindAsData {
 	{
 		Type = type;
 		OriginalType = originalType;
-		
+
 	}
 
 	public static bool TryParse (AttributeData attributeData,
@@ -30,7 +30,7 @@ readonly record struct BindAsData {
 		var count = attributeData.ConstructorArguments.Length;
 		string type;
 		string? originalType = null;
-		
+
 		switch (count) {
 		case 1:
 			type = ((ITypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
@@ -39,12 +39,12 @@ readonly record struct BindAsData {
 			// 0 should not be an option..
 			return false;
 		}
-		
+
 		if (attributeData.NamedArguments.Length == 0) {
 			data = new (type);
 			return true;
 		}
-		
+
 		foreach (var (argumentName, value) in attributeData.NamedArguments) {
 			switch (argumentName) {
 			case "Type":
@@ -58,7 +58,7 @@ readonly record struct BindAsData {
 				return false;
 			}
 		}
-		
+
 		data = new (type, originalType);
 		return true;
 	}

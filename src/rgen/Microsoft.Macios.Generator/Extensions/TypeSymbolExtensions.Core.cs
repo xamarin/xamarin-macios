@@ -44,11 +44,11 @@ static partial class TypeSymbolExtensions {
 
 			attributeDataList.Add (attributeData);
 		}
-		
+
 		// if we are dealing with a method, we want to also return the attributes used for the return type
-		if (symbol is not IMethodSymbol methodSymbol) 
+		if (symbol is not IMethodSymbol methodSymbol)
 			return attributes;
-		
+
 		var returnAttributes = methodSymbol.GetReturnTypeAttributes ();
 		foreach (var attributeData in returnAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
