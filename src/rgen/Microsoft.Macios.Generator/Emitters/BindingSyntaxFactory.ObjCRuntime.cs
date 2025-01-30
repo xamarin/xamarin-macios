@@ -42,9 +42,9 @@ static partial class BindingSyntaxFactory {
 		var enumBackingValue = parameter.Type.EnumUnderlyingType.Value.GetKeyword ();
 		var castExpression = CastExpression (IdentifierName (marshalType), // (IntPtr/UIntPtr) cast
 			CastExpression (
-				IdentifierName (enumBackingValue),
-				IdentifierName (parameter.Name)
-					.WithLeadingTrivia (Space))
+					IdentifierName (enumBackingValue),
+					IdentifierName (parameter.Name)
+						.WithLeadingTrivia (Space))
 				.WithLeadingTrivia (Space)); // (backingfield) (variable) cast
 		return castExpression;
 	}
@@ -89,14 +89,15 @@ static partial class BindingSyntaxFactory {
 			return null;
 		// (byte) 1
 		var castOne = CastExpression (
-				PredefinedType (Token (SyntaxKind.ByteKeyword)),
-				LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (1)).WithLeadingTrivia (Space).WithTrailingTrivia (Space)
-				);
+			PredefinedType (Token (SyntaxKind.ByteKeyword)),
+			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (1)).WithLeadingTrivia (Space)
+				.WithTrailingTrivia (Space)
+		);
 		// (byte) 0
 		var castZero = CastExpression (
-				PredefinedType (Token (SyntaxKind.ByteKeyword)),
-				LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space)
-				).WithLeadingTrivia (Space);
+			PredefinedType (Token (SyntaxKind.ByteKeyword)),
+			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space)
+		).WithLeadingTrivia (Space);
 
 		// with this exact space count
 		// foo ? (byte) 1 : (byte) 0
@@ -210,7 +211,8 @@ static partial class BindingSyntaxFactory {
 
 		// generates: variable = {FactoryCall}
 		var declarator = VariableDeclarator (Identifier (variableName))
-			.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)).WithLeadingTrivia (Space));
+			.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space))
+				.WithLeadingTrivia (Space));
 		// generates the final statement: 
 		// var x = zone.GetHandle ();
 		// or 
@@ -226,6 +228,38 @@ static partial class BindingSyntaxFactory {
 						TriviaList ()))).WithVariables (
 				SingletonSeparatedList (declarator.WithLeadingTrivia (Space))
 			));
+	}
+
+	internal static LocalDeclarationStatementSyntax? GetStringAuxVariable (in Parameter parameter)
+	{
+		if (parameter.Type.Name != "string")
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.NSString);
+		if (variableName is null)
+			return null;
+
+		// generates: CFString.CreateNative ({parameter.Name});
+		var cfstringFactoryInvocation = InvocationExpression (
+				MemberAccessExpression (
+					SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName ("CFString"),
+					IdentifierName ("CreateNative").WithTrailingTrivia (Space))
+			)
+			.WithArgumentList (ArgumentList (SingletonSeparatedList (
+				Argument (IdentifierName (parameter.Name)))));
+
+		// generates {var} = CFString.CreateNative ({parameter.Name});
+		var declarator = VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+			.WithInitializer (EqualsValueClause (cfstringFactoryInvocation.WithLeadingTrivia (Space)));
+
+
+		// put everythign together
+		var declaration = VariableDeclaration (IdentifierName (Identifier (
+				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (declaration);
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,

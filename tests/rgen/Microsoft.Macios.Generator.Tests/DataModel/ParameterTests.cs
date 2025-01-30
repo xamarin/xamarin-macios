@@ -19,6 +19,8 @@ public class ParameterTests {
 			yield return [exampleParameter, Parameter.VariableType.BlockLiteral, $"block_ptr_{exampleParameter.Name}"];
 			yield return [exampleParameter, Parameter.VariableType.PrimitivePointer, $"converted_{exampleParameter.Name}"];
 			yield return [exampleParameter, Parameter.VariableType.NSArray, $"nsa_{exampleParameter.Name}"];
+			yield return [exampleParameter, Parameter.VariableType.NSString, $"ns{exampleParameter.Name}"];
+			yield return [exampleParameter, Parameter.VariableType.NSStringStruct, $"_s{exampleParameter.Name}"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
