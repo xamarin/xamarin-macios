@@ -8,6 +8,16 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct TypeInfo {
 
+	/// <summary>
+	/// Return if the type represents a wrapped object from the objc world.
+	/// </summary>
+	public bool IsWrapped { get; init; }
+
+	/// <summary>
+	/// Returns, if the type is an array, if its elements are a wrapped object from the objc world.
+	/// </summary>
+	public bool ArrayElementTypeIsWrapped { get; init; }
+
 	internal TypeInfo (ITypeSymbol symbol) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
@@ -18,7 +28,6 @@ readonly partial struct TypeInfo {
 		IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated;
 		IsBlittable = symbol.IsBlittable ();
 		IsSmartEnum = symbol.IsSmartEnum ();
-		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
 		IsStruct = symbol.TypeKind == TypeKind.Struct;
 		IsInterface = symbol.TypeKind == TypeKind.Interface;
@@ -32,6 +41,13 @@ readonly partial struct TypeInfo {
 			isDictionaryContainer: out isDictionaryContainer,
 			parents: out parents,
 			interfaces: out interfaces);
+
+		IsWrapped = symbol.IsWrapped (isNSObject);
+		if (symbol is IArrayTypeSymbol arraySymbol) {
+			IsArray = true;
+			ArrayElementTypeIsWrapped = arraySymbol.ElementType.IsWrapped ();
+		}
+		IsArray = symbol is IArrayTypeSymbol;
 
 		// try to get the named type symbol to have more educated decisions
 		var namedTypeSymbol = symbol as INamedTypeSymbol;

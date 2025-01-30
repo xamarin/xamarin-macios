@@ -13,6 +13,11 @@ using Microsoft.Macios.Generator.Availability;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class TypeSymbolExtensions {
+
+	const string nativeObjectInterface = "ObjCRuntime.INativeObject";
+	const string nsObjectClass = "Foundation.NSObject";
+	const string dictionaryContainerClass = "Foundation.DictionaryContainer";
+
 	/// <summary>
 	/// Retrieve a dictionary with the attribute data of all the attributes attached to a symbol. Because
 	/// an attribute can appear more than once, the valus are a collection of attribute data.
@@ -417,11 +422,7 @@ static partial class TypeSymbolExtensions {
 		out ImmutableArray<string> parents,
 		out ImmutableArray<string> interfaces)
 	{
-		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
-		const string nsObjectClass = "Foundation.NSObject";
-		const string dictionaryContainerClass = "Foundation.DictionaryContainer";
-
-		isNSObject = false;
+		isNSObject = symbol.ToDisplayString ().Trim () == nsObjectClass;
 		isNativeObject = false;
 		isDictionaryContainer = false;
 
