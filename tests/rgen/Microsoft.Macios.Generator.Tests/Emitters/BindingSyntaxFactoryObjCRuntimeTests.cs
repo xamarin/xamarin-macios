@@ -247,12 +247,12 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
-	
+
 	class TestDataGetStringAuxVariableTest : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
-				new Parameter (0, ReturnTypeForString(), "myParam"),
+				new Parameter (0, ReturnTypeForString (), "myParam"),
 				"var nsmyParam = CFString.CreateNative (myParam);",
 			];
 
@@ -266,7 +266,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataGetStringAuxVariableTest))]
+	[ClassData (typeof (TestDataGetStringAuxVariableTest))]
 	void GetStringAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
 	{
 		var declaration = GetStringAuxVariable (parameter);
