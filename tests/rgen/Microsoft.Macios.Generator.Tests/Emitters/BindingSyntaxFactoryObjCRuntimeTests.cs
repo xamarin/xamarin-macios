@@ -195,7 +195,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 		}
 	}
 
-	class TestDataCodeChangesFromClassDeclaration : IEnumerable<object []> {
+	class TestDataGetHandleAuxVariableTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			// nsobject type
@@ -236,10 +236,40 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	}
 
 	[Theory]
-	[ClassData (typeof (TestDataCodeChangesFromClassDeclaration))]
+	[ClassData (typeof (TestDataGetHandleAuxVariableTests))]
 	void GetHandleAuxVariableTests (in Parameter parameter, string? expectedDeclaration, bool withNullAllowed)
 	{
 		var declaration = GetHandleAuxVariable (parameter, withNullAllowed: withNullAllowed);
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
+	
+	class TestDataGetStringAuxVariableTest : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				new Parameter (0, ReturnTypeForString(), "myParam"),
+				"var nsmyParam = CFString.CreateNative (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForBool (), "myParam"),
+				null!,
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof(TestDataGetStringAuxVariableTest))]
+	void GetStringAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
+	{
+		var declaration = GetStringAuxVariable (parameter);
 		if (expectedDeclaration is null) {
 			Assert.Null (declaration);
 		} else {
