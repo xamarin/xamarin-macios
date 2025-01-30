@@ -2,16 +2,14 @@
 // Licensed under the MIT License.
 
 using System.Collections;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class AsyncDataTests : BaseTransformerTestClass {
+public class AsyncDataTests : AttributeParsingTestClass {
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -146,23 +144,6 @@ interface NSTableViewDiffableDataSource {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, AsyncData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<MethodDeclarationSyntax> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var attribute = symbol.GetAttribute<AsyncData> (AttributesNames.AsyncAttribute, AsyncData.TryParse);
-		Assert.Equal (expectedData, attribute);
-	}
+		=> AssertTryCreate<AsyncData, MethodDeclarationSyntax> (platform, source, AttributesNames.AsyncAttribute,
+			expectedData, AsyncData.TryParse);
 }
