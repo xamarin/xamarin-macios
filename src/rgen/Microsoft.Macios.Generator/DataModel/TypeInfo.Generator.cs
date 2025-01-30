@@ -7,12 +7,12 @@ using Microsoft.Macios.Generator.Extensions;
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct TypeInfo {
-	
+
 	/// <summary>
 	/// Return if the type represents a wrapped object from the objc world.
 	/// </summary>
 	public bool IsWrapped { get; init; }
-	
+
 	/// <summary>
 	/// Returns, if the type is an array, if its elements are a wrapped object from the objc world.
 	/// </summary>

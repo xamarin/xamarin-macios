@@ -1702,7 +1702,7 @@ public partial class MyClass {
 		Assert.NotNull (symbol);
 		Assert.Equal (expectedResult, symbol.Type.IsBlittable ());
 	}
-	
+
 	class TestDataIsWrapped : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -1745,7 +1745,7 @@ public partial class MyClass {
 	public NMatrix4 Property { get; set; }
 }
 ";
-			
+
 			yield return [nmatrix4Property, false];
 
 			const string nativeHandleProperty = @"
@@ -1775,7 +1775,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nsZoneProperty, false];
-			
+
 			const string nsobjectProperty = @"
 using System;
 using Foundation;
@@ -1789,7 +1789,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nsobjectProperty, true];
-			
+
 			const string nssetProperty = @"
 using System;
 using Foundation;
@@ -1804,7 +1804,7 @@ public partial class MyClass {
 ";
 			yield return [nssetProperty, true];
 
-			
+
 			const string mtlDeviceProperty = @"
 using System;
 using Metal;
@@ -1818,7 +1818,7 @@ public partial class MyClass {
 }
 ";
 			yield return [mtlDeviceProperty, true];
-			
+
 			const string EnumProperty = @"
 using System;
 using System.Runtime.InteropServices;
