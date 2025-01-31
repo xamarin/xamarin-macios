@@ -71,11 +71,11 @@ static partial class TypeSymbolExtensions {
 		// to find AT LEAST one enum field that contains the Field attribute.
 		if (symbol.TypeKind != TypeKind.Enum)
 			return false;
-		
-		foreach (var member in symbol.GetMembers()) {
-			if (member is not IFieldSymbol field || !field.IsConst) 
+
+		foreach (var member in symbol.GetMembers ()) {
+			if (member is not IFieldSymbol field || !field.IsConst)
 				continue;
-			
+
 			// try to get the Field attribute from the current member, if we found it, then we have a smart enum
 			var attributeData = field.GetAttributeData ();
 			if (attributeData.HasFieldAttribute ())

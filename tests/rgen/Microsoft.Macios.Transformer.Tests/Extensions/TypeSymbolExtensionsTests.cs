@@ -11,7 +11,7 @@ using Xamarin.Utils;
 namespace Microsoft.Macios.Transformer.Tests.Extensions;
 
 public class TypeSymbolExtensionsTests : BaseTransformerTestClass {
-	
+
 	class TestDataIsSmartEnum : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -29,7 +29,7 @@ public enum MyEnum {
 }
 ";
 			yield return [(Source: normalEnum, Path: path), false];
-			
+
 			const string traditionalSmartEnum = @"
 using System;
 using Foundation;
@@ -46,7 +46,7 @@ public enum MyEnum {
 	Last,	
 }
 ";
-			
+
 			yield return [(Source: traditionalSmartEnum, Path: path), true];
 
 			const string partialSmartEnum = @"
@@ -63,7 +63,7 @@ public enum MyEnum {
 	Last,	
 }
 ";
-			
+
 			// should not be very common, nevertheless test for it.
 			yield return [(Source: partialSmartEnum, Path: path), true];
 		}
