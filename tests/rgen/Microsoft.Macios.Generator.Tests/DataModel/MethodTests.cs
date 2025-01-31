@@ -573,6 +573,75 @@ namespace NS {
 					]
 				)
 			];
+			
+			const string returnTypeBindFromAttribute = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS {
+	public class MyClass {
+		[return: BindFrom (typeof(NSNumber))]
+		public int MyMethod () {}
+	}
+}
+";
+
+			yield return [
+				returnTypeBindFromAttribute,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForInt (),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [
+						new ("ObjCBindings.BindFromAttribute", ["Foundation.NSNumber"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				) {
+					BindAs = new ("Foundation.NSNumber"),
+				}
+			];
+			
+			const string parameterBindFromAttr = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS {
+	public class MyClass {
+		public void MyMethod ([BindFrom (typeof(NSNumber))] int value) {}
+	}
+}
+";
+
+			yield return [
+				parameterBindFromAttr,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForVoid(),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, ReturnTypeForInt (), "value") {
+							Attributes = [
+								new ("ObjCBindings.BindFromAttribute", ["Foundation.NSNumber"]),
+							],
+							BindAs = new BindFromData("Foundation.NSNumber"),
+						}
+					]
+				)
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

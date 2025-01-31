@@ -52,6 +52,11 @@ readonly partial struct Property {
 	/// </summary>
 	public bool MarshalNativeExceptions
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
+	
+	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindFromData? BindAs { get; init; }
 
 	/// <summary>
 	/// True if the property should be generated without a backing field.
@@ -163,7 +168,9 @@ readonly partial struct Property {
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			accessors: accessorCodeChanges) {
+			accessors: accessorCodeChanges) 
+		{
+			BindAs = propertySymbol.GetBindFromData (),
 			ExportFieldData = GetFieldInfo (context, propertySymbol),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
@@ -190,6 +197,7 @@ readonly partial struct Property {
 		sb.Append ($"IsTransient: '{IsTransient}', ");
 		sb.Append ($"NeedsBackingField: '{NeedsBackingField}', ");
 		sb.Append ($"RequiresDirtyCheck: '{RequiresDirtyCheck}', ");
+		sb.Append ($"BindAs: '{BindAs}', ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");

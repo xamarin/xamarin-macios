@@ -1330,6 +1330,47 @@ public class TestClass {
 					ExportPropertyData = new (selector: "name"),
 				}
 			];
+			
+			const string bindFromAttribute = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name""), BindFrom (typeof(NSNumber))]
+	public int Name { get; }
+}
+";
+			yield return [
+				bindFromAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForInt (),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+						new (name: "ObjCBindings.BindFromAttribute", arguments: ["Foundation.NSNumber"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new (selector: "name"),
+					BindAs = new ("Foundation.NSNumber"),
+				}
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()

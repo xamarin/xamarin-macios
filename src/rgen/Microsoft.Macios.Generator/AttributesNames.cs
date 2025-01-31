@@ -12,6 +12,7 @@ static class AttributesNames {
 	public const string BindingAttribute = "ObjCBindings.BindingTypeAttribute";
 	public const string BindingCategoryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Category>";
 	public const string BindingClassAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>";
+	public const string BindFromAttribute = "ObjCBindings.BindFromAttribute";
 	public const string BindingProtocolAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>";
 	public const string BindingStrongDictionaryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.StrongDictionary>";
 	public const string FieldAttribute = "ObjCBindings.FieldAttribute";

@@ -19,6 +19,11 @@ readonly partial struct Method {
 	/// The data of the export attribute used to mark the value as a property binding. 
 	/// </summary>
 	public ExportData<ObjCBindings.Method> ExportMethodData { get; }
+	
+	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindFromData? BindAs { get; init; }
 
 	/// <summary>
 	/// Returns if the method was marked as thread safe.
@@ -79,7 +84,10 @@ readonly partial struct Method {
 			exportMethodData: exportData,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			parameters: parametersBucket.ToImmutableArray ());
+			parameters: parametersBucket.ToImmutableArray ()) 
+		{
+			BindAs = method.GetBindFromData (),
+		};
 
 		return true;
 	}
