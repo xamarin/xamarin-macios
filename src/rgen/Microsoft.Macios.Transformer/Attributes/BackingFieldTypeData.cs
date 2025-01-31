@@ -25,7 +25,7 @@ readonly record struct BackingFieldTypeData {
 
 		switch (count) {
 		case 1:
-			backingField = ((INamedTypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
+			backingField = ((ITypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
 			break;
 		default:
 			// 0 should not be an option..
@@ -40,7 +40,7 @@ readonly record struct BackingFieldTypeData {
 		foreach (var (argumentName, value) in attributeData.NamedArguments) {
 			switch (argumentName) {
 			case "BackingFieldType":
-				backingField = ((INamedTypeSymbol) value.Value!).ToDisplayString ();
+				backingField = ((ITypeSymbol) value.Value!).ToDisplayString ();
 				break;
 			default:
 				data = null;

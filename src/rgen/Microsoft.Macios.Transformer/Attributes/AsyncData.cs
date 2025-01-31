@@ -51,7 +51,7 @@ readonly record struct AsyncData {
 				methodName = methodNameValue;
 			} else {
 				constructorType = ConstructorType.ResultType;
-				resultType = ((INamedTypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
+				resultType = ((ITypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
 			}
 			break;
 		default:
@@ -70,7 +70,7 @@ readonly record struct AsyncData {
 		foreach (var (argumentName, value) in attributeData.NamedArguments) {
 			switch (argumentName) {
 			case "ResultType":
-				resultType = ((INamedTypeSymbol) value.Value!).ToDisplayString ();
+				resultType = ((ITypeSymbol) value.Value!).ToDisplayString ();
 				break;
 			case "MethodName":
 				methodName = (string) value.Value!;
