@@ -573,7 +573,7 @@ namespace NS {
 					]
 				)
 			];
-			
+
 			const string returnTypeBindFromAttribute = @"
 using System;
 using Foundation;
@@ -606,7 +606,7 @@ namespace NS {
 					BindAs = new ("Foundation.NSNumber"),
 				}
 			];
-			
+
 			const string parameterBindFromAttr = @"
 using System;
 using Foundation;
@@ -624,7 +624,7 @@ namespace NS {
 				new Method (
 					type: "NS.MyClass",
 					name: "MyMethod",
-					returnType: ReturnTypeForVoid(),
+					returnType: ReturnTypeForVoid (),
 					symbolAvailability: new (),
 					exportMethodData: new (),
 					attributes: [
@@ -637,7 +637,7 @@ namespace NS {
 							Attributes = [
 								new ("ObjCBindings.BindFromAttribute", ["Foundation.NSNumber"]),
 							],
-							BindAs = new BindFromData("Foundation.NSNumber"),
+							BindAs = new BindFromData ("Foundation.NSNumber"),
 						}
 					]
 				)

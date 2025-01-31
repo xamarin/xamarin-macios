@@ -20,12 +20,12 @@ readonly partial struct Parameter {
 		PrimitivePointer,
 		StringPointer,
 	}
-	
+
 	/// <summary>
 	/// Returns the bind from data if present in the binding.
 	/// </summary>
 	public BindFromData? BindAs { get; init; }
-	
+
 	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{

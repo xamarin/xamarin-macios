@@ -52,7 +52,7 @@ readonly partial struct Property {
 	/// </summary>
 	public bool MarshalNativeExceptions
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
-	
+
 	/// <summary>
 	/// Returns the bind from data if present in the binding.
 	/// </summary>
@@ -168,8 +168,7 @@ readonly partial struct Property {
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			accessors: accessorCodeChanges) 
-		{
+			accessors: accessorCodeChanges) {
 			BindAs = propertySymbol.GetBindFromData (),
 			ExportFieldData = GetFieldInfo (context, propertySymbol),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),

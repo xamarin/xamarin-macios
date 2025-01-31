@@ -38,7 +38,7 @@ readonly partial struct Property {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => throw new NotImplementedException ();
-	
+
 	/// <summary>
 	/// Returns the bind from data if present in the binding.
 	/// </summary>

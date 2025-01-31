@@ -78,7 +78,7 @@ readonly partial struct Parameter : IEquatable<Parameter> {
 		Type = type;
 		Name = name;
 	}
-	
+
 	/// <inheritdoc/>
 	public bool Equals (Parameter other)
 	{

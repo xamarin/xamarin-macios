@@ -1330,7 +1330,7 @@ public class TestClass {
 					ExportPropertyData = new (selector: "name"),
 				}
 			];
-			
+
 			const string bindFromAttribute = @"
 using System;
 using Foundation;

@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 namespace Microsoft.Macios.Generator.Attributes;
 
 readonly struct BindFromData : IEquatable<BindFromData> {
-	
+
 	public string Type { get; }
 	public string? OriginalType { get; }
 
@@ -31,7 +31,7 @@ readonly struct BindFromData : IEquatable<BindFromData> {
 		var count = attributeData.ConstructorArguments.Length;
 		string? type;
 		string? originalType = null;
-		
+
 		switch (count) {
 		case 1:
 			type = ((INamedTypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
@@ -40,12 +40,12 @@ readonly struct BindFromData : IEquatable<BindFromData> {
 			// no other constructors are available
 			return false;
 		}
-		
+
 		if (attributeData.NamedArguments.Length == 0) {
 			data = new (type);
 			return true;
 		}
-		
+
 		foreach (var (name, value) in attributeData.NamedArguments) {
 			switch (name) {
 			case "Type":
@@ -62,7 +62,7 @@ readonly struct BindFromData : IEquatable<BindFromData> {
 		data = new (type, originalType);
 		return true;
 	}
-	
+
 	/// <inheritdoc />
 	public bool Equals (BindFromData other)
 	{
@@ -92,7 +92,7 @@ readonly struct BindFromData : IEquatable<BindFromData> {
 	{
 		return !(x == y);
 	}
-	
+
 	public override string ToString ()
 	{
 		return $"{{ Type: '{Type}', OriginalType: '{OriginalType ?? "null"}' }}";
