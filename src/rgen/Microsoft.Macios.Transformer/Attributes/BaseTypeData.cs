@@ -42,7 +42,7 @@ readonly record struct BaseTypeData {
 
 		switch (count) {
 		case 1:
-			baseType = ((INamedTypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
+			baseType = ((ITypeSymbol) attributeData.ConstructorArguments [0].Value!).ToDisplayString ();
 			break;
 		default:
 			// 0 should not be an option..
@@ -61,7 +61,7 @@ readonly record struct BaseTypeData {
 				break;
 			case "Events":
 				events = value.Values.Select (
-					v => ((INamedTypeSymbol) v.Value!).ToDisplayString ())
+					v => ((ITypeSymbol) v.Value!).ToDisplayString ())
 					.ToArray ();
 				break;
 			case "Delegates":
