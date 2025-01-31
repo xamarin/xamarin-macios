@@ -34,7 +34,7 @@ interface AVCapturePhotoSettingsThumbnailFormat {
 }
 ";
 
-			yield return [(Source: strongDictionary, Path: "/some/random/path.cs"), new StrongDictionaryData ("AVCapturePhotoSettingsThumbnailFormatKeys")];
+			yield return [(Source: strongDictionary, Path: path), new StrongDictionaryData ("AVCapturePhotoSettingsThumbnailFormatKeys")];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
