@@ -66,9 +66,7 @@ readonly struct BindFromData : IEquatable<BindFromData> {
 	/// <inheritdoc />
 	public bool Equals (BindFromData other)
 	{
-		if (Type != other.Type)
-			return false;
-		return OriginalType == other.OriginalType;
+		return Type == other.Type && OriginalType == other.OriginalType;
 	}
 
 	/// <inheritdoc />
