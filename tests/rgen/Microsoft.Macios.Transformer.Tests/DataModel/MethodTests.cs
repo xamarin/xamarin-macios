@@ -347,7 +347,7 @@ interface AVPlayer {
 				.DescendantNodes ().OfType<MethodDeclarationSyntax> ()
 				.LastOrDefault ();
 		Assert.NotNull (declaration);
-		Assert.True (Method.TryCreate (declaration, semanticModel, out var parameter));
-		Assert.Equal (expectedData, parameter);
+		Assert.True (Method.TryCreate (declaration, semanticModel, out var method));
+		Assert.Equal (expectedData, method);
 	}
 }

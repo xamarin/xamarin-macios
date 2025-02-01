@@ -337,4 +337,23 @@ static class TestDataFactory {
 			Parents = ["object"],
 			Interfaces = ["ObjCRuntime.INativeObject"]
 		};
+
+	public static TypeInfo ReturnTypeForNSString (bool isNullable = false)
+		=> new (
+			name: "Foundation.NSString",
+			isNullable: isNullable,
+			isArray: false, isReferenceType: true) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = [
+				"Foundation.NSObject",
+				"object"
+			],
+			Interfaces = [
+				"Foundation.INSCopying",
+				"Foundation.INSSecureCoding",
+				"ObjCRuntime.INativeObject",
+				"Foundation.INSObjectFactory"
+			]
+		};
 }

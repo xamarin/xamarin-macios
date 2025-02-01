@@ -21,9 +21,7 @@ readonly partial struct Method {
 	/// The data of the export attribute used to mark the value as a property binding. 
 	/// </summary>
 	public ExportData? ExportMethodData {
-		get {
-			return overrideExportData ?? ExportAttribute;
-		}
+		get => overrideExportData ?? ExportAttribute;
 		init => overrideExportData = value;
 	}
 
@@ -50,69 +48,10 @@ readonly partial struct Method {
 		ReturnType = returnType;
 		SymbolAvailability = symbolAvailability;
 		Parameters = parameters;
-		
-#pragma warning disable format
-		// Modifiers are special because we might be dealing with several flags that the user has set in the method.
-		// We have to add the partial keyword so that we can have the partial implementation of the method later generated
-		// by the roslyn code generator
-		Modifiers = this switch {
-			// internal static partial
-			{ HasNewFlag: false, HasStaticFlag: true, HasInternalFlag: true } 
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.StaticKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// public static partial
-			{ HasNewFlag: false, HasStaticFlag: true, HasInternalFlag: false } 
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.StaticKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// internal new static partial
-			{ HasNewFlag: true, HasStaticFlag: true, HasInternalFlag: true} 
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.StaticKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// public new static partial
-			{ HasNewFlag: true, HasStaticFlag: true, HasInternalFlag: false }
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.StaticKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// public new virtual partial
-			{ HasNewFlag: true, HasStaticFlag: false, HasAbstractFlag: false, HasInternalFlag: false }
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.VirtualKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// internal new virtual partial
-			{ HasNewFlag: true, HasStaticFlag: false, HasAbstractFlag: false, HasInternalFlag: true }
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.VirtualKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// public new abstract
-			{ HasNewFlag: true, HasAbstractFlag: true, HasInternalFlag: false}
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.AbstractKeyword)],
-			
-			// internal new abstract
-			{ HasNewFlag: true, HasAbstractFlag: true, HasInternalFlag: true}
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.NewKeyword), Token (SyntaxKind.AbstractKeyword)],
-			
-			// public override partial
-			{ HasNewFlag: false, HasOverrideFlag: true, HasInternalFlag: false}
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.OverrideKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// internal override partial
-			{ HasNewFlag: false, HasOverrideFlag: true, HasInternalFlag: true}
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.OverrideKeyword), Token (SyntaxKind.PartialKeyword)],
-			
-			// public abstract 
-			{ HasAbstractFlag: true, HasInternalFlag: false}
-				=> [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.AbstractKeyword)],
-			
-			// internal abstract
-			{ HasAbstractFlag: true, HasInternalFlag: true}
-				=> [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.AbstractKeyword)],
-			
-			// general case, but internal
-			{ HasInternalFlag: true} => 
-				[Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.VirtualKeyword), Token (SyntaxKind.VirtualKeyword)],
-			
-			// general case
-			_ => [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.VirtualKeyword), Token (SyntaxKind.PartialKeyword)]
-		};
-#pragma warning restore format
 
+		// create a helper struct to retrieve the modifiers
+		var flags = new ModifiersFlags (HasAbstractFlag, HasInternalFlag, HasNewFlag, HasOverrideFlag, HasStaticFlag);
+		Modifiers = flags.ToModifiersArray ();
 	}
 
 	public static bool TryCreate (MethodDeclarationSyntax declaration, SemanticModel semanticModel,

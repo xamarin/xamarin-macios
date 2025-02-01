@@ -32,10 +32,6 @@ static partial class TypeSymbolExtensions {
 		// add the different platforms to the result hashsets
 		var builder = SymbolAvailability.CreateBuilder ();
 		var boundAttributes = symbol.GetAttributes ();
-		if (boundAttributes.Length == 0) {
-			// no attrs in the symbol, therefore the symbol is supported in all platforms
-			return builder.ToImmutable ();
-		}
 
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
