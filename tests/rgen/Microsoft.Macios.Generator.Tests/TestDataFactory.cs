@@ -35,7 +35,7 @@ static class TestDataFactory {
 			IsINativeObject = false,
 		};
 
-	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
+	public static TypeInfo ReturnTypeForInt (bool isNullable = false, bool keepInterfaces = false)
 		=> new (
 			name: "int",
 			specialType: SpecialType.System_Int32,
@@ -44,7 +44,7 @@ static class TestDataFactory {
 			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
-			Interfaces = isNullable
+			Interfaces = isNullable && !keepInterfaces
 				? []
 				: [
 					"System.IComparable",
@@ -175,17 +175,19 @@ static class TestDataFactory {
 			IsInterface = true,
 		};
 
-	public static TypeInfo ReturnTypeForStruct (string structName)
+	public static TypeInfo ReturnTypeForStruct (string structName, bool isBlittable = false)
 		=> new (
 			name: structName,
+			isBlittable: isBlittable,
 			isStruct: true
 		) { Parents = ["System.ValueType", "object"] };
 
 	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false,
-		SpecialType underlyingType = SpecialType.System_Int32)
+		bool isNullable = false, bool isBlittable = true, SpecialType underlyingType = SpecialType.System_Int32)
 		=> new (
 			name: enumName,
-			isBlittable: true,
+			isNullable: isNullable,
+			isBlittable: isBlittable,
 			isSmartEnum: isSmartEnum
 		) {
 			Parents = [
@@ -300,7 +302,7 @@ static class TestDataFactory {
 			]
 		};
 
-	public static TypeInfo ReturnTypeForNSObject (string? nsObjectName = null, bool isNullable = false)
+	public static TypeInfo ReturnTypeForNSObject (string? nsObjectName = null, bool isNullable = false, bool isApiDefinition = false)
 		=> new (
 			name: nsObjectName ?? "Foundation.NSObject",
 			isNullable: isNullable,
@@ -310,13 +312,18 @@ static class TestDataFactory {
 			IsNSObject = true,
 			IsINativeObject = true,
 			Parents = nsObjectName is null ? ["object"] : ["Foundation.NSObject", "object"],
-			Interfaces = [
-				"ObjCRuntime.INativeObject",
-				$"System.IEquatable<{nsObjectName ?? "Foundation.NSObject"}>",
-				"System.IDisposable",
-				"Foundation.INSObjectFactory",
-				"Foundation.INSObjectProtocol"
-			]
+			Interfaces = isApiDefinition
+				? [
+					"ObjCRuntime.INativeObject",
+					"Foundation.INSObjectFactory",
+				]
+				: [
+					"ObjCRuntime.INativeObject",
+					$"System.IEquatable<{nsObjectName ?? "Foundation.NSObject"}>",
+					"System.IDisposable",
+					"Foundation.INSObjectFactory",
+					"Foundation.INSObjectProtocol"
+				]
 		};
 
 	public static TypeInfo ReturnTypeForINativeObject (string nativeObjectName, bool isNullable = false)
