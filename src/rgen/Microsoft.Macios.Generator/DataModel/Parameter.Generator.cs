@@ -1,6 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Extensions;
+
 namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Parameter {
@@ -13,6 +19,33 @@ readonly partial struct Parameter {
 		NSStringStruct,
 		PrimitivePointer,
 		StringPointer,
+	}
+
+	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindFromData? BindAs { get; init; }
+
+	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
+		[NotNullWhen (true)] out Parameter? parameter)
+	{
+		DelegateInfo? delegateInfo = null;
+		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
+			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
+			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
+		}
+
+		parameter = new (symbol.Ordinal, new (symbol.Type), symbol.Name) {
+			BindAs = symbol.GetBindFromData (),
+			IsOptional = symbol.IsOptional,
+			IsParams = symbol.IsParams,
+			IsThis = symbol.IsThis,
+			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
+			ReferenceKind = symbol.RefKind.ToReferenceKind (),
+			Delegate = delegateInfo,
+			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
+		};
+		return true;
 	}
 
 	/// <summary>

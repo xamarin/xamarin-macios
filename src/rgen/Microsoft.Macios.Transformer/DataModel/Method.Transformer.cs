@@ -16,6 +16,11 @@ readonly partial struct Method {
 	public ExportData ExportMethodData { get; }
 
 	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindAsData? BindAs => BindAsAttribute;
+
+	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => throw new NotImplementedException ();

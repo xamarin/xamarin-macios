@@ -39,14 +39,21 @@ readonly partial struct Property {
 	/// </summary>
 	public bool MarshalNativeExceptions => throw new NotImplementedException ();
 
+	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindAsData? BindAs => BindAsAttribute;
+
 	/// <inheritdoc />
 	public bool Equals (Property other) => Comparer.Equals (this, other);
 
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+		var sb = new StringBuilder ($"Name: '{Name}', Type: {ReturnType}, ");
+		sb.Append ($"Supported Platforms: {SymbolAvailability}, ");
+		sb.Append ($"ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ");
+		sb.Append ($"ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");
 		sb.AppendJoin (",", Modifiers.Select (x => x.Text));

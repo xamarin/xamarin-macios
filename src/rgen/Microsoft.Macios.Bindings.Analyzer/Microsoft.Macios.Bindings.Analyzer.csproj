@@ -39,6 +39,9 @@
         <Compile Include="../Microsoft.Macios.Generator/DictionaryComparer.cs" >
             <Link>Generator/DictionaryComparer.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/BindFromData.cs" >
+            <Link>Generator/Attributes/BindFromData.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/FieldData.cs" >
             <Link>Generator/Attributes/FieldData.cs</Link>
         </Compile>

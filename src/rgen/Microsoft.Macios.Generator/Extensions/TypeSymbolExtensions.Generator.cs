@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -133,6 +132,9 @@ static partial class TypeSymbolExtensions {
 	/// returned.</remarks>
 	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
 		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
+
+	public static BindFromData? GetBindFromData (this ISymbol symbol)
+		=> GetAttribute<BindFromData> (symbol, AttributesNames.BindFromAttribute, BindFromData.TryParse);
 
 	public static bool X86NeedStret (ITypeSymbol returnType)
 	{

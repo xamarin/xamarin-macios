@@ -61,6 +61,8 @@ readonly partial struct Method : IEquatable<Method> {
 			return false;
 		if (ExportMethodData != other.ExportMethodData)
 			return false;
+		if (BindAs != other.BindAs)
+			return false;
 
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
@@ -86,6 +88,7 @@ readonly partial struct Method : IEquatable<Method> {
 		hashCode.Add (Type);
 		hashCode.Add (Name);
 		hashCode.Add (ReturnType);
+		hashCode.Add (BindAs);
 		foreach (var modifier in Modifiers) {
 			hashCode.Add (modifier);
 		}
@@ -119,6 +122,7 @@ readonly partial struct Method : IEquatable<Method> {
 		sb.Append ($"ReturnType: {ReturnType}, ");
 		sb.Append ($"SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ($"ExportMethodData: {ExportMethodData}, ");
+		sb.Append ($"BindAs: {BindAs}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], Modifiers: [");

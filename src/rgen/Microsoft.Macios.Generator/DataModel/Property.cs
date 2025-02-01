@@ -113,6 +113,8 @@ readonly partial struct Property : IEquatable<Property> {
 			return false;
 		if (ExportPropertyData != other.ExportPropertyData)
 			return false;
+		if (BindAs != other.BindAs)
+			return false;
 
 		var attrsComparer = new AttributesEqualityComparer ();
 		if (!attrsComparer.Equals (Attributes, other.Attributes))
