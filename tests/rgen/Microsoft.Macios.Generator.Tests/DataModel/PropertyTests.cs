@@ -38,6 +38,34 @@ public class PropertyTests : BaseGeneratorTestClass {
 	}
 
 	[Fact]
+	public void IsThreadSafeProperty ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+		};
+		Assert.True (property.IsThreadSafe);
+
+		property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.Default)
+		};
+		Assert.False (property.IsThreadSafe);
+	}
+
+	[Fact]
 	public void CompareDiffName ()
 	{
 		var x = new Property (
@@ -1219,6 +1247,88 @@ public class TestClass {
 							modifiers: []
 						),
 					])
+			];
+
+			const string nsObjectProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject Name { get; }
+}
+";
+			yield return [
+				nsObjectProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForNSObject (),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string nsObjectArrayProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject[] Name { get; }
+}
+";
+			yield return [
+				nsObjectArrayProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForArray ("Foundation.NSObject"),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
 			];
 		}
 

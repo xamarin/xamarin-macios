@@ -158,7 +158,27 @@ partial class TabbedStringBuilder : IDisposable {
 
 		return this;
 	}
-	
+#else
+	/// <summary>
+	/// Append a new raw literal by prepending the correct indentation.
+	/// </summary>
+	/// <param name="rawString">The raw string to append.</param>
+	/// <returns>The current builder.</returns>
+	public TabbedStringBuilder AppendRaw (string rawString)
+	{
+		// we will split the raw string in lines and then append them so that the
+		// tabbing is correct
+		var lines = rawString.Split (['\n'], StringSplitOptions.None);
+		for (var index = 0; index < lines.Length; index++) {
+			var line = lines [index];
+			if (index == lines.Length - 1) {
+				Append (line);
+			} else {
+				AppendLine (line);
+			}
+		}
+		return this;
+	}
 #endif
 
 	/// <summary>
