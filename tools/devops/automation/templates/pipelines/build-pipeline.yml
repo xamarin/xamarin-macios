@@ -11,7 +11,7 @@ parameters:
 - name: macOSName # comes from the build agent demand named macOS.Name
   displayName: Name of the version of macOS to use
   type: string
-  default: 'Sonoma'
+  default: 'Sequoia'
 
 - name: pool
   type: string
@@ -140,12 +140,6 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
-    endpoint: xamarin
-
-  - repository: sdk-insertions
-    type: github
-    name: xamarin/sdk-insertions
     ref: refs/heads/main
     endpoint: xamarin
 

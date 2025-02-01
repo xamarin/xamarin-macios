@@ -20,6 +20,11 @@ namespace ObjCBindings {
 		/// Map to Objective-C/clang use of __attribute__((objc_designated_initializer)).
 		/// </summary>
 		DesignatedInitializer = 1 << 2,
+
+		/// <summary>
+		/// Flags the object as being thread safe.
+		/// </summary>
+		IsThreadSafe = 1 << 3,
 	}
 
 	/// <summary>
@@ -58,6 +63,11 @@ namespace ObjCBindings {
 		/// - Library: The library to be used in the custom marshal directive.
 		/// </summary>
 		CustomMarshalDirective = 1 << 5,
+
+		/// <summary>
+		/// Flags the object as being thread safe.
+		/// </summary>
+		IsThreadSafe = 1 << 6,
 
 	}
 
@@ -111,6 +121,18 @@ namespace ObjCBindings {
 		/// API instead of using the fast string marshalling code.
 		/// </summary>
 		DisableZeroCopy = 1 << 6,
+
+		/// <summary>
+		/// Flags the object as being thread safe.
+		/// </summary>
+		IsThreadSafe = 1 << 7,
+
+		/// <summary>
+		/// If this falgs is applied to a property, we do not generate a
+		/// backing field.   See bugzilla #3359 and Assistly 7032 for some
+		/// background information
+		/// </summary>
+		Transient = 1 << 8,
 
 	}
 }

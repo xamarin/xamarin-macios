@@ -47,7 +47,9 @@ public class BaseTransformerTestClass {
 			.WithPreprocessorSymbols (preprocessorDirectives)
 			.WithDocumentationMode (DocumentationMode.None);
 
-		var references = parseResult.GetReferences (workingDirectory, Configuration.DotNetBclDir);
+		var references = parseResult.GetReferences (workingDirectory, Configuration.DotNetBclDir).ToList ();
+		// add the mono cecil assembly, which we are missing in the api compilation rsp
+		references.Add (MetadataReference.CreateFromFile (typeof (Mono.Cecil.Cil.OpCode).Assembly.Location));
 		var parsedSource = parseResult.GetSourceFiles (updatedParseOptions).ToList ();
 		foreach (var (source, path) in sources) {
 			parsedSource.Add (CSharpSyntaxTree.ParseText (source, updatedParseOptions, path));

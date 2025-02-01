@@ -13,6 +13,11 @@ using Microsoft.Macios.Generator.Availability;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class TypeSymbolExtensions {
+
+	const string nativeObjectInterface = "ObjCRuntime.INativeObject";
+	const string nsObjectClass = "Foundation.NSObject";
+	const string dictionaryContainerClass = "Foundation.DictionaryContainer";
+
 	/// <summary>
 	/// Retrieve a dictionary with the attribute data of all the attributes attached to a symbol. Because
 	/// an attribute can appear more than once, the valus are a collection of attribute data.
@@ -29,6 +34,23 @@ static partial class TypeSymbolExtensions {
 
 		var attributes = new Dictionary<string, List<AttributeData>> ();
 		foreach (var attributeData in boundAttributes) {
+			var attrName = attributeData.AttributeClass?.ToDisplayString ();
+			if (string.IsNullOrEmpty (attrName))
+				continue;
+			if (!attributes.TryGetValue (attrName, out var attributeDataList)) {
+				attributeDataList = new List<AttributeData> ();
+				attributes.Add (attrName, attributeDataList);
+			}
+
+			attributeDataList.Add (attributeData);
+		}
+
+		// if we are dealing with a method, we want to also return the attributes used for the return type
+		if (symbol is not IMethodSymbol methodSymbol)
+			return attributes;
+
+		var returnAttributes = methodSymbol.GetReturnTypeAttributes ();
+		foreach (var attributeData in returnAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
 			if (string.IsNullOrEmpty (attrName))
 				continue;
@@ -116,7 +138,8 @@ static partial class TypeSymbolExtensions {
 		return null;
 	}
 
-	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse) where T : struct
+	internal static T? GetAttribute<T> (this ISymbol symbol, string attributeName, TryParse<T> tryParse)
+		where T : struct
 		=> GetAttribute (symbol, () => attributeName, tryParse);
 
 	/// <summary>
@@ -229,7 +252,8 @@ static partial class TypeSymbolExtensions {
 				attr.AttributeClass?.ToString () == typeof (FieldOffsetAttribute).FullName);
 
 		return offsetAttribute is not null
-				? (int) offsetAttribute.ConstructorArguments [0].Value! : 0;
+			? (int) offsetAttribute.ConstructorArguments [0].Value!
+			: 0;
 	}
 
 	/// <summary>
@@ -300,6 +324,9 @@ static partial class TypeSymbolExtensions {
 		return result;
 	}
 
+	static bool TryGetBuiltInTypeSize (this ITypeSymbol type)
+		=> TryGetBuiltInTypeSize (type, true /* doesn't matter */, out _);
+
 	static int AlignAndAdd (int size, int add, ref int maxElementSize)
 	{
 		maxElementSize = Math.Max (maxElementSize, add);
@@ -309,7 +336,8 @@ static partial class TypeSymbolExtensions {
 	}
 
 
-	static void GetValueTypeSize (this ITypeSymbol originalSymbol, ITypeSymbol type, List<ITypeSymbol> fieldSymbols, bool is64Bits, ref int size,
+	static void GetValueTypeSize (this ITypeSymbol originalSymbol, ITypeSymbol type, List<ITypeSymbol> fieldSymbols,
+		bool is64Bits, ref int size,
 		ref int maxElementSize)
 	{
 		// FIXME:
@@ -330,6 +358,7 @@ static partial class TypeSymbolExtensions {
 				GetValueTypeSize (originalSymbol, field.Type, fieldSymbols, is64Bits, ref size, ref maxElementSize);
 				continue;
 			}
+
 			var (marshalAsType, sizeConst) = marshalAs.Value;
 			var multiplier = 1;
 			switch (marshalAsType) {
@@ -364,7 +393,6 @@ static partial class TypeSymbolExtensions {
 			size = AlignAndAdd (size, typeSize, ref maxElementSize);
 			size += (multiplier - 1) * size;
 		}
-
 	}
 
 	/// <summary>
@@ -411,11 +439,7 @@ static partial class TypeSymbolExtensions {
 		out ImmutableArray<string> parents,
 		out ImmutableArray<string> interfaces)
 	{
-		const string nativeObjectInterface = "ObjCRuntime.INativeObject";
-		const string nsObjectClass = "Foundation.NSObject";
-		const string dictionaryContainerClass = "Foundation.DictionaryContainer";
-
-		isNSObject = false;
+		isNSObject = symbol.ToDisplayString ().Trim () == nsObjectClass;
 		isNativeObject = false;
 		isDictionaryContainer = false;
 

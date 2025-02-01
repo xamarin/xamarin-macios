@@ -11,9 +11,18 @@
         <DotnetBuildDirectory>build/dotnet</DotnetBuildDirectory>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.2"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
+        <PackageReference Include="Mono.Cecil" Version="0.11.5" />
         <PackageReference Include="xunit" Version="2.9.0"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
     </ItemGroup>

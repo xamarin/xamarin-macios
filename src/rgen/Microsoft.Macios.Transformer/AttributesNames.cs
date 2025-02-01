@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 #pragma warning disable format
+using Microsoft.Macios.Transformer.Attributes;
 using Microsoft.Macios.Transformer.Generator;
 
 namespace Microsoft.Macios.Transformer;
@@ -32,10 +33,18 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string AutoreleaseAttribute = "AutoreleaseAttribute";
+	
+	[BindingAttribute(typeof(AsyncData), AttributeTargets.Method)]
+	public const string AsyncAttribute = "AsyncAttribute";
 
+	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.Enum)]
 	public const string BackingFieldTypeAttribute = "BackingFieldTypeAttribute";
 	public const string BaseTypeAttribute = "BaseTypeAttribute";
+	[BindingAttribute(typeof(BindData), AttributeTargets.Method )]
 	public const string BindAttribute = "BindAttribute";
+
+	[BindingAttribute(typeof(BindAsData), AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter)]
+	public const string BindAsAttribute = "ObjCRuntime.BindAsAttribute";
 
 	/// <summary>
 	/// Use this attribute on a type definition to bind Objective-C categories and to expose those as C# extension
@@ -46,10 +55,18 @@ static class AttributesNames {
 
 	[BindingFlag] 
 	public const string CheckDisposedAttribute = "CheckDisposedAttribute";
+	
+	[BindingAttribute(typeof(CoreImageFilterData), AttributeTargets.Interface)]
 	public const string CoreImageFilterAttribute = "CoreImageFilterAttribute";
+	
+	[BindingAttribute(typeof(CoreImageFilterPropertyData), AttributeTargets.Property)]
+	public const string CoreImageFilterPropertyAttribute = "CoreImageFilterPropertyAttribute";
+	
+	[BindingFlag (AttributeTargets.Interface)]
 	public const string DefaultCtorVisibilityAttribute = "DefaultCtorVisibilityAttribute";
 
-	[BindingFlag (AttributeTargets.Field)] public const string DefaultEnumValueAttribute = "DefaultEnumValueAttribute";
+	[BindingFlag (AttributeTargets.Field)]
+	public const string DefaultEnumValueAttribute = "DefaultEnumValueAttribute";
 	public const string DeprecatedAttribute = "DeprecatedAttribute";
 
 	[BindingFlag (AttributeTargets.Interface)]
@@ -72,15 +89,30 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Parameter | AttributeTargets.Property)]
 	public const string DisableZeroCopyAttribute = "DisableZeroCopyAttribute";
 
+	/// <summary>
+	/// Code to run from a generated Dispose method, before any generated code is executed
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Interface | AttributeTargets.Class)]
 	public const string DisposeAttribute = "DisposeAttribute";
+	
 	public const string EditorBrowsableAttribute = "System.ComponentModel.EditorBrowsableAttribute";
+	
+	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Enum)]
 	public const string ErrorDomainAttribute = "ErrorDomainAttribute";
+	
 	public const string ExperimentalAttribute = "System.Diagnostics.CodeAnalysis.ExperimentalAttribute";
+	
+	[BindingAttribute(typeof(ExportData), AttributeTargets.Method | AttributeTargets.Property)]
 	public const string ExportAttribute = "Foundation.ExportAttribute";
 
 	[BindingFlag] 
 	public const string FactoryAttribute = "FactoryAttribute";
+	
+	[BindingAttribute(typeof(FieldData), AttributeTargets.Field | AttributeTargets.Property)]
 	public const string FieldAttribute = "Foundation.FieldAttribute";
+	
+	[BindingFlag (AttributeTargets.Enum)]
 	public const string FlagsAttribute = "System.FlagsAttribute";
 
 	/// <summary>
@@ -125,7 +157,9 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string ModelAttribute = "Foundation.ModelAttribute";
+	[BindingAttribute(typeof(NativeData), AttributeTargets.Enum)]
 	public const string NativeAttribute = "ObjCRuntime.NativeAttribute";
+	[BindingAttribute(typeof(NativeData), AttributeTargets.Enum | AttributeTargets.Struct)]
 	public const string NativeNameAttribute = "ObjCRuntime.NativeNameAttribute";
 
 	/// <summary>
@@ -153,6 +187,13 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method)]
 	public const string NoMethodAttribute = "NoMethodAttribute";
 
+	/// <summary>
+	/// When applied, flags the [Flags] as a notification and generates the
+	/// code to strongly type the notification.
+	/// </summary>
+	[BindingAttribute(typeof(NotificationData), AttributeTargets.Property)]
+	public const string NotificationAttribute = "NotificationAttribute";
+	
 	public const string NoTVAttribute = "NoTVAttribute";
 	public const string NoiOSAttribute = "NoiOSAttribute";
 
@@ -199,6 +240,20 @@ static class AttributesNames {
 	public const string PlainStringAttribute = "PlainStringAttribute";
 
 	/// <summary>
+	/// PostSnippet code is inserted before returning, before paramters are disposed/released
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PostSnippetAttribute = "PostSnippetAttribute";
+	
+	/// <summary>
+	/// PreSnippet code is inserted after the parameters have been validated/marshalled
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PreSnippetAttribute = "PreSnippetAttribute";
+
+	/// <summary>
 	/// When this attribute is applied to the interface definition it will flag the default constructor as private.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Interface)]
@@ -206,6 +261,13 @@ static class AttributesNames {
 
 	[BindingFlag (AttributeTargets.Property)]
 	public const string ProbePresenceAttribute = "ProbePresenceAttribute";
+	
+	/// <summary>
+	/// PrologueSnippet code is inserted before any code is generated
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PrologueSnippetAttribute = "PrologueSnippetAttribute";
 
 	/// <summary>
 	/// Use this attribute to instruct the binding generator that the binding for this particular method should be
@@ -242,6 +304,12 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class)]
 	public const string StaticAttribute = "StaticAttribute";
+	
+	/// <summary>
+	/// When this attribute is applied to an interface, it directs the generator to
+	/// create a strongly typed DictionaryContainer for the specified fields. 
+	/// </summary>
+	[BindingAttribute(typeof(StrongDictionaryData), AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Property)]
 	public const string StrongDictionaryAttribute = "StrongDictionaryAttribute";
 
 	/// <summary>
@@ -257,6 +325,11 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string TargetAttribute = "TargetAttribute";
+	
+	/// <summary>
+	/// Flags the object as being thread safe.
+	/// </summary>
+	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.All)]
 	public const string ThreadSafeAttribute = "ThreadSafeAttribute";
 
 	/// <summary>

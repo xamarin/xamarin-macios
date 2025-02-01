@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class FieldDataTests : BaseTransformerTestClass {
+public class FieldDataTests : AttributeParsingTestClass {
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -86,23 +86,6 @@ interface UIFeedbackGenerator : UIInteraction {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, FieldData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<PropertyDeclarationSyntax> ()
-			.FirstOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var fieldData = symbol.GetAttribute<FieldData> (AttributesNames.FieldAttribute, FieldData.TryParse);
-		Assert.Equal (expectedData, fieldData);
-	}
+		=> AssertTryCreate<FieldData, PropertyDeclarationSyntax> (platform, source, AttributesNames.FieldAttribute,
+			expectedData, FieldData.TryParse, lastOrDefault: false);
 }

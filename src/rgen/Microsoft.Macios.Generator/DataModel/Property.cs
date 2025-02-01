@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Availability;
 
@@ -96,8 +94,7 @@ readonly partial struct Property : IEquatable<Property> {
 		Accessors = accessors;
 	}
 
-	/// <inheritdoc />
-	public bool Equals (Property other)
+	bool CoreEquals (Property other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
@@ -151,17 +148,4 @@ readonly partial struct Property : IEquatable<Property> {
 		return !left.Equals (right);
 	}
 
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
-		sb.AppendJoin (",", Attributes);
-		sb.Append ("], Modifiers: [");
-		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
-		sb.Append ("], Accessors: [");
-		sb.AppendJoin (",", Accessors);
-		sb.Append (']');
-		return sb.ToString ();
-	}
 }

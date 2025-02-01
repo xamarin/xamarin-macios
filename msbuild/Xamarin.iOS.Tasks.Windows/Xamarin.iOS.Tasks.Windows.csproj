@@ -22,6 +22,7 @@
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="iSign.Core" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
     <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
     <PackageReference Include="System.Diagnostics.Tracer" Version="2.1.0-alpha" GeneratePathProperty="true" />
     <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
@@ -38,7 +39,7 @@
     <None Include="*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgiSign_Core)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Versions.g.cs" />
     <Compile Include="..\Xamarin.MacDev.Tasks\PublishFolderType.cs">
