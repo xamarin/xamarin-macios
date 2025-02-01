@@ -205,7 +205,7 @@ public class Example {
 		Assert.NotNull (declaration);
 		Assert.True (Property.TryCreate (declaration, semanticModel, out var changes));
 		Assert.NotNull (changes);
-		var marshall = changes.Value.ReturnType.ToMarshallType (ReferenceKind.None);
+		var marshall = changes.Value.ReturnType.ToMarshallType ();
 		Assert.NotNull (marshall);
 		Assert.Equal (expectedTypeName, marshall);
 	}

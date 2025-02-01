@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Microsoft.Macios.Transformer.Attributes;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -36,4 +38,21 @@ readonly partial struct Property {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => throw new NotImplementedException ();
+
+	/// <inheritdoc />
+	public bool Equals (Property other) => Comparer.Equals (this, other);
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		var sb = new StringBuilder (
+			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
+		sb.AppendJoin (",", Attributes);
+		sb.Append ("], Modifiers: [");
+		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
+		sb.Append ("], Accessors: [");
+		sb.AppendJoin (",", Accessors);
+		sb.Append (']');
+		return sb.ToString ();
+	}
 }

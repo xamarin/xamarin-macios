@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-readonly struct BindData : IEquatable<BindData> {
+readonly record struct BindData {
 
 	public string Selector { get; }
 	public bool Virtual { get; init; }
@@ -24,7 +24,6 @@ readonly struct BindData : IEquatable<BindData> {
 		var count = attributeData.ConstructorArguments.Length;
 		string selector;
 		bool @virtual = false;
-		// custom marshal directive values
 
 		switch (count) {
 		case 1:
@@ -56,39 +55,5 @@ readonly struct BindData : IEquatable<BindData> {
 
 		data = new (selector) { Virtual = @virtual, };
 		return true;
-	}
-
-	public bool Equals (BindData other)
-	{
-		if (Selector != other.Selector)
-			return false;
-		return Virtual == other.Virtual;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is BindData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-		=> HashCode.Combine (Selector, Virtual);
-
-
-	public static bool operator == (BindData x, BindData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (BindData x, BindData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ BindSelector: '{Selector}', Virtual: {Virtual} }}";
 	}
 }
