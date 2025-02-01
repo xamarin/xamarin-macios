@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Transformer.Attributes;
+using Microsoft.Macios.Transformer.Extensions;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Extensions;
@@ -66,6 +67,21 @@ static partial class TypeSymbolExtensions {
 
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
-		throw new NotImplementedException ();
+		// smart enums in the classic bindings are a little more complicated to detect since we need
+		// to find AT LEAST one enum field that contains the Field attribute.
+		if (symbol.TypeKind != TypeKind.Enum)
+			return false;
+
+		foreach (var member in symbol.GetMembers ()) {
+			if (member is not IFieldSymbol field || !field.IsConst)
+				continue;
+
+			// try to get the Field attribute from the current member, if we found it, then we have a smart enum
+			var attributeData = field.GetAttributeData ();
+			if (attributeData.HasFieldAttribute ())
+				return true;
+		}
+
+		return false;
 	}
 }
