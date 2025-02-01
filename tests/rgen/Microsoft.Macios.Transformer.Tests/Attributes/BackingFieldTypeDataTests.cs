@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class BackingFieldTypeDataTests : BaseTransformerTestClass {
+public class BackingFieldTypeDataTests : AttributeParsingTestClass {
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -70,25 +70,7 @@ public enum ASAuthorizationProviderExtensionEncryptionAlgorithm {
 
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
-	void TryeCreateTests (ApplePlatform platform, (string Source, string Path) source, BackingFieldTypeData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<BaseTypeDeclarationSyntax> ()
-			.LastOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var exportData = symbol.GetAttribute<BackingFieldTypeData> (
-			AttributesNames.BackingFieldTypeAttribute, BackingFieldTypeData.TryParse);
-		Assert.Equal (expectedData, exportData);
-	}
+	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, BackingFieldTypeData expectedData)
+		=> AssertTryCreate<BackingFieldTypeData, BaseTypeDeclarationSyntax> (platform, source, AttributesNames.BackingFieldTypeAttribute,
+			expectedData, BackingFieldTypeData.TryParse, lastOrDefault: true);
 }

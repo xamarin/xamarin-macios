@@ -181,7 +181,8 @@ static class TestDataFactory {
 			isStruct: true
 		) { Parents = ["System.ValueType", "object"] };
 
-	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false,
+		SpecialType underlyingType = SpecialType.System_Int32)
 		=> new (
 			name: enumName,
 			isBlittable: true,
@@ -199,7 +200,7 @@ static class TestDataFactory {
 				"System.ISpanFormattable"
 			],
 			IsNativeEnum = isNativeEnum,
-			EnumUnderlyingType = SpecialType.System_Int32,
+			EnumUnderlyingType = underlyingType,
 		};
 
 	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
@@ -297,5 +298,36 @@ static class TestDataFactory {
 				"System.ICloneable",
 				"System.Runtime.Serialization.ISerializable",
 			]
+		};
+
+	public static TypeInfo ReturnTypeForNSObject (string? nsObjectName = null, bool isNullable = false)
+		=> new (
+			name: nsObjectName ?? "Foundation.NSObject",
+			isNullable: isNullable,
+			isArray: false,
+			isReferenceType: true
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = nsObjectName is null ? ["object"] : ["Foundation.NSObject", "object"],
+			Interfaces = [
+				"ObjCRuntime.INativeObject",
+				$"System.IEquatable<{nsObjectName ?? "Foundation.NSObject"}>",
+				"System.IDisposable",
+				"Foundation.INSObjectFactory",
+				"Foundation.INSObjectProtocol"
+			]
+		};
+
+	public static TypeInfo ReturnTypeForINativeObject (string nativeObjectName, bool isNullable = false)
+		=> new (
+			name: nativeObjectName,
+			isNullable: isNullable,
+			isArray: false
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = ["object"],
+			Interfaces = ["ObjCRuntime.INativeObject"]
 		};
 }

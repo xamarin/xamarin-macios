@@ -3,6 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Macios.Generator.Attributes;
+using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -19,6 +20,20 @@ readonly struct BindingInfo : IEquatable<BindingInfo> {
 	[FieldOffset (8)] readonly BindingTypeData<ObjCBindings.Category> categoryData;
 
 	public BindingType BindingType => bindingType;
+
+	/// <summary>
+	/// Returns if the binding has been declared to be thread safe.
+	/// </summary>
+	public bool IsThreadSafe {
+		get {
+			return bindingType switch {
+				BindingType.Category => categoryData.Flags.HasFlag (Category.IsThreadSafe),
+				BindingType.Class => classData.Flags.HasFlag (Class.IsThreadSafe),
+				BindingType.Protocol => protocolData.Flags.HasFlag (Protocol.IsThreadSafe),
+				_ => false
+			};
+		}
+	}
 
 	public BindingInfo (BindingType type, BindingTypeData data)
 	{

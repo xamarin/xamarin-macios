@@ -16,7 +16,7 @@
 
 		-->
 		<MessagingVersion Condition="'$(MessagingVersion)' == ''">[3.0.13]</MessagingVersion>
-		<HotRestartVersion>[17.14.51-gd03e25086a]</HotRestartVersion>
+		<HotRestartVersion>[17.14.83-g77e8f56103]</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
 </Project>

@@ -155,7 +155,7 @@ namespace ObjCRuntime {
 		}
 #endif // BGENERATOR
 
-#if BGENERATOR
+#if BGENERATOR || RGEN
 		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;

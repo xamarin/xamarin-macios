@@ -2,6 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -130,4 +133,114 @@ static partial class TypeSymbolExtensions {
 	/// returned.</remarks>
 	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
 		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
+
+	public static bool X86NeedStret (ITypeSymbol returnType)
+	{
+		if (!returnType.IsValueType || returnType.SpecialType == SpecialType.System_Enum ||
+			returnType.TryGetBuiltInTypeSize ())
+			return false;
+
+		var fieldTypes = new List<ITypeSymbol> ();
+		var size = GetValueTypeSize (returnType, fieldTypes, false);
+
+		if (size > 8)
+			return true;
+
+		return fieldTypes.Count == 3;
+	}
+
+	public static bool X86_64NeedStret (ITypeSymbol returnType)
+	{
+		if (!returnType.IsValueType || returnType.SpecialType == SpecialType.System_Enum ||
+			returnType.TryGetBuiltInTypeSize ())
+			return false;
+
+		var fieldTypes = new List<ITypeSymbol> ();
+		return GetValueTypeSize (returnType, fieldTypes, true) > 16;
+	}
+
+	public static bool ArmNeedStret (ITypeSymbol returnType, Compilation compilation)
+	{
+		var currentPlatform = compilation.GetCurrentPlatform ();
+		bool has32bitArm = currentPlatform != PlatformName.TvOS && currentPlatform != PlatformName.MacOSX;
+		if (!has32bitArm)
+			return false;
+
+		ITypeSymbol t = returnType;
+
+		if (!t.IsValueType || t.SpecialType == SpecialType.System_Enum || t.TryGetBuiltInTypeSize ())
+			return false;
+
+		var fieldTypes = new List<ITypeSymbol> ();
+		var size = t.GetValueTypeSize (fieldTypes, false);
+
+		bool isiOS = currentPlatform == PlatformName.iOS;
+
+		if (isiOS && size <= 4 && fieldTypes.Count == 1) {
+			
+#pragma warning disable format
+			return fieldTypes [0] switch {
+				{ Name: "nint" } => false,
+				{ Name: "nuint" } => false,
+				{ SpecialType: SpecialType.System_Char } => false,
+				{ SpecialType: SpecialType.System_Byte } => false,
+				{ SpecialType: SpecialType.System_SByte } => false,
+				{ SpecialType: SpecialType.System_UInt16 } => false,
+				{ SpecialType: SpecialType.System_Int16 } => false,
+				{ SpecialType: SpecialType.System_UInt32 } => false,
+				{ SpecialType: SpecialType.System_Int32 } => false,
+				{ SpecialType: SpecialType.System_IntPtr } => false,
+				{ SpecialType: SpecialType.System_UIntPtr } => false,
+				_ => true
+			};
+#pragma warning restore format
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Return if a given ITypeSymbol requires to use the objc_MsgSend_stret variants.
+	/// </summary>
+	/// <param name="returnType">The type we are testing.</param>
+	/// <param name="compilation">The current compilation, used to determine the target platform.</param>
+	/// <returns>If the type represented by the symtol needs a stret call variant.</returns>
+	public static bool NeedsStret (this ITypeSymbol returnType, Compilation compilation)
+	{
+		if (X86NeedStret (returnType))
+			return true;
+
+		if (X86_64NeedStret (returnType))
+			return true;
+
+		return ArmNeedStret (returnType, compilation);
+	}
+
+	/// <summary>
+	/// A type is considered wrapped if it is an Interface or is an child of the NSObject class or the NSObject
+	/// itself.
+	/// </summary>
+	/// <param name="symbol">The symbol to check if it is wrapped.</param>
+	/// <param name="isNSObject">If the symbol is a NSObject of inherits from an NSObject.</param>
+	/// <returns>True if the ymbol is considered to be wrapped.</returns>
+	public static bool IsWrapped (this ITypeSymbol symbol, bool isNSObject)
+		=> symbol.TypeKind == TypeKind.Interface || isNSObject;
+
+	/// <summary>
+	/// A type is considered wrapped if it is an Interface or is an child of the NSObject class or the NSObject
+	/// itself.
+	/// </summary>
+	/// <param name="symbol">The symbol to check if it is wrapped.</param>
+	/// <returns>True if the ymbol is considered to be wrapped.</returns>
+	public static bool IsWrapped (this ITypeSymbol symbol)
+	{
+		symbol.GetInheritance (
+			isNSObject: out bool isNSObject,
+			isNativeObject: out bool _,
+			isDictionaryContainer: out bool _,
+			parents: out ImmutableArray<string> _,
+			interfaces: out ImmutableArray<string> _);
+		// either we are a NSObject or we are a subclass of it
+		return IsWrapped (symbol, isNSObject);
+	}
 }

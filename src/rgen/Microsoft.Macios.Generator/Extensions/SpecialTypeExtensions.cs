@@ -17,7 +17,7 @@ static class SpecialTypeExtensions {
 	/// </summary>
 	/// <param name="self">The special type to convert.</param>
 	/// <returns>The string representation of the keyword.</returns>
-	public static string? GetKeyword (this SpecialType self)
+	public static string GetKeyword (this SpecialType self)
 	{
 		var kind = self switch {
 			SpecialType.System_Void => SyntaxKind.VoidKeyword,

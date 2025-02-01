@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-struct FieldData : IEquatable<FieldData> {
+readonly record struct FieldData {
 
 	public string SymbolName { get; }
 	public string? LibraryName { get; }
@@ -22,7 +22,7 @@ struct FieldData : IEquatable<FieldData> {
 	public static bool TryParse (AttributeData attributeData,
 		[NotNullWhen (true)] out FieldData? data)
 	{
-		data = default;
+		data = null;
 
 		var count = attributeData.ConstructorArguments.Length;
 		string? symbolName;
@@ -58,39 +58,5 @@ struct FieldData : IEquatable<FieldData> {
 		}
 		data = new (symbolName, libraryName);
 		return true;
-	}
-
-	public bool Equals (FieldData other)
-	{
-		if (SymbolName != other.SymbolName)
-			return false;
-		return LibraryName == other.LibraryName;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is FieldData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-	{
-		return HashCode.Combine (SymbolName, LibraryName);
-	}
-
-	public static bool operator == (FieldData x, FieldData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (FieldData x, FieldData y)
-	{
-		return !(x == y);
-	}
-
-	public override string ToString ()
-	{
-		return $"{{ SymbolName: '{SymbolName}' LibraryName: '{LibraryName ?? "null"}' }}";
 	}
 }
