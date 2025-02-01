@@ -302,7 +302,7 @@ static class AttributesNames {
 	/// When this attribute is applied to a class it will just generate a static class, one that does not derive
 	/// from NSObject.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Class)]
+	[BindingFlag (AttributeTargets.Class | AttributeTargets.Method)]
 	public const string StaticAttribute = "StaticAttribute";
 	
 	/// <summary>

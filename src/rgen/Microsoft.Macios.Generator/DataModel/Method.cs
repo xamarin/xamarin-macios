@@ -41,7 +41,7 @@ readonly partial struct Method : IEquatable<Method> {
 	/// <summary>
 	/// Modifiers list.
 	/// </summary>
-	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
+	public ImmutableArray<SyntaxToken> Modifiers { get; init; } = [];
 
 	/// <summary>
 	/// Parameters list.
