@@ -16,6 +16,21 @@ namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
 public class MethodTests : BaseTransformerTestClass {
 
+	[Theory]
+	[InlineData ("Hello", false)]
+	[InlineData ("Constructor", true)]
+	public void IsConstructorTests (string methodName, bool expectedResult)
+	{
+		var method = new Method (
+			type: "TestClass",
+			name: methodName,
+			returnType: ReturnTypeForVoid (),
+			symbolAvailability: new (),
+			attributes: new (),
+			parameters: []);
+		Assert.Equal (expectedResult, method.IsConstructor);
+	}
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
