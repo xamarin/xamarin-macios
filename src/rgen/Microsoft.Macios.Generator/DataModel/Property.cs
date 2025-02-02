@@ -61,7 +61,7 @@ readonly partial struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Get the modifiers of the property.
 	/// </summary>
-	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
+	public ImmutableArray<SyntaxToken> Modifiers { get; init; } = [];
 
 	/// <summary>
 	/// Get the list of accessor changes of the property.
@@ -78,20 +78,6 @@ readonly partial struct Property : IEquatable<Property> {
 				return accessor;
 		}
 		return null;
-	}
-
-	internal Property (string name, TypeInfo returnType,
-		SymbolAvailability symbolAvailability,
-		ImmutableArray<AttributeCodeChange> attributes,
-		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
-	{
-		Name = name;
-		BackingField = $"_{Name}";
-		ReturnType = returnType;
-		SymbolAvailability = symbolAvailability;
-		Attributes = attributes;
-		Modifiers = modifiers;
-		Accessors = accessors;
 	}
 
 	bool CoreEquals (Property other)

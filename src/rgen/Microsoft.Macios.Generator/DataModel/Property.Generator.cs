@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using ObjCRuntime;
@@ -27,6 +28,9 @@ readonly partial struct Property {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
+	/// <summary>
+	/// Returns if the field was marked as a notification.
+	/// </summary>
 	public bool IsNotification
 		=> IsField && ExportFieldData.Value.FieldData.Flags.HasFlag (ObjCBindings.Property.Notification);
 
@@ -114,6 +118,21 @@ readonly partial struct Property {
 		}
 
 		return fieldInfo;
+	}
+
+	internal Property (string name, TypeInfo returnType,
+		SymbolAvailability symbolAvailability,
+		ImmutableArray<AttributeCodeChange> attributes,
+		ImmutableArray<SyntaxToken> modifiers,
+		ImmutableArray<Accessor> accessors)
+	{
+		Name = name;
+		BackingField = $"_{Name}";
+		ReturnType = returnType;
+		SymbolAvailability = symbolAvailability;
+		Attributes = attributes;
+		Modifiers = modifiers;
+		Accessors = accessors;
 	}
 
 	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootBindingContext context,
