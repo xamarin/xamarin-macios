@@ -36,7 +36,7 @@ readonly partial struct Method {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => HasMarshalNativeExceptionsFlag;
-	
+
 	const string constructorName = "Constructor";
 	/// <summary>
 	/// True if the method is considered to be a constructor in the old bindings.

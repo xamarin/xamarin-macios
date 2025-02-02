@@ -25,12 +25,12 @@ public class MethodTests : BaseTransformerTestClass {
 			type: "TestClass",
 			name: methodName,
 			returnType: ReturnTypeForVoid (),
-			symbolAvailability: new(),
-			attributes: new(),
+			symbolAvailability: new (),
+			attributes: new (),
 			parameters: []);
 		Assert.Equal (expectedResult, method.IsConstructor);
 	}
-	
+
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
