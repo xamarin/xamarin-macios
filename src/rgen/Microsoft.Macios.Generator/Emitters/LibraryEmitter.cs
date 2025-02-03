@@ -11,7 +11,7 @@ using Microsoft.Macios.Generator.Context;
 namespace Microsoft.Macios.Generator.Emitters;
 
 class LibraryEmitter (
-	RootBindingContext context,
+	RootContext context,
 	TabbedStringBuilder builder) {
 	public string SymbolNamespace => "ObjCRuntime";
 	public string SymbolName => "Libraries";

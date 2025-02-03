@@ -52,7 +52,7 @@ readonly partial struct Method {
 		Parameters = parameters;
 	}
 
-	public static bool TryCreate (MethodDeclarationSyntax declaration, RootBindingContext context,
+	public static bool TryCreate (MethodDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Method? change)
 	{
 		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {

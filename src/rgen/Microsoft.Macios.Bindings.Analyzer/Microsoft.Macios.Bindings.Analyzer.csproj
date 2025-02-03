@@ -69,6 +69,9 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
             <Link>Generator/Extensions/CompilationExtensions.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/Delegates.cs" >
+            <Link>Generator/Extensions/Delegates.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs">
             <Link>Generator/Extensions/TypeSymbolExtensions.Core.cs</Link>
         </Compile>

@@ -106,7 +106,7 @@ readonly partial struct Property {
 		init => requiresDirtyCheck = value;
 	}
 
-	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
+	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootContext context, IPropertySymbol propertySymbol)
 	{
 		// grab the last port of the namespace
 		var ns = propertySymbol.ContainingNamespace.Name.Split ('.') [^1];
@@ -135,7 +135,7 @@ readonly partial struct Property {
 		Accessors = accessors;
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootBindingContext context,
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();

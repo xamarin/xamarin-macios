@@ -61,6 +61,11 @@ static partial class TypeSymbolExtensions {
 		return builder.ToImmutable ();
 	}
 
+	/// <summary>
+	/// Test if a symbol represents a smart enum.
+	/// </summary>
+	/// <param name="symbol">The symbol under query.</param>
+	/// <returns>True if the symbol is a smart enum.</returns>
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
 		// a type is a smart enum if its type is a enum one AND it was decorated with the
@@ -69,47 +74,23 @@ static partial class TypeSymbolExtensions {
 			   && symbol.HasAttribute (AttributesNames.BindingAttribute);
 	}
 
+	/// <summary>
+	/// Retrieves the binding type data from a symbol that represents a smart enum. For any other binding types use
+	/// the generic method.
+	/// </summary>
+	/// <param name="symbol">The symbol under query.</param>
+	/// <returns>The binding type data for a smart enum binding.</returns>
 	public static BindingTypeData GetBindingData (this ISymbol symbol)
-	{
-		var boundAttributes = symbol.GetAttributes ();
-		if (boundAttributes.Length == 0) {
-			// no attrs in the symbol, therefore the symbol is supported in all platforms
-			return default;
-		}
+		=> GetAttribute<BindingTypeData> (symbol, AttributesNames.BindingAttribute, BindingTypeData.TryParse) ?? default;
 
-		// we are looking for the basic BindingAttribute attr
-		foreach (var attributeData in boundAttributes) {
-			var attrName = attributeData.AttributeClass?.ToDisplayString ();
-			if (string.IsNullOrEmpty (attrName) || attrName != AttributesNames.BindingAttribute)
-				continue;
-			if (BindingTypeData.TryParse (attributeData, out var bindingData)) {
-				return bindingData.Value;
-			}
-		}
-
-		return default;
-	}
-
+	/// <summary>
+	/// Retrieves the binding type data from a symbol that represents a binding type.
+	/// </summary>
+	/// <param name="symbol">The symbol under query.</param>
+	/// <typeparam name="T">The flag that identifies the type of binding.</typeparam>
+	/// <returns>The binding type data for the binding that matches the flat T.</returns>
 	public static BindingTypeData<T> GetBindingData<T> (this ISymbol symbol) where T : Enum
-	{
-		var boundAttributes = symbol.GetAttributes ();
-		if (boundAttributes.Length == 0) {
-			// no attrs in the symbol, therefore the symbol is supported in all platforms
-			return default;
-		}
-
-		var targetAttrName = AttributesNames.GetBindingTypeAttributeName<T> ();
-		foreach (var attributeData in boundAttributes) {
-			var attrName = attributeData.AttributeClass?.ToDisplayString ();
-			if (string.IsNullOrEmpty (attrName) || attrName != targetAttrName)
-				continue;
-			if (BindingTypeData<T>.TryParse (attributeData, out var bindingData)) {
-				return bindingData.Value;
-			}
-		}
-
-		return default;
-	}
+		=> GetAttribute<BindingTypeData<T>> (symbol, AttributesNames.GetBindingTypeAttributeName<T>, BindingTypeData<T>.TryParse) ?? default;
 
 	/// <summary>
 	/// Retrieve the data of an export attribute on a symbol.
@@ -123,7 +104,7 @@ static partial class TypeSymbolExtensions {
 		=> GetAttribute<ExportData<T>> (symbol, AttributesNames.GetExportAttributeName<T>, ExportData<T>.TryParse);
 
 	/// <summary>
-	/// Retrieve the data of a field attribute on a symbol.
+	/// Retrieve the data of a field attribute on a symbol, usually a property.
 	/// </summary>
 	/// <param name="symbol">The tagged symbol.</param>
 	/// <typeparam name="T">Enum type used in the attribute.</typeparam>
@@ -133,6 +114,11 @@ static partial class TypeSymbolExtensions {
 	public static FieldData<T>? GetFieldData<T> (this ISymbol symbol) where T : Enum
 		=> GetAttribute<FieldData<T>> (symbol, AttributesNames.GetFieldAttributeName<T>, FieldData<T>.TryParse);
 
+	/// <summary>
+	/// Retrieve the data from the bind from attribute on a symbol.
+	/// </summary>
+	/// <param name="symbol">The tagged symbol.</param>
+	/// <returns>The data of a BindFromAttribute that was added to the symbol or null if it was not found.</returns>
 	public static BindFromData? GetBindFromData (this ISymbol symbol)
 		=> GetAttribute<BindFromData> (symbol, AttributesNames.BindFromAttribute, BindFromData.TryParse);
 
