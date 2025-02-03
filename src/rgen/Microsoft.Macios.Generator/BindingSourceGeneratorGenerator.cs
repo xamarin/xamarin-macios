@@ -71,9 +71,9 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		_ => false,
 	};
 
-	static (RootBindingContext RootBindingContext, Binding Bindings, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
+	static (RootContext RootBindingContext, Binding Bindings, bool BindingAttributeFound) GetChangesForSourceGen (GeneratorSyntaxContext context)
 	{
-		var bindingContext = new RootBindingContext (context.SemanticModel);
+		var bindingContext = new RootContext (context.SemanticModel);
 		// we do know that the context node has to be one of the base type declarations
 		var declarationSyntax = Unsafe.As<BaseTypeDeclarationSyntax> (context.Node);
 
@@ -140,7 +140,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 	/// <param name="context">Source production context.</param>
 	/// <param name="libraryChanges">The root context of the current generation.</param>
 	static void GenerateLibraryCode (SourceProductionContext context,
-		ImmutableArray<(RootBindingContext RootBindingContext, IEnumerable<(string LibraryName, string? LibraryPath)> LibraryPaths)> libraryChanges)
+		ImmutableArray<(RootContext RootBindingContext, IEnumerable<(string LibraryName, string? LibraryPath)> LibraryPaths)> libraryChanges)
 	{
 		if (libraryChanges.Length == 0)
 			return;

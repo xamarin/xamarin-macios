@@ -1,47 +1,22 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Transformer.Attributes;
 
-namespace Microsoft.Macios.Generator.DataModel;
+namespace Microsoft.Macios.Transformer.DataModel;
 
 /// <summary>
 /// This struct works as a union to store the possible BindingTypeData that can be present in the bindings.
 /// </summary>
-readonly struct BindingInfo : IEquatable<BindingInfo> {
+readonly record struct BindingInfo {
+	public BaseTypeData? BaseTypeData { get; init; }
+	public BindingType BindingType { get; init; }
 
-	public BaseTypeData BaseTypeData { get; }
-
-	public BindingInfo (BaseTypeData baseTypeData)
+	public BindingInfo (BaseTypeData? baseTypeData, BindingType bindingType)
 	{
+		// we have to calculate the type of the binding based on the attributes that the user provided
 		BaseTypeData = baseTypeData;
-	}
-
-	/// <inheritdoc />
-	public bool Equals (BindingInfo other)
-	{
-		throw new NotImplementedException ();
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is BindingInfo other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-	{
-		throw new NotImplementedException ();
-	}
-
-	public static bool operator == (BindingInfo x, BindingInfo y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (BindingInfo x, BindingInfo y)
-	{
-		return !(x == y);
+		BindingType = bindingType;
 	}
 }

@@ -17,14 +17,29 @@ namespace Microsoft.Macios.Generator.Context;
 /// The class also provides a number or properties that will allow to determine the platform we are binding and access
 /// to the current compilation.
 /// </summary>
-class RootBindingContext {
+class RootContext {
+
+	/// <summary>
+	/// The platform of the current compilation.
+	/// </summary>
 	public PlatformName CurrentPlatform { get; set; }
+
+	/// <summary>
+	/// Current compilation.
+	/// </summary>
 	public Compilation Compilation => this.SemanticModel.Compilation;
+
+	/// <summary>
+	/// Current semantic model.
+	/// </summary>
 	public SemanticModel SemanticModel { get; set; }
 
+	/// <summary>
+	/// A dictionary that contains the libraries that are being used in the current binding.
+	/// </summary>
 	public Dictionary<string, string> Libraries { get; } = new ();
 
-	public RootBindingContext (SemanticModel semanticModel)
+	public RootContext (SemanticModel semanticModel)
 	{
 		SemanticModel = semanticModel;
 		CurrentPlatform = Compilation.GetCurrentPlatform ();
@@ -91,6 +106,10 @@ class RootBindingContext {
 		// has to end with the word library
 		&& libraryName.EndsWith ("Library", StringComparison.Ordinal);
 
+	/// <summary>
+	/// Return the Constants type from the ObjCRuntime namespace.
+	/// </summary>
+	/// <returns></returns>
 	INamedTypeSymbol GetObjCConstants () => Compilation.GetTypeByMetadataName ("ObjCRuntime.Constants")!;
 
 	/// <summary>
@@ -107,5 +126,5 @@ class RootBindingContext {
 			.Any (s => IsLibraryName (s, name));
 	}
 
-	public static implicit operator RootBindingContext (SemanticModel semanticModel) => new (semanticModel);
+	public static implicit operator RootContext (SemanticModel semanticModel) => new (semanticModel);
 }

@@ -53,11 +53,29 @@
         <Compile Include="../Microsoft.Macios.Generator/Availability/*.cs">
             <Link>Availability/*.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Context/RootContext.cs">
+            <Link>Context/RootContext.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ApplePlatformExtensions.cs">
             <Link>Extensions/ApplePlatformExtensions.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/BaseTypeDeclarationSyntaxExtensions.cs">
+            <Link>Extensions/BaseTypeDeclarationSyntaxExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs">
+            <Link>Extensions/CompilationExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/Delegates.cs">
+            <Link>Extensions/Delegates.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/FieldSymbolExtensions.cs">
+            <Link>Extensions/FieldSymbolExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/ParameterSyntaxExtensions.cs">
             <Link>Extensions/ParameterSyntaxExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/SemanticModelExtensions.cs" >
+            <Link>Extensions/SemanticModelExtensions.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/SpecialTypeExtensions.cs" >
             <Link>Extensions/SpecialTypeExtensions.cs</Link>
@@ -65,8 +83,14 @@
         <Compile Include="../Microsoft.Macios.Generator/Extensions/StringExtensions.cs">
             <Link>Extensions/StringExtensions.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/SyntaxTreeExtensions.cs">
+            <Link>Extensions/SyntaxTreeExtensions.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs">
             <Link>Extensions/TypeSymbolExtensions.Core.cs</Link>
+        </Compile>
+        <Compile Include="..\..\bgen\Extensions\PlatformNameExtensions.cs" >
+            <Link>external\PlatformNameExtensions.cs</Link>
         </Compile>
     </ItemGroup>
 
