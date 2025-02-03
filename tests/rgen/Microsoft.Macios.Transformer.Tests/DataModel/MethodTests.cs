@@ -366,122 +366,120 @@ interface AVPlayer {
 		Assert.True (Method.TryCreate (declaration, semanticModel, out var method));
 		Assert.Equal (expectedData, method);
 	}
-	
-	class TestDataToConstructor: IEnumerable<object []> {
+
+	class TestDataToConstructor : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "SomeMethodName", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
+					type: "MyType",
+					name: "SomeMethodName",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
 					parameters: ImmutableArray<Parameter>.Empty),
 				null!
 			];
-			
+
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "Constructor", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
 					parameters: ImmutableArray<Parameter>.Empty),
-				new Constructor(
-					type: "MyType", 
-					symbolAvailability: new(), 
-					attributes: [], 
-					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+				new Constructor (
+					type: "MyType",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)],
 					parameters: [])
 			];
-			
+
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "Constructor", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
-					parameters: []) 
-				{
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
+					parameters: []) {
 					Modifiers = [
-						Token (SyntaxKind.InternalKeyword), 
-						Token (SyntaxKind.VirtualKeyword), 
+						Token (SyntaxKind.InternalKeyword),
+						Token (SyntaxKind.VirtualKeyword),
 						Token (SyntaxKind.PartialKeyword)
 					]
 				},
-				new Constructor(
-					type: "MyType", 
-					symbolAvailability: new(), 
-					attributes: [], 
-					modifiers: [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.PartialKeyword)], 
+				new Constructor (
+					type: "MyType",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.PartialKeyword)],
 					parameters: [])
 			];
-			
+
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "Constructor", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
-					parameters: []) 
-				{
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
+					parameters: []) {
 					Modifiers = [
-						Token (SyntaxKind.ProtectedKeyword), 
-						Token (SyntaxKind.VirtualKeyword), 
+						Token (SyntaxKind.ProtectedKeyword),
+						Token (SyntaxKind.VirtualKeyword),
 						Token (SyntaxKind.PartialKeyword)
 					]
 				},
-				new Constructor(
-					type: "MyType", 
-					symbolAvailability: new(), 
-					attributes: [], 
-					modifiers: [Token (SyntaxKind.ProtectedKeyword), Token (SyntaxKind.PartialKeyword)], 
+				new Constructor (
+					type: "MyType",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [Token (SyntaxKind.ProtectedKeyword), Token (SyntaxKind.PartialKeyword)],
 					parameters: [])
 			];
-			
+
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "Constructor", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
 					parameters: [
-						new Parameter(0, ReturnTypeForString (), "name")
+						new Parameter (0, ReturnTypeForString (), "name")
 					]),
-				new Constructor(
-					type: "MyType", 
-					symbolAvailability: new(), 
-					attributes: [], 
-					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+				new Constructor (
+					type: "MyType",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)],
 					parameters: [
-						new Parameter(0, ReturnTypeForString (), "name")
+						new Parameter (0, ReturnTypeForString (), "name")
 					])
 			];
-			
+
 			yield return [
 				new Method (
-					type: "MyType", 
-					name: "Constructor", 
-					returnType: ReturnTypeForVoid (), 
-					symbolAvailability: new (), 
-					attributes: new (), 
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
 					parameters: [
-						new Parameter(0, ReturnTypeForString (), "name"),
-						new Parameter(1, ReturnTypeForString (isNullable: true), "surname")
+						new Parameter (0, ReturnTypeForString (), "name"),
+						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
 					]),
-				new Constructor(
-					type: "MyType", 
-					symbolAvailability: new(), 
-					attributes: [], 
-					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+				new Constructor (
+					type: "MyType",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)],
 					parameters: [
-						new Parameter(0, ReturnTypeForString (), "name"),
-						new Parameter(1, ReturnTypeForString (isNullable: true), "surname")
+						new Parameter (0, ReturnTypeForString (), "name"),
+						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
 					])
 			];
 		}
@@ -490,7 +488,7 @@ interface AVPlayer {
 	}
 
 	[Theory]
-	[ClassData (typeof(TestDataToConstructor))]
+	[ClassData (typeof (TestDataToConstructor))]
 	void ToConstructorTests (Method method, Constructor? expectedConstructor)
 		=> Assert.Equal (expectedConstructor, method.ToConstructor ());
 
