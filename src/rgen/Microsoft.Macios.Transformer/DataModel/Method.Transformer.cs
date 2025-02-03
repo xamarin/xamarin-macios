@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -60,10 +61,10 @@ readonly partial struct Method {
 		Modifiers = flags.ToModifiersArray ();
 	}
 
-	public static bool TryCreate (MethodDeclarationSyntax declaration, SemanticModel semanticModel,
+	public static bool TryCreate (MethodDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Method? change)
 	{
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
 			change = null;
 			return false;
 		}
@@ -71,7 +72,7 @@ readonly partial struct Method {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, semanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}
