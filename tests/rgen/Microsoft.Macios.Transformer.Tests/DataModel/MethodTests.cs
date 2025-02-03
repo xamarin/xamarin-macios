@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
@@ -11,6 +12,7 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using Token = System.CommandLine.Parsing.Token;
 
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
@@ -341,7 +343,6 @@ interface AVPlayer {
 			];
 		}
 
-
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
 
@@ -365,4 +366,132 @@ interface AVPlayer {
 		Assert.True (Method.TryCreate (declaration, semanticModel, out var method));
 		Assert.Equal (expectedData, method);
 	}
+	
+	class TestDataToConstructor: IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "SomeMethodName", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: ImmutableArray<Parameter>.Empty),
+				null!
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "Constructor", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: ImmutableArray<Parameter>.Empty),
+				new Constructor(
+					type: "MyType", 
+					symbolAvailability: new(), 
+					attributes: [], 
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+					parameters: [])
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "Constructor", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: []) 
+				{
+					Modifiers = [
+						Token (SyntaxKind.InternalKeyword), 
+						Token (SyntaxKind.VirtualKeyword), 
+						Token (SyntaxKind.PartialKeyword)
+					]
+				},
+				new Constructor(
+					type: "MyType", 
+					symbolAvailability: new(), 
+					attributes: [], 
+					modifiers: [Token (SyntaxKind.InternalKeyword), Token (SyntaxKind.PartialKeyword)], 
+					parameters: [])
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "Constructor", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: []) 
+				{
+					Modifiers = [
+						Token (SyntaxKind.ProtectedKeyword), 
+						Token (SyntaxKind.VirtualKeyword), 
+						Token (SyntaxKind.PartialKeyword)
+					]
+				},
+				new Constructor(
+					type: "MyType", 
+					symbolAvailability: new(), 
+					attributes: [], 
+					modifiers: [Token (SyntaxKind.ProtectedKeyword), Token (SyntaxKind.PartialKeyword)], 
+					parameters: [])
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "Constructor", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: [
+						new Parameter(0, ReturnTypeForString (), "name")
+					]),
+				new Constructor(
+					type: "MyType", 
+					symbolAvailability: new(), 
+					attributes: [], 
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+					parameters: [
+						new Parameter(0, ReturnTypeForString (), "name")
+					])
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType", 
+					name: "Constructor", 
+					returnType: ReturnTypeForVoid (), 
+					symbolAvailability: new (), 
+					attributes: new (), 
+					parameters: [
+						new Parameter(0, ReturnTypeForString (), "name"),
+						new Parameter(1, ReturnTypeForString (isNullable: true), "surname")
+					]),
+				new Constructor(
+					type: "MyType", 
+					symbolAvailability: new(), 
+					attributes: [], 
+					modifiers: [Token (SyntaxKind.PublicKeyword), Token (SyntaxKind.PartialKeyword)], 
+					parameters: [
+						new Parameter(0, ReturnTypeForString (), "name"),
+						new Parameter(1, ReturnTypeForString (isNullable: true), "surname")
+					])
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof(TestDataToConstructor))]
+	void ToConstructorTests (Method method, Constructor? expectedConstructor)
+		=> Assert.Equal (expectedConstructor, method.ToConstructor ());
+
 }

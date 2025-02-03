@@ -3,12 +3,14 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Availability;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
+[StructLayout(LayoutKind.Auto)]
 readonly partial struct Constructor : IEquatable<Constructor> {
 	/// <summary>
 	/// Type name that owns the constructor.
