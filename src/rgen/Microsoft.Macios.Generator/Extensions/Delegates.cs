@@ -10,7 +10,7 @@ namespace Microsoft.Macios.Generator.Extensions;
 /// Delegate to try to parse a value struct from an attribute.
 /// </summary>
 /// <typeparam name="T">The type of the returned struct.</typeparam>
-delegate bool TryParseDelegate<T> (AttributeData attributeData, [NotNullWhen (true)] out T? value) 
+delegate bool TryParseDelegate<T> (AttributeData attributeData, [NotNullWhen (true)] out T? value)
 	where T : struct;
 
 /// <summary>

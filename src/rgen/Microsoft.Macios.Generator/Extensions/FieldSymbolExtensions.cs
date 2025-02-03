@@ -33,10 +33,10 @@ static partial class FieldSymbolExtensions {
 		if (fieldSyntax is null)
 			return null;
 
-		if (tryParseDelegate(fieldAttrData, out var fieldData))
+		if (tryParseDelegate (fieldAttrData, out var fieldData))
 			return fieldData.Value;
 
 		return null;
 	}
-	
+
 }

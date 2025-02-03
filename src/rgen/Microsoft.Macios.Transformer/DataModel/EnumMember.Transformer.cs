@@ -25,7 +25,7 @@ readonly partial struct EnumMember {
 		AttributesDictionary = attributes;
 		FieldInfo = FieldAttribute is null ? null : new FieldInfo (FieldAttribute.Value, libraryName, libraryPath);
 	}
-	
+
 	public EnumMember (string name,
 		string libraryName,
 		string? libraryPath,
@@ -34,7 +34,7 @@ readonly partial struct EnumMember {
 	{
 		Name = name;
 		SymbolAvailability = symbolAvailability;
-		FieldInfo = new(fieldData, libraryName, libraryPath);
+		FieldInfo = new (fieldData, libraryName, libraryPath);
 	}
 
 }

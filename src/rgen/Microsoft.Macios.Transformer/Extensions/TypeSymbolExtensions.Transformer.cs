@@ -89,7 +89,7 @@ static partial class TypeSymbolExtensions {
 
 		return false;
 	}
-	
+
 	/// <summary>
 	/// Returns the BaseTypeAttribute data that was used for a given symbol.
 	/// </summary>

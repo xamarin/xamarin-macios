@@ -36,7 +36,7 @@ readonly partial struct EnumMember {
 		SymbolAvailability = symbolAvailability;
 		Attributes = attributes;
 	}
-	
+
 	/// <summary>
 	/// Create a new change that happened on a member.
 	/// </summary>

@@ -18,17 +18,17 @@ namespace Microsoft.Macios.Generator.Context;
 /// to the current compilation.
 /// </summary>
 class RootContext {
-	
+
 	/// <summary>
 	/// The platform of the current compilation.
 	/// </summary>
 	public PlatformName CurrentPlatform { get; set; }
-	
+
 	/// <summary>
 	/// Current compilation.
 	/// </summary>
 	public Compilation Compilation => this.SemanticModel.Compilation;
-	
+
 	/// <summary>
 	/// Current semantic model.
 	/// </summary>

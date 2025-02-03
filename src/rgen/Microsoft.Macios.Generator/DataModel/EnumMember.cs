@@ -31,7 +31,7 @@ readonly partial struct EnumMember : IEquatable<EnumMember> {
 	/// Get the attributes added to the member.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
-	
+
 	/// <inheritdoc />
 	public bool Equals (EnumMember other)
 	{

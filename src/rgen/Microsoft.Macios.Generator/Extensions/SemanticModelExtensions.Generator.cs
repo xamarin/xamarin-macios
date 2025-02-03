@@ -10,7 +10,7 @@ using Microsoft.Macios.Generator.DataModel;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class SemanticModelExtensions {
-	
+
 	public static void GetSymbolData (this SemanticModel self, BaseTypeDeclarationSyntax declaration,
 		BindingType bindingType,
 		out string name,
@@ -34,5 +34,5 @@ static partial class SemanticModelExtensions {
 			};
 		}
 	}
-	
+
 }

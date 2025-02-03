@@ -46,5 +46,5 @@ static partial class SemanticModelExtensions {
 		interfaces = interfacesBucket.ToImmutable ();
 		namespaces = bucket.ToImmutableArray ();
 	}
-	
+
 }

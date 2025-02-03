@@ -102,7 +102,7 @@ static partial class TypeSymbolExtensions {
 
 		return false;
 	}
-	
+
 	internal static T? GetAttribute<T> (this ISymbol symbol, GetAttributeNames getAttributeNames, TryParseDelegate<T> tryParse)
 		where T : struct
 	{

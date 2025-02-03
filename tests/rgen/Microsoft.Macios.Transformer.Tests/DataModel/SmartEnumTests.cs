@@ -15,7 +15,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
 public class SmartEnumTests : BaseTransformerTestClass {
-	
+
 	readonly BindingEqualityComparer comparer = new ();
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -50,39 +50,38 @@ public enum AVCaptureDeviceType {
 			yield return [
 				(Source: smartEnum, Path: path),
 				new Binding (
-					symbolName: "AVCaptureDeviceType", 
-					@namespace: ["AVFoundation"], 
-					fullyQualifiedSymbol: "AVFoundation.AVCaptureDeviceType", 
-					info: new BindingInfo(null, BindingType.SmartEnum), 
-					symbolAvailability: availabilityBuilder.ToImmutable (), 
-					attributes: new ())
-				{
+					symbolName: "AVCaptureDeviceType",
+					@namespace: ["AVFoundation"],
+					fullyQualifiedSymbol: "AVFoundation.AVCaptureDeviceType",
+					info: new BindingInfo (null, BindingType.SmartEnum),
+					symbolAvailability: availabilityBuilder.ToImmutable (),
+					attributes: new ()) {
 					Base = "System.Enum",
 					Modifiers = [Token (SyntaxKind.PublicKeyword)],
 					EnumMembers = [
-						new EnumMember(
-							name: "BuiltInMicrophone", 
-							libraryName: "AVFoundation", 
-							libraryPath: null, 
-							fieldData: new ("AVCaptureDeviceTypeBuiltInMicrophone"), 
+						new EnumMember (
+							name: "BuiltInMicrophone",
+							libraryName: "AVFoundation",
+							libraryPath: null,
+							fieldData: new ("AVCaptureDeviceTypeBuiltInMicrophone"),
 							symbolAvailability: availabilityBuilder.ToImmutable ()),
-						new EnumMember(
-							name: "BuiltInWideAngleCamera", 
-							libraryName: "AVFoundation", 
-							libraryPath: null, 
-							fieldData: new ("AVCaptureDeviceTypeBuiltInWideAngleCamera"), 
+						new EnumMember (
+							name: "BuiltInWideAngleCamera",
+							libraryName: "AVFoundation",
+							libraryPath: null,
+							fieldData: new ("AVCaptureDeviceTypeBuiltInWideAngleCamera"),
 							symbolAvailability: availabilityBuilder.ToImmutable ()),
-						new EnumMember(
-							name: "BuiltInTelephotoCamera", 
-							libraryName: "AVFoundation", 
-							libraryPath: null, 
-							fieldData: new ("AVCaptureDeviceTypeBuiltInTelephotoCamera"), 
+						new EnumMember (
+							name: "BuiltInTelephotoCamera",
+							libraryName: "AVFoundation",
+							libraryPath: null,
+							fieldData: new ("AVCaptureDeviceTypeBuiltInTelephotoCamera"),
 							symbolAvailability: availabilityBuilder.ToImmutable ()),
 					],
-					UsingDirectives = new HashSet<string> {"System", "Foundation", "ObjCRutime"},
+					UsingDirectives = new HashSet<string> { "System", "Foundation", "ObjCRutime" },
 				}
 			];
-			
+
 			const string missingField = @"
 using System;
 using Foundation;
@@ -102,42 +101,41 @@ public enum AVCaptureDeviceType {
 	BuiltInTelephotoCamera,
 }
 ";
-			
+
 			yield return [
 				(Source: missingField, Path: path),
-				
+
 				new Binding (
-					symbolName: "AVCaptureDeviceType", 
-					@namespace: ["AVFoundation"], 
-					fullyQualifiedSymbol: "AVFoundation.AVCaptureDeviceType", 
-					info: new BindingInfo(null, BindingType.SmartEnum), 
-					symbolAvailability: availabilityBuilder.ToImmutable (), 
-					attributes: new ())
-				{
+					symbolName: "AVCaptureDeviceType",
+					@namespace: ["AVFoundation"],
+					fullyQualifiedSymbol: "AVFoundation.AVCaptureDeviceType",
+					info: new BindingInfo (null, BindingType.SmartEnum),
+					symbolAvailability: availabilityBuilder.ToImmutable (),
+					attributes: new ()) {
 					Base = "System.Enum",
 					Modifiers = [Token (SyntaxKind.PublicKeyword)],
 					EnumMembers = [
-						new EnumMember(
-							name: "BuiltInMicrophone", 
-							libraryName: "AVFoundation", 
-							libraryPath: null, 
-							fieldData: new ("AVCaptureDeviceTypeBuiltInMicrophone"), 
+						new EnumMember (
+							name: "BuiltInMicrophone",
+							libraryName: "AVFoundation",
+							libraryPath: null,
+							fieldData: new ("AVCaptureDeviceTypeBuiltInMicrophone"),
 							symbolAvailability: availabilityBuilder.ToImmutable ()),
-						new EnumMember(
-							name: "BuiltInWideAngleCamera", 
-							libraryName: "AVFoundation", 
-							libraryPath: null, 
-							fieldData: new ("AVCaptureDeviceTypeBuiltInWideAngleCamera"), 
+						new EnumMember (
+							name: "BuiltInWideAngleCamera",
+							libraryName: "AVFoundation",
+							libraryPath: null,
+							fieldData: new ("AVCaptureDeviceTypeBuiltInWideAngleCamera"),
 							symbolAvailability: availabilityBuilder.ToImmutable ()),
 					],
-					UsingDirectives = new HashSet<string> {"System", "Foundation", "ObjCRutime"},
+					UsingDirectives = new HashSet<string> { "System", "Foundation", "ObjCRutime" },
 				}
 			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source, Binding expectedData)
@@ -155,11 +153,11 @@ public enum AVCaptureDeviceType {
 				.DescendantNodes ().OfType<EnumDeclarationSyntax> ()
 				.LastOrDefault ();
 		Assert.NotNull (declaration);
-		
+
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
-		
-		var binding = new Binding (declaration, symbol, new(semanticModel));
+
+		var binding = new Binding (declaration, symbol, new (semanticModel));
 		Assert.Equal (expectedData, binding, comparer);
 	}
 }

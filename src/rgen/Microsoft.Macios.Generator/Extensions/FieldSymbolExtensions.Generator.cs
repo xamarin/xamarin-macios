@@ -8,7 +8,7 @@ using ObjCBindings;
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class FieldSymbolExtensions {
-	
+
 	/// <summary>
 	/// Retrieve the FieldData from the field symbol.
 	/// </summary>

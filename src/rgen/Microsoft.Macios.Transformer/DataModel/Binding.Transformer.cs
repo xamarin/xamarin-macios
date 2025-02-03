@@ -34,9 +34,9 @@ readonly partial struct Binding {
 	/// <param name="info">the binding info struct.</param>
 	/// <param name="symbolAvailability">The platform availability of the named symbol.</param>
 	/// <param name="attributes">The dictioanary with the attributes the user used with the binding.</param>
-	internal Binding (string symbolName, 
+	internal Binding (string symbolName,
 		ImmutableArray<string> @namespace,
-		string fullyQualifiedSymbol, 
+		string fullyQualifiedSymbol,
 		BindingInfo info,
 		SymbolAvailability symbolAvailability,
 		Dictionary<string, List<AttributeData>> attributes)
