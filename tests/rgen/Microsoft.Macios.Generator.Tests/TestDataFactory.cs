@@ -35,10 +35,14 @@ static class TestDataFactory {
 			IsINativeObject = false,
 		};
 
-	public static TypeInfo ReturnTypeForInt (bool isNullable = false, bool keepInterfaces = false)
-		=> new (
-			name: "int",
-			specialType: SpecialType.System_Int32,
+	public static TypeInfo ReturnTypeForInt (bool isNullable = false, bool keepInterfaces = false,
+		bool isUnsigned = false)
+	{
+		var typeName = isUnsigned ? "int" : "uint";
+		var metadataName = isUnsigned ? "Int32" : "UInt32";
+		var type = new TypeInfo (
+			name: typeName,
+			specialType: isUnsigned ? SpecialType.System_UInt32 : SpecialType.System_Int32,
 			isBlittable: !isNullable,
 			isNullable: isNullable,
 			isStruct: true
@@ -48,39 +52,41 @@ static class TestDataFactory {
 				? []
 				: [
 					"System.IComparable",
-					"System.IComparable<int>",
+					$"System.IComparable<{typeName}>",
 					"System.IConvertible",
-					"System.IEquatable<int>",
+					$"System.IEquatable<{typeName}>",
 					"System.IFormattable",
-					"System.IParsable<int>",
+					$"System.IParsable<{typeName}>",
 					"System.ISpanFormattable",
-					"System.ISpanParsable<int>",
+					$"System.ISpanParsable<{typeName}>",
 					"System.IUtf8SpanFormattable",
-					"System.IUtf8SpanParsable<int>",
-					"System.Numerics.IAdditionOperators<int, int, int>",
-					"System.Numerics.IAdditiveIdentity<int, int>",
-					"System.Numerics.IBinaryInteger<int>",
-					"System.Numerics.IBinaryNumber<int>",
-					"System.Numerics.IBitwiseOperators<int, int, int>",
-					"System.Numerics.IComparisonOperators<int, int, bool>",
-					"System.Numerics.IEqualityOperators<int, int, bool>",
-					"System.Numerics.IDecrementOperators<int>",
-					"System.Numerics.IDivisionOperators<int, int, int>",
-					"System.Numerics.IIncrementOperators<int>",
-					"System.Numerics.IModulusOperators<int, int, int>",
-					"System.Numerics.IMultiplicativeIdentity<int, int>",
-					"System.Numerics.IMultiplyOperators<int, int, int>",
-					"System.Numerics.INumber<int>",
-					"System.Numerics.INumberBase<int>",
-					"System.Numerics.ISubtractionOperators<int, int, int>",
-					"System.Numerics.IUnaryNegationOperators<int, int>",
-					"System.Numerics.IUnaryPlusOperators<int, int>",
-					"System.Numerics.IShiftOperators<int, int, int>",
-					"System.Numerics.IMinMaxValue<int>",
-					"System.Numerics.ISignedNumber<int>"
+					$"System.IUtf8SpanParsable<{typeName}>",
+					$"System.Numerics.IAdditionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IAdditiveIdentity<{typeName}, {typeName}>",
+					$"System.Numerics.IBinaryInteger<{typeName}>",
+					$"System.Numerics.IBinaryNumber<{typeName}>",
+					$"System.Numerics.IBitwiseOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IComparisonOperators<{typeName}, {typeName}, bool>",
+					$"System.Numerics.IEqualityOperators<{typeName}, {typeName}, bool>",
+					$"System.Numerics.IDecrementOperators<{typeName}>",
+					$"System.Numerics.IDivisionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IIncrementOperators<{typeName}>",
+					$"System.Numerics.IModulusOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IMultiplicativeIdentity<{typeName}, {typeName}>",
+					$"System.Numerics.IMultiplyOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.INumber<{typeName}>",
+					$"System.Numerics.INumberBase<{typeName}>",
+					$"System.Numerics.ISubtractionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IUnaryNegationOperators<{typeName}, {typeName}>",
+					$"System.Numerics.IUnaryPlusOperators<{typeName}, {typeName}>",
+					$"System.Numerics.IShiftOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IMinMaxValue<{typeName}>",
+					$"System.Numerics.ISignedNumber<{typeName}>"
 				],
 			MetadataName = "Int32",
 		};
+		return type;
+	}
 
 	public static TypeInfo ReturnTypeForIntPtr (bool isNullable = false)
 		=> new (

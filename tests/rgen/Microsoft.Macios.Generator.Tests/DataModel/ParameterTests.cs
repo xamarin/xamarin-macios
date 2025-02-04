@@ -21,6 +21,7 @@ public class ParameterTests {
 			yield return [exampleParameter, Parameter.VariableType.NSArray, $"nsa_{exampleParameter.Name}"];
 			yield return [exampleParameter, Parameter.VariableType.NSString, $"ns{exampleParameter.Name}"];
 			yield return [exampleParameter, Parameter.VariableType.NSStringStruct, $"_s{exampleParameter.Name}"];
+			yield return [exampleParameter, Parameter.VariableType.BindFrom, $"nsb_{exampleParameter.Name}"];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
