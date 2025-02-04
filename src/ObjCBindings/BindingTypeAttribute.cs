@@ -37,5 +37,50 @@ namespace ObjCBindings {
 		/// Get/Set the export configuration flags.
 		/// </summary >
 		public T? Flags { get; set; } = default (T);
+
+		/// <summary>
+		/// Get/set the visibility of the default constructor for a core image filter.
+		/// </summary >
+		public MethodAttributes DefaultCtorVisibility { get; set; }
+
+		/// <summary>
+		/// Get/set the visibility of the IntPtr constructor for a core image filter.
+		/// </summary >
+		public MethodAttributes IntPtrCtorVisibility { get; set; }
+
+		/// <summary>
+		///Get/set the visibility of the string constructor for a core image filter.
+		/// </summary >
+		public MethodAttributes StringCtorVisibility { get; set; }
+
+		/// <summary>
+		/// Creates a binding type attribute with the default flag value;
+		/// </summary>
+		public BindingTypeAttribute () {}
+
+		/// <summary>
+		/// Creates a binding type attribute with the specified flags.
+		/// </summary>
+		public BindingTypeAttribute (T flags)
+		{
+			Flags = flags;
+		}
+
+		/// <summary>
+		/// Creates a binding type attribute with the specified flags.
+		/// </summary>
+		public BindingTypeAttribute (string name)
+		{
+			Name = name;
+		}
+
+		/// <summary>
+		/// Creates a binding type attribute with the specified flags.
+		/// </summary>
+		public BindingTypeAttribute (string name, T flags)
+		{
+			Name = name;
+			Flags = flags;
+		}
 	}
 }
