@@ -31,11 +31,11 @@ steps:
   env:
     IS_PR: and(eq(parameters.isPR, 'true'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull')))
 
-- checkout: maccore
-  clean: true
-  fetchDepth: 0
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
-  fetchTags: false
+# - checkout: maccore
+#   clean: true
+#   fetchDepth: 0
+#   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+#   fetchTags: false
 
 - checkout: macios-adr
   clean: true

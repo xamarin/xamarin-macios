@@ -71,8 +71,8 @@ extends:
         exclusionsFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true  # run both maccore and macios in the same job
-        include:
-          - repository: maccore
+        # include:
+        #   - repository: maccore
         exclude:
           - repository: yaml-templates
           - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
