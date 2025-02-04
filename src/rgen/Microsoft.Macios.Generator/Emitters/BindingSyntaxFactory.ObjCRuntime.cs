@@ -321,7 +321,7 @@ static partial class BindingSyntaxFactory {
 
 		if (factoryMethod is null)
 			return null;
-		
+
 		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
 		if (variableName is null)
 			return null;
@@ -353,7 +353,7 @@ static partial class BindingSyntaxFactory {
 		var declarator =
 			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
 				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));
-		
+
 		// generats: var nba_variable = NSNumber.FromDouble(value);
 		var declaration = VariableDeclaration (IdentifierName (Identifier (
 				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
