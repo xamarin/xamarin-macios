@@ -32,7 +32,7 @@ static class AttributesNames {
 		BindingClassAttribute,
 		BindingProtocolAttribute,
 		BindingStrongDictionaryAttribute,
-		BindingCoreImageFilterAttribute, 
+		BindingCoreImageFilterAttribute,
 	];
 
 

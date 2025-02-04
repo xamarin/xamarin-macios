@@ -56,7 +56,7 @@ namespace ObjCBindings {
 		/// <summary>
 		/// Creates a binding type attribute with the default flag value;
 		/// </summary>
-		public BindingTypeAttribute () {}
+		public BindingTypeAttribute () { }
 
 		/// <summary>
 		/// Creates a binding type attribute with the specified flags.
