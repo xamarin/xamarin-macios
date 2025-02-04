@@ -13,7 +13,7 @@ static class AttributesNames {
 	/// The [Abstract] attribute can be applied to either methods or properties and causes the generator to flag the
 	/// generated member as abstract and the class to be an abstract class.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
 	public const string AbstractAttribute = "AbstractAttribute";
 
 	[BindingFlag] 
@@ -103,7 +103,7 @@ static class AttributesNames {
 	
 	public const string ExperimentalAttribute = "System.Diagnostics.CodeAnalysis.ExperimentalAttribute";
 	
-	[BindingAttribute(typeof(ExportData), AttributeTargets.Method | AttributeTargets.Property)]
+	[BindingAttribute(typeof(ExportData), AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property)]
 	public const string ExportAttribute = "Foundation.ExportAttribute";
 
 	[BindingFlag] 
@@ -126,7 +126,7 @@ static class AttributesNames {
 	/// The [Internal] attribute can be applied to methods or properties and it has the effect of flagging the
 	/// generated code with the internal C# keyword making the code only accessible to code in the generated assembly.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property)]
 	public const string InternalAttribute = "InternalAttribute";
 
 	public const string IntroducedAttribute = "IntroducedAttribute";
@@ -273,7 +273,7 @@ static class AttributesNames {
 	/// Use this attribute to instruct the binding generator that the binding for this particular method should be
 	/// flagged with an protected keyword.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
 	public const string ProtectedAttribute = "ProtectedAttribute";
 
 	[BindingFlag (AttributeTargets.Interface | AttributeTargets.Class)]

@@ -10,7 +10,6 @@ using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -89,4 +88,12 @@ readonly partial struct Method {
 			parameters: parametersBucket.ToImmutableArray ());
 		return true;
 	}
+
+	/// <summary>
+	/// Return the constructor representation of the method if it is a constructor in the bindings.
+	/// </summary>
+	/// <returns>A constructor data model if the method is one in the bindings or null otherwise.</returns>
+	public Constructor? ToConstructor ()
+		=> IsConstructor ? new Constructor (this) : null;
+
 }
