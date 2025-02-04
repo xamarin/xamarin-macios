@@ -63,18 +63,27 @@ steps:
   displayName: 'Clean for remote tests'
   continueOnError: true
 
-- bash: ./install-qa-provisioning-profiles.sh -v
-  displayName: 'Add build provisioning profiles'
-  timeoutInMinutes: 30
-  continueOnError: true # should not stop the build
-  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+# - bash: ./install-qa-provisioning-profiles.sh -v
+#   displayName: 'Add build provisioning profiles'
+#   timeoutInMinutes: 30
+#   continueOnError: true # should not stop the build
+#   workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+#   env:
+#     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+#     AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+#     AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+#     AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+#     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+#     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+- template: ../common/install-qa-provisioning-profiles.yml
+  parameters:
+    env:
+      AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+      AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
 - template: ./generate-token.yml

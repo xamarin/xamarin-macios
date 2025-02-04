@@ -128,17 +128,26 @@ steps:
     set -e
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
-    ./maccore/tools/install-qa-provisioning-profiles.sh -v
+    # ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
-  timeoutInMinutes: 30
-  retryCountOnTaskFailure: ${{ parameters.retryCount }} # We sometinmes have network issues when we try to retrieve the version of provisionator
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+  # timeoutInMinutes: 30
+  # retryCountOnTaskFailure: ${{ parameters.retryCount }} # We sometinmes have network issues when we try to retrieve the version of provisionator
+  # env:
+  #   AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+  #   AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+  #   AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+  #   AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+  #   AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+  #   AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+- template: ../common/install-qa-provisioning-profiles.yml
+  parameters:
+    env:
+      AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+      AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # this could be a template, which would make everything a lot simpler BUT alas we found a bug in Azure Devops (bugs++). 
 # if we use a template here azure devops will throw an exception due to a foreign key constraint error in their PK_Task_tbl_PlanContext.
