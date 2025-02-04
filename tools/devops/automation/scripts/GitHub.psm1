@@ -292,9 +292,9 @@ class GitHubComments {
         }
 
         if ([string]::IsNullOrEmpty($Env:PR_ID)) {
-            $prefix = "[CI Build]"
+            $prefix = "[CI Build #$Env:BUILD_BUILDID]"
         } else {
-            $prefix = "[PR Build]"
+            $prefix = "[PR Build #$Env:BUILD_BUILDID]"
         }
 
         $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
