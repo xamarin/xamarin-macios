@@ -13,7 +13,7 @@ readonly struct BindingTypeData : IEquatable<BindingTypeData> {
 	/// Original name of the ObjC class or protocol.
 	/// </summary>
 	public string? Name { get; }
-	
+
 	public BindingTypeData (string? name)
 	{
 		Name = name;
@@ -106,7 +106,7 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 	/// The configuration flags used on the exported class/interface.
 	/// </summary>
 	public T? Flags { get; } = default;
-	
+
 	/// <summary>
 	/// The visibility of the default constructor for a core image filter.
 	/// </summary>
@@ -155,7 +155,7 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 		var defaultCtorVisibility = MethodAttributes.Public;
 		var intPtrCtorVisibility = MethodAttributes.PrivateScope;
 		var stringCtorVisibility = MethodAttributes.PrivateScope;
-		
+
 		switch (count) {
 		case 0:
 			// use the defaults
@@ -208,8 +208,8 @@ readonly struct BindingTypeData<T> : IEquatable<BindingTypeData<T>> where T : En
 		}
 
 		data = flags is not null
-			? new(name, flags)
-			: new(name) {
+			? new (name, flags)
+			: new (name) {
 				DefaultCtorVisibility = defaultCtorVisibility,
 				IntPtrCtorVisibility = intPtrCtorVisibility,
 				StringCtorVisibility = stringCtorVisibility,

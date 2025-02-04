@@ -4,5 +4,5 @@
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class CoreImageFilterTests {
-	
+
 }
