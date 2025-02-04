@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using Microsoft.Macios.Transformer.Attributes;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -98,12 +99,12 @@ readonly partial struct Property {
 		}
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, SemanticModel semanticModel,
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Property? property)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
 		// get the symbol from the property declaration
-		if (semanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
+		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IPropertySymbol propertySymbol) {
 			property = null;
 			return false;
 		}
@@ -114,7 +115,7 @@ readonly partial struct Property {
 			// calculate any possible changes in the accessors of the property
 			var accessorsBucket = ImmutableArray.CreateBuilder<Accessor> ();
 			foreach (var accessorDeclaration in declaration.AccessorList.Accessors) {
-				if (semanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
+				if (context.SemanticModel.GetDeclaredSymbol (accessorDeclaration) is not ISymbol accessorSymbol)
 					continue;
 				var kind = accessorDeclaration.Kind ().ToAccessorKind ();
 				accessorsBucket.Add (new (
