@@ -451,4 +451,35 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
+
+	class TestDataGetNSStringSmartEnumAuxVariableTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("CoreAnimation.CATransform3D", isSmartEnum: true), "myParam"),
+				"var nsb_myParam = myParam.GetConstant ();",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("CoreAnimation.CATransform3D", isSmartEnum: false), "myParam"),
+				null!
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetNSStringSmartEnumAuxVariableTests))]
+	void GetNSStringSmartEnumAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
+	{
+		var declaration = GetNSStringSmartEnumAuxVariable (parameter);
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
+
 }
