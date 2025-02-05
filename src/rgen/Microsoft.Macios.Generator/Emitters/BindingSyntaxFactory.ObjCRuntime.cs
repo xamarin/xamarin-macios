@@ -437,6 +437,36 @@ static partial class BindingSyntaxFactory {
 		return LocalDeclarationStatement (declaration);
 	}
 
+	internal static LocalDeclarationStatementSyntax? GetNSStringSmartEnumAuxVariable (in Parameter parameter)
+	{
+		if (!parameter.Type.IsSmartEnum)
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
+		if (variableName is null)
+			return null;
+
+		// smart enums are very simple to do, we need to call the GetConstant that was generated as an extension
+		// method
+		var factoryInvocation = InvocationExpression (
+			MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName (parameter.Name),
+				IdentifierName ("GetConstant").WithTrailingTrivia (Space))
+		);
+
+		var declarator =
+			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));
+
+		// generats: var nba_variable = NSNumber.FromDouble(value);
+		var declaration = VariableDeclaration (IdentifierName (Identifier (
+				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (declaration);
+	}
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
