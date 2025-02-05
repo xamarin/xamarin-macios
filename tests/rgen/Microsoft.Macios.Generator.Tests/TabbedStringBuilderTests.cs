@@ -350,7 +350,7 @@ Because we are using a raw string  we expected:
 	[Fact]
 	public void CreateBlockStringArray ()
 	{
-		var expecteString = 
+		var expecteString =
 @"using (var m1 = new MemoryStream())
 using (var m2 = new MemoryStream())
 using (var m3 = new MemoryStream())
@@ -368,6 +368,6 @@ using (var m3 = new MemoryStream())
 		using (var usingBlock = baseBlock.CreateBlock (usingStatements, true)) {
 			usingBlock.AppendLine ("// this is an example with several usings");
 		}
-		Assert.Equal (expecteString, baseBlock.ToString ());	
+		Assert.Equal (expecteString, baseBlock.ToString ());
 	}
 }

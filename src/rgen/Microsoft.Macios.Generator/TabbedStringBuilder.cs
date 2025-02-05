@@ -281,14 +281,14 @@ partial class TabbedStringBuilder : IDisposable {
 	/// <returns></returns>
 	public TabbedStringBuilder CreateBlock (IEnumerable<string> lines, bool block)
 	{
-		var array = lines as string[] ?? lines.ToArray();
+		var array = lines as string [] ?? lines.ToArray ();
 		if (array.Length == 0) {
 			return CreateBlock (isBlock);
 		}
-		
+
 		// append all the lines, then create a block
 		for (var i = 0; i < array.Length - 1; i++) {
-			WriteTabs ().AppendLine (array[i]);
+			WriteTabs ().AppendLine (array [i]);
 		}
 		return CreateBlock (array [^1], block);
 	}
