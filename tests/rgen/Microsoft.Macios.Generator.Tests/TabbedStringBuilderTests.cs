@@ -346,4 +346,28 @@ Because we are using a raw string  we expected:
 		block.Clear ();
 		Assert.Equal (string.Empty, block.ToString ());
 	}
+
+	[Fact]
+	public void CreateBlockStringArray ()
+	{
+		var expecteString =
+@"using (var m1 = new MemoryStream())
+using (var m2 = new MemoryStream())
+using (var m3 = new MemoryStream())
+{
+	// this is an example with several usings
+}
+";
+		var baseBlock = new TabbedStringBuilder (sb);
+		// create a list of lines to get the new block
+		var usingStatements = new [] {
+			"using (var m1 = new MemoryStream())",
+			"using (var m2 = new MemoryStream())",
+			"using (var m3 = new MemoryStream())",
+		};
+		using (var usingBlock = baseBlock.CreateBlock (usingStatements, true)) {
+			usingBlock.AppendLine ("// this is an example with several usings");
+		}
+		Assert.Equal (expecteString, baseBlock.ToString ());
+	}
 }
