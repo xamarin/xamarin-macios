@@ -467,6 +467,26 @@ static partial class BindingSyntaxFactory {
 		return LocalDeclarationStatement (declaration);
 	}
 
+	/// <summary>
+	/// Returns the aux variable declaration needed when a parameter has the BindFrom attribute.
+	/// </summary>
+	/// <param name="parameter">The parameter whose aux variable we want to declare.</param>
+	/// <returns>The syntax declaration of the aux variable or null if it could not be generated.</returns>
+	internal static LocalDeclarationStatementSyntax? GetBindFromAuxVariable (in Parameter parameter)
+	{
+		if (parameter.BindAs is null)
+			return null;
+		
+		// based on the bindas type call one of the helper factory methods
+		return parameter.BindAs.Value.Type switch {
+			"Foundation.NSNumber" => GetNSNumberAuxVariable (parameter),
+			"Foundation.NSValue" => GetNSValueAuxVariable (parameter),
+			"Foundation.NSString" => GetNSStringSmartEnumAuxVariable(parameter),
+			_ => null,
+		};
+	}
+
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
