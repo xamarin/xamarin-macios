@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -261,6 +263,34 @@ partial class TabbedStringBuilder : IDisposable {
 		}
 
 		return new TabbedStringBuilder (sb, tabCount, block);
+	}
+
+	/// <summary>
+	/// Concatenate an array of lines as a single block. The generated code is similar to the following
+	///
+	/// <code>
+	/// using (var nsobject = Create ())
+	/// using (var nsstring = Create ())
+	/// using (var x = new NSString ()) {
+	///    // your code goes here.
+	/// }
+	/// </code>
+	/// </summary>
+	/// <param name="lines">The lines to concatenate.</param>
+	/// <param name="block">True if the block should use braces, false otherwise.</param>
+	/// <returns></returns>
+	public TabbedStringBuilder CreateBlock (IEnumerable<string> lines, bool block)
+	{
+		var array = lines as string[] ?? lines.ToArray();
+		if (array.Length == 0) {
+			return CreateBlock (isBlock);
+		}
+		
+		// append all the lines, then create a block
+		for (var i = 0; i < array.Length - 1; i++) {
+			WriteTabs ().AppendLine (array[i]);
+		}
+		return CreateBlock (array [^1], block);
 	}
 
 	/// <summary>
