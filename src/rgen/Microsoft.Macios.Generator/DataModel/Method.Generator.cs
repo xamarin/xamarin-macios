@@ -34,6 +34,12 @@ readonly partial struct Method {
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.MarshalNativeExceptions);
+	
+	/// <summary>
+	/// True if the generator should not use a NSString for marshalling.
+	/// </summary>
+	public bool UsePlainString
+		=> ExportMethodData.Flags.HasFlag (ObjCBindings.Method.PlainString);
 
 	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,

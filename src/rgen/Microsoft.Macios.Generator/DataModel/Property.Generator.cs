@@ -66,6 +66,18 @@ readonly partial struct Property {
 	/// True if the property should be generated without a backing field.
 	/// </summary>
 	public bool IsTransient => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.Transient);
+	
+	/// <summary>
+	/// True if the property was marked to DisableZeroCopy.
+	/// </summary>
+	public bool DisableZeroCopy
+		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.DisableZeroCopy);
+	
+	/// <summary>
+	/// True if the generator should not use a NSString for marshalling.
+	/// </summary>
+	public bool UsePlainString
+		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.PlainString);
 
 	readonly bool? needsBackingField = null;
 	/// <summary>

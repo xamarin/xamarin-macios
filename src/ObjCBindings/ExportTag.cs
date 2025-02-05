@@ -25,6 +25,12 @@ namespace ObjCBindings {
 		/// Flags the object as being thread safe.
 		/// </summary>
 		IsThreadSafe = 1 << 3,
+
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 4,
 	}
 
 	/// <summary>
@@ -69,6 +75,11 @@ namespace ObjCBindings {
 		/// </summary>
 		IsThreadSafe = 1 << 6,
 
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 7,
 	}
 
 	/// <summary>
@@ -134,6 +145,11 @@ namespace ObjCBindings {
 		/// </summary>
 		Transient = 1 << 8,
 
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 9,
 	}
 }
 
