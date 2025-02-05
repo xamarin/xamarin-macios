@@ -191,6 +191,8 @@ extends:
         enabled: false  # we run our on sbom generation
       credscan:
         suppressionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/CredScanSuppressions.json'
+        debugMode: true
+        verboseOutput: true
       policheck:
         exclusionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
