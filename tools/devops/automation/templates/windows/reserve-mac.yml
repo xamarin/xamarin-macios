@@ -37,10 +37,10 @@ steps:
 #   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 #   fetchTags: false
 
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:BUILD_SOURCESDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
-- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
+- bash: '$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
   displayName: 'Clean bot'
   continueOnError: true
   timeoutInMinutes: 60
