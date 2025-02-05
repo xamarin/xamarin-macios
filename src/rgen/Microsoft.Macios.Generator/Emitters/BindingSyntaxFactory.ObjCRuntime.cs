@@ -362,6 +362,81 @@ static partial class BindingSyntaxFactory {
 		return LocalDeclarationStatement (declaration);
 	}
 
+	internal static LocalDeclarationStatementSyntax? GetNSValueAuxVariable (in Parameter parameter)
+	{
+
+		// the BindFrom attribute with a nsvalue supports the following types:
+		// - CGAffineTransform
+		// - NSRange
+		// - CGVector
+		// - SCNMatrix4
+		// - CLLocationCoordinate2D
+		// - SCNVector3
+		// - SCNVector4
+		// - CGPoint / PointF
+		// - CGRect / RectangleF
+		// - CGSize / SizeF
+		// - UIEdgeInsets
+		// - UIOffset
+		// - MKCoordinateSpan
+		// - CMTimeRange
+		// - CMTime
+		// - CMTimeMapping
+		// - CATransform3D
+		var t = parameter.Type.Name;
+
+#pragma warning disable format
+		// get the factory method based on the parameter type, if it is not found, return null
+		var factoryMethod = parameter.Type switch { 
+			{ FullyQualifiedName: "CoreGraphics.CGAffineTransform" } => "FromCGAffineTransform", 
+			{ FullyQualifiedName: "Foundation.NSRange" } => "FromRange", 
+			{ FullyQualifiedName: "CoreGraphics.CGVector" } => "FromCGVector", 
+			{ FullyQualifiedName: "SceneKit.SCNMatrix4" } => "FromSCNMatrix4", 
+			{ FullyQualifiedName: "CoreLocation.CLLocationCoordinate2D" } => "FromMKCoordinate", 
+			{ FullyQualifiedName: "SceneKit.SCNVector3" } => "FromVector", 
+			{ FullyQualifiedName: "SceneKit.SCNVector4" } => "FromVector", 
+			{ FullyQualifiedName: "CoreGraphics.CGPoint" } => "FromCGPoint", 
+			{ FullyQualifiedName: "CoreGraphics.CGRect" } => "FromCGRect", 
+			{ FullyQualifiedName: "CoreGraphics.CGSize" } => "FromCGSize", 
+			{ FullyQualifiedName: "UIKit.UIEdgeInsets" } => "FromUIEdgeInsets", 
+			{ FullyQualifiedName: "UIKit.UIOffset" } => "FromUIOffset", 
+			{ FullyQualifiedName: "MapKit.MKCoordinateSpan" } => "FromMKCoordinateSpan", 
+			{ FullyQualifiedName: "CoreMedia.CMTimeRange" } => "FromCMTimeRange", 
+			{ FullyQualifiedName: "CoreMedia.CMTime" } => "FromCMTime", 
+			{ FullyQualifiedName: "CoreMedia.CMTimeMapping" } => "FromCMTimeMapping", 
+			{ FullyQualifiedName: "CoreAnimation.CATransform3D" } => "FromCATransform3D",
+			_ => null,
+		};
+#pragma warning restore format
+
+		if (factoryMethod is null)
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
+		if (variableName is null)
+			return null;
+
+		// generates: NSValue.FromCMTime 
+		var factoryInvocation = InvocationExpression (
+			MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName ("NSValue"),
+				IdentifierName (factoryMethod).WithTrailingTrivia (Space))
+		).WithArgumentList (ArgumentList (SingletonSeparatedList (
+			Argument (IdentifierName (parameter.Name)))));
+
+		var declarator =
+			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));
+
+		// generats: var nba_variable = NSNumber.FromDouble(value);
+		var declaration = VariableDeclaration (IdentifierName (Identifier (
+				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (declaration);
+	}
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum

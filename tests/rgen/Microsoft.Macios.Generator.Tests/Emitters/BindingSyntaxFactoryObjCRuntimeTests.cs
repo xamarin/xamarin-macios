@@ -341,7 +341,109 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	void GetNSNumberAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
 	{
 		var declaration = GetNSNumberAuxVariable (parameter);
-		var str = declaration!.ToString ();
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
+
+	class TestDataGetNSValueAuxVariableTest : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreGraphics.CGAffineTransform"), "myParam"),
+				"var nsb_myParam = NSValue.FromCGAffineTransform (myParam);"
+			];
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("Foundation.NSRange"), "myParam"),
+				"var nsb_myParam = NSValue.FromRange (myParam);"
+			];
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreGraphics.CGVector"), "myParam"),
+				"var nsb_myParam = NSValue.FromCGVector (myParam);"
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("SceneKit.SCNMatrix4"), "myParam"),
+				"var nsb_myParam = NSValue.FromSCNMatrix4 (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreLocation.CLLocationCoordinate2D"), "myParam"),
+				"var nsb_myParam = NSValue.FromMKCoordinate (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("SceneKit.SCNVector3"), "myParam"),
+				"var nsb_myParam = NSValue.FromVector (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("SceneKit.SCNVector4"), "myParam"),
+				"var nsb_myParam = NSValue.FromVector (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreGraphics.CGPoint"), "myParam"),
+				"var nsb_myParam = NSValue.FromCGPoint (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreGraphics.CGRect"), "myParam"),
+				"var nsb_myParam = NSValue.FromCGRect (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreGraphics.CGSize"), "myParam"),
+				"var nsb_myParam = NSValue.FromCGSize (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("UIKit.UIEdgeInsets"), "myParam"),
+				"var nsb_myParam = NSValue.FromUIEdgeInsets (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("UIKit.UIOffset"), "myParam"),
+				"var nsb_myParam = NSValue.FromUIOffset (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("MapKit.MKCoordinateSpan"), "myParam"),
+				"var nsb_myParam = NSValue.FromMKCoordinateSpan (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreMedia.CMTimeRange"), "myParam"),
+				"var nsb_myParam = NSValue.FromCMTimeRange (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreMedia.CMTime"), "myParam"),
+				"var nsb_myParam = NSValue.FromCMTime (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreMedia.CMTimeMapping"), "myParam"),
+				"var nsb_myParam = NSValue.FromCMTimeMapping (myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForStruct ("CoreAnimation.CATransform3D"), "myParam"),
+				"var nsb_myParam = NSValue.FromCATransform3D (myParam);",
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetNSValueAuxVariableTest))]
+	void GetNSValueAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
+	{
+		var declaration = GetNSValueAuxVariable (parameter);
 		if (expectedDeclaration is null) {
 			Assert.Null (declaration);
 		} else {
