@@ -38,8 +38,8 @@ static class TestDataFactory {
 	public static TypeInfo ReturnTypeForInt (bool isNullable = false, bool keepInterfaces = false,
 		bool isUnsigned = false)
 	{
-		var typeName = isUnsigned ? "int" : "uint";
-		var metadataName = isUnsigned ? "Int32" : "UInt32";
+		var typeName = isUnsigned ? "uint" : "int";
+		var metadataName = isUnsigned ? "UInt32" : "Int32";
 		var type = new TypeInfo (
 			name: typeName,
 			specialType: isUnsigned ? SpecialType.System_UInt32 : SpecialType.System_Int32,
