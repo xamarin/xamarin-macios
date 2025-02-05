@@ -277,4 +277,76 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
+
+	class TestDataGetNSNumberAuxVariableTest : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				new Parameter (0, ReturnTypeForInt (), "myParam"),
+				"var nsb_myParam = NSNumber.FromInt32 (myParam);"
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForInt (isUnsigned: true), "myParam"),
+				"var nsb_myParam = NSNumber.FromUInt32 (myParam);"
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForBool (), "myParam"),
+				"var nsb_myParam = NSNumber.FromBoolean (myParam);"
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum"), "myParam"),
+				"var nsb_myParam = NSNumber.FromInt32 ((int) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_Byte), "myParam"),
+				"var nsb_myParam = NSNumber.FromByte ((byte) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_SByte), "myParam"),
+				"var nsb_myParam = NSNumber.FromSByte ((sbyte) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_Int16), "myParam"),
+				"var nsb_myParam = NSNumber.FromInt16 ((short) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_UInt16), "myParam"),
+				"var nsb_myParam = NSNumber.FromUInt16 ((ushort) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_Int64), "myParam"),
+				"var nsb_myParam = NSNumber.FromInt64 ((long) myParam);",
+			];
+
+			yield return [
+				new Parameter (0, ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_UInt64), "myParam"),
+				"var nsb_myParam = NSNumber.FromUInt64 ((ulong) myParam);",
+			];
+
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetNSNumberAuxVariableTest))]
+	void GetNSNumberAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
+	{
+		var declaration = GetNSNumberAuxVariable (parameter);
+		var str = declaration!.ToString ();
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
 }

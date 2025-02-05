@@ -19,6 +19,7 @@ readonly partial struct Parameter {
 		NSStringStruct,
 		PrimitivePointer,
 		StringPointer,
+		BindFrom,
 	}
 
 	/// <summary>
@@ -65,6 +66,7 @@ readonly partial struct Parameter {
 			VariableType.NSStringStruct => $"_s{cleanedName}",
 			VariableType.PrimitivePointer => $"converted_{cleanedName}",
 			VariableType.StringPointer => $"_p{cleanedName}",
+			VariableType.BindFrom => $"nsb_{cleanedName}",
 			_ => null
 		};
 	}

@@ -193,7 +193,7 @@ static partial class BindingSyntaxFactory {
 							IdentifierName (parameter.Name)),
 						IdentifierName ("GetNonNullHandle").WithTrailingTrivia (Space)))
 				.WithArgumentList (ArgumentList (
-					SingletonSeparatedList<ArgumentSyntax> (Argument (
+					SingletonSeparatedList (Argument (
 						InvocationExpression (
 								IdentifierName (Identifier (TriviaList (Space), SyntaxKind.NameOfKeyword, "nameof",
 									"nameof",
@@ -250,11 +250,111 @@ static partial class BindingSyntaxFactory {
 				Argument (IdentifierName (parameter.Name)))));
 
 		// generates {var} = CFString.CreateNative ({parameter.Name});
-		var declarator = VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
-			.WithInitializer (EqualsValueClause (cfstringFactoryInvocation.WithLeadingTrivia (Space)));
+		var declarator =
+			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithInitializer (EqualsValueClause (cfstringFactoryInvocation.WithLeadingTrivia (Space)));
 
 
 		// put everythign together
+		var declaration = VariableDeclaration (IdentifierName (Identifier (
+				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (declaration);
+	}
+
+	internal static LocalDeclarationStatementSyntax? GetNSNumberAuxVariable (in Parameter parameter)
+	{
+		// the BindFrom attribute with a nsnumber supports the following types:
+		// - bool
+		// - byte
+		// - double
+		// - float
+		// - short
+		// - int
+		// - long
+		// - sbyte
+		// - ushort
+		// - uint
+		// - ulong
+		// - nfloat
+		// - nint
+		// - nuint
+		// - Enums: this are simply casted to their backing representation
+		// if we do not match the expected type, return null
+
+		// make sure that the parameter type is valid and return the required method for the nsnumber variable
+#pragma warning disable format
+		var factoryMethod = parameter.Type switch {
+			{ Name: "nint" } => "FromNInt",
+			{ Name: "nuint" } => "FromNUInt",
+			{ Name: "nfloat" or "NFloat" } => "FromNFloat",
+			{
+				IsEnum: true, IsSmartEnum: true
+			} => null, // we do not support smart enums, there is a special case for them 
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => "FromSByte",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => "FromByte",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => "FromInt16",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => "FromUInt16",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => "FromInt32",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => "FromUInt32",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => "FromInt64",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => "FromUInt64",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_IntPtr } => "FromNint",
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UIntPtr } => "FromNUint",
+			{ SpecialType: SpecialType.System_Boolean } => "FromBoolean",
+			{ SpecialType: SpecialType.System_Byte } => "FromByte",
+			{ SpecialType: SpecialType.System_Double } => "FromDouble",
+			{ SpecialType: SpecialType.System_Single } => "FromFloat",
+			{ SpecialType: SpecialType.System_Int16 } => "FromInt16",
+			{ SpecialType: SpecialType.System_Int32 } => "FromInt32",
+			{ SpecialType: SpecialType.System_Int64 } => "FromInt64",
+			{ SpecialType: SpecialType.System_SByte } => "FromSByte",
+			{ SpecialType: SpecialType.System_UInt16 } => "FromUInt16",
+			{ SpecialType: SpecialType.System_UInt32 } => "FromUInt32",
+			{ SpecialType: SpecialType.System_UInt64 } => "FromUInt64",
+			{ SpecialType: SpecialType.System_IntPtr } => "FromNint",
+			{ SpecialType: SpecialType.System_UIntPtr } => "FromNUint",
+			_ => null,
+		};
+#pragma warning restore format
+
+		if (factoryMethod is null)
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
+		if (variableName is null)
+			return null;
+
+		// generates: NSNumber.FromDouble
+		var factoryInvocation = InvocationExpression (
+			MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName ("NSNumber"),
+				IdentifierName (factoryMethod).WithTrailingTrivia (Space))
+		);
+
+		// the arguments of the factory information depends on if we are dealing with a enum, in which case we cast
+		// or not, in which case we just add the arguments
+		if (parameter.Type.IsEnum) {
+			// generates: NSNumber.FromDouble ((int)value);
+			factoryInvocation = factoryInvocation
+				.WithArgumentList (ArgumentList (SingletonSeparatedList (Argument (
+					CastExpression (
+						IdentifierName (parameter.Type.EnumUnderlyingType.GetKeyword () ?? ""),
+						IdentifierName (parameter.Name).WithLeadingTrivia (Space))))));
+		} else {
+			// generates: NSNumber.FromDouble (value);
+			factoryInvocation = factoryInvocation
+				.WithArgumentList (ArgumentList (SingletonSeparatedList (
+					Argument (IdentifierName (parameter.Name)))));
+		}
+
+		var declarator =
+			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));
+
+		// generats: var nba_variable = NSNumber.FromDouble(value);
 		var declaration = VariableDeclaration (IdentifierName (Identifier (
 				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
 			.WithVariables (SingletonSeparatedList (declarator));
