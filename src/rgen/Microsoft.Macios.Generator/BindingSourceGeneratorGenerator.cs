@@ -13,6 +13,7 @@ using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Emitters;
 using Microsoft.Macios.Generator.Extensions;
+using Microsoft.Macios.Generator.IO;
 
 namespace Microsoft.Macios.Generator;
 
@@ -195,7 +196,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		foreach (var ns in usingDirectivesToKeep) {
 			if (string.IsNullOrEmpty (ns))
 				continue;
-			sb.AppendLine ($"using {ns};");
+			sb.WriteLine ($"using {ns};");
 		}
 	}
 }

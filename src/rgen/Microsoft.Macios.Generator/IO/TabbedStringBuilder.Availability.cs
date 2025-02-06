@@ -4,7 +4,7 @@
 using Microsoft.Macios.Generator.Availability;
 using Xamarin.Utils;
 
-namespace Microsoft.Macios.Generator;
+namespace Microsoft.Macios.Generator.IO;
 
 partial class TabbedStringBuilder {
 
@@ -16,16 +16,16 @@ partial class TabbedStringBuilder {
 				var versionStr = (PlatformAvailability.IsDefaultVersion (availability.SupportedVersion))
 					? string.Empty
 					: availability.SupportedVersion.ToString ();
-				AppendLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
+				WriteLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
 			}
 
 			// loop over the unsupported versions of the platform 
 			foreach (var (version, message) in availability.UnsupportedVersions) {
 				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
 				if (message is null) {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
+					WriteLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
 				} else {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
+					WriteLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
 				}
 			}
 
@@ -35,16 +35,16 @@ partial class TabbedStringBuilder {
 
 				switch (obsoleteInfo) {
 				case (null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
+					WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
 					break;
 				case (not null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
+					WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
 					break;
 				case (null, not null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
+					WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
 					break;
 				case (not null, not null):
-					AppendLine (
+					WriteLine (
 						$"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\", Url=\"{obsoleteInfo.Url}\")]");
 					break;
 				}

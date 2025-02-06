@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using Microsoft.Macios.Generator.DataModel;
+using Microsoft.Macios.Generator.IO;
 
 namespace Microsoft.Macios.Generator.Context;
 

@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
+using Microsoft.Macios.Generator.IO;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -43,17 +44,17 @@ class LibraryEmitter (
 			return true;
 		}
 
-		builder.AppendLine ("using Foundation;");
-		builder.AppendLine ("using ObjCBindings;");
-		builder.AppendLine ("using ObjCRuntime;");
-		builder.AppendLine ("using System;");
+		builder.WriteLine ("using Foundation;");
+		builder.WriteLine ("using ObjCBindings;");
+		builder.WriteLine ("using ObjCRuntime;");
+		builder.WriteLine ("using System;");
 
 		// keep track if we added a lib, if not we don't need to generate the class
 		bool added = false;
 
-		builder.AppendLine ();
-		builder.AppendLine ($"namespace ObjCRuntime;");
-		builder.AppendLine ();
+		builder.WriteLine ();
+		builder.WriteLine ($"namespace ObjCRuntime;");
+		builder.WriteLine ();
 
 		builder.AppendGeneratedCodeAttribute ();
 		using (var classBlock = builder.CreateBlock ($"static partial class {SymbolName}", true)) {
@@ -63,12 +64,12 @@ class LibraryEmitter (
 				using (var nestedClass =
 					   classBlock.CreateBlock ($"static public class {className}", true)) {
 					if (name == "__Internal") {
-						nestedClass.AppendLine ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
+						nestedClass.WriteLine ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
 					} else if (context.IsSystemLibrary (name)) {
-						nestedClass.AppendLine (
+						nestedClass.WriteLine (
 							$"static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.{name}Library, 0);");
 					} else {
-						nestedClass.AppendLine (
+						nestedClass.WriteLine (
 							$"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{path}\", 0);");
 					}
 				}
