@@ -482,4 +482,65 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 		}
 	}
 
+	class TestDataGetBindFromAuxVariableTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			// nsnumber
+			yield return [
+				new Parameter (
+					position: 0,
+					type: ReturnTypeForEnum ("MyEnum", underlyingType: SpecialType.System_UInt64),
+					name: "myParam") {
+					BindAs = new ("Foundation.NSNumber"),
+				},
+				"var nsb_myParam = NSNumber.FromUInt64 ((ulong) myParam);",
+			];
+			// nsvalue	
+			yield return [
+				new Parameter (
+					position: 0,
+					type: ReturnTypeForStruct ("CoreAnimation.CATransform3D"),
+					name: "myParam") {
+					BindAs = new ("Foundation.NSValue"),
+				},
+				"var nsb_myParam = NSValue.FromCATransform3D (myParam);",
+			];
+
+			// smart enum
+			yield return [
+				new Parameter (
+					position: 0,
+					type: ReturnTypeForEnum ("CoreAnimation.CATransform3D", isSmartEnum: true),
+					name: "myParam") {
+					BindAs = new ("Foundation.NSString"),
+				},
+				"var nsb_myParam = myParam.GetConstant ();",
+			];
+
+			//missing attr
+			yield return [
+				new Parameter (
+					position: 0,
+					type: ReturnTypeForEnum ("CoreAnimation.CATransform3D", isSmartEnum: true),
+					name: "myParam"),
+				null!
+			];
+
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetBindFromAuxVariableTests))]
+	void GetBindFromAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
+	{
+		var declaration = GetBindFromAuxVariable (parameter);
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
 }
