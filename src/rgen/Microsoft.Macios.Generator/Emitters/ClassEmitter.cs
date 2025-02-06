@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
@@ -33,7 +34,7 @@ class ClassEmitter : ICodeEmitter {
 	];
 
 
-	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedStringBuilder classBlock, bool disableDefaultCtor)
+	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedWriter<StringWriter> classBlock, bool disableDefaultCtor)
 	{
 
 		if (!disableDefaultCtor) {
@@ -71,7 +72,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 	/// <param name="classBlock">Current class block.</param>
 	/// <param name="notificationProperties">An immutable array with all the properties that are marked as notifications
 	/// and that need a helper class to be generated.</param>
-	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedStringBuilder classBlock,
+	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock,
 		out ImmutableArray<Property> notificationProperties)
 	{
 		var notificationsBuilder = ImmutableArray.CreateBuilder<Property> ();
@@ -141,7 +142,7 @@ return {backingField};
 		notificationProperties = notificationsBuilder.ToImmutable ();
 	}
 
-	void EmitNotifications (in ImmutableArray<Property> properties, TabbedStringBuilder classBlock)
+	void EmitNotifications (in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock)
 	{
 		// to be implemented, do not throw or tests will fail.
 	}

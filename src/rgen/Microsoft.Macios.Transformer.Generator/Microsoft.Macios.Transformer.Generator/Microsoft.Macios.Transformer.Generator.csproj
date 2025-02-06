@@ -26,10 +26,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="../../Microsoft.Macios.Generator/IO/TabbedStringBuilder.cs">
-        <Link>TabbedStringBuilder.cs</Link>
-      </Compile>
+        <Compile Include="../../Microsoft.Macios.Generator/IO/TabbedStringBuilder.cs">
+            <Link>TabbedStringBuilder.cs</Link>
+        </Compile>
+        <Compile Include="../../Microsoft.Macios.Generator/IO/TabbedWriter.cs">
+            <Link>TabbedWriter.cs</Link>
+        </Compile>
     </ItemGroup>
-    
+
 
 </Project>
