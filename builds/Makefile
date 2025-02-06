@@ -57,7 +57,7 @@ print-dotnet-pkg-urls: dotnet-install.sh
 
 # We need https://github.com/dotnet/install-scripts/pull/526, which hasn't been released yet.
 # Revert to using https://dot.net/v1/dotnet-install.sh whenever https://dot.net/v1/dotnet-install.sh has been updated.
-DOTNET_DOWNLOAD_URL?=https://raw.githubusercontent.com/dotnet/install-scripts/87151ae8d2153247f4566208e0df23169d737e92/src/dotnet-install.sh
+# DOTNET_DOWNLOAD_URL?=https://raw.githubusercontent.com/dotnet/install-scripts/87151ae8d2153247f4566208e0df23169d737e92/src/dotnet-install.sh
 
 DOTNET_DOWNLOAD_URL?=https://dot.net/v1/dotnet-install.sh
 
