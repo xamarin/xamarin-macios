@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.Macios.Generator.IO;
 
-abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
+abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
 	protected bool IsBlock;
@@ -24,7 +24,7 @@ abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
 	public TabbedWriter (T innerTextWriter, int currentCount = 0, bool block = false)
 	{
 		InnerWriter = innerTextWriter;
-		Writer = new IndentedTextWriter(innerTextWriter, "\t");
+		Writer = new IndentedTextWriter (innerTextWriter, "\t");
 		IsBlock = block;
 		if (IsBlock) {
 			// increase by 1 because we are in a block
@@ -48,7 +48,7 @@ abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
 		Writer.Indent = oldIndent;
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append content, but do not add a \n
 	/// </summary>
@@ -109,7 +109,7 @@ abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
 		return this;
 	}
 
-#if NET9_0 
+#if NET9_0
 	public TabbedWriter<T> Write (ref DefaultInterpolatedStringHandler handler)
 	{
 		Writer.Write (handler.ToStringAndClear ());
@@ -214,7 +214,7 @@ abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
 		return CreateBlock (array [^1], block);
 	}
 
-	protected virtual void Dispose(bool disposing)
+	protected virtual void Dispose (bool disposing)
 	{
 		if (disposing) {
 			if (IsBlock) {
@@ -227,7 +227,7 @@ abstract class TabbedWriter<T> : IDisposable where T: TextWriter{
 	}
 
 	/// <inheritdoc/>
-	public void Dispose()
+	public void Dispose ()
 	{
 		Dispose (true);
 		GC.SuppressFinalize (this);

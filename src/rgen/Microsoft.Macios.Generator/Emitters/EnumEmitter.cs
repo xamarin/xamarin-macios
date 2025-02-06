@@ -28,7 +28,7 @@ class EnumEmitter : ICodeEmitter {
 		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
 		classBlock.WriteLine ($"[Field (\"{fieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
 		using (var propertyBlock =
-		       classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true)) {
+			   classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true)) {
 			using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
 				getterBlock.WriteLine ($"fixed (IntPtr *storage = &values [{index}])");
 				getterBlock.WriteLine (

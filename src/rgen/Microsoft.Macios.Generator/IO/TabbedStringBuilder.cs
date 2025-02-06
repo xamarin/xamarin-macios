@@ -28,8 +28,8 @@ partial class TabbedStringBuilder : TabbedWriter<StringWriter> {
 	/// <param name="currentCount">The original tab size.</param>
 	/// <param name="block">States if we are creating a {} block.</param>
 	public TabbedStringBuilder (StringBuilder builder, int currentCount = 0, bool block = false)
-		: base (new StringWriter (builder), currentCount, block) {}
-	
+		: base (new StringWriter (builder), currentCount, block) { }
+
 	/// <summary>
 	/// Create a new block with the given line. This method can be used to write if/else statements.
 	/// </summary>

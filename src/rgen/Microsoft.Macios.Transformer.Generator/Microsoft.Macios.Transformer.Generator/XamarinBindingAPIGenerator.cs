@@ -237,7 +237,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 
 		// Add the source code to the compilation.
 		context.AddSource ("AttributeDataDictionaryExtensions.g.cs",
-			SourceText.From (sb.ToCode(), Encoding.UTF8));
+			SourceText.From (sb.ToCode (), Encoding.UTF8));
 
 #pragma warning disable format
 		// generate the extra methods for the data model, group the fields by the model type based on the target
