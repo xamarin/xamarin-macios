@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Microsoft.Macios.Generator;
+namespace Microsoft.Macios.Generator.IO;
 
 /// <summary>
 /// String builder wrapper that keeps track of the current indentation level by abusing the IDisposable pattern. Rather
@@ -23,8 +23,8 @@ namespace Microsoft.Macios.Generator;
 /// </example>
 /// </summary>
 partial class TabbedStringBuilder : IDisposable {
-	readonly StringBuilder sb;
-	readonly uint tabCount;
+	readonly StringBuilder writer;
+	readonly int tabCount;
 	readonly bool isBlock;
 	bool disposed;
 
@@ -34,9 +34,9 @@ partial class TabbedStringBuilder : IDisposable {
 	/// <param name="builder">The string builder to be used to write code.</param>
 	/// <param name="currentCount">The original tab size.</param>
 	/// <param name="block">States if we are creating a {} block.</param>
-	public TabbedStringBuilder (StringBuilder builder, uint currentCount = 0, bool block = false)
+	public TabbedStringBuilder (StringBuilder builder, int currentCount = 0, bool block = false)
 	{
-		sb = builder;
+		writer = builder;
 		isBlock = block;
 		if (isBlock) {
 			// increase by 1 because we are in a block
@@ -48,15 +48,15 @@ partial class TabbedStringBuilder : IDisposable {
 		}
 	}
 
-	StringBuilder WriteTabs () => sb.Append ('\t', (int) tabCount);
+	StringBuilder WriteTabs () => writer.Append ('\t', (int) tabCount);
 
 	/// <summary>
 	/// Append a new empty line to the string builder using the correct tab size.
 	/// </summary>
 	/// <returns>The current tabbed string builder.</returns>
-	public TabbedStringBuilder AppendLine ()
+	public TabbedStringBuilder WriteLine ()
 	{
-		sb.AppendLine ();
+		writer.AppendLine ();
 		return this;
 	}
 
@@ -65,10 +65,10 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="line">The content to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder Append (string line)
+	public TabbedStringBuilder Write (string line)
 	{
 		if (string.IsNullOrWhiteSpace (line)) {
-			sb.Append (line);
+			writer.Append (line);
 		} else {
 			WriteTabs ().Append (line);
 		}
@@ -81,10 +81,10 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="span">The content to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder Append (ReadOnlySpan<char> span)
+	public TabbedStringBuilder Write (ReadOnlySpan<char> span)
 	{
 		if (span.IsWhiteSpace ()) {
-			sb.Append (span);
+			writer.Append (span);
 		} else {
 			WriteTabs ().Append (span);
 		}
@@ -97,10 +97,10 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="line">The line to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendLine (string line)
+	public TabbedStringBuilder WriteLine (string line)
 	{
 		if (string.IsNullOrWhiteSpace (line)) {
-			sb.AppendLine (line);
+			writer.AppendLine (line);
 		} else {
 			WriteTabs ().AppendLine (line);
 		}
@@ -113,10 +113,10 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="span">The line to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendLine (ReadOnlySpan<char> span)
+	public TabbedStringBuilder WriteLine (ReadOnlySpan<char> span)
 	{
 		if (span.IsWhiteSpace ()) {
-			sb.Append (span).AppendLine ();
+			writer.Append (span).AppendLine ();
 		} else {
 			WriteTabs ().Append (span).AppendLine ();
 		}
@@ -126,13 +126,13 @@ partial class TabbedStringBuilder : IDisposable {
 
 #if NET9_0
 	
-	public TabbedStringBuilder Append (ref DefaultInterpolatedStringHandler handler)
+	public TabbedStringBuilder Write (ref DefaultInterpolatedStringHandler handler)
 	{
 		WriteTabs ().Append (handler.ToStringAndClear ());
 		return this;
 	}
 
-	public TabbedStringBuilder AppendLine (ref DefaultInterpolatedStringHandler handler)
+	public TabbedStringBuilder WriteLine (ref DefaultInterpolatedStringHandler handler)
 	{
 		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
 		return this;
@@ -144,7 +144,7 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="rawString">The raw string to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendRaw (string rawString)
+	public TabbedStringBuilder WriteRaw (string rawString)
 	{
 		// we will split the raw string in lines and then append them so that the
 		// tabbing is correct
@@ -152,9 +152,9 @@ partial class TabbedStringBuilder : IDisposable {
 		var count = 0;
 		foreach (var range in lines) {
 			if (count > 0)
-				AppendLine ();
+				WriteLine ();
 			var line = rawString.AsSpan (range);
-			Append (line);
+			Write (line);
 			count++;
 		}
 
@@ -166,7 +166,7 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	/// <param name="rawString">The raw string to append.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendRaw (string rawString)
+	public TabbedStringBuilder WriteRaw (string rawString)
 	{
 		// we will split the raw string in lines and then append them so that the
 		// tabbing is correct
@@ -174,9 +174,9 @@ partial class TabbedStringBuilder : IDisposable {
 		for (var index = 0; index < lines.Length; index++) {
 			var line = lines [index];
 			if (index == lines.Length - 1) {
-				Append (line);
+				Write (line);
 			} else {
-				AppendLine (line);
+				WriteLine (line);
 			}
 		}
 		return this;
@@ -192,10 +192,10 @@ partial class TabbedStringBuilder : IDisposable {
 	{
 		if (optimizable) {
 			const string attr = "[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]";
-			AppendLine (attr);
+			WriteLine (attr);
 		} else {
 			const string attr = "[BindingImpl (BindingImplOptions.GeneratedCode)]";
-			AppendLine (attr);
+			WriteLine (attr);
 		}
 
 		return this;
@@ -205,7 +205,7 @@ partial class TabbedStringBuilder : IDisposable {
 	{
 		string attr =
 			$"[Advice (\"Use '{className}.Notifications.{notification}' helper method instead.\")]";
-		AppendLine (attr);
+		WriteLine (attr);
 		return this;
 	}
 
@@ -216,14 +216,14 @@ partial class TabbedStringBuilder : IDisposable {
 	public TabbedStringBuilder AppendEditorBrowsableAttribute (EditorBrowsableState state)
 	{
 		string attr = $"[EditorBrowsable (EditorBrowsableState.{state})]";
-		AppendLine (attr);
+		WriteLine (attr);
 		return this;
 	}
 
 	public TabbedStringBuilder AppendDesignatedInitializer ()
 	{
 		const string attr = "[DesignatedInitializer]";
-		AppendLine (attr);
+		WriteLine (attr);
 		return this;
 	}
 
@@ -234,12 +234,12 @@ partial class TabbedStringBuilder : IDisposable {
 	public TabbedStringBuilder WriteHeader ()
 	{
 		// let people know this is generated code
-		AppendLine ("// <auto-generated />");
+		WriteLine ("// <auto-generated />");
 
 		// enable nullable!
-		AppendLine ();
-		AppendLine ("#nullable enable");
-		AppendLine ();
+		WriteLine ();
+		WriteLine ("#nullable enable");
+		WriteLine ();
 		return this;
 	}
 
@@ -262,7 +262,7 @@ partial class TabbedStringBuilder : IDisposable {
 			WriteTabs ().AppendLine (line);
 		}
 
-		return new TabbedStringBuilder (sb, tabCount, block);
+		return new TabbedStringBuilder (writer, tabCount, block);
 	}
 
 	/// <summary>
@@ -300,7 +300,7 @@ partial class TabbedStringBuilder : IDisposable {
 	public override string ToString ()
 	{
 		Dispose ();
-		return sb.ToString ();
+		return writer.ToString ();
 	}
 
 	/// <summary>
@@ -308,7 +308,7 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	public void Clear ()
 	{
-		sb.Clear ();
+		writer.Clear ();
 	}
 
 	/// <summary>
@@ -319,7 +319,7 @@ partial class TabbedStringBuilder : IDisposable {
 		if (disposed || !isBlock) return;
 
 		disposed = true;
-		sb.Append ('\t', (int) tabCount - 1);
-		sb.Append ('}').AppendLine ();
+		writer.Append ('\t', (int) tabCount - 1);
+		writer.Append ('}').AppendLine ();
 	}
 }

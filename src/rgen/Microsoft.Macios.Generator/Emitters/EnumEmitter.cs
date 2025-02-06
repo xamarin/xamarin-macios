@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Formatters;
+using Microsoft.Macios.Generator.IO;
 
 namespace Microsoft.Macios.Generator.Emitters;
 
@@ -24,11 +25,11 @@ class EnumEmitter : ICodeEmitter {
 		var (fieldData, libraryName, libraryPath) = enumField.FieldInfo.Value;
 
 		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
-		classBlock.AppendLine ($"[Field (\"{fieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
+		classBlock.WriteLine ($"[Field (\"{fieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
 		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true))
 		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
-			getterBlock.AppendLine ($"fixed (IntPtr *storage = &values [{index}])");
-			getterBlock.AppendLine (
+			getterBlock.WriteLine ($"fixed (IntPtr *storage = &values [{index}])");
+			getterBlock.WriteLine (
 				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{fieldData.SymbolName}\", storage);");
 		}
 	}
@@ -44,7 +45,7 @@ class EnumEmitter : ICodeEmitter {
 			if (!backingFields.Add (binding.EnumMembers [index].FieldInfo!.Value.FieldData.SymbolName)) {
 				return false;
 			}
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 			EmitEnumFieldAtIndex (classBlock, binding, index);
 		}
 		return true;
@@ -59,42 +60,42 @@ class EnumEmitter : ICodeEmitter {
 
 		// Get constant
 		using (var getConstantBlock = classBlock.CreateBlock ($"public static NSString? GetConstant (this {binding.Name} self)", true)) {
-			getConstantBlock.AppendLine ("IntPtr ptr = IntPtr.Zero;");
+			getConstantBlock.WriteLine ("IntPtr ptr = IntPtr.Zero;");
 			using (var switchBlock = getConstantBlock.CreateBlock ("switch ((int) self)", true)) {
 				for (var index = 0; index < binding.EnumMembers.Length; index++) {
 					var enumMember = binding.EnumMembers [index];
 					if (enumMember.FieldInfo is null)
 						continue;
 					var (fieldData, _, _) = enumMember.FieldInfo.Value;
-					switchBlock.AppendLine ($"case {index}: // {fieldData.SymbolName}");
-					switchBlock.AppendLine ($"\tptr = {fieldData.SymbolName};");
-					switchBlock.AppendLine ("\tbreak;");
+					switchBlock.WriteLine ($"case {index}: // {fieldData.SymbolName}");
+					switchBlock.WriteLine ($"\tptr = {fieldData.SymbolName};");
+					switchBlock.WriteLine ("\tbreak;");
 				}
 			}
 
-			getConstantBlock.AppendLine ("return (NSString?) Runtime.GetNSObject (ptr);");
+			getConstantBlock.WriteLine ("return (NSString?) Runtime.GetNSObject (ptr);");
 		}
 
-		classBlock.AppendLine ();
+		classBlock.WriteLine ();
 		// Get value
 		using (var getValueBlock = classBlock.CreateBlock ($"public static {binding.Name} GetValue (NSString constant)", true)) {
-			getValueBlock.AppendLine ("if (constant is null)");
-			getValueBlock.AppendLine ("\tthrow new ArgumentNullException (nameof (constant));");
+			getValueBlock.WriteLine ("if (constant is null)");
+			getValueBlock.WriteLine ("\tthrow new ArgumentNullException (nameof (constant));");
 			foreach (var enumMember in binding.EnumMembers) {
 				if (enumMember.FieldInfo is null)
 					continue;
 				var (fieldData, _, _) = enumMember.FieldInfo.Value;
-				getValueBlock.AppendLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
-				getValueBlock.AppendLine ($"\treturn {binding.Name}.{enumMember.Name};");
+				getValueBlock.WriteLine ($"if (constant.IsEqualTo ({fieldData.SymbolName}))");
+				getValueBlock.WriteLine ($"\treturn {binding.Name}.{enumMember.Name};");
 			}
 
-			getValueBlock.AppendLine (
+			getValueBlock.WriteLine (
 				"throw new NotSupportedException ($\"The constant {constant} has no associated enum value on this platform.\");");
 		}
 
-		classBlock.AppendLine ();
+		classBlock.WriteLine ();
 		// To ConstantArray
-		classBlock.AppendRaw (
+		classBlock.WriteRaw (
 @$"internal static NSString?[]? ToConstantArray (this {binding.Name}[]? values)
 {{
 	if (values is null)
@@ -106,10 +107,10 @@ class EnumEmitter : ICodeEmitter {
 	}}
 	return rv.ToArray ();
 }}");
-		classBlock.AppendLine ();
-		classBlock.AppendLine ();
+		classBlock.WriteLine ();
+		classBlock.WriteLine ();
 		// ToEnumArray
-		classBlock.AppendRaw (
+		classBlock.WriteRaw (
 @$"internal static {binding.Name}[]? ToEnumArray (this NSString[]? values)
 {{
 	if (values is null)
@@ -136,28 +137,28 @@ class EnumEmitter : ICodeEmitter {
 		}
 		// in the old generator we had to copy over the enum, in this new approach, the only code
 		// we need to create is the extension class for the enum that is backed by fields
-		bindingContext.Builder.AppendLine ();
-		bindingContext.Builder.AppendLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
-		bindingContext.Builder.AppendLine ();
+		bindingContext.Builder.WriteLine ();
+		bindingContext.Builder.WriteLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
+		bindingContext.Builder.WriteLine ();
 
 		bindingContext.Builder.AppendMemberAvailability (bindingContext.Changes.SymbolAvailability);
 		bindingContext.Builder.AppendGeneratedCodeAttribute ();
 		var extensionClassDeclaration =
 			bindingContext.Changes.ToSmartEnumExtensionDeclaration (GetSymbolName (bindingContext.Changes));
 		using (var classBlock = bindingContext.Builder.CreateBlock (extensionClassDeclaration.ToString (), true)) {
-			classBlock.AppendLine ();
-			classBlock.AppendLine ($"static IntPtr[] values = new IntPtr [{bindingContext.Changes.EnumMembers.Length}];");
+			classBlock.WriteLine ();
+			classBlock.WriteLine ($"static IntPtr[] values = new IntPtr [{bindingContext.Changes.EnumMembers.Length}];");
 			// foreach member in the enum we need to create a field that holds the value, the property emitter
 			// will take care of generating the property. Do not order it by name to keep the order of the enum
 			if (!TryEmit (classBlock, bindingContext.Changes)) {
 				diagnostics = []; // empty diagnostics since it was a user error
 				return false;
 			}
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 
 			// emit the extension methods that will be used to get the values from the enum
 			EmitExtensionMethods (classBlock, bindingContext.Changes);
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 		}
 
 		return true;
