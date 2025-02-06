@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.Macios.Generator.IO;
 
 abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
+	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim(1, 1);	
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
 	protected bool IsBlock;
@@ -50,6 +53,27 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	}
 
 	/// <summary>
+	/// Append a new empty line to the string builder using no tabs since it is empty.
+	/// </summary>
+	/// <returns>The current tabbed string builder.</returns>
+	public async Task<TabbedWriter<T>> WriteLineAsync ()
+	{
+		// because we are dealing with a method that changes the indentaiton DURING the write, we need 
+		// to lock the writer to make sure that the indentation is correct.
+		await indentationSemaphore.WaitAsync ();
+		try {
+			var oldIndent = Writer.Indent;
+			Writer.Indent = 0;
+			await Writer.WriteLineAsync();
+			Writer.Indent = oldIndent;
+		} finally {
+			indentationSemaphore.Release ();
+		}
+
+		return this;
+	}
+	
+	/// <summary>
 	/// Append content, but do not add a \n
 	/// </summary>
 	/// <param name="line">The content to append.</param>
@@ -58,6 +82,20 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	{
 		if (!string.IsNullOrWhiteSpace (line)) {
 			Writer.Write (line);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Append content, but do not add a \n
+	/// </summary>
+	/// <param name="line">The content to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteAsync (string line)
+	{
+		if (!string.IsNullOrWhiteSpace (line)) {
+			await Writer.WriteAsync (line);
 		}
 
 		return this;
@@ -88,6 +126,22 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 			WriteLine ();
 		} else {
 			Writer.WriteLine (line);
+		}
+
+		return this;
+	}
+	
+	/// <summary>
+	/// Append a new tabbed line.
+	/// </summary>
+	/// <param name="line">The line to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteLineAsync (string line)
+	{
+		if (string.IsNullOrWhiteSpace (line)) {
+			await WriteLineAsync ();
+		} else {
+			await Writer.WriteLineAsync (line);
 		}
 
 		return this;
@@ -148,6 +202,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		}
 		return this;
 	}
+	
 #else
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
@@ -170,6 +225,27 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		return this;
 	}
 #endif
+	
+	/// <summary>
+	/// Append a new raw literal by prepending the correct indentation.
+	/// </summary>
+	/// <param name="rawString">The raw string to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteRawAsync (string rawString)
+	{
+		// we will split the raw string in lines and then append them so that the
+		// tabbing is correct
+		var lines = rawString.Split (['\n'], StringSplitOptions.None);
+		for (var index = 0; index < lines.Length; index++) {
+			var line = lines [index];
+			if (index == lines.Length - 1) {
+				await WriteAsync (line);
+			} else {
+				await WriteLineAsync (line);
+			}
+		}
+		return this;
+	}
 
 	/// <summary>
 	/// Create a new block with the given line. This method can be used to write if/else statements.
