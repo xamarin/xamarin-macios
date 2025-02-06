@@ -476,12 +476,12 @@ static partial class BindingSyntaxFactory {
 	{
 		if (parameter.BindAs is null)
 			return null;
-		
+
 		// based on the bindas type call one of the helper factory methods
 		return parameter.BindAs.Value.Type switch {
 			"Foundation.NSNumber" => GetNSNumberAuxVariable (parameter),
 			"Foundation.NSValue" => GetNSValueAuxVariable (parameter),
-			"Foundation.NSString" => GetNSStringSmartEnumAuxVariable(parameter),
+			"Foundation.NSString" => GetNSStringSmartEnumAuxVariable (parameter),
 			_ => null,
 		};
 	}
