@@ -211,11 +211,11 @@ static class TestDataFactory {
 			EnumUnderlyingType = underlyingType,
 		};
 
-	public static TypeInfo ReturnTypeForArray (string type, 
-		bool isNullable = false, 
-		bool isBlittable = false, 
-		bool isEnum = false, 
-		bool isSmartEnum = false, 
+	public static TypeInfo ReturnTypeForArray (string type,
+		bool isNullable = false,
+		bool isBlittable = false,
+		bool isEnum = false,
+		bool isSmartEnum = false,
 		bool isStruct = false)
 		=> new (
 			name: type,
@@ -226,7 +226,7 @@ static class TestDataFactory {
 			isSmartEnum: isSmartEnum,
 			isStruct: isStruct
 		) {
-			EnumUnderlyingType = isEnum ? SpecialType.System_Int32 : null, 
+			EnumUnderlyingType = isEnum ? SpecialType.System_Int32 : null,
 			Parents = ["System.Array", "object"],
 			Interfaces = [
 				$"System.Collections.Generic.IList<{type}>",

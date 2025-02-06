@@ -470,19 +470,19 @@ static partial class BindingSyntaxFactory {
 		// we can only work with parameters that are an array
 		if (!parameter.Type.IsArray)
 			return null;
-		
+
 		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
 		if (variableName is null)
 			return null;
-		
+
 		// use a switch to decide which of the constructors we are going to use to build the array.
 		var lambdaFunctionVariable = "obj";
 		var nsNumberExpr = ObjectCreationExpression (
 				IdentifierName ("NSNumber").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
 			.WithArgumentList (ArgumentList (SingletonSeparatedList (
 				Argument (IdentifierName (lambdaFunctionVariable)))));
-		var nsValueExpr= ObjectCreationExpression (
-				IdentifierName ("NSValue").WithLeadingTrivia (Space).WithTrailingTrivia(Space))
+		var nsValueExpr = ObjectCreationExpression (
+				IdentifierName ("NSValue").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
 			.WithArgumentList (ArgumentList (SingletonSeparatedList (
 				Argument (IdentifierName (lambdaFunctionVariable)))));
 		var smartEnumExpr = InvocationExpression (MemberAccessExpression (
@@ -549,8 +549,8 @@ static partial class BindingSyntaxFactory {
 		// obj => new NSNumber (obj);
 		// obj => new NSValue (obj);
 		// obj => obj.GetValue ();
-		var lambdaExpression = SimpleLambdaExpression(Parameter(Identifier(lambdaFunctionVariable).WithTrailingTrivia (Space)))
-			.WithExpressionBody(constructor.WithLeadingTrivia (Space));
+		var lambdaExpression = SimpleLambdaExpression (Parameter (Identifier (lambdaFunctionVariable).WithTrailingTrivia (Space)))
+			.WithExpressionBody (constructor.WithLeadingTrivia (Space));
 
 		// generate: NSArray.FromNSObjects (o => new NSNumber (o), shape);
 		var factoryInvocation = InvocationExpression (MemberAccessExpression (
@@ -560,11 +560,11 @@ static partial class BindingSyntaxFactory {
 			ArgumentList (
 				SeparatedList<ArgumentSyntax> (
 					new SyntaxNodeOrToken [] {
-						Argument (lambdaExpression), 
-						Token (SyntaxKind.CommaToken), 
+						Argument (lambdaExpression),
+						Token (SyntaxKind.CommaToken),
 						Argument (IdentifierName (parameter.Name).WithLeadingTrivia (Space))
 					})));
-		
+
 		var declarator =
 			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
 				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));

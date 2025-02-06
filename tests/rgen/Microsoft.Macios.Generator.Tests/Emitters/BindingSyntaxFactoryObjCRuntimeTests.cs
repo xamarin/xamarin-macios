@@ -481,41 +481,38 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
-	
+
 	class TestDataGetNSArrayBindFromAuxVariableTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			// nsnumber
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("nint"),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSNumber"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => new NSNumber (obj), myParam);"
 			];
-			
+
 			// nsvalue
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("CoreGraphics.CGAffineTransform", isStruct: true),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSValue"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => new NSValue (obj), myParam);"
 			];
-			
+
 			// smart enum
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("MySmartEnum", isEnum: true, isSmartEnum: true),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSString"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => obj.GetConstant(), myParam);"
@@ -524,7 +521,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[ClassData (typeof (TestDataGetNSArrayBindFromAuxVariableTests))]
 	void GetNSArrayBindFromAuxVariableTests (in Parameter parameter, string? expectedDeclaration)
@@ -537,7 +534,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
-	
+
 	class TestDataGetBindFromAuxVariableTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -551,18 +548,17 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 				},
 				"var nsb_myParam = NSNumber.FromUInt64 ((ulong) myParam);",
 			];
-			
+
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("nint"),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSNumber"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => new NSNumber (obj), myParam);"
 			];
-			
+
 			// nsvalue	
 			yield return [
 				new Parameter (
@@ -573,18 +569,17 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 				},
 				"var nsb_myParam = NSValue.FromCATransform3D (myParam);",
 			];
-			
+
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("CoreGraphics.CGAffineTransform", isStruct: true),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSValue"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => new NSValue (obj), myParam);"
 			];
-			
+
 			// smart enum
 			yield return [
 				new Parameter (
@@ -595,18 +590,17 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 				},
 				"var nsb_myParam = myParam.GetConstant ();",
 			];
-			
+
 			yield return [
 				new Parameter (
-					position: 0, 
+					position: 0,
 					type: ReturnTypeForArray ("MySmartEnum", isEnum: true, isSmartEnum: true),
-					name: "myParam") 
-				{
+					name: "myParam") {
 					BindAs = new ("Foundation.NSString"),
 				},
 				"var nsb_myParam = NSArray.FromNSObjects (obj => obj.GetConstant(), myParam);"
 			];
-			
+
 			//missing attr
 			yield return [
 				new Parameter (
