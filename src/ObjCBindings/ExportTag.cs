@@ -150,6 +150,13 @@ namespace ObjCBindings {
 		/// marshalling the property.
 		/// </summary>
 		PlainString = 1 << 9,
+
+		/// <summary>
+		/// If this flag is applied to a property, the generator will consider the property to be
+		/// part of a CoreImage filter and will generate the property as a CoreImage filter property.
+		/// </summary>
+		CoreImageFilterProperty = 1 << 10,
+
 	}
 }
 

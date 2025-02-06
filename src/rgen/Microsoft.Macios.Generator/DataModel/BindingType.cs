@@ -27,5 +27,9 @@ enum BindingType : ulong {
 	/// Binding type for a enum with backing fields.
 	/// </summary>
 	SmartEnum,
+	/// <summary>
+	/// Binding type for a core image filter.
+	/// </summary>
+	CoreImageFilter,
 }
 
