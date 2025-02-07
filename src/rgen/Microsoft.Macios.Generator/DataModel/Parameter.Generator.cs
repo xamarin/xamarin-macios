@@ -27,6 +27,19 @@ readonly partial struct Parameter {
 	/// </summary>
 	public BindFromData? BindAs { get; init; }
 
+	/// <summary>
+	/// Returns if the parameter needs a null check when the code is generated.
+	/// </summary>
+	public bool NeedsNullCheck {
+		get {
+			if (ReferenceKind != ReferenceKind.None)
+				return false;
+			if (Type.IsNullable)
+				return false;
+			return Type.IsWrapped || Type.IsReferenceType;
+		}
+	}
+
 	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{
