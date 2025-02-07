@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.IO;
@@ -66,6 +67,22 @@ public class TabbedStringBuilderTests {
 	}
 
 	[Theory]
+	[InlineData (0)]
+	[InlineData (1)]
+	[InlineData (5)]
+	public async Task AppendLineTestAsync (int tabCount)
+	{
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			await block.WriteLineAsync ();
+			result = block.ToCode ();
+		}
+
+		// an empty line should have not tabs
+		Assert.Equal ("\n", result);
+	}
+
+	[Theory]
 	[InlineData ("// test comment", 0, "")]
 	[InlineData ("var t = 1;", 1, "\t")]
 	[InlineData ("Console.WriteLine (\"1\");", 5, "\t\t\t\t\t")]
@@ -74,6 +91,21 @@ public class TabbedStringBuilderTests {
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
 			block.WriteLine (line);
+			result = block.ToCode ();
+		}
+
+		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n", result);
+	}
+
+	[Theory]
+	[InlineData ("// test comment", 0, "")]
+	[InlineData ("var t = 1;", 1, "\t")]
+	[InlineData ("Console.WriteLine (\"1\");", 5, "\t\t\t\t\t")]
+	public async Task AppendLineStringTestAsync (string line, int tabCount, string expectedTabs)
+	{
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
+			await block.WriteLineAsync (line);
 			result = block.ToCode ();
 		}
 
@@ -126,6 +158,37 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteRaw (input);
+			result = block.ToCode ();
+		}
+
+		Assert.Equal (expected, result);
+	}
+
+	[Theory]
+	[InlineData (0, "")]
+	[InlineData (1, "\t")]
+	[InlineData (5, "\t\t\t\t\t")]
+	public async Task AppendRawTestAsync (int tabCount, string expectedTabs)
+	{
+		var input = @"
+## Raw string
+Because we are using a raw string  we expected:
+  1. The string to be split in lines
+  2. All lines should have the right indentation
+     - This means nested one
+  3. And all lines should have the correct tabs
+";
+		var expected = $@"
+{expectedTabs}## Raw string
+{expectedTabs}Because we are using a raw string  we expected:
+{expectedTabs}  1. The string to be split in lines
+{expectedTabs}  2. All lines should have the right indentation
+{expectedTabs}     - This means nested one
+{expectedTabs}  3. And all lines should have the correct tabs
+";
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			await block.WriteRawAsync (input);
 			result = block.ToCode ();
 		}
 
