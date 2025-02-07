@@ -9,6 +9,8 @@
 		<MicrosoftBuildTasksCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildTasksCorePackageVersion>
 		<MicrosoftBuildUtilitiesCorePackageVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildUtilitiesCorePackageVersion>
 		<NUnitXmlTestLoggerPackageVersion>3.1.15</NUnitXmlTestLoggerPackageVersion>
+		<!-- Fix transient dependency issue found by component governance 4.7.0 -> 4.7.2 brought by Microsoft.Build package -->
+		<SystemDrawingCommonPackageVersion>4.7.2</SystemDrawingCommonPackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>
