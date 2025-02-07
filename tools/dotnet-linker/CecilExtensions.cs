@@ -52,6 +52,8 @@ namespace Xamarin.Linker {
 
 		public static void GenerateILOffsets(this MethodBody body)
 		{
+			// This does not compute precise offsets, it just assigns a unique number to each instruction
+			// The trimmer relies on unique offsets to identify instructions
 			int instructionOffset = 0;
 			foreach (var instruction in body.Instructions) {
 				instruction.Offset = instructionOffset++;
