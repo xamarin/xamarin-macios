@@ -7,14 +7,14 @@ class TabbedStreamWriter : TabbedWriter<StreamWriter> {
 	readonly string path;
 	TabbedStreamWriter? parent;
 
-	TabbedStreamWriter (string filePath, FileMode mode, FileAccess access, FileShare share, 
+	TabbedStreamWriter (string filePath, FileMode mode, FileAccess access, FileShare share,
 		int currentCount = 0, bool block = false)
 		: base (new StreamWriter (new FileStream (filePath, mode, access, share)), currentCount, block)
 	{
 		// keep track of the path we are writing to
 		path = filePath;
 	}
-	
+
 	public TabbedStreamWriter (string filePath, int currentCount = 0, bool block = false)
 		: this (filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite, currentCount, block) { }
 
@@ -54,17 +54,17 @@ class TabbedStreamWriter : TabbedWriter<StreamWriter> {
 		parent?.InnerWriter.BaseStream.Seek (0, SeekOrigin.End);
 		parent = null;
 	}
-	
+
 	public override void Close ()
 	{
-		base.Close();
+		base.Close ();
 		// if we have a parent, move the stream to the end
 		SyncParent ();
 	}
 
 	public override async Task CloseAsync ()
 	{
-		await base.CloseAsync();
+		await base.CloseAsync ();
 		SyncParent ();
 	}
 }

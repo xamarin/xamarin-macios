@@ -131,7 +131,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append a new tabbed line.
 	/// </summary>
@@ -242,7 +242,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		return this;
 	}
 #endif
-	
+
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
 	/// </summary>
@@ -327,7 +327,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		}
 		return CreateBlock (array [^1], block);
 	}
-	
+
 	public virtual void Close ()
 	{
 		// if we are closing, and it is a block, we need to close the block
@@ -338,7 +338,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		}
 		Writer.Flush ();
 	}
-	
+
 	public virtual async Task CloseAsync ()
 	{
 		// if we are closing, and it is a block, we need to close the block
@@ -365,7 +365,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		GC.SuppressFinalize (this);
 	}
 
-	public async ValueTask DisposeAsync()
+	public async ValueTask DisposeAsync ()
 	{
 		if (indentationSemaphore is IAsyncDisposable indentationSemaphoreAsyncDisposable)
 			await indentationSemaphoreAsyncDisposable.DisposeAsync ();

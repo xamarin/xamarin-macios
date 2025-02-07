@@ -7,7 +7,7 @@ namespace Microsoft.Macios.Transformer.Tests.IO;
 
 public class TabbedStreamWriterTests : IDisposable {
 	readonly string tempFile = Path.GetTempFileName ();
-	
+
 	public void Dispose ()
 	{
 		if (File.Exists (tempFile))
@@ -31,7 +31,7 @@ public class TabbedStreamWriterTests : IDisposable {
 		}
 		Assert.Equal ($"{expectedTabs}Test\n", ReadFile ());
 	}
-	
+
 	[Theory]
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
@@ -44,7 +44,7 @@ public class TabbedStreamWriterTests : IDisposable {
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\tTest\n{expectedTabs}}}\n", ReadFile ());
 	}
-	
+
 	[Fact]
 	public void ConstructorBlockNestedTest ()
 	{
@@ -81,7 +81,7 @@ using (var test2 = new Test ())
 ";
 		Assert.Equal (expectedResult, ReadFile ());
 	}
-	
+
 	[Fact]
 	public async Task ConstructorBlockNestedAsyncTest ()
 	{
