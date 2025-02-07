@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Macios.Generator.IO;
 
-abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
+abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWriter {
 	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim(1, 1);	
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
@@ -37,6 +37,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		} else {
 			Writer.Indent = currentCount;
 		}
+		Writer.Flush ();
 	}
 
 	/// <summary>
@@ -289,15 +290,33 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		}
 		return CreateBlock (array [^1], block);
 	}
+	
+	public virtual void Close ()
+	{
+		// if we are closing, and it is a block, we need to close the block
+		if (IsBlock) {
+			Writer.Indent -= 1;
+			Writer.WriteLine ('}');
+			IsBlock = false;
+		}
+		Writer.Flush ();
+	}
+	
+	public virtual async Task CloseAsync ()
+	{
+		// if we are closing, and it is a block, we need to close the block
+		if (IsBlock) {
+			Writer.Indent -= 1;
+			await Writer.WriteLineAsync ('}');
+			IsBlock = false;
+		}
+		await Writer.FlushAsync ();
+	}
 
 	protected virtual void Dispose (bool disposing)
 	{
 		if (disposing) {
-			if (IsBlock) {
-				Writer.Indent -= 1;
-				Writer.WriteLine ('}');
-				IsBlock = false;
-			}
+			Close ();
 			Writer.Dispose ();
 		}
 	}
@@ -307,5 +326,16 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	{
 		Dispose (true);
 		GC.SuppressFinalize (this);
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		if (indentationSemaphore is IAsyncDisposable indentationSemaphoreAsyncDisposable)
+			await indentationSemaphoreAsyncDisposable.DisposeAsync ();
+		else
+			indentationSemaphore.Dispose ();
+		await CloseAsync ();
+		await Writer.DisposeAsync ();
+		await InnerWriter.DisposeAsync ();
 	}
 }
