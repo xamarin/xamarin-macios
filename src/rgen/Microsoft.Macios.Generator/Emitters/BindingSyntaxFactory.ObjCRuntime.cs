@@ -289,9 +289,7 @@ static partial class BindingSyntaxFactory {
 			{ Name: "nint" } => "FromNInt",
 			{ Name: "nuint" } => "FromNUInt",
 			{ Name: "nfloat" or "NFloat" } => "FromNFloat",
-			{
-				IsEnum: true, IsSmartEnum: true
-			} => null, // we do not support smart enums, there is a special case for them 
+			{ IsEnum: true, IsSmartEnum: true } => null, // we do not support smart enums, there is a special case for them 
 			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => "FromSByte",
 			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => "FromByte",
 			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => "FromInt16",
@@ -467,6 +465,117 @@ static partial class BindingSyntaxFactory {
 		return LocalDeclarationStatement (declaration);
 	}
 
+	internal static LocalDeclarationStatementSyntax? GetNSArrayBindFromAuxVariable (in Parameter parameter)
+	{
+		// we can only work with parameters that are an array
+		if (!parameter.Type.IsArray)
+			return null;
+
+		var variableName = parameter.GetNameForVariableType (Parameter.VariableType.BindFrom);
+		if (variableName is null)
+			return null;
+
+		// use a switch to decide which of the constructors we are going to use to build the array.
+		var lambdaFunctionVariable = "obj";
+		var nsNumberExpr = ObjectCreationExpression (
+				IdentifierName ("NSNumber").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+			.WithArgumentList (ArgumentList (SingletonSeparatedList (
+				Argument (IdentifierName (lambdaFunctionVariable)))));
+		var nsValueExpr = ObjectCreationExpression (
+				IdentifierName ("NSValue").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+			.WithArgumentList (ArgumentList (SingletonSeparatedList (
+				Argument (IdentifierName (lambdaFunctionVariable)))));
+		var smartEnumExpr = InvocationExpression (MemberAccessExpression (
+			SyntaxKind.SimpleMemberAccessExpression,
+			IdentifierName (lambdaFunctionVariable).WithLeadingTrivia (Space),
+			IdentifierName ("GetConstant")));
+			
+#pragma warning disable format
+		ExpressionSyntax? constructor = parameter.Type switch {
+			// smart enums
+			{ IsEnum: true, IsSmartEnum: true } => smartEnumExpr,
+			// NSNumber types:
+			{ Name: "nint" } => nsNumberExpr,
+			{ Name: "nuint" } => nsNumberExpr,
+			{ Name: "nfloat" or "NFloat" } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_SByte } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Byte } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int16 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt16 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int32 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt32 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_Int64 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UInt64 } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_IntPtr } => nsNumberExpr,
+			{ IsEnum: true, EnumUnderlyingType: SpecialType.System_UIntPtr } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Boolean } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Byte } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Double } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Single } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Int16 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Int32 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_Int64 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_SByte } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_UInt16 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_UInt32 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_UInt64 } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_IntPtr } => nsNumberExpr,
+			{ SpecialType: SpecialType.System_UIntPtr } => nsNumberExpr,
+			// NSValue related types:
+			{ FullyQualifiedName: "CoreGraphics.CGAffineTransform" } => nsValueExpr, 
+			{ FullyQualifiedName: "Foundation.NSRange" } =>  nsValueExpr, 
+			{ FullyQualifiedName: "CoreGraphics.CGVector" } =>  nsValueExpr, 
+			{ FullyQualifiedName: "SceneKit.SCNMatrix4" } => nsValueExpr, 
+			{ FullyQualifiedName: "CoreLocation.CLLocationCoordinate2D" } => nsValueExpr, 
+			{ FullyQualifiedName: "SceneKit.SCNVector3" } => nsValueExpr,
+			{ FullyQualifiedName: "SceneKit.SCNVector4" } => nsValueExpr,
+			{ FullyQualifiedName: "CoreGraphics.CGPoint" } => nsValueExpr,
+			{ FullyQualifiedName: "CoreGraphics.CGRect" } => nsValueExpr,
+			{ FullyQualifiedName: "CoreGraphics.CGSize" } => nsValueExpr,
+			{ FullyQualifiedName: "UIKit.UIEdgeInsets" } => nsValueExpr,
+			{ FullyQualifiedName: "UIKit.UIOffset" } => nsValueExpr,
+			{ FullyQualifiedName: "MapKit.MKCoordinateSpan" } => nsNumberExpr,
+			{ FullyQualifiedName: "CoreMedia.CMTimeRange" } => nsNumberExpr,
+			{ FullyQualifiedName: "CoreMedia.CMTime" } => nsValueExpr, 
+			{ FullyQualifiedName: "CoreMedia.CMTimeMapping" } => nsValueExpr, 
+			{ FullyQualifiedName: "CoreAnimation.CATransform3D" } => nsValueExpr, 
+			_ => null
+		};
+#pragma warning restore format
+		
+		if (constructor is null)
+			return null;
+		// generates:
+		// obj => new NSNumber (obj);
+		// obj => new NSValue (obj);
+		// obj => obj.GetValue ();
+		var lambdaExpression = SimpleLambdaExpression (Parameter (Identifier (lambdaFunctionVariable).WithTrailingTrivia (Space)))
+			.WithExpressionBody (constructor.WithLeadingTrivia (Space));
+
+		// generate: NSArray.FromNSObjects (o => new NSNumber (o), shape);
+		var factoryInvocation = InvocationExpression (MemberAccessExpression (
+			SyntaxKind.SimpleMemberAccessExpression,
+			IdentifierName ("NSArray"),
+			IdentifierName ("FromNSObjects").WithTrailingTrivia (Space))).WithArgumentList (
+			ArgumentList (
+				SeparatedList<ArgumentSyntax> (
+					new SyntaxNodeOrToken [] {
+						Argument (lambdaExpression),
+						Token (SyntaxKind.CommaToken),
+						Argument (IdentifierName (parameter.Name).WithLeadingTrivia (Space))
+					})));
+
+		var declarator =
+			VariableDeclarator (Identifier (variableName).WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithInitializer (EqualsValueClause (factoryInvocation.WithLeadingTrivia (Space)));
+
+		var declaration = VariableDeclaration (IdentifierName (Identifier (
+				TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (declaration);
+	}
+
 	/// <summary>
 	/// Returns the aux variable declaration needed when a parameter has the BindFrom attribute.
 	/// </summary>
@@ -477,13 +586,16 @@ static partial class BindingSyntaxFactory {
 		if (parameter.BindAs is null)
 			return null;
 
+#pragma warning disable format
 		// based on the bindas type call one of the helper factory methods
-		return parameter.BindAs.Value.Type switch {
-			"Foundation.NSNumber" => GetNSNumberAuxVariable (parameter),
-			"Foundation.NSValue" => GetNSValueAuxVariable (parameter),
-			"Foundation.NSString" => GetNSStringSmartEnumAuxVariable (parameter),
+		return (Type: parameter.BindAs.Value.Type, IsArray: parameter.Type.IsArray) switch {
+			{ IsArray: true } => GetNSArrayBindFromAuxVariable (parameter),
+			{ Type: "Foundation.NSNumber" } => GetNSNumberAuxVariable (parameter),
+			{ Type: "Foundation.NSValue" } => GetNSValueAuxVariable (parameter),
+			{ Type: "Foundation.NSString" } => GetNSStringSmartEnumAuxVariable(parameter),
 			_ => null,
 		};
+#pragma warning restore format
 	}
 
 
