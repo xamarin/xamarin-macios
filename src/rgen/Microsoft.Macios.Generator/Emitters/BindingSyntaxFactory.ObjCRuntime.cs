@@ -650,6 +650,29 @@ static partial class BindingSyntaxFactory {
 			IdentifierName ("EnsureUIThread").WithTrailingTrivia (Space))));
 	}
 
+	/// <summary>
+	/// Generate the declaration needed for the exception marhsaling.
+	/// </summary>
+	/// <returns>The local declaration needed for the exception marshaling.</returns>
+	internal static LocalDeclarationStatementSyntax GetExceptionHandleAuxVariable ()
+	{
+		const string handleVariableName = "exception_gchandle";
+		const string intPtr = "IntPtr";
+		//  object creation
+		var zeroPtr = MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName (intPtr),
+				IdentifierName ("Zero"));
+
+		var declarator = VariableDeclarator (Identifier (handleVariableName))
+				.WithInitializer (EqualsValueClause (zeroPtr));
+
+		return LocalDeclarationStatement (
+			VariableDeclaration (IdentifierName (intPtr))
+				.WithVariables (SingletonSeparatedList (declarator)))
+			.NormalizeWhitespace (); // no special mono style
+	}
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
