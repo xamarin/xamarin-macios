@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Macios.Generator.IO;
 
 abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWriter {
-	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim(1, 1);	
+	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim (1, 1);
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
 	protected bool IsBlock;
@@ -65,7 +65,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		try {
 			var oldIndent = Writer.Indent;
 			Writer.Indent = 0;
-			await Writer.WriteLineAsync();
+			await Writer.WriteLineAsync ();
 			Writer.Indent = oldIndent;
 		} finally {
 			indentationSemaphore.Release ();
@@ -73,7 +73,7 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append content, but do not add a \n
 	/// </summary>
@@ -132,6 +132,22 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		return this;
 	}
 	
+	/// <summary>
+	/// Append a new tabbed line.
+	/// </summary>
+	/// <param name="line">The line to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteLineAsync (string line)
+	{
+		if (string.IsNullOrWhiteSpace (line)) {
+			await WriteLineAsync ();
+		} else {
+			await Writer.WriteLineAsync (line);
+		}
+
+		return this;
+	}
+
 	/// <summary>
 	/// Append a new tabbed line.
 	/// </summary>
@@ -227,6 +243,27 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 	}
 #endif
 	
+	/// <summary>
+	/// Append a new raw literal by prepending the correct indentation.
+	/// </summary>
+	/// <param name="rawString">The raw string to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteRawAsync (string rawString)
+	{
+		// we will split the raw string in lines and then append them so that the
+		// tabbing is correct
+		var lines = rawString.Split (['\n'], StringSplitOptions.None);
+		for (var index = 0; index < lines.Length; index++) {
+			var line = lines [index];
+			if (index == lines.Length - 1) {
+				await WriteAsync (line);
+			} else {
+				await WriteLineAsync (line);
+			}
+		}
+		return this;
+	}
+
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
 	/// </summary>
