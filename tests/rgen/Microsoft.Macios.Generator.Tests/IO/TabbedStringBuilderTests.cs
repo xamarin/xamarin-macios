@@ -65,7 +65,7 @@ public class TabbedStringBuilderTests {
 		// an empty line should have not tabs
 		Assert.Equal ("\n", result);
 	}
-	
+
 	[Theory]
 	[InlineData (0)]
 	[InlineData (1)]
@@ -96,7 +96,7 @@ public class TabbedStringBuilderTests {
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n", result);
 	}
-	
+
 	[Theory]
 	[InlineData ("// test comment", 0, "")]
 	[InlineData ("var t = 1;", 1, "\t")]
@@ -163,7 +163,7 @@ Because we are using a raw string  we expected:
 
 		Assert.Equal (expected, result);
 	}
-	
+
 	[Theory]
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]

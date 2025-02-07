@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Macios.Generator.IO;
 
 abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
-	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim(1, 1);	
+	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim (1, 1);
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
 	protected bool IsBlock;
@@ -64,7 +64,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		try {
 			var oldIndent = Writer.Indent;
 			Writer.Indent = 0;
-			await Writer.WriteLineAsync();
+			await Writer.WriteLineAsync ();
 			Writer.Indent = oldIndent;
 		} finally {
 			indentationSemaphore.Release ();
@@ -72,7 +72,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append content, but do not add a \n
 	/// </summary>
@@ -130,7 +130,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 
 		return this;
 	}
-	
+
 	/// <summary>
 	/// Append a new tabbed line.
 	/// </summary>
@@ -225,7 +225,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		return this;
 	}
 #endif
-	
+
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.
 	/// </summary>
