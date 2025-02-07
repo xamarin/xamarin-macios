@@ -622,7 +622,32 @@ static partial class BindingSyntaxFactory {
 			.WithVariables (SingletonSeparatedList (declarator));
 
 		return LocalDeclarationStatement (variableDeclaration);
+	}
 
+	/// <summary>
+	/// Generate the expression needed to check the code is in the UI thread based on the compilation target.
+	/// </summary>
+	/// <param name="platform">The platform we are targeting in the compilation.</param>
+	/// <returns>The expression with the correct call per platform.</returns>
+	internal static ExpressionStatementSyntax? EnsureUiThread (PlatformName platform)
+	{
+		(string Namespace, string Classname)? caller = platform switch {
+			PlatformName.iOS => ("UIKit", "UIApplication"),
+			PlatformName.TvOS => ("UIKit", "UIApplication"),
+			PlatformName.MacCatalyst => ("UIKit", "UIApplication"),
+			PlatformName.MacOSX => ("AppKit", "NSApplication"),
+			_ => null
+		};
+		if (caller is null)
+			return null;
+
+		return ExpressionStatement (InvocationExpression (MemberAccessExpression (
+			SyntaxKind.SimpleMemberAccessExpression,
+			MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName (caller.Value.Namespace),
+				IdentifierName (caller.Value.Classname)),
+			IdentifierName ("EnsureUIThread").WithTrailingTrivia (Space))));
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,

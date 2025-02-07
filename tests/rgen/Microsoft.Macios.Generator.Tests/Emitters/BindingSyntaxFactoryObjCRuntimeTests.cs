@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.DataModel;
+using Xamarin.Utils;
 using Xunit;
 using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
@@ -637,4 +638,21 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 		Assert.Equal (expected, declaration.ToString ());
 	}
 
+	[Theory]
+	[InlineData (PlatformName.iOS, "UIKit.UIApplication.EnsureUIThread ();")]
+	[InlineData (PlatformName.TvOS, "UIKit.UIApplication.EnsureUIThread ();")]
+	[InlineData (PlatformName.MacCatalyst, "UIKit.UIApplication.EnsureUIThread ();")]
+	[InlineData (PlatformName.MacOSX, "AppKit.NSApplication.EnsureUIThread ();")]
+	[InlineData (PlatformName.WatchOS, null)]
+	[InlineData (PlatformName.None, null)]
+	void EnsureUiThreadTests (PlatformName platform, string? expectedDeclaration)
+	{
+		var declaration = EnsureUiThread (platform);
+		if (expectedDeclaration is null) {
+			Assert.Null (declaration);
+		} else {
+			Assert.NotNull (declaration);
+			Assert.Equal (expectedDeclaration, declaration.ToString ());
+		}
+	}
 }
