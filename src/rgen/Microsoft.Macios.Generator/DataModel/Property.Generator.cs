@@ -78,7 +78,7 @@ readonly partial struct Property {
 	/// </summary>
 	public bool UsePlainString
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.PlainString);
-	
+
 	/// <summary>
 	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
 	/// </summary>

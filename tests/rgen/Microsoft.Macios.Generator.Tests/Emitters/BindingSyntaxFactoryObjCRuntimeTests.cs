@@ -636,5 +636,5 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 		Assert.NotNull (declaration);
 		Assert.Equal (expected, declaration.ToString ());
 	}
-	
+
 }

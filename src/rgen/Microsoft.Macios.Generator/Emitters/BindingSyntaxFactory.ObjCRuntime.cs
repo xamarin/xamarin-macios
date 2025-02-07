@@ -610,19 +610,19 @@ static partial class BindingSyntaxFactory {
 			ObjectCreationExpression (
 					IdentifierName ("NSAutoreleasePool").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
 				.WithArgumentList (ArgumentList ());
-		
+
 		// return the autorelease pool definition 
 		var declarator = VariableDeclarator (Identifier (poolVariableName));
 		declarator = declarator.WithInitializer (EqualsValueClause (create.WithLeadingTrivia (Space))
 				.WithLeadingTrivia (Space));
-		
+
 		var variableDeclaration = VariableDeclaration (IdentifierName (
 				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
 			.WithTrailingTrivia (Space)
 			.WithVariables (SingletonSeparatedList (declarator));
-		
+
 		return LocalDeclarationStatement (variableDeclaration);
-		
+
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
