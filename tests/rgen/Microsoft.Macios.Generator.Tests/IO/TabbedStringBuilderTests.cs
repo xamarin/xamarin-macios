@@ -28,7 +28,7 @@ public class TabbedStringBuilderTests {
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteLine ("Test");
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}Test\n", result);
@@ -43,7 +43,7 @@ public class TabbedStringBuilderTests {
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
 			block.WriteLine ("Test");
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\tTest\n{expectedTabs}}}\n", result);
@@ -58,7 +58,7 @@ public class TabbedStringBuilderTests {
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteLine ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		// an empty line should have not tabs
@@ -74,7 +74,7 @@ public class TabbedStringBuilderTests {
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
 			block.WriteLine (line);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n", result);
@@ -94,7 +94,7 @@ public class TabbedStringBuilderTests {
 		var expected = $"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n";
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
 			block.WriteLine ($"{val1} {val2}{val3}");
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -126,7 +126,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteRaw (input);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -142,7 +142,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendGeneratedCodeAttribute (false);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -159,7 +159,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendGeneratedCodeAttribute ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -175,7 +175,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendEditorBrowsableAttribute (state);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -193,7 +193,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendNotificationAdvice (className, notificationName);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -209,7 +209,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendDesignatedInitializer ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -232,7 +232,7 @@ Because we are using a raw string  we expected:
 				nested.WriteLine (blockContent);
 			}
 
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -256,7 +256,7 @@ Because we are using a raw string  we expected:
 				nested.WriteLine (blockContent);
 			}
 
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -276,7 +276,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteHeader ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -333,7 +333,7 @@ Because we are using a raw string  we expected:
 	{
 		var block = new TabbedStringBuilder (sb);
 		block.AppendMemberAvailability (availability);
-		var result = block.ToString ();
+		var result = block.ToCode ();
 		Assert.Equal (expectedString, result);
 	}
 
@@ -343,9 +343,9 @@ Because we are using a raw string  we expected:
 		var block = new TabbedStringBuilder (sb);
 		var line = "My Line";
 		block.Write (line);
-		Assert.Equal (line, block.ToString ());
+		Assert.Equal (line, block.ToCode ());
 		block.Clear ();
-		Assert.Equal (string.Empty, block.ToString ());
+		Assert.Equal (string.Empty, block.ToCode ());
 	}
 
 	[Fact]
@@ -369,6 +369,6 @@ using (var m3 = new MemoryStream())
 		using (var usingBlock = baseBlock.CreateBlock (usingStatements, true)) {
 			usingBlock.WriteLine ("// this is an example with several usings");
 		}
-		Assert.Equal (expecteString, baseBlock.ToString ());
+		Assert.Equal (expecteString, baseBlock.ToCode ());
 	}
 }

@@ -113,7 +113,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				var bindingContext = new BindingContext (sb, binding);
 				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
-					var code = sb.ToString ();
+					var code = sb.ToCode ();
 					var namespacePath = Path.Combine (binding.Namespace.ToArray ());
 					var fileName = emitter.GetSymbolName (binding);
 					context.AddSource ($"{Path.Combine (namespacePath, fileName)}.g.cs",
@@ -162,7 +162,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 
 		if (emitter.TryEmit (distinctLibraryPaths, out var diagnostics)) {
 			// only add a file when we do generate code
-			var code = sb.ToString ();
+			var code = sb.ToCode ();
 			context.AddSource ($"{Path.Combine (emitter.SymbolNamespace, emitter.SymbolName)}.g.cs",
 				SourceText.From (code, Encoding.UTF8));
 		} else {

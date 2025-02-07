@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -83,7 +84,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 			.ToArray ();
 
 
-	static void WriteFlagProperty (TabbedStringBuilder sb, string flagName)
+	static void WriteFlagProperty (TabbedWriter<StringWriter> sb, string flagName)
 	{
 		// write the backing field
 		sb.WriteLine ($"readonly bool _{flagName} = false;");
@@ -93,7 +94,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 		}
 	}
 
-	static void WriteAttributeProperty (TabbedStringBuilder sb,
+	static void WriteAttributeProperty (TabbedWriter<StringWriter> sb,
 		(string AttributeFullName, string AttributeName, BindingAttributeData Data) attrData)
 	{
 		// add a property that will state if we have the attr, this will help with nullability
@@ -176,7 +177,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 		var methodAttributes = GetAttributesForTarget (attributes, targets);
 		WriteDataModelExtension (sb, dataModel, methodFlags, methodAttributes);
 		context.AddSource ($"{dataModel}.Transformer.g.cs",
-			SourceText.From (sb.ToString (), Encoding.UTF8));
+			SourceText.From (sb.ToCode (), Encoding.UTF8));
 	}
 
 	static AttributeTargets GetTarget (ISymbol symbol)
@@ -236,7 +237,7 @@ public class XamarinBindingAPIGenerator : IIncrementalGenerator {
 
 		// Add the source code to the compilation.
 		context.AddSource ("AttributeDataDictionaryExtensions.g.cs",
-			SourceText.From (sb.ToString (), Encoding.UTF8));
+			SourceText.From (sb.ToCode (), Encoding.UTF8));
 
 #pragma warning disable format
 		// generate the extra methods for the data model, group the fields by the model type based on the target

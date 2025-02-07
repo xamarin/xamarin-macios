@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
@@ -16,7 +17,7 @@ class EnumEmitter : ICodeEmitter {
 	public string GetSymbolName (in Binding binding) => $"{binding.Name}Extensions";
 	public IEnumerable<string> UsingStatements => ["Foundation", "ObjCRuntime", "System"];
 
-	void EmitEnumFieldAtIndex (TabbedStringBuilder classBlock, in Binding binding, int index)
+	void EmitEnumFieldAtIndex (TabbedWriter<StringWriter> classBlock, in Binding binding, int index)
 	{
 		var enumField = binding.EnumMembers [index];
 		if (enumField.FieldInfo is null)
@@ -26,15 +27,17 @@ class EnumEmitter : ICodeEmitter {
 
 		classBlock.AppendMemberAvailability (enumField.SymbolAvailability);
 		classBlock.WriteLine ($"[Field (\"{fieldData.SymbolName}\", \"{libraryPath ?? libraryName}\")]");
-		using (var propertyBlock = classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true))
-		using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
-			getterBlock.WriteLine ($"fixed (IntPtr *storage = &values [{index}])");
-			getterBlock.WriteLine (
-				$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{fieldData.SymbolName}\", storage);");
+		using (var propertyBlock =
+			   classBlock.CreateBlock ($"internal unsafe static IntPtr {fieldData.SymbolName}", true)) {
+			using (var getterBlock = propertyBlock.CreateBlock ("get", true)) {
+				getterBlock.WriteLine ($"fixed (IntPtr *storage = &values [{index}])");
+				getterBlock.WriteLine (
+					$"\treturn Dlfcn.CachePointer (Libraries.{libraryName}.Handle, \"{fieldData.SymbolName}\", storage);");
+			}
 		}
 	}
 
-	bool TryEmit (TabbedStringBuilder classBlock, in Binding binding)
+	bool TryEmit (TabbedWriter<StringWriter> classBlock, in Binding binding)
 	{
 		// keep track of the field symbols, they have to be unique, if we find a duplicate we return false and
 		// abort the code generation
@@ -51,7 +54,7 @@ class EnumEmitter : ICodeEmitter {
 		return true;
 	}
 
-	void EmitExtensionMethods (TabbedStringBuilder classBlock, in Binding binding)
+	void EmitExtensionMethods (TabbedWriter<StringWriter> classBlock, in Binding binding)
 	{
 		if (binding.EnumMembers.Length == 0)
 			return;

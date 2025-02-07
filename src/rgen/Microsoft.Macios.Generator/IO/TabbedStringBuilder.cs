@@ -1,10 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
+
+using System.IO;
 using System.Text;
 
 namespace Microsoft.Macios.Generator.IO;
@@ -22,11 +19,7 @@ namespace Microsoft.Macios.Generator.IO;
 /// }
 /// </example>
 /// </summary>
-partial class TabbedStringBuilder : IDisposable {
-	readonly StringBuilder writer;
-	readonly int tabCount;
-	readonly bool isBlock;
-	bool disposed;
+partial class TabbedStringBuilder : TabbedWriter<StringWriter> {
 
 	/// <summary>
 	/// Created a new tabbed string builder that will use the given sb to write code.
@@ -35,220 +28,7 @@ partial class TabbedStringBuilder : IDisposable {
 	/// <param name="currentCount">The original tab size.</param>
 	/// <param name="block">States if we are creating a {} block.</param>
 	public TabbedStringBuilder (StringBuilder builder, int currentCount = 0, bool block = false)
-	{
-		writer = builder;
-		isBlock = block;
-		if (isBlock) {
-			// increase by 1 because we are in a block
-			tabCount = currentCount;
-			WriteTabs ().Append ('{').AppendLine ();
-			tabCount++;
-		} else {
-			tabCount = currentCount;
-		}
-	}
-
-	StringBuilder WriteTabs () => writer.Append ('\t', (int) tabCount);
-
-	/// <summary>
-	/// Append a new empty line to the string builder using the correct tab size.
-	/// </summary>
-	/// <returns>The current tabbed string builder.</returns>
-	public TabbedStringBuilder WriteLine ()
-	{
-		writer.AppendLine ();
-		return this;
-	}
-
-	/// <summary>
-	/// Append conteng, but do not add a \n
-	/// </summary>
-	/// <param name="line">The content to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder Write (string line)
-	{
-		if (string.IsNullOrWhiteSpace (line)) {
-			writer.Append (line);
-		} else {
-			WriteTabs ().Append (line);
-		}
-
-		return this;
-	}
-
-	/// <summary>
-	/// Append conteng, but do not add a \n
-	/// </summary>
-	/// <param name="span">The content to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder Write (ReadOnlySpan<char> span)
-	{
-		if (span.IsWhiteSpace ()) {
-			writer.Append (span);
-		} else {
-			WriteTabs ().Append (span);
-		}
-
-		return this;
-	}
-
-	/// <summary>
-	/// Append a new tabbed line.
-	/// </summary>
-	/// <param name="line">The line to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder WriteLine (string line)
-	{
-		if (string.IsNullOrWhiteSpace (line)) {
-			writer.AppendLine (line);
-		} else {
-			WriteTabs ().AppendLine (line);
-		}
-
-		return this;
-	}
-
-	/// <summary>
-	/// Append a new tabbed lien from the span.
-	/// </summary>
-	/// <param name="span">The line to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder WriteLine (ReadOnlySpan<char> span)
-	{
-		if (span.IsWhiteSpace ()) {
-			writer.Append (span).AppendLine ();
-		} else {
-			WriteTabs ().Append (span).AppendLine ();
-		}
-
-		return this;
-	}
-
-#if NET9_0
-	
-	public TabbedStringBuilder Write (ref DefaultInterpolatedStringHandler handler)
-	{
-		WriteTabs ().Append (handler.ToStringAndClear ());
-		return this;
-	}
-
-	public TabbedStringBuilder WriteLine (ref DefaultInterpolatedStringHandler handler)
-	{
-		WriteTabs ().Append (handler.ToStringAndClear ()).AppendLine ();
-		return this;
-	}
-	
-
-	/// <summary>
-	/// Append a new raw literal by prepending the correct indentation.
-	/// </summary>
-	/// <param name="rawString">The raw string to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder WriteRaw (string rawString)
-	{
-		// we will split the raw string in lines and then append them so that the
-		// tabbing is correct
-		var lines = rawString.AsSpan ().Split ('\n');
-		var count = 0;
-		foreach (var range in lines) {
-			if (count > 0)
-				WriteLine ();
-			var line = rawString.AsSpan (range);
-			Write (line);
-			count++;
-		}
-
-		return this;
-	}
-#else
-	/// <summary>
-	/// Append a new raw literal by prepending the correct indentation.
-	/// </summary>
-	/// <param name="rawString">The raw string to append.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder WriteRaw (string rawString)
-	{
-		// we will split the raw string in lines and then append them so that the
-		// tabbing is correct
-		var lines = rawString.Split (['\n'], StringSplitOptions.None);
-		for (var index = 0; index < lines.Length; index++) {
-			var line = lines [index];
-			if (index == lines.Length - 1) {
-				Write (line);
-			} else {
-				WriteLine (line);
-			}
-		}
-		return this;
-	}
-#endif
-
-	/// <summary>
-	/// Append the generated code attribute to the current string builder. Added for convenience.
-	/// </summary>
-	/// <param name="optimizable">If the binding is Optimizable or not.</param>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendGeneratedCodeAttribute (bool optimizable = true)
-	{
-		if (optimizable) {
-			const string attr = "[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]";
-			WriteLine (attr);
-		} else {
-			const string attr = "[BindingImpl (BindingImplOptions.GeneratedCode)]";
-			WriteLine (attr);
-		}
-
-		return this;
-	}
-
-	public TabbedStringBuilder AppendNotificationAdvice (in string className, in string notification)
-	{
-		string attr =
-			$"[Advice (\"Use '{className}.Notifications.{notification}' helper method instead.\")]";
-		WriteLine (attr);
-		return this;
-	}
-
-	/// <summary>
-	/// Append a EditorBrowsable attribute. Added for convenience.
-	/// </summary>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder AppendEditorBrowsableAttribute (EditorBrowsableState state)
-	{
-		string attr = $"[EditorBrowsable (EditorBrowsableState.{state})]";
-		WriteLine (attr);
-		return this;
-	}
-
-	public TabbedStringBuilder AppendDesignatedInitializer ()
-	{
-		const string attr = "[DesignatedInitializer]";
-		WriteLine (attr);
-		return this;
-	}
-
-	/// <summary>
-	/// Writes the autogenerated header and other pragmas.
-	/// </summary>
-	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder WriteHeader ()
-	{
-		// let people know this is generated code
-		WriteLine ("// <auto-generated />");
-
-		// enable nullable!
-		WriteLine ();
-		WriteLine ("#nullable enable");
-		WriteLine ();
-		return this;
-	}
-
-	/// <summary>
-	/// Create a bew empty block.
-	/// </summary>
-	/// <param name="block">If it is a block that uses {} or not.</param>
-	/// <returns>The new bloc.</returns>
-	public TabbedStringBuilder CreateBlock (bool block) => CreateBlock (string.Empty, block);
+		: base (new StringWriter (builder), currentCount, block) { }
 
 	/// <summary>
 	/// Create a new block with the given line. This method can be used to write if/else statements.
@@ -256,51 +36,29 @@ partial class TabbedStringBuilder : IDisposable {
 	/// <param name="line">The new line to append</param>
 	/// <param name="block">If the new line should considered a block.</param>
 	/// <returns>The current builder.</returns>
-	public TabbedStringBuilder CreateBlock (string line, bool block)
+	public override TabbedWriter<StringWriter> CreateBlock (string line, bool block)
 	{
 		if (!string.IsNullOrEmpty (line)) {
-			WriteTabs ().AppendLine (line);
+			Writer.WriteLine (line);
 		}
 
-		return new TabbedStringBuilder (writer, tabCount, block);
+		return new TabbedStringBuilder (InnerWriter.GetStringBuilder (), Writer.Indent, block);
 	}
 
 	/// <summary>
-	/// Concatenate an array of lines as a single block. The generated code is similar to the following
-	///
-	/// <code>
-	/// using (var nsobject = Create ())
-	/// using (var nsstring = Create ())
-	/// using (var x = new NSString ()) {
-	///    // your code goes here.
-	/// }
-	/// </code>
+	/// Return code as a string.
 	/// </summary>
-	/// <param name="lines">The lines to concatenate.</param>
-	/// <param name="block">True if the block should use braces, false otherwise.</param>
-	/// <returns></returns>
-	public TabbedStringBuilder CreateBlock (IEnumerable<string> lines, bool block)
+	/// <returns>The code written so far.</returns>
+	public string ToCode ()
 	{
-		var array = lines as string [] ?? lines.ToArray ();
-		if (array.Length == 0) {
-			return CreateBlock (isBlock);
+		// we need to make sure that if we are a block, that we close it
+		if (IsBlock) {
+			Writer.Flush ();
+			Writer.Indent -= 1;
+			Writer.WriteLine ('}');
+			IsBlock = false;
 		}
-
-		// append all the lines, then create a block
-		for (var i = 0; i < array.Length - 1; i++) {
-			WriteTabs ().AppendLine (array [i]);
-		}
-		return CreateBlock (array [^1], block);
-	}
-
-	/// <summary>
-	/// Return the string builder as a string.
-	/// </summary>
-	/// <returns></returns>
-	public override string ToString ()
-	{
-		Dispose ();
-		return writer.ToString ();
+		return InnerWriter.GetStringBuilder ().ToString ();
 	}
 
 	/// <summary>
@@ -308,18 +66,10 @@ partial class TabbedStringBuilder : IDisposable {
 	/// </summary>
 	public void Clear ()
 	{
-		writer.Clear ();
-	}
-
-	/// <summary>
-	/// Does not really dispose anything, it just closes the current block.
-	/// </summary>
-	public void Dispose ()
-	{
-		if (disposed || !isBlock) return;
-
-		disposed = true;
-		writer.Append ('\t', (int) tabCount - 1);
-		writer.Append ('}').AppendLine ();
+		if (Writer.InnerWriter is StringWriter stringWriter) {
+			stringWriter.GetStringBuilder ().Clear ();
+		} else {
+			Writer.InnerWriter.Flush ();
+		}
 	}
 }
