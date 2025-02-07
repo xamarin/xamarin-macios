@@ -38,6 +38,7 @@ steps:
     inputs:
       secureFile: ${{ secureFile.secureFile }}
   - pwsh: |
+      Write-Host "Copying ${{ secureFile.name }} to $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles"
       Copy-Item $(Agent.TempDirectory)/${{ secureFile.secureFile }} $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles${{ secureFile.name }}
     displayName: 'Copy ${{ secureFile.name }}'
 - pwsh: |
