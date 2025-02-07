@@ -627,4 +627,14 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
 	}
+
+	[Fact]
+	void GetAutoreleasePoolVariableTests ()
+	{
+		const string expected = "var autorelease_pool = new NSAutoreleasePool ();";
+		var declaration = GetAutoreleasePoolVariable ();
+		Assert.NotNull (declaration);
+		Assert.Equal (expected, declaration.ToString ());
+	}
+	
 }

@@ -29,6 +29,11 @@ readonly partial struct Method {
 	/// Returns if the method was marked as thread safe.
 	/// </summary>
 	public bool IsThreadSafe => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.IsThreadSafe);
+	
+	/// <summary>
+	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
+	/// </summary>
+	public bool AutoRelease => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.AutoRelease);
 
 	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
