@@ -11,6 +11,8 @@
 		<NUnitXmlTestLoggerPackageVersion>3.1.15</NUnitXmlTestLoggerPackageVersion>
 		<!-- Fix transient dependency issue found by component governance 4.7.0 -> 4.7.2 brought by Microsoft.Build package -->
 		<SystemDrawingCommonPackageVersion>4.7.2</SystemDrawingCommonPackageVersion>
+		<!-- Fix transient dependency issue found by component governance 4.7.0 -> 4.7.1 brought by Microsoft.Build.Tasks.Core package -->
+		<SystemSecurityCryptographyXmlPackageVersion>4.7.1</SystemSecurityCryptographyXmlPackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>
