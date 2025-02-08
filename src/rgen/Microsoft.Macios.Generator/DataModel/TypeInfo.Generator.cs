@@ -47,7 +47,6 @@ readonly partial struct TypeInfo {
 			IsArray = true;
 			ArrayElementTypeIsWrapped = arraySymbol.ElementType.IsWrapped ();
 		}
-		IsArray = symbol is IArrayTypeSymbol;
 
 		// try to get the named type symbol to have more educated decisions
 		var namedTypeSymbol = symbol as INamedTypeSymbol;

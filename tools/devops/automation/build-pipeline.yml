@@ -156,9 +156,6 @@ variables:
     value: true
 
 trigger:
-  # because we are building for developers branches, batch the builds to use 
-  # less resources. Otherwise, we would be building for every commit.
-  batch: true
   branches:
     include:
       - '*'

@@ -39,6 +39,9 @@
         <Compile Include="../Microsoft.Macios.Generator/DictionaryComparer.cs" >
             <Link>Generator/DictionaryComparer.cs</Link>
         </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Attributes/BindFromData.cs" >
+            <Link>Generator/Attributes/BindFromData.cs</Link>
+        </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/FieldData.cs" >
             <Link>Generator/Attributes/FieldData.cs</Link>
         </Compile>
@@ -65,6 +68,9 @@
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/CompilationExtensions.cs" >
             <Link>Generator/Extensions/CompilationExtensions.cs</Link>
+        </Compile>
+        <Compile Include="../Microsoft.Macios.Generator/Extensions/Delegates.cs" >
+            <Link>Generator/Extensions/Delegates.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Extensions/TypeSymbolExtensions.Core.cs">
             <Link>Generator/Extensions/TypeSymbolExtensions.Core.cs</Link>

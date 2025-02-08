@@ -831,7 +831,7 @@ namespace CoreGraphics {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var context = new RootBindingContext (semanticModel);
+		var context = new RootContext (semanticModel);
 		Assert.True (Property.TryCreate (node, context, out var property));
 		var compilationUnit = FieldConstantGetter (property.Value).ToString ();
 		var str = compilationUnit.ToString ();
@@ -1688,7 +1688,7 @@ namespace CoreGraphics {
 			.FirstOrDefault ();
 		Assert.NotNull (node);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var context = new RootBindingContext (semanticModel);
+		var context = new RootContext (semanticModel);
 		Assert.True (Property.TryCreate (node, context, out var property));
 		Assert.Equal (expectedCall, FieldConstantSetter (property.Value, variableName).ToString ());
 	}

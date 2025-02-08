@@ -12,7 +12,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Constructor {
 
-	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootBindingContext context,
+	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Constructor? change)
 	{
 		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol constructor) {
