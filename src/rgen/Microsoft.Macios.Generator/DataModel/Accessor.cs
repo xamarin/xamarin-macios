@@ -25,7 +25,7 @@ readonly partial struct Accessor : IEquatable<Accessor> {
 	/// <summary>
 	/// List of attribute code changes of the accessor.
 	/// </summary>
-	public ImmutableArray<AttributeCodeChange> Attributes { get; }
+	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
 	/// <summary>
 	/// List of modifiers of the accessor.
@@ -69,16 +69,5 @@ readonly partial struct Accessor : IEquatable<Accessor> {
 	public static bool operator != (Accessor left, Accessor right)
 	{
 		return !left.Equals (right);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		var sb = new StringBuilder ($"{{ Kind: {Kind}, Supported Platforms: {SymbolAvailability}, ExportData: {ExportPropertyData?.ToString () ?? "null"} Modifiers: [");
-		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
-		sb.Append ("], Attributes: [");
-		sb.AppendJoin (", ", Attributes);
-		sb.Append ("] }");
-		return sb.ToString ();
 	}
 }

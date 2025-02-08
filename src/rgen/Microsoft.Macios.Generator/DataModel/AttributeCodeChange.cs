@@ -93,6 +93,7 @@ readonly struct AttributeCodeChange : IEquatable<AttributeCodeChange> {
 		var bucket = ImmutableArray.CreateBuilder<AttributeCodeChange> ();
 		foreach (AttributeListSyntax attributeListSyntax in attributes) {
 			foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes) {
+				var x = semanticModel.GetSymbolInfo (attributeSyntax);
 				if (semanticModel.GetSymbolInfo (attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
 					continue; // if we can't get the symbol, ignore it
 				var name = attributeSymbol.ContainingType.ToDisplayString ();
