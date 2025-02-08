@@ -39,10 +39,10 @@
             <Link>CollectionComparer.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/IO/TabbedWriter.cs">
-            <Link>TabbedWriter.cs</Link>
+            <Link>IO/TabbedWriter.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/IO/TabbedStringBuilder.cs">
-            <Link>TabbedStringBuilder.cs</Link>
+            <Link>IO/TabbedStringBuilder.cs</Link>
         </Compile>
         <Compile Include="../Microsoft.Macios.Generator/Attributes/ObsoletedOSPlatformData.cs">
             <Link>Attributes/ObsoletedOSPlatformData.cs</Link>

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Macios.Generator.IO;
 
-abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
+abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWriter {
 	readonly SemaphoreSlim indentationSemaphore = new SemaphoreSlim (1, 1);
 	protected readonly IndentedTextWriter Writer;
 	protected readonly T InnerWriter;
@@ -37,6 +37,7 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		} else {
 			Writer.Indent = currentCount;
 		}
+		Writer.Flush ();
 	}
 
 	/// <summary>
@@ -126,6 +127,22 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 			WriteLine ();
 		} else {
 			Writer.WriteLine (line);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Append a new tabbed line.
+	/// </summary>
+	/// <param name="line">The line to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteLineAsync (string line)
+	{
+		if (string.IsNullOrWhiteSpace (line)) {
+			await WriteLineAsync ();
+		} else {
+			await Writer.WriteLineAsync (line);
 		}
 
 		return this;
@@ -248,6 +265,27 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	}
 
 	/// <summary>
+	/// Append a new raw literal by prepending the correct indentation.
+	/// </summary>
+	/// <param name="rawString">The raw string to append.</param>
+	/// <returns>The current builder.</returns>
+	public async Task<TabbedWriter<T>> WriteRawAsync (string rawString)
+	{
+		// we will split the raw string in lines and then append them so that the
+		// tabbing is correct
+		var lines = rawString.Split (['\n'], StringSplitOptions.None);
+		for (var index = 0; index < lines.Length; index++) {
+			var line = lines [index];
+			if (index == lines.Length - 1) {
+				await WriteAsync (line);
+			} else {
+				await WriteLineAsync (line);
+			}
+		}
+		return this;
+	}
+
+	/// <summary>
 	/// Create a new block with the given line. This method can be used to write if/else statements.
 	/// </summary>
 	/// <param name="line">The new line to append</param>
@@ -290,14 +328,32 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 		return CreateBlock (array [^1], block);
 	}
 
+	public virtual void Close ()
+	{
+		// if we are closing, and it is a block, we need to close the block
+		if (IsBlock) {
+			Writer.Indent -= 1;
+			Writer.WriteLine ('}');
+			IsBlock = false;
+		}
+		Writer.Flush ();
+	}
+
+	public virtual async Task CloseAsync ()
+	{
+		// if we are closing, and it is a block, we need to close the block
+		if (IsBlock) {
+			Writer.Indent -= 1;
+			await Writer.WriteLineAsync ('}');
+			IsBlock = false;
+		}
+		await Writer.FlushAsync ();
+	}
+
 	protected virtual void Dispose (bool disposing)
 	{
 		if (disposing) {
-			if (IsBlock) {
-				Writer.Indent -= 1;
-				Writer.WriteLine ('}');
-				IsBlock = false;
-			}
+			Close ();
 			Writer.Dispose ();
 		}
 	}
@@ -307,5 +363,16 @@ abstract class TabbedWriter<T> : IDisposable where T : TextWriter {
 	{
 		Dispose (true);
 		GC.SuppressFinalize (this);
+	}
+
+	public async ValueTask DisposeAsync ()
+	{
+		if (indentationSemaphore is IAsyncDisposable indentationSemaphoreAsyncDisposable)
+			await indentationSemaphoreAsyncDisposable.DisposeAsync ();
+		else
+			indentationSemaphore.Dispose ();
+		await CloseAsync ();
+		await Writer.DisposeAsync ();
+		await InnerWriter.DisposeAsync ();
 	}
 }
