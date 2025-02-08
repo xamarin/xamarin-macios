@@ -598,6 +598,32 @@ static partial class BindingSyntaxFactory {
 #pragma warning restore format
 	}
 
+	/// <summary>
+	/// Generate the definition for an autorelease pool to wrap a method/property call.
+	/// </summary>
+	/// <returns>The variable declaration for a auto release pool.</returns>
+	internal static LocalDeclarationStatementSyntax GetAutoreleasePoolVariable ()
+	{
+		const string poolVariableName = "autorelease_pool";
+		//  object creation
+		var create =
+			ObjectCreationExpression (
+					IdentifierName ("NSAutoreleasePool").WithLeadingTrivia (Space).WithTrailingTrivia (Space))
+				.WithArgumentList (ArgumentList ());
+
+		// return the autorelease pool definition 
+		var declarator = VariableDeclarator (Identifier (poolVariableName));
+		declarator = declarator.WithInitializer (EqualsValueClause (create.WithLeadingTrivia (Space))
+				.WithLeadingTrivia (Space));
+
+		var variableDeclaration = VariableDeclaration (IdentifierName (
+				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
+			.WithTrailingTrivia (Space)
+			.WithVariables (SingletonSeparatedList (declarator));
+
+		return LocalDeclarationStatement (variableDeclaration);
+
+	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)

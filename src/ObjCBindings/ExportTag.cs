@@ -80,6 +80,11 @@ namespace ObjCBindings {
 		/// marshalling the property.
 		/// </summary>
 		PlainString = 1 << 7,
+
+		/// <summary>
+		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
+		/// </summary>
+		AutoRelease = 1 << 8,
 	}
 
 	/// <summary>
@@ -156,6 +161,11 @@ namespace ObjCBindings {
 		/// part of a CoreImage filter and will generate the property as a CoreImage filter property.
 		/// </summary>
 		CoreImageFilterProperty = 1 << 10,
+
+		/// <summary>
+		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
+		/// </summary>
+		AutoRelease = 1 << 11,
 
 	}
 }

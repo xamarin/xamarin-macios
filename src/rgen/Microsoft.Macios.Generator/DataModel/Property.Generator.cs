@@ -79,6 +79,11 @@ readonly partial struct Property {
 	public bool UsePlainString
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.PlainString);
 
+	/// <summary>
+	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
+	/// </summary>
+	public bool AutoRelease => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Method.AutoRelease);
+
 	readonly bool? needsBackingField = null;
 	/// <summary>
 	/// States if the property, when generated, needs a backing field.
