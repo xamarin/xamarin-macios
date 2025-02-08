@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Formatters;
+using Microsoft.Macios.Generator.IO;
 using ObjCBindings;
 using Property = Microsoft.Macios.Generator.DataModel.Property;
 using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
@@ -32,13 +34,13 @@ class ClassEmitter : ICodeEmitter {
 	];
 
 
-	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedStringBuilder classBlock, bool disableDefaultCtor)
+	void EmitDefaultConstructors (in BindingContext bindingContext, TabbedWriter<StringWriter> classBlock, bool disableDefaultCtor)
 	{
 
 		if (!disableDefaultCtor) {
 			classBlock.AppendGeneratedCodeAttribute ();
 			classBlock.AppendDesignatedInitializer ();
-			classBlock.AppendRaw (
+			classBlock.WriteRaw (
 $@"[Export (""init"")]
 public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 {{
@@ -48,17 +50,17 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 		InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.Selector.GetHandle (""init"")), ""init"");
 }}
 ");
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 		}
 
 		classBlock.AppendGeneratedCodeAttribute ();
 		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
-		classBlock.AppendLine ($"protected {bindingContext.Changes.Name} (NSObjectFlag t) : base (t) {{}}");
+		classBlock.WriteLine ($"protected {bindingContext.Changes.Name} (NSObjectFlag t) : base (t) {{}}");
 
-		classBlock.AppendLine ();
+		classBlock.WriteLine ();
 		classBlock.AppendGeneratedCodeAttribute ();
 		classBlock.AppendEditorBrowsableAttribute (EditorBrowsableState.Advanced);
-		classBlock.AppendLine ($"protected internal {bindingContext.Changes.Name} (NativeHandle handle) : base (handle) {{}}");
+		classBlock.WriteLine ($"protected internal {bindingContext.Changes.Name} (NativeHandle handle) : base (handle) {{}}");
 	}
 
 	/// <summary>
@@ -70,7 +72,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 	/// <param name="classBlock">Current class block.</param>
 	/// <param name="notificationProperties">An immutable array with all the properties that are marked as notifications
 	/// and that need a helper class to be generated.</param>
-	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedStringBuilder classBlock,
+	void EmitFields (string className, in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock,
 		out ImmutableArray<Property> notificationProperties)
 	{
 		var notificationsBuilder = ImmutableArray.CreateBuilder<Property> ();
@@ -78,7 +80,7 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 			if (!property.IsField)
 				continue;
 
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 			// a field should always have a getter, if it does not, we do not generate the property
 			var getter = property.GetAccessor (AccessorKind.Getter);
 			if (getter is null)
@@ -86,10 +88,10 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 
 			// provide a backing variable for the property if and only if we are dealing with a reference type
 			if (property.IsReferenceType) {
-				classBlock.AppendLine (FieldPropertyBackingVariable (property).ToString ());
+				classBlock.WriteLine (FieldPropertyBackingVariable (property).ToString ());
 			}
 
-			classBlock.AppendLine ();
+			classBlock.WriteLine ();
 			classBlock.AppendMemberAvailability (property.SymbolAvailability);
 			classBlock.AppendGeneratedCodeAttribute (optimizable: true);
 			if (property.IsNotification) {
@@ -109,14 +111,14 @@ public {bindingContext.Changes.Name} () : base (NSObjectFlag.Empty)
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
 					// fields with a reference type have a backing fields, while value types do not
 					if (property.IsReferenceType) {
-						getterBlock.AppendRaw (
+						getterBlock.WriteRaw (
 $@"if ({backingField} is null)
 	{backingField} = {FieldConstantGetter (property)}
 return {backingField};
 ");
 					} else {
 						// directly return the call from the getter
-						getterBlock.AppendLine ($"return {FieldConstantGetter (property)}");
+						getterBlock.WriteLine ($"return {FieldConstantGetter (property)}");
 					}
 				}
 
@@ -125,22 +127,22 @@ return {backingField};
 					// we are done with the current property
 					continue;
 
-				propertyBlock.AppendLine (); // add space between getter and setter since we have the attrs
+				propertyBlock.WriteLine (); // add space between getter and setter since we have the attrs
 				propertyBlock.AppendMemberAvailability (setter.Value.SymbolAvailability);
 				using (var setterBlock = propertyBlock.CreateBlock ("set", block: true)) {
 					if (property.IsReferenceType) {
 						// set the backing field
-						setterBlock.AppendLine ($"{backingField} = value;");
+						setterBlock.WriteLine ($"{backingField} = value;");
 					}
 					// call the native code
-					setterBlock.AppendLine ($"{FieldConstantSetter (property, "value")}");
+					setterBlock.WriteLine ($"{FieldConstantSetter (property, "value")}");
 				}
 			}
 		}
 		notificationProperties = notificationsBuilder.ToImmutable ();
 	}
 
-	void EmitNotifications (in ImmutableArray<Property> properties, TabbedStringBuilder classBlock)
+	void EmitNotifications (in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock)
 	{
 		// to be implemented, do not throw or tests will fail.
 	}
@@ -158,9 +160,9 @@ return {backingField};
 		}
 
 		// namespace declaration
-		bindingContext.Builder.AppendLine ();
-		bindingContext.Builder.AppendLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
-		bindingContext.Builder.AppendLine ();
+		bindingContext.Builder.WriteLine ();
+		bindingContext.Builder.WriteLine ($"namespace {string.Join (".", bindingContext.Changes.Namespace)};");
+		bindingContext.Builder.WriteLine ();
 
 		// register the class only if we are not dealing with a static class
 		var bindingData = (BindingTypeData<Class>) bindingContext.Changes.BindingInfo;
@@ -169,16 +171,16 @@ return {backingField};
 		var registrationName = bindingData.Name ?? bindingContext.Changes.Name;
 
 		if (!bindingContext.Changes.IsStatic) {
-			bindingContext.Builder.AppendLine ($"[Register (\"{registrationName}\", true)]");
+			bindingContext.Builder.WriteLine ($"[Register (\"{registrationName}\", true)]");
 		}
 		var modifiers = $"{string.Join (' ', bindingContext.Changes.Modifiers)} ";
 		using (var classBlock = bindingContext.Builder.CreateBlock ($"{(string.IsNullOrWhiteSpace (modifiers) ? string.Empty : modifiers)}class {bindingContext.Changes.Name}", true)) {
 			if (!bindingContext.Changes.IsStatic) {
 				classBlock.AppendGeneratedCodeAttribute (optimizable: true);
-				classBlock.AppendLine ($"static readonly NativeHandle class_ptr = Class.GetHandle (\"{registrationName}\");");
-				classBlock.AppendLine ();
-				classBlock.AppendLine ("public override NativeHandle ClassHandle => class_ptr;");
-				classBlock.AppendLine ();
+				classBlock.WriteLine ($"static readonly NativeHandle class_ptr = Class.GetHandle (\"{registrationName}\");");
+				classBlock.WriteLine ();
+				classBlock.WriteLine ("public override NativeHandle ClassHandle => class_ptr;");
+				classBlock.WriteLine ();
 
 				EmitDefaultConstructors (bindingContext: bindingContext,
 					classBlock: classBlock,
@@ -190,7 +192,7 @@ return {backingField};
 
 			// emit the notification helper classes, leave this for the very bottom of the class
 			EmitNotifications (notificationProperties, classBlock);
-			classBlock.AppendLine ("// TODO: add binding code here");
+			classBlock.WriteLine ("// TODO: add binding code here");
 		}
 		return true;
 	}
