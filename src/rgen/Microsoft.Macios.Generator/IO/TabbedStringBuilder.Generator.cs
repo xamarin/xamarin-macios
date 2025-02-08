@@ -5,7 +5,7 @@ using System;
 using Microsoft.Macios.Generator.Attributes;
 using ObjCRuntime;
 
-namespace Microsoft.Macios.Generator;
+namespace Microsoft.Macios.Generator.IO;
 
 partial class TabbedStringBuilder {
 
@@ -13,9 +13,9 @@ partial class TabbedStringBuilder {
 	{
 		// Try to write the smaller amount of data. We are using the old ExportAttribute until we make the final move
 		if (exportData.ArgumentSemantic != ArgumentSemantic.None) {
-			AppendLine ($"[Export (\"{exportData.Selector}\", ArgumentSemantic.{exportData.ArgumentSemantic})]");
+			WriteLine ($"[Export (\"{exportData.Selector}\", ArgumentSemantic.{exportData.ArgumentSemantic})]");
 		} else {
-			AppendLine ($"[Export (\"{exportData.Selector}\")]");
+			WriteLine ($"[Export (\"{exportData.Selector}\")]");
 		}
 		return this;
 	}

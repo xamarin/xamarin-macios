@@ -11,7 +11,7 @@ namespace Microsoft.Macios.Transformer.Tests.Attributes;
 public class AttributeParsingTestClass : BaseTransformerTestClass {
 
 	internal void AssertTryCreate<T, TR> (ApplePlatform platform, (string Source, string Path) source,
-		string attributeName, T expectedData, TypeSymbolExtensions.TryParse<T> tryParse, bool lastOrDefault = false)
+		string attributeName, T expectedData, TryParseDelegate<T> tryParse, bool lastOrDefault = false)
 		where T : struct
 		where TR : MemberDeclarationSyntax
 	{

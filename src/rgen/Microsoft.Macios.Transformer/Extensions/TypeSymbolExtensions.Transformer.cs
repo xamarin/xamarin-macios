@@ -5,13 +5,18 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Transformer;
 using Microsoft.Macios.Transformer.Attributes;
+using Microsoft.Macios.Transformer.Extensions;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Extensions;
 
 static partial class TypeSymbolExtensions {
 
+	/// <summary>
+	/// List of supported platforms by the transformer.
+	/// </summary>
 	static readonly ImmutableArray<ApplePlatform> allSupportedPlatforms = [
 		ApplePlatform.iOS,
 		ApplePlatform.TVOS,
@@ -31,10 +36,6 @@ static partial class TypeSymbolExtensions {
 		// add the different platforms to the result hashsets
 		var builder = SymbolAvailability.CreateBuilder ();
 		var boundAttributes = symbol.GetAttributes ();
-		if (boundAttributes.Length == 0) {
-			// no attrs in the symbol, therefore the symbol is supported in all platforms
-			return builder.ToImmutable ();
-		}
 
 		foreach (var attributeData in boundAttributes) {
 			var attrName = attributeData.AttributeClass?.ToDisplayString ();
@@ -64,8 +65,36 @@ static partial class TypeSymbolExtensions {
 		return builder.ToImmutable ();
 	}
 
+	/// <summary>
+	/// Return if a symbol represents a smart enum in the old Xamarin bidings.
+	/// </summary>
+	/// <param name="symbol">The symbol under query.</param>
+	/// <returns>True if the symbol represents a smart enum.</returns>
 	public static bool IsSmartEnum (this ITypeSymbol symbol)
 	{
-		throw new NotImplementedException ();
+		// smart enums in the classic bindings are a little more complicated to detect since we need
+		// to find AT LEAST one enum field that contains the Field attribute.
+		if (symbol.TypeKind != TypeKind.Enum)
+			return false;
+
+		foreach (var member in symbol.GetMembers ()) {
+			if (member is not IFieldSymbol field || !field.IsConst)
+				continue;
+
+			// try to get the Field attribute from the current member, if we found it, then we have a smart enum
+			var attributeData = field.GetAttributeData ();
+			if (attributeData.HasFieldAttribute ())
+				return true;
+		}
+
+		return false;
 	}
+
+	/// <summary>
+	/// Returns the BaseTypeAttribute data that was used for a given symbol.
+	/// </summary>
+	/// <param name="symbol">The symbol under query.</param>
+	/// <returns>The BaseTypeAttribute data if it was found, null otherwise.</returns>
+	public static BaseTypeData? GetBaseTypeData (this ISymbol symbol)
+		=> GetAttribute<BaseTypeData> (symbol, AttributesNames.BaseTypeAttribute, BaseTypeData.TryParse);
 }

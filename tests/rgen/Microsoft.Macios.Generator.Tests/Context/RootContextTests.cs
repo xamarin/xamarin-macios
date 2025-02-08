@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Macios.Generator.Tests.Context;
 
-public class RootBindingContextTests : BaseGeneratorTestClass {
+public class RootContextTests : BaseGeneratorTestClass {
 	[Theory]
 	[PlatformInlineData (ApplePlatform.iOS, "+CoreImage", "CoreImage", "CoreImage")]
 	[PlatformInlineData (ApplePlatform.iOS, "+CoreServices", "CoreServices", "MobileCoreServices")]
@@ -29,7 +29,7 @@ namespace MyNamespace {
 ";
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (compilation.SyntaxTrees);
-		var rootContext = new RootBindingContext (compilation.GetSemanticModel (syntaxTrees [0]));
+		var rootContext = new RootContext (compilation.GetSemanticModel (syntaxTrees [0]));
 		Assert.True (rootContext.TryComputeLibraryName (attributeLibName, ns, out var libName, out var libPath));
 		Assert.Equal (expectedLibraryName, libName);
 	}
@@ -51,7 +51,7 @@ namespace MyNamespace {
 ";
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (compilation.SyntaxTrees);
-		var rootContext = new RootBindingContext (compilation.GetSemanticModel (syntaxTrees [0]));
+		var rootContext = new RootContext (compilation.GetSemanticModel (syntaxTrees [0]));
 		Assert.Equal (rootContext.IsSystemLibrary (lib), expectedResult);
 	}
 }

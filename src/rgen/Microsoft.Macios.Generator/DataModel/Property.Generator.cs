@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 using ObjCRuntime;
@@ -27,6 +28,9 @@ readonly partial struct Property {
 	[MemberNotNullWhen (true, nameof (ExportFieldData))]
 	public bool IsField => ExportFieldData is not null;
 
+	/// <summary>
+	/// Returns if the field was marked as a notification.
+	/// </summary>
 	public bool IsNotification
 		=> IsField && ExportFieldData.Value.FieldData.Flags.HasFlag (ObjCBindings.Property.Notification);
 
@@ -54,9 +58,31 @@ readonly partial struct Property {
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
 
 	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindFromData? BindAs { get; init; }
+
+	/// <summary>
 	/// True if the property should be generated without a backing field.
 	/// </summary>
 	public bool IsTransient => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.Transient);
+
+	/// <summary>
+	/// True if the property was marked to DisableZeroCopy.
+	/// </summary>
+	public bool DisableZeroCopy
+		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.DisableZeroCopy);
+
+	/// <summary>
+	/// True if the generator should not use a NSString for marshalling.
+	/// </summary>
+	public bool UsePlainString
+		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.PlainString);
+
+	/// <summary>
+	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
+	/// </summary>
+	public bool AutoRelease => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Method.AutoRelease);
 
 	readonly bool? needsBackingField = null;
 	/// <summary>
@@ -97,7 +123,7 @@ readonly partial struct Property {
 		init => requiresDirtyCheck = value;
 	}
 
-	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootBindingContext context, IPropertySymbol propertySymbol)
+	static FieldInfo<ObjCBindings.Property>? GetFieldInfo (RootContext context, IPropertySymbol propertySymbol)
 	{
 		// grab the last port of the namespace
 		var ns = propertySymbol.ContainingNamespace.Name.Split ('.') [^1];
@@ -111,7 +137,22 @@ readonly partial struct Property {
 		return fieldInfo;
 	}
 
-	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootBindingContext context,
+	internal Property (string name, TypeInfo returnType,
+		SymbolAvailability symbolAvailability,
+		ImmutableArray<AttributeCodeChange> attributes,
+		ImmutableArray<SyntaxToken> modifiers,
+		ImmutableArray<Accessor> accessors)
+	{
+		Name = name;
+		BackingField = $"_{Name}";
+		ReturnType = returnType;
+		SymbolAvailability = symbolAvailability;
+		Attributes = attributes;
+		Modifiers = modifiers;
+		Accessors = accessors;
+	}
+
+	public static bool TryCreate (PropertyDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Property? change)
 	{
 		var memberName = declaration.Identifier.ToFullString ().Trim ();
@@ -164,6 +205,7 @@ readonly partial struct Property {
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
 			accessors: accessorCodeChanges) {
+			BindAs = propertySymbol.GetBindFromData (),
 			ExportFieldData = GetFieldInfo (context, propertySymbol),
 			ExportPropertyData = propertySymbol.GetExportData<ObjCBindings.Property> (),
 		};
@@ -190,6 +232,7 @@ readonly partial struct Property {
 		sb.Append ($"IsTransient: '{IsTransient}', ");
 		sb.Append ($"NeedsBackingField: '{NeedsBackingField}', ");
 		sb.Append ($"RequiresDirtyCheck: '{RequiresDirtyCheck}', ");
+		sb.Append ($"BindAs: '{BindAs}', ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (",", Attributes);
 		sb.Append ("], Modifiers: [");

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
@@ -57,6 +57,9 @@
         </Compile>
         <Compile Include="..\..\mtouch\Cache.cs">
             <Link>external\Cache.cs</Link>
+        </Compile>
+        <Compile Include="..\Microsoft.Macios.Generator.Tests\TestDataFactory.cs">
+            <Link>external\TestDataFactory.cs</Link>
         </Compile>
     </ItemGroup>
     
