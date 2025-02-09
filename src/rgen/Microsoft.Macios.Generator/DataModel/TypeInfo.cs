@@ -92,6 +92,11 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	/// Returns if the return type is void.
 	/// </summary>
 	public bool IsVoid => SpecialType == SpecialType.System_Void;
+	
+	/// <summary>
+	/// True if the type is a delegate.
+	/// </summary>
+	public bool IsDelegate => SpecialType == SpecialType.System_Delegate;
 
 	/// <summary>
 	/// True if the type is for an interface.
