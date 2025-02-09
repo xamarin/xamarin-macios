@@ -625,10 +625,10 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
-	/// Generate the expression needed to check the code is in the UI thread based on the compilation target.
+	/// Generate the method that will check the ui thread based on the platform.
 	/// </summary>
-	/// <param name="platform">The platform we are targeting in the compilation.</param>
-	/// <returns>The expression with the correct call per platform.</returns>
+	/// <param name="platform">The platform targeted in the compilation.</param>
+	/// <returns>The correct expression to check if the code is executing in the UI thread.</returns>
 	internal static ExpressionStatementSyntax? EnsureUiThread (PlatformName platform)
 	{
 		(string Namespace, string Classname)? caller = platform switch {
