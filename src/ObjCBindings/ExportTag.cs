@@ -60,7 +60,6 @@ namespace ObjCBindings {
 		/// </summary>
 		MarshalNativeExceptions = 1 << 4,
 
-
 		/// <summary>
 		/// Instruct the generator to use a custom marshal directive for the method. When this flag is applied the 
 		/// following name parameters must be provided:
@@ -85,6 +84,21 @@ namespace ObjCBindings {
 		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
 		/// </summary>
 		AutoRelease = 1 << 8,
+
+		/// <summary>
+		/// Use this flag on method to retain the return value.
+		/// </summary>
+		RetainReturnValue = 1 << 9,
+
+		/// <summary>
+		/// Use this flag on method to release the return value.
+		/// </summary>
+		ReleaseReturnValue = 1 << 10,
+
+		Proxy = 1 << 11,
+
+		Factory = 1 << 12,
+
 	}
 
 	/// <summary>
@@ -166,6 +180,18 @@ namespace ObjCBindings {
 		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
 		/// </summary>
 		AutoRelease = 1 << 11,
+
+		/// <summary>
+		/// Use this flag on property to retain the return value.
+		/// </summary>
+		RetainReturnValue = 1 << 12,
+
+		/// <summary>
+		/// Use this flag on property to release the return value.
+		/// </summary>
+		ReleaseReturnValue = 1 << 13,
+
+		Proxy = 1 << 14,
 
 	}
 }
