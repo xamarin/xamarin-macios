@@ -46,22 +46,22 @@ readonly partial struct Method {
 	/// </summary>
 	public bool UsePlainString
 		=> ExportMethodData.Flags.HasFlag (ObjCBindings.Method.PlainString);
-	
+
 	/// <summary>
 	/// True if the generated code should retain the return value.
 	/// </summary>
 	public bool RetainReturnValue => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.RetainReturnValue);
-	
+
 	/// <summary>
 	/// True if the generated code should release the return value.
 	/// </summary>
 	public bool ReleaseReturnValue => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.ReleaseReturnValue);
-	
+
 	/// <summary>
 	/// True if the method was marked as a factory method.
 	/// </summary>
 	public bool IsFactory => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.Factory);
-	
+
 	/// <summary>
 	/// True if the return type of the method was returned as a proxy object.
 	/// </summary>
@@ -73,24 +73,18 @@ readonly partial struct Method {
 	public bool UseTempReturn {
 		get {
 			var byRefParameterCount = Parameters.Count (p => p.ReferenceKind != ReferenceKind.None);
-			
+
 			// based on the configuration flags of the method and the return type we can decide if we need a
 			// temp return type
 			return (Method: this, ByRefParameterCount: byRefParameterCount) switch {
 				// focus first on the flags, since those are manually added and have more precedence
-				{ ByRefParameterCount: > 0 } => true,
-				{ Method.ReleaseReturnValue: true } => true,
-				{ Method.IsFactory: true } => true,
-				{ Method.IsProxy: true } => true,
-				{ Method.MarshalNativeExceptions: true, Method.ReturnType.IsVoid: false } => true,
+				{ ByRefParameterCount: > 0 } => true, { Method.ReleaseReturnValue: true } => true, { Method.IsFactory: true } => true, { Method.IsProxy: true } => true, { Method.MarshalNativeExceptions: true, Method.ReturnType.IsVoid: false } => true,
 
 				// focus on the return type
-				{ Method.ReturnType: { IsVoid: false, NeedsStret: true } } => true,
-				{ Method.ReturnType: { IsVoid: false, IsWrapped: true } } => true,
-				{ Method.ReturnType.IsNativeEnum: true } => true,
-				{ Method.ReturnType.SpecialType: 
-					SpecialType.System_Boolean or SpecialType.System_Char or SpecialType.System_Delegate } => true,
-				{ Method.ReturnType.IsDelegate: true } => true,
+				{ Method.ReturnType: { IsVoid: false, NeedsStret: true } } => true, { Method.ReturnType: { IsVoid: false, IsWrapped: true } } => true, { Method.ReturnType.IsNativeEnum: true } => true, {
+					Method.ReturnType.SpecialType:
+																																																			 SpecialType.System_Boolean or SpecialType.System_Char or SpecialType.System_Delegate
+				} => true, { Method.ReturnType.IsDelegate: true } => true,
 				// default will be false
 				_ => false
 			};

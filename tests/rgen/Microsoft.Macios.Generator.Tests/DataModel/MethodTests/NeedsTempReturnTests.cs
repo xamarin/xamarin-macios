@@ -14,7 +14,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel.MethodTests;
 
 public class NeedsTempReturnTests : BaseGeneratorTestClass {
-	
+
 	class TestDataUseTempReturn : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -34,7 +34,7 @@ public class TestClass {
 				nsobjectMethod,
 				true
 			];
-			
+
 			const string stringMethod = @"
 using System;
 using ObjCBindings;
@@ -46,10 +46,10 @@ public class TestClass {
 	public virtual string GetBuiltinPluginsPath ();
 ";
 			yield return [
-				stringMethod, 
-				false 
+				stringMethod,
+				false
 			];
-			
+
 			const string boolMethod = @"
 using System;
 using ObjCBindings;
@@ -61,10 +61,10 @@ public class TestClass {
 	public virtual bool GetBuiltinPluginsPath ()
 ";
 			yield return [
-				boolMethod, 
+				boolMethod,
 				true
 			];
-			
+
 			const string charMethod = @"
 using System;
 using ObjCBindings;
@@ -76,10 +76,10 @@ public class TestClass {
 	public virtual char GetBuiltinPluginsPath ();
 ";
 			yield return [
-				charMethod, 
+				charMethod,
 				true
 			];
-			
+
 			const string nfloatMethod = @"
 using System;
 using ObjCBindings;
@@ -91,10 +91,10 @@ public class TestClass {
 	public virtual nfloat GetBuiltinPluginsPath ();
 ";
 			yield return [
-				nfloatMethod, 
-				false 
+				nfloatMethod,
+				false
 			];
-			
+
 			const string stretType = @"
 using System;
 using ObjCBindings;
@@ -107,10 +107,10 @@ public class TestClass {
 	public virtual NMatrix4 GetBuiltinPluginsPath ();
 ";
 			yield return [
-				stretType, 
-				true	
+				stretType,
+				true
 			];
-			
+
 			const string nativeEnumType = @"
 using System;
 using AVFoundation;
@@ -124,10 +124,10 @@ public class TestClass {
 	public virtual AVAudioApplicationMicrophoneInjectionPermission GetBuiltinPluginsPath ();
 ";
 			yield return [
-				nativeEnumType, 
-				true	
+				nativeEnumType,
+				true
 			];
-			
+
 			const string delegateMethod = @"
 using System;
 using AVFoundation;
@@ -141,8 +141,8 @@ public class TestClass {
 	public virtual Action<string> GetBuiltinPluginsPath ();
 ";
 			yield return [
-				delegateMethod, 
-				true	
+				delegateMethod,
+				true
 			];
 
 			const string marshalNativeExceptions = @"
@@ -156,10 +156,10 @@ public class TestClass {
 	public virtual string GetBuiltinPluginsPath ();
 ";
 			yield return [
-				marshalNativeExceptions, 
-				true	
+				marshalNativeExceptions,
+				true
 			];
-			
+
 			const string factoryMethod = @"
 using System;
 using ObjCBindings;
@@ -171,10 +171,10 @@ public class TestClass {
 	public virtual string GetBuiltinPluginsPath ();
 ";
 			yield return [
-				factoryMethod, 
-				true	
+				factoryMethod,
+				true
 			];
-			
+
 			const string byRefParameters = @"
 using System;
 using ObjCBindings;
@@ -186,15 +186,15 @@ public class TestClass {
 	public virtual string GetBuiltinPluginsPath (out NSError error);
 ";
 			yield return [
-				byRefParameters, 
-				true	
+				byRefParameters,
+				true
 			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
 			=> GetEnumerator ();
 	}
-		
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataUseTempReturn>]
 	void FromMethodDeclaration (ApplePlatform platform, string inputText, bool expected)

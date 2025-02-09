@@ -83,24 +83,24 @@ readonly partial struct Property {
 	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
 	/// </summary>
 	public bool AutoRelease => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.AutoRelease);
-	
+
 	/// <summary>
 	/// True if the generated code should retain the return value.
 	/// </summary>
-	public bool RetainReturnValue 
+	public bool RetainReturnValue
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.RetainReturnValue);
-	
+
 	/// <summary>
 	/// True if the generated code should release the return value.
 	/// </summary>
-	public bool ReleaseReturnValue 
+	public bool ReleaseReturnValue
 		=> IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.ReleaseReturnValue);
-	
+
 	/// <summary>
 	/// True if the return type of the method was returned as a proxy object.
 	/// </summary>
 	public bool IsProxy => IsProperty && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.Proxy);
-	
+
 	/// <summary>
 	/// True if the generated property should use a temp return variable.
 	/// </summary>
@@ -110,22 +110,18 @@ readonly partial struct Property {
 			// temp return type
 			return this switch {
 				// focus first on the flags, since those are manually added and have more precedence
-				{ ReleaseReturnValue: true } => true,
-				{ IsProxy: true } => true,
-				{ MarshalNativeExceptions: true, ReturnType.IsVoid: false } => true,
-				{ RequiresDirtyCheck: true } => true,
+				{ ReleaseReturnValue: true } => true, { IsProxy: true } => true, { MarshalNativeExceptions: true, ReturnType.IsVoid: false } => true, { RequiresDirtyCheck: true } => true,
 
 				// focus on the return type
-				{ ReturnType: { IsVoid: false, NeedsStret: true } } => true,
-				{ ReturnType.IsNativeEnum: true } => true,
-				{ ReturnType.SpecialType: 
-					SpecialType.System_Boolean or SpecialType.System_Char or SpecialType.System_Delegate } => true,
-				{ReturnType.IsDelegate: true } => true,
+				{ ReturnType: { IsVoid: false, NeedsStret: true } } => true, { ReturnType.IsNativeEnum: true } => true, {
+					ReturnType.SpecialType:
+																															SpecialType.System_Boolean or SpecialType.System_Char or SpecialType.System_Delegate
+				} => true, { ReturnType.IsDelegate: true } => true,
 				// default will be false
 				_ => false
 			};
 		}
-		
+
 	}
 
 	readonly bool? needsBackingField = null;

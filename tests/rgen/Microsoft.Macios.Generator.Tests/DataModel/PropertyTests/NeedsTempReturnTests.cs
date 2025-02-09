@@ -13,7 +13,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel.PropertyTests;
 
 public class NeedsTempReturnTests : BaseGeneratorTestClass {
-	
+
 	class TestDataUseTempReturn : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -31,7 +31,7 @@ public class TestClass {
 ";
 			yield return [
 				nsobjectProperty,
-				true	
+				true
 			];
 
 			const string stringProperty = @"
@@ -45,10 +45,10 @@ public class TestClass {
 	public virtual string BuiltinPluginsPath { get; }
 ";
 			yield return [
-				stringProperty, 
-				false 
+				stringProperty,
+				false
 			];
-			
+
 			const string boolProperty = @"
 using System;
 using ObjCBindings;
@@ -60,10 +60,10 @@ public class TestClass {
 	public virtual bool BuiltinPluginsPath { get; }
 ";
 			yield return [
-				boolProperty, 
+				boolProperty,
 				true
 			];
-			
+
 			const string charProperty = @"
 using System;
 using ObjCBindings;
@@ -75,10 +75,10 @@ public class TestClass {
 	public virtual char BuiltinPluginsPath { get; }
 ";
 			yield return [
-				charProperty, 
+				charProperty,
 				true
 			];
-			
+
 			const string nfloatProperty = @"
 using System;
 using ObjCBindings;
@@ -90,10 +90,10 @@ public class TestClass {
 	public virtual nfloat BuiltinPluginsPath { get; }
 ";
 			yield return [
-				nfloatProperty, 
-				false 
+				nfloatProperty,
+				false
 			];
-			
+
 			const string stretType = @"
 using System;
 using ObjCBindings;
@@ -106,10 +106,10 @@ public class TestClass {
 	public virtual NMatrix4 BuiltinPluginsPath { get; }
 ";
 			yield return [
-				stretType, 
-				true	
+				stretType,
+				true
 			];
-			
+
 			const string nativeEnumType = @"
 using System;
 using AVFoundation;
@@ -123,10 +123,10 @@ public class TestClass {
 	public virtual AVAudioApplicationMicrophoneInjectionPermission BuiltinPluginsPath { get; }
 ";
 			yield return [
-				nativeEnumType, 
-				true	
+				nativeEnumType,
+				true
 			];
-			
+
 			const string delegateProperty = @"
 using System;
 using AVFoundation;
@@ -140,8 +140,8 @@ public class TestClass {
 	public virtual Action<string> BuiltinPluginsPath { get; }
 ";
 			yield return [
-				delegateProperty, 
-				true	
+				delegateProperty,
+				true
 			];
 
 			const string marshalNativeExceptions = @"
@@ -155,8 +155,8 @@ public class TestClass {
 	public virtual string BuiltinPluginsPath { get; }
 ";
 			yield return [
-				marshalNativeExceptions, 
-				true	
+				marshalNativeExceptions,
+				true
 			];
 
 		}
@@ -164,7 +164,7 @@ public class TestClass {
 		IEnumerator IEnumerable.GetEnumerator ()
 			=> GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataUseTempReturn>]
 	void UseTempReturnTests (ApplePlatform platform, string inputText, bool expected)

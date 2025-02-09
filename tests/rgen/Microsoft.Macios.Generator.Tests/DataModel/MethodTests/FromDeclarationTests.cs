@@ -18,7 +18,7 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel.MethodTests;
 
 public class FromDeclarationTests : BaseGeneratorTestClass {
-	
+
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
