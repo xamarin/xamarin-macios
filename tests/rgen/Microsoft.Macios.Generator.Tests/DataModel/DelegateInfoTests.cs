@@ -379,6 +379,6 @@ namespace NS {
 		Assert.NotNull (changes);
 		Assert.Equal (expected, changes);
 		Assert.Single (changes.Value.Parameters);
-		Assert.True (changes.Value.Parameters[0].IsDelegate);
+		Assert.True (changes.Value.Parameters [0].IsDelegate);
 	}
 }
