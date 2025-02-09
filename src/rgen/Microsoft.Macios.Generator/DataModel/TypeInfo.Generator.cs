@@ -12,7 +12,7 @@ readonly partial struct TypeInfo {
 	/// Return if the type represents a wrapped object from the objc world.
 	/// </summary>
 	public bool IsWrapped { get; init; }
-	
+
 	/// <summary>
 	/// True if the type needs to use a stret call.
 	/// </summary>
