@@ -95,8 +95,15 @@ namespace ObjCBindings {
 		/// </summary>
 		ReleaseReturnValue = 1 << 10,
 
+		/// <summary>
+		/// Use this flag on a method to mark that the return type of the method is a 
+		/// proxy type.
+		/// </summary>
 		Proxy = 1 << 11,
 
+		/// <summary>
+		/// Use this flag on a method to mark that the method is a factory method.
+		/// </summary>
 		Factory = 1 << 12,
 
 	}
@@ -191,6 +198,10 @@ namespace ObjCBindings {
 		/// </summary>
 		ReleaseReturnValue = 1 << 13,
 
+		/// <summary>
+		/// Use this flag on a method to mark that the return type of the method is a 
+		/// proxy type.
+		/// </summary>
 		Proxy = 1 << 14,
 
 	}
