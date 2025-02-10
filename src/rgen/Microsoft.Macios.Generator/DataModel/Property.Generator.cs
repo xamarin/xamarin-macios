@@ -200,7 +200,7 @@ readonly partial struct Property {
 
 		change = new (
 			name: memberName,
-			returnType: new (propertySymbol.Type),
+			returnType: new (propertySymbol.Type, context.Compilation),
 			symbolAvailability: propertySupportedPlatforms,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
