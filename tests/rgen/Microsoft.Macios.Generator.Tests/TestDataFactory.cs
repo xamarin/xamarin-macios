@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 #pragma warning disable APL0003
 using Microsoft.CodeAnalysis;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
@@ -7,12 +8,11 @@ using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 namespace Microsoft.Macios.Generator.Tests;
 
 static class TestDataFactory {
-
-	public static TypeInfo ReturnTypeForString ()
+	public static TypeInfo ReturnTypeForString (bool isNullable = false)
 		=> new (
 			name: "string",
 			specialType: SpecialType.System_String,
-			isNullable: false,
+			isNullable: isNullable,
 			isBlittable: false,
 			isSmartEnum: false,
 			isArray: false,
@@ -35,58 +35,66 @@ static class TestDataFactory {
 			IsINativeObject = false,
 		};
 
-	public static TypeInfo ReturnTypeForInt (bool isNullable = false)
-		=> new (
-			name: "int",
-			specialType: SpecialType.System_Int32,
+	public static TypeInfo ReturnTypeForInt (bool isNullable = false, bool keepInterfaces = false,
+		bool isUnsigned = false)
+	{
+		var typeName = isUnsigned ? "uint" : "int";
+		var metadataName = isUnsigned ? "UInt32" : "Int32";
+		var type = new TypeInfo (
+			name: typeName,
+			specialType: isUnsigned ? SpecialType.System_UInt32 : SpecialType.System_Int32,
 			isBlittable: !isNullable,
-			isNullable: isNullable
+			isNullable: isNullable,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
-			Interfaces = isNullable
+			Interfaces = isNullable && !keepInterfaces
 				? []
 				: [
-				"System.IComparable",
-					"System.IComparable<int>",
+					"System.IComparable",
+					$"System.IComparable<{typeName}>",
 					"System.IConvertible",
-					"System.IEquatable<int>",
+					$"System.IEquatable<{typeName}>",
 					"System.IFormattable",
-					"System.IParsable<int>",
+					$"System.IParsable<{typeName}>",
 					"System.ISpanFormattable",
-					"System.ISpanParsable<int>",
+					$"System.ISpanParsable<{typeName}>",
 					"System.IUtf8SpanFormattable",
-					"System.IUtf8SpanParsable<int>",
-					"System.Numerics.IAdditionOperators<int, int, int>",
-					"System.Numerics.IAdditiveIdentity<int, int>",
-					"System.Numerics.IBinaryInteger<int>",
-					"System.Numerics.IBinaryNumber<int>",
-					"System.Numerics.IBitwiseOperators<int, int, int>",
-					"System.Numerics.IComparisonOperators<int, int, bool>",
-					"System.Numerics.IEqualityOperators<int, int, bool>",
-					"System.Numerics.IDecrementOperators<int>",
-					"System.Numerics.IDivisionOperators<int, int, int>",
-					"System.Numerics.IIncrementOperators<int>",
-					"System.Numerics.IModulusOperators<int, int, int>",
-					"System.Numerics.IMultiplicativeIdentity<int, int>",
-					"System.Numerics.IMultiplyOperators<int, int, int>",
-					"System.Numerics.INumber<int>",
-					"System.Numerics.INumberBase<int>",
-					"System.Numerics.ISubtractionOperators<int, int, int>",
-					"System.Numerics.IUnaryNegationOperators<int, int>",
-					"System.Numerics.IUnaryPlusOperators<int, int>",
-					"System.Numerics.IShiftOperators<int, int, int>",
-					"System.Numerics.IMinMaxValue<int>",
-					"System.Numerics.ISignedNumber<int>"
-			],
+					$"System.IUtf8SpanParsable<{typeName}>",
+					$"System.Numerics.IAdditionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IAdditiveIdentity<{typeName}, {typeName}>",
+					$"System.Numerics.IBinaryInteger<{typeName}>",
+					$"System.Numerics.IBinaryNumber<{typeName}>",
+					$"System.Numerics.IBitwiseOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IComparisonOperators<{typeName}, {typeName}, bool>",
+					$"System.Numerics.IEqualityOperators<{typeName}, {typeName}, bool>",
+					$"System.Numerics.IDecrementOperators<{typeName}>",
+					$"System.Numerics.IDivisionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IIncrementOperators<{typeName}>",
+					$"System.Numerics.IModulusOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IMultiplicativeIdentity<{typeName}, {typeName}>",
+					$"System.Numerics.IMultiplyOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.INumber<{typeName}>",
+					$"System.Numerics.INumberBase<{typeName}>",
+					$"System.Numerics.ISubtractionOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IUnaryNegationOperators<{typeName}, {typeName}>",
+					$"System.Numerics.IUnaryPlusOperators<{typeName}, {typeName}>",
+					$"System.Numerics.IShiftOperators<{typeName}, {typeName}, {typeName}>",
+					$"System.Numerics.IMinMaxValue<{typeName}>",
+					$"System.Numerics.ISignedNumber<{typeName}>"
+				],
 			MetadataName = "Int32",
 		};
+		return type;
+	}
 
 	public static TypeInfo ReturnTypeForIntPtr (bool isNullable = false)
 		=> new (
 			name: "nint",
 			specialType: SpecialType.System_IntPtr,
 			isBlittable: !isNullable,
-			isNullable: isNullable
+			isNullable: isNullable,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
 			Interfaces = isNullable
@@ -125,13 +133,15 @@ static class TestDataFactory {
 					"System.Runtime.Serialization.ISerializable"
 				],
 			MetadataName = "IntPtr",
+			IsNativeIntegerType = !isNullable,
 		};
 
 	public static TypeInfo ReturnTypeForBool ()
 		=> new (
 			name: "bool",
 			specialType: SpecialType.System_Boolean,
-			isBlittable: false
+			isBlittable: false,
+			isStruct: true
 		) {
 			Parents = ["System.ValueType", "object"],
 			Interfaces = [
@@ -146,29 +156,44 @@ static class TestDataFactory {
 		};
 
 	public static TypeInfo ReturnTypeForVoid ()
-		=> new ("void", SpecialType.System_Void) {
-			Parents = ["System.ValueType", "object"],
-		};
+		=> new ("void", SpecialType.System_Void, isStruct: true) { Parents = ["System.ValueType", "object"], };
 
-	public static TypeInfo ReturnTypeForClass (string className)
+	public static TypeInfo ReturnTypeForClass (string className, bool isNullable = false)
 		=> new (
 			name: className,
+			isReferenceType: true,
+			isNullable: isNullable
+		) { Parents = ["object"] };
+
+	public static TypeInfo ReturnTypeForGeneric (string genericName, bool isNullable = false)
+		=> new (
+			name: genericName,
+			isReferenceType: false,
+			isNullable: isNullable
+		);
+
+	public static TypeInfo ReturnTypeForInterface (string interfaceName)
+		=> new (
+			name: interfaceName,
 			isReferenceType: true
 		) {
-			Parents = ["object"]
+			Parents = [],
+			IsInterface = true,
 		};
 
-	public static TypeInfo ReturnTypeForStruct (string structName)
+	public static TypeInfo ReturnTypeForStruct (string structName, bool isBlittable = false)
 		=> new (
-			name: structName
-		) {
-			Parents = ["System.ValueType", "object"]
-		};
+			name: structName,
+			isBlittable: isBlittable,
+			isStruct: true
+		) { Parents = ["System.ValueType", "object"] };
 
-	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false)
+	public static TypeInfo ReturnTypeForEnum (string enumName, bool isSmartEnum = false, bool isNativeEnum = false,
+		bool isNullable = false, bool isBlittable = true, SpecialType underlyingType = SpecialType.System_Int32)
 		=> new (
 			name: enumName,
-			isBlittable: true,
+			isNullable: isNullable,
+			isBlittable: isBlittable,
 			isSmartEnum: isSmartEnum
 		) {
 			Parents = [
@@ -182,17 +207,26 @@ static class TestDataFactory {
 				"System.IFormattable",
 				"System.ISpanFormattable"
 			],
-			EnumUnderlyingType = SpecialType.System_Int32,
+			IsNativeEnum = isNativeEnum,
+			EnumUnderlyingType = underlyingType,
 		};
 
-	public static TypeInfo ReturnTypeForArray (string type, bool isNullable = false, bool isBlittable = false)
+	public static TypeInfo ReturnTypeForArray (string type,
+		bool isNullable = false,
+		bool isBlittable = false,
+		bool isEnum = false,
+		bool isSmartEnum = false,
+		bool isStruct = false)
 		=> new (
 			name: type,
 			isNullable: isNullable,
 			isBlittable: isBlittable,
 			isArray: true,
-			isReferenceType: true
+			isReferenceType: true,
+			isSmartEnum: isSmartEnum,
+			isStruct: isStruct
 		) {
+			EnumUnderlyingType = isEnum ? SpecialType.System_Int32 : null,
 			Parents = ["System.Array", "object"],
 			Interfaces = [
 				$"System.Collections.Generic.IList<{type}>",
@@ -203,6 +237,137 @@ static class TestDataFactory {
 				"System.Collections.IStructuralComparable",
 				"System.Collections.IStructuralEquatable",
 				"System.ICloneable"
+			]
+		};
+
+	public static TypeInfo ReturnTypeForAction ()
+		=> new (
+			name: "System.Action",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForAction (params string [] parameters)
+		=> new (
+			name: $"System.Action<{string.Join (", ", parameters)}>",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForFunc (params string [] parameters)
+		=> new (
+			name: $"System.Func<{string.Join (", ", parameters)}>",
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForDelegate (string delegateName)
+		=> new (
+			name: delegateName,
+			isNullable: false,
+			isBlittable: false,
+			isArray: false,
+			isReferenceType: true
+		) {
+			Parents = [
+				"System.MulticastDelegate",
+				"System.Delegate",
+				"object"
+			],
+			Interfaces = [
+				"System.ICloneable",
+				"System.Runtime.Serialization.ISerializable",
+			]
+		};
+
+	public static TypeInfo ReturnTypeForNSObject (string? nsObjectName = null, bool isNullable = false, bool isApiDefinition = false)
+		=> new (
+			name: nsObjectName ?? "Foundation.NSObject",
+			isNullable: isNullable,
+			isArray: false,
+			isReferenceType: true
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = nsObjectName is null ? ["object"] : ["Foundation.NSObject", "object"],
+			Interfaces = isApiDefinition
+				? [
+					"ObjCRuntime.INativeObject",
+					"Foundation.INSObjectFactory",
+				]
+				: [
+					"ObjCRuntime.INativeObject",
+					$"System.IEquatable<{nsObjectName ?? "Foundation.NSObject"}>",
+					"System.IDisposable",
+					"Foundation.INSObjectFactory",
+					"Foundation.INSObjectProtocol"
+				]
+		};
+
+	public static TypeInfo ReturnTypeForINativeObject (string nativeObjectName, bool isNullable = false)
+		=> new (
+			name: nativeObjectName,
+			isNullable: isNullable,
+			isArray: false
+		) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = ["object"],
+			Interfaces = ["ObjCRuntime.INativeObject"]
+		};
+
+	public static TypeInfo ReturnTypeForNSString (bool isNullable = false)
+		=> new (
+			name: "Foundation.NSString",
+			isNullable: isNullable,
+			isArray: false, isReferenceType: true) {
+			IsNSObject = true,
+			IsINativeObject = true,
+			Parents = [
+				"Foundation.NSObject",
+				"object"
+			],
+			Interfaces = [
+				"Foundation.INSCopying",
+				"Foundation.INSSecureCoding",
+				"ObjCRuntime.INativeObject",
+				"Foundation.INSObjectFactory"
 			]
 		};
 }

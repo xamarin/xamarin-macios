@@ -117,7 +117,7 @@ public class ParentClass{
 	}
 }
 ";
-			Func<SyntaxNode, MemberDeclarationSyntax?> getNestedMethod =
+			Func<SyntaxNode, CSharpSyntaxNode?> getNestedMethod =
 				rootNode => rootNode.DescendantNodes ().OfType<MethodDeclarationSyntax> ().LastOrDefault ();
 			var nestedMethodNestedClassParents = new [] { "ChildClass", "ParentClass" };
 			yield return [nestedMethodNestedClass, getNestedMethod, nestedMethodNestedClassParents];
@@ -152,7 +152,7 @@ namespace Test {
 			yield return [nestedNamespacesNestedClass, getNestedMethod, nestedNamespacesParents];
 
 
-			Func<SyntaxNode, MemberDeclarationSyntax?> getEnumValue =
+			Func<SyntaxNode, CSharpSyntaxNode?> getEnumValue =
 				rootNode => rootNode.DescendantNodes ().OfType<EnumMemberDeclarationSyntax> ().LastOrDefault ();
 			const string enumValueNested = @"
 using System;
@@ -169,6 +169,26 @@ public class ParentClass {
 ";
 			var enumParensts = new [] { "MyEnum", "ChildClass", "ParentClass" };
 			yield return [enumValueNested, getEnumValue, enumParensts];
+
+			Func<SyntaxNode, CSharpSyntaxNode?> getGetterValue =
+				rootNode => rootNode.DescendantNodes ().OfType<AccessorDeclarationSyntax> ().LastOrDefault ();
+			const string propertyGetter = @"
+using System;
+
+namespace Test;
+
+public class ParentClass {
+	public class ChildClass {
+		public int Property {
+			get {
+				return 0;
+			}
+		}
+	}
+}
+";
+			var getterParents = new [] { "Property", "ChildClass", "ParentClass" };
+			yield return [propertyGetter, getGetterValue, getterParents];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -177,7 +197,7 @@ public class ParentClass {
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataGetParents>]
 	public void GetParentTests (ApplePlatform platform, string inputText,
-		Func<SyntaxNode, MemberDeclarationSyntax?> getNode, string [] expectedParents)
+		Func<SyntaxNode, CSharpSyntaxNode?> getNode, string [] expectedParents)
 	{
 		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
@@ -1681,6 +1701,163 @@ public partial class MyClass {
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
 		Assert.Equal (expectedResult, symbol.Type.IsBlittable ());
+	}
+
+	class TestDataIsWrapped : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string stringProperty = @"
+using System;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public string Property { get; set; }
+}
+";
+			yield return [stringProperty, false];
+
+			const string nsUuidProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NSUuid Property { get; set; }
+}
+";
+			yield return [nsUuidProperty, true];
+
+			const string nmatrix4Property = @"
+using System;
+using CoreGraphics;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NMatrix4 Property { get; set; }
+}
+";
+
+			yield return [nmatrix4Property, false];
+
+			const string nativeHandleProperty = @"
+using System;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NativeHandle Property { get; set; }
+}
+";
+			yield return [nativeHandleProperty, false];
+
+			const string nsZoneProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NSZone Property { get; set; }
+}
+";
+			yield return [nsZoneProperty, false];
+
+			const string nsobjectProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NSObject Property { get; set; }
+}
+";
+			yield return [nsobjectProperty, true];
+
+			const string nssetProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public NSSet<NSObject> Property { get; set; }
+}
+";
+			yield return [nssetProperty, true];
+
+
+			const string mtlDeviceProperty = @"
+using System;
+using Metal;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	public IMTLDevice Property { get; set; }
+}
+";
+			yield return [mtlDeviceProperty, true];
+
+			const string EnumProperty = @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCBindings;
+
+namespace NS;
+
+public enum MyEnum : ulong {
+	First,
+	Second,
+}
+
+[BindingType<Class>]
+public partial class MyClass {
+	public MyEnum Property { get; set; }
+}
+";
+			yield return [EnumProperty, false];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataIsWrapped>]
+	void IsWrapped (ApplePlatform platform, string inputText, bool expectedResult)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<PropertyDeclarationSyntax> ()
+			.FirstOrDefault ();
+		Assert.NotNull (declaration);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		Assert.NotNull (semanticModel);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		Assert.Equal (expectedResult, symbol.Type.IsWrapped ());
 	}
 
 }
