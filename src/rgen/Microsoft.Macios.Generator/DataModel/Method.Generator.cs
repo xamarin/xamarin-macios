@@ -76,18 +76,26 @@ readonly partial struct Method {
 
 			// based on the configuration flags of the method and the return type we can decide if we need a
 			// temp return type
+#pragma warning disable fomat
 			return (Method: this, ByRefParameterCount: byRefParameterCount) switch {
 				// focus first on the flags, since those are manually added and have more precedence
-				{ ByRefParameterCount: > 0 } => true, { Method.ReleaseReturnValue: true } => true, { Method.IsFactory: true } => true, { Method.IsProxy: true } => true, { Method.MarshalNativeExceptions: true, Method.ReturnType.IsVoid: false } => true,
+				{ ByRefParameterCount: > 0 } => true, 
+				{ Method.ReleaseReturnValue: true } => true, 
+				{ Method.IsFactory: true } => true, 
+				{ Method.IsProxy: true } => true, 
+				{ Method.MarshalNativeExceptions: true, Method.ReturnType.IsVoid: false } => true,
 
 				// focus on the return type
-				{ Method.ReturnType: { IsVoid: false, NeedsStret: true } } => true, { Method.ReturnType: { IsVoid: false, IsWrapped: true } } => true, { Method.ReturnType.IsNativeEnum: true } => true, {
-					Method.ReturnType.SpecialType:
-																																																			 SpecialType.System_Boolean or SpecialType.System_Char or SpecialType.System_Delegate
-				} => true, { Method.ReturnType.IsDelegate: true } => true,
+				{ Method.ReturnType: { IsVoid: false, NeedsStret: true } } => true, 
+				{ Method.ReturnType: { IsVoid: false, IsWrapped: true } } => true, 
+				{ Method.ReturnType.IsNativeEnum: true } => true, 
+				{ Method.ReturnType.SpecialType: SpecialType.System_Boolean 
+					or SpecialType.System_Char or SpecialType.System_Delegate } => true, 
+				{ Method.ReturnType.IsDelegate: true } => true,
 				// default will be false
 				_ => false
 			};
+#pragma warning restore fomat
 		}
 	}
 
