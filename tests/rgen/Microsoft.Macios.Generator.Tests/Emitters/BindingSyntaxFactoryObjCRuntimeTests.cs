@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.DataModel;
-using Xamarin.Utils;
 using Xunit;
 using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
@@ -654,5 +653,13 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.NotNull (declaration);
 			Assert.Equal (expectedDeclaration, declaration.ToString ());
 		}
+	}
+
+	[Fact]
+	void GetExceptionHandleAuxVariableTests ()
+	{
+		var expected = "IntPtr exception_gchandle = IntPtr.Zero;";
+		var declaration = GetExceptionHandleAuxVariable ();
+		Assert.Equal (expected, declaration.ToString ());
 	}
 }
