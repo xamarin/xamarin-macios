@@ -187,9 +187,6 @@
 	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
 		<!-- This turns off some NativeAOT logic we don't want nor need -->
 		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
-
-		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
-		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
 		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
@@ -202,5 +199,8 @@
 			we are only setting this flag when we are building executables. (Class libraries do not have a managed Main)
 		-->
 		<CustomNativeMain Condition="'$(OutputType)' == 'Exe'">true</CustomNativeMain>
+
+		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
+		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
 	</PropertyGroup>
 </Project>
