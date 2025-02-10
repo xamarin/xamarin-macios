@@ -438,7 +438,7 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		unsafe T? GetProperty<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioFileStreamProperty property) where T : unmanaged
+		unsafe T? GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioFileStreamProperty property) where T : unmanaged
 #else
 		unsafe T? GetProperty<T> (AudioFileStreamProperty property) where T : unmanaged
 #endif

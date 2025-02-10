@@ -28,7 +28,7 @@ namespace Network {
 	public class NWRelayHop : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWRelayHop (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWRelayHop (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		public NWRelayHop (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

@@ -36,7 +36,7 @@ using System.Net;
 #if NET
 using CFNetwork;
 using CoreFoundation;
-using CF = CoreFoundation;
+using CF=CoreFoundation;
 #else
 using CoreServices;
 using CoreFoundation;

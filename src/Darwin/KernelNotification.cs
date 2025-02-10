@@ -57,24 +57,24 @@ namespace Darwin {
 
 	[Flags]
 	public enum EventFlags : ushort {
-		Add = 0x0001,
-		Delete = 0x0002,
-		Enable = 0x0004,
-		Disable = 0x0008,
-		OneShot = 0x0010,
-		Clear = 0x0020,
-		Receipt = 0x0040,
-		Dispatch = 0x0080,
+		Add         = 0x0001,
+		Delete      = 0x0002,
+		Enable      = 0x0004,
+		Disable     = 0x0008,
+		OneShot     = 0x0010,
+		Clear       = 0x0020,
+		Receipt     = 0x0040,
+		Dispatch    = 0x0080,
 
-		Flag0 = 0x1000,
-		Flag1 = 0x2000,
-		SystemFlags = unchecked(0xf000),
-
+		Flag0       = 0x1000,
+		Flag1       = 0x2000,
+		SystemFlags = unchecked (0xf000),
+			
 		// Return values.
-		EOF = 0x8000,
-		Error = 0x4000,
+		EOF         = 0x8000,
+		Error       = 0x4000,
 	}
-
+	
 	public enum EventFilter : short {
 		Read = -1,
 		Write = -2,
@@ -88,60 +88,60 @@ namespace Darwin {
 		User = -10,
 		VM = -11
 	}
-
+	
 	[Flags]
 	public enum FilterFlags : uint {
-		ReadPoll = EventFlags.Flag0,
-		ReadOutOfBand = EventFlags.Flag1,
-		ReadLowWaterMark = 0x00000001,
+		ReadPoll          = EventFlags.Flag0,
+		ReadOutOfBand     = EventFlags.Flag1,
+		ReadLowWaterMark  = 0x00000001,
 
 		WriteLowWaterMark = ReadLowWaterMark,
 
-		NoteTrigger = 0x01000000,
-		NoteFFNop = 0x00000000,
-		NoteFFAnd = 0x40000000,
-		NoteFFOr = 0x80000000,
-		NoteFFCopy = 0xc0000000,
-		NoteFFCtrlMask = 0xc0000000,
-		NoteFFlagsMask = 0x00ffffff,
-
-		VNodeDelete = 0x00000001,
-		VNodeWrite = 0x00000002,
-		VNodeExtend = 0x00000004,
-		VNodeAttrib = 0x00000008,
-		VNodeLink = 0x00000010,
-		VNodeRename = 0x00000020,
-		VNodeRevoke = 0x00000040,
-		VNodeNone = 0x00000080,
-
-		ProcExit = 0x80000000,
-		ProcFork = 0x40000000,
-		ProcExec = 0x20000000,
-		ProcReap = 0x10000000,
-		ProcSignal = 0x08000000,
-		ProcExitStatus = 0x04000000,
-		ProcResourceEnd = 0x02000000,
+		NoteTrigger       = 0x01000000,
+		NoteFFNop         = 0x00000000,
+		NoteFFAnd         = 0x40000000,
+		NoteFFOr          = 0x80000000,
+		NoteFFCopy        = 0xc0000000,
+		NoteFFCtrlMask    = 0xc0000000,
+		NoteFFlagsMask    = 0x00ffffff,
+			          
+		VNodeDelete       = 0x00000001,
+		VNodeWrite        = 0x00000002,
+		VNodeExtend       = 0x00000004,
+		VNodeAttrib       = 0x00000008,
+		VNodeLink         = 0x00000010,
+		VNodeRename       = 0x00000020,
+		VNodeRevoke       = 0x00000040,
+		VNodeNone         = 0x00000080,
+			          
+		ProcExit          = 0x80000000,
+		ProcFork          = 0x40000000,
+		ProcExec          = 0x20000000,
+		ProcReap          = 0x10000000,
+		ProcSignal        = 0x08000000,
+		ProcExitStatus    = 0x04000000,
+		ProcResourceEnd   = 0x02000000,
 
 		// iOS only
-		ProcAppactive = 0x00800000,
+		ProcAppactive     = 0x00800000,
 		ProcAppBackground = 0x00400000,
-		ProcAppNonUI = 0x00200000,
-		ProcAppInactive = 0x00100000,
-		ProcAppAllStates = 0x00f00000,
+		ProcAppNonUI      = 0x00200000,
+		ProcAppInactive   = 0x00100000,
+		ProcAppAllStates  = 0x00f00000,
 
 		// Masks
-		ProcPDataMask = 0x000fffff,
-		ProcControlMask = 0xfff00000,
+		ProcPDataMask     = 0x000fffff,
+		ProcControlMask   = 0xfff00000,
 
-		VMPressure = 0x80000000,
+		VMPressure        = 0x80000000,
 		VMPressureTerminate = 0x40000000,
 		VMPressureSuddenTerminate = 0x20000000,
-		VMError = 0x10000000,
+		VMError           = 0x10000000,
 
-		TimerSeconds = 0x00000001,
-		TimerMicroSeconds = 0x00000002,
-		TimerNanoSeconds = 0x00000004,
-		TimerAbsolute = 0x00000008,
+		TimerSeconds      =    0x00000001,
+		TimerMicroSeconds =   0x00000002,
+		TimerNanoSeconds  =   0x00000004,
+		TimerAbsolute     =   0x00000008,
 	}
 
 	public class KernelQueue : IDisposable, INativeObject {
@@ -167,19 +167,19 @@ namespace Darwin {
 		{
 			Dispose (false);
 		}
-
+		
 		protected virtual void Dispose (bool disposing)
 		{
-			if (handle != -1) {
+			if (handle != -1){
 				DispatchSource.VnodeMonitor.close (handle);
 				handle = -1;
 			}
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		unsafe extern static int /* int */ kevent (int kq, KernelEvent* changeList, int /* int */ nChanges, KernelEvent* eventList, int /* int */ nEvents, TimeSpec* timeout);
+		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, TimeSpec* timeout);
 
-		public int KEvent (KernelEvent [] changeList, KernelEvent [] eventList, TimeSpan? timeout = null)
+		public int KEvent (KernelEvent[] changeList, KernelEvent[] eventList, TimeSpan? timeout = null)
 		{
 			if (changeList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (changeList));
@@ -196,7 +196,7 @@ namespace Darwin {
 			return KEvent (changeList, changeList.Length, eventList, eventList.Length, ToTimespec (timeout));
 		}
 
-		public unsafe int KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents, TimeSpec? timeout = null)
+		public unsafe int KEvent (KernelEvent[] changeList, int nChanges, KernelEvent[] eventList, int nEvents, TimeSpec? timeout = null)
 		{
 			if (changeList is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (changeList));
@@ -217,15 +217,15 @@ namespace Darwin {
 				throw new ArgumentOutOfRangeException ("nEvents is larger than the number of elements in eventList", nameof (nEvents));
 
 			unsafe {
-				fixed (KernelEvent* cp = changeList)
-				fixed (KernelEvent* ep = eventList) {
-					if (timeout is null) {
-						return kevent (handle, cp, nChanges, ep, nEvents, null);
-					} else {
-						TimeSpec ts = timeout.Value;
-						return kevent (handle, cp, nChanges, ep, nEvents, &ts);
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList) {
+						if (timeout is null) {
+							return kevent (handle, cp, nChanges, ep, nEvents, null);
+						} else {
+							TimeSpec ts = timeout.Value;
+							return kevent (handle, cp, nChanges, ep, nEvents, &ts);
+						}
 					}
-				}
 			}
 		}
 
@@ -240,7 +240,7 @@ namespace Darwin {
 			return rv;
 		}
 
-		// Don't worry about nullability for !NET
+// Don't worry about nullability for !NET
 #nullable disable
 #if !NET
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
@@ -295,10 +295,10 @@ namespace Darwin {
 #endif
 		{
 			unsafe {
-				fixed (KernelEvent* cp = changeList)
-				fixed (KernelEvent* ep = eventList)
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList)
 #if NET
-					return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, null);
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, null);
 #else
 						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, null) != -1;
 #endif

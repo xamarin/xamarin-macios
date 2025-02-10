@@ -69,12 +69,11 @@ namespace ContactsUI {
 	interface ICNContactPickerDelegate { }
 
 #if MONOMAC
-	[NoiOS]
-	[NoMacCatalyst]
-	[NoTV]
+	[NoiOS][NoMacCatalyst][NoTV]
 	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface CNContactPickerDelegate {
+	[BaseType (typeof(NSObject))]
+	interface CNContactPickerDelegate
+	{
 		[Export ("contactPicker:didSelectContact:")]
 		void ContactSelected (CNContactPicker picker, CNContact contact);
 

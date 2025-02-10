@@ -32,7 +32,7 @@ using Security;
 
 #if MONOMAC
 using AppKit;
-using UIColor = AppKit.NSColor;
+using UIColor=AppKit.NSColor;
 using UIScrollView = AppKit.NSScrollView;
 using UIImage = AppKit.NSImage;
 using IUIContextMenuInteractionCommitAnimating = Foundation.NSObject;
@@ -2539,7 +2539,7 @@ namespace WebKit {
 		[Export ("webView:shouldPerformAction:fromSender:"), DelegateName ("WebViewPerformAction"), DefaultValue (null)]
 		bool UIShouldPerformActionfromSender (WebView webView, Selector action, NSObject sender);
 #else
-		[Export ("webView:shouldPerformAction:fromSender:"), DelegateName ("WebViewPerformAction"), DefaultValue (null)]
+		[Export ("webView:shouldPerformAction:fromSender:"), DelegateName("WebViewPerformAction"), DefaultValue (null)]
 		bool UIShouldPerformAction (WebView webView, Selector action, NSObject sender);
 #endif
 
@@ -5760,7 +5760,7 @@ namespace WebKit {
 	}
 
 #if MONOMAC
-	interface UIPreviewActionItem { }
+	interface UIPreviewActionItem {}
 #endif
 
 	interface IWKPreviewActionItem { }

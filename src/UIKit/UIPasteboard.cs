@@ -25,16 +25,16 @@ namespace UIKit {
 					var obj = Runtime.GetNSObject (array.ValueAt (i));
 					var data = obj as NSData;
 					UIImage img;
-
+			
 					if (data is not null) {
 						img = new UIImage (data);
 					} else {
 						img = (UIImage) obj;
 					}
-
+			
 					ret [i] = img;
 				}
-
+				
 				return ret;
 			}
 		}
@@ -46,11 +46,11 @@ namespace UIKit {
 		// API and not make users change their code.
 
 		[CompilerGenerated]
-		public virtual UIImage [] Images {
+		public virtual UIImage[] Images {
 			[Export ("images", ArgumentSemantic.Copy)]
 			get {
 				global::UIKit.UIApplication.EnsureUIThread ();
-				UIImage [] ret;
+				UIImage[] ret;
 				if (IsDirectBinding) {
 					ret = GetImageArray (ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (selImages)));
 				} else {
@@ -58,12 +58,12 @@ namespace UIKit {
 				}
 				return ret;
 			}
-
+			
 			[Export ("setImages:", ArgumentSemantic.Copy)]
 			set {
 				global::UIKit.UIApplication.EnsureUIThread ();
 				var nsa_value = NSArray.FromNSObjects (value);
-
+				
 				if (IsDirectBinding) {
 					ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (selSetImages_), nsa_value.Handle);
 				} else {

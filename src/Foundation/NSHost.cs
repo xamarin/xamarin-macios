@@ -17,8 +17,10 @@ using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Foundation {
-	public partial class NSHost : IEquatable<NSHost>, IEnumerable<IPAddress> {
+namespace Foundation
+{
+	public partial class NSHost : IEquatable<NSHost>, IEnumerable<IPAddress>
+	{
 		static NSHost? CheckNull (NSHost? host)
 		{
 			if (host is null)
@@ -141,7 +143,7 @@ namespace Foundation {
 
 		public override int GetHashCode ()
 		{
-			return (int) _Hash;
+			return (int)_Hash;
 		}
 
 		public override bool Equals (object? obj)

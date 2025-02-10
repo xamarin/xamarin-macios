@@ -76,7 +76,7 @@ namespace UIKit {
 		public static IntPtr GetAppearance (IntPtr class_ptr, params Type [] whenFoundIn)
 		{
 			using (var array = NSArray.FromIntPtrs (TypesToPointers (whenFoundIn))) {
-				return Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr,
+				return Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, 
 					Selector.GetHandle (UIAppearance.selAppearanceWhenContainedInInstancesOfClasses), array.Handle);
 			}
 		}
@@ -90,7 +90,7 @@ namespace UIKit {
 				throw new ArgumentNullException ("traits");
 
 			using (var array = NSArray.FromIntPtrs (TypesToPointers (whenFoundIn))) {
-				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr,
+				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr, 
 					Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedInInstancesOfClasses),
 					traits.Handle, array.Handle);
 			}

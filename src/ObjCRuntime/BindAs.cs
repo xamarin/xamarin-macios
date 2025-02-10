@@ -37,7 +37,7 @@ namespace ObjCRuntime {
 			return obj;
 		}
 
-		unsafe static T []? ConvertNSArrayToManagedArray<T> (IntPtr nsarray, delegate*<IntPtr, T> convert) where T : struct
+		unsafe static T[]? ConvertNSArrayToManagedArray<T> (IntPtr nsarray, delegate*<IntPtr, T> convert) where T: struct
 		{
 			if (nsarray == IntPtr.Zero)
 				return null;
@@ -45,7 +45,7 @@ namespace ObjCRuntime {
 			return ConvertNSArrayToManagedArray2<T, T> (nsarray, convert, &Identity<T>);
 		}
 
-		unsafe static IntPtr ConvertManagedArrayToNSArray<T> (T []? array, delegate*<T, IntPtr> convert) where T : struct
+		unsafe static IntPtr ConvertManagedArrayToNSArray<T> (T[]? array, delegate*<T, IntPtr> convert) where T: struct
 		{
 			if (array is null)
 				return IntPtr.Zero;
@@ -53,7 +53,7 @@ namespace ObjCRuntime {
 			return ConvertManagedArrayToNSArray2<T, T> (array, &Identity<T>, convert);
 		}
 
-		unsafe static T []? ConvertNSArrayToManagedArray2<T, U> (IntPtr nsarray, delegate*<IntPtr, U> convert1, delegate*<U, T> convert2) where T : struct
+		unsafe static T[]? ConvertNSArrayToManagedArray2<T,U> (IntPtr nsarray, delegate*<IntPtr, U> convert1, delegate*<U, T> convert2) where T: struct
 		{
 			if (nsarray == IntPtr.Zero)
 				return null;
@@ -61,7 +61,7 @@ namespace ObjCRuntime {
 			return NSArray.ArrayFromHandleFunc<T> (nsarray, (ptr) => convert2 (convert1 (ptr)));
 		}
 
-		unsafe static IntPtr ConvertManagedArrayToNSArray2<T, U> (T []? array, delegate*<T, U> convert1, delegate*<U, IntPtr> convert2) where T : struct
+		unsafe static IntPtr ConvertManagedArrayToNSArray2<T,U> (T[]? array, delegate*<T, U> convert1, delegate*<U, IntPtr> convert2) where T: struct
 		{
 			if (array is null)
 				return IntPtr.Zero;
@@ -90,14 +90,14 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
-		unsafe static T? CreateNullable<T> (IntPtr handle, delegate*<IntPtr, T> convert) where T : struct
+		unsafe static T? CreateNullable<T> (IntPtr handle, delegate*<IntPtr, T> convert) where T: struct
 		{
 			if (handle == IntPtr.Zero)
 				return null;
 			return convert (handle);
 		}
 
-		unsafe static T? CreateNullable2<T, U> (IntPtr handle, delegate*<IntPtr, U> convert1, delegate*<U, T> convert2) where T : struct
+		unsafe static T? CreateNullable2<T, U> (IntPtr handle, delegate*<IntPtr, U> convert1, delegate*<U, T> convert2) where T: struct
 		{
 			if (handle == IntPtr.Zero)
 				return null;

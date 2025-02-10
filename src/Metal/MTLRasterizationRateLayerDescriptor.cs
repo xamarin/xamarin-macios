@@ -9,7 +9,8 @@ using ObjCRuntime;
 #nullable enable
 
 namespace Metal {
-	public partial class MTLRasterizationRateLayerDescriptor {
+	public partial class MTLRasterizationRateLayerDescriptor
+	{
 #if NET
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("ios13.0")]
@@ -18,10 +19,10 @@ namespace Metal {
 #else
 		[MacCatalyst (15,0)]
 #endif
-		public double [] HorizontalSampleStorage {
+		public double[] HorizontalSampleStorage { 
 			get {
-				var width = (int) SampleCount.Width;
-				var floatArray = new double [width];
+				var width = (int)SampleCount.Width;
+				var floatArray = new double[width];
 				Marshal.Copy (_HorizontalSampleStorage, floatArray, 0, width);
 				return floatArray;
 			}
@@ -35,10 +36,10 @@ namespace Metal {
 #else
 		[MacCatalyst (15,0)]
 #endif
-		public double [] VerticalSampleStorage {
+		public double[] VerticalSampleStorage {
 			get {
-				var height = (int) SampleCount.Height;
-				var floatArray = new double [height];
+				var height = (int)SampleCount.Height;
+				var floatArray = new double[height];
 				Marshal.Copy (_VerticalSampleStorage, floatArray, 0, height);
 				return floatArray;
 			}
@@ -52,7 +53,7 @@ namespace Metal {
 #else
 		[MacCatalyst (15,0)]
 #endif
-		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float [] horizontal, float [] vertical)
+		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
 			if (horizontal is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (horizontal));

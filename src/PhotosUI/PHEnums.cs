@@ -14,9 +14,7 @@ namespace PhotosUI {
 	}
 
 #if MONOMAC
-	[NoiOS]
-	[NoTV]
-	[NoMacCatalyst]
+	[NoiOS][NoTV][NoMacCatalyst]
 	[Native]
 	public enum PHLivePhotoViewContentMode : long {
 		AspectFit,

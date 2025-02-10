@@ -30,7 +30,7 @@ namespace Network {
 
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		public NWResolverConfig (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

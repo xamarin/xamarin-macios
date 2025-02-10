@@ -298,7 +298,7 @@ namespace Network {
 				}
 
 #if NET
-				delegate* unmanaged<IntPtr, NWConnectionGroupState, IntPtr, void> trampoline = &TrampolineStateChangedHandler;
+				delegate* unmanaged<IntPtr, NWConnectionGroupState, IntPtr, void> trampoline=  &TrampolineStateChangedHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWConnectionGroup), nameof (TrampolineStateChangedHandler));
 #else
 				using var block = new BlockLiteral ();

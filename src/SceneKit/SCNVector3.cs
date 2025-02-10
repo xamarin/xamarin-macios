@@ -61,10 +61,10 @@ namespace SceneKit {
 	/// The Vector3 structure is suitable for interoperation with unmanaged code requiring three consecutive floats.
 	/// </remarks>
 #if NET
-	[SupportedOSPlatform ("ios")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("tvos")]
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
 #endif
 	[Serializable]
 	[StructLayout (LayoutKind.Sequential)]
@@ -771,17 +771,17 @@ namespace SceneKit {
 		public static void TransformVector (ref SCNVector3 vec, ref SCNMatrix4 mat, out SCNVector3 result)
 		{
 #if NET
-			result.X = vec.X * mat.Row0.X +
-					   vec.Y * mat.Row0.Y +
-					   vec.Z * mat.Row0.Z;
+            result.X = vec.X * mat.Row0.X +
+                       vec.Y * mat.Row0.Y +
+                       vec.Z * mat.Row0.Z;
 
-			result.Y = vec.X * mat.Row1.X +
-					   vec.Y * mat.Row1.Y +
-					   vec.Z * mat.Row1.Z;
+            result.Y = vec.X * mat.Row1.X +
+                       vec.Y * mat.Row1.Y +
+                       vec.Z * mat.Row1.Z;
 
-			result.Z = vec.X * mat.Row2.X +
-					   vec.Y * mat.Row2.Y +
-					   vec.Z * mat.Row2.Z;
+            result.Z = vec.X * mat.Row2.X +
+                       vec.Y * mat.Row2.Y +
+                       vec.Z * mat.Row2.Z;
 #else
 			result.X = vec.X * mat.Row0.X +
 					   vec.Y * mat.Row1.X +
@@ -803,7 +803,7 @@ namespace SceneKit {
 		/// This calculates the inverse of the given matrix, use TransformNormalInverse if you
 		/// already have the inverse to avoid this extra calculation
 		/// </remarks>
-		/// <param name="norm">The column-based normal to transform</param>
+        /// <param name="norm">The column-based normal to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed normal</returns>
 #else
@@ -828,7 +828,7 @@ namespace SceneKit {
 		/// This calculates the inverse of the given matrix, use TransformNormalInverse if you
 		/// already have the inverse to avoid this extra calculation
 		/// </remarks>
-		/// <param name="norm">The column-based normal to transform</param>
+        /// <param name="norm">The column-based normal to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed normal</param>
 #else
@@ -853,7 +853,7 @@ namespace SceneKit {
 		/// This version doesn't calculate the inverse matrix.
 		/// Use this version if you already have the inverse of the desired transform to hand
 		/// </remarks>
-		/// <param name="norm">The column-based normal to transform</param>
+        /// <param name="norm">The column-based normal to transform</param>
 		/// <param name="invMat">The inverse of the desired transformation</param>
 		/// <returns>The transformed normal</returns>
 #else
@@ -878,7 +878,7 @@ namespace SceneKit {
 		/// This version doesn't calculate the inverse matrix.
 		/// Use this version if you already have the inverse of the desired transform to hand
 		/// </remarks>
-		/// <param name="norm">The column-based normal to transform</param>
+        /// <param name="norm">The column-based normal to transform</param>
 		/// <param name="invMat">The inverse of the desired transformation</param>
 		/// <param name="result">The transformed normal</param>
 #else
@@ -894,17 +894,17 @@ namespace SceneKit {
 		public static void TransformNormalInverse (ref SCNVector3 norm, ref SCNMatrix4 invMat, out SCNVector3 result)
 		{
 #if NET
-			result.X = norm.X * invMat.Column0.X +
-					   norm.Y * invMat.Column0.Y +
-					   norm.Z * invMat.Column0.Z;
+            result.X = norm.X * invMat.Column0.X +
+                       norm.Y * invMat.Column0.Y +
+                       norm.Z * invMat.Column0.Z;
 
-			result.Y = norm.X * invMat.Column1.X +
-					   norm.Y * invMat.Column1.Y +
-					   norm.Z * invMat.Column1.Z;
+            result.Y = norm.X * invMat.Column1.X +
+                       norm.Y * invMat.Column1.Y +
+                       norm.Z * invMat.Column1.Z;
 
-			result.Z = norm.X * invMat.Column2.X +
-					   norm.Y * invMat.Column2.Y +
-					   norm.Z * invMat.Column2.Z;
+            result.Z = norm.X * invMat.Column2.X +
+                       norm.Y * invMat.Column2.Y +
+                       norm.Z * invMat.Column2.Z;
 #else
 			result.X = norm.X * invMat.Row0.X +
 					   norm.Y * invMat.Row0.Y +
@@ -922,7 +922,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Position by the given Matrix</summary>
-		/// <param name="pos">The column-based position to transform</param>
+        /// <param name="pos">The column-based position to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed position</returns>
 #else
@@ -939,7 +939,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Position by the given Matrix</summary>
-		/// <param name="pos">The column-based position to transform</param>
+        /// <param name="pos">The column-based position to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed position</param>
 #else
@@ -951,20 +951,20 @@ namespace SceneKit {
 		public static void TransformPosition (ref SCNVector3 pos, ref SCNMatrix4 mat, out SCNVector3 result)
 		{
 #if NET
-			result.X = mat.Row0.X * pos.X +
-					   mat.Row0.Y * pos.Y +
-					   mat.Row0.Z * pos.Z +
-					   mat.Row0.W;
+            result.X = mat.Row0.X * pos.X +
+                       mat.Row0.Y * pos.Y +
+                       mat.Row0.Z * pos.Z +
+                       mat.Row0.W;
 
-			result.Y = mat.Row1.X * pos.X +
-					   mat.Row1.Y * pos.Y +
-					   mat.Row1.Z * pos.Z +
-					   mat.Row1.W;
+            result.Y = mat.Row1.X * pos.X +
+                       mat.Row1.Y * pos.Y +
+                       mat.Row1.Z * pos.Z +
+                       mat.Row1.W;
 
-			result.Z = mat.Row2.X * pos.X +
-					   mat.Row2.Y * pos.Y +
-					   mat.Row2.Z * pos.Z +
-					   mat.Row2.W;
+            result.Z = mat.Row2.X * pos.X +
+                       mat.Row2.Y * pos.Y +
+                       mat.Row2.Z * pos.Z +
+                       mat.Row2.W;
 #else
 			result.X = pos.X * mat.Row0.X +
 					   pos.Y * mat.Row1.X +
@@ -985,7 +985,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Vector by the given Matrix</summary>
-		/// <param name="vec">The column vector to transform</param>
+        /// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed vector</returns>
 #else
@@ -1002,7 +1002,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Vector by the given Matrix</summary>
-		/// <param name="vec">The column vector to transform</param>
+        /// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed vector</param>
 #else

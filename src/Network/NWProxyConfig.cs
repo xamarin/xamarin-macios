@@ -29,7 +29,7 @@ namespace Network {
 	public class NWProxyConfig : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWProxyConfig (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWProxyConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		public NWProxyConfig (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

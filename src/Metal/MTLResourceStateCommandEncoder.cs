@@ -32,7 +32,7 @@ namespace Metal {
 		[NoMac]
 		[NoTV]
 #endif
-		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion [] regions, nuint [] mipLevels, nuint [] slices)
+		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion[] regions, nuint[] mipLevels, nuint[] slices)
 		{
 			if (texture is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texture));
@@ -43,14 +43,14 @@ namespace Metal {
 			if (slices is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (slices));
 
-			var regionsHandle = GCHandle.Alloc (regions, GCHandleType.Pinned);
-			var mipLevelsHandle = GCHandle.Alloc (mipLevels, GCHandleType.Pinned);
-			var slicesHandle = GCHandle.Alloc (slices, GCHandleType.Pinned);
+			var regionsHandle = GCHandle.Alloc (regions, GCHandleType.Pinned); 
+			var mipLevelsHandle = GCHandle.Alloc (mipLevels, GCHandleType.Pinned); 
+			var slicesHandle = GCHandle.Alloc (slices, GCHandleType.Pinned); 
 			try {
 				var regionsPtr = regionsHandle.AddrOfPinnedObject ();
 				var mipLevelsPtr = mipLevelsHandle.AddrOfPinnedObject ();
 				var slicesPtr = slicesHandle.AddrOfPinnedObject ();
-				This.Update (texture, mode, regionsPtr, mipLevelsPtr, slicesPtr, (nuint) regions.Length);
+				This.Update (texture, mode, regionsPtr, mipLevelsPtr, slicesPtr, (nuint)regions.Length);
 			} finally {
 				regionsHandle.Free ();
 				mipLevelsHandle.Free ();

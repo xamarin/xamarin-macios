@@ -18,10 +18,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_ethernet_channel = System.IntPtr;
-using OS_nw_interface = System.IntPtr;
-using OS_dispatch_data = System.IntPtr;
-using OS_nw_parameters = System.IntPtr;
+using OS_nw_ethernet_channel=System.IntPtr;
+using OS_nw_interface=System.IntPtr;
+using OS_dispatch_data=System.IntPtr;
+using OS_nw_parameters=System.IntPtr;
 
 
 #if !NET
@@ -48,7 +48,7 @@ namespace Network {
 	public class NWEthernetChannel : NativeObject {
 
 		[Preserve (Conditional = true)]
-		internal NWEthernetChannel (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWEthernetChannel (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_ethernet_channel nw_ethernet_channel_create (ushort ether_type, OS_nw_interface networkInterface);
@@ -89,13 +89,13 @@ namespace Network {
 		[Mac (13,0)]
 #endif
 		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface, NWParameters parameters) =>
-			InitializeHandle (nw_ethernet_channel_create_with_parameters (ethernetType,
+			InitializeHandle (nw_ethernet_channel_create_with_parameters (ethernetType, 
 						networkInterface.GetNonNullHandle (nameof (networkInterface)), parameters.GetNonNullHandle (nameof (parameters))));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ethernet_channel_start (OS_nw_ethernet_channel ethernet_channel);
 
-		public void Start () => nw_ethernet_channel_start (GetCheckedHandle ());
+		public void Start () => nw_ethernet_channel_start (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ethernet_channel_cancel (OS_nw_ethernet_channel ethernet_channel);
@@ -160,7 +160,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_ethernet_channel_set_receive_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral* handler);
+		unsafe static extern void nw_ethernet_channel_set_receive_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral *handler);
 
 #if !NET
 		delegate void nw_ethernet_channel_receive_handler_t (IntPtr block, OS_dispatch_data content, ushort vlan_tag, IntPtr local_address, IntPtr remote_address);
@@ -206,7 +206,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_ethernet_channel_set_state_changed_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral* handler);
+		unsafe static extern void nw_ethernet_channel_set_state_changed_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral *handler);
 
 #if !NET
 		delegate void nw_ethernet_channel_state_changed_handler_t (IntPtr block, NWEthernetChannelState state, IntPtr error);
@@ -243,7 +243,7 @@ namespace Network {
 #endif
 				nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
-		}
+		}	
 
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -262,7 +262,7 @@ namespace Network {
 #else
 		[Mac (13,0)]
 #endif
-		public uint MaximumPayloadSize => nw_ethernet_channel_get_maximum_payload_size (GetCheckedHandle ());
+		public uint MaximumPayloadSize  => nw_ethernet_channel_get_maximum_payload_size (GetCheckedHandle ());
 	}
 }
 #endif

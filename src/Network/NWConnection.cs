@@ -55,7 +55,7 @@ namespace Network {
 	public class NWConnection : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

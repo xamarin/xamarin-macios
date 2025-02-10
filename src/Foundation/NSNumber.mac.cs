@@ -14,33 +14,35 @@ using ObjCRuntime;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Foundation {
-	public partial class NSNumber {
+namespace Foundation
+{
+	public partial class NSNumber
+	{
 #if !COREBUILD
 		public static NSNumber FromObject (object value)
 		{
 			if (value is float) {
-				return FromFloat ((float) value);
+				return FromFloat ((float)value);
 			} else if (value is double) {
-				return FromDouble ((double) value);
+				return FromDouble ((double)value);
 			} else if (value is sbyte) {
-				return FromSByte ((sbyte) value);
+				return FromSByte ((sbyte)value);
 			} else if (value is byte) {
-				return FromByte ((byte) value);
+				return FromByte ((byte)value);
 			} else if (value is short) {
-				return FromInt16 ((short) value);
+				return FromInt16 ((short)value);
 			} else if (value is ushort) {
-				return FromUInt16 ((ushort) value);
+				return FromUInt16 ((ushort)value);
 			} else if (value is int) {
-				return FromInt32 ((int) value);
+				return FromInt32 ((int)value);
 			} else if (value is uint) {
-				return FromUInt32 ((uint) value);
+				return FromUInt32 ((uint)value);
 			} else if (value is long) {
-				return FromInt64 ((long) value);
+				return FromInt64 ((long)value);
 			} else if (value is ulong) {
-				return FromUInt64 ((ulong) value);
+				return FromUInt64 ((ulong)value);
 			} else if (value is bool) {
-				return FromBoolean ((bool) value);
+				return FromBoolean ((bool)value);
 			} else if (value is nint) {
 				return FromNInt ((nint) value);
 			} else if (value is nuint) {

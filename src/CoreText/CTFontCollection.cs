@@ -191,7 +191,7 @@ namespace CoreText {
 #if NET
 		[DllImport (Constants.CoreTextLibrary)]
 		static unsafe extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
-				IntPtr collection, delegate* unmanaged<IntPtr, IntPtr, IntPtr, CFIndex> sortCallback,
+				IntPtr collection, delegate* unmanaged<IntPtr, IntPtr, IntPtr, CFIndex> sortCallback, 
 				IntPtr refCon);
 #else
 		[DllImport (Constants.CoreTextLibrary)]

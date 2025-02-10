@@ -1714,4 +1714,9 @@
             {0}: the path to a file
         </comment>
     </data>
+
+    <data name="W7144" xml:space="preserve">
+        <value>Did not extract {0} because it would write outside the target directory.</value>
+    </data>
+
 </root>

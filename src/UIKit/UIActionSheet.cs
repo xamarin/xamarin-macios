@@ -41,7 +41,7 @@ namespace UIKit {
 				return;
 			}
 
-			foreach (string b in other) {
+			foreach (string b in other){
 				if (b is not null)
 					AddButton (b);
 			}
@@ -49,7 +49,7 @@ namespace UIKit {
 			if (cancelTitle is not null)
 				CancelButtonIndex = AddButton (cancelTitle);
 		}
-
+		
 #if !NET
 		[Obsolete ("Use overload with a IUIActionSheetDelegate parameter")]
 		public UIActionSheet (string title, UIActionSheetDelegate del)
@@ -59,10 +59,10 @@ namespace UIKit {
 #endif
 
 		public UIActionSheet (string title, IUIActionSheetDelegate del)
-		: this (title, del, null, null, (string) null) { }
+		: this (title, del, null, null, (string) null) {}
 
 		public UIActionSheet (string title)
-		: this (title, null, null, null, (string) null) { }
+		: this (title, null, null, null, (string) null) {}
 
 		public void Add (string name)
 		{
@@ -75,7 +75,7 @@ namespace UIKit {
 				yield return ButtonTitle (i);
 		}
 	}
-
+	
 }
 
 #endif // IOS

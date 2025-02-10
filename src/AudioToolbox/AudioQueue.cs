@@ -988,7 +988,7 @@ namespace AudioToolbox {
 
 		// Should be private
 #if NET
-		public unsafe T GetProperty<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioQueueProperty property) where T : struct
+		public unsafe T GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioQueueProperty property) where T : struct
 #else
 		public unsafe T GetProperty<T> (AudioQueueProperty property) where T : struct
 #endif
@@ -1016,7 +1016,7 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		unsafe T GetProperty<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioConverterPropertyID property) where T : struct
+		unsafe T GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioConverterPropertyID property) where T : struct
 #else
 		unsafe T GetProperty<T> (AudioConverterPropertyID property) where T : struct
 #endif
@@ -1189,7 +1189,7 @@ namespace AudioToolbox {
 #if !MONOMAC
 				return GetProperty<AudioStreamBasicDescription> (AudioQueueProperty.StreamDescription);
 #else
-				return GetProperty<AudioStreamBasicDescription> (AudioConverterPropertyID.CurrentInputStreamDescription);
+				return GetProperty <AudioStreamBasicDescription> (AudioConverterPropertyID.CurrentInputStreamDescription);
 #endif
 			}
 		}
@@ -1296,7 +1296,7 @@ namespace AudioToolbox {
 #if NET
 			unsafe {
 				status = AudioQueueProcessingTapNew (handle, &AudioQueueProcessingTap.TapCallback, GCHandle.ToIntPtr (aqpt.Handle), flags, &maxFrames,
-						 &processingFormat, &tapHandle);
+						 &processingFormat,  &tapHandle);
 			}
 #else
 			status = AudioQueueProcessingTapNew (handle, AudioQueueProcessingTap.CreateTapCallback, GCHandle.ToIntPtr (aqpt.Handle), flags, out maxFrames,
@@ -1459,7 +1459,7 @@ namespace AudioToolbox {
 #if NET
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern unsafe static OSStatus AudioQueueNewOutput (AudioStreamBasicDescription* format, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback,
-			IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,
+			IntPtr userData, IntPtr cfrunLoop_callbackRunloop, IntPtr cfstr_runMode,  
 			uint flags, IntPtr* audioQueue);
 #else
 		static readonly AudioQueueOutputCallback dOutputCallback = output_callback;

@@ -16,9 +16,11 @@ using System.Runtime.InteropServices;
 
 // This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/vector_types.h
 #if NET
-namespace CoreGraphics {
+namespace CoreGraphics
+{
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NVector2d : IEquatable<NVector2d> {
+	public struct NVector2d : IEquatable<NVector2d>
+	{
 		public double X;
 		public double Y;
 
@@ -45,7 +47,7 @@ namespace CoreGraphics {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine (X, Y);
+			return HashCode.Combine(X, Y);
 		}
 
 		public override bool Equals (object? obj)

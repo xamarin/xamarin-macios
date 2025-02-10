@@ -12,10 +12,10 @@ using MetalPerformanceShaders;
 namespace MetalPerformanceShadersGraph {
 	/// <summary>This enum is used to select how to initialize a new instance of a <see cref="MPSGraphExecutable" />.</summary>
 #if NET
-	[SupportedOSPlatform ("ios17.0")]
-	[SupportedOSPlatform ("maccatalyst17.0")]
-	[SupportedOSPlatform ("macos14.0")]
-	[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
 #else
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif

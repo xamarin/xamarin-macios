@@ -7,7 +7,7 @@ using CoreFoundation;
 #nullable enable
 
 namespace CoreBluetooth {
-	public partial class CBPeer {
+	public partial class CBPeer  {
 #if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]

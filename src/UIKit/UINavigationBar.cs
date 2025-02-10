@@ -23,12 +23,12 @@ namespace UIKit {
 			{
 				return new UITextAttributes (_TitleTextAttributes);
 			}
-
+	
 			public virtual void SetTitleTextAttributes (UITextAttributes attributes)
 			{
 				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
-
+					
 				_TitleTextAttributes = attributes.ToDictionary ();
 			}
 		}

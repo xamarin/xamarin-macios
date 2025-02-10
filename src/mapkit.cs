@@ -28,11 +28,11 @@ using Contacts;
 using System;
 
 #if MONOMAC
-using UIImage = AppKit.NSImage;
-using UIView = AppKit.NSView;
-using UIEdgeInsets = AppKit.NSEdgeInsets;
-using UIColor = AppKit.NSColor;
-using UIScene = AppKit.NSColor;
+using UIImage=AppKit.NSImage;
+using UIView=AppKit.NSView;
+using UIEdgeInsets=AppKit.NSEdgeInsets;
+using UIColor=AppKit.NSColor;
+using UIScene=AppKit.NSColor;
 using UIControl = AppKit.NSControl;
 using UIBarButtonItem = Foundation.NSObject;
 using UIViewController = AppKit.NSViewController;

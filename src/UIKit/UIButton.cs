@@ -15,7 +15,7 @@ namespace UIKit {
 
 		public UIButton (UIButtonType type)
 #if NET
-		: base (ObjCRuntime.Messaging.NativeHandle_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int) type))
+		: base (ObjCRuntime.Messaging.NativeHandle_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
 #else
 		: base (ObjCRuntime.Messaging.IntPtr_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int) type))
 #endif

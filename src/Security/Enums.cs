@@ -316,7 +316,7 @@ namespace Security {
 		InvalidCRLAuthority = -67827,   /* The CRL authority was not valid. */
 #if MONOMAC
 		[Obsolete ("Use InvalidCRLAuthority.")]
-		InvaldCRLAuthority = InvalidCRLAuthority,
+		InvaldCRLAuthority					= InvalidCRLAuthority,
 #endif
 		InvalidCRLEncoding = -67828,    /* The CRL encoding was not valid. */
 		InvalidCRLType = -67829,    /* The CRL type was not valid. */
@@ -345,7 +345,7 @@ namespace Security {
 		InvalidTupleCredentials = -67852,   /* The tuple credentials are not valid. */
 #if MONOMAC
 		[Obsolete ("Use InvalidTupleCredentials.")]
-		InvalidTupleCredendtials = InvalidTupleCredentials,
+		InvalidTupleCredendtials			= InvalidTupleCredentials,
 #endif
 		InvalidEncoding = -67853,   /* The encoding was not valid. */
 		InvalidValidityPeriod = -67854, /* The validity period was not valid. */

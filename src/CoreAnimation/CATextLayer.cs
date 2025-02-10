@@ -106,7 +106,7 @@ namespace CoreAnimation {
 			set {
 #if MONOMAC
 				var ns = value as NSFont;
-				if (ns is not null) {
+				if (ns is not null){
 					_Font = ns.Handle;
 					return;
 				}

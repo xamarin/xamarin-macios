@@ -17,7 +17,7 @@ namespace AVFoundation {
 	}
 
 	public partial class AVMutableAssetDownloadStorageManagementPolicy {
-
+		
 		public override AVAssetDownloadedAssetEvictionPriority Priority {
 			get { return AVAssetDownloadedAssetEvictionPriorityExtensions.GetValue (_Priority); }
 			set { _Priority = value.GetConstant () ?? throw new ArgumentOutOfRangeException (nameof (Priority)); }

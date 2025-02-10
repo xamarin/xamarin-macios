@@ -85,7 +85,7 @@ namespace AddressBook {
 		{
 #if __MACCATALYST__
 			// avoid TypeLoadException if used before macOS 11.x
-			if (!SystemVersion.CheckiOS (14, 0))
+			if (!SystemVersion.CheckiOS (14,0))
 				return;
 #endif
 			// ensure we can init. This is needed before iOS6 (as per doc).

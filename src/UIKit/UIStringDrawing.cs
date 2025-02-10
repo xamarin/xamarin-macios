@@ -8,7 +8,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace UIKit {
-	public unsafe static partial class UIStringDrawing {
+	public unsafe static partial class UIStringDrawing  {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

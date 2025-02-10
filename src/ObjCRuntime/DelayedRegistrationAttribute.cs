@@ -29,7 +29,8 @@ using System.IO;
 
 namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.Assembly)]
-	public abstract class DelayedRegistrationAttribute : Attribute {
+	public abstract class DelayedRegistrationAttribute : Attribute
+	{
 		public abstract bool Delay { get; }
 	}
 }

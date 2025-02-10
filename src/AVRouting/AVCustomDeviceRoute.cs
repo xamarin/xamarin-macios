@@ -13,7 +13,7 @@ using Network;
 namespace AVRouting {
 	partial class AVCustomDeviceRoute {
 
-		public NWEndpoint NetworkEndpoint => new NWEndpoint (_NetworkEndpoint, owns: false);
+		 public NWEndpoint NetworkEndpoint => new NWEndpoint (_NetworkEndpoint, owns: false);
 
 	}
 }

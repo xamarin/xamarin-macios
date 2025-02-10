@@ -126,8 +126,7 @@ namespace CoreText {
 
 #if NET
 	[Internal]
-	[Static]
-	[Partial]
+	[Static][Partial]
 	interface CTBaselineClassID {
 		[Field ("kCTBaselineClassRoman")]
 		NSString Roman { get; }
@@ -149,8 +148,7 @@ namespace CoreText {
 	}
 
 	[Internal]
-	[Static]
-	[Partial]
+	[Static][Partial]
 	interface CTBaselineFontID {
 		[Field ("kCTBaselineReferenceFont")]
 		NSString Reference { get; }
@@ -276,8 +274,7 @@ namespace CoreText {
 	}
 
 	[Internal]
-	[Static]
-	[Partial]
+	[Static][Partial]
 	interface CTFontNameKeyId {
 		[Field ("kCTFontCopyrightNameKey")]
 		NSString Copyright { get; }

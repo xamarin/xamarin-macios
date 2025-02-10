@@ -39,37 +39,37 @@ namespace PdfKit {
 	[Native]
 	[TV (18, 2)]
 	public enum PdfActionNamedName : long {
-		None = 0,
-		NextPage = 1,
+		None         = 0,
+		NextPage     = 1,
 		PreviousPage = 2,
-		FirstPage = 3,
-		LastPage = 4,
-		GoBack = 5,
-		GoForward = 6,
-		GoToPage = 7,
-		Find = 8,
-		Print = 9,
-		ZoomIn = 10,
-		ZoomOut = 11
+		FirstPage    = 3,
+		LastPage     = 4,
+		GoBack       = 5,
+		GoForward    = 6,
+		GoToPage     = 7,
+		Find         = 8,
+		Print        = 9,
+		ZoomIn       = 10,
+		ZoomOut      = 11
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfWidgetControlType : long {
-		Unknown = -1,
-		PushButton = 0,
+		Unknown    = -1,
+		PushButton  = 0,
 		RadioButton = 1,
-		CheckBox = 2
+		CheckBox    = 2
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfLineStyle : long {
-		None = 0,
-		Square = 1,
-		Circle = 2,
-		Diamond = 3,
-		OpenArrow = 4,
+		None        = 0,
+		Square      = 1,
+		Circle      = 2,
+		Diamond     = 3,
+		OpenArrow   = 4,
 		ClosedArrow = 5
 	}
 
@@ -79,28 +79,28 @@ namespace PdfKit {
 		Highlight = 0,
 		StrikeOut = 1,
 		Underline = 2,
-		Redact = 3,
+		Redact    = 3,
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfTextAnnotationIconType : long {
-		Comment = 0,
-		Key = 1,
-		Note = 2,
-		Help = 3,
+		Comment      = 0,
+		Key          = 1,
+		Note         = 2,
+		Help         = 3,
 		NewParagraph = 4,
-		Paragraph = 5,
-		Insert = 6
+		Paragraph    = 5,
+		Insert       = 6
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfBorderStyle : long {
-		Solid = 0,
-		Dashed = 1,
-		Beveled = 2,
-		Inset = 3,
+		Solid     = 0,
+		Dashed    = 1,
+		Beveled   = 2,
+		Inset     = 3,
 		Underline = 4
 	}
 
@@ -110,16 +110,16 @@ namespace PdfKit {
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
-		None = 0,
-		ToFit = 1,
+		None      = 0,
+		ToFit     = 1,
 		DownToFit = 2
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfDocumentPermissions : long {
-		None = 0,
-		User = 1,
+		None  = 0,
+		User  = 1,
 		Owner = 2
 	}
 
@@ -127,36 +127,36 @@ namespace PdfKit {
 	[TV (18, 2)]
 	public enum PdfDisplayBox : long {
 		Media = 0,
-		Crop = 1,
+		Crop  = 1,
 		Bleed = 2,
-		Trim = 3,
-		Art = 4
+		Trim  = 3,
+		Art   = 4
 	}
 
 	[Native]
 	[TV (18, 2)]
 	public enum PdfDisplayMode : long {
-		SinglePage = 0,
+		SinglePage           = 0,
 		SinglePageContinuous = 1,
-		TwoUp = 2,
-		TwoUpContinuous = 3
+		TwoUp                = 2,
+		TwoUpContinuous      = 3
 	}
 
 	[Flags]
 	[Native]
 	[TV (18, 2)]
 	public enum PdfAreaOfInterest : long {
-		NoArea = 0,
-		PageArea = 1 << 0,
-		TextArea = 1 << 1,
+		NoArea         = 0,
+		PageArea       = 1 << 0,
+		TextArea       = 1 << 1,
 		AnnotationArea = 1 << 2,
-		LinkArea = 1 << 3,
-		ControlArea = 1 << 4,
-		TextFieldArea = 1 << 5,
-		IconArea = 1 << 6,
-		PopupArea = 1 << 7,
-		ImageArea = 1 << 8,
-		[iOS (15, 0), MacCatalyst (15, 0)]
+		LinkArea       = 1 << 3,
+		ControlArea    = 1 << 4,
+		TextFieldArea  = 1 << 5,
+		IconArea       = 1 << 6,
+		PopupArea      = 1 << 7,
+		ImageArea      = 1 << 8,
+		[iOS (15,0), MacCatalyst (15,0)]
 		AnyArea = Int64.MaxValue,
 	}
 

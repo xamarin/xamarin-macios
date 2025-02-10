@@ -181,7 +181,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead.")]
+		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead."	)]
 #else
 		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'NSCursor.DisappearingItemCursor' instead.")]
 #endif
@@ -190,7 +190,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead.")]
+		[ObsoletedOSPlatform ("macos14.0", "Use 'NSCursor.DisappearingItemCursor' instead."	)]
 #else
 		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'NSCursor.DisappearingItemCursor' instead.")]
 #endif

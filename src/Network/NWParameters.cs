@@ -36,7 +36,7 @@ namespace Network {
 	public class NWParameters : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWParameters (NativeHandle handle, bool owns) : base (handle, owns) { }
+		internal NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
 		public NWParameters (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
@@ -222,7 +222,7 @@ namespace Network {
 		[NoiOS]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral* configure_ip);
+		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
 #if NET
 		[SupportedOSPlatform ("macos")]

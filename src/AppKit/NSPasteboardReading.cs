@@ -11,7 +11,7 @@ using ObjCRuntime;
 namespace AppKit {
 	public partial interface INSPasteboardReading {
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe static T? CreateInstance<T> (NSObject propertyList, NSPasteboardType type) where T : NSObject, INSPasteboardReading
+		public unsafe static T? CreateInstance<T> (NSObject propertyList, NSPasteboardType type) where T: NSObject, INSPasteboardReading
 		{
 			return CreateInstance<T> (propertyList, type.GetConstant ()!);
 		}

@@ -98,7 +98,7 @@ namespace Network {
 			unsafe {
 #if NET
 				delegate* unmanaged<IntPtr, NWReportResolutionSource, nuint, int, nw_endpoint_t, nw_endpoint_t, void> trampoline = &TrampolineResolutionEnumeratorHandler;
-				using var block = new BlockLiteral (trampoline, handler, typeof (NWEstablishmentReport), nameof (TrampolineResolutionEnumeratorHandler));
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWEstablishmentReport),nameof (TrampolineResolutionEnumeratorHandler));
 #else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ResolutionEnumeratorHandler, handler);

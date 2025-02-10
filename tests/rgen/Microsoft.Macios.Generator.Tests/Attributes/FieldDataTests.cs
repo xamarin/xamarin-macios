@@ -63,11 +63,11 @@ public class FieldDataTests {
 		{
 			yield return [
 				new FieldData<EnumValue> ("symbol", null, EnumValue.Default),
-				"{ SymbolName: 'symbol' LibraryName: 'null', Flags: 'Default' }"
+				"{ SymbolName: 'symbol', LibraryName: 'null', Flags: 'Default' }"
 			];
 			yield return [
 				new FieldData<EnumValue> ("symbol", "lib", EnumValue.Default),
-				"{ SymbolName: 'symbol' LibraryName: 'lib', Flags: 'Default' }"
+				"{ SymbolName: 'symbol', LibraryName: 'lib', Flags: 'Default' }"
 			];
 		}
 

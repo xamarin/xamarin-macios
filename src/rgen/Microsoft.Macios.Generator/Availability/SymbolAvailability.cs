@@ -34,6 +34,19 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	}
 
 	/// <summary>
+	/// Return the symbol trivia if it has any.
+	/// </summary>
+	public AvailabilityTrivia? Trivia {
+		get {
+			// just returns the trivia if it has any, null otherwise
+			var trivia = new AvailabilityTrivia (this);
+			if (trivia.Start is not null || trivia.End is not null)
+				return trivia;
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Copy constructor.
 	/// </summary>
 	/// <param name="other">Symbol availability to copy,</param>

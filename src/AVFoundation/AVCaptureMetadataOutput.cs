@@ -36,12 +36,12 @@ using System.Runtime.CompilerServices;
 namespace AVFoundation {
 
 	public partial class AVCaptureMetadataOutput {
-
+	
 		public AVMetadataObjectType AvailableMetadataObjectTypes {
 			get { return AVMetadataObjectTypeExtensions.ToFlags (WeakAvailableMetadataObjectTypes); }
 		}
 
-		public AVMetadataObjectType MetadataObjectTypes {
+		public AVMetadataObjectType MetadataObjectTypes { 
 			get { return AVMetadataObjectTypeExtensions.ToFlags (WeakMetadataObjectTypes); }
 			set { WeakMetadataObjectTypes = value.ToArray (); }
 		}

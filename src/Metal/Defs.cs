@@ -531,7 +531,8 @@ namespace Metal {
 	[NoiOS]
 	[NoTV]
 #endif
-	public struct MTLIndirectCommandBufferExecutionRange {
+	public struct MTLIndirectCommandBufferExecutionRange
+	{
 		public uint Location;
 		public uint Length;
 

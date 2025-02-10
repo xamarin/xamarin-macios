@@ -512,7 +512,7 @@ namespace CoreGraphics {
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
 #if NET
-		public static CGColorSpace? CreateIccProfile (nfloat []? range, CGDataProvider profile, CGColorSpace alternate)
+		public static CGColorSpace? CreateIccProfile (nfloat[]? range, CGDataProvider profile, CGColorSpace alternate)
 #else
 		public static CGColorSpace? CreateICCProfile (nfloat []? range, CGDataProvider profile, CGColorSpace alternate)
 #endif

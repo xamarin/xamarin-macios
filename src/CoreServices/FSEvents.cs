@@ -18,11 +18,12 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-namespace CoreServices {
+namespace CoreServices
+{
 	// FSEvents.h: typedef UInt32                          FSEventStreamCreateFlags;
 	[Flags]
 	public enum FSEventStreamCreateFlags : uint {
-		None = 0x00000000,
+		None  = 0x00000000,
 		/*UseCFTypes = 0x00000001,*/
 		NoDefer = 0x00000002,
 		WatchRoot = 0x00000004,
@@ -65,7 +66,7 @@ namespace CoreServices {
 		ItemIsFile = 0x00010000,
 		ItemIsDir = 0x00020000,
 		ItemIsSymlink = 0x00040000,
-		OwnEvent = 0x00080000,
+		OwnEvent  = 0x00080000,
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
 #if NET
@@ -77,7 +78,8 @@ namespace CoreServices {
 #if NET
 	[SupportedOSPlatform ("macos")]
 #endif
-	public struct FSEvent {
+	public struct FSEvent
+	{
 		public ulong Id { get; internal set; }
 		public string? Path { get; internal set; }
 		public FSEventStreamEventFlags Flags { get; internal set; }
@@ -149,7 +151,8 @@ namespace CoreServices {
 #if NET
 	[SupportedOSPlatform ("macos")]
 #endif
-	public sealed class FSEventStreamEventsArgs : EventArgs {
+	public sealed class FSEventStreamEventsArgs : EventArgs
+	{
 		public FSEvent [] Events { get; private set; }
 
 		internal FSEventStreamEventsArgs (FSEvent [] events)
@@ -164,7 +167,8 @@ namespace CoreServices {
 #if NET
 	[SupportedOSPlatform ("macos")]
 #endif
-	public sealed class FSEventStreamCreateOptions {
+	public sealed class FSEventStreamCreateOptions
+	{
 		/// <summary>
 		/// The allocator to use to allocate memory for the stream. If <c>null</c>, the default
 		/// allocator will be used.
@@ -239,7 +243,8 @@ namespace CoreServices {
 #if NET
 	[SupportedOSPlatform ("macos")]
 #endif
-	public class FSEventStream : NativeObject {
+	public class FSEventStream : NativeObject
+	{
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern void FSEventStreamRetain (IntPtr handle);
 
@@ -312,7 +317,7 @@ namespace CoreServices {
 			var allocator = options.Allocator.GetHandle ();
 			var sinceWhenId = options.SinceWhenId ?? FSEvent.SinceNowId;
 			var latency = options.Latency.TotalSeconds;
-			var flags = options.Flags |= (FSEventStreamCreateFlags) 0x1 /* UseCFTypes */;
+			var flags = options.Flags |= (FSEventStreamCreateFlags)0x1 /* UseCFTypes */;
 
 			IntPtr handle;
 			unsafe {
@@ -398,7 +403,7 @@ namespace CoreServices {
 				return;
 			}
 
-			var events = new FSEvent [numEvents];
+			var events = new FSEvent[numEvents];
 
 			for (int i = 0; i < events.Length; i++) {
 				string? path = null;
@@ -410,7 +415,7 @@ namespace CoreServices {
 				if (eventDataType == CFStringTypeID) {
 					path = CFString.FromHandle (eventDataHandle);
 				} else if (eventDataType == CFDictionaryTypeID) {
-					path = CFString.FromHandle (CFDictionary.GetValue (
+					path =  CFString.FromHandle (CFDictionary.GetValue (
 						eventDataHandle,
 						kFSEventStreamEventExtendedDataPathKey.Handle));
 
@@ -424,11 +429,12 @@ namespace CoreServices {
 					}
 				}
 
-				events [i] = new FSEvent {
-					Id = (ulong) Marshal.ReadInt64 (eventIds, i * 8),
+				events[i] = new FSEvent
+				{
+					Id = (ulong)Marshal.ReadInt64 (eventIds, i * 8),
 					Path = path,
-					Flags = (FSEventStreamEventFlags) (uint) Marshal.ReadInt32 (eventFlags, i * 4),
-					FileId = (ulong) fileId,
+					Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4),
+					FileId = (ulong)fileId,
 				};
 			}
 

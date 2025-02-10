@@ -719,7 +719,7 @@ namespace CoreFoundation {
 
 #if NET
 					unsafe {
-						using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
+					using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
 #else
 					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif
@@ -783,7 +783,7 @@ namespace CoreFoundation {
 
 #if NET
 				unsafe {
-					using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
+				using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), true))
 #else
 				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), true))
 #endif

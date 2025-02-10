@@ -181,22 +181,22 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
-		: this (url, documentAttributes, out var _, out error) { }
+		: this (url, documentAttributes, out var _, out error) {}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
-		: this (data, documentAttributes, out var _, out error) { }
+		: this (data, documentAttributes, out var _, out error) {}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSUrl url, out NSError error)
-		: this (url, new NSDictionary (), out var _, out error) { }
+		: this (url, new NSDictionary (), out var _, out error) {}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
 		public NSAttributedString (NSData data, out NSError error)
-		: this (data, new NSDictionary (), out var _, out error) { }
+		: this (data, new NSDictionary (), out var _, out error) {}
 #else
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'Create' method instead, because there's no way to return an error from a constructor.")]
@@ -237,7 +237,6 @@ namespace Foundation {
 			return Runtime.GetNSObject<NSDictionary> (LowLevelGetAttributes (location, out effectiveRange));
 		}
 
-#if NET
 		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
 		{
 			unsafe {
@@ -246,7 +245,6 @@ namespace Foundation {
 				}
 			}
 		}
-#endif
 
 		public NSAttributedString (string str, CTStringAttributes? attributes)
 			: this (str, attributes?.Dictionary)

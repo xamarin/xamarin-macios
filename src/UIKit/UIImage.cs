@@ -32,11 +32,11 @@ namespace UIKit {
 		public void SaveToPhotosAlbum (SaveStatus status)
 		{
 			UIImageStatusDispatcher? dis = null;
-			UIApplication.EnsureUIThread ();
+			UIApplication.EnsureUIThread ();			
 
 			if (status is not null)
 				dis = new UIImageStatusDispatcher (status);
-
+			
 			UIImageWriteToSavedPhotosAlbum (Handle, dis is not null ? dis.Handle : IntPtr.Zero, dis is not null ? Selector.GetHandle (UIImageStatusDispatcher.callbackSelector) : IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
@@ -155,7 +155,7 @@ namespace UIKit {
 	internal class UIImageStatusDispatcher : NSObject {
 		public const string callbackSelector = "Xamarin_Internal__image:didFinishSavingWithError:contextInfo:";
 		UIImage.SaveStatus status;
-
+		
 		public UIImageStatusDispatcher (UIImage.SaveStatus status)
 		{
 			IsDirectBinding = false;

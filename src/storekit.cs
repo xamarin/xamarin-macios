@@ -79,17 +79,13 @@ namespace StoreKit {
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
-		[NoiOS]
-		[NoTV]
-		[NoMacCatalyst]
+		[NoiOS][NoTV][NoMacCatalyst]
 		[Obsolete ("Use 'State' instead.")]
 		[Wrap ("State", IsVirtual = true)]
-		SKDownloadState DownloadState { get; }
+		SKDownloadState DownloadState { get;  }
 
-		[NoiOS]
-		[NoTV]
-		[NoMacCatalyst]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'ExpectedContentLength' instead.")]
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
 #else
@@ -378,10 +374,8 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 #if MONOMAC
-		[NoiOS]
-		[NoTV]
-		[NoMacCatalyst]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'IsDownloadable' instead.")]
+[NoiOS][NoTV][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
 		bool Downloadable { get; }
 #elif !NET

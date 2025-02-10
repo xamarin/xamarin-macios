@@ -1322,9 +1322,9 @@ namespace NetworkExtension {
 
 		// CopyAppRules was incorrectly bound to AppRules and it is only available on macOS
 #if NET || MONOMAC || __MACCATALYST__
-		[NoTV, NoiOS, MacCatalyst (15, 0)]
+		[NoTV, NoiOS, MacCatalyst (15,0)]
 		[Export ("appRules", ArgumentSemantic.Copy)]
-		NEAppRule [] AppRules { get; set; }
+		NEAppRule[] AppRules { get; set; }
 #else
 		[NoTV]
 		[Obsolete ("Use 'CopyAppRules' instead, this property will be removed in the future.")]

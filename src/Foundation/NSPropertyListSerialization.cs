@@ -30,8 +30,10 @@
 
 using System;
 
-namespace Foundation {
-	public partial class NSPropertyListSerialization {
+namespace Foundation
+{
+	public partial class NSPropertyListSerialization
+	{
 		public static NSData DataWithPropertyList (NSObject plist, NSPropertyListFormat format, out NSError error)
 		{
 			return DataWithPropertyList (plist, format, NSPropertyListWriteOptions.Immutable, out error);

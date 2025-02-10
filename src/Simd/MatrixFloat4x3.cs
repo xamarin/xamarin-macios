@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 #if NET
-using VectorFloat4 = global::System.Numerics.Vector4;
+using VectorFloat4=global::System.Numerics.Vector4;
 #else
 using VectorFloat4 = global::OpenTK.Vector4;
 #endif

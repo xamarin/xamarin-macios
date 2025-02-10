@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -34,6 +35,34 @@ public class PropertyTests : BaseGeneratorTestClass {
 			accessors: []
 		);
 		Assert.Equal ($"_{propertyName}", property.BackingField);
+	}
+
+	[Fact]
+	public void IsThreadSafeProperty ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+		};
+		Assert.True (property.IsThreadSafe);
+
+		property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.Default)
+		};
+		Assert.False (property.IsThreadSafe);
 	}
 
 	[Fact]
@@ -444,6 +473,44 @@ public class TestClass {
 				}
 			];
 
+			const string marshallNativeException = @"
+using System;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"", Property.MarshalNativeExceptions)]
+	public string Name { get; }
+}
+";
+			yield return [
+				marshallNativeException,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: new (),
+					attributes: [
+						new ("ObjCBindings.ExportAttribute<ObjCBindings.Property>", ["name", "ObjCBindings.Property.MarshalNativeExceptions"])
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new (selector: "name", ArgumentSemantic.None, ObjCBindings.Property.MarshalNativeExceptions),
+				}
+			];
+
 			const string valueTypeProperty = @"
 using System;
 using ObjCBindings;
@@ -839,14 +906,14 @@ public class TestClass {
 					accessors: [
 						new (
 							accessorKind: AccessorKind.Getter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
 						),
 						new (
 							accessorKind: AccessorKind.Setter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
@@ -899,7 +966,7 @@ public class TestClass {
 						),
 						new (
 							accessorKind: AccessorKind.Setter,
-							symbolAvailability: new (),
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
@@ -1024,6 +1091,285 @@ namespace Test {
 							modifiers: []
 						),
 					])
+			];
+
+			const string autoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				autoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
+
+			const string staticAutoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public static string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				staticAutoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.StaticKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
+
+			const string partialStaticAutoPropertyGetterWithAttribute = @"
+using System.Runtime.Versioning;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+	const string name = ""Test"";
+
+	[SupportedOSPlatform (""ios"")]
+	public static partial string Name {
+		[SupportedOSPlatform (""ios17.0"")]
+		get;
+		set;
+	}
+}
+";
+			getterAvailabilityBuilder.Clear ();
+			getterAvailabilityBuilder.Add (supportedPlatform: new SupportedOSPlatformData (platformName: "ios17.0"));
+			yield return [
+				partialStaticAutoPropertyGetterWithAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForString (),
+					symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+					attributes: [
+						new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.StaticKeyword),
+						SyntaxFactory.Token (kind: SyntaxKind.PartialKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: getterAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [
+								new (name: "System.Runtime.Versioning.SupportedOSPlatformAttribute", arguments: ["ios17.0"]),
+							],
+							modifiers: []
+						),
+						new (
+							accessorKind: AccessorKind.Setter,
+							symbolAvailability: propertyAvailabilityBuilder.ToImmutable (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						),
+					])
+			];
+
+			const string nsObjectProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject Name { get; }
+}
+";
+			yield return [
+				nsObjectProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForNSObject (),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string nsObjectArrayProperty = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name"")]
+	public NSObject[] Name { get; }
+}
+";
+			yield return [
+				nsObjectArrayProperty,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForArray ("Foundation.NSObject"),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					NeedsBackingField = true,
+					RequiresDirtyCheck = true,
+					ExportPropertyData = new (selector: "name"),
+				}
+			];
+
+			const string bindFromAttribute = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace Test;
+
+public class TestClass {
+
+	[Export<Property>(""name""), BindFrom (typeof(NSNumber))]
+	public int Name { get; }
+}
+";
+			yield return [
+				bindFromAttribute,
+				new Property (
+					name: "Name",
+					returnType: ReturnTypeForInt (),
+					symbolAvailability: new (),
+					attributes: [
+						new (name: "ObjCBindings.ExportAttribute<ObjCBindings.Property>", arguments: ["name"]),
+						new (name: "ObjCBindings.BindFromAttribute", arguments: ["Foundation.NSNumber"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (kind: SyntaxKind.PublicKeyword),
+					],
+					accessors: [
+						new (
+							accessorKind: AccessorKind.Getter,
+							symbolAvailability: new (),
+							exportPropertyData: null,
+							attributes: [],
+							modifiers: []
+						)
+					]
+				) {
+					ExportPropertyData = new (selector: "name"),
+					BindAs = new ("Foundation.NSNumber"),
+				}
 			];
 		}
 

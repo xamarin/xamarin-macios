@@ -51,12 +51,12 @@ namespace CoreGraphics {
 #endif
 	[Flags]
 	public enum CGWindowImageOption : uint {
-		Default = 0,
+		Default             = 0,
 		BoundsIgnoreFraming = (1 << 0),
-		ShouldBeOpaque = (1 << 1),
-		OnlyShadows = (1 << 2),
-		BestResolution = (1 << 3),
-		NominalResolution = (1 << 4),
+		ShouldBeOpaque      = (1 << 1),
+		OnlyShadows         = (1 << 2),
+		BestResolution      = (1 << 3),
+		NominalResolution   = (1 << 4),
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
@@ -68,12 +68,12 @@ namespace CoreGraphics {
 #endif
 	[Flags]
 	public enum CGWindowListOption : uint {
-		All = 0,
-		OnScreenOnly = (1 << 0),
+		All                 = 0,
+		OnScreenOnly        = (1 << 0),
 		OnScreenAboveWindow = (1 << 1),
 		OnScreenBelowWindow = (1 << 2),
-		IncludingWindow = (1 << 3),
-		ExcludeDesktopElements = (1 << 4)
+		IncludingWindow     = (1 << 3),
+		ExcludeDesktopElements    = (1 << 4)
 	}
 #endif
 
@@ -264,8 +264,8 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use ScreenCaptureKit instead.")]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGWindowListCreateImage (CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
-
+		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
+        
 #if NET
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("maccatalyst18.0", "Use ScreenCaptureKit instead.")]

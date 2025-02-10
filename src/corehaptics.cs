@@ -22,7 +22,7 @@ namespace CoreHaptics {
 
 	// we are not binding the API on Mac OS X yet due to an issue on Apples side: https://github.com/xamarin/maccore/issues/1951
 #if MONOMAC || TV
-	interface AVAudioSession { }
+	interface AVAudioSession {}
 #endif
 
 	[iOS (13, 0), TV (14, 0)]

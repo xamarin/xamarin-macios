@@ -30,7 +30,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace CoreServices {
+namespace CoreServices
+{
 	[Flags]
 	public enum LSRoles/*Mask*/ : uint /* always 32-bit uint */
 	{
@@ -48,7 +49,8 @@ namespace CoreServices {
 		AllowLoginUI = 2
 	}
 
-	public enum LSResult {
+	public enum LSResult
+	{
 		Success = 0,
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -87,8 +89,9 @@ namespace CoreServices {
 #if NET
 	[SupportedOSPlatform ("macos")]
 #endif
-	public static class LaunchServices {
-		#region Locating an Application
+	public static class LaunchServices
+	{
+#region Locating an Application
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -218,19 +221,19 @@ namespace CoreServices {
 			);
 		}
 
-		#endregion
+#endregion
 
-		#region Opening Items
+#region Opening Items
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		unsafe static extern LSResult LSOpenCFURLRef (IntPtr inUrl, void** outLaunchedUrl);
+		unsafe static extern LSResult LSOpenCFURLRef (IntPtr inUrl, void **outLaunchedUrl);
 
 		public unsafe static LSResult Open (NSUrl url)
 		{
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			return LSOpenCFURLRef (url.Handle, (void**) 0);
+			return LSOpenCFURLRef (url.Handle, (void **)0);
 		}
 
 		public unsafe static LSResult Open (NSUrl url, out NSUrl? launchedUrl)
@@ -238,15 +241,15 @@ namespace CoreServices {
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			void* launchedUrlHandle;
+			void *launchedUrlHandle;
 			var result = LSOpenCFURLRef (url.Handle, &launchedUrlHandle);
 			launchedUrl = Runtime.GetNSObject<NSUrl> (new IntPtr (launchedUrlHandle));
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region Registering an Application
+#region Registering an Application
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern LSResult LSRegisterURL (IntPtr inUrl, byte inUpdate);
@@ -256,12 +259,12 @@ namespace CoreServices {
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			return LSRegisterURL (url.Handle, (byte) (update ? 1 : 0));
+			return LSRegisterURL (url.Handle, (byte)(update ? 1 : 0));
 		}
 
-		#endregion
+#endregion
 
-		#region Working with Role Handlers
+#region Working with Role Handlers
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -278,7 +281,7 @@ namespace CoreServices {
 #else
 		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
-		public static string? []? GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
+		public static string?[]? GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
@@ -308,7 +311,7 @@ namespace CoreServices {
 			if (contentType is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
 
-			return (string) Runtime.GetNSObject<NSString> (
+			return (string)Runtime.GetNSObject<NSString> (
 				LSCopyDefaultRoleHandlerForContentType (new NSString (contentType).Handle, roles)
 			);
 		}
@@ -360,7 +363,7 @@ namespace CoreServices {
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 #endif
-		public static string? []? GetAllHandlersForUrlScheme (string urlScheme)
+		public static string?[]? GetAllHandlersForUrlScheme (string urlScheme)
 		{
 			if (urlScheme is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlScheme));
@@ -390,7 +393,7 @@ namespace CoreServices {
 			if (urlScheme is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlScheme));
 
-			return (string) Runtime.GetNSObject<NSString> (
+			return (string)Runtime.GetNSObject<NSString> (
 				LSCopyDefaultHandlerForURLScheme (new NSString (urlScheme).Handle)
 			);
 		}
@@ -423,7 +426,7 @@ namespace CoreServices {
 			);
 		}
 
-		#endregion
+#endregion
 	}
 }
 

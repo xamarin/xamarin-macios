@@ -56,7 +56,8 @@ namespace ObjCRuntime {
 			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.libcLibrary, 0);
 		}
 #if HAS_OPENGLES
-		static public class OpenGLES {
+		static public class OpenGLES
+		{
 			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.OpenGLESLibrary, 0);
 		}
 #endif

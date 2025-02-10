@@ -28,7 +28,8 @@ namespace Foundation {
 #if MONOMAC
 			try {
 				return SupportsSecureCoding (new Class (type));
-			} catch (ArgumentException) {
+			}
+			catch (ArgumentException) {
 				// unlike XI the current registration will throw for protocols
 				// until that's fixed we'll only report correctly properly bound protocol types
 				// the workaround is important since this method is used to validate our bindings

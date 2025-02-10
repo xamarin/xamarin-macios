@@ -22,7 +22,7 @@ namespace UIKit {
 	internal class UIVideoStatusDispatcher : NSObject {
 		public const string callbackSelector = "Xamarin_Internal__video:didFinishSavingWithError:contextInfo:";
 		UIVideo.SaveStatus status;
-
+		
 		public UIVideoStatusDispatcher (UIVideo.SaveStatus status)
 		{
 			this.status = status;
@@ -38,13 +38,13 @@ namespace UIKit {
 			DangerousRelease ();
 		}
 	}
-
+	
 	public static class UIVideo {
 		public delegate void SaveStatus (string path, NSError error);
-
+		
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ byte UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (/* NSString* */ IntPtr videoPath);
-
+		
 		public static bool IsCompatibleWithSavedPhotosAlbum (string path)
 		{
 			UIApplication.EnsureUIThread ();
@@ -63,11 +63,11 @@ namespace UIKit {
 				throw new ArgumentNullException ("status");
 			UIApplication.EnsureUIThread ();
 			var dis = new UIVideoStatusDispatcher (status);
-
+			
 			using (var ns = new NSString (path))
 				UISaveVideoAtPathToSavedPhotosAlbum (ns.Handle, dis.Handle, Selector.GetHandle (UIVideoStatusDispatcher.callbackSelector), IntPtr.Zero);
 		}
-
+		
 	}
 }
 

@@ -220,7 +220,7 @@ namespace HealthKit {
 #if NET
 	/// <summary>The completion handler for <see cref="M:HealthKit.HKAnchoredObjectQuery.#ctor(HealthKit.HKSampleType,Foundation.NSPredicate,System.nuint,System.nuint,HealthKit.HKAnchoredObjectResultHandler2)" />.</summary>
 	/// <summary>Completion handler for anchored object queries.</summary>
-	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample [] results, nuint newAnchor, NSError error);
+	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 #else
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample [] results, nuint newAnchor, NSError error);
 

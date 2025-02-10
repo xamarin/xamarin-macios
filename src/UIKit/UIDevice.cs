@@ -15,7 +15,7 @@ namespace UIKit {
 		public bool CheckSystemVersion (int major, int minor)
 		{
 #if __MACCATALYST__
-			return Runtime.CheckSystemVersion (major, minor, Runtime.iOSSupportVersion);
+			return Runtime.CheckSystemVersion (major, minor, Runtime.iOSSupportVersion);	
 #else
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);
 #endif
