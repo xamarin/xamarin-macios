@@ -625,10 +625,10 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
-	/// Generate the expression needed to check the code is in the UI thread based on the compilation target.
+	/// Generate the method that will check the ui thread based on the platform.
 	/// </summary>
-	/// <param name="platform">The platform we are targeting in the compilation.</param>
-	/// <returns>The expression with the correct call per platform.</returns>
+	/// <param name="platform">The platform targeted in the compilation.</param>
+	/// <returns>The correct expression to check if the code is executing in the UI thread.</returns>
 	internal static ExpressionStatementSyntax? EnsureUiThread (PlatformName platform)
 	{
 		(string Namespace, string Classname)? caller = platform switch {
@@ -648,6 +648,29 @@ static partial class BindingSyntaxFactory {
 				IdentifierName (caller.Value.Namespace),
 				IdentifierName (caller.Value.Classname)),
 			IdentifierName ("EnsureUIThread").WithTrailingTrivia (Space))));
+	}
+
+	/// <summary>
+	/// Generate the declaration needed for the exception marhsaling.
+	/// </summary>
+	/// <returns>The local declaration needed for the exception marshaling.</returns>
+	internal static LocalDeclarationStatementSyntax GetExceptionHandleAuxVariable ()
+	{
+		const string handleVariableName = "exception_gchandle";
+		const string intPtr = "IntPtr";
+		//  object creation
+		var zeroPtr = MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName (intPtr),
+				IdentifierName ("Zero"));
+
+		var declarator = VariableDeclarator (Identifier (handleVariableName))
+				.WithInitializer (EqualsValueClause (zeroPtr));
+
+		return LocalDeclarationStatement (
+			VariableDeclaration (IdentifierName (intPtr))
+				.WithVariables (SingletonSeparatedList (declarator)))
+			.NormalizeWhitespace (); // no special mono style
 	}
 
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
