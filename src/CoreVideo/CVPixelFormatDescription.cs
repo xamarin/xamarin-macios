@@ -156,24 +156,18 @@ namespace CoreVideo {
 
 		[Obsolete ("Use 'CVPixelFormatKeys.ContainsGrayscale' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public static readonly NSString ContainsGrayscaleKey;
 
 		[Obsolete ("Use 'CVPixelFormatKeys.ContainsSenselArray' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
-#if NET
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
-#else
-		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#endif
 		public static readonly NSString ContainsSenselArray;
 #endif // !XAMCORE_5_0
 
@@ -288,34 +282,25 @@ namespace CoreVideo {
 			Register (description?.Dictionary!, pixelFormat);
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static byte CVIsCompressedPixelFormatAvailable (int /* OSType = int32_t */ pixelFormat);
 
 		/// <summary>Check if the specified pixel format is supported on this platform.</summary>
 		/// <param name="pixelFormat">The pixel format to check.</param>
 		/// <returns>Whether the specified pixel format is supported or not.</returns>
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0), Mac (12, 0)]
-#endif
 		public static bool IsPixelFormatAvailable (CVPixelFormatType pixelFormat)
 		{
 			return CVIsCompressedPixelFormatAvailable ((int) pixelFormat) != 0;
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -346,8 +331,6 @@ namespace CoreVideo {
 				FillExtendedPixelsCallback = data;
 			}
 		}
-#endif
-
 #endif // !COREBUILD
 	}
 }
