@@ -222,12 +222,12 @@ namespace CoreFoundation {
 
 			if (context is not null) {
 				unsafe {
-				if (context.Retain is not null)
-					contextProxy.retain = &RetainProxy;
-				if (context.Release is not null)
-					contextProxy.release = &ReleaseProxy;
-				if (context.CopyDescription is not null)
-					contextProxy.copyDescription = &CopyDescriptionProxy;
+					if (context.Retain is not null)
+						contextProxy.retain = &RetainProxy;
+					if (context.Release is not null)
+						contextProxy.release = &ReleaseProxy;
+					if (context.CopyDescription is not null)
+						contextProxy.copyDescription = &CopyDescriptionProxy;
 				}
 				contextProxy.info = (IntPtr) shortHandle;
 				lock (messagePortContexts)
