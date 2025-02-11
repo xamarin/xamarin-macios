@@ -94,6 +94,15 @@ readonly partial struct Method {
 	/// </summary>
 	/// <returns>A constructor data model if the method is one in the bindings or null otherwise.</returns>
 	public Constructor? ToConstructor ()
-		=> IsConstructor ? new Constructor (this) : null;
+	{
+		if (!IsConstructor)
+			return null;
+		
+		// do not allow constructors to have ref parameters
+		if (Parameters.Any(p => p.ReferenceKind != ReferenceKind.None))
+			return null;
+
+		return new Constructor (this);
+	}
 
 }

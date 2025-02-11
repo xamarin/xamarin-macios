@@ -12,7 +12,6 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using Token = System.CommandLine.Parsing.Token;
 
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
@@ -481,6 +480,20 @@ interface AVPlayer {
 						new Parameter (0, ReturnTypeForString (), "name"),
 						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
 					])
+			];
+			
+			yield return [
+				new Method (
+					type: "MyType",
+					name: "Constructor",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					attributes: new (),
+					parameters: [
+						new Parameter (0, ReturnTypeForString (), "name") {ReferenceKind = ReferenceKind.Out},
+						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
+					]),
+				null!
 			];
 		}
 
