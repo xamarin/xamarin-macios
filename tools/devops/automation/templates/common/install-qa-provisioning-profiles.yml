@@ -37,16 +37,20 @@ steps:
     displayName: 'Download ${{ secureFile.name }}'
     inputs:
       secureFile: ${{ secureFile.secureFile }}
-  - pwsh: |
-      Write-Host "Copying ${{ secureFile.name }} to $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles"
-      Copy-Item $(Agent.TempDirectory)/${{ secureFile.secureFile }} $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles/${{ secureFile.name }}
-    displayName: 'Copy ${{ secureFile.name }}'
 - pwsh: |
     gci $(Agent.TempDirectory)
   displayName: 'List secure files'
 - pwsh: |
+    foreach ($secureFile in ${{ parameters.secureFiles }}) {
+        $sourcePath = Join-Path -Path $env:AGENT_TEMPDIRECTORY -ChildPath $secureFile.secureFile
+        $destinationPath = Join-Path -Path "$env:BUILD_SOURCESDIRECTORY/maccore/tools/provisioning-profiles/certificates-and-profiles" -ChildPath $secureFile.name
+
+        Copy-Item -Path $sourcePath -Destination $destinationPath -Force
+    }
+  displayName: 'Copy Certificates and Profiles'
+- pwsh: |
     gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
-  displayName: 'List certs and profiles'
+  displayName: 'List Certificates and Profiles'
 
 - bash: |
     WHITE=$(tput setaf 7 2>/dev/null || true)
