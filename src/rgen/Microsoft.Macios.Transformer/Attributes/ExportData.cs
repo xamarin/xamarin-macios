@@ -7,7 +7,7 @@ using ObjCRuntime;
 
 namespace Microsoft.Macios.Transformer.Attributes;
 
-struct ExportData : IEquatable<ExportData> {
+readonly record struct ExportData {
 
 	/// <summary>
 	/// The exported native selector.
@@ -80,40 +80,5 @@ struct ExportData : IEquatable<ExportData> {
 
 		data = new (selector, argumentSemantic);
 		return true;
-	}
-
-	public bool Equals (ExportData other)
-	{
-		if (Selector != other.Selector)
-			return false;
-		return ArgumentSemantic == other.ArgumentSemantic;
-	}
-
-	/// <inheritdoc />
-	public override bool Equals (object? obj)
-	{
-		return obj is ExportData other && Equals (other);
-	}
-
-	/// <inheritdoc />
-	public override int GetHashCode ()
-	{
-		return HashCode.Combine (Selector, ArgumentSemantic);
-	}
-
-	public static bool operator == (ExportData x, ExportData y)
-	{
-		return x.Equals (y);
-	}
-
-	public static bool operator != (ExportData x, ExportData y)
-	{
-		return !(x == y);
-	}
-
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		return $"{{ Selector: '{Selector ?? "null"}', ArgumentSemantic: {ArgumentSemantic} }}";
 	}
 }

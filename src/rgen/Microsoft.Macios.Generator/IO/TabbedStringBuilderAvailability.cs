@@ -1,14 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.IO;
 using Microsoft.Macios.Generator.Availability;
 using Xamarin.Utils;
 
-namespace Microsoft.Macios.Generator;
+namespace Microsoft.Macios.Generator.IO;
 
-partial class TabbedStringBuilder {
+static class TabbedStringBuilderAvailability {
 
-	public TabbedStringBuilder AppendMemberAvailability (in SymbolAvailability allPlatformsAvailability)
+	public static TabbedWriter<StringWriter> AppendMemberAvailability (this TabbedWriter<StringWriter> self, in SymbolAvailability allPlatformsAvailability)
 	{
 		foreach (var availability in allPlatformsAvailability.PlatformAvailabilities) {
 			var platformName = availability.Platform.AsString ().ToLower ();
@@ -16,16 +17,16 @@ partial class TabbedStringBuilder {
 				var versionStr = (PlatformAvailability.IsDefaultVersion (availability.SupportedVersion))
 					? string.Empty
 					: availability.SupportedVersion.ToString ();
-				AppendLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
+				self.WriteLine ($"[SupportedOSPlatform (\"{platformName}{versionStr}\")]");
 			}
 
 			// loop over the unsupported versions of the platform 
 			foreach (var (version, message) in availability.UnsupportedVersions) {
 				var versionStr = (PlatformAvailability.IsDefaultVersion (version)) ? string.Empty : version.ToString ();
 				if (message is null) {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
+					self.WriteLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\")]");
 				} else {
-					AppendLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
+					self.WriteLine ($"[UnsupportedOSPlatform (\"{platformName}{versionStr}\", \"{message}\")]");
 				}
 			}
 
@@ -35,22 +36,22 @@ partial class TabbedStringBuilder {
 
 				switch (obsoleteInfo) {
 				case (null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
+					self.WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\")]");
 					break;
 				case (not null, null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
+					self.WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\")]");
 					break;
 				case (null, not null):
-					AppendLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
+					self.WriteLine ($"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", Url=\"{obsoleteInfo.Url}\")]");
 					break;
 				case (not null, not null):
-					AppendLine (
+					self.WriteLine (
 						$"[ObsoletedOSPlatform (\"{platformName}{versionStr}\", \"{obsoleteInfo.Message}\", Url=\"{obsoleteInfo.Url}\")]");
 					break;
 				}
 			}
 		}
 
-		return this;
+		return self;
 	}
 }

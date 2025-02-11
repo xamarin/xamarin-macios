@@ -121,12 +121,12 @@ readonly partial struct Binding {
 
 	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
 
-	delegate bool TryCreateDelegate<in T, TR> (T declaration, RootBindingContext context,
+	delegate bool TryCreateDelegate<in T, TR> (T declaration, RootContext context,
 		[NotNullWhen (true)] out TR? change)
 		where T : MemberDeclarationSyntax
 		where TR : struct;
 
-	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, RootBindingContext context,
+	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, RootContext context,
 		SkipDelegate<T> skip, TryCreateDelegate<T, TR> tryCreate, out ImmutableArray<TR> members)
 		where T : MemberDeclarationSyntax
 		where TR : struct
@@ -166,7 +166,7 @@ readonly partial struct Binding {
 	/// </summary>
 	/// <param name="enumDeclaration">The enum declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	Binding (EnumDeclarationSyntax enumDeclaration, RootBindingContext context)
+	Binding (EnumDeclarationSyntax enumDeclaration, RootContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: enumDeclaration,
@@ -216,7 +216,7 @@ readonly partial struct Binding {
 	/// </summary>
 	/// <param name="classDeclaration">The class declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	Binding (ClassDeclarationSyntax classDeclaration, RootBindingContext context)
+	Binding (ClassDeclarationSyntax classDeclaration, RootContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: classDeclaration,
@@ -248,7 +248,7 @@ readonly partial struct Binding {
 	/// </summary>
 	/// <param name="interfaceDeclaration">The interface declaration that triggered the change.</param>
 	/// <param name="context">The root binding context of the current compilation.</param>
-	Binding (InterfaceDeclarationSyntax interfaceDeclaration, RootBindingContext context)
+	Binding (InterfaceDeclarationSyntax interfaceDeclaration, RootContext context)
 	{
 		context.SemanticModel.GetSymbolData (
 			declaration: interfaceDeclaration,
@@ -281,7 +281,7 @@ readonly partial struct Binding {
 	/// <param name="context">The root binding context of the current compilation.</param>
 	/// <returns>A code change or null if it could not be calculated.</returns>
 	public static Binding? FromDeclaration (BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
-		RootBindingContext context)
+		RootContext context)
 		=> baseTypeDeclarationSyntax switch {
 			EnumDeclarationSyntax enumDeclarationSyntax => new Binding (enumDeclarationSyntax, context),
 			InterfaceDeclarationSyntax interfaceDeclarationSyntax => new Binding (interfaceDeclarationSyntax,

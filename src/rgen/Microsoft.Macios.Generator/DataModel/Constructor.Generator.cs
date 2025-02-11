@@ -12,7 +12,7 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct Constructor {
 
-	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootBindingContext context,
+	public static bool TryCreate (ConstructorDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Constructor? change)
 	{
 		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol constructor) {
@@ -25,7 +25,7 @@ readonly partial struct Constructor {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in constructor.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}

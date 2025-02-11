@@ -25,6 +25,12 @@ namespace ObjCBindings {
 		/// Flags the object as being thread safe.
 		/// </summary>
 		IsThreadSafe = 1 << 3,
+
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 4,
 	}
 
 	/// <summary>
@@ -69,6 +75,16 @@ namespace ObjCBindings {
 		/// </summary>
 		IsThreadSafe = 1 << 6,
 
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 7,
+
+		/// <summary>
+		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
+		/// </summary>
+		AutoRelease = 1 << 8,
 	}
 
 	/// <summary>
@@ -126,6 +142,30 @@ namespace ObjCBindings {
 		/// Flags the object as being thread safe.
 		/// </summary>
 		IsThreadSafe = 1 << 7,
+
+		/// <summary>
+		/// If this falgs is applied to a property, we do not generate a
+		/// backing field.   See bugzilla #3359 and Assistly 7032 for some
+		/// background information
+		/// </summary>
+		Transient = 1 << 8,
+
+		/// <summary>
+		/// If this flag is applied to a property, we do not generate a NSString for
+		/// marshalling the property.
+		/// </summary>
+		PlainString = 1 << 9,
+
+		/// <summary>
+		/// If this flag is applied to a property, the generator will consider the property to be
+		/// part of a CoreImage filter and will generate the property as a CoreImage filter property.
+		/// </summary>
+		CoreImageFilterProperty = 1 << 10,
+
+		/// <summary>
+		/// Use this flag on method to wrap the invocation in a NSAutoReleasePool.
+		/// </summary>
+		AutoRelease = 1 << 11,
 
 	}
 }

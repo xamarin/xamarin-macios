@@ -8,7 +8,22 @@ namespace Microsoft.Macios.Generator.DataModel;
 
 readonly partial struct TypeInfo {
 
-	internal TypeInfo (ITypeSymbol symbol) :
+	/// <summary>
+	/// Return if the type represents a wrapped object from the objc world.
+	/// </summary>
+	public bool IsWrapped { get; init; }
+
+	/// <summary>
+	/// True if the type needs to use a stret call.
+	/// </summary>
+	public bool NeedsStret { get; init; }
+
+	/// <summary>
+	/// Returns, if the type is an array, if its elements are a wrapped object from the objc world.
+	/// </summary>
+	public bool ArrayElementTypeIsWrapped { get; init; }
+
+	internal TypeInfo (ITypeSymbol symbol, Compilation compilation) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
 				? arrayTypeSymbol.ElementType.ToDisplayString ()
@@ -18,12 +33,12 @@ readonly partial struct TypeInfo {
 		IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated;
 		IsBlittable = symbol.IsBlittable ();
 		IsSmartEnum = symbol.IsSmartEnum ();
-		IsArray = symbol is IArrayTypeSymbol;
 		IsReferenceType = symbol.IsReferenceType;
 		IsStruct = symbol.TypeKind == TypeKind.Struct;
 		IsInterface = symbol.TypeKind == TypeKind.Interface;
 		IsNativeIntegerType = symbol.IsNativeIntegerType;
 		IsNativeEnum = symbol.HasAttribute (AttributesNames.NativeEnumAttribute);
+		NeedsStret = symbol.NeedsStret (compilation);
 
 		// data that we can get from the symbol without being INamedType
 		symbol.GetInheritance (
@@ -32,6 +47,12 @@ readonly partial struct TypeInfo {
 			isDictionaryContainer: out isDictionaryContainer,
 			parents: out parents,
 			interfaces: out interfaces);
+
+		IsWrapped = symbol.IsWrapped (isNSObject);
+		if (symbol is IArrayTypeSymbol arraySymbol) {
+			IsArray = true;
+			ArrayElementTypeIsWrapped = arraySymbol.ElementType.IsWrapped ();
+		}
 
 		// try to get the named type symbol to have more educated decisions
 		var namedTypeSymbol = symbol as INamedTypeSymbol;

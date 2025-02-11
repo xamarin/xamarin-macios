@@ -37,4 +37,21 @@ readonly partial struct EnumMember {
 		Attributes = attributes;
 	}
 
+	/// <summary>
+	/// Create a new change that happened on a member.
+	/// </summary>
+	/// <param name="name">The name of the changed member.</param>
+	/// <param name="libraryName">The library name of the smart enum.</param>
+	/// <param name="libraryPath">The library path to the library, null if it is a known frameworl.</param>
+	public EnumMember (string name, string libraryName, string? libraryPath)
+		: this (
+			name: name,
+			libraryName: libraryName,
+			libraryPath: libraryPath,
+			fieldData: null,
+			symbolAvailability: new SymbolAvailability (),
+			attributes: ImmutableArray<AttributeCodeChange>.Empty)
+	{
+	}
+
 }

@@ -21,14 +21,30 @@ readonly partial struct Method {
 	public ExportData<ObjCBindings.Method> ExportMethodData { get; }
 
 	/// <summary>
+	/// Returns the bind from data if present in the binding.
+	/// </summary>
+	public BindFromData? BindAs { get; init; }
+
+	/// <summary>
 	/// Returns if the method was marked as thread safe.
 	/// </summary>
 	public bool IsThreadSafe => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.IsThreadSafe);
 
 	/// <summary>
+	/// Return if the method invocation should be wrapped by a NSAutoReleasePool.
+	/// </summary>
+	public bool AutoRelease => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.AutoRelease);
+
+	/// <summary>
 	/// True if the method was exported with the MarshalNativeExceptions flag allowing it to support native exceptions.
 	/// </summary>
 	public bool MarshalNativeExceptions => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.MarshalNativeExceptions);
+
+	/// <summary>
+	/// True if the generator should not use a NSString for marshalling.
+	/// </summary>
+	public bool UsePlainString
+		=> ExportMethodData.Flags.HasFlag (ObjCBindings.Method.PlainString);
 
 	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
@@ -47,7 +63,7 @@ readonly partial struct Method {
 		Parameters = parameters;
 	}
 
-	public static bool TryCreate (MethodDeclarationSyntax declaration, RootBindingContext context,
+	public static bool TryCreate (MethodDeclarationSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Method? change)
 	{
 		if (context.SemanticModel.GetDeclaredSymbol (declaration) is not IMethodSymbol method) {
@@ -60,7 +76,7 @@ readonly partial struct Method {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}
@@ -74,12 +90,14 @@ readonly partial struct Method {
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: new TypeInfo (method.ReturnType),
+			returnType: new TypeInfo (method.ReturnType, context.Compilation),
 			symbolAvailability: method.GetSupportedPlatforms (),
 			exportMethodData: exportData,
 			attributes: attributes,
 			modifiers: [.. declaration.Modifiers],
-			parameters: parametersBucket.ToImmutableArray ());
+			parameters: parametersBucket.ToImmutableArray ()) {
+			BindAs = method.GetBindFromData (),
+		};
 
 		return true;
 	}

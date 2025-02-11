@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Availability;
 
@@ -63,7 +61,7 @@ readonly partial struct Property : IEquatable<Property> {
 	/// <summary>
 	/// Get the modifiers of the property.
 	/// </summary>
-	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
+	public ImmutableArray<SyntaxToken> Modifiers { get; init; } = [];
 
 	/// <summary>
 	/// Get the list of accessor changes of the property.
@@ -82,22 +80,7 @@ readonly partial struct Property : IEquatable<Property> {
 		return null;
 	}
 
-	internal Property (string name, TypeInfo returnType,
-		SymbolAvailability symbolAvailability,
-		ImmutableArray<AttributeCodeChange> attributes,
-		ImmutableArray<SyntaxToken> modifiers, ImmutableArray<Accessor> accessors)
-	{
-		Name = name;
-		BackingField = $"_{Name}";
-		ReturnType = returnType;
-		SymbolAvailability = symbolAvailability;
-		Attributes = attributes;
-		Modifiers = modifiers;
-		Accessors = accessors;
-	}
-
-	/// <inheritdoc />
-	public bool Equals (Property other)
+	bool CoreEquals (Property other)
 	{
 		// this could be a large && but ifs are more readable
 		if (Name != other.Name)
@@ -115,6 +98,8 @@ readonly partial struct Property : IEquatable<Property> {
 		if (ExportFieldData != other.ExportFieldData)
 			return false;
 		if (ExportPropertyData != other.ExportPropertyData)
+			return false;
+		if (BindAs != other.BindAs)
 			return false;
 
 		var attrsComparer = new AttributesEqualityComparer ();
@@ -151,17 +136,4 @@ readonly partial struct Property : IEquatable<Property> {
 		return !left.Equals (right);
 	}
 
-	/// <inheritdoc />
-	public override string ToString ()
-	{
-		var sb = new StringBuilder (
-			$"Name: '{Name}', Type: {ReturnType}, Supported Platforms: {SymbolAvailability}, ExportFieldData: '{ExportFieldData?.ToString () ?? "null"}', ExportPropertyData: '{ExportPropertyData?.ToString () ?? "null"}' Attributes: [");
-		sb.AppendJoin (",", Attributes);
-		sb.Append ("], Modifiers: [");
-		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
-		sb.Append ("], Accessors: [");
-		sb.AppendJoin (",", Accessors);
-		sb.Append (']');
-		return sb.ToString ();
-	}
 }

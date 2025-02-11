@@ -11,7 +11,7 @@ using Xamarin.Utils;
 
 namespace Microsoft.Macios.Transformer.Tests.Attributes;
 
-public class ErrorDomainDataTests : BaseTransformerTestClass {
+public class ErrorDomainDataTests : AttributeParsingTestClass {
 
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -67,24 +67,6 @@ public enum AVKitError : long {
 	[AllSupportedPlatformsClassData<TestDataTryCreate>]
 	void TryCreateTests (ApplePlatform platform, (string Source, string Path) source,
 		ErrorDomainData expectedData)
-	{
-		// create a compilation used to create the transformer
-		var compilation = CreateCompilation (platform, sources: source);
-		var syntaxTree = compilation.SyntaxTrees.ForSource (source);
-		Assert.NotNull (syntaxTree);
-
-		var semanticModel = compilation.GetSemanticModel (syntaxTree);
-		Assert.NotNull (semanticModel);
-
-		var declaration = syntaxTree.GetRoot ()
-			.DescendantNodes ().OfType<EnumDeclarationSyntax> ()
-			.LastOrDefault ();
-		Assert.NotNull (declaration);
-
-		var symbol = semanticModel.GetDeclaredSymbol (declaration);
-		Assert.NotNull (symbol);
-		var exportData = symbol.GetAttribute<ErrorDomainData> (
-			AttributesNames.ErrorDomainAttribute, ErrorDomainData.TryParse);
-		Assert.Equal (expectedData, exportData);
-	}
+		=> AssertTryCreate<ErrorDomainData, EnumDeclarationSyntax> (platform, source, AttributesNames.ErrorDomainAttribute,
+			expectedData, ErrorDomainData.TryParse, lastOrDefault: true);
 }

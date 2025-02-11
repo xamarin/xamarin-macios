@@ -129,12 +129,6 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: sdk-insertions
-      type: github
-      name: xamarin/sdk-insertions
-      ref: refs/heads/main
-      endpoint: xamarin
-
     - repository: maccore
       type: github
       name: xamarin/maccore
@@ -153,7 +147,6 @@ resources:
 variables:
   - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
       - template: templates/vsts-variables.yml
-  - template: templates/common/vs-release-vars.yml@sdk-insertions
   - template: templates/variables/common.yml
   - template: templates/variables/api-scan.yml
   - template: templates/variables/signing.yml
@@ -163,9 +156,6 @@ variables:
     value: true
 
 trigger:
-  # because we are building for developers branches, batch the builds to use 
-  # less resources. Otherwise, we would be building for every commit.
-  batch: true
   branches:
     include:
       - '*'
@@ -218,7 +208,6 @@ extends:
           - repository: maccore
         exclude:
           - repository: yaml-templates
-          - repository: sdk-insertions
           - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
     stages:
       - template: templates/main-stage.yml

@@ -72,4 +72,16 @@ namespace ObjCBindings {
 		/// </summary>
 		Default = 0,
 	}
+
+	/// <summary>
+	/// Flags to be used on core image filter bindings.
+	/// </summary>
+	[Flags]
+	[Experimental ("APL0003")]
+	public enum CoreImageFilter : Int64 {
+		/// <summary>
+		/// Use the default values.
+		/// </summary>
+		Default = 0,
+	}
 }

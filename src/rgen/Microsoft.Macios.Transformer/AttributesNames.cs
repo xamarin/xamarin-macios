@@ -13,7 +13,7 @@ static class AttributesNames {
 	/// The [Abstract] attribute can be applied to either methods or properties and causes the generator to flag the
 	/// generated member as abstract and the class to be an abstract class.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
 	public const string AbstractAttribute = "AbstractAttribute";
 
 	[BindingFlag] 
@@ -33,12 +33,18 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
 	public const string AutoreleaseAttribute = "AutoreleaseAttribute";
+	
+	[BindingAttribute(typeof(AsyncData), AttributeTargets.Method)]
+	public const string AsyncAttribute = "AsyncAttribute";
 
 	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.Enum)]
 	public const string BackingFieldTypeAttribute = "BackingFieldTypeAttribute";
 	public const string BaseTypeAttribute = "BaseTypeAttribute";
 	[BindingAttribute(typeof(BindData), AttributeTargets.Method )]
 	public const string BindAttribute = "BindAttribute";
+
+	[BindingAttribute(typeof(BindAsData), AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter)]
+	public const string BindAsAttribute = "ObjCRuntime.BindAsAttribute";
 
 	/// <summary>
 	/// Use this attribute on a type definition to bind Objective-C categories and to expose those as C# extension
@@ -83,7 +89,13 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Parameter | AttributeTargets.Property)]
 	public const string DisableZeroCopyAttribute = "DisableZeroCopyAttribute";
 
+	/// <summary>
+	/// Code to run from a generated Dispose method, before any generated code is executed
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Interface | AttributeTargets.Class)]
 	public const string DisposeAttribute = "DisposeAttribute";
+	
 	public const string EditorBrowsableAttribute = "System.ComponentModel.EditorBrowsableAttribute";
 	
 	[BindingAttribute(typeof(ErrorDomainData), AttributeTargets.Enum)]
@@ -91,7 +103,7 @@ static class AttributesNames {
 	
 	public const string ExperimentalAttribute = "System.Diagnostics.CodeAnalysis.ExperimentalAttribute";
 	
-	[BindingAttribute(typeof(ExportData), AttributeTargets.Method | AttributeTargets.Property)]
+	[BindingAttribute(typeof(ExportData), AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property)]
 	public const string ExportAttribute = "Foundation.ExportAttribute";
 
 	[BindingFlag] 
@@ -114,7 +126,7 @@ static class AttributesNames {
 	/// The [Internal] attribute can be applied to methods or properties and it has the effect of flagging the
 	/// generated code with the internal C# keyword making the code only accessible to code in the generated assembly.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property)]
 	public const string InternalAttribute = "InternalAttribute";
 
 	public const string IntroducedAttribute = "IntroducedAttribute";
@@ -175,6 +187,13 @@ static class AttributesNames {
 	[BindingFlag (AttributeTargets.Method)]
 	public const string NoMethodAttribute = "NoMethodAttribute";
 
+	/// <summary>
+	/// When applied, flags the [Flags] as a notification and generates the
+	/// code to strongly type the notification.
+	/// </summary>
+	[BindingAttribute(typeof(NotificationData), AttributeTargets.Property)]
+	public const string NotificationAttribute = "NotificationAttribute";
+	
 	public const string NoTVAttribute = "NoTVAttribute";
 	public const string NoiOSAttribute = "NoiOSAttribute";
 
@@ -221,6 +240,20 @@ static class AttributesNames {
 	public const string PlainStringAttribute = "PlainStringAttribute";
 
 	/// <summary>
+	/// PostSnippet code is inserted before returning, before paramters are disposed/released
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PostSnippetAttribute = "PostSnippetAttribute";
+	
+	/// <summary>
+	/// PreSnippet code is inserted after the parameters have been validated/marshalled
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PreSnippetAttribute = "PreSnippetAttribute";
+
+	/// <summary>
 	/// When this attribute is applied to the interface definition it will flag the default constructor as private.
 	/// </summary>
 	[BindingFlag (AttributeTargets.Interface)]
@@ -228,12 +261,19 @@ static class AttributesNames {
 
 	[BindingFlag (AttributeTargets.Property)]
 	public const string ProbePresenceAttribute = "ProbePresenceAttribute";
+	
+	/// <summary>
+	/// PrologueSnippet code is inserted before any code is generated
+	/// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
+	/// </summary>
+	[BindingAttribute (typeof(SnippetData), AttributeTargets.Method | AttributeTargets.Property)]
+	public const string PrologueSnippetAttribute = "PrologueSnippetAttribute";
 
 	/// <summary>
 	/// Use this attribute to instruct the binding generator that the binding for this particular method should be
 	/// flagged with an protected keyword.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
 	public const string ProtectedAttribute = "ProtectedAttribute";
 
 	[BindingFlag (AttributeTargets.Interface | AttributeTargets.Class)]
@@ -262,8 +302,14 @@ static class AttributesNames {
 	/// When this attribute is applied to a class it will just generate a static class, one that does not derive
 	/// from NSObject.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Class)]
+	[BindingFlag (AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property)]
 	public const string StaticAttribute = "StaticAttribute";
+	
+	/// <summary>
+	/// When this attribute is applied to an interface, it directs the generator to
+	/// create a strongly typed DictionaryContainer for the specified fields. 
+	/// </summary>
+	[BindingAttribute(typeof(StrongDictionaryData), AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Property)]
 	public const string StrongDictionaryAttribute = "StrongDictionaryAttribute";
 
 	/// <summary>
@@ -279,6 +325,11 @@ static class AttributesNames {
 	/// </summary>
 	[BindingFlag (AttributeTargets.Class | AttributeTargets.Interface)]
 	public const string TargetAttribute = "TargetAttribute";
+	
+	/// <summary>
+	/// Flags the object as being thread safe.
+	/// </summary>
+	[BindingAttribute(typeof(BackingFieldTypeData), AttributeTargets.All)]
 	public const string ThreadSafeAttribute = "ThreadSafeAttribute";
 
 	/// <summary>

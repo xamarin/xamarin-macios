@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System.Collections.Immutable;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
@@ -15,6 +17,9 @@ readonly partial struct Accessor {
 	/// </summary>
 	public ExportData<ObjCBindings.Property>? ExportPropertyData { get; init; }
 
+	/// <summary>
+	/// State if we should marshal native exceptions when generating the accessor.
+	/// </summary>
 	public bool MarshalNativeExceptions
 		=> ExportPropertyData is not null && ExportPropertyData.Value.Flags.HasFlag (ObjCBindings.Property.MarshalNativeExceptions);
 
@@ -72,4 +77,16 @@ readonly partial struct Accessor {
 	public bool ShouldMarshalNativeExceptions (in Property property)
 		=> MarshalNativeExceptions || property.MarshalNativeExceptions;
 
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ($"{{ Kind: {Kind}, ");
+		sb.Append ($"Supported Platforms: {SymbolAvailability}, ");
+		sb.Append ($"ExportData: {ExportPropertyData?.ToString () ?? "null"} Modifiers: [");
+		sb.AppendJoin (",", Modifiers.Select (x => x.Text));
+		sb.Append ("], Attributes: [");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ("] }");
+		return sb.ToString ();
+	}
 }

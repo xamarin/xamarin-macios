@@ -1,14 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using System;
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
+using Microsoft.Macios.Generator.IO;
 using Xunit;
 
-namespace Microsoft.Macios.Generator.Tests;
+namespace Microsoft.Macios.Generator.Tests.IO;
 
 public class TabbedStringBuilderTests {
 	StringBuilder sb;
@@ -22,12 +24,12 @@ public class TabbedStringBuilderTests {
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void ConstructorNotBlockTest (uint tabCount, string expectedTabs)
+	public void ConstructorNotBlockTest (int tabCount, string expectedTabs)
 	{
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendLine ("Test");
-			result = block.ToString ();
+			block.WriteLine ("Test");
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}Test\n", result);
@@ -37,12 +39,12 @@ public class TabbedStringBuilderTests {
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void ConstructorBlockTest (uint tabCount, string expectedTabs)
+	public void ConstructorBlockTest (int tabCount, string expectedTabs)
 	{
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
-			block.AppendLine ("Test");
-			result = block.ToString ();
+			block.WriteLine ("Test");
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\tTest\n{expectedTabs}}}\n", result);
@@ -52,12 +54,28 @@ public class TabbedStringBuilderTests {
 	[InlineData (0)]
 	[InlineData (1)]
 	[InlineData (5)]
-	public void AppendLineTest (uint tabCount)
+	public void AppendLineTest (int tabCount)
 	{
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendLine ();
-			result = block.ToString ();
+			block.WriteLine ();
+			result = block.ToCode ();
+		}
+
+		// an empty line should have not tabs
+		Assert.Equal ("\n", result);
+	}
+
+	[Theory]
+	[InlineData (0)]
+	[InlineData (1)]
+	[InlineData (5)]
+	public async Task AppendLineTestAsync (int tabCount)
+	{
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			await block.WriteLineAsync ();
+			result = block.ToCode ();
 		}
 
 		// an empty line should have not tabs
@@ -68,12 +86,27 @@ public class TabbedStringBuilderTests {
 	[InlineData ("// test comment", 0, "")]
 	[InlineData ("var t = 1;", 1, "\t")]
 	[InlineData ("Console.WriteLine (\"1\");", 5, "\t\t\t\t\t")]
-	public void AppendLineStringTest (string line, uint tabCount, string expectedTabs)
+	public void AppendLineStringTest (string line, int tabCount, string expectedTabs)
 	{
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
-			block.AppendLine (line);
-			result = block.ToString ();
+			block.WriteLine (line);
+			result = block.ToCode ();
+		}
+
+		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n", result);
+	}
+
+	[Theory]
+	[InlineData ("// test comment", 0, "")]
+	[InlineData ("var t = 1;", 1, "\t")]
+	[InlineData ("Console.WriteLine (\"1\");", 5, "\t\t\t\t\t")]
+	public async Task AppendLineStringTestAsync (string line, int tabCount, string expectedTabs)
+	{
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
+			await block.WriteLineAsync (line);
+			result = block.ToCode ();
 		}
 
 		Assert.Equal ($"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n", result);
@@ -83,7 +116,7 @@ public class TabbedStringBuilderTests {
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendInterpolatedLineTest (uint tabCount, string expectedTabs)
+	public void AppendInterpolatedLineTest (int tabCount, string expectedTabs)
 	{
 		string result;
 		var val1 = "Hello";
@@ -92,8 +125,8 @@ public class TabbedStringBuilderTests {
 		var line = "Hello World!";
 		var expected = $"{expectedTabs}{{\n{expectedTabs}\t{line}\n{expectedTabs}}}\n";
 		using (var block = new TabbedStringBuilder (sb, tabCount, true)) {
-			block.AppendLine ($"{val1} {val2}{val3}");
-			result = block.ToString ();
+			block.WriteLine ($"{val1} {val2}{val3}");
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -104,7 +137,7 @@ public class TabbedStringBuilderTests {
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendRawTest (uint tabCount, string expectedTabs)
+	public void AppendRawTest (int tabCount, string expectedTabs)
 	{
 		var input = @"
 ## Raw string
@@ -124,8 +157,8 @@ Because we are using a raw string  we expected:
 ";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
-			block.AppendRaw (input);
-			result = block.ToString ();
+			block.WriteRaw (input);
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -135,13 +168,44 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendGeneratedCodeAttributeTest (uint tabCount, string expectedTabs)
+	public async Task AppendRawTestAsync (int tabCount, string expectedTabs)
+	{
+		var input = @"
+## Raw string
+Because we are using a raw string  we expected:
+  1. The string to be split in lines
+  2. All lines should have the right indentation
+     - This means nested one
+  3. And all lines should have the correct tabs
+";
+		var expected = $@"
+{expectedTabs}## Raw string
+{expectedTabs}Because we are using a raw string  we expected:
+{expectedTabs}  1. The string to be split in lines
+{expectedTabs}  2. All lines should have the right indentation
+{expectedTabs}     - This means nested one
+{expectedTabs}  3. And all lines should have the correct tabs
+";
+		string result;
+		using (var block = new TabbedStringBuilder (sb, tabCount)) {
+			await block.WriteRawAsync (input);
+			result = block.ToCode ();
+		}
+
+		Assert.Equal (expected, result);
+	}
+
+	[Theory]
+	[InlineData (0, "")]
+	[InlineData (1, "\t")]
+	[InlineData (5, "\t\t\t\t\t")]
+	public void AppendGeneratedCodeAttributeTest (int tabCount, string expectedTabs)
 	{
 		var expected = $"{expectedTabs}[BindingImpl (BindingImplOptions.GeneratedCode)]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendGeneratedCodeAttribute (false);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -151,14 +215,14 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendGeneratedCodeAttributeOptimizableTest (uint tabCount, string expectedTabs)
+	public void AppendGeneratedCodeAttributeOptimizableTest (int tabCount, string expectedTabs)
 	{
 		var expected =
 			$"{expectedTabs}[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendGeneratedCodeAttribute ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -168,13 +232,13 @@ Because we are using a raw string  we expected:
 	[InlineData (EditorBrowsableState.Advanced, 0, "")]
 	[InlineData (EditorBrowsableState.Never, 1, "\t")]
 	[InlineData (EditorBrowsableState.Always, 5, "\t\t\t\t\t")]
-	public void AppendEditorBrowsableAttributeTest (EditorBrowsableState state, uint tabCount, string expectedTabs)
+	public void AppendEditorBrowsableAttributeTest (EditorBrowsableState state, int tabCount, string expectedTabs)
 	{
 		var expected = $"{expectedTabs}[EditorBrowsable (EditorBrowsableState.{state})]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendEditorBrowsableAttribute (state);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -184,7 +248,7 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendNotificationAdviceTests (uint tabCount, string expectedTabs)
+	public void AppendNotificationAdviceTests (int tabCount, string expectedTabs)
 	{
 		var className = "TestClass";
 		var notificationName = "DidWriteAttribute";
@@ -192,7 +256,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendNotificationAdvice (className, notificationName);
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -202,13 +266,13 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void AppendDesignatedInitializer (uint tabCount, string expectedTabs)
+	public void AppendDesignatedInitializer (int tabCount, string expectedTabs)
 	{
 		var expected = $"{expectedTabs}[DesignatedInitializer]\n";
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.AppendDesignatedInitializer ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -218,7 +282,7 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void CreateEmptyBlockTest (uint tabCount, string expectedTabs)
+	public void CreateEmptyBlockTest (int tabCount, string expectedTabs)
 	{
 		var blockContent = "// the test";
 		var expected = $@"{expectedTabs}{{
@@ -228,10 +292,10 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			using (var nested = block.CreateBlock (true)) {
-				nested.AppendLine (blockContent);
+				nested.WriteLine (blockContent);
 			}
 
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -241,7 +305,7 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "", "if (true)")]
 	[InlineData (1, "\t", "using (var t = new StringBuilder)")]
 	[InlineData (5, "\t\t\t\t\t", "fixed (*foo)")]
-	public void CreateBlockTest (uint tabCount, string expectedTabs, string blockType)
+	public void CreateBlockTest (int tabCount, string expectedTabs, string blockType)
 	{
 		var blockContent = "// the test";
 		var expected = $@"{expectedTabs}{blockType}
@@ -252,10 +316,10 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			using (var nested = block.CreateBlock (blockType, true)) {
-				nested.AppendLine (blockContent);
+				nested.WriteLine (blockContent);
 			}
 
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -265,7 +329,7 @@ Because we are using a raw string  we expected:
 	[InlineData (0, "")]
 	[InlineData (1, "\t")]
 	[InlineData (5, "\t\t\t\t\t")]
-	public void WriteHeaderTest (uint tabCount, string expectedTabs)
+	public void WriteHeaderTest (int tabCount, string expectedTabs)
 	{
 		var expected = $@"{expectedTabs}// <auto-generated />
 
@@ -275,7 +339,7 @@ Because we are using a raw string  we expected:
 		string result;
 		using (var block = new TabbedStringBuilder (sb, tabCount)) {
 			block.WriteHeader ();
-			result = block.ToString ();
+			result = block.ToCode ();
 		}
 
 		Assert.Equal (expected, result);
@@ -332,7 +396,7 @@ Because we are using a raw string  we expected:
 	{
 		var block = new TabbedStringBuilder (sb);
 		block.AppendMemberAvailability (availability);
-		var result = block.ToString ();
+		var result = block.ToCode ();
 		Assert.Equal (expectedString, result);
 	}
 
@@ -341,9 +405,33 @@ Because we are using a raw string  we expected:
 	{
 		var block = new TabbedStringBuilder (sb);
 		var line = "My Line";
-		block.Append (line);
-		Assert.Equal (line, block.ToString ());
+		block.Write (line);
+		Assert.Equal (line, block.ToCode ());
 		block.Clear ();
-		Assert.Equal (string.Empty, block.ToString ());
+		Assert.Equal (string.Empty, block.ToCode ());
+	}
+
+	[Fact]
+	public void CreateBlockStringArray ()
+	{
+		var expecteString =
+@"using (var m1 = new MemoryStream())
+using (var m2 = new MemoryStream())
+using (var m3 = new MemoryStream())
+{
+	// this is an example with several usings
+}
+";
+		var baseBlock = new TabbedStringBuilder (sb);
+		// create a list of lines to get the new block
+		var usingStatements = new [] {
+			"using (var m1 = new MemoryStream())",
+			"using (var m2 = new MemoryStream())",
+			"using (var m3 = new MemoryStream())",
+		};
+		using (var usingBlock = baseBlock.CreateBlock (usingStatements, true)) {
+			usingBlock.WriteLine ("// this is an example with several usings");
+		}
+		Assert.Equal (expecteString, baseBlock.ToCode ());
 	}
 }

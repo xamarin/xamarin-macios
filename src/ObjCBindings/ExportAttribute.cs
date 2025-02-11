@@ -51,6 +51,21 @@ namespace ObjCBindings {
 		/// </summary >
 		public string? Library { get; set; } = null;
 
+		/// <summary>
+		///
+		/// </summary >
+		public MethodAttributes DefaultCtorVisibility { get; set; }
+
+		/// <summary>
+		///
+		/// </summary >
+		public MethodAttributes IntPtrCtorVisibility { get; set; }
+
+		/// <summary>
+		///
+		/// </summary >
+		public MethodAttributes StringCtorVisibility { get; set; }
+
 		protected ExportAttribute () { }
 
 		/// <summary>
