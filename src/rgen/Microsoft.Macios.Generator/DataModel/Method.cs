@@ -122,7 +122,7 @@ readonly partial struct Method : IEquatable<Method> {
 		sb.Append ($"ReturnType: {ReturnType}, ");
 		sb.Append ($"SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ($"ExportMethodData: {ExportMethodData}, ");
-		sb.Append ($"BindAs: {BindAs}, ");
+		sb.Append ($"BindAs: {BindAs?.ToString () ?? "null"}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], Modifiers: [");
