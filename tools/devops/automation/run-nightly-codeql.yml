@@ -48,9 +48,9 @@ stages:
       os: macOS
       name: $(PRBuildPool)
       demands:
-        - Agent.OS -equals Darwin
-        - macOS.Name -equals ${{ parameters.macOSName }}
-        - XcodeChannel -equals Stable
+      - Agent.OS -equals Darwin
+      - macOS.Name -equals ${{ parameters.macOSName }}
+      - XcodeChannel -equals Stable
     workspace:
       clean: all
     steps:
@@ -60,7 +60,7 @@ stages:
 
     - task: CodeQL3000Init@0
       displayName: CodeQL 3000 Init
-      #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
     - template: /tools/devops/automation/templates/build/build.yml
       parameters:
@@ -71,17 +71,17 @@ stages:
         use1ES: false
         disableCodeQL: false
         buildSteps:
-          - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-nugets.sh
-            displayName: 'Build Nugets'
-            condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-            timeoutInMinutes: 360
+        - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-nugets.sh
+          displayName: 'Build Nugets'
+          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+          timeoutInMinutes: 360
 
-          - task: PublishPipelineArtifact@1
-            displayName: Publish Build Artifacts
-            inputs:
-              path: $(Build.SourcesDirectory)/package
-              artifact: not-signed-package
+        - task: PublishPipelineArtifact@1
+          displayName: Publish Build Artifacts
+          inputs:
+            path: $(Build.SourcesDirectory)/package
+            artifact: not-signed-package
 
     - task: CodeQL3000Finalize@0
       displayName: CodeQL 3000 Finalize
-      #condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      # condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
