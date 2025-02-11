@@ -11,9 +11,10 @@ schedules:
     - main
 
 parameters:
-- name: commit
+- name: macOSName  # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
   type: string
-  default: HEAD
+  default: 'Sequoia'
 
 resources:
   repositories:
@@ -34,6 +35,13 @@ stages:
   - job: build_nightly_codeql
     displayName: CodeQL
     timeoutInMinutes: 480
+    pool:
+      os: macOS
+      name: $(CIBuildPool)
+      demands:
+        - Agent.OS -equals Darwin
+        - macOS.Name -equals ${{ parameters.macOSName }}
+        - XcodeChannel -equals Stable
     workspace:
       clean: all
     steps:
@@ -47,9 +55,7 @@ stages:
 
     - template: /tools/devops/automation/templates/build/build.yml
       parameters:
-        isPR: false
-        repositoryAlias: self
-        commit: ${{ parameters.commit }}
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
