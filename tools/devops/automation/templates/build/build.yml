@@ -44,9 +44,9 @@ parameters:
     type: boolean
     default: true
 
-- name: disableCodeQL
-  type: boolean
-  default: true
+  - name: disableCodeQL
+    type: boolean
+    default: true
 
 steps:
 
