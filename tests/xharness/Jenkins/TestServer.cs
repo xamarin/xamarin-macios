@@ -101,7 +101,7 @@ namespace Xharness.Jenkins {
 							// Ref: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2351243
 							response.StatusCode = 400;
 							response.StatusDescription = "Bad Request";
-							response.Write ("Invalid local path");
+							response.OutputStream.Write (System.Text.Encoding.UTF8.GetBytes ("Invalid local path"));
 							return;
 						}
 
