@@ -50,7 +50,7 @@ namespace Xamarin.Linker {
 			return body;
 		}
 
-		public static void GenerateILOffsets(this MethodBody body)
+		public static void GenerateILOffsets (this MethodBody body)
 		{
 			// This does not compute precise offsets, it just assigns a unique number to each instruction
 			// The trimmer relies on unique offsets to identify instructions
@@ -138,7 +138,7 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Ldarg_0);
 			il.Emit (OpCodes.Call, abr.System_Object__ctor);
 			il.Emit (OpCodes.Ret);
-			body.GenerateILOffsets();
+			body.GenerateILOffsets ();
 			return defaultCtor;
 		}
 

@@ -397,7 +397,7 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Callvirt, proxyInterfaceMethod);
 			il.Emit (OpCodes.Ret);
 
-			body.GenerateILOffsets();		
+			body.GenerateILOffsets ();
 		}
 
 		public void EmitCallToExportedMethod (MethodDefinition method, MethodDefinition callback)
@@ -621,7 +621,7 @@ namespace Xamarin.Linker {
 				instr.Operand = leaveTryInstructionOperand;
 			eh.HandlerEnd = (Instruction) leaveEHInstruction.Operand;
 
-			body.GenerateILOffsets();
+			body.GenerateILOffsets ();
 		}
 
 		void AddExceptionHandler (ILProcessor il, VariableDefinition? returnVariable, Instruction placeholderNextInstruction, bool isGeneric, out ExceptionHandler eh, out Instruction leaveEHInstruction)
@@ -1384,7 +1384,7 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Call, ctor);
 			il.Emit (OpCodes.Ret);
 
-			body.GenerateILOffsets();
+			body.GenerateILOffsets ();
 
 			return clonedCtor;
 		}
