@@ -46,7 +46,7 @@ stages:
     timeoutInMinutes: 480
     pool:
       os: macOS
-      name: $(CIBuildPool)
+      name: $(PRBuildPool)
       demands:
         - Agent.OS -equals Darwin
         - macOS.Name -equals ${{ parameters.macOSName }}
