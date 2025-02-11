@@ -835,7 +835,6 @@ FOUNDATION_CORE_SOURCES = \
 FOUNDATION_SOURCES = \
 	Foundation/Additions.cs \
 	Foundation/Compat.cs \
-	Foundation/MonoTouchException.cs \
 	Foundation/NSAppleEventDescriptor.cs \
 	Foundation/NSArray.cs \
 	Foundation/NSArray_1.cs \
@@ -1936,6 +1935,7 @@ SHARED_CORE_SOURCES = \
 	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
+	ObjCBindings/BindFromAttribute.cs \
 	ObjCBindings/BindingTypeAttribute.cs \
 	ObjCBindings/BindingTypeTag.cs \
 	ObjCBindings/ExportAttribute.cs \

@@ -1439,22 +1439,6 @@ namespace AppKit {
 		AsKeyedArchive = 4,
 	}
 
-#if !NET && MONOMAC // Use the one in Foundation instead, only keep this in macOS until .NET.
-	[Native]
-	public enum NSUnderlineStyle : long {
-		None                = 0x00,
-		Single              = 0x01,
-		Thick               = 0x02,
-		Double              = 0x09,
-		PatternSolid 		= 0x0000,
-		PatternDot 			= 0x0100,
-		PatternDash 		= 0x0200,
-		PatternDashDot 		= 0x0300,
-		PatternDashDotDot 	= 0x0400,
-		ByWord 				= 0x8000,
-	}
-#endif
-
 	// Convenience enum, untyped in ObjC
 	[NoMacCatalyst]
 	public enum NSUnderlinePattern : int {
