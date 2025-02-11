@@ -314,7 +314,7 @@ namespace CoreVideo {
 				unsafe {
 					if (bytes.Length < sizeof (CVFillExtendedPixelsCallBackDataStruct))
 						throw new InvalidOperationException ($"The size of the callback data structure is smaller than expected (got {bytes.Length} bytes, expected at least {sizeof (CVFillExtendedPixelsCallBackDataStruct)} bytes)");
-					fixed (byte *ptr = bytes)
+					fixed (byte* ptr = bytes)
 						return Marshal.PtrToStructure<CVFillExtendedPixelsCallBackDataStruct> ((IntPtr) ptr);
 				}
 			}
