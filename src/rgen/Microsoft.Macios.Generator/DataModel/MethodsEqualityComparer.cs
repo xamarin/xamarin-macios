@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -5,9 +7,9 @@ using System.Linq;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
-class MethodsEqualityComparer : IEqualityComparer<ImmutableArray<Method>> {
+class MethodsEqualityComparer : EqualityComparer<ImmutableArray<Method>> {
 	/// <inheritdoc/>
-	public bool Equals (ImmutableArray<Method> x, ImmutableArray<Method> y)
+	public override bool Equals (ImmutableArray<Method> x, ImmutableArray<Method> y)
 	{
 		// to compare two lists, we need to do the following:
 		// 1. Group all the methods by return type + name + param count, this way we
@@ -21,13 +23,13 @@ class MethodsEqualityComparer : IEqualityComparer<ImmutableArray<Method>> {
 		// create the dictionary comparer that will do the based comparison and relay on a list comparer for the
 		// diff methods
 		var dictionaryComparer =
-			new DictionaryComparer<(string ReturnType, string Name, int ParameterCount), List<Method>> (
-				new ListComparer<Method> (new MethodComparer ()));
+			new DictionaryComparer<(TypeInfo ReturnType, string Name, int ParameterCount), List<Method>> (
+				new CollectionComparer<Method> (new MethodComparer ()));
 		return dictionaryComparer.Equals (xMethods, yMethods);
 	}
 
 	/// <inheritdoc/>
-	public int GetHashCode (ImmutableArray<Method> obj)
+	public override int GetHashCode (ImmutableArray<Method> obj)
 	{
 		var hashCode = new HashCode ();
 		foreach (var ctr in obj) {

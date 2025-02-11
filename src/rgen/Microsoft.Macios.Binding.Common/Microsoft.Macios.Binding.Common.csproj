@@ -25,6 +25,9 @@
        <Compile Include="..\..\ObjCRuntime\ArgumentSemantic.cs">
            <Link>external\ArgumentSemantic.cs</Link>
        </Compile>
+        <Compile Include="..\..\ObjCBindings\BindingTypeTag.cs" >
+            <Link>external\BindingTypeTag.cs</Link>
+        </Compile>
         <Compile Include="..\..\ObjCBindings\ExportTag.cs" >
             <Link>external\ExportTag.cs</Link>
         </Compile>

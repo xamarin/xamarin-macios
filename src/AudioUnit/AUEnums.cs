@@ -184,7 +184,7 @@ namespace AudioUnit {
 	}
 
 	[MacCatalyst (13, 1)]
-	[NoTV, NoWatch]
+	[NoTV]
 #if NET
 	[NoiOS]
 #endif
@@ -214,7 +214,7 @@ namespace AudioUnit {
 		ProcessIsMaster = 1835103092, // 'mast'
 #endif // !XAMCORE_5_0
 		[NoiOS]
-		[MacCatalyst (15, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -229,14 +229,14 @@ namespace AudioUnit {
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 		[NoiOS]
-		[MacCatalyst (15, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV]
 		ProcessMute = 1634758765, // 'appm'
-		[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		[MacCatalyst (17, 0), Mac (14, 0), NoTV]
 		InputMute = 1852403056, //pmin
 	}
 
 	[MacCatalyst (13, 1)]
-	[NoTV, NoWatch]
+	[NoTV]
 #if NET
 	[NoiOS]
 #endif
@@ -248,7 +248,7 @@ namespace AudioUnit {
 	}
 
 	[MacCatalyst (13, 1)]
-	[NoTV, NoWatch]
+	[NoTV]
 #if NET
 	[NoiOS]
 #endif
@@ -392,7 +392,7 @@ namespace AudioUnit {
 		BypassVoiceProcessing = 2100,
 		VoiceProcessingEnableAGC = 2101,
 		MuteOutput = 2104,
-		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoWatch, NoTV]
+		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV]
 		MutedSpeechActivityEventListener = 2106,
 
 		// AUNBandEQ unit
@@ -432,11 +432,11 @@ namespace AudioUnit {
 		SpatialMixerAttenuationCurve = 3013,
 		SpatialMixerOutputType = 3100,
 		SpatialMixerPointSourceInHeadMode = 3103,
-		[Mac (12, 3), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Mac (12, 3), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		SpatialMixerEnableHeadTracking = 3111,
-		[Mac (13, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Mac (13, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		SpatialMixerPersonalizedHrtfMode = 3113,
-		[Mac (14, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0), NoWatch]
+		[Mac (14, 0), iOS (18, 0), TV (18, 0), MacCatalyst (18, 0)]
 		SpatialMixerAnyInputIsUsingPersonalizedHrtf = 3116,
 
 		// AUScheduledSoundPlayer
@@ -990,7 +990,7 @@ namespace AudioUnit {
 #endif
 	}
 
-	[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch, NoiOS]
+	[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoiOS]
 	public enum AudioAggregateDriftCompensation : uint {
 		MinQuality = 0,
 		LowQuality = 0x20,

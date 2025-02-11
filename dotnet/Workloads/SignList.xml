@@ -3,21 +3,20 @@
   <ItemGroup>
     <Skip Include="System.Reflection.MetadataLoadContext.dll" />
     <!-- Microsoft.iOS.Windows.Sdk content -->
-    <Skip Include="tools\msbuild\Microsoft.Win32.Registry.dll" />
-    <Skip Include="tools\msbuild\System.Buffers.dll" />
-    <Skip Include="tools\msbuild\System.Formats.Asn1.dll" />
-    <Skip Include="tools\msbuild\System.Memory.dll" />
-    <Skip Include="tools\msbuild\System.Numerics.Vectors.dll" />
-    <Skip Include="tools\msbuild\System.Runtime.CompilerServices.Unsafe.dll" />
-    <Skip Include="tools\msbuild\System.Security.AccessControl.dll" />
-    <Skip Include="tools\msbuild\System.Security.Cryptography.Pkcs.dll" />
-    <Skip Include="tools\msbuild\System.Security.Cryptography.ProtectedData.dll" />
-    <Skip Include="tools\msbuild\System.Security.Principal.Windows.dll" />
-    <Skip Include="tools\msbuild\ws2_32.dll" />
+    <Skip Include="tools\msbuild\iOS\Microsoft.Win32.Registry.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Buffers.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Formats.Asn1.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Memory.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Numerics.Vectors.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.AccessControl.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Cryptography.Pkcs.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Cryptography.ProtectedData.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Principal.Windows.dll" />
+    <Skip Include="tools\msbuild\iOS\ws2_32.dll" />
     <!-- Broker.zip -->
     <Skip Include="Broker\Newtonsoft.Json.dll" />
-    <Skip Include="Broker\System.Net.Mqtt.dll" />
-    <Skip Include="Broker\System.Net.Mqtt.Server.dll" />
+    <Skip Include="Broker\MQTTnet.dll" />
     <Skip Include="Broker\System.Reactive.dll" />
     <Skip Include="Broker\System.Runtime.CompilerServices.Unsafe.dll" />
     <Skip Include="Broker\System.Security.Cryptography.ProtectedData.dll" />
@@ -36,12 +35,13 @@
     <Skip Include="Build\System.Text.Json.dll" />
     <Skip Include="Build\System.Threading.Tasks.Dataflow.dll" />
     <Skip Include="Build\System.Threading.Tasks.Extensions.dll" />
+    <!-- They are now signed by their origin build https://github.com/xamarin/XamarinVS/pull/14522 -->
+    <Skip Include="imobiledevice-*\*.dll" />
+    <Skip Include="imobiledevice-*\*.exe" />
   </ItemGroup>
 
   <ItemGroup>
     <ThirdParty Include="BouncyCastle.Crypto.dll" />
-    <ThirdParty Include="imobiledevice-*\*.dll" />
-    <ThirdParty Include="imobiledevice-*\*.exe" />
     <!-- Build.zip -->
     <ThirdParty Include="Mono.Cecil*.dll" />
 

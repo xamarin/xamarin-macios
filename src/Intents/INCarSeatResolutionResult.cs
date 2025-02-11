@@ -16,9 +16,7 @@ namespace Intents {
 	public partial class INCarSeatResolutionResult {
 		public static INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return SuccessWithResolvedCarSeat (resolvedValue);
 			else
@@ -28,9 +26,7 @@ namespace Intents {
 
 		public static INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm)
 		{
-#if __WATCHOS__
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
-#elif __IOS__
+#if __IOS__
 			if (SystemVersion.CheckiOS (11, 0))
 				return ConfirmationRequiredWithCarSeatToConfirm (valueToConfirm);
 			else

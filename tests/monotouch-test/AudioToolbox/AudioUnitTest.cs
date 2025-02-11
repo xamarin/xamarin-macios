@@ -28,6 +28,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void Callbacks ()
 		{
+			TestRuntime.IgnoreIfLockedScreen ();
+
 			var audioComponent = AudioComponent.FindComponent (AudioTypeOutput.VoiceProcessingIO);
 			using var audioUnit = new global::AudioUnit.AudioUnit (audioComponent);
 

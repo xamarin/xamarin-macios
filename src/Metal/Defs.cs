@@ -364,8 +364,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSizeAndAlign {
@@ -385,8 +383,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLDrawPatchIndirectArguments {
@@ -410,8 +406,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf {
@@ -480,8 +474,6 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[NoWatch]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf {
@@ -538,7 +530,6 @@ namespace Metal {
 #else
 	[NoiOS]
 	[NoTV]
-	[NoWatch]
 #endif
 	public struct MTLIndirectCommandBufferExecutionRange
 	{
@@ -640,7 +631,7 @@ namespace Metal {
 	[SupportedOSPlatform ("macos13.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), NoWatch]
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 	[NativeName ("MTLResourceID")]
 	[StructLayout (LayoutKind.Sequential)]

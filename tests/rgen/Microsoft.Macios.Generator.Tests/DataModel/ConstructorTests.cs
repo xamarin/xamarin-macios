@@ -1,12 +1,17 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -30,7 +35,8 @@ namespace NS {
 			yield return [
 				emptyConstructor,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
@@ -54,13 +60,14 @@ namespace NS {
 			yield return [
 				singleParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
+						new (position: 0, type: ReturnTypeForString (), name: "inName"),
 					]
 				)
 			];
@@ -83,14 +90,15 @@ namespace NS {
 			yield return [
 				multiParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string", "inName"),
-						new (1, "int", "inAge"),
+						new (position: 0, type: ReturnTypeForString (), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
 					]
 				)
 			];
@@ -113,14 +121,15 @@ namespace NS {
 			yield return [
 				nullableParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
 					]
 				)
 			];
@@ -146,15 +155,197 @@ namespace NS {
 			yield return [
 				paramsCollectionParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, },
-						new (1, "int", "inAge"),
-						new (2, "string[]", "inSurnames") { IsParams = true, },
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string"), name: "inSurnames") {
+							IsParams = true,
+						},
+					]
+				)
+			];
+
+			const string arrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				arrayParameter,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string"), name: "inSurnames") {
+							IsParams = false,
+						},
+					]
+				)
+			];
+
+			const string nullableArrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[]? inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				nullableArrayParameter,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string", isNullable: true), name: "inSurnames"),
+					]
+				)
+			];
+
+			const string arrayOfNullableParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string?[] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				arrayOfNullableParameter,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string?"), name: "inSurnames"),
+					]
+				)
+			];
+
+			const string nullableArrayOfNullableParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string?[]? inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				nullableArrayOfNullableParameter,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, ReturnTypeForString (isNullable: true), "inName"),
+						new (1, ReturnTypeForInt (), "inAge"),
+						new (2, ReturnTypeForArray ("string?", isNullable: true), "inSurnames"),
+					]
+				)
+			];
+
+			const string twoDimensionalArrayParameter = @"
+using System;
+
+namespace NS {
+	public class TestClass {
+		string name;	
+		int age;
+		string [] surnames;
+
+		public TestClass (string? inName, int inAge, string[][] inSurnames) {
+			name = inName ?? string.Empty;
+			age = inAge;
+			surnames = inSurnames;	
+		}
+	}
+}
+";
+
+			yield return [
+				twoDimensionalArrayParameter,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: new (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName"),
+						new (position: 1, type: ReturnTypeForInt (), name: "inAge"),
+						new (position: 2, type: ReturnTypeForArray ("string[]"), name: "inSurnames") {
+							IsParams = false,
+						},
 					]
 				)
 			];
@@ -175,13 +366,16 @@ namespace NS {
 			yield return [
 				optionalParameter,
 				new Constructor (
-					type: "NS.TestClass",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "string?", "inName") { IsNullable = true, IsOptional = true, },
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName") {
+							IsOptional = true,
+						},
 					]
 				)
 			];
@@ -202,13 +396,52 @@ namespace NS {
 			yield return [
 				genericParameter,
 				new Constructor (
-					type: "NS.TestClass<T>",
+					type: "TestClass",
+					symbolAvailability: new (),
 					attributes: [],
 					modifiers: [
 						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 					],
 					parameters: [
-						new (0, "T?", "inName") { IsOptional = true, IsNullable = true, },
+						new (position: 0, type: ReturnTypeForGeneric ("T", isNullable: true), name: "inName") {
+							IsOptional = true,
+						},
+					]
+				)
+			];
+
+			const string availabilityPresent = @"
+using System.Runtime.Versioning;
+using System;
+
+namespace NS {
+	[SupportedOSPlatform (""ios"")]
+	[SupportedOSPlatform (""tvos"")]
+	public class TestClass {
+		string name;	
+		public TestClass (string? inName = null) {
+			name = inName ?? string.Empty;
+		}
+	}
+}
+";
+			var builder = SymbolAvailability.CreateBuilder ();
+			builder.Add (new SupportedOSPlatformData ("ios"));
+			builder.Add (new SupportedOSPlatformData ("tvos"));
+
+			yield return [
+				availabilityPresent,
+				new Constructor (
+					type: "TestClass",
+					symbolAvailability: builder.ToImmutable (),
+					attributes: [],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (position: 0, type: ReturnTypeForString (isNullable: true), name: "inName") {
+							IsOptional = true,
+						},
 					]
 				)
 			];
@@ -224,8 +457,7 @@ namespace NS {
 	[AllSupportedPlatformsClassData<TestDataFromConstructorDeclaration>]
 	void FromConstructorDeclaration (ApplePlatform platform, string inputText, Constructor expected)
 	{
-		var (compilation, syntaxTrees) = CreateCompilation (nameof (FromConstructorDeclaration),
-			platform, inputText);
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (syntaxTrees);
 		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
 		var declaration = syntaxTrees [0].GetRoot ()

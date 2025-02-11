@@ -1,6 +1,13 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
-using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Availability;
+using ObjCBindings;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -8,40 +15,33 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// Structure that represents a change that was made by the user on enum members that has to be
 /// reflected in the generated code.
 /// </summary>
-readonly struct EnumMember : IEquatable<EnumMember> {
-
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct EnumMember : IEquatable<EnumMember> {
 	/// <summary>
 	/// Get the name of the member.
 	/// </summary>
 	public string Name { get; }
 
 	/// <summary>
+	/// The platform availability of the enum value.
+	/// </summary>
+	public SymbolAvailability SymbolAvailability { get; }
+
+	/// <summary>
 	/// Get the attributes added to the member.
 	/// </summary>
-	public ImmutableArray<AttributeCodeChange> Attributes { get; }
-
-	/// <summary>
-	/// Create a new change that happened on a member.
-	/// </summary>
-	/// <param name="name">The name of the changed member.</param>
-	/// <param name="attributes">The list of attribute changes in the member.</param>
-	public EnumMember (string name, ImmutableArray<AttributeCodeChange> attributes)
-	{
-		Name = name;
-		Attributes = attributes;
-	}
-
-	/// <summary>
-	/// Create a new change that happened on a member.
-	/// </summary>
-	/// <param name="name">The name of the changed member.</param>
-	public EnumMember (string name) : this (name, []) { }
+	public ImmutableArray<AttributeCodeChange> Attributes { get; } = [];
 
 	/// <inheritdoc />
 	public bool Equals (EnumMember other)
 	{
 		if (Name != other.Name)
 			return false;
+		if (SymbolAvailability != other.SymbolAvailability)
+			return false;
+		if (FieldInfo != other.FieldInfo)
+			return false;
+
 		var attrComparer = new AttributesEqualityComparer ();
 		return attrComparer.Equals (Attributes, other.Attributes);
 	}
@@ -55,7 +55,7 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	/// <inheritdoc />
 	public override int GetHashCode ()
 	{
-		return HashCode.Combine (Name, Attributes);
+		return HashCode.Combine (Name, SymbolAvailability, Attributes);
 	}
 
 	public static bool operator == (EnumMember x, EnumMember y)
@@ -66,5 +66,15 @@ readonly struct EnumMember : IEquatable<EnumMember> {
 	public static bool operator != (EnumMember x, EnumMember y)
 	{
 		return !(x == y);
+	}
+
+	/// <inheritdoc />
+	public override string ToString ()
+	{
+		var sb = new StringBuilder (
+			$"{{ Name: '{Name}' SymbolAvailability: {SymbolAvailability} FieldInfo: {FieldInfo} Attributes: [");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ("] }");
+		return sb.ToString ();
 	}
 }

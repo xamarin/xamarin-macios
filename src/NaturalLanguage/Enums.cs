@@ -29,7 +29,6 @@ namespace NaturalLanguage {
 	/// <summary>Enumerates preprocessing options for tags.</summary>
 	[Flags]
 	[Native]
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
@@ -42,7 +41,6 @@ namespace NaturalLanguage {
 
 	/// <summary>Enumerates natural language model types.</summary>
 	[Native]
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLModelType : long {
 		Classifier,
@@ -51,7 +49,6 @@ namespace NaturalLanguage {
 
 	/// <summary>Enumerates linguistic units to which tags can be applied.</summary>
 	[Native]
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenUnit : long {
 		Word,
@@ -64,7 +61,6 @@ namespace NaturalLanguage {
 	/// <summary>Enumerates content hints for tokenizers.</summary>
 	[Flags]
 	[Native]
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
@@ -73,7 +69,6 @@ namespace NaturalLanguage {
 	}
 
 	/// <summary>Enumerates languages for which recognition is supported.</summary>
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
@@ -194,13 +189,12 @@ namespace NaturalLanguage {
 		[Field ("NLLanguageVietnamese")]
 		Vietnamese,
 
-		[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[iOS (16, 0), Mac (13, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Field ("NLLanguageKazakh")]
 		Kazakh,
 	}
 
 	/// <summary>Enumerates classes of tags that are returned from a text classifier.</summary>
-	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]
@@ -217,13 +211,13 @@ namespace NaturalLanguage {
 		Language,
 		[Field ("NLTagSchemeScript")]
 		Script,
-		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NLTagSchemeSentimentScore")]
 		SentimentScore,
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum NLScript {
 		[Field ("NLScriptUndetermined")]
 		Undetermined,
@@ -289,7 +283,7 @@ namespace NaturalLanguage {
 		TraditionalChinese,
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	public enum NLContextualEmbeddingAssetsResult : long {
 		Available,
@@ -297,7 +291,7 @@ namespace NaturalLanguage {
 		Error,
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum NLContextualEmebeddingKey {
 		[Field ("NLContextualEmbeddingKeyLanguages")]
 		Languages,

@@ -1,5 +1,9 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
@@ -11,7 +15,9 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	static readonly HashSet<ApplePlatform> supportedPlatforms =
 		[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
 
-	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities;
+	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities = new ();
+
+	public SymbolAvailability () { }
 
 	SymbolAvailability (Dictionary<ApplePlatform, PlatformAvailability?> platforms)
 	{
@@ -24,6 +30,19 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 		availabilities = new SortedDictionary<ApplePlatform, PlatformAvailability?> ();
 		foreach (var (key, value) in platforms) {
 			availabilities.Add (key, value);
+		}
+	}
+
+	/// <summary>
+	/// Return the symbol trivia if it has any.
+	/// </summary>
+	public AvailabilityTrivia? Trivia {
+		get {
+			// just returns the trivia if it has any, null otherwise
+			var trivia = new AvailabilityTrivia (this);
+			if (trivia.Start is not null || trivia.End is not null)
+				return trivia;
+			return null;
 		}
 	}
 
@@ -149,5 +168,14 @@ readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	public static bool operator != (SymbolAvailability left, SymbolAvailability right)
 	{
 		return !left.Equals (right);
+	}
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("[");
+		sb.AppendJoin (", ", availabilities.Values.Where (x => x is not null));
+		sb.Append ("]");
+		return sb.ToString ();
 	}
 }

@@ -233,6 +233,7 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_ErrorRuntimeIdentifiersClash;
+			BuildOnlySettings;
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;
@@ -518,13 +519,13 @@
 					- ios/tvos device builds in all configurations
 					- macOS/MacCatalyst builds in release configuration
 				- Set 'partial-static' for:
-					- when no assemblies are trimmed and when _MarshalManagedExceptionMode is default (or not set)
+					- when no assemblies are trimmed and when MarshalManagedExceptionMode is default (or not set)
 				- Otherwise set 'dynamic' 
 			-->
 			<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">managed-static</Registrar>
 			<Registrar Condition="'$(Registrar)' == '' And '$(_SdkIsSimulator)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">managed-static</Registrar>
 			<Registrar Condition="'$(Registrar)' == '' And '$(_BundlerDebug)' != 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">managed-static</Registrar>
-			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(_MarshalManagedExceptionMode)' == '' Or '$(_MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
+			<Registrar Condition="'$(Registrar)' == '' And '$(_AreAnyAssembliesTrimmed)' != 'true' And ('$(MarshalManagedExceptionMode)' == '' Or '$(MarshalManagedExceptionMode)' == 'default')">partial-static</Registrar>
 			<Registrar Condition="'$(Registrar)' == ''">dynamic</Registrar>
 		</PropertyGroup>
 	</Target>
@@ -601,8 +602,8 @@
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LibMonoLinkMode=$(_LibMonoLinkMode)
 				LibXamarinLinkMode=$(_LibXamarinLinkMode)
-				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
-				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
+				MarshalManagedExceptionMode=$(MarshalManagedExceptionMode)
+				MarshalObjectiveCExceptionMode=$(MarshalObjectiveCExceptionMode)
 				@(_MonoLibrary -> 'MonoLibrary=%(Identity)')
 				MtouchFloat32=$(MtouchFloat32)
 				NoWarn=$(_BundlerNoWarn)
@@ -1115,7 +1116,7 @@
 				In such setup, during runtime, AOT images are loaded but marked as unusuable as they are compiled with `full` compiler switch and the code falls back to interpreter.
 				Dedup AOT image is specially handled by the AOT runtime and it is not allowed to have it marked as unusuable.
 			-->
-			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(TargetArchitectures)' == 'ARM64'">true</_IsDedupEnabled>
+			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == '' And '$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(TargetArchitectures)' == 'ARM64' And '$(MtouchInterpreter)' != 'all'">true</_IsDedupEnabled>
 			<_DedupAssembly Condition="'$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<!-- default to 'static' for Mac Catalyst to work around https://github.com/xamarin/xamarin-macios/issues/14686 -->

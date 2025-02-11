@@ -1,5 +1,5 @@
 //
-// Compat.cs: Stuff we won't provide in Xamarin.iOS.dll or newer XAMCORE_* profiles
+// Compat.cs: Stuff we won't provide in newer XAMCORE_* profiles
 //
 // Authors:
 //   Sebastien Pouliot  <sebastien@xamarin.com>
@@ -12,32 +12,6 @@ using System.ComponentModel;
 using ObjCRuntime;
 
 namespace Foundation {
-
-#if !NET
-#if MONOMAC
-	public partial class NSError {
-
-		// removed in Xcode 11 GM
-		[Obsolete ("This API has been removed.")]
-		public static NSError GetFileProviderErrorForOutOfDateItem (FileProvider.INSFileProviderItem updatedVersion)
-		{
-			return null;
-		}
-	}
-#endif
-
-#if !WATCH
-	public partial class NSUserActivity {
-
-		[Obsolete ("Use the constructor that allows you to set an activity type.")]
-		public NSUserActivity ()
-			: this (String.Empty)
-		{
-		}
-	}
-#endif
-#endif // !NET
-
 #if !XAMCORE_5_0
 #if __IOS__ && !__MACCATALYST__
 	public partial class NSUrlConnection {

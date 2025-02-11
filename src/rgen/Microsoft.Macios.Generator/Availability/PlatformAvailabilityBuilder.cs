@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
 using Microsoft.Macios.Generator.Attributes;
@@ -100,7 +102,7 @@ readonly partial struct PlatformAvailability {
 		/// <summary>
 		/// Add a new obsoleted version of the platform to the availability struct.
 		/// </summary>
-		/// <param name="version"></param>
+		/// <param name="version">The supported versions to add.</param>
 		/// <param name="message">Optional obsolete message.</param>
 		/// <param name="url">Optional documentation url.</param>
 		public void AddObsoletedVersion (Version version, string? message, string? url)
@@ -136,6 +138,16 @@ readonly partial struct PlatformAvailability {
 		public PlatformAvailability ToImmutable ()
 		{
 			return new PlatformAvailability (platform, supportedVersion, unsupported, obsoleted);
+		}
+
+		/// <summary>
+		/// Clear all the versions that have been added to the platform availability.
+		/// </summary>
+		public void Clear ()
+		{
+			supportedVersion = null;
+			unsupported.Clear ();
+			obsoleted.Clear ();
 		}
 	}
 }

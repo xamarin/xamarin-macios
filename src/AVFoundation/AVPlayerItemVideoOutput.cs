@@ -1,5 +1,3 @@
-#if !WATCH
-
 using System;
 
 using Foundation;
@@ -36,5 +34,3 @@ namespace AVFoundation {
 		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) { }
 	}
 }
-
-#endif

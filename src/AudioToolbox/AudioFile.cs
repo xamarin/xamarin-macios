@@ -41,7 +41,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
 #if !NET
@@ -59,8 +58,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[NoWatch]
 #endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
@@ -82,8 +79,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[NoWatch]
 #endif
 		FLAC = 0x666c6163, // flac
 #if NET
@@ -92,7 +87,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[NoWatch]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
@@ -262,7 +256,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 #endif
@@ -279,7 +272,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 #endif
@@ -295,7 +287,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 #endif
@@ -311,7 +302,6 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[NoWatch]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 #endif

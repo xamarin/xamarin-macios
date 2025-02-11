@@ -7,7 +7,7 @@
 // Copyright 2009, Novell, Inc.
 //
 
-#if !WATCH && !COREBUILD
+#if !COREBUILD
 
 using System;
 using Foundation;
@@ -203,4 +203,4 @@ namespace UIKit {
 	}
 }
 
-#endif // !WATCH
+#endif // !COREBUILD

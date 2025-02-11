@@ -125,6 +125,31 @@ Only applicable to iOS and tvOS projects.
 
 See [CreatePackage](#createpackage) for macOS and Mac Catalyst projects.
 
+## BundleOriginalResources
+
+This property determines whether resources are compiled before being embedded
+into library projects, or if the original (uncompiled) version is embedded.
+
+Historically resources have been compiled before being embedded into library
+projects, but this requires having Xcode available, which has a few drawbacks:
+
+* It slows down remote builds on Windows.
+* It won't work when building locally on Windows, and neither on any other
+  platform except macOS.
+* Resources are compiled using the current available Xcode, which may not have
+  the same features as a potentially newer Xcode available when the library in
+  question is consumed.
+* It makes it impossible to have a whole-program view of all the resources
+  when building an app, which is necessary to detect clashing resources.
+
+As such, we've added supported for embedding the original resources into
+libraries. This will be opt-in in .NET 9, but opt-out starting in .NET 10.
+
+Default value: `false` in .NET 9, `true` in .NET 10+.
+
+Note: please file an issue if you find that you need to disable this feature,
+as it's possible we'll remove the option to disable it at some point.
+
 ## CodesignAllocate
 
 The path to the `codesign_allocate` tool.
@@ -442,6 +467,40 @@ Default: automatically detected according to the default version shipped with th
 
 See also [MtouchSdkVersion](#mtouchsdkversion).
 
+## MarshalManagedExceptionMode
+
+Choose how managed exceptions are handled when encountering a native frame
+during stack unwinding while processing the managed exception.
+
+Valid values:
+
+* `default`: Currently, this is `throwobjectivecexception`.
+* `unwindnativecode`: This is not available when using the CoreCLR runtime.
+* `throwobjectivecexception`: Catch the managed exception, and convert it into an Objective-C exception.
+* `abort`: Abort the process.
+* `disable`: Disable intercepting any managed exceptions. For MonoVM this is equivalent to `unwindnativecode`, for CoreCLR this is equivalent to `abort`.
+
+For more information see the article about [Exception marshaling](todo)
+
+See also [MarshalObjectiveCExceptionMode](#marshalobjectivecexceptionmode)
+
+## MarshalObjectiveCExceptionMode
+
+Choose how Objective-C exceptions are handled when encountering a managed frame
+during stack unwinding while processing the Objective-C exception.
+
+Valid values:
+
+* `default`: Currently, this is `throwmanagedexception`.
+* `unwindmanagedcode`: This is not available when using the CoreCLR runtime.
+* `throwmanagedexception`:  Catch the Objective-C exception, and convert it into a managed exception.
+* `abort`: Abort the process.
+* `disable`: Disable intercepting any Objective-C exceptions.
+
+For more information see the article about [Exception marshaling](todo)
+
+See also [MarshalManagedExceptionMode](#marshalmanagedexceptionmode)
+
 ## MdimportPath
 
 The full path to the `mdimport` tool.
@@ -754,6 +813,30 @@ only scan libraries with the `[LinkWith]` attribute for Objective-C classes:
 </PropertyGroup>
 ```
 
+## SkipStaticLibraryValidation
+
+Hot Restart doesn't support linking with static libraries, so by default we'll
+show an error if the project tries to link with any static libraries when
+using Hot Restart.
+
+However, in some cases it might be useful to ignore such errors (for instance if testing a code path in the app that doesn't require the static library in question), so it's possible to ignore them.
+
+The valid values are:
+
+* "true", "disable": Completely disable the validation.
+* "false", "error", empty string: Enable the validation (this is the default)
+* "warn": Validate, but show warnings instead of errors.
+
+Example:
+
+```xml
+<PropertyGroup>
+  <SkipStaticLibraryValidation>warn</SkipStaticLibraryValidation>
+</PropertyGroup>
+```
+
+This will show warnings instead of errors if the project tries to link with a static library.
+
 ## StripPath
 
 The full path to the `strip` command-line tool.
@@ -855,6 +938,20 @@ See [MtouchInterpreter](#mtouchinterpreter) for more information.
 Whether the native http handler should be the default http handler or not.
 
 Default: true for all platforms except macOS.
+
+## ValidateEntitlements
+
+Choose whether entitlements the app requests should be validated.
+
+Valid values for this property:
+
+* `disable`: Validation is disabled.
+* `warn`: Any validation failures are shown as warnings.
+* `error`: Any validation failures are shown as errors. This is the default.
+
+The validation process may not validate every entitlement, nor is it guaranteed to not be overeager.
+
+If the validation fails for entitlements that actually work, please file a new issue.
 
 ## XamMacResourcePrefix
 

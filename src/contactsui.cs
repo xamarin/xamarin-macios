@@ -143,7 +143,6 @@ namespace ContactsUI {
 			get;
 			[NoiOS]
 			[NoTV]
-			[NoWatch]
 			[NoMacCatalyst]
 			set;
 		}

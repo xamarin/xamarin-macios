@@ -193,10 +193,6 @@ namespace Cecil.Tests {
 							continue;
 						}
 						foreach (var member in GetAllTypeMembers (type)) {
-							// If a member is hidden, it's probably because it's broken in some way, so don't consider it.
-							if (ObsoleteTest.HasEditorBrowseableNeverAttribute (member))
-								continue;
-
 							var mentionedPlatforms = GetAvailabilityAttributes (member).ToList ();
 							if (mentionedPlatforms.Any ()) {
 								var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList ();

@@ -11,16 +11,11 @@ parameters:
 - name: macOSName # comes from the build agent demand named macOS.Name
   displayName: Name of the version of macOS to use
   type: string
-  default: 'Sonoma'
+  default: 'Sequoia'
 
 - name: pool
   type: string
   displayName: Bot pool to use
-  default: automatic
-  values:
-  - pr
-  - ci
-  - automatic
 
 - name: isPR
   displayName: Is PR build

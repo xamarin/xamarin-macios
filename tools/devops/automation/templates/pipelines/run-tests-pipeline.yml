@@ -14,16 +14,7 @@ parameters:
   - name: macOSName # comes from the build agent demand named macOS.Name
     displayName: Name of the version of macOS to use
     type: string
-    default: 'Sonoma'
-
-  - name: pool
-    type: string
-    displayName: Bot pool to use
-    default: automatic
-    values:
-      - pr
-      - ci
-      - automatic
+    default: 'Sequoia'
 
   - name: runTests
     displayName: Run Simulator Tests
@@ -114,7 +105,6 @@ stages:
       macOSName: ${{ parameters.macOSName }}
       isPR: ${{ parameters.isPR }}
       provisionatorChannel: ${{ parameters.provisionatorChannel }}
-      pool: ${{ parameters.pool }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       runWindowsIntegration: ${{ parameters.runWindowsIntegration }}

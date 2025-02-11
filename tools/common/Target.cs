@@ -194,9 +194,7 @@ namespace Xamarin.Bundler {
 			// *** Makefile so simlauncher-sgen does not miss any framework
 
 			HashSet<string> processed = new HashSet<string> ();
-#if !MONOMAC
 			Version v80 = new Version (8, 0);
-#endif
 
 			foreach (ModuleDefinition md in productAssembly.Modules) {
 				foreach (TypeDefinition td in md.Types) {
@@ -216,20 +214,6 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC && (!NET || LEGACY_TOOLS)
-						case "QTKit":
-							// we already warn in Frameworks.cs Gather method
-							if (!Driver.LinkProhibitedFrameworks)
-								continue;
-							break;
-						case "CHIP":
-							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
-							if (Driver.XcodeVersion.Major >= 14) {
-								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
-								continue;
-							}
-							break;
-#else
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
 							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
@@ -257,23 +241,6 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-#if !NET || !LEGACY_TOOLS
-						case "WatchKit":
-							// Xcode 11 doesn't ship WatchKit for iOS
-							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
-								ErrorHelper.Warning (5219, Errors.MT5219);
-								continue;
-							}
-							break;
-						case "CHIP":
-							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
-							if (Driver.XcodeVersion.Major >= 14) {
-								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
-								continue;
-							} else if (App.IsSimulatorBuild)
-								continue;
-							break;
-#endif
 						case "GameKit":
 							if (Driver.XcodeVersion.Major >= 14 && Is32Build) {
 								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
@@ -302,7 +269,6 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-#endif
 						}
 
 						if (framework.Unavailable) {

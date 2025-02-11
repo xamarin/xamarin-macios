@@ -1,13 +1,21 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
 /// <summary>
 /// Readonly structure that represents a change in a parameter.
 /// </summary>
-readonly struct Parameter : IEquatable<Parameter> {
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>
@@ -16,7 +24,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Type of the parameter.
 	/// </summary>
-	public string Type { get; }
+	public TypeInfo Type { get; }
 
 	/// <summary>
 	/// Parameter name
@@ -39,11 +47,6 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public bool IsThis { get; init; }
 
 	/// <summary>
-	/// True if the parameter is nullable.:w
-	/// </summary>
-	public bool IsNullable { get; init; }
-
-	/// <summary>
 	/// Optional default value.
 	/// </summary>
 	public string? DefaultValue { get; init; }
@@ -54,11 +57,22 @@ readonly struct Parameter : IEquatable<Parameter> {
 	public ReferenceKind ReferenceKind { get; init; }
 
 	/// <summary>
+	/// If the parameter is a delegate. The method information of the invoke.
+	/// </summary>
+	public DelegateInfo? Delegate { get; init; } = null;
+
+	/// <summary>
+	/// True if the parameter is a delegate.
+	/// </summary>
+	//[MemberNotNullWhen (true, nameof (DelegateMethod))]
+	public bool IsDelegate => Delegate is not null;
+
+	/// <summary>
 	/// List of attributes attached to the parameter.
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
-	public Parameter (int position, string type, string name)
+	public Parameter (int position, TypeInfo type, string name)
 	{
 		Position = position;
 		Type = type;
@@ -80,11 +94,13 @@ readonly struct Parameter : IEquatable<Parameter> {
 			return false;
 		if (IsThis != other.IsThis)
 			return false;
-		if (IsNullable != other.IsNullable)
-			return false;
 		if (DefaultValue != other.DefaultValue)
 			return false;
 		if (ReferenceKind != other.ReferenceKind)
+			return false;
+		if (BindAs != other.BindAs)
+			return false;
+		if (Delegate != other.Delegate)
 			return false;
 
 		var attributeComparer = new AttributesEqualityComparer ();
@@ -97,6 +113,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		return obj is Parameter other && Equals (other);
 	}
 
+	/// <inheritdoc/>
 	public override int GetHashCode ()
 	{
 		var hashCode = new HashCode ();
@@ -106,9 +123,10 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsOptional);
 		hashCode.Add (IsParams);
 		hashCode.Add (IsThis);
-		hashCode.Add (IsNullable);
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
+		hashCode.Add (Delegate);
+		hashCode.Add (BindAs);
 		return hashCode.ToHashCode ();
 	}
 
@@ -129,14 +147,15 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"Position: {Position}, ");
 		sb.Append ($"Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
-		sb.Append ("Attributes: ");
+		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
-		sb.Append ($" IsOptional: {IsOptional}, ");
-		sb.Append ($"IsParams {IsParams}, ");
+		sb.Append ($"] IsOptional: {IsOptional}, ");
+		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
-		sb.Append ($"IsNullable: {IsNullable}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
-		sb.Append ($"ReferenceKind: {ReferenceKind} }}");
+		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
+		sb.Append ($"BindAs: {BindAs?.ToString () ?? "null"}, ");
+		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
 		return sb.ToString ();
 	}
 }

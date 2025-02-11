@@ -17,7 +17,6 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using OSStatus = System.Int32;
 
 namespace CoreMedia {
 
@@ -27,8 +26,6 @@ namespace CoreMedia {
 
 #if NET
 	// [SupportedOSPlatform ("ios")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
-#else
-	[Watch (6, 0)]
 #endif
 	public delegate nint CMBufferGetSize (INativeObject buffer);
 
@@ -453,9 +450,6 @@ namespace CoreMedia {
 		}
 #endif // !COREBUILD
 
-#if !NET
-		[Watch (6, 0)]
-#endif
 		public enum TriggerCondition {
 			WhenDurationBecomesLessThan = 1,
 			WhenDurationBecomesLessThanOrEqualTo = 2,

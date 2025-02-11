@@ -40,8 +40,6 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (6, 0)]
 #endif
 	public class AVUrlAssetOptions : DictionaryContainer {
 #if !COREBUILD
@@ -54,7 +52,6 @@ namespace AVFoundation {
 			: base (dictionary)
 		{
 		}
-#if !WATCH
 		public bool? PreferPreciseDurationAndTiming {
 			set {
 				SetBooleanValue (AVUrlAsset.PreferPreciseDurationAndTimingKey, value);
@@ -72,7 +69,6 @@ namespace AVFoundation {
 				return (AVAssetReferenceRestrictions?) (ulong?) GetNUIntValue (AVUrlAsset.ReferenceRestrictionsKey);
 			}
 		}
-#endif
 #endif
 	}
 }

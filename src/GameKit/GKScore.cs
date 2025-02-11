@@ -56,14 +56,10 @@ namespace GameKit {
 			if (categoryOrIdentifier is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (categoryOrIdentifier));
 
-#if WATCH
-			Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
-#else
 			if (SystemVersion.CheckiOS (7, 0))
 				Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 			else
 				Handle = InitWithCategory (categoryOrIdentifier);
-#endif
 		}
 	}
 }

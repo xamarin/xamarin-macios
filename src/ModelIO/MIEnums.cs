@@ -158,7 +158,7 @@ namespace ModelIO {
 		AmbientOcclusion,
 		AmbientOcclusionScale,
 		None = 0x8000,
-		UserDefined = 0x8001
+		UserDefined = 0x8001,
 	}
 
 	/// <summary>Enumerates material property types.</summary>
@@ -181,21 +181,23 @@ namespace ModelIO {
 	/// <summary>Enumerates procedures for handling texture coordinates outside of the range <c>[0.0,1.0]</c>.</summary>
 	[Native]
 	public enum MDLMaterialTextureWrapMode : ulong {
-		Clamp, Repeat, Mirror
+		Clamp,
+		Repeat,
+		Mirror,
 	}
 
 	/// <summary>Enumerates values that control how to sample between texels.</summary>
 	[Native]
 	public enum MDLMaterialTextureFilterMode : ulong {
 		Nearest,
-		Linear
+		Linear,
 	}
 
 	/// <summary>Enumerates values that control texture sampling between mipmap levels.</summary>
 	[Native]
 	public enum MDLMaterialMipMapFilterMode : ulong {
 		Nearest,
-		Linear
+		Linear,
 	}
 
 	/// <summary>Enumerates values that specify data types and sizes for texel channels.</summary>
@@ -207,7 +209,7 @@ namespace ModelIO {
 		UInt32 = 4,
 		Float16 = 258,
 		Float16SR = 770,
-		Float32 = 260
+		Float32 = 260,
 	}
 
 	/// <summary>Enumerates the types of <see cref="T:ModelIO.MDLLight" />.</summary>
@@ -224,7 +226,7 @@ namespace ModelIO {
 		SuperElliptical,
 		Photometric,
 		Probe,
-		Environment
+		Environment,
 	}
 
 	/// <summary>Enumerates camera projections.</summary>

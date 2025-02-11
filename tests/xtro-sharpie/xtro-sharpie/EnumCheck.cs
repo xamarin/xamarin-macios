@@ -244,8 +244,12 @@ namespace Extrospection {
 
 					// couldn't find a matching managed enum value for the native enum value
 					// don't report deprecated native enum values (or if the native enum itself is deprecated) as missing
-					if (!valueDecl.IsDeprecated () && !decl.IsDeprecated ())
+					if (!valueDecl.IsDeprecated () && !decl.IsDeprecated ()) {
+						// skip native enum values that aren't available on the current platform, unless it's an error enum.
+						if (!valueDecl.IsAvailable () && !IsErrorEnum (mname))
+							continue;
 						Log.On (framework).Add ($"!missing-enum-value! {type.Name} native value {valueName} = {value} not bound");
+					}
 				}
 			}
 
@@ -280,14 +284,21 @@ namespace Extrospection {
 				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
 		}
 
+		static bool IsErrorEnum (string typeName)
+		{
+			if (typeName.EndsWith ("Error", StringComparison.Ordinal))
+				return true;
+			if (typeName.EndsWith ("ErrorCode", StringComparison.Ordinal))
+				return true;
+			return false;
+		}
+
 		static bool IsErrorEnum (TypeDefinition type)
 		{
 			if (!type.IsEnum)
 				return false;
 
-			if (type.Name.EndsWith ("Error", StringComparison.Ordinal))
-				return true;
-			if (type.Name.EndsWith ("ErrorCode", StringComparison.Ordinal))
+			if (IsErrorEnum (type.Name))
 				return true;
 
 			if (!type.HasCustomAttributes)
@@ -308,6 +319,8 @@ namespace Extrospection {
 			// `Ok = 0` and `Success = 0` are often added to errors enums
 			case "Ok":
 			case "Success":
+				if (typeName.EndsWith ("Error", StringComparison.Ordinal))
+					return true;
 				if (typeName.EndsWith ("ErrorCode", StringComparison.Ordinal))
 					return true;
 				if (typeName.EndsWith ("Status", StringComparison.Ordinal))

@@ -382,9 +382,20 @@ namespace Xamarin.Tests {
 			}
 
 			var rv = Execute (executable, out var output, out string magicWord, environment);
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
-			return output.ToString ();
+			var outputString = output.ToString ();
+			if (rv.ExitCode != 0) {
+				var msg = $"'{executable}' exited with exit code {rv.ExitCode} (timed out: {rv.TimedOut} timeout: {rv.Timeout}):" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			if (!outputString.Contains (magicWord)) {
+				var msg = $"'{executable}' exited with exit code {rv.ExitCode} as expected, but did not contain the magic word '{magicWord}' ({outputString.Length}):" +
+							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
+				Console.WriteLine (msg);
+				Assert.Fail (msg);
+			}
+			return outputString;
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord, Dictionary<string, string?>? environment = null)
@@ -403,7 +414,7 @@ namespace Xamarin.Tests {
 			}
 
 			output = new StringBuilder ();
-			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (30)).Result;
 		}
 
 		public static StringBuilder AssertExecute (string executable, params string [] arguments)

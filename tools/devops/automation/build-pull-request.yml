@@ -15,16 +15,7 @@ parameters:
 - name: macOSName # comes from the build agent demand named macOS.Name
   displayName: Name of the version of macOS to use
   type: string
-  default: 'Sonoma'
-
-- name: pool
-  type: string
-  displayName: Bot pool to use
-  default: automatic
-  values:
-  - pr
-  - ci
-  - automatic
+  default: 'Sequoia'
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
@@ -129,12 +120,6 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  - repository: sdk-insertions
-    type: github
-    name: xamarin/sdk-insertions
-    ref: refs/heads/main
-    endpoint: xamarin
-
   - repository: maccore
     type: github
     name: xamarin/maccore
@@ -153,12 +138,17 @@ resources:
 variables:
 - template: templates/variables/common.yml
 - template: templates/variables/api-scan.yml
-- template: templates/common/vs-release-vars.yml@sdk-insertions
 - name: Packaging.EnableSBOMSigning
   value: false
 
 
-trigger: none
+# only allow triggers from specific branches
+trigger:
+  branches:
+    include:
+    - refs/heads/dev/*
+    - refs/heads/darc-*
+    - refs/heads/backport-pr-*
 
 pr:
   autoCancel: true
@@ -209,7 +199,6 @@ extends:
         - repository: maccore
         exclude:
         - repository: yaml-templates
-        - repository: sdk-insertions
         - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
     stages:
     - template: templates/main-stage.yml
@@ -218,7 +207,7 @@ extends:
         macOSName: ${{ parameters.macOSName }}
         isPR: true
         provisionatorChannel: ${{ parameters.provisionatorChannel }}
-        pool: ${{ parameters.pool }}
+        pool: $(PRBuildPool)
         runGovernanceTests: ${{ parameters.runGovernanceTests }}
         forceInsertion: ${{ parameters.forceInsertion }}
         pushNugets: false

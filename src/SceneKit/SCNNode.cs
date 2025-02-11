@@ -11,9 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if !WATCH
 using CoreAnimation;
-#endif
 using Foundation;
 using ObjCRuntime;
 
@@ -45,7 +43,6 @@ namespace SceneKit {
 			return GetEnumerator ();
 		}
 
-#if !WATCH
 		public void AddAnimation (CAAnimation animation, string? key)
 		{
 			if (key is null) {
@@ -129,7 +126,5 @@ namespace SceneKit {
 			EnumerateChildNodes (predHandler);
 		}
 #endif
-
-#endif // !WATCH
 	}
 }

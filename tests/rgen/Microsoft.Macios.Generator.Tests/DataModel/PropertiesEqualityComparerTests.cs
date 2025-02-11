@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
@@ -23,35 +25,56 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 			new (
 				name: "SecondProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -64,25 +87,39 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "AVFoundation.AVVideo",
+				returnType: new ("AVFoundation.AVVideo"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
@@ -95,28 +132,87 @@ public class PropertiesEqualityComparerTests {
 		ImmutableArray<Property> x = [
 			new (
 				name: "FirstProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 		ImmutableArray<Property> y = [
 			new (
 				name: "FirstProperty",
-				type: "string",
+				returnType: new ("string"),
+				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [
 					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
 				],
 				accessors: [
-					new (AccessorKind.Getter, [], [])
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
 				]),
 		];
 
 		Assert.True (equalityComparer.Equals (x, y));
+	}
+
+	[Fact]
+	public void CompareDiffSmartEnum ()
+	{
+		ImmutableArray<Property> x = [
+			new (
+				name: "FirstProperty",
+				returnType: new ("string"),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [
+					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]),
+		];
+		ImmutableArray<Property> y = [
+			new (
+				name: "FirstProperty",
+				returnType: new ("string", isSmartEnum: true),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [
+					SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]),
+		];
+
+		Assert.False (equalityComparer.Equals (x, y));
 	}
 }

@@ -21,12 +21,6 @@ namespace Introspection {
 				return true;
 			}
 
-			switch (type.Namespace) {
-			case "MonoMac.QTKit": // QTKit has been removed from macOS
-			case "QTKit":
-				return true;
-			}
-
 			return base.Skip (type);
 		}
 	}

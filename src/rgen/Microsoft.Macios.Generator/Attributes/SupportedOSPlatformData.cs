@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
@@ -24,6 +26,12 @@ readonly struct SupportedOSPlatformData {
 	internal SupportedOSPlatformData (string platformName)
 	{
 		(Platform, Version) = platformName.GetPlatformAndVersion ();
+	}
+
+	internal SupportedOSPlatformData (ApplePlatform platform, Version version)
+	{
+		Platform = platform;
+		Version = version;
 	}
 
 	/// <summary>

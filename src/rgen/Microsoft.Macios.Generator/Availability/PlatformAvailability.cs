@@ -1,5 +1,9 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Xamarin.Utils;
 
 namespace Microsoft.Macios.Generator.Availability;
@@ -32,14 +36,26 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// <summary>
 	/// Dictionary that contains all the obsoleted versions and their optional data.
 	/// </summary>
-	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
+	public IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
 	readonly SortedDictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 	/// <summary>
-	/// Dictionary tath contains all the unsupported versions and their optional data.
+	/// The Dictionary which contains all the unsupported versions and their optional data.
 	/// </summary>
-	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
+	public IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
+
+	/// <summary>
+	/// Return if the platform is supported.
+	/// </summary>
+	public bool IsSupported {
+		get {
+			// a platform is supported if:
+			// 1. The supported version is not null, either the default version or a specific one
+			// 2. The default version is not in the unsupported list
+			return SupportedVersion is not null && !unsupported.ContainsKey (defaultVersion);
+		}
+	}
 
 
 	/// <summary>
@@ -49,14 +65,15 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// <returns>True if the version is default.</returns>
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
 
+
 	PlatformAvailability (ApplePlatform platform, Version? supportedVersion,
 		SortedDictionary<Version, string?> unsupportedVersions,
 		SortedDictionary<Version, (string? Message, string? Url)> obsoletedVersions)
 	{
 		Platform = platform;
 		SupportedVersion = supportedVersion;
-		unsupported = unsupportedVersions;
-		obsoleted = obsoletedVersions;
+		unsupported = new (unsupportedVersions);
+		obsoleted = new (obsoletedVersions);
 	}
 
 	/// <summary>
@@ -67,7 +84,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	{
 		Platform = other.Platform;
 		SupportedVersion = other.SupportedVersion;
-		// important, the default copy constructor of a record wont do this. It will use the same ref, not
+		// Important: the default copy constructor of a record won't do this. It will use the same ref, not
 		// something we want to do because it will mean that two records will modify the same collection
 		unsupported = new (other.unsupported);
 		obsoleted = new (other.obsoleted);
@@ -133,6 +150,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		var obsoleteComparer = new DictionaryComparer<Version, (string?, string?)> ();
 		var unsupportedComparer = new DictionaryComparer<Version, string?> ();
 
+		var x = Equals (SupportedVersion, other.SupportedVersion);
 		return Platform == other.Platform &&
 			   Equals (SupportedVersion, other.SupportedVersion) &&
 			   unsupportedComparer.Equals (unsupported, other.unsupported) &&
@@ -159,5 +177,19 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	public static bool operator != (PlatformAvailability left, PlatformAvailability right)
 	{
 		return !left.Equals (right);
+	}
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("{ ");
+		sb.Append ($"Platform: '{Platform}', ");
+		sb.Append ($"Supported: '{SupportedVersion?.ToString ()}', ");
+		sb.Append ("Unsupported: [");
+		sb.AppendJoin (", ", unsupported.Select (v => $"'{v.Key}': '{v.Value?.ToString () ?? "null"}'"));
+		sb.Append ("], Obsoleted: [");
+		sb.AppendJoin (", ", obsoleted.Select (v => $"'{v.Key}': ('{v.Value.Message?.ToString () ?? "null"}', '{v.Value.Url?.ToString () ?? "null"}')"));
+		sb.Append ("] }");
+		return sb.ToString ();
 	}
 }

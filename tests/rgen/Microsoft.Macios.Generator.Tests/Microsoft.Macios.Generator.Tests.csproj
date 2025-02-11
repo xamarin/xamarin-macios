@@ -7,6 +7,11 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>NU1608</NoWarn>
         <RootNamespace>Microsoft.Macios.Generator.Tests</RootNamespace>
+        <DefineConstants>RGEN</DefineConstants>
+
+        <!-- Ensure we do have the def rsp-->
+        <SourceDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\src'))</SourceDirectory>
+        <DotnetRspDirectory>rsp/dotnet</DotnetRspDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +32,9 @@
     </ItemGroup>
     
     <ItemGroup>
+        <Compile Include="..\..\..\src\ObjCRuntime\Stret.cs">
+          <Link>external\ObjCRuntime\Stret.cs</Link>
+        </Compile>
         <Compile Include="..\..\common\Configuration.cs" >
             <Link>external\Configuration.cs</Link>
         </Compile>
@@ -51,8 +59,20 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Remove="SmartEnum\Data\*.cs" />
-      <None Include="SmartEnum\Data\*.cs" />
+        <Compile Remove="SmartEnum\Data\*.cs" />
+        <Compile Remove="Classes\Data\*.cs" />
+        
+        <None Include="SmartEnum\Data\*.cs" />
+        <None Include="Classes\Data\*.cs" />
     </ItemGroup>
+
+
+    <Target Name="BuildTestLibraries" BeforeTargets="BeforeBuild">
+        <Message Text="Processing platform: %(Platform.Identity)" />
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetRspDirectory)/ios-defines-dotnet.rsp"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetRspDirectory)/tvos-defines-dotnet.rsp"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetRspDirectory)/macos-defines-dotnet.rsp"/>
+        <Exec Command="make -j8 -C $(SourceDirectory) $(DotnetRspDirectory)/maccatalyst-defines-dotnet.rsp"/>
+    </Target>
 
 </Project>

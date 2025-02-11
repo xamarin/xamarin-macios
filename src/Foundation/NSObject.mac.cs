@@ -42,9 +42,6 @@ namespace Foundation {
 		static IntPtr ct = Dlfcn.dlopen (Constants.CoreTextLibrary, 1);
 		static IntPtr wl = Dlfcn.dlopen (Constants.WebKitLibrary, 1);
 		static IntPtr zl = Dlfcn.dlopen (Constants.QuartzLibrary, 1);
-#if !NET
-		static IntPtr ql = Dlfcn.dlopen (Constants.QTKitLibrary, 1);
-#endif
 		static IntPtr cl = Dlfcn.dlopen (Constants.CoreLocationLibrary, 1);
 		static IntPtr ll = Dlfcn.dlopen (Constants.SecurityLibrary, 1);
 		static IntPtr zc = Dlfcn.dlopen (Constants.QuartzComposerLibrary, 1);
@@ -117,6 +114,7 @@ namespace Foundation {
 		// FSKit was removed from Xcode 16 RC, but keeping it commented, because it's likely to return in a later release
 		// static IntPtr fk = Dlfcn.dlopen (Constants.FSKitLibrary, 1);
 		static IntPtr be = Dlfcn.dlopen (Constants.BrowserEngineKitLibrary, 1);
+		static IntPtr ce = Dlfcn.dlopen (Constants.CoreHapticsLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

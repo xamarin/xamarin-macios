@@ -25,8 +25,6 @@
 //
 #pragma warning disable 414
 
-#if !WATCH // doesn't show up in watch headers
-
 using System;
 using System.Threading.Tasks;
 using System.Threading;
@@ -62,4 +60,3 @@ namespace MapKit {
 		}
 	}
 }
-#endif // !WATCH
