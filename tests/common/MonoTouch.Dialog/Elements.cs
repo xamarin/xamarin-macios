@@ -765,7 +765,7 @@ namespace MonoTouch.Dialog {
 	///   options and can render images or background images either from UIImage parameters 
 	///   or by downloading them from the net.
 	/// </summary>
-	public partial class StyledStringElement : StringElement, IImageUpdated, IColorizeBackground {
+	public partial class StyledStringElement : StringElement, IColorizeBackground {
 		static NSString [] skey = { new NSString (".1"), new NSString (".2"), new NSString (".3"), new NSString (".4") };
 
 		public StyledStringElement (string caption) : base (caption) { }
@@ -793,9 +793,7 @@ namespace MonoTouch.Dialog {
 		ExtraInfo extraInfo;
 
 		class ExtraInfo {
-			public UIImage Image; // Maybe add BackgroundImage?
 			public UIColor BackgroundColor, DetailColor;
-			public Uri Uri, BackgroundUri;
 		}
 
 		ExtraInfo OnImageInfo ()
@@ -805,36 +803,12 @@ namespace MonoTouch.Dialog {
 			return extraInfo;
 		}
 
-		// Uses the specified image (use this or ImageUri)
-		public UIImage Image {
-			get {
-				return extraInfo is null ? null : extraInfo.Image;
-			}
-			set {
-				OnImageInfo ().Image = value;
-				extraInfo.Uri = null;
-			}
-		}
-
-		// Loads the image from the specified uri (use this or Image)
-		public Uri ImageUri {
-			get {
-				return extraInfo is null ? null : extraInfo.Uri;
-			}
-			set {
-				OnImageInfo ().Uri = value;
-				extraInfo.Image = null;
-			}
-		}
-
-		// Background color for the cell (alternative: BackgroundUri)
 		public UIColor BackgroundColor {
 			get {
 				return extraInfo is null ? null : extraInfo.BackgroundColor;
 			}
 			set {
 				OnImageInfo ().BackgroundColor = value;
-				extraInfo.BackgroundUri = null;
 			}
 		}
 
@@ -844,17 +818,6 @@ namespace MonoTouch.Dialog {
 			}
 			set {
 				OnImageInfo ().DetailColor = value;
-			}
-		}
-
-		// Uri for a Background image (alternatiev: BackgroundColor)
-		public Uri BackgroundUri {
-			get {
-				return extraInfo is null ? null : extraInfo.BackgroundUri;
-			}
-			set {
-				OnImageInfo ().BackgroundUri = value;
-				extraInfo.BackgroundColor = null;
 			}
 		}
 
@@ -893,19 +856,6 @@ namespace MonoTouch.Dialog {
 			if (extraInfo is null) {
 				ClearBackground (cell);
 			} else {
-				var imgView = cell.ImageView;
-				UIImage img;
-
-				if (imgView is not null) {
-					if (extraInfo.Uri is not null)
-						img = ImageLoader.DefaultRequestImage (extraInfo.Uri, this);
-					else if (extraInfo.Image is not null)
-						img = extraInfo.Image;
-					else
-						img = null;
-					imgView.Image = img;
-				}
-
 				if (cell.DetailTextLabel is not null)
 					cell.DetailTextLabel.TextColor = extraInfo.DetailColor ?? UIColor.Gray;
 			}
@@ -934,22 +884,8 @@ namespace MonoTouch.Dialog {
 			if (extraInfo.BackgroundColor is not null) {
 				cell.TextLabel.BackgroundColor = UIColor.Clear;
 				cell.BackgroundColor = extraInfo.BackgroundColor;
-			} else if (extraInfo.BackgroundUri is not null) {
-				var img = ImageLoader.DefaultRequestImage (extraInfo.BackgroundUri, this);
-				cell.TextLabel.BackgroundColor = UIColor.Clear;
-				cell.BackgroundColor = img is null ? UIColor.White : UIColor.FromPatternImage (img);
 			} else
 				ClearBackground (cell);
-		}
-
-		void IImageUpdated.UpdatedImage (Uri uri)
-		{
-			if (uri is null || extraInfo is null)
-				return;
-			var root = GetImmediateRootElement ();
-			if (root is null || root.TableView is null)
-				return;
-			root.TableView.ReloadRows (new NSIndexPath [] { IndexPath }, UITableViewRowAnimation.None);
 		}
 
 		internal void AccessoryTap ()
@@ -1077,57 +1013,6 @@ namespace MonoTouch.Dialog {
 
 			return height + 10;
 		}
-	}
-
-	public partial class ImageStringElement : StringElement {
-		static NSString skey = new NSString ("ImageStringElement");
-		UIImage image;
-		public UITableViewCellAccessory Accessory { get; set; }
-
-		public ImageStringElement (string caption, UIImage image) : base (caption)
-		{
-			this.image = image;
-			this.Accessory = UITableViewCellAccessory.None;
-		}
-
-		public ImageStringElement (string caption, string value, UIImage image) : base (caption, value)
-		{
-			this.image = image;
-			this.Accessory = UITableViewCellAccessory.None;
-		}
-
-		public ImageStringElement (string caption, NSAction tapped, UIImage image) : base (caption, tapped)
-		{
-			this.image = image;
-			this.Accessory = UITableViewCellAccessory.None;
-		}
-
-		protected override NSString CellKey {
-			get {
-				return skey;
-			}
-		}
-		public override UITableViewCell GetCell (UITableView tv)
-		{
-			var cell = tv.DequeueReusableCell (CellKey);
-			if (cell is null) {
-				cell = new UITableViewCell (Value is null ? UITableViewCellStyle.Default : UITableViewCellStyle.Subtitle, CellKey);
-				cell.SelectionStyle = UITableViewCellSelectionStyle.Blue;
-			}
-
-			cell.Accessory = Accessory;
-			cell.TextLabel.Text = Caption;
-			cell.TextLabel.TextAlignment = Alignment;
-
-			cell.ImageView.Image = image;
-
-			// The check is needed because the cell might have been recycled.
-			if (cell.DetailTextLabel is not null)
-				cell.DetailTextLabel.Text = Value is null ? "" : Value;
-
-			return cell;
-		}
-
 	}
 
 	/// <summary>
@@ -1266,194 +1151,6 @@ namespace MonoTouch.Dialog {
 			base.Selected (dvc, tableView, path);
 		}
 
-	}
-
-	public partial class ImageElement : Element {
-		public UIImage Value;
-		static CGRect rect = new CGRect (0, 0, dimx, dimy);
-		static NSString ikey = new NSString ("ImageElement");
-		UIImage scaled;
-
-		// There's no UIImagePickerController in tvOS (and I couldn't find any suitable replacement either).
-#if !__TVOS__
-		UIPopoverController popover;
-
-		// Apple leaks this one, so share across all.
-		static UIImagePickerController picker;
-#endif // !__TVOS__
-
-		// Height for rows
-		const int dimx = 48;
-		const int dimy = 43;
-
-		// radius for rounding
-		const int rad = 10;
-
-		static UIImage MakeEmpty ()
-		{
-			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
-				using (var bit = new CGBitmapContext (IntPtr.Zero, dimx, dimy, 8, 0, cs, CGImageAlphaInfo.PremultipliedFirst)) {
-					bit.SetStrokeColor (1, 0, 0, 0.5f);
-					bit.FillRect (new CGRect (0, 0, dimx, dimy));
-
-					return UIImage.FromImage (bit.ToImage ());
-				}
-			}
-		}
-
-		UIImage Scale (UIImage source)
-		{
-			UIGraphics.BeginImageContext (new CGSize (dimx, dimy));
-			var ctx = UIGraphics.GetCurrentContext ();
-
-			var img = source.CGImage;
-			ctx.TranslateCTM (0, dimy);
-			if (img.Width > img.Height)
-				ctx.ScaleCTM (1, (nfloat) (-img.Width / dimy));
-			else
-				ctx.ScaleCTM ((nfloat) img.Height / dimx, -1);
-
-			ctx.DrawImage (rect, source.CGImage);
-
-			var ret = UIGraphics.GetImageFromCurrentImageContext ();
-			UIGraphics.EndImageContext ();
-			return ret;
-		}
-
-		public ImageElement (UIImage image) : base ("")
-		{
-			if (image is null) {
-				Value = MakeEmpty ();
-				scaled = Value;
-			} else {
-				Value = image;
-				scaled = Scale (Value);
-			}
-		}
-
-		protected override NSString CellKey {
-			get {
-				return ikey;
-			}
-		}
-
-		public override UITableViewCell GetCell (UITableView tv)
-		{
-			var cell = tv.DequeueReusableCell (CellKey);
-			if (cell is null) {
-				cell = new UITableViewCell (UITableViewCellStyle.Default, CellKey);
-			}
-
-			if (scaled is null)
-				return cell;
-
-			Section psection = Parent as Section;
-			bool roundTop = psection.Elements [0] == this;
-			bool roundBottom = psection.Elements [psection.Elements.Count - 1] == this;
-
-			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
-				using (var bit = new CGBitmapContext (IntPtr.Zero, dimx, dimy, 8, 0, cs, CGImageAlphaInfo.PremultipliedFirst)) {
-					// Clipping path for the image, different on top, middle and bottom.
-					if (roundBottom) {
-						bit.AddArc (rad, rad, rad, (float) Math.PI, (float) (3 * Math.PI / 2), false);
-					} else {
-						bit.MoveTo (0, rad);
-						bit.AddLineToPoint (0, 0);
-					}
-					bit.AddLineToPoint (dimx, 0);
-					bit.AddLineToPoint (dimx, dimy);
-
-					if (roundTop) {
-						bit.AddArc (rad, dimy - rad, rad, (float) (Math.PI / 2), (float) Math.PI, false);
-						bit.AddLineToPoint (0, rad);
-					} else {
-						bit.AddLineToPoint (0, dimy);
-					}
-					bit.Clip ();
-					bit.DrawImage (rect, scaled.CGImage);
-
-					cell.ImageView.Image = UIImage.FromImage (bit.ToImage ());
-				}
-			}
-			return cell;
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			if (disposing) {
-				if (scaled is not null) {
-					scaled.Dispose ();
-					Value.Dispose ();
-					scaled = null;
-					Value = null;
-				}
-			}
-			base.Dispose (disposing);
-		}
-
-#if !__TVOS__
-		class MyDelegate : UIImagePickerControllerDelegate {
-			ImageElement container;
-			UITableView table;
-			NSIndexPath path;
-
-			public MyDelegate (ImageElement container, UITableView table, NSIndexPath path)
-			{
-				this.container = container;
-				this.table = table;
-				this.path = path;
-			}
-
-#if !NET
-			public override void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo)
-			{
-				container.Picked (image);
-				table.ReloadRows (new NSIndexPath [] { path }, UITableViewRowAnimation.None);
-			}
-#else
-			public override void FinishedPickingMedia (UIImagePickerController picker, NSDictionary info)
-			{
-				var image = (UIImage) (info [UIImagePickerController.OriginalImage] ?? info [UIImagePickerController.EditedImage]);
-				container.Picked (image);
-				table.ReloadRows (new NSIndexPath [] { path }, UITableViewRowAnimation.None);
-			}
-#endif
-		}
-
-		void Picked (UIImage image)
-		{
-			Value = image;
-			scaled = Scale (image);
-			currentController.DismissModalViewController (true);
-		}
-
-		UIViewController currentController;
-		public override void Selected (DialogViewController dvc, UITableView tableView, NSIndexPath path)
-		{
-			if (picker is null)
-				picker = new UIImagePickerController ();
-			picker.Delegate = new MyDelegate (this, tableView, path);
-
-			switch (UIDevice.CurrentDevice.UserInterfaceIdiom) {
-			case UIUserInterfaceIdiom.Pad:
-				CGRect useRect;
-				popover = new UIPopoverController (picker);
-				var cell = tableView.CellAt (path);
-				if (cell is null)
-					useRect = rect;
-				else
-					useRect = cell.Frame;
-				popover.PresentFromRect (useRect, dvc.View, UIPopoverArrowDirection.Any, true);
-				break;
-
-			default:
-			case UIUserInterfaceIdiom.Phone:
-				dvc.ActivateController (picker);
-				break;
-			}
-			currentController = dvc;
-		}
-#endif // !__TVOS__
 	}
 
 	/// <summary>

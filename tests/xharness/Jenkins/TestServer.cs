@@ -95,7 +95,17 @@ namespace Xharness.Jenkins {
 						}
 
 						string serveFile = null;
-						switch (request.Url.LocalPath) {
+						var localPath = request.Url.LocalPath;
+						if (localPath.Contains ("..") || localPath.Contains ("/") || localPath.Contains ("\\")) {
+							// Validate that we're not requested to serve any file on the file system.
+							// Ref: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2351243
+							response.StatusCode = 400;
+							response.StatusDescription = "Bad Request";
+							response.Write ("Invalid local path");
+							return;
+						}
+
+						switch (localPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
 							using (var writer = new StreamWriter (response.OutputStream)) {
@@ -188,10 +198,10 @@ namespace Xharness.Jenkins {
 										writer.WriteLine ("unknown query: {0}", request.Url.Query);
 										break;
 									}
-									if (request.Url.LocalPath == "/select") {
+									if (localPath == "/select") {
 										if (is_match.HasValue && is_match.Value)
 											task.Ignored = false;
-									} else if (request.Url.LocalPath == "/deselect") {
+									} else if (localPath == "/deselect") {
 										if (is_match.HasValue && is_match.Value)
 											task.Ignored = true;
 									}
@@ -273,17 +283,17 @@ namespace Xharness.Jenkins {
 							response.Redirect (redirect_to);
 							break;
 						default:
-							var filename = Path.GetFileName (request.Url.LocalPath);
-							if (filename == "index.html" && Path.GetFileName (jenkins.LogDirectory) == Path.GetFileName (Path.GetDirectoryName (request.Url.LocalPath))) {
+							var filename = Path.GetFileName (localPath);
+							if (filename == "index.html" && Path.GetFileName (jenkins.LogDirectory) == Path.GetFileName (Path.GetDirectoryName (localPath))) {
 								// We're asked for the report for the current test run, so re-generate it.
 								jenkins.GenerateReport ();
 							}
 
 							if (serveFile is null) {
-								serveFile = Path.Combine (Path.GetDirectoryName (jenkins.LogDirectory), request.Url.LocalPath.Substring (1));
+								serveFile = Path.Combine (Path.GetDirectoryName (jenkins.LogDirectory), localPath.Substring (1));
 								serveFile = Path.GetFullPath (serveFile);
 								if (!serveFile.StartsWith (Path.GetDirectoryName (Path.GetFullPath (jenkins.LogDirectory)) + Path.DirectorySeparatorChar)) {
-									Console.WriteLine ($"400: {request.Url.LocalPath}");
+									Console.WriteLine ($"400: {localPath}");
 									response.StatusCode = 400;
 									response.OutputStream.WriteByte ((byte) '?');
 									break;
@@ -316,7 +326,7 @@ namespace Xharness.Jenkins {
 										response.OutputStream.Write (buffer, 0, read);
 								}
 							} else {
-								Console.WriteLine ($"404: {request.Url.LocalPath}");
+								Console.WriteLine ($"404: {localPath}");
 								response.StatusCode = 404;
 								response.OutputStream.WriteByte ((byte) '?');
 							}
