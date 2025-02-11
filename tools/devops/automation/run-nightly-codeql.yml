@@ -59,6 +59,7 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
+        use1ES: false
         buildSteps:
           - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-nugets.sh
             displayName: 'Build Nugets'
