@@ -76,7 +76,7 @@ readonly partial struct Method {
 
 			// based on the configuration flags of the method and the return type we can decide if we need a
 			// temp return type
-#pragma warning disable fomat
+#pragma warning disable format
 			return (Method: this, ByRefParameterCount: byRefParameterCount) switch {
 				// focus first on the flags, since those are manually added and have more precedence
 				{ ByRefParameterCount: > 0 } => true, 
@@ -95,7 +95,7 @@ readonly partial struct Method {
 				// default will be false
 				_ => false
 			};
-#pragma warning restore fomat
+#pragma warning restore format
 		}
 	}
 

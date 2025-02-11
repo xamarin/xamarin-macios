@@ -108,7 +108,7 @@ readonly partial struct Property {
 		get {
 			// based on the configuration flags of the method and the return type we can decide if we need a
 			// temp return type
-#pragma warning disable fomat
+#pragma warning disable format
 			return this switch {
 				// focus first on the flags, since those are manually added and have more precedence
 				{ ReleaseReturnValue: true } => true, 
@@ -125,7 +125,7 @@ readonly partial struct Property {
 				// default will be false
 				_ => false
 			};
-#pragma warning restore fomat
+#pragma warning restore format
 		}
 
 	}
