@@ -97,9 +97,9 @@ readonly partial struct Method {
 	{
 		if (!IsConstructor)
 			return null;
-		
+
 		// do not allow constructors to have ref parameters
-		if (Parameters.Any(p => p.ReferenceKind != ReferenceKind.None))
+		if (Parameters.Any (p => p.ReferenceKind != ReferenceKind.None))
 			return null;
 
 		return new Constructor (this);

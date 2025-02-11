@@ -481,7 +481,7 @@ interface AVPlayer {
 						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
 					])
 			];
-			
+
 			yield return [
 				new Method (
 					type: "MyType",
@@ -490,7 +490,7 @@ interface AVPlayer {
 					symbolAvailability: new (),
 					attributes: new (),
 					parameters: [
-						new Parameter (0, ReturnTypeForString (), "name") {ReferenceKind = ReferenceKind.Out},
+						new Parameter (0, ReturnTypeForString (), "name") { ReferenceKind = ReferenceKind.Out },
 						new Parameter (1, ReturnTypeForString (isNullable: true), "surname")
 					]),
 				null!
