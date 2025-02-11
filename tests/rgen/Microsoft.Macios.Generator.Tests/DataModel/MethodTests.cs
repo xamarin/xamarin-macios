@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
+#pragma warning disable APL0003
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -16,6 +19,38 @@ using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class MethodTests : BaseGeneratorTestClass {
+
+	[Fact]
+	public void IsThreadSafe ()
+	{
+		var method = new Method (
+			type: "NS.MyClass",
+			name: "MyMethod",
+			returnType: ReturnTypeForVoid (),
+			symbolAvailability: new (),
+			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.IsThreadSafe),
+			attributes: [],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: []
+		);
+		Assert.True (method.IsThreadSafe);
+
+		method = new Method (
+			type: "NS.MyClass",
+			name: "MyMethod",
+			returnType: ReturnTypeForVoid (),
+			symbolAvailability: new (),
+			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.Default),
+			attributes: [],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+			],
+			parameters: []
+		);
+		Assert.False (method.IsThreadSafe);
+	}
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -535,6 +570,75 @@ namespace NS {
 								new (name: "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute", arguments: ["true"])
 							],
 						},
+					]
+				)
+			];
+
+			const string returnTypeBindFromAttribute = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS {
+	public class MyClass {
+		[return: BindFrom (typeof(NSNumber))]
+		public int MyMethod () {}
+	}
+}
+";
+
+			yield return [
+				returnTypeBindFromAttribute,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForInt (),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [
+						new ("ObjCBindings.BindFromAttribute", ["Foundation.NSNumber"]),
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: []
+				) {
+					BindAs = new ("Foundation.NSNumber"),
+				}
+			];
+
+			const string parameterBindFromAttr = @"
+using System;
+using Foundation;
+using ObjCBindings;
+
+namespace NS {
+	public class MyClass {
+		public void MyMethod ([BindFrom (typeof(NSNumber))] int value) {}
+	}
+}
+";
+
+			yield return [
+				parameterBindFromAttr,
+				new Method (
+					type: "NS.MyClass",
+					name: "MyMethod",
+					returnType: ReturnTypeForVoid (),
+					symbolAvailability: new (),
+					exportMethodData: new (),
+					attributes: [
+					],
+					modifiers: [
+						SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+					],
+					parameters: [
+						new (0, ReturnTypeForInt (), "value") {
+							Attributes = [
+								new ("ObjCBindings.BindFromAttribute", ["Foundation.NSNumber"]),
+							],
+							BindAs = new BindFromData ("Foundation.NSNumber"),
+						}
 					]
 				)
 			];

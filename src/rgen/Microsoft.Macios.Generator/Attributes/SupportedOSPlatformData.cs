@@ -28,6 +28,12 @@ readonly struct SupportedOSPlatformData {
 		(Platform, Version) = platformName.GetPlatformAndVersion ();
 	}
 
+	internal SupportedOSPlatformData (ApplePlatform platform, Version version)
+	{
+		Platform = platform;
+		Version = version;
+	}
+
 	/// <summary>
 	/// Try to parse the attribute data to retrieve the information of an SupportedOSPlatformAttribute.
 	/// </summary>

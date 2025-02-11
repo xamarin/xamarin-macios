@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,7 +14,8 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly structure that represents a change in a parameter.
 /// </summary>
-readonly struct Parameter : IEquatable<Parameter> {
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>
@@ -77,27 +79,6 @@ readonly struct Parameter : IEquatable<Parameter> {
 		Name = name;
 	}
 
-	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
-		[NotNullWhen (true)] out Parameter? parameter)
-	{
-		DelegateInfo? delegateInfo = null;
-		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
-			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
-			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
-		}
-
-		parameter = new (symbol.Ordinal, new (symbol.Type), symbol.Name) {
-			IsOptional = symbol.IsOptional,
-			IsParams = symbol.IsParams,
-			IsThis = symbol.IsThis,
-			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
-			ReferenceKind = symbol.RefKind.ToReferenceKind (),
-			Delegate = delegateInfo,
-			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
-		};
-		return true;
-	}
-
 	/// <inheritdoc/>
 	public bool Equals (Parameter other)
 	{
@@ -116,6 +97,8 @@ readonly struct Parameter : IEquatable<Parameter> {
 		if (DefaultValue != other.DefaultValue)
 			return false;
 		if (ReferenceKind != other.ReferenceKind)
+			return false;
+		if (BindAs != other.BindAs)
 			return false;
 		if (Delegate != other.Delegate)
 			return false;
@@ -143,6 +126,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
 		hashCode.Add (Delegate);
+		hashCode.Add (BindAs);
 		return hashCode.ToHashCode ();
 	}
 
@@ -163,13 +147,14 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"Position: {Position}, ");
 		sb.Append ($"Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
-		sb.Append ("Attributes: ");
+		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
-		sb.Append ($" IsOptional: {IsOptional}, ");
+		sb.Append ($"] IsOptional: {IsOptional}, ");
 		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
 		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
+		sb.Append ($"BindAs: {BindAs?.ToString () ?? "null"}, ");
 		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
 		return sb.ToString ();
 	}
