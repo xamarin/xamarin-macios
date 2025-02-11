@@ -44,6 +44,10 @@ parameters:
     type: boolean
     default: true
 
+- name: disableCodeQL
+  type: boolean
+  default: true
+
 steps:
 
   - template: ../common/checkout.yml
@@ -54,6 +58,7 @@ steps:
 
   - template: ../common/setup.yml
     parameters:
+      disableCodeQL: ${{ parameters.disableCodeQL }}
       keyringPass: ${{ parameters.keyringPass }}
 
   - template: install-certificates.yml@yaml-templates
