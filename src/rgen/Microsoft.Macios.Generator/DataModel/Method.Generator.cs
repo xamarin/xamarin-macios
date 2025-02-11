@@ -76,7 +76,7 @@ readonly partial struct Method {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}
@@ -90,7 +90,7 @@ readonly partial struct Method {
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: new TypeInfo (method.ReturnType),
+			returnType: new TypeInfo (method.ReturnType, context.Compilation),
 			symbolAvailability: method.GetSupportedPlatforms (),
 			exportMethodData: exportData,
 			attributes: attributes,

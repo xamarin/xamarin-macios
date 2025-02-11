@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -40,7 +41,7 @@ readonly partial struct Parameter {
 		}
 	}
 
-	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
+	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{
 		DelegateInfo? delegateInfo = null;
@@ -49,7 +50,7 @@ readonly partial struct Parameter {
 			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
 		}
 
-		parameter = new (symbol.Ordinal, new (symbol.Type), symbol.Name) {
+		parameter = new (symbol.Ordinal, new (symbol.Type, context.Compilation), symbol.Name) {
 			BindAs = symbol.GetBindFromData (),
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
@@ -57,7 +58,7 @@ readonly partial struct Parameter {
 			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
 			ReferenceKind = symbol.RefKind.ToReferenceKind (),
 			Delegate = delegateInfo,
-			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
+			Attributes = declaration.GetAttributeCodeChanges (context.SemanticModel),
 		};
 		return true;
 	}
