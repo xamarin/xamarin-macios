@@ -31,12 +31,6 @@ steps:
   env:
     IS_PR: and(eq(parameters.isPR, 'true'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull')))
 
-# - checkout: maccore
-#   clean: true
-#   fetchDepth: 0
-#   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
-#   fetchTags: false
-
 - checkout: macios-adr
   clean: true
   fetchDepth: 0
@@ -46,7 +40,3 @@ steps:
 - checkout: yaml-templates
   clean: true
   fetchTags: false
-
-# - pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
-#   displayName: 'Clean git mess from VSTS'
-#   workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts

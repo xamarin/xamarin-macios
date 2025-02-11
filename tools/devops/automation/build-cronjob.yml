@@ -32,12 +32,6 @@ resources:
     ref: refs/heads/main
     endpoint: xamarin
 
-  # - repository: maccore
-  #   type: github
-  #   name: xamarin/maccore
-  #   ref: refs/heads/main
-  #   endpoint: xamarin
-
 trigger:
 - main
 

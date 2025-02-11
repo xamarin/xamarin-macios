@@ -42,17 +42,6 @@ steps:
     xqaCertPass: ${{ parameters.xqaCertPass }}
     buildSteps:
 
-    # # funny enough we need these profiles to build the mac tests
-    # - template: ../common/install-qa-provisioning-profiles.yml
-    #   parameters:
-    #     env:
-    #       AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-    #       AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-    #       AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-    #       AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-    #       AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-    #       AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-
     - bash: |
         set -x
         set -e

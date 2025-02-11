@@ -72,7 +72,6 @@ extends:
       sourceRepositoriesToScan:
         runInSingleJob: true  # run both maccore and macios in the same job
         include:
-        #   - repository: maccore
           - repository: self
             path: xamarin-macios        
         exclude:
