@@ -31,10 +31,6 @@ using UIKit;
 using NSImage = Foundation.NSObject;
 #endif
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace Intents {
 
 	// HACK only to please the generator - which does not (normally) know the type hierarchy in the
@@ -183,12 +179,8 @@ namespace Intents {
 		All
 	}
 
-#if NET
 	/// <summary>Enumerates operators to be used with search predicates.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -361,10 +353,8 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-#if NET
 	/// <summary>Enumerates the attributes of a message.</summary>
 	[NoMac]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -374,19 +364,13 @@ namespace Intents {
 		Unread,
 		Flagged,
 		Unflagged,
-#if NET
 		[NoMac]
-#endif
 		[MacCatalyst (13, 1)]
 		Played,
 	}
 
-#if NET
 	/// <summary>Enumerates the statuses of a message.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -396,9 +380,7 @@ namespace Intents {
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
 		Unflagged = (1 << 3),
-#if NET
 		[NoMac]
-#endif
 		[MacCatalyst (13, 1)]
 		Played = (1UL << 4),
 	}
@@ -665,12 +647,8 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
-#if NET
 	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchCallHistoryIntent" />.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -690,12 +668,8 @@ namespace Intents {
 		Success,
 	}
 
-#if NET
 	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSearchForMessagesIntent" />.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -817,10 +791,8 @@ namespace Intents {
 		FailureRequiringAppLaunch
 	}
 
-#if NET
 	/// <summary>Enumerates results codes for the <see cref="T:Intents.INSetMessageAttributeIntent" />.</summary>
 	[NoMac]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -894,12 +866,8 @@ namespace Intents {
 		Authorized,
 	}
 
-#if NET
 	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartAudioCallIntent" />.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -938,12 +906,8 @@ namespace Intents {
 		FailureAppConfigurationRequired,
 	}
 
-#if NET
 	/// <summary>Enumerates results codes for the <see cref="T:Intents.INStartVideoCallIntent" />.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -1395,12 +1359,8 @@ namespace Intents {
 		ByLocationTrigger,
 	}
 
-#if NET
 	/// <summary>Enumerates message content types.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -2425,102 +2385,58 @@ namespace Intents {
 		[Field (null)]
 		None,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipMother")]
 		Mother,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipParent")]
 		Parent,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipBrother")]
 		Brother,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipSister")]
 		Sister,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipChild")]
 		Child,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipFriend")]
 		Friend,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipSpouse")]
 		Spouse,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipPartner")]
 		Partner,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipAssistant")]
 		Assistant,
 
-#if NET
 		[NoMac]
 		[MacCatalyst (13, 1)]
-#else
-		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 		[Field ("INPersonRelationshipManager")]
 		Manager,
 
@@ -2690,12 +2606,8 @@ namespace Intents {
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[MacCatalyst (13, 1)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
-#if NET
 		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
-#else
-		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
-		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, ulong partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
-#endif
+
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
@@ -2729,13 +2641,7 @@ namespace Intents {
 		void HandleBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmBookRestaurantReservation
-#endif
-		(INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
+		void Confirm (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("resolveRestaurantForBookRestaurantReservation:withCompletion:")]
 		void ResolveRestaurant (INBookRestaurantReservationIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -2833,12 +2739,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCallRecordType:")]
-		INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedCallRecordType);
+		INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCallRecordTypeToConfirm:")]
-		INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType callRecordTypeToConfirm);
+		INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2901,13 +2807,7 @@ namespace Intents {
 		void HandleCancelWorkout (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("confirmCancelWorkout:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmCancelWorkout
-#endif
-		(INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
+		void Confirm (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForCancelWorkout:withCompletion:")]
 		void ResolveWorkoutName (INCancelWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -2948,12 +2848,20 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCarAirCirculationMode:")]
-		INCarAirCirculationModeResolutionResult GetSuccess (INCarAirCirculationMode resolvedCarAirCirculationMode);
+		INCarAirCirculationModeResolutionResult GetSuccess (INCarAirCirculationMode resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarAirCirculationModeToConfirm:")]
-		INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode carAirCirculationModeToConfirm);
+		INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode valueToConfirm);
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'GetConfirmationRequired' instead.")]
+		[MacCatalyst (13, 1)]
+		[Static]
+		[Export ("confirmationRequiredWithCarAirCirculationModeToConfirm:")]
+		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithCarAirCirculationModeToConfirm (INCarAirCirculationMode carAirCirculationModeToConfirm);
+#endif // XAMCORE_5_0
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3004,19 +2912,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCarAudioSource:")]
-		INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedCarAudioSource);
+		INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarAudioSourceToConfirm:")]
-		INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource carAudioSourceToConfirm);
-
-		[Internal]
-		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarAudioSourceResolutionResult ConfirmationRequiredWithValueToConfirm (INCarAudioSource valueToConfirm);
+		INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3067,12 +2968,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCarDefroster:")]
-		INCarDefrosterResolutionResult GetSuccess (INCarDefroster resolvedCarDefroster);
+		INCarDefrosterResolutionResult GetSuccess (INCarDefroster resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarDefrosterToConfirm:")]
-		INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster carDefrosterToConfirm);
+		INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3123,12 +3024,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCarSeat:")]
-		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedCarSeat);
+		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
-		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat carSeatToConfirm);
+		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -3254,9 +3155,7 @@ namespace Intents {
 		NativeHandle Constructor (EKRecurrenceRule recurrenceRule);
 
 		// Headers claim the recurrenceRule property is available in macOS, but the parameter type INRecurrenceRule is not, so...
-#if NET
 		[NoMac]
-#endif
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
@@ -3270,9 +3169,7 @@ namespace Intents {
 		NSDateComponents EndDateComponents { get; }
 
 		// Headers claim the recurrenceRule property is available in macOS, but the property type (INRecurrenceRule) is not, so...
-#if NET
 		[NoMac]
-#endif
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
@@ -3285,15 +3182,11 @@ namespace Intents {
 		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving a range of dates.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INDateComponentsRangeResolutionResult">Apple documentation for <c>INDateComponentsRangeResolutionResult</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -3345,10 +3238,8 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if NET
 	/// <summary> Interface combining several interfaces related to various phone-call intents.</summary>
 	[NoMac]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INStartAudioCallIntentHandling, INStartVideoCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -3417,9 +3308,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling, INSearchForAccountsIntentHandling and INTransferMoneyIntentHandling' instead.")]
 	[Protocol]
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
-#endif
 	{
 	}
 
@@ -3441,9 +3330,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling, INCancelRideIntentHandling and INSendRideFeedbackIntentHandling' instead.")]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling
-#if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
-#endif
 	{
 	}
 
@@ -3596,13 +3483,7 @@ namespace Intents {
 		void HandleEndWorkout (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("confirmEndWorkout:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmEndWorkout
-#endif
-		(INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
+		void Confirm (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForEndWorkout:withCompletion:")]
 		void ResolveWorkoutName (INEndWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -3672,13 +3553,7 @@ namespace Intents {
 		void HandleAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmAvailableRestaurantReservationBookingDefaults
-#endif
-		(INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
+		void Confirm (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookingDefaults:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -3760,13 +3635,7 @@ namespace Intents {
 		void HandleAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmAvailableRestaurantReservationBookings
-#endif
-		(INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
+		void Confirm (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookings:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -3829,13 +3698,7 @@ namespace Intents {
 		void HandleRestaurantGuest (INGetRestaurantGuestIntent intent, Action<INGetRestaurantGuestIntentResponse> completion);
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmRestaurantGuest
-#endif
-		(INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
+		void Confirm (INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
 	}
 
 	/// <summary>
@@ -3896,13 +3759,7 @@ namespace Intents {
 		void StopSendingUpdates (INGetRideStatusIntent intent);
 
 		[Export ("confirmGetRideStatus:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmRideStatus
-#endif
-		(INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
+		void Confirm (INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
 	}
 
 	interface IINGetRideStatusIntentResponseObserver { }
@@ -3982,13 +3839,7 @@ namespace Intents {
 		void HandleUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmUserCurrentRestaurantReservationBookings
-#endif
-		(INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
+		void Confirm (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetUserCurrentRestaurantReservationBookings:withCompletion:")]
 		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -4321,13 +4172,7 @@ namespace Intents {
 		void HandleListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("confirmListRideOptions:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmListRideOptions
-#endif
-		(INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
+		void Confirm (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForListRideOptions:withCompletion:")]
 		void ResolvePickupLocation (INListRideOptionsIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -4364,14 +4209,10 @@ namespace Intents {
 		NSDate ExpirationDate { get; set; }
 	}
 
-#if NET
 	/// <summary>Encapsulates Intents / SiriKit information regarding a messaging-service message.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessage">Apple documentation for <c>INMessage</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4514,15 +4355,11 @@ namespace Intents {
 
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving messages.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessageAttributeOptionsResolutionResult">Apple documentation for <c>INMessageAttributeOptionsResolutionResult</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -4532,12 +4369,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedMessageAttributeOptions:")]
-		INMessageAttributeOptionsResolutionResult GetSuccess (INMessageAttributeOptions resolvedMessageAttributeOptions);
+		INMessageAttributeOptionsResolutionResult GetSuccess (INMessageAttributeOptions resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeOptionsToConfirm:")]
-		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithMessageAttributeOptionsToConfirm (INMessageAttributeOptions messageAttributeOptionsToConfirm);
+		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (INMessageAttributeOptions valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -4572,13 +4409,11 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving messages.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INMessageAttributeResolutionResult">Apple documentation for <c>INMessageAttributeResolutionResult</c></related>
 	[NoMac]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -4588,12 +4423,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedMessageAttribute:")]
-		INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedMessageAttribute);
+		INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeToConfirm:")]
-		INMessageAttributeResolutionResult GetConfirmationRequired (INMessageAttribute messageAttributeToConfirm);
+		INMessageAttributeResolutionResult GetConfirmationRequired (INMessageAttribute valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -4656,13 +4491,7 @@ namespace Intents {
 		void HandlePauseWorkout (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("confirmPauseWorkout:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmPauseWorkout
-#endif
-		(INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
+		void Confirm (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForPauseWorkout:withCompletion:")]
 		void ResolveWorkoutName (INPauseWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -4986,9 +4815,7 @@ namespace Intents {
 	}
 
 	[Unavailable (PlatformName.MacOSX)]
-#if NET || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
-#endif
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -5247,13 +5074,7 @@ namespace Intents {
 		void HandleRequestPayment (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
 		[Export ("confirmRequestPayment:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmRequestPayment
-#endif
-		(INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
+		void Confirm (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
@@ -5349,13 +5170,7 @@ namespace Intents {
 		void HandleRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("confirmRequestRide:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmRequestRide
-#endif
-		(INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
+		void Confirm (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForRequestRide:withCompletion:")]
 		void ResolvePickupLocation (INRequestRideIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -5718,13 +5533,7 @@ namespace Intents {
 		void HandleResumeWorkout (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("confirmResumeWorkout:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmResumeWorkout
-#endif
-		(INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
+		void Confirm (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForResumeWorkout:withCompletion:")]
 		void ResolveWorkoutName (INResumeWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -5889,9 +5698,9 @@ namespace Intents {
 		[NullAllowed, Export ("priceRange", ArgumentSemantic.Copy)]
 		INPriceRange PriceRange { get; set; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("usesMeteredFare", ArgumentSemantic.Copy)]
-		NSNumber _UsesMeteredFare { get; set; }
+		NSNumber UsesMeteredFare { get; set; }
 
 		[NullAllowed, Export ("disclaimerMessage")]
 		string DisclaimerMessage { get; set; }
@@ -6066,13 +5875,7 @@ namespace Intents {
 		void HandleSaveProfileInCar (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSaveProfileInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSaveProfileInCar
-#endif
-		(INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
+		void Confirm (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
@@ -6103,14 +5906,10 @@ namespace Intents {
 		INSaveProfileInCarIntentResponseCode Code { get; }
 	}
 
-#if NET
 	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search the call history.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchCallHistoryIntent">Apple documentation for <c>INSearchCallHistoryIntent</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6156,11 +5955,7 @@ namespace Intents {
 		NSNumber WeakUnseen { get; }
 	}
 
-#if NET
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6173,13 +5968,7 @@ namespace Intents {
 		void HandleSearchCallHistory (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
 		[Export ("confirmSearchCallHistory:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSearchCallHistory
-#endif
-		(INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
+		void Confirm (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveCallTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCallTypes' instead.")]
@@ -6203,15 +5992,11 @@ namespace Intents {
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchCallHistoryIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchCallHistoryIntentResponse">Apple documentation for <c>INSearchCallHistoryIntentResponse</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -6232,14 +6017,10 @@ namespace Intents {
 		INCallRecord [] CallRecords { get; set; }
 	}
 
-#if NET
 	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to search their message history.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForMessagesIntent">Apple documentation for <c>INSearchForMessagesIntent</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
@@ -6328,11 +6109,7 @@ namespace Intents {
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
 
-#if NET
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Protocol]
@@ -6343,13 +6120,7 @@ namespace Intents {
 		void HandleSearchForMessages (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("confirmSearchForMessages:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSearchForMessages
-#endif
-		(INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
+		void Confirm (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
 		void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult []> completion);
@@ -6374,15 +6145,11 @@ namespace Intents {
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINSearchForMessagesIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSearchForMessagesIntentResponse">Apple documentation for <c>INSearchForMessagesIntentResponse</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
@@ -6456,13 +6223,7 @@ namespace Intents {
 		void HandleSearchForPhotos (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("confirmSearchForPhotos:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSearchForPhotos
-#endif
-		(INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
+		void Confirm (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForSearchForPhotos:withCompletion:")]
 		void ResolveDateCreated (INSearchForPhotosIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -6601,13 +6362,7 @@ namespace Intents {
 		void HandleSendMessage (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
 		[Export ("confirmSendMessage:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSendMessage
-#endif
-		(INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
+		void Confirm (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
@@ -6633,9 +6388,7 @@ namespace Intents {
 		[Export ("resolveOutgoingMessageTypeForSendMessage:withCompletion:")]
 		void ResolveOutgoingMessageType (INSendMessageIntent intent, Action<INOutgoingMessageTypeResolutionResult> completion);
 
-#if NET
 		[NoMac] // The INSpeakableStringResolutionResult used as a parameter type is not available in macOS
-#endif
 		[MacCatalyst (13, 1)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6658,9 +6411,7 @@ namespace Intents {
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
 
-#if NET
 		[NoMac] // The INMessage type isn't available in macOS
-#endif
 		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the 'SentMessages' property instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'SentMessages' property instead.")]
 		[MacCatalyst (13, 1)]
@@ -6708,13 +6459,7 @@ namespace Intents {
 		void HandleSendPayment (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
 		[Export ("confirmSendPayment:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSendPayment
-#endif
-		(INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
+		void Confirm (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
@@ -6795,13 +6540,7 @@ namespace Intents {
 		void HandleSetAudioSourceInCar (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetAudioSourceInCar
-#endif
-		(INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
+		void Confirm (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("resolveAudioSourceForSetAudioSourceInCar:withCompletion:")]
 		void ResolveAudioSource (INSetAudioSourceInCarIntent intent, Action<INCarAudioSourceResolutionResult> completion);
@@ -6872,15 +6611,11 @@ namespace Intents {
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
-#if NET
 		[BindAs (typeof (int?))]
-#endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
-#if NET
 		[BindAs (typeof (double?))]
-#endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedPercentage { get; }
 
@@ -6914,13 +6649,7 @@ namespace Intents {
 		void HandleSetClimateSettingsInCar (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetClimateSettingsInCar
-#endif
-		(INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
+		void Confirm (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableFanForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveEnableFan (INSetClimateSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -7028,13 +6757,7 @@ namespace Intents {
 		void HandleSetDefrosterSettingsInCar (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetDefrosterSettingsInCar
-#endif
-		(INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
+		void Confirm (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveEnable (INSetDefrosterSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -7099,13 +6822,7 @@ namespace Intents {
 		void HandleSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("confirmSetMessageAttribute:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetMessageAttribute
-#endif
-		(INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
+		void Confirm (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("resolveAttributeForSetMessageAttribute:withCompletion:")]
 		void ResolveAttribute (INSetMessageAttributeIntent intent, Action<INMessageAttributeResolutionResult> completion);
@@ -7140,6 +6857,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetProfileInCarIntent {
+		[Protected]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
@@ -7155,9 +6873,7 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed][BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed][BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
 
-#if NET
 		[BindAs (typeof (int?))]
-#endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
@@ -7192,13 +6908,7 @@ namespace Intents {
 		void HandleSetProfileInCar (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSetProfileInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetProfileInCar
-#endif
-		(INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
+		void Confirm (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSetProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSetProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
@@ -7282,13 +6992,7 @@ namespace Intents {
 		void HandleSetRadioStation (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("confirmSetRadioStation:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetRadioStation
-#endif
-		(INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
+		void Confirm (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("resolveRadioTypeForSetRadioStation:withCompletion:")]
 		void ResolveRadioType (INSetRadioStationIntent intent, Action<INRadioTypeResolutionResult> completion);
@@ -7364,9 +7068,7 @@ namespace Intents {
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
-#if NET
 		[BindAs (typeof (int?))]
-#endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
 		NSNumber Level { get; }
 
@@ -7391,13 +7093,7 @@ namespace Intents {
 		void HandleSetSeatSettingsInCar (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetSeatSettingsInCar
-#endif
-		(INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
+		void Confirm (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableHeatingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveEnableHeating (INSetSeatSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -7505,16 +7201,12 @@ namespace Intents {
 		string PronunciationHint { get; }
 
 		[MacCatalyst (13, 1)]
-#if NET
 		[Abstract]
-#endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
 		[MacCatalyst (13, 1)]
-#if NET
 		[Abstract]
-#endif
 		[NullAllowed, Export ("alternativeSpeakableMatches")]
 		IINSpeakable [] AlternativeSpeakableMatches { get; }
 
@@ -7522,9 +7214,6 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'VocabularyIdentifier' instead.")]
-#if !NET
-		[Abstract]
-#endif
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
 	}
@@ -7545,15 +7234,11 @@ namespace Intents {
 		NativeHandle Constructor (string spokenPhrase);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResolutionResult" /> for resolving parameters in interactions involving arbitrary strings.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INSpeakableStringResolutionResult">Apple documentation for <c>INSpeakableStringResolutionResult</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -7605,14 +7290,10 @@ namespace Intents {
 		INSpeakableStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if NET
 	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to start an audio call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartAudioCallIntent">Apple documentation for <c>INStartAudioCallIntent</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7639,11 +7320,7 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-#if NET
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7656,13 +7333,7 @@ namespace Intents {
 		void HandleStartAudioCall (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
 		[Export ("confirmStartAudioCall:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmStartAudioCall
-#endif
-		(INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
+		void Confirm (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
 		[MacCatalyst (13, 1)]
 		[Export ("resolveDestinationTypeForStartAudioCall:withCompletion:")]
@@ -7672,15 +7343,11 @@ namespace Intents {
 		void ResolveContacts (INStartAudioCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartAudioCallIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartAudioCallIntentResponse">Apple documentation for <c>INStartAudioCallIntentResponse</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7753,13 +7420,7 @@ namespace Intents {
 		void HandleStartPhotoPlayback (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmStartPhotoPlayback
-#endif
-		(INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
+		void Confirm (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForStartPhotoPlayback:withCompletion:")]
 		void ResolveDateCreated (INStartPhotoPlaybackIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -7798,14 +7459,10 @@ namespace Intents {
 		NSNumber SearchResultsCount { get; set; }
 	}
 
-#if NET
 	/// <summary>An <see cref="T:Intents.INIntent" /> indicating the user wishes to start a video call.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartVideoCallIntent">Apple documentation for <c>INStartVideoCallIntent</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7821,11 +7478,7 @@ namespace Intents {
 		INPerson [] Contacts { get; }
 	}
 
-#if NET
 	[NoMac]
-#elif MONOMAC
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'INStartCallIntentHandling' instead.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7838,27 +7491,17 @@ namespace Intents {
 		void HandleStartVideoCall (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("confirmStartVideoCall:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmStartVideoCall
-#endif
-		(INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
+		void Confirm (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("resolveContactsForStartVideoCall:withCompletion:")]
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
 	}
 
-#if NET
 	/// <summary>
 	///       <see cref="T:Intents.INIntentResponse" /> subclass that developers of <see cref="T:Intents.IINStartVideoCallIntentHandling" /> interface implementations populate with their extension's results.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/reference/Intents/INStartVideoCallIntentResponse">Apple documentation for <c>INStartVideoCallIntentResponse</c></related>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -7901,9 +7544,9 @@ namespace Intents {
 		[Export ("workoutLocationType", ArgumentSemantic.Assign)]
 		INWorkoutLocationType WorkoutLocationType { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("isOpenEnded", ArgumentSemantic.Copy)]
-		NSNumber _IsOpenEnded { get; }
+		NSNumber IsOpenEnded { get; }
 	}
 
 	[Unavailable (PlatformName.MacOSX)]
@@ -7917,13 +7560,7 @@ namespace Intents {
 		void HandleStartWorkout (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("confirmStartWorkout:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmStartWorkout
-#endif
-		(INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
+		void Confirm (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForStartWorkout:withCompletion:")]
 		void ResolveWorkoutName (INStartWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -8289,13 +7926,7 @@ namespace Intents {
 		void HandleActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("confirmActivateCarSignal:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmActivateCarSignal
-#endif
-		(INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
+		void Confirm (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("resolveCarNameForActivateCarSignal:withCompletion:")]
 		void ResolveCarName (INActivateCarSignalIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -8436,12 +8067,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedBillType:")]
-		INBillTypeResolutionResult GetSuccess (INBillType resolvedBillType);
+		INBillTypeResolutionResult GetSuccess (INBillType resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithBillTypeToConfirm:")]
-		INBillTypeResolutionResult GetConfirmationRequired (INBillType billTypeToConfirm);
+		INBillTypeResolutionResult GetConfirmationRequired (INBillType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -8488,12 +8119,12 @@ namespace Intents {
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedCarSignalOptions:")]
-		INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedCarSignalOptions);
+		INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedValue);
 
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarSignalOptionsToConfirm:")]
-		INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions carSignalOptionsToConfirm);
+		INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -8555,13 +8186,7 @@ namespace Intents {
 		void HandleGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmGetCarLockStatus:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmGetCarLockStatus
-#endif
-		(INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
+		void Confirm (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarLockStatus:withCompletion:")]
 		void ResolveCarName (INGetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -8583,12 +8208,9 @@ namespace Intents {
 		[Export ("code")]
 		INGetCarLockStatusIntentResponseCode Code { get; }
 
-#if false // I wish BindAs was a thing right now
 		[BindAs (typeof (bool?))]
-#endif
-		[Internal]
 		[NullAllowed, Export ("locked", ArgumentSemantic.Copy)]
-		NSNumber _Locked { get; set; }
+		NSNumber Locked { get; set; }
 	}
 
 	/// <summary>An <see cref="T:Intents.INIntent" /> for retrieving the current power level of a car.</summary>
@@ -8628,13 +8250,7 @@ namespace Intents {
 		void StopSendingUpdates (INGetCarPowerLevelStatusIntent intent);
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmGetCarPowerLevelStatus
-#endif
-		(INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
+		void Confirm (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarPowerLevelStatus:withCompletion:")]
 		void ResolveCarName (INGetCarPowerLevelStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -8676,19 +8292,13 @@ namespace Intents {
 		[NullAllowed, Export ("carIdentifier")]
 		string CarIdentifier { get; set; }
 
-#if false // I wish BindAs was a thing right now
 		[BindAs (typeof (float?))]
-#endif
-		[Internal]
 		[NullAllowed, Export ("fuelPercentRemaining", ArgumentSemantic.Copy)]
-		NSNumber _FuelPercentRemaining { get; set; }
+		NSNumber FuelPercentRemaining { get; set; }
 
-#if false // I wish BindAs was a thing right now
 		[BindAs (typeof (float?))]
-#endif
-		[Internal]
 		[NullAllowed, Export ("chargePercentRemaining", ArgumentSemantic.Copy)]
-		NSNumber _ChargePercentRemaining { get; set; }
+		NSNumber ChargePercentRemaining { get; set; }
 
 		[NullAllowed, Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
@@ -8808,21 +8418,12 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INPayBillIntentHandling {
-
-#if NET
 		[Abstract]
-#endif
 		[Export ("handlePayBill:completion:")]
 		void HandlePayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("confirmPayBill:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmPayBill
-#endif
-		(INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
+		void Confirm (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForPayBill:withCompletion:")]
 		void ResolveBillPayee (INPayBillIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -9135,21 +8736,12 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSearchForBillsIntentHandling {
-
-#if NET
 		[Abstract]
-#endif
 		[Export ("handleSearchForBills:completion:")]
 		void HandleSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("confirmSearchForBills:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSearch
-#endif
-		(INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
+		void Confirm (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForSearchForBills:withCompletion:")]
 		void ResolveBillPayee (INSearchForBillsIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -9202,12 +8794,9 @@ namespace Intents {
 		[Export ("initWithLocked:carName:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber locked, [NullAllowed] INSpeakableString carName);
 
-#if false // I wish BindAs was a thing right now
 		[BindAs (typeof (bool?))]
-#endif
-		[Internal]
 		[Export ("locked", ArgumentSemantic.Copy), NullAllowed]
-		NSNumber _Locked { get; }
+		NSNumber Locked { get; }
 
 		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString CarName { get; }
@@ -9224,13 +8813,7 @@ namespace Intents {
 		void HandleSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmSetCarLockStatus:completion:")]
-		void
-#if NET // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
-		Confirm
-#else
-		ConfirmSetCarLockStatus
-#endif
-		(INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
+		void Confirm (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveLockedForSetCarLockStatus:withCompletion:")]
 		void ResolveLocked (INSetCarLockStatusIntent intent, Action<INBooleanResolutionResult> completion);
@@ -10329,12 +9912,8 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-#if NET
 	/// <summary>Represents a custom interface parameter for a developer-defined Siri interaction.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -10368,12 +9947,8 @@ namespace Intents {
 		nuint GetIndex (string subKeyPath);
 	}
 
-#if NET
 	/// <summary>A repetition rule for date ranges.</summary>
 	[NoMac]
-#elif MONOMAC
-	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
-#endif
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

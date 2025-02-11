@@ -1062,16 +1062,12 @@ IMAGEKIT_CORE_SOURCES = \
 
 INTENTS_SOURCES = \
 	Intents/INCallRecord.cs \
-	Intents/INGetCarLockStatusIntentResponse.cs \
-	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INInteraction.cs \
 	Intents/INPerson.cs \
 	Intents/INPriceRange.cs \
-	Intents/INRideOption.cs \
 	Intents/INPlayMediaIntentResponse.cs \
 	Intents/INSearchCallHistoryIntent.cs \
-	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \

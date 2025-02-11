@@ -15,13 +15,6 @@ namespace Intents {
 			this (workoutName, goalValue, workoutGoalUnitType, workoutLocationType, isOpenEnded.HasValue ? new NSNumber (isOpenEnded.Value) : null)
 		{
 		}
-
-		// if/when we update the generator to allow this pattern we can move this back
-		// into bindings and making them virtual (not a breaking change)
-
-		public bool? IsOpenEnded {
-			get { return _IsOpenEnded is null ? null : (bool?) _IsOpenEnded.BoolValue; }
-		}
 	}
 }
 
