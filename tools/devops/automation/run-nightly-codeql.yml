@@ -45,7 +45,7 @@ stages:
       displayName: CodeQL 3000 Init
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
-    - template: build.yml
+    - template: /tools/devops/automation/templates/build/build.yml
       parameters:
         isPR: false
         repositoryAlias: self
