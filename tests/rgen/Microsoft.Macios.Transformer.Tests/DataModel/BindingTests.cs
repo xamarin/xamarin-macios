@@ -15,7 +15,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
 public class BindingTests : BaseTransformerTestClass {
-	
+
 	readonly TransformerBindingEqualityComparer comparer = new ();
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -42,7 +42,7 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 
 			yield return [
 				(Source: simpleNSObject, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSArray",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSArray",
@@ -52,22 +52,22 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 				) {
 					Base = "Foundation.NSObject",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = ["Foundation.INSFastEnumeration"],
 					Protocols = [
-						"Foundation.NSSecureCoding", 
-						"Foundation.NSMutableCopying", 
+						"Foundation.NSSecureCoding",
+						"Foundation.NSMutableCopying",
 						"CloudKit.CKRecordValue"],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
+						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string internalSimpleNSObject = @"
 using System;
 using Foundation;
@@ -84,7 +84,7 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 
 			yield return [
 				(Source: internalSimpleNSObject, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSArray",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSArray",
@@ -94,22 +94,22 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 				) {
 					Base = "Foundation.NSObject",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = ["Foundation.INSFastEnumeration"],
 					Protocols = [
-						"Foundation.NSSecureCoding", 
-						"Foundation.NSMutableCopying", 
+						"Foundation.NSSecureCoding",
+						"Foundation.NSMutableCopying",
 						"CloudKit.CKRecordValue"],
 					Modifiers = [
-						Token (SyntaxKind.InternalKeyword), 
+						Token (SyntaxKind.InternalKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string staticNSObject = @"
 using System;
 using Foundation;
@@ -126,7 +126,7 @@ interface MyNSArray {
 
 			yield return [
 				(Source: staticNSObject, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSArray",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSArray",
@@ -136,20 +136,20 @@ interface MyNSArray {
 				) {
 					Base = "Foundation.NSObject",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = [],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
-						Token (SyntaxKind.StaticKeyword), 
+						Token (SyntaxKind.PublicKeyword),
+						Token (SyntaxKind.StaticKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string nsObjectWithParent = @"
 using System;
 using Foundation;
@@ -165,7 +165,7 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 
 			yield return [
 				(Source: nsObjectWithParent, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSArray",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSArray",
@@ -175,22 +175,22 @@ interface MyNSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRe
 				) {
 					Base = "Foundation.NSArray",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = ["Foundation.INSFastEnumeration"],
 					Protocols = [
-						"Foundation.NSSecureCoding", 
-						"Foundation.NSMutableCopying", 
+						"Foundation.NSSecureCoding",
+						"Foundation.NSMutableCopying",
 						"CloudKit.CKRecordValue"],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
+						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string publicCategory = @"
 using System;
 using Foundation;
@@ -205,7 +205,7 @@ partial interface MyNSKeyValueSorting_NSOrderedSet { }
 
 			yield return [
 				(Source: publicCategory, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSKeyValueSorting_NSOrderedSet",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSKeyValueSorting_NSOrderedSet",
@@ -215,20 +215,20 @@ partial interface MyNSKeyValueSorting_NSOrderedSet { }
 				) {
 					Base = "object",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = [],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
-						Token (SyntaxKind.StaticKeyword), 
+						Token (SyntaxKind.PublicKeyword),
+						Token (SyntaxKind.StaticKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string internalCategory = @"
 using System;
 using Foundation;
@@ -243,7 +243,7 @@ partial interface MyNSKeyValueSorting_NSOrderedSet { }
 
 			yield return [
 				(Source: internalCategory, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSKeyValueSorting_NSOrderedSet",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSKeyValueSorting_NSOrderedSet",
@@ -253,16 +253,16 @@ partial interface MyNSKeyValueSorting_NSOrderedSet { }
 				) {
 					Base = "object",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = [],
 					Modifiers = [
-						Token (SyntaxKind.InternalKeyword), 
-						Token (SyntaxKind.StaticKeyword), 
+						Token (SyntaxKind.InternalKeyword),
+						Token (SyntaxKind.StaticKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
@@ -279,10 +279,10 @@ namespace Test;
 interface MyNSCacheDelegate { }
 
 ";
-			
+
 			yield return [
 				(Source: simpleProtocol, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSCacheDelegate",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSCacheDelegate",
@@ -292,15 +292,15 @@ interface MyNSCacheDelegate { }
 				) {
 					Base = string.Empty,
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = [],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
+						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
@@ -317,10 +317,10 @@ namespace Test;
 interface MyNSCacheDelegate : NSSecureCoding { }
 
 ";
-			
+
 			yield return [
 				(Source: protocolWithParent, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyNSCacheDelegate",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyNSCacheDelegate",
@@ -330,21 +330,21 @@ interface MyNSCacheDelegate : NSSecureCoding { }
 				) {
 					Base = string.Empty,
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CloudKit", 
+						"System",
+						"Foundation",
+						"CloudKit",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = [
-						"Foundation.NSSecureCoding", 
+						"Foundation.NSSecureCoding",
 					],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
+						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string coreImageFilter = @"
 using System;
 using Foundation;
@@ -361,7 +361,7 @@ interface MyCIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 
 			yield return [
 				(Source: coreImageFilter, Path: path),
-				new Binding(
+				new Binding (
 					symbolName: "MyCIAccordionFoldTransition",
 					@namespace: ["Test"],
 					fullyQualifiedSymbol: "Test.MyCIAccordionFoldTransition",
@@ -371,15 +371,15 @@ interface MyCIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 				) {
 					Base = "CoreImage.CIFilter",
 					UsingDirectives = new HashSet<string> {
-						"System", 
-						"Foundation", 
-						"CoreImage", 
+						"System",
+						"Foundation",
+						"CoreImage",
 						"ObjCRuntime"
 					},
 					Interfaces = [],
 					Protocols = ["CoreImage.CIAccordionFoldTransitionProtocol"],
 					Modifiers = [
-						Token (SyntaxKind.PublicKeyword), 
+						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];

@@ -26,7 +26,7 @@ static partial class SemanticModelExtensions {
 
 		return bucket.ToImmutable ();
 	}
-	
+
 	/// <summary>
 	/// Retrieves all the data from a symbol needed for a binding/transformation.
 	/// </summary>

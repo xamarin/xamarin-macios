@@ -28,7 +28,7 @@ readonly partial struct Binding {
 	/// </summary>
 	public BindingInfo BindingInfo { get; init; }
 
-	
+
 	readonly ImmutableArray<string> protocols = ImmutableArray<string>.Empty;
 
 	/// <summary>
@@ -109,7 +109,7 @@ readonly partial struct Binding {
 	/// <param name="attributes">The dictionary with the attributes of the symbol.</param>
 	/// <param name="baseTypeAttribute">The base type attribute of the binding.</param>
 	/// <returns>The type of binding or BindingType.Unknown if it could not be calculated.</returns>
-	static BindingType GetBindingType(Dictionary<string, List<AttributeData>> attributes, BaseTypeData? baseTypeAttribute)
+	static BindingType GetBindingType (Dictionary<string, List<AttributeData>> attributes, BaseTypeData? baseTypeAttribute)
 	{
 		BindingType bindingType;
 		if (attributes.HasProtocolFlag () || attributes.HasModelFlag ()) {
@@ -127,7 +127,7 @@ readonly partial struct Binding {
 
 		return bindingType;
 	}
-	
+
 	/// <summary>
 	/// Retrieve the base class for a given binding based on its binding infor.
 	/// </summary>
@@ -195,18 +195,18 @@ readonly partial struct Binding {
 		UsingDirectives = interfaceDeclarationSyntax.SyntaxTree.CollectUsingStatements ();
 		AttributesDictionary = symbol.GetAttributeData ();
 		var baseTypeAttribute = symbol.GetBaseTypeData ();
-		BindingInfo = new(baseTypeAttribute, GetBindingType(AttributesDictionary, baseTypeAttribute));
+		BindingInfo = new (baseTypeAttribute, GetBindingType (AttributesDictionary, baseTypeAttribute));
 		name = symbol.Name;
 		availability = symbol.GetAvailabilityForSymbol ();
 		namespaces = symbol.GetNamespaceArray ();
 		baseClass = GetBaseClass (symbol, BindingInfo);
-		
+
 		// retrieve the interfaces and protocols, notice that this are two out params
 		GetInterfaceAndProtocols (symbol, out interfaces, out protocols);
-		
+
 		// use the helper struct to get the modifiers
 		var flags = new ModifiersFlags (
-			hasAbstractFlag: HasAbstractFlag, 
+			hasAbstractFlag: HasAbstractFlag,
 			hasInternalFlag: HasInternalFlag,
 			hasNewFlag: false,  // makes no sense on a class/interface
 			hasOverrideFlag: false, // makes no sense on a class/interface
@@ -214,7 +214,7 @@ readonly partial struct Binding {
 		);
 		Modifiers = flags.ToClassModifiersArray ();
 	}
-	
+
 	/// <inheritdoc/>
 	public override string ToString ()
 	{

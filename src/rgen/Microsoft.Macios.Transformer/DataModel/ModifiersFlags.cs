@@ -105,7 +105,7 @@ readonly record struct ModifiersFlags {
 		};
 #pragma warning restore format
 	}
-	
+
 	/// <summary>
 	/// Returns the list of modifiers to be used with the provided set of flags for a method/property.
 	/// </summary>

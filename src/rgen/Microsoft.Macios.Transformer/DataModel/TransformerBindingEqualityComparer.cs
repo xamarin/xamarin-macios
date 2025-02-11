@@ -13,7 +13,7 @@ class TransformerBindingEqualityComparer : BindingEqualityComparer {
 		// call the base, if they are equals, compare the new properties
 		if (!base.Equals (x, y))
 			return false;
-		
+
 		// comparer for when order does not matter.
 		var ignoreOrderComparer = new CollectionComparer<string> (StringComparer.InvariantCulture);
 		if (!ignoreOrderComparer.Equals (x.Protocols, y.Protocols))

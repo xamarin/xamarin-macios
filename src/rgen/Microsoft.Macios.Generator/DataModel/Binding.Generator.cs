@@ -290,7 +290,7 @@ readonly partial struct Binding {
 			ClassDeclarationSyntax classDeclarationSyntax => new Binding (classDeclarationSyntax, context),
 			_ => null
 		};
-	
+
 	/// <inheritdoc/>
 	public override string ToString ()
 	{

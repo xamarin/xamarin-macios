@@ -154,5 +154,5 @@ readonly partial struct Binding {
 		get => methods;
 		init => methods = value;
 	}
-	
+
 }
