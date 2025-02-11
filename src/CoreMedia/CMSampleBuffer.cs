@@ -161,7 +161,7 @@ namespace CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		unsafe static extern CMSampleBufferError CMSampleBufferCallForEachSample (
 			/* CMSampleBufferRef */ IntPtr sbuf,
-			delegate* unmanaged<IntPtr, int, IntPtr, CMSampleBufferError> callback, 
+			delegate* unmanaged<IntPtr, int, IntPtr, CMSampleBufferError> callback,
 		   /* void* */ IntPtr refcon);
 
 		[UnmanagedCallersOnly]
@@ -616,7 +616,7 @@ namespace CoreMedia {
 				if (invalidate.IsAllocated)
 					invalidate.Free ();
 				unsafe {
-				return CMSampleBufferSetInvalidateCallback (Handle, null, 0);
+					return CMSampleBufferSetInvalidateCallback (Handle, null, 0);
 				}
 			}
 
@@ -628,7 +628,7 @@ namespace CoreMedia {
 
 			invalidate = GCHandle.Alloc (Tuple.Create (invalidateHandler, this));
 			unsafe {
-				return CMSampleBufferSetInvalidateCallback (Handle, &InvalidateHandler, (ulong)(IntPtr)invalidate);
+				return CMSampleBufferSetInvalidateCallback (Handle, &InvalidateHandler, (ulong) (IntPtr) invalidate);
 			}
 		}
 
