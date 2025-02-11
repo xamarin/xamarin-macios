@@ -3308,8 +3308,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling, INSearchForAccountsIntentHandling and INTransferMoneyIntentHandling' instead.")]
 	[Protocol]
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
-	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
-	{
+	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling {
 	}
 
 	/// <summary>Interface combining several interfaces related to various photo-related intents.</summary>
@@ -3330,8 +3329,7 @@ namespace Intents {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling, INCancelRideIntentHandling and INSendRideFeedbackIntentHandling' instead.")]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling
-	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
-	{
+	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling {
 	}
 
 	/// <summary>Composite interface for adopting all of lists and notes protocols.</summary>
