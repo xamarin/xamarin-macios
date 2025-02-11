@@ -12,33 +12,15 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CFMutableString : CFString {
-
-#if !NET
-		protected CFMutableString (NativeHandle handle)
-			: this (handle, false)
-		{
-		}
-#endif
-
 		[Preserve (Conditional = true)]
-#if NET
 		internal CFMutableString (NativeHandle handle, bool owns)
-#else
-		protected CFMutableString (NativeHandle handle, bool owns)
-#endif
 			: base (handle, owns)
 		{
 		}

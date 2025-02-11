@@ -34,10 +34,6 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	// CFBase.h
@@ -50,20 +46,8 @@ namespace CoreFoundation {
 		static CFAllocator? Null_cf;
 #endif
 
-#if !NET
-		[Obsolete ("Use the overload that takes a 'bool owns' parameter instead.")]
-		public CFAllocator (NativeHandle handle)
-			: base (handle, true /* backwards compatibility means we have to pass true here as opposed to the general pattern */)
-		{
-		}
-#endif
-
 		[Preserve (Conditional = true)]
-#if NET
 		internal CFAllocator (NativeHandle handle, bool owns)
-#else
-		public CFAllocator (NativeHandle handle, bool owns)
-#endif
 			: base (handle, owns)
 		{
 		}

@@ -40,41 +40,21 @@ using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	public delegate void DispatchIOHandler (DispatchData? data, int error);
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class DispatchIO : DispatchObject {
 		[Preserve (Conditional = true)]
 		internal DispatchIO (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 
-#if !NET
-		[Preserve (Conditional = true)]
-		internal DispatchIO (NativeHandle handle) : this (handle, false)
-		{
-		}
-#endif
-
-#if !NET
-		delegate void DispatchReadWrite (IntPtr block, IntPtr dispatchData, int error);
-		static DispatchReadWrite static_DispatchReadWriteHandler = Trampoline_DispatchReadWriteHandler;
-
-		[MonoPInvokeCallback (typeof (DispatchReadWrite))]
-#else
 		[UnmanagedCallersOnly]
-#endif
 		static void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
 			var del = BlockLiteral.GetTarget<DispatchIOHandler> (block);
@@ -99,13 +79,8 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			unsafe {
-#if NET
 				delegate* unmanaged<IntPtr, IntPtr, int, void> trampoline = &Trampoline_DispatchReadWriteHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (DispatchIO), nameof (Trampoline_DispatchReadWriteHandler));
-#else
-				using var block = new BlockLiteral ();
-				block.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
-#endif
 				dispatch_read (fd, size, dispatchQueue.Handle, &block);
 			}
 		}
@@ -124,13 +99,8 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			unsafe {
-#if NET
 				delegate* unmanaged<IntPtr, IntPtr, int, void> trampoline = &Trampoline_DispatchReadWriteHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (DispatchIO), nameof (Trampoline_DispatchReadWriteHandler));
-#else
-				using var block = new BlockLiteral ();
-				block.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
-#endif
 				dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, &block);
 			}
 		}

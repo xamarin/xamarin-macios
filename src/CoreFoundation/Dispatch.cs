@@ -40,10 +40,6 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	// The native constants are defined in usr/include/dispatch/queue.h, but since they're
@@ -66,12 +62,10 @@ namespace CoreFoundation {
 		Unspecified = 0x00,
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public abstract class DispatchObject : NativeObject {
 #if !COREBUILD
 		//
@@ -103,51 +97,6 @@ namespace CoreFoundation {
 			dispatch_release (Handle);
 		}
 
-#if !NET
-		public static bool operator == (DispatchObject a, DispatchObject b)
-		{
-			if (a is null)
-				return b is null;
-			else if (b is null)
-				return false;
-
-			return a.Handle == b.Handle;
-		}
-
-		public static bool operator != (DispatchObject a, DispatchObject b)
-		{
-			if (a is null)
-				return b is not null;
-			else if (b is null)
-				return true;
-			return a.Handle != b.Handle;
-		}
-
-		// For the .net profile `DisposableObject` implements both
-		// `Equals` and `GetHashCode` based on the Handle property.
-		public override bool Equals (object other)
-		{
-			var od = other as DispatchQueue;
-			if (od is null)
-				return false;
-			return od.Handle == Handle;
-		}
-
-		public override int GetHashCode ()
-		{
-			return ((IntPtr) Handle).ToInt32 ();
-		}
-#endif
-
-#if !NET
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use 'GetCheckedHandle' instead.")]
-		protected void Check ()
-		{
-			GetCheckedHandle ();
-		}
-#endif
-
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_target_queue (/* dispatch_object_t */ IntPtr queue, /* dispatch_queue_t */ IntPtr target);
 
@@ -164,46 +113,34 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		internal extern static void dispatch_suspend (IntPtr o);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public void Activate ()
 		{
 			dispatch_activate (GetCheckedHandle ());
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public sealed class DispatchQueue : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 		internal DispatchQueue (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
-
-#if !NET
-		public DispatchQueue (NativeHandle handle) : base (handle, false)
-		{
-		}
-#endif
 
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)
@@ -228,12 +165,10 @@ namespace CoreFoundation {
 				throw new Exception ("Error creating dispatch queue");
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
@@ -249,12 +184,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public static string? CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
@@ -277,13 +210,8 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_context (IntPtr o, IntPtr ctx);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_apply_f (IntPtr iterations, IntPtr queue, IntPtr ctx, delegate* unmanaged<IntPtr, IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_apply_f (IntPtr iterations, IntPtr queue, IntPtr ctx, dispatch_callback_iterations_t dispatch);
-#endif
 
 		public IntPtr Context {
 			get {
@@ -294,17 +222,12 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
-#else
-		[Deprecated (PlatformName.iOS, 6, 0)]
-		[Deprecated (PlatformName.MacOSX, 10, 9)]
-#endif
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
@@ -344,21 +267,8 @@ namespace CoreFoundation {
 		//
 		// Dispatching
 		//
-#if !NET
-		internal delegate void dispatch_callback_t (IntPtr context);
-		internal static readonly dispatch_callback_t static_dispatch = static_dispatcher_to_managed;
-
-		internal delegate void dispatch_callback_iterations_t (IntPtr context, IntPtr count);
-		internal static readonly dispatch_callback_iterations_t static_dispatch_iterations = static_dispatcher_iterations_to_managed;
-#endif
-
-#if NET
 		[UnmanagedCallersOnly]
 		internal static void static_dispatcher_to_managed (IntPtr context)
-#else
-		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
-		static void static_dispatcher_to_managed (IntPtr context)
-#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action, DispatchQueue>;
@@ -385,11 +295,7 @@ namespace CoreFoundation {
 
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		[MonoPInvokeCallback (typeof (dispatch_callback_iterations_t))]
-#endif
 		static void static_dispatcher_iterations_to_managed (IntPtr context, IntPtr count)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
@@ -416,13 +322,8 @@ namespace CoreFoundation {
 			}
 
 		}
-#if !NET
-		internal static readonly dispatch_callback_t free_gchandle = static_free_gchandle;
 
-		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
-#else
 		[UnmanagedCallersOnly]
-#endif
 		static void static_free_gchandle (IntPtr context)
 		{
 			GCHandle.FromIntPtr (context).Free ();
@@ -432,13 +333,9 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-#if NET
 			unsafe {
 				dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
 			}
-#else
-			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
-#endif
 		}
 
 		public void DispatchAsync (DispatchBlock block)
@@ -454,13 +351,9 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-#if NET
 			unsafe {
 				dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
 			}
-#else
-			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
-#endif
 		}
 
 		public void DispatchSync (DispatchBlock block)
@@ -476,13 +369,9 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-#if NET
 			unsafe {
 				dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
 			}
-#else
-			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
-#endif
 		}
 
 		public void DispatchBarrierAsync (DispatchBlock block)
@@ -498,13 +387,9 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-#if NET
 			unsafe {
 				dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
 			}
-#else
-			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
-#endif
 		}
 
 		public void DispatchBarrierSync (DispatchBlock block)
@@ -519,13 +404,9 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-#if NET
 			unsafe {
 				dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
 			}
-#else
-			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
-#endif
 		}
 
 		public void DispatchAfter (DispatchTime when, DispatchBlock block)
@@ -540,24 +421,16 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-#if NET
 			unsafe {
 				dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_iterations_to_managed);
 			}
-#else
-			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
-#endif
 		}
 
 		public void SetSpecific (IntPtr key, object context)
 		{
-#if NET
 			unsafe {
 				dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), &static_free_gchandle);
 			}
-#else
-			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
-#endif
 		}
 
 		public object? GetSpecific (IntPtr key)
@@ -566,12 +439,10 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
 			unsafe {
@@ -580,12 +451,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public DispatchQualityOfService QualityOfService {
 			get {
 				unsafe {
@@ -605,12 +474,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target)
 		{
 			using var labelPtr = new TransientString (label);
@@ -620,72 +487,42 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (IntPtr label, IntPtr attr, IntPtr target);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_async_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async (IntPtr queue, IntPtr block);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_sync_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_sync (IntPtr queue, IntPtr block);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async (IntPtr queue, IntPtr block);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync (IntPtr queue, IntPtr block);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
-#else
-		[Deprecated (PlatformName.iOS, 6, 0)]
-		[Deprecated (PlatformName.MacOSX, 10, 9)]
-#endif
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
 
@@ -697,57 +534,18 @@ namespace CoreFoundation {
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
 		extern static IntPtr dispatch_queue_get_label (IntPtr queue);
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, delegate* unmanaged<IntPtr, void> /* _Nullable */ destructor);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, dispatch_callback_t /* _Nullable */ destructor);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
-
-#if !NET
-		// For the .net profile `DisposableObject` implements both
-		// `Equals` and `GetHashCode` based on the Handle property.
-		public override bool Equals (object other)
-		{
-			if (other is DispatchQueue o)
-				return (o.Handle == Handle);
-			return false;
-		}
-#endif
-
-#if !NET
-		public static bool operator == (DispatchQueue left, DispatchQueue right)
-		{
-			if (left is null)
-				return right is null;
-			return left.Equals (right);
-		}
-
-		public static bool operator != (DispatchQueue left, DispatchQueue right)
-		{
-			if (left is null)
-				return right is not null;
-			return !left.Equals (right);
-		}
-
-		public override int GetHashCode ()
-		{
-			return ((IntPtr) Handle).ToInt32 ();
-		}
-#endif
 
 #if MONOMAC
 		//
@@ -766,36 +564,28 @@ namespace CoreFoundation {
 		public class Attributes {
 			public bool Concurrent { get; set; }
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#endif
 			public bool IsInitiallyInactive { get; set; }
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
-#endif
 			public int RelativePriority { get; set; }
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
-#endif
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
 			internal IntPtr Create ()
@@ -817,36 +607,28 @@ namespace CoreFoundation {
 				return rv;
 			}
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
-#if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
-#endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		[Native]
 		public enum AutoreleaseFrequency : ulong /* unsigned long */
 		{
@@ -859,12 +641,10 @@ namespace CoreFoundation {
 
 	// Some insights from: https://opensource.apple.com/source/libdispatch/libdispatch-442.1.4/src/time.c
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public struct DispatchTime {
 #if !COREBUILD
 		public static readonly DispatchTime Now = new DispatchTime ();
@@ -906,12 +686,10 @@ namespace CoreFoundation {
 #endif // !COREBUILD
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class DispatchGroup : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
@@ -941,13 +719,9 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-#if NET
 			unsafe {
 				dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), &DispatchQueue.static_dispatcher_to_managed);
 			}
-#else
-			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
-#endif
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock block)
@@ -965,13 +739,9 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-#if NET
 			unsafe {
 				dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), &DispatchQueue.static_dispatcher_to_managed);
 			}
-#else
-			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
-#endif
 		}
 
 		public void Enter ()
@@ -997,21 +767,11 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_group_create ();
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_group_async_f (IntPtr group, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> block);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_group_async_f (IntPtr group, IntPtr queue, IntPtr context, DispatchQueue.dispatch_callback_t block);
-#endif
 
-#if NET
 		[DllImport (Constants.libcLibrary)]
 		extern unsafe static void dispatch_group_notify_f (IntPtr group, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> block);
-#else
-		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_group_notify_f (IntPtr group, IntPtr queue, IntPtr context, DispatchQueue.dispatch_callback_t block);
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_notify (IntPtr group, IntPtr queue, IntPtr block);
