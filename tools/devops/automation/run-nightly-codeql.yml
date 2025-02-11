@@ -60,7 +60,7 @@ stages:
 
     - task: CodeQL3000Init@0
       displayName: CodeQL 3000 Init
-      # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
     - template: /tools/devops/automation/templates/build/build.yml
       parameters:
@@ -84,4 +84,4 @@ stages:
 
     - task: CodeQL3000Finalize@0
       displayName: CodeQL 3000 Finalize
-      # condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
