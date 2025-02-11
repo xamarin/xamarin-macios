@@ -57,7 +57,7 @@ readonly partial struct Method {
 
 		// create a helper struct to retrieve the modifiers
 		var flags = new ModifiersFlags (HasAbstractFlag, HasInternalFlag, HasNewFlag, HasOverrideFlag, HasStaticFlag);
-		Modifiers = flags.ToModifiersArray ();
+		Modifiers = flags.ToMethodModifiersArray ();
 	}
 
 	public static bool TryCreate (MethodDeclarationSyntax declaration, RootContext context,
