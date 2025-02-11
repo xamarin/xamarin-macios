@@ -21,6 +21,9 @@ public class ClassGenerationTests : BaseGeneratorTestClass {
 			(ApplePlatform.MacOSX, "AVAudioPcmBuffer", "AVAudioPcmBufferDefaultCtr.cs", "ExpectedAVAudioPcmBufferDefaultCtr.cs", null),
 			(ApplePlatform.iOS, "AVAudioPcmBuffer", "AVAudioPcmBufferNoNativeName.cs", "ExpectedAVAudioPcmBufferNoNativeName.cs", null),
 			(ApplePlatform.MacOSX, "AVAudioPcmBuffer", "AVAudioPcmBufferNoNativeName.cs", "ExpectedAVAudioPcmBufferNoNativeName.cs", null),
+			(ApplePlatform.iOS, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
+			(ApplePlatform.TVOS, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
+			(ApplePlatform.MacCatalyst, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
 
 		};
 

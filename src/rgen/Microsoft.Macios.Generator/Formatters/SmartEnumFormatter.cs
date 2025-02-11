@@ -16,7 +16,7 @@ static class SmartEnumFormatter {
 	/// <param name="smartEnumChange">The smart enum code change.</param>
 	/// <param name="extensionClassName">The name to use for the extension class.</param>
 	/// <returns>The class declaration for the extension class for a smart enum change.</returns>
-	public static CompilationUnitSyntax ToSmartEnumExtensionDeclaration (this in CodeChanges smartEnumChange,
+	public static CompilationUnitSyntax ToSmartEnumExtensionDeclaration (this in Binding smartEnumChange,
 		string extensionClassName)
 	{
 		// add to a set to make sure we do no duplicate them and make sure static and partial are present 
@@ -40,7 +40,7 @@ static class SmartEnumFormatter {
 	/// <param name="smartEnumChange">The smart enum code change.</param>
 	/// <param name="extensionClassName">The name to use for the extension class.</param>
 	/// <returns>The class declaration for the extension class for a smart enum change.</returns>
-	public static CompilationUnitSyntax? ToSmartEnumExtensionDeclaration (this in CodeChanges? smartEnumChange,
+	public static CompilationUnitSyntax? ToSmartEnumExtensionDeclaration (this in Binding? smartEnumChange,
 		string extensionClassName)
 		=> smartEnumChange is null ? null : ToSmartEnumExtensionDeclaration (smartEnumChange.Value, extensionClassName);
 }

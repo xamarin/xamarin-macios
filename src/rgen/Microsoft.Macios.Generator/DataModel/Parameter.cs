@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,7 +14,8 @@ namespace Microsoft.Macios.Generator.DataModel;
 /// <summary>
 /// Readonly structure that represents a change in a parameter.
 /// </summary>
-readonly struct Parameter : IEquatable<Parameter> {
+[StructLayout (LayoutKind.Auto)]
+readonly partial struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Parameter position in the method.
 	/// </summary>
@@ -22,7 +24,7 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// <summary>
 	/// Type of the parameter.
 	/// </summary>
-	public string Type { get; }
+	public TypeInfo Type { get; }
 
 	/// <summary>
 	/// Parameter name
@@ -43,26 +45,6 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// True if the parameter represents the 'this' pointer.
 	/// </summary>
 	public bool IsThis { get; init; }
-
-	/// <summary>
-	/// True if the parameter is nullable.:w
-	/// </summary>
-	public bool IsNullable { get; init; }
-
-	/// <summary>
-	/// True if the parameter type is blittable.
-	/// </summary>
-	public bool IsBlittable { get; }
-
-	/// <summary>
-	/// Returns if the parameter type is a smart enum.
-	/// </summary>
-	public bool IsSmartEnum { get; init; }
-
-	/// <summary>
-	/// Returns if the parameter is an array type.
-	/// </summary>
-	public bool IsArray { get; init; }
 
 	/// <summary>
 	/// Optional default value.
@@ -90,39 +72,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 	/// </summary>
 	public ImmutableArray<AttributeCodeChange> Attributes { get; init; } = [];
 
-	public Parameter (int position, string type, string name, bool isBlittable)
+	public Parameter (int position, TypeInfo type, string name)
 	{
 		Position = position;
 		Type = type;
 		Name = name;
-		IsBlittable = isBlittable;
-	}
-
-	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
-		[NotNullWhen (true)] out Parameter? parameter)
-	{
-		var type = symbol.Type is IArrayTypeSymbol arrayTypeSymbol
-			? arrayTypeSymbol.ElementType.ToDisplayString ()
-			: symbol.Type.ToDisplayString ().Trim ('?', '[', ']');
-		DelegateInfo? delegateInfo = null;
-		if (symbol.Type is INamedTypeSymbol namedTypeSymbol
-			&& namedTypeSymbol.DelegateInvokeMethod is not null) {
-			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
-		}
-
-		parameter = new (symbol.Ordinal, type, symbol.Name, symbol.Type.IsBlittable ()) {
-			IsOptional = symbol.IsOptional,
-			IsParams = symbol.IsParams,
-			IsThis = symbol.IsThis,
-			IsNullable = symbol.NullableAnnotation == NullableAnnotation.Annotated,
-			IsSmartEnum = symbol.Type.IsSmartEnum (),
-			IsArray = symbol.Type is IArrayTypeSymbol,
-			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
-			ReferenceKind = symbol.RefKind.ToReferenceKind (),
-			Delegate = delegateInfo,
-			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
-		};
-		return true;
 	}
 
 	/// <inheritdoc/>
@@ -140,17 +94,11 @@ readonly struct Parameter : IEquatable<Parameter> {
 			return false;
 		if (IsThis != other.IsThis)
 			return false;
-		if (IsNullable != other.IsNullable)
-			return false;
-		if (IsBlittable != other.IsBlittable)
-			return false;
-		if (IsSmartEnum != other.IsSmartEnum)
-			return false;
-		if (IsArray != other.IsArray)
-			return false;
 		if (DefaultValue != other.DefaultValue)
 			return false;
 		if (ReferenceKind != other.ReferenceKind)
+			return false;
+		if (BindAs != other.BindAs)
 			return false;
 		if (Delegate != other.Delegate)
 			return false;
@@ -175,12 +123,10 @@ readonly struct Parameter : IEquatable<Parameter> {
 		hashCode.Add (IsOptional);
 		hashCode.Add (IsParams);
 		hashCode.Add (IsThis);
-		hashCode.Add (IsNullable);
-		hashCode.Add (IsSmartEnum);
-		hashCode.Add (IsArray);
 		hashCode.Add (DefaultValue);
 		hashCode.Add ((int) ReferenceKind);
 		hashCode.Add (Delegate);
+		hashCode.Add (BindAs);
 		return hashCode.ToHashCode ();
 	}
 
@@ -201,17 +147,14 @@ readonly struct Parameter : IEquatable<Parameter> {
 		sb.Append ($"Position: {Position}, ");
 		sb.Append ($"Type: {Type}, ");
 		sb.Append ($"Name: {Name}, ");
-		sb.Append ("Attributes: ");
+		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
-		sb.Append ($" IsOptional: {IsOptional}, ");
+		sb.Append ($"] IsOptional: {IsOptional}, ");
 		sb.Append ($"IsParams: {IsParams}, ");
 		sb.Append ($"IsThis: {IsThis}, ");
-		sb.Append ($"IsNullable: {IsNullable}, ");
-		sb.Append ($"IsBlittable: {IsBlittable}, ");
-		sb.Append ($"IsSmartEnum: {IsSmartEnum}, ");
-		sb.Append ($"IsArray: {IsArray}, ");
 		sb.Append ($"DefaultValue: {DefaultValue}, ");
 		sb.Append ($"ReferenceKind: {ReferenceKind}, ");
+		sb.Append ($"BindAs: {BindAs?.ToString () ?? "null"}, ");
 		sb.Append ($"Delegate: {Delegate?.ToString () ?? "null"} }}");
 		return sb.ToString ();
 	}

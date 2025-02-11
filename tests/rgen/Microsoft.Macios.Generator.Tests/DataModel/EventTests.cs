@@ -210,8 +210,8 @@ public class TestClass {
 					],
 					accessors: [
 						new (
-							accessorKind: AccessorKind.Add
-							, symbolAvailability: new (),
+							accessorKind: AccessorKind.Add,
+							symbolAvailability: eventAvailabilityBuilder.ToImmutable (),
 							exportPropertyData: null,
 							attributes: [],
 							modifiers: []
