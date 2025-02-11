@@ -245,7 +245,11 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path, verbosity);
+
+			var properties = GetDefaultProperties ();
+			if (bundleOriginalResources.HasValue)
+				properties ["BundleOriginalResources"] = bundleOriginalResources.Value ? "true" : "false";
+			var result = DotNet.AssertBuild (project_path, properties);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
@@ -255,14 +259,17 @@ namespace Xamarin.Tests {
 			var asm = assemblies.First ();
 			Assert.That (asm, Does.Exist, "Assembly existence");
 
-			// Verify that there's one resource in the binding assembly, and its name
+			// Verify the resource count in the binding assembly, and their names
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (3), "3 resources");
-			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
-			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
-			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08__with__loc.png"), $"__{prefix}_content_basn3p08__with__loc.png");
-			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
-			Assert.That (resources [2].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+			var resources = ad.MainModule.Resources.Select (v => v.Name).ToArray ();
+			var expectedResources = new string [] {
+				"basn3p08.png",
+				"basn3p08__with__loc.png",
+				"xamvideotest.mp4",
+			};
+			var oldPrefixed = expectedResources.Select (v => $"__{prefix}_content_{v}").ToArray ();
+			var newPrefixed = expectedResources.Select (v => $"__{prefix}_item_BundleResource_{v}").ToArray ();
+			Assert.That (resources, Is.EquivalentTo (oldPrefixed).Or.EquivalentTo (newPrefixed), "Resources");
 		}
 
 		[TestCase ("iOS")]
