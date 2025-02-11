@@ -23,6 +23,15 @@ resources:
     name: xamarin/yaml-templates
     ref: refs/heads/main
     endpoint: xamarin
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+  - repository: macios-adr
+    type: git
+    name: macios-adr
+    ref: refs/heads/main
 
 variables:
 - template: /tools/devops/automation/templates/variables/common.yml
