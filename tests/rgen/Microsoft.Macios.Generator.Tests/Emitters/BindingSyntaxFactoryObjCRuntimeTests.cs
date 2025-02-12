@@ -196,7 +196,9 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	[ClassData (typeof (TestDataGetNSArrayAuxVariableTest))]
 	void GetNSArrayAuxVariableTests (in Parameter parameter, string? expectedDeclaration, bool withUsing)
 	{
-		var declaration = GetNSArrayAuxVariable (in parameter, withUsing: withUsing);
+		var declaration = GetNSArrayAuxVariable (in parameter);
+		if (withUsing && expectedDeclaration is not null)
+			declaration = Using (GetNSArrayAuxVariable (in parameter)!);
 		if (expectedDeclaration is null) {
 			Assert.Null (declaration);
 		} else {

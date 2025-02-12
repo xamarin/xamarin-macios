@@ -115,8 +115,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="parameter">The parameter whose aux variable we want to generate.</param>
 	/// <param name="withUsing">If the using clause should be added to the declaration.</param>
 	/// <returns>The variable declaration for the NSArray aux variable of the parameter.</returns>
-	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter,
-		bool withUsing = false)
+	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter)
 	{
 		if (!parameter.Type.IsArray)
 			return null;
@@ -161,11 +160,8 @@ static partial class BindingSyntaxFactory {
 				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
 			.WithTrailingTrivia (Space)
 			.WithVariables (SingletonSeparatedList (declarator));
-		var statement = LocalDeclarationStatement (variableDeclaration);
 		// add using if requested
-		return withUsing
-			? statement.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space))
-			: statement;
+		return LocalDeclarationStatement (variableDeclaration);
 	}
 
 	/// <summary>
@@ -689,7 +685,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="declaration"></param>
 	/// <param name="isBlock"></param>
 	/// <returns></returns>
-	internal static StatementSyntax Using (LocalDeclarationStatementSyntax declaration)
+	internal static LocalDeclarationStatementSyntax Using (LocalDeclarationStatementSyntax declaration)
 	{
 		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
 	}
