@@ -34,12 +34,10 @@ using ObjCRuntime;
 
 namespace CoreVideo {
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CVPixelBufferAttributes : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferAttributes ()
@@ -203,12 +201,10 @@ namespace CoreVideo {
 		}
 #endif
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#endif
 		public bool? MetalCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.MetalCompatibilityKey, value);
