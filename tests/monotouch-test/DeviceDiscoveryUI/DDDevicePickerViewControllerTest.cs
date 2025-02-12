@@ -18,11 +18,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.DeviceDiscoveryUI {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DDDevicePickerViewControllerTest {
-		
+
 		const string serviceName = "MyAppService";
 
 		[OneTimeSetUp]
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.DeviceDiscoveryUI {
 			var browserDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (serviceName);
 			var parameters = NWParameters.CreateApplicationService ();
 			var isSupported = DDDevicePickerViewController.IsSupported (browserDescriptor, parameters);
-			
+
 			// DDDevicePickerViewController seems to work only for devices
 			if (TestRuntime.IsSimulator)
 				Assert.IsFalse (isSupported, "IsSupported");
@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.DeviceDiscoveryUI {
 			var browserDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (serviceName);
 			var parameters = NWParameters.CreateApplicationService ();
 			var isSupported = DDDevicePickerViewController.IsSupported (browserDescriptor, parameters);
-			
+
 			// If this fails, please, double check that MyAppService is registered within the Info.plist
 			// https://developer.apple.com/documentation/bundleresources/information_property_list/nsapplicationservices
 			Assert.IsTrue (isSupported, $"The {serviceName} key might not be registered in the Info.plist.");
@@ -69,11 +69,11 @@ namespace MonoTouchFixtures.DeviceDiscoveryUI {
 			var browserDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (serviceName);
 			var parameters = NWParameters.CreateApplicationService ();
 			var isSupported = DDDevicePickerViewController.IsSupported (browserDescriptor, parameters);
-			
+
 			// If this fails, please, double check that MyAppService is registered within the Info.plist
 			// https://developer.apple.com/documentation/bundleresources/information_property_list/nsapplicationservices
 			Assert.IsTrue (isSupported, $"The {serviceName} key might not be registered in the Info.plist.");
-			
+
 			Assert.DoesNotThrow (() => {
 				var devicePicker = new DDDevicePickerViewController (browserDescriptor, parameters);
 				devicePicker.SetDevicePicker ((endpoint, error) => { });

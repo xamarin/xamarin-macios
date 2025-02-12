@@ -902,8 +902,7 @@ namespace MonoTouch.Dialog {
 		static public CGSize StringSize (this string self, UIFont font)
 		{
 			using (var str = (NSString) self) {
-				return str.GetSizeUsingAttributes (new UIStringAttributes ()
-				{
+				return str.GetSizeUsingAttributes (new UIStringAttributes () {
 					Font = font,
 				});
 			}
@@ -918,11 +917,9 @@ namespace MonoTouch.Dialog {
 
 		static public CGSize StringSize (this NSString self, UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode)
 		{
-			return self.GetBoundingRect (constrainedToSize, NSStringDrawingOptions.UsesLineFragmentOrigin, new UIStringAttributes ()
-			{
+			return self.GetBoundingRect (constrainedToSize, NSStringDrawingOptions.UsesLineFragmentOrigin, new UIStringAttributes () {
 				Font = font,
-				ParagraphStyle = new NSMutableParagraphStyle ()
-				{
+				ParagraphStyle = new NSMutableParagraphStyle () {
 					LineBreakMode = lineBreakMode,
 				},
 			}, null).Size;
@@ -936,8 +933,7 @@ namespace MonoTouch.Dialog {
 		static public void DrawString (this string self, CGRect rect, UIFont font)
 		{
 			using (var str = (NSString) self) {
-				NSStringDrawing.DrawString (str, rect, new UIStringAttributes ()
-				{
+				NSStringDrawing.DrawString (str, rect, new UIStringAttributes () {
 					Font = font,
 				});
 			}
@@ -946,11 +942,9 @@ namespace MonoTouch.Dialog {
 		static public void DrawString (this string self, CGPoint point, float width, UIFont font, UILineBreakMode lineBreakMode)
 		{
 			using (var str = (NSString) self) {
-				NSStringDrawing.DrawString (str, point, new UIStringAttributes ()
-				{
+				NSStringDrawing.DrawString (str, point, new UIStringAttributes () {
 					Font = font,
-					ParagraphStyle = new NSMutableParagraphStyle ()
-					{
+					ParagraphStyle = new NSMutableParagraphStyle () {
 						LineBreakMode = lineBreakMode,
 					},
 				});
@@ -960,11 +954,9 @@ namespace MonoTouch.Dialog {
 		static public void DrawString (this string self, CGRect rect, UIFont font, UILineBreakMode lineBreakMode, UITextAlignment alignment)
 		{
 			using (var str = (NSString) self) {
-				NSStringDrawing.DrawString (str, rect, new UIStringAttributes ()
-				{
+				NSStringDrawing.DrawString (str, rect, new UIStringAttributes () {
 					Font = font,
-					ParagraphStyle = new NSMutableParagraphStyle ()
-					{
+					ParagraphStyle = new NSMutableParagraphStyle () {
 						LineBreakMode = lineBreakMode,
 						Alignment = alignment,
 					},
