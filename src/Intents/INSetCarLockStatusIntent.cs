@@ -21,13 +21,6 @@ namespace Intents {
 			this (locked.HasValue ? new NSNumber (locked.Value) : null, carName)
 		{
 		}
-
-		// if/when we update the generator to allow this pattern we can move this back
-		// into bindings and making them virtual (not a breaking change)
-
-		public bool? Locked {
-			get { return _Locked is null ? null : (bool?) _Locked.BoolValue; }
-		}
 	}
 }
 

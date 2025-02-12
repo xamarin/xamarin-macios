@@ -972,8 +972,17 @@ namespace Foundation {
 		[Export ("objectForKey:")]
 		NSObject ObjectForKey (NSObject key);
 
+#if !XAMCORE_5_0
+		[Obsolete ("Use 'SetObjectForKey' instead.")]
 		[Export ("setObject:forKey:")]
 		void SetObjectforKey (NSObject obj, NSObject key);
+#endif
+
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setObject:forKey:")]
+		void SetObjectForKey (NSObject obj, NSObject key);
 
 		[Export ("setObject:forKey:cost:")]
 		void SetCost (NSObject obj, NSObject key, nuint cost);

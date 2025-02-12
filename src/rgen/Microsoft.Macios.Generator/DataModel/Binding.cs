@@ -155,33 +155,4 @@ readonly partial struct Binding {
 		init => methods = value;
 	}
 
-	/// <inheritdoc/>
-	public override string ToString ()
-	{
-		var sb = new StringBuilder ("Changes: {");
-		sb.Append ($"BindingData: '{BindingInfo}', Name: '{Name}', Namespace: [");
-		sb.AppendJoin (", ", Namespace);
-		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', Base: '{Base ?? "null"}', SymbolAvailability: {SymbolAvailability}, ");
-		sb.Append ("Interfaces: [");
-		sb.AppendJoin (", ", Interfaces);
-		sb.Append ("], Attributes: [");
-		sb.AppendJoin (", ", Attributes);
-		sb.Append ("], UsingDirectives: [");
-		sb.AppendJoin (", ", UsingDirectives);
-		sb.Append ("], Modifiers: [");
-		sb.AppendJoin (", ", Modifiers);
-		sb.Append ("], EnumMembers: [");
-		sb.AppendJoin (", ", EnumMembers);
-		sb.Append ("], Constructors: [");
-		sb.AppendJoin (", ", Constructors);
-		sb.Append ("], Properties: [");
-		sb.AppendJoin (", ", Properties);
-		sb.Append ("], Methods: [");
-		sb.AppendJoin (", ", Methods);
-		sb.Append ("], Events: [");
-		sb.AppendJoin (", ", Events);
-		sb.Append ("] }");
-		return sb.ToString ();
-	}
-
 }

@@ -95,7 +95,7 @@ readonly partial struct Property {
 		} else {
 			// create a helper struct to retrieve the modifiers
 			var flags = new ModifiersFlags (HasAbstractFlag, HasInternalFlag, HasNewFlag, HasOverrideFlag, HasStaticFlag);
-			Modifiers = flags.ToModifiersArray ();
+			Modifiers = flags.ToMethodModifiersArray ();
 		}
 	}
 
