@@ -182,6 +182,23 @@ readonly partial struct Binding {
 	}
 
 	/// <summary>
+	/// Decide if a property should be ignored as a change.
+	/// </summary>
+	/// <param name="propertyDeclarationSyntax">The property declaration under test.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <returns>True if the property should be ignored. False otherwise.</returns>
+	internal static bool Skip (PropertyDeclarationSyntax propertyDeclarationSyntax, SemanticModel semanticModel)
+	{
+		var propertySymbol = semanticModel.GetDeclaredSymbol (propertyDeclarationSyntax);
+		if (propertySymbol is null)
+			// skip if we cannot retrieve the symbol
+			return true;
+		var attributes = propertySymbol.GetAttributeData ();
+		// we will skip properties if they do not have the [Export] attribute or the [Field] attribute
+		return !attributes.HasExportAttribute () && !attributes.HasFieldAttribute ();
+	}
+
+	/// <summary>
 	/// Create a new binding based on the interface declaration. Because in the old SDK old the bindings
 	/// are represented by an interface, this constructor will ensure that the correct binding type is set.
 	/// </summary>
@@ -213,6 +230,10 @@ readonly partial struct Binding {
 			hasStaticFlag: HasStaticFlag || BindingInfo.BindingType == BindingType.Category // add static for categories
 		);
 		Modifiers = flags.ToClassModifiersArray ();
+
+		// loop over the different members and add them to the model
+		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclarationSyntax, context, Skip, Property.TryCreate,
+			out properties);
 	}
 
 	/// <inheritdoc/>
