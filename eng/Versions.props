@@ -12,7 +12,7 @@
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>9.0.0-rc.2.24462.10</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.24515.1</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.25103.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>10.0.0-prerelease.24610.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <MicrosoftDotNetArcadeSdkPackageVersion>9.0.0-beta.25111.5</MicrosoftDotNetArcadeSdkPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100Version)</Emscriptennet7WorkloadVersion>

@@ -10,12 +10,10 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public static class CMAttachmentBearer {
 
 		[DllImport (Constants.CoreMediaLibrary)]

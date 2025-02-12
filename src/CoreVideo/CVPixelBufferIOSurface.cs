@@ -17,23 +17,19 @@ using ObjCRuntime;
 namespace CoreVideo {
 	public partial class CVPixelBuffer : CVImageBuffer {
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static IntPtr /* IOSurfaceRef */ CVPixelBufferGetIOSurface (
 			/* CVPixelBufferRef CV_NULLABLE */ IntPtr pixelBuffer
 		);
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public IOSurface.IOSurface? GetIOSurface ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -46,12 +42,10 @@ namespace CoreVideo {
 			return Runtime.GetINativeObject<IOSurface.IOSurface> (ret, false);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static CVReturn /* IOSurfaceRef */ CVPixelBufferCreateWithIOSurface (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
@@ -60,12 +54,10 @@ namespace CoreVideo {
 			/* CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ IntPtr* pixelBufferOut
 		);
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			if (surface is null)
@@ -87,12 +79,10 @@ namespace CoreVideo {
 			return new CVPixelBuffer (pixelBufferPtr, true);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			CVReturn result;

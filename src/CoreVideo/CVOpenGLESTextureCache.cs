@@ -26,15 +26,10 @@ using OpenGLES;
 namespace CoreVideo {
 
 	// CVOpenGLESTextureCache.h
-#if NET
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTextureCache' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTextureCache' instead.")]
-#else
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
-#endif
 	public class CVOpenGLESTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
 
