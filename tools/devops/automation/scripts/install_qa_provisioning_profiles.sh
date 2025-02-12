@@ -80,7 +80,7 @@ if test -z "$ONLY_CREATE_KEYCHAIN"; then
 	if test -z "${IGNORE_LOGIN_KEYCHAIN:-}"; then
 	if ! security list-keychains | grep -q "login.keychain"; then
 		echo "Adding login.keychain to the keychain search list"
-		security list-keychains -s $(security list-keychains | sed -e s/\"//g) login.keychain
+		security list-keychains -s "$(security list-keychains | sed -e s/\"//g)" login.keychain
 	else
 		echo "login.keychain already included in the keychain search list"
 	fi
@@ -123,7 +123,7 @@ fi
 # Include our keychain in the keychain search list and make it the default keychain
 if ! security list-keychains | grep -q "$KEYCHAIN.keychain"; then
 	echo "Adding $KEYCHAIN.keychain to the keychain search list"
-	security list-keychains -s $(security list-keychains | sed -e s/\"//g) "$KEYCHAIN.keychain"
+	security list-keychains -s "$(security list-keychains | sed -e s/\"//g)" "$KEYCHAIN.keychain"
 else
 	echo "$KEYCHAIN.keychain already included in the keychain search list"
 fi
