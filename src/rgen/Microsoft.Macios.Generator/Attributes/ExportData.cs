@@ -98,7 +98,7 @@ readonly struct ExportData<T> : IEquatable<ExportData<T>> where T : Enum {
 			// there are two possible cases in this situation.
 			// 1. The second argument is an ArgumentSemantic
 			// 2. The second argument is a T
-			if (attributeData.ConstructorArguments [1].Value is ArgumentSemantic) {
+			if (attributeData.ConstructorArguments [1].Type?.Name == nameof(ObjCRuntime.ArgumentSemantic)) {
 				selector = (string?) attributeData.ConstructorArguments [0].Value!;
 				argumentSemantic = (ArgumentSemantic) attributeData.ConstructorArguments [1].Value!;
 			} else {

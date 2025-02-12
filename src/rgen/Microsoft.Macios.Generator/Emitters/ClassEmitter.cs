@@ -142,6 +142,44 @@ return {backingField};
 		notificationProperties = notificationsBuilder.ToImmutable ();
 	}
 
+	void EmitProperties (in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock)
+	{
+
+		foreach (var property in properties.OrderBy (p => p.Name)) {
+			if (property.IsField)
+				// ignore fields
+				continue;
+			
+			// we expect to always at least have a getter
+			var getter = property.GetAccessor (AccessorKind.Getter);
+			if (getter is null)
+				continue;
+
+			classBlock.WriteLine ();
+			classBlock.AppendMemberAvailability (property.SymbolAvailability);
+			classBlock.AppendGeneratedCodeAttribute (optimizable: true);
+
+			using (var propertyBlock = classBlock.CreateBlock (property.ToDeclaration ().ToString (), block: true)) {
+				// be very verbose with the availability, makes the life easier to the dotnet analyzer
+				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
+				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
+					getterBlock.WriteLine ("throw new NotImplementedException();");
+				}
+				
+				var setter = property.GetAccessor (AccessorKind.Setter);
+				if (setter is null)
+					// we are done with the current property
+					continue;
+
+				propertyBlock.WriteLine (); // add space between getter and setter since we have the attrs
+				propertyBlock.AppendMemberAvailability (setter.Value.SymbolAvailability);
+				using (var setterBlock = propertyBlock.CreateBlock ("set", block: true)) {
+					setterBlock.WriteLine ("throw new NotImplementedException();");
+				}
+			}
+		}
+	}
+
 	void EmitNotifications (in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock)
 	{
 		// to be implemented, do not throw or tests will fail.
@@ -189,6 +227,7 @@ return {backingField};
 
 			EmitFields (bindingContext.Changes.Name, bindingContext.Changes.Properties, classBlock,
 				out var notificationProperties);
+			EmitProperties (bindingContext.Changes.Properties, classBlock);
 
 			// emit the notification helper classes, leave this for the very bottom of the class
 			EmitNotifications (notificationProperties, classBlock);

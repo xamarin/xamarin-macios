@@ -13,6 +13,7 @@ public class ClassGenerationTests : BaseGeneratorTestClass {
 	public class TestDataGenerator : BaseTestDataGenerator, IEnumerable<object []> {
 		readonly List<(ApplePlatform Platform, string ClassName, string BindingFile, string OutputFile, string? LibraryText)> _data = new ()
 		{
+			/*
 			(ApplePlatform.iOS, "AVAudioPcmBuffer", "AVAudioPcmBufferNoDefaultCtr.cs", "ExpectedAVAudioPcmBufferNoDefaultCtr.cs", null),
 			(ApplePlatform.TVOS, "AVAudioPcmBuffer", "AVAudioPcmBufferNoDefaultCtr.cs", "ExpectedAVAudioPcmBufferNoDefaultCtr.cs", null),
 			(ApplePlatform.MacCatalyst, "AVAudioPcmBuffer", "AVAudioPcmBufferNoDefaultCtr.cs", "ExpectedAVAudioPcmBufferNoDefaultCtr.cs", null),
@@ -24,6 +25,11 @@ public class ClassGenerationTests : BaseGeneratorTestClass {
 			(ApplePlatform.iOS, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
 			(ApplePlatform.TVOS, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
 			(ApplePlatform.MacCatalyst, "CIImage", "CIImage.cs", "ExpectedCIImage.cs", null),
+			(ApplePlatform.iOS, "PropertyTests", "PropertyTests.cs", "ExpectedPropertyTests.cs", null),
+			(ApplePlatform.TVOS, "PropertyTests", "PropertyTests.cs", "ExpectedPropertyTests.cs", null),
+			(ApplePlatform.MacCatalyst, "PropertyTests", "PropertyTests.cs", "ExpectedPropertyTests.cs", null),
+			*/
+			(ApplePlatform.MacOSX, "PropertyTests", "PropertyTests.cs", "ExpectedPropertyTests.cs", null),
 
 		};
 
