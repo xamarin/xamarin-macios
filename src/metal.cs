@@ -2211,10 +2211,6 @@ namespace Metal {
 		[Export ("mipmapLevelCount")]
 		nuint MipmapLevelCount { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 13, 0)]
-		[Deprecated (PlatformName.iOS, 16, 0)]
-		[Deprecated (PlatformName.TvOS, 16, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 

@@ -301,6 +301,10 @@ namespace CoreGraphics {
 			return FromHandle (imageRef, true);
 		}
 #else
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
 		public static CGImage? ScreenImage {
 			get {
 				return UIKit.UIScreen.MainScreen.Capture ().CGImage;

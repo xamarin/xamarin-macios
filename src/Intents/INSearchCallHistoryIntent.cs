@@ -7,11 +7,13 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if !(NET && __MACOS__)
+#if !__MACOS__
 #if !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace Intents {
 	public partial class INSearchCallHistoryIntent {
@@ -22,4 +24,4 @@ namespace Intents {
 	}
 }
 #endif
-#endif // !(NET && __MACOS__)
+#endif // __MACOS__
