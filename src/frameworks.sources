@@ -1664,7 +1664,6 @@ SOCIAL_API_SOURCES = \
 
 SOCIAL_SOURCES = \
 	Social/SLComposeViewController.cs \
-	Social/SLRequest.cs \
 
 # Speech
 
