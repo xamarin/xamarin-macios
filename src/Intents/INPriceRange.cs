@@ -11,20 +11,29 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace Intents {
 	public enum INPriceRangeOption {
 		Maximum,
-		Minimum
+		Minimum,
 	}
 
 	public partial class INPriceRange {
 
 		public INPriceRange (INPriceRangeOption option, NSDecimalNumber price, string currencyCode)
+			: base (NSObjectFlag.Empty)
 		{
-			if (option == INPriceRangeOption.Maximum)
-				Handle = InitWithMaximumPrice (price, currencyCode);
-			else
-				Handle = InitWithMinimumPrice (price, currencyCode);
+			switch (option) {
+			case INPriceRangeOption.Maximum:
+				InitializeHandle (InitWithMaximumPrice (price, currencyCode));
+				break;
+			case INPriceRangeOption.Minimum:
+				InitializeHandle (InitWithMinimumPrice (price, currencyCode));
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (option), option, "Invalid enum value.");
+			}
 		}
 	}
 }

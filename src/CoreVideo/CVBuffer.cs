@@ -35,21 +35,15 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 #nullable enable
 
 namespace CoreVideo {
 
 	// CVBuffer.h
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CVBuffer : NativeObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
@@ -93,7 +87,6 @@ namespace CoreVideo {
 			CVBufferRemoveAttachment (Handle, key.Handle);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -102,12 +95,6 @@ namespace CoreVideo {
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
 		[ObsoletedOSPlatform ("ios15.0")]
-#else
-		[Deprecated (PlatformName.MacOSX, 12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0)]
-		[Deprecated (PlatformName.TvOS, 15, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
 
@@ -119,16 +106,10 @@ namespace CoreVideo {
 
 		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
 		// older method has been deprecatd.
-#if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (15, 0)]
-		[iOS (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
 
@@ -163,7 +144,6 @@ namespace CoreVideo {
 		}
 #endif
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -172,25 +152,13 @@ namespace CoreVideo {
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
 		[ObsoletedOSPlatform ("ios15.0")]
-#else
-		[Deprecated (PlatformName.MacOSX, 12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0)]
-		[Deprecated (PlatformName.TvOS, 15, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferGetAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
-#if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (15, 0)]
-		[iOS (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
@@ -247,29 +215,17 @@ namespace CoreVideo {
 			CVBufferSetAttachments (Handle, theAttachments.Handle, attachmentMode);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (15, 0)]
-		[TV (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern byte CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
 
-#if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (15, 0)]
-		[TV (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		public bool HasAttachment (NSString key)
 		{
 			if (key is null)
