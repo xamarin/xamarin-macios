@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using System;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
-namespace Microsoft.Macios.Generator.Tests.DataModel;
+namespace Microsoft.Macios.Generator.Tests.DataModel.MethodTests;
 
 public class MethodComparerTests {
 	readonly MethodComparer comparer = new ();

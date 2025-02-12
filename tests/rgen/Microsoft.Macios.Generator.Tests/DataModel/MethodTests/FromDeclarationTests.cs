@@ -10,47 +10,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
-using ObjCRuntime;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
-namespace Microsoft.Macios.Generator.Tests.DataModel;
+namespace Microsoft.Macios.Generator.Tests.DataModel.MethodTests;
 
-public class MethodTests : BaseGeneratorTestClass {
+public class FromDeclarationTests : BaseGeneratorTestClass {
 
-	[Fact]
-	public void IsThreadSafe ()
-	{
-		var method = new Method (
-			type: "NS.MyClass",
-			name: "MyMethod",
-			returnType: ReturnTypeForVoid (),
-			symbolAvailability: new (),
-			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.IsThreadSafe),
-			attributes: [],
-			modifiers: [
-				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
-			],
-			parameters: []
-		);
-		Assert.True (method.IsThreadSafe);
-
-		method = new Method (
-			type: "NS.MyClass",
-			name: "MyMethod",
-			returnType: ReturnTypeForVoid (),
-			symbolAvailability: new (),
-			exportMethodData: new ("selector", ArgumentSemantic.None, ObjCBindings.Method.Default),
-			attributes: [],
-			modifiers: [
-				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
-			],
-			parameters: []
-		);
-		Assert.False (method.IsThreadSafe);
-	}
 	class TestDataFromMethodDeclaration : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
