@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
+using Microsoft.Macios.Generator.Formatters;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using Parameter = Microsoft.Macios.Generator.DataModel.Parameter;
@@ -669,6 +670,17 @@ static partial class BindingSyntaxFactory {
 			.NormalizeWhitespace (); // no special mono style
 	}
 
+	internal static (string Name, LocalDeclarationStatementSyntax Declaration) GetReturnValueAuxVariable (in TypeInfo returnType)
+	{
+		var typeSyntax = returnType.GetIdentifierSyntax ();
+		var variableName = returnType.ReturnVariableName;
+		// generates Type ret; The GetIdentifierSyntax will ensure that the correct type and nullable annotation is used
+		var declaration = LocalDeclarationStatement (
+			VariableDeclaration (typeSyntax.WithTrailingTrivia (Space))
+				.WithVariables (SingletonSeparatedList (VariableDeclarator (Identifier (variableName)))));
+		return (Name: variableName, Declaration: declaration);
+	}
+
 	/// <summary>
 	/// Returns a using statement or block for a local declaration.
 	///
@@ -689,7 +701,7 @@ static partial class BindingSyntaxFactory {
 	{
 		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
 	}
-
+	
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
