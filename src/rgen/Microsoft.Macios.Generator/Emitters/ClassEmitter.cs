@@ -149,7 +149,7 @@ return {backingField};
 			if (property.IsField)
 				// ignore fields
 				continue;
-			
+
 			// we expect to always at least have a getter
 			var getter = property.GetAccessor (AccessorKind.Getter);
 			if (getter is null)
@@ -165,7 +165,7 @@ return {backingField};
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
 					getterBlock.WriteLine ("throw new NotImplementedException();");
 				}
-				
+
 				var setter = property.GetAccessor (AccessorKind.Setter);
 				if (setter is null)
 					// we are done with the current property
