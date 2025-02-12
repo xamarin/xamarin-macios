@@ -701,7 +701,7 @@ static partial class BindingSyntaxFactory {
 	{
 		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
 	}
-	
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum

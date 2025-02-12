@@ -731,7 +731,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	[ClassData (typeof (TestDataUsingTests))]
 	void UsingTests (LocalDeclarationStatementSyntax declaration, string expectedDeclaration)
 		=> Assert.Equal (expectedDeclaration, Using (declaration).ToString ());
-	
+
 	class TestDataGetReturnValueAuxVariable : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -740,55 +740,55 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 				"ret",
 				"bool ret;"
 			];
-			
+
 			yield return [
 				ReturnTypeForString (),
 				"ret",
 				"string ret;"
 			];
-			
+
 			yield return [
 				ReturnTypeForString (isNullable: true),
 				"ret",
 				"string? ret;"
 			];
-			
+
 			yield return [
-				ReturnTypeForNSObject("NSLocale"),
+				ReturnTypeForNSObject ("NSLocale"),
 				"ret",
 				"NSLocale ret;"
 			];
-			
+
 			yield return [
-				ReturnTypeForNSObject("NSLocale", isNullable: true),
+				ReturnTypeForNSObject ("NSLocale", isNullable: true),
 				"ret",
 				"NSLocale? ret;"
 			];
-			
+
 			yield return [
-				ReturnTypeForStruct("MyStruct"),
+				ReturnTypeForStruct ("MyStruct"),
 				"ret",
 				"MyStruct ret;"
 			];
-			
+
 			yield return [
 				ReturnTypeForArray ("int"),
 				"ret",
 				"int[] ret;"
 			];
-			
+
 			yield return [
 				ReturnTypeForArray ("int", isNullable: true),
 				"ret",
 				"int[]? ret;"
 			];
-			
+
 			yield return [
 				ReturnTypeForArray ("int?", isNullable: true),
 				"ret",
 				"int?[]? ret;"
 			];
-			
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -798,7 +798,7 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 	[ClassData (typeof (TestDataGetReturnValueAuxVariable))]
 	void GetReturnValueAuxVariableTests (TypeInfo typeInfo, string expectedVariable, string expectedDeclaration)
 	{
-		var (name, declaration) = GetReturnValueAuxVariable (typeInfo);	
+		var (name, declaration) = GetReturnValueAuxVariable (typeInfo);
 		Assert.Equal (expectedVariable, name);
 		Assert.Equal (expectedDeclaration, declaration.ToString ());
 	}

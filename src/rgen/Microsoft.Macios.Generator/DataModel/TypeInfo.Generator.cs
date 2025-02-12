@@ -32,7 +32,7 @@ readonly partial struct TypeInfo {
 	/// Get the name of the variable for the type when it is used as a return value.
 	/// </summary>
 	public string ReturnVariableName => "ret"; // nothing fancy for now
-	
+
 	internal TypeInfo (ITypeSymbol symbol, Compilation compilation) :
 		this (
 			symbol is IArrayTypeSymbol arrayTypeSymbol
