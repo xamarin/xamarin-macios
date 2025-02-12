@@ -797,7 +797,8 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfNotOnWindows ();
 
 			// This should all execute locally on Windows when BundleOriginalResources=true
-			LibraryWithResources (platform, anyLibraryResources: bundleOriginalResources == true, bundleOriginalResources: bundleOriginalResources);
+			bool anyLibraryResources = bundleOriginalResources ?? Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major >= 10;
+			LibraryWithResources (platform, anyLibraryResources: anyLibraryResources, bundleOriginalResources: bundleOriginalResources);
 		}
 
 
