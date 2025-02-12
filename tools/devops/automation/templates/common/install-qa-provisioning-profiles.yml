@@ -41,7 +41,7 @@ steps:
     gci $(Agent.TempDirectory)
   displayName: 'List secure files'
 - pwsh: |
-    $secureFiles = "${{ convertToJson(parameters.secureFiles) }}" | ConvertFrom-Json
+    $secureFiles = '${{ convertToJson(parameters.secureFiles) }}' | ConvertFrom-Json
     foreach ($secureFile in $secureFiles) {
         $sourcePath = Join-Path -Path $env:AGENT_TEMPDIRECTORY -ChildPath $secureFile.secureFile
         $destinationPath = Join-Path -Path "$env:BUILD_SOURCESDIRECTORY/maccore/tools/provisioning-profiles/certificates-and-profiles" -ChildPath $secureFile.name
