@@ -40,7 +40,7 @@ $macTest = @("dontlink", "introspection", "linksdk", "linkall", "monotouch-test"
 foreach ($t in $macTest) {
   $testName = "exec-$t"
   Write-Host "Execution test $testName"
-  make -d -C $testsPath $testName -f packaged-macos-tests.mk
+  make -d -C $testsPath $testName -f packaged-macos-tests.mk V=1
   if ($LastExitCode -eq 0) {
     Write-Host "$t succeeded"
   } else {
