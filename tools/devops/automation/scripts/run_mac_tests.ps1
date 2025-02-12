@@ -29,7 +29,10 @@ $testsPath = "$SourcesDirectory/artifacts/mac-test-package/tests"
 Write-Host "Tests path is $testsPath"
 
 # print enviroment
-dir env:
+env -0 | sort -z | tr '\0' '\n'
+which dotnet
+dotnet --version
+dotnet --info
 
 [System.Collections.Generic.List[string]]$failures = @()
 
@@ -40,6 +43,7 @@ $macTest = @("dontlink", "introspection", "linksdk", "linkall", "monotouch-test"
 foreach ($t in $macTest) {
   $testName = "exec-$t"
   Write-Host "Execution test $testName"
+  Write-Host "make -d -C '$testsPath' $testName -f packaged-macos-tests.mk V=1"
   make -d -C $testsPath $testName -f packaged-macos-tests.mk V=1
   if ($LastExitCode -eq 0) {
     Write-Host "$t succeeded"
