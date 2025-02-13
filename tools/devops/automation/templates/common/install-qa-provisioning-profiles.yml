@@ -54,9 +54,9 @@ steps:
     gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
   displayName: 'List Certificates and Profiles'
 
-- bash: $(Build.SourcesDirectory)/maccore/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
+- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
   displayName: 'Install provisioning profiles'
-  workingDirectory: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)//maccore/tools
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
   env: ${{ parameters.env }}
   timeoutInMinutes: 30
   continueOnError: true  # should not stop the build
