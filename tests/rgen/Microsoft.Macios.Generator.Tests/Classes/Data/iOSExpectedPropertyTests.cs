@@ -57,7 +57,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			Foundation.NSCharacterSet ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 	}
 
@@ -74,7 +80,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			Foundation.NSAttributedString ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 	}
 
@@ -91,7 +103,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			bool ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -117,7 +135,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			bool ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 	}
 
@@ -134,7 +158,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 	}
 
@@ -151,7 +179,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			bool ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -177,7 +211,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			bool ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -203,7 +243,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -229,7 +273,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			Foundation.NSLocale ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -255,7 +305,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -281,7 +335,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -307,7 +365,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -333,7 +395,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			Foundation.NSMetadataItem[] ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 	}
 
@@ -350,7 +418,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			CoreGraphics.CGSize ret;
+			if (IsDirectBinding) {
+				ret = throw new NotImplementedException();
+			} else {
+				ret = throw new NotImplementedException();
+			}
+			return ret;
 		}
 	}
 
@@ -367,7 +441,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 	}
 
@@ -384,7 +462,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			throw new NotImplementedException();
+			if (IsDirectBinding) {
+				throw new NotImplementedException();
+			} else {
+				throw new NotImplementedException();
+			}
 		}
 
 		[SupportedOSPlatform ("macos")]

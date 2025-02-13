@@ -163,7 +163,28 @@ return {backingField};
 				// be very verbose with the availability, makes the life easier to the dotnet analyzer
 				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
-					getterBlock.WriteLine ("throw new NotImplementedException();");
+					// depending on the property definition, we might need a temp variable to store
+					// the return value
+					if (property.UseTempReturn) {
+						var (tempVar, tempDeclaration) = GetReturnValueAuxVariable (property.ReturnType);
+						getterBlock.WriteRaw (
+$@"{tempDeclaration}
+if (IsDirectBinding) {{
+	{tempVar} = throw new NotImplementedException();
+}} else {{
+	{tempVar} = throw new NotImplementedException();
+}}
+return {tempVar};
+");
+					} else {
+						getterBlock.WriteRaw (
+@"if (IsDirectBinding) {
+	throw new NotImplementedException();
+} else {
+	throw new NotImplementedException();
+}
+");
+					}
 				}
 
 				var setter = property.GetAccessor (AccessorKind.Setter);
