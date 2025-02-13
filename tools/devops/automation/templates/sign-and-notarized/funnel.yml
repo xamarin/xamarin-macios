@@ -141,6 +141,10 @@ jobs:
   timeoutInMinutes: 1000
   templateContext: # disable some of the sdl tasks for this job
     sdl:
+      codeql:
+        compiled:
+          enabled: false
+          justificationForDisabling: 'This is not the main/default branch'
       credscan: # run in the sdl stage 
         enabled: false
       binskim: # job does not compile anything

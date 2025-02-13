@@ -222,6 +222,10 @@ extends:
       image: 1ESPT-Windows2022
       os: windows
     sdl:
+      codeql:
+        compiled:
+          enabled: false
+          justificationForDisabling: 'This is not the main/default branch'
       baseline:
         baselineFile: '$(System.DefaultWorkingDirectory)\\xamarin-macios\\tools\\devops\\governance\\baselines.gdnbaselines'
       suppression:
