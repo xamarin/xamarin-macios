@@ -54,7 +54,7 @@ steps:
     gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
   displayName: 'List Certificates and Profiles'
 
-- bash: $(SYSTEM_DEFAULTWORKINGDIRECTORY)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/install-provisioning-profiles.sh
+- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/install-provisioning-profiles.sh
   displayName: 'Install provisioning profiles'
   env: ${{ parameters.env }}
   timeoutInMinutes: 30
