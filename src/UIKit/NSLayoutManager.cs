@@ -19,7 +19,7 @@ using Foundation;
 using ObjCRuntime;
 
 #if MONOMAC
-using UIFont=AppKit.NSFont;
+using UIFont = AppKit.NSFont;
 #endif
 
 #if MONOMAC

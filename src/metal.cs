@@ -1584,7 +1584,7 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("counterSets")]
 #if NET
-		IMTLCounterSet[] CounterSets { get; }
+		IMTLCounterSet [] CounterSets { get; }
 #else
 		[Obsolete ("Use 'GetIMTLCounterSets' instead.")]
 		MTLCounterSet [] CounterSets { get; }

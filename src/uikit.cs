@@ -15777,7 +15777,7 @@ namespace UIKit {
 	// , Events=new Type [] {typeof(UITextFieldDelegate)})] custom logic needed, see https://bugzilla.xamarin.com/show_bug.cgi?id=53174
 	interface UITextField : UITextInput, UIContentSizeCategoryAdjusting, UILetterformAwareAdjusting
 #if IOS
-	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting 
+	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting
 #endif // IOS
 	{
 		[Export ("initWithFrame:")]
@@ -15993,7 +15993,7 @@ namespace UIKit {
 	[BaseType (typeof (UIScrollView), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (UITextViewDelegate) })]
 	interface UITextView : UITextInput, NSCoding, UIContentSizeCategoryAdjusting, UILetterformAwareAdjusting
 #if IOS
-	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting 
+	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting
 #endif // IOS
 	{
 		[Export ("initWithFrame:")]
