@@ -348,6 +348,9 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlink (string file)
 		{
+			if (OperatingSystem.IsWindows ())
+				return false;
+
 			Stat buf;
 			var rv = lstat (file, out buf);
 			if (rv != 0)
@@ -358,6 +361,9 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlinkOrContainsSymlinks (string directoryOrFile)
 		{
+			if (OperatingSystem.IsWindows ())
+				return false;
+
 			if (IsSymlink (directoryOrFile))
 				return true;
 
