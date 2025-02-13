@@ -123,7 +123,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<PropertyGroup>
 			<IsHotRestartBuild Condition="'$(IsHotRestartBuild)' == 'True' And '$(_PlatformName)' != 'iOS'">False</IsHotRestartBuild>
 			<IsRemoteBuild Condition="'$(IsHotRestartBuild)' == 'True'">False</IsRemoteBuild>
-			<IsRemoteBuild Condition="'$(BundleOriginalResources)' == 'true' And '$(OutputType)' != 'Exe'">False</IsRemoteBuild>
+			<IsRemoteBuild Condition="'$(BundleOriginalResources)' == 'true' And '$(OutputType)' != 'Exe' And '$(IsBindingProject)' != 'true'">False</IsRemoteBuild>
 		</PropertyGroup>
 	</Target>
 
@@ -191,8 +191,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<CompressBindingResourcePackage>auto</CompressBindingResourcePackage>
 		</PropertyGroup>
 
-		<CreateBindingResourcePackage
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
+		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
@@ -203,13 +202,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
 		/>
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
 			Files="$(BindingResourcePath).stamp"
 			>
