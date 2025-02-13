@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -119,28 +120,26 @@ namespace CoreVideo {
 			return CVBufferCopyAttachment (buffer, key, (CVAttachmentMode*) Unsafe.AsPointer<CVAttachmentMode> (ref attachmentMode));
 		}
 
-		// FIXME: we need to bring the new API to xamcore
-#if !MONOMAC
 		// any CF object can be attached
 		public T? GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
-			if (SystemVersion.CheckiOS (15, 0))
+			if (!SystemVersion.CheckiOS (15, 0))
+				return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 #endif
 			return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
-			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
-#else
+
+#if MONOMAC && !XAMCORE_5_0
+		[Obsolete ("Use the generic 'GetAttachment<T>' method instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NSObject? GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			if (SystemVersion.CheckmacOS (12, 0))
-				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
-			else
-				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
+			return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 		}
 #endif
 
@@ -165,12 +164,10 @@ namespace CoreVideo {
 		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
 #if IOS || __MACCATALYST__ || TVOS
-			if (SystemVersion.CheckiOS (15, 0))
-#elif MONOMAC
-			if (SystemVersion.CheckmacOS (12, 0))
+			if (!SystemVersion.CheckiOS (15, 0))
+				return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 #endif
 			return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
-			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
