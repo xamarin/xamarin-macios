@@ -377,8 +377,7 @@ static partial class BindingSyntaxFactory {
 		// - CMTime
 		// - CMTimeMapping
 		// - CATransform3D
-		var t = parameter.Type.Name;
-
+		
 #pragma warning disable format
 		// get the factory method based on the parameter type, if it is not found, return null
 		var factoryMethod = parameter.Type switch { 
