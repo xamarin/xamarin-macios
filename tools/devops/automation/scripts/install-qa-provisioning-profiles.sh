@@ -10,7 +10,7 @@ KEYCHAIN=xamarin-macios
 ONLY_CREATE_KEYCHAIN=
 VERBOSE=
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+#cd "$(dirname "${BASH_SOURCE[0]}")"
 
 while ! test -z "${1:-}"; do
 	case "$1" in

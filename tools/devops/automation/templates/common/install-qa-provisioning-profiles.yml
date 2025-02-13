@@ -56,6 +56,7 @@ steps:
 
 - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
   displayName: 'Install provisioning profiles'
+  workingDirectory: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)//maccore/tools
   env: ${{ parameters.env }}
   timeoutInMinutes: 30
   continueOnError: true  # should not stop the build
