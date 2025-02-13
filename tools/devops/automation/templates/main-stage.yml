@@ -175,8 +175,8 @@ stages:
         displayName: 'Configure build'
         pool:
           name: AzurePipelines-EO
-          demands:
-            - ImageOverride -equals 1ESPT-Ubuntu22.04
+          os: linux
+          image: 1ESPT-Ubuntu22.04
 
         variables:
           isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
