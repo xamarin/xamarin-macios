@@ -122,7 +122,7 @@ namespace ObjCBindings {
 		/// <summary>
 		/// The backing field for a property to be annotated with the .NET [ThreadStatic] attribute.
 		/// </summary>
-		IsThreadStaticAttribute = 1 << 2,
+		IsThreadStatic = 1 << 2,
 
 		/// <summary>
 		/// Generate a notification for the property.
