@@ -346,13 +346,9 @@ namespace Xamarin.Utils {
 			}
 		}
 
-		static bool OnWindows {
-			get => Environment.OSVersion.Platform == PlatformID.Win32NT;
-		}
-
 		public static bool IsSymlink (string file)
 		{
-			if (OnWindows)
+			if (OperatingSystem.IsWindows ())
 				return false;
 
 			Stat buf;
@@ -365,7 +361,7 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlinkOrContainsSymlinks (string directoryOrFile)
 		{
-			if (OnWindows)
+			if (OperatingSystem.IsWindows ())
 				return false;
 
 			if (IsSymlink (directoryOrFile))
