@@ -21,6 +21,98 @@ namespace TestNamespace;
 public partial class PropertyTests
 {
 	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selCountX = "count";
+	static readonly NativeHandle selCountXHandle = Selector.GetHandle ("count");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selLineSpacingX = "lineSpacing";
+	static readonly NativeHandle selLineSpacingXHandle = Selector.GetHandle ("lineSpacing");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetLineSpacing_X = "setLineSpacing:";
+	static readonly NativeHandle selSetLineSpacing_XHandle = Selector.GetHandle ("setLineSpacing:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSizesX = "sizes";
+	static readonly NativeHandle selSizesXHandle = Selector.GetHandle ("sizes");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selContainsAttachmentsX = "containsAttachments";
+	static readonly NativeHandle selContainsAttachmentsXHandle = Selector.GetHandle ("containsAttachments");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selNameX = "name";
+	static readonly NativeHandle selNameXHandle = Selector.GetHandle ("name");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetName_X = "setName:";
+	static readonly NativeHandle selSetName_XHandle = Selector.GetHandle ("setName:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSurnamesX = "surnames";
+	static readonly NativeHandle selSurnamesXHandle = Selector.GetHandle ("surnames");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetSurnames_X = "setSurnames:";
+	static readonly NativeHandle selSetSurnames_XHandle = Selector.GetHandle ("setSurnames:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selAttributedStringByInflectingStringX = "attributedStringByInflectingString";
+	static readonly NativeHandle selAttributedStringByInflectingStringXHandle = Selector.GetHandle ("attributedStringByInflectingString");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selDelegateX = "delegate";
+	static readonly NativeHandle selDelegateXHandle = Selector.GetHandle ("delegate");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetDelegate_X = "setDelegate:";
+	static readonly NativeHandle selSetDelegate_XHandle = Selector.GetHandle ("setDelegate:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selResultsX = "results";
+	static readonly NativeHandle selResultsXHandle = Selector.GetHandle ("results");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSizeX = "size";
+	static readonly NativeHandle selSizeXHandle = Selector.GetHandle ("size");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selAlphanumericCharacterSetX = "alphanumericCharacterSet";
+	static readonly NativeHandle selAlphanumericCharacterSetXHandle = Selector.GetHandle ("alphanumericCharacterSet");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selLocaleX = "locale";
+	static readonly NativeHandle selLocaleXHandle = Selector.GetHandle ("locale");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetLocale_X = "setLocale:";
+	static readonly NativeHandle selSetLocale_XHandle = Selector.GetHandle ("setLocale:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selIsForPersonMassUseX = "isForPersonMassUse";
+	static readonly NativeHandle selIsForPersonMassUseXHandle = Selector.GetHandle ("isForPersonMassUse");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetForPersonMassUse_X = "setForPersonMassUse:";
+	static readonly NativeHandle selSetForPersonMassUse_XHandle = Selector.GetHandle ("setForPersonMassUse:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selIsLenientX = "isLenient";
+	static readonly NativeHandle selIsLenientXHandle = Selector.GetHandle ("isLenient");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetLenient_X = "setLenient:";
+	static readonly NativeHandle selSetLenient_XHandle = Selector.GetHandle ("setLenient:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selCanDrawX = "canDraw";
+	static readonly NativeHandle selCanDrawXHandle = Selector.GetHandle ("canDraw");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+	const string selSetCanDraw_X = "setCanDraw:";
+	static readonly NativeHandle selSetCanDraw_XHandle = Selector.GetHandle ("setCanDraw:");
+
+	[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 	static readonly NativeHandle class_ptr = Class.GetHandle ("PropertyTests");
 
 	public override NativeHandle ClassHandle => class_ptr;

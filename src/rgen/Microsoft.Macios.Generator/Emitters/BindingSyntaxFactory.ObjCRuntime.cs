@@ -681,6 +681,51 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
+	/// Returns the declaration needed for the string field of a given selector.
+	/// </summary>
+	/// <param name="selector">The selector to be store in the field.</param>
+	/// <param name="selectorName">The selector handle name. This will be used to calculate the field name.</param>
+	/// <returns>The declaration statement for the variable.</returns>
+	internal static LocalDeclarationStatementSyntax GetSelectorStringField (string selector, string selectorName)
+	{
+		var fieldName = selectorName.Substring (0, selectorName.Length - 6 /* Handle */);
+		var variableDeclaration =
+			VariableDeclaration (PredefinedType (Token (SyntaxKind.StringKeyword)))
+				.WithVariables (
+					SingletonSeparatedList (
+						VariableDeclarator (Identifier (fieldName))
+							.WithInitializer (EqualsValueClause (
+								LiteralExpression (SyntaxKind.StringLiteralExpression, Literal (selector))))));
+		return LocalDeclarationStatement (variableDeclaration)
+			.WithModifiers (TokenList (Token (SyntaxKind.ConstKeyword))).NormalizeWhitespace ();
+	}
+
+	internal static LocalDeclarationStatementSyntax GetSelectorHandleField (string selector, string selectorName)
+	{
+		// list of the modifiers
+		var modifiers = TokenList (
+			Token (SyntaxKind.StaticKeyword).WithTrailingTrivia (Space),
+			Token (SyntaxKind.ReadOnlyKeyword).WithTrailingTrivia (Space));
+		// generates: Selector.GetHandle (selector);
+		var getHandleInvocation = InvocationExpression (MemberAccessExpression (SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName ("Selector"), IdentifierName ("GetHandle").WithTrailingTrivia (Space)))
+			.WithArgumentList (
+				ArgumentList (
+					SingletonSeparatedList (
+						Argument (
+							LiteralExpression (SyntaxKind.StringLiteralExpression, Literal (selector))))));
+
+		// generates: NativeHandler selectorName = Selector.GetHandle (selector);
+		return LocalDeclarationStatement (
+			VariableDeclaration (IdentifierName ("NativeHandle").WithTrailingTrivia (Space))
+				.WithVariables (
+					SingletonSeparatedList (
+						VariableDeclarator (Identifier (selectorName).WithTrailingTrivia (Space))
+							.WithInitializer (EqualsValueClause (getHandleInvocation.WithLeadingTrivia (Space)))))
+		).WithModifiers (modifiers);
+	}
+
+	/// <summary>
 	/// Returns a using statement or block for a local declaration.
 	///
 	/// This allows to write the following for a binding:

@@ -802,4 +802,56 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 		Assert.Equal (expectedVariable, name);
 		Assert.Equal (expectedDeclaration, declaration.ToString ());
 	}
+
+	class TestDataGetSelectorStringField : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			// selection of example selectors
+			yield return [
+				"RTFDFileWrapperFromRange:documentAttributes:",
+				"selRTFDFileWrapperFromRange_DocumentAttributes_XHandle",
+				"const string selRTFDFileWrapperFromRange_DocumentAttributes_X = \"RTFDFileWrapperFromRange:documentAttributes:\";"
+			];
+
+			yield return [
+				"RTFDFromRange:documentAttributes:",
+				"selRTFDFromRange_DocumentAttributes_XHandle",
+				"const string selRTFDFromRange_DocumentAttributes_X = \"RTFDFromRange:documentAttributes:\";"
+			];
+
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetSelectorStringField))]
+	void GetSelectorStringFieldTest (string selector, string selectorName, string expectedDeclaration)
+		=> Assert.Equal (expectedDeclaration, GetSelectorStringField (selector, selectorName).ToString ());
+
+	class TestDataGetSelectorHandleField : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			// selection of example selectors
+			yield return [
+				"RTFDFileWrapperFromRange:documentAttributes:",
+				"selRTFDFileWrapperFromRange_DocumentAttributes_XHandle",
+				"static readonly NativeHandle selRTFDFileWrapperFromRange_DocumentAttributes_XHandle = Selector.GetHandle (\"RTFDFileWrapperFromRange:documentAttributes:\");"
+			];
+
+			yield return [
+				"RTFDFromRange:documentAttributes:",
+				"selRTFDFromRange_DocumentAttributes_XHandle",
+				"static readonly NativeHandle selRTFDFromRange_DocumentAttributes_XHandle = Selector.GetHandle (\"RTFDFromRange:documentAttributes:\");"
+			];
+
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataGetSelectorHandleField))]
+	void GetSelectorHandleFieldTest (string selector, string selectorName, string expectedDeclaration)
+		=> Assert.Equal (expectedDeclaration, GetSelectorHandleField (selector, selectorName).ToString ());
 }
