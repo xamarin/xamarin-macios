@@ -87,7 +87,7 @@ namespace PassKit {
 			throw new InvalidOperationException (Constants.RemovedFromPassKit);
 		}
 
-		public unsafe virtual Task<Tuple<bool,NSError>> AuthorizeDisbursementAsync ()
+		public unsafe virtual Task<Tuple<bool, NSError>> AuthorizeDisbursementAsync ()
 		{
 			throw new InvalidOperationException (Constants.RemovedFromPassKit);
 		}
@@ -125,8 +125,7 @@ namespace PassKit {
 #endif // NET
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-	public partial interface IPKDisbursementAuthorizationControllerDelegate : INativeObject, IDisposable
-	{
+	public partial interface IPKDisbursementAuthorizationControllerDelegate : INativeObject, IDisposable {
 		void DidAuthorize (PKDisbursementAuthorizationController controller, PKDisbursementVoucher disbursementVoucher);
 		void DidFinish (PKDisbursementAuthorizationController controller);
 	}

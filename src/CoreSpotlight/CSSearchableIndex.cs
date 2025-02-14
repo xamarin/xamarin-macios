@@ -21,7 +21,7 @@ namespace CoreSpotlight {
 
 		// Strongly typed version of initWithName:protectionClass:
 		public CSSearchableIndex (string name, CSFileProtection protectionOption = CSFileProtection.None) : this (name, Translate (protectionOption))
-			{}
+		{ }
 
 		static NSString? Translate (CSFileProtection protectionOption)
 		{

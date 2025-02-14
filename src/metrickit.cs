@@ -163,7 +163,7 @@ namespace MetricKit {
 		[MacCatalyst (14, 0)]
 		[Export ("dictionaryRepresentation")]
 #if MONOMAC
- 		NSDictionary DictionaryRepresentation { get; }
+		NSDictionary DictionaryRepresentation { get; }
 #else
 		[Internal]
 		NSDictionary _DictionaryRepresentation14 { get; }

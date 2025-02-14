@@ -1336,17 +1336,17 @@ namespace AVFoundation {
 
 #if NET
 		[Abstract]
-		[TV (13,0), iOS (13,0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("sourceMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingSourceMode SourceMode { get; set; }
 
 		[Abstract]
-		[TV (13,0), iOS (13,0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("pointSourceInHeadMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingPointSourceInHeadMode PointSourceInHeadMode { get; set; }
-	
+
 #else
 		[TV (13, 0), iOS (13, 0)]
 		[Export ("sourceMode", ArgumentSemantic.Assign)]
@@ -8858,7 +8858,7 @@ namespace AVFoundation {
 
 		[Export ("supportedFileTypes")]
 #if NET
-		string [] SupportedFileTypes { get;  }
+		string [] SupportedFileTypes { get; }
 #else
 		NSObject [] SupportedFileTypes { get; }
 #endif
@@ -11857,7 +11857,7 @@ namespace AVFoundation {
 #else
 		[Static]
 		[Export ("discoverySessionWithDeviceTypes:mediaType:position:")]
-		AVCaptureDeviceDiscoverySession Create ([BindAs (typeof (AVCaptureDeviceType[]))] NSString[] deviceTypes, [NullAllowed] [BindAs (typeof (AVMediaTypes))] NSString mediaType, AVCaptureDevicePosition position);
+		AVCaptureDeviceDiscoverySession Create ([BindAs (typeof (AVCaptureDeviceType []))] NSString [] deviceTypes, [NullAllowed][BindAs (typeof (AVMediaTypes))] NSString mediaType, AVCaptureDevicePosition position);
 #endif
 
 		[Export ("devices")]
