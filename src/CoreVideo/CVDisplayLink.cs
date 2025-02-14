@@ -42,7 +42,7 @@ namespace CoreVideo {
 	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CVDisplayLink (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -93,7 +93,7 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
+		public static CVDisplayLink? CreateFromDisplayIds (uint [] displayIds, out CVReturn error)
 		{
 			if (displayIds is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (displayIds));
@@ -115,7 +115,7 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
+		public static CVDisplayLink? CreateFromDisplayIds (uint [] displayIds)
 			=> CreateFromDisplayIds (displayIds, out var _);
 
 		[SupportedOSPlatform ("macos")]
@@ -153,12 +153,12 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRetain (IntPtr handle);
-		
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
-		
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		protected internal override void Retain ()
@@ -176,7 +176,7 @@ namespace CoreVideo {
 		protected override void Dispose (bool disposing)
 		{
 			if (callbackHandle.IsAllocated) {
-				callbackHandle.Free();
+				callbackHandle.Free ();
 			}
 
 			base.Dispose (disposing);
@@ -209,7 +209,7 @@ namespace CoreVideo {
 		public CVDisplayLink ()
 			: base (Create (), true)
 		{
-		}		
+		}
 
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
@@ -221,8 +221,8 @@ namespace CoreVideo {
 		public CVReturn SetCurrentDisplay (int displayId)
 		{
 			return CVDisplayLinkSetCurrentCGDisplay (Handle, displayId);
-		}     
-			
+		}
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -233,7 +233,7 @@ namespace CoreVideo {
 		public CVReturn SetCurrentDisplay (CGLContext cglContext, CGLPixelFormat cglPixelFormat)
 		{
 			return CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext (Handle, cglContext.Handle, cglPixelFormat.Handle);
-		}     
+		}
 
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
@@ -246,7 +246,7 @@ namespace CoreVideo {
 		{
 			return CVDisplayLinkGetCurrentCGDisplay (Handle);
 		}
-			
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -257,8 +257,8 @@ namespace CoreVideo {
 		public CVReturn Start ()
 		{
 			return CVDisplayLinkStart (Handle);
-		}		     
-			
+		}
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -269,8 +269,8 @@ namespace CoreVideo {
 		public CVReturn Stop ()
 		{
 			return CVDisplayLinkStop (Handle);
-		}		     
-			
+		}
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -309,7 +309,7 @@ namespace CoreVideo {
 				return CVDisplayLinkGetActualOutputVideoRefreshPeriod (Handle);
 			}
 		}
-			
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -322,7 +322,7 @@ namespace CoreVideo {
 				return CVDisplayLinkIsRunning (Handle) != 0;
 			}
 		}
-			
+
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -335,21 +335,21 @@ namespace CoreVideo {
 			CVReturn ret;
 			outTime = default;
 			unsafe {
-				ret = CVDisplayLinkGetCurrentTime (this.Handle, (CVTimeStamp *) Unsafe.AsPointer<CVTimeStamp> (ref outTime));
+				ret = CVDisplayLinkGetCurrentTime (this.Handle, (CVTimeStamp*) Unsafe.AsPointer<CVTimeStamp> (ref outTime));
 			}
-				
+
 			return ret;
 		}
-		
-		public delegate CVReturn DisplayLinkOutputCallback (CVDisplayLink displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut);	
-		delegate CVReturn CVDisplayLinkOutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext);		
-	  
+
+		public delegate CVReturn DisplayLinkOutputCallback (CVDisplayLink displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut);
+		delegate CVReturn CVDisplayLinkOutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext);
+
 		[UnmanagedCallersOnly]
 		static unsafe CVReturn OutputCallback (IntPtr displayLink, CVTimeStamp* inNow, CVTimeStamp* inOutputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, IntPtr displayLinkContext)
 		{
 			GCHandle callbackHandle = GCHandle.FromIntPtr (displayLinkContext);
 			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
-			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
+			CVDisplayLink delegateDisplayLink = new CVDisplayLink (displayLink, false);
 			return func (delegateDisplayLink,
 				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inNow),
 				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inOutputTime),
@@ -359,7 +359,7 @@ namespace CoreVideo {
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static unsafe CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, delegate* unmanaged<IntPtr, CVTimeStamp*, CVTimeStamp*, CVOptionFlags, CVOptionFlags *, IntPtr, CVReturn> function, IntPtr userInfo);
+		extern static unsafe CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, delegate* unmanaged<IntPtr, CVTimeStamp*, CVTimeStamp*, CVOptionFlags, CVOptionFlags*, IntPtr, CVReturn> function, IntPtr userInfo);
 
 		[ObsoletedOSPlatform ("macos15.0", "Use 'NSView.GetDisplayLink', 'NSWindow.GetDisplayLink' or 'NSScreen.GetDisplayLink' instead.")]
 		[SupportedOSPlatform ("macos")]
@@ -404,7 +404,7 @@ namespace CoreVideo {
 		public bool TryTranslateTime (CVTimeStamp inTime, ref CVTimeStamp outTime)
 		{
 			unsafe {
-				return CVDisplayLinkTranslateTime (this.Handle, inTime, (CVTimeStamp *) Unsafe.AsPointer<CVTimeStamp> (ref outTime)) == 0;
+				return CVDisplayLinkTranslateTime (this.Handle, inTime, (CVTimeStamp*) Unsafe.AsPointer<CVTimeStamp> (ref outTime)) == 0;
 			}
 		}
 	}

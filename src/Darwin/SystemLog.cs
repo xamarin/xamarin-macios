@@ -43,7 +43,7 @@ namespace Darwin {
 
 	public class SystemLog : DisposableObject {
 		static SystemLog? _default;
-		
+
 		public static SystemLog Default {
 			get {
 				if (_default is null)
@@ -51,7 +51,7 @@ namespace Darwin {
 				return _default!;
 			}
 		}
-		
+
 		[Flags]
 		public enum Option {
 			Stderr,
@@ -65,10 +65,10 @@ namespace Darwin {
 				asl_close (Handle);
 			base.Dispose (disposing);
 		}
-		
+
 		[DllImport (Constants.SystemLibrary)]
 		extern static void asl_close (IntPtr handle);
-		
+
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_open (IntPtr ident, IntPtr facility, Option /* uint32_t */ options);
 
@@ -89,7 +89,7 @@ namespace Darwin {
 			: base (handle, owns)
 		{
 		}
-		
+
 		public SystemLog (string ident, string facility, Option options = 0)
 			: base (
 					asl_open (
@@ -110,7 +110,7 @@ namespace Darwin {
 			using var facilityStr = new TransientString (facility);
 			return asl_open_from_file (fd, identStr, facilityStr);
 		}
-		
+
 		public SystemLog (int fileDescriptor, string ident, string facility)
 			: base (
 					asl_open_from_file (
@@ -127,7 +127,7 @@ namespace Darwin {
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_remove_log_file (IntPtr handle, int /* int */ fd);
-		
+
 		public void AddLogFile (int descriptor)
 		{
 			asl_add_log_file (Handle, descriptor);
@@ -159,24 +159,24 @@ namespace Darwin {
 		{
 			if (text is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (text));
-			
+
 			return asl_log (Handle, IntPtr.Zero, text);
 		}
-		
+
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_send (IntPtr handle, IntPtr msgHandle);
-		
+
 		public int Log (Message msg)
 		{
 			if (msg is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (msg));
-			
+
 			return asl_send (Handle, msg.Handle);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_set_filter (IntPtr handle, int /* int */ f);
-		
+
 		public int SetFilter (int level)
 		{
 			return asl_set_filter (Handle, level);
@@ -187,17 +187,17 @@ namespace Darwin {
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr aslresponse_next (IntPtr handle);
-		
+
 		[DllImport (Constants.SystemLibrary)]
 		extern static void aslresponse_free (IntPtr handle);
-		
+
 		public IEnumerable<Message> Search (Message msg)
 		{
 			if (msg is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (msg));
 			var search = asl_search (Handle, msg.Handle);
 			IntPtr mh;
-			
+
 			while ((mh = aslresponse_next (search)) != IntPtr.Zero)
 				yield return new Message (mh, true);
 
@@ -218,7 +218,7 @@ namespace Darwin {
 			Suffix = 0x40,
 			Substring = 0x60,
 			Numeric = 0x80,
-				Regex = 0x100,
+			Regex = 0x100,
 			Equal = 1,
 			Greater = 2,
 			GreaterEqual = 3,
@@ -233,7 +233,7 @@ namespace Darwin {
 			: base (handle, owns)
 		{
 		}
-		
+
 		public Message (Kind kind)
 			: base (asl_new (kind), true)
 		{
@@ -254,7 +254,7 @@ namespace Darwin {
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_get (IntPtr handle, IntPtr key);
-		
+
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_set (IntPtr handle, IntPtr key, IntPtr value);
 
@@ -276,7 +276,7 @@ namespace Darwin {
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_unset (IntPtr handle, IntPtr key);
-		
+
 		public void Remove (string key)
 		{
 			if (key is null)
@@ -284,7 +284,7 @@ namespace Darwin {
 			using var keyStr = new TransientString (key);
 			asl_unset (Handle, keyStr);
 		}
-		
+
 #if NET
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr asl_key (IntPtr handle, int /* uint32_t */ key);
@@ -292,8 +292,8 @@ namespace Darwin {
 		[DllImport (Constants.SystemLibrary)]
 		extern static string asl_key (IntPtr handle, int /* uint32_t */ key);
 #endif
-		
-		public string this [int key]{
+
+		public string this [int key] {
 			get {
 #if NET
 				return Marshal.PtrToStringAuto (asl_key (Handle, key))!;
@@ -312,37 +312,37 @@ namespace Darwin {
 			get { return this ["Host"]; }
 			set { this ["Host"] = value; }
 		}
-		
+
 		public string Sender {
 			get { return this ["Sender"]; }
 			set { this ["Sender"] = value; }
 		}
-		
+
 		public string Facility {
 			get { return this ["Facility"]; }
 			set { this ["Facility"] = value; }
 		}
-		
+
 		public string PID {
 			get { return this ["PID"]; }
 			set { this ["PID"] = value; }
 		}
-		
+
 		public string UID {
 			get { return this ["UID"]; }
 			set { this ["UID"] = value; }
 		}
-		
+
 		public string GID {
 			get { return this ["GID"]; }
 			set { this ["GID"] = value; }
 		}
-		
+
 		public string Level {
 			get { return this ["Level"]; }
 			set { this ["Level"] = value; }
 		}
-		
+
 		public string Msg {
 			get { return this ["Message"]; }
 			set { this ["Message"] = value; }
@@ -350,7 +350,7 @@ namespace Darwin {
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_set_query (IntPtr handle, IntPtr key, IntPtr value, int /* uint32_t */ op);
-		
+
 		public bool SetQuery (string key, Op op, string value)
 		{
 			using var keyStr = new TransientString (key);

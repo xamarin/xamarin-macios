@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
+using Microsoft.Macios.Generator.Formatters;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using Parameter = Microsoft.Macios.Generator.DataModel.Parameter;
@@ -115,8 +116,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="parameter">The parameter whose aux variable we want to generate.</param>
 	/// <param name="withUsing">If the using clause should be added to the declaration.</param>
 	/// <returns>The variable declaration for the NSArray aux variable of the parameter.</returns>
-	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter,
-		bool withUsing = false)
+	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter)
 	{
 		if (!parameter.Type.IsArray)
 			return null;
@@ -161,11 +161,8 @@ static partial class BindingSyntaxFactory {
 				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
 			.WithTrailingTrivia (Space)
 			.WithVariables (SingletonSeparatedList (declarator));
-		var statement = LocalDeclarationStatement (variableDeclaration);
 		// add using if requested
-		return withUsing
-			? statement.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space))
-			: statement;
+		return LocalDeclarationStatement (variableDeclaration);
 	}
 
 	/// <summary>
@@ -381,8 +378,7 @@ static partial class BindingSyntaxFactory {
 		// - CMTime
 		// - CMTimeMapping
 		// - CATransform3D
-		var t = parameter.Type.Name;
-
+		
 #pragma warning disable format
 		// get the factory method based on the parameter type, if it is not found, return null
 		var factoryMethod = parameter.Type switch { 
@@ -673,6 +669,17 @@ static partial class BindingSyntaxFactory {
 			.NormalizeWhitespace (); // no special mono style
 	}
 
+	internal static (string Name, LocalDeclarationStatementSyntax Declaration) GetReturnValueAuxVariable (in TypeInfo returnType)
+	{
+		var typeSyntax = returnType.GetIdentifierSyntax ();
+		var variableName = returnType.ReturnVariableName;
+		// generates Type ret; The GetIdentifierSyntax will ensure that the correct type and nullable annotation is used
+		var declaration = LocalDeclarationStatement (
+			VariableDeclaration (typeSyntax.WithTrailingTrivia (Space))
+				.WithVariables (SingletonSeparatedList (VariableDeclarator (Identifier (variableName)))));
+		return (Name: variableName, Declaration: declaration);
+	}
+
 	/// <summary>
 	/// Returns a using statement or block for a local declaration.
 	///
@@ -689,7 +696,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="declaration"></param>
 	/// <param name="isBlock"></param>
 	/// <returns></returns>
-	internal static StatementSyntax Using (LocalDeclarationStatementSyntax declaration)
+	internal static LocalDeclarationStatementSyntax Using (LocalDeclarationStatementSyntax declaration)
 	{
 		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
 	}

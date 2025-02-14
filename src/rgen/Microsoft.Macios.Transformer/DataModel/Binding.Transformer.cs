@@ -131,10 +131,9 @@ readonly partial struct Binding {
 	/// <summary>
 	/// Retrieve the base class for a given binding based on its binding infor.
 	/// </summary>
-	/// <param name="symbol">The symbol whose base class we want to retrieve..</param>
 	/// <param name="bindingInfo">The binding information.</param>
 	/// <returns>The base class to use for the new style SDK based on the binding information.</returns>
-	static string GetBaseClass (INamedTypeSymbol symbol, BindingInfo bindingInfo)
+	static string GetBaseClass (BindingInfo bindingInfo)
 	{
 		// collecting the base class and the interface is a little more complicated in the older SDK style because
 		// we have to make the difference between a class base and a protocol base
@@ -182,6 +181,40 @@ readonly partial struct Binding {
 	}
 
 	/// <summary>
+	/// Decide if a property should be ignored as a change.
+	/// </summary>
+	/// <param name="propertyDeclarationSyntax">The property declaration under test.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <returns>True if the property should be ignored. False otherwise.</returns>
+	internal static bool Skip (PropertyDeclarationSyntax propertyDeclarationSyntax, SemanticModel semanticModel)
+	{
+		var propertySymbol = semanticModel.GetDeclaredSymbol (propertyDeclarationSyntax);
+		if (propertySymbol is null)
+			// skip if we cannot retrieve the symbol
+			return true;
+		var attributes = propertySymbol.GetAttributeData ();
+		// we will skip properties if they do not have the [Export] attribute or the [Field] attribute
+		return !attributes.HasExportAttribute () && !attributes.HasFieldAttribute ();
+	}
+
+	/// <summary>
+	/// Decide if a method should be ignored as a change.
+	/// </summary>
+	/// <param name="methodDeclarationSyntax">The method declaration under test.</param>
+	/// <param name="semanticModel">The semantic model of the compilation.</param>
+	/// <returns>True if the method should be skipped, false otherwise.</returns>
+	internal static bool Skip (MethodDeclarationSyntax methodDeclarationSyntax, SemanticModel semanticModel)
+	{
+		var methodSymbol = semanticModel.GetDeclaredSymbol (methodDeclarationSyntax);
+		if (methodSymbol is null)
+			// skip if we cannot retrieve the symbol
+			return true;
+		var attributes = methodSymbol.GetAttributeData ();
+		// we will skip methods that do not have the export attribute
+		return !attributes.HasExportAttribute ();
+	}
+
+	/// <summary>
 	/// Create a new binding based on the interface declaration. Because in the old SDK old the bindings
 	/// are represented by an interface, this constructor will ensure that the correct binding type is set.
 	/// </summary>
@@ -199,7 +232,7 @@ readonly partial struct Binding {
 		name = symbol.Name;
 		availability = symbol.GetAvailabilityForSymbol ();
 		namespaces = symbol.GetNamespaceArray ();
-		baseClass = GetBaseClass (symbol, BindingInfo);
+		baseClass = GetBaseClass (BindingInfo);
 
 		// retrieve the interfaces and protocols, notice that this are two out params
 		GetInterfaceAndProtocols (symbol, out interfaces, out protocols);
@@ -213,6 +246,21 @@ readonly partial struct Binding {
 			hasStaticFlag: HasStaticFlag || BindingInfo.BindingType == BindingType.Category // add static for categories
 		);
 		Modifiers = flags.ToClassModifiersArray ();
+
+		// loop over the different members and add them to the model
+		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclarationSyntax, context, Skip, Property.TryCreate,
+			out properties);
+		// methods are a little diff, in the old SDK style, both methods and constructors are methods, we will get
+		// all exported methods and then filter accordingly
+		GetMembers<MethodDeclarationSyntax, Method> (interfaceDeclarationSyntax, context, Skip, Method.TryCreate,
+			out ImmutableArray<Method> allMethods);
+		methods = [.. allMethods.Where (m => !m.IsConstructor)];
+		constructors = allMethods.Where (m => m.IsConstructor)
+			.Select (m => m.ToConstructor ())
+			.Where (c => c is not null)
+			.Select (c => c!.Value)
+			.ToImmutableArray ();
+
 	}
 
 	/// <inheritdoc/>
