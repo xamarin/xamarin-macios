@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -125,56 +124,17 @@ namespace Xamarin.Bundler {
 #endif
 		{
 			// first chance, try to update existing content inside `target`
-			if (TryUpdateDirectory (source, target, out var err, out var errorMessage))
+			if (TryUpdateDirectory (source, target, out var err))
 				return;
 
 			// 2nd chance, remove `target` then copy everything
-			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, errorMessage);
+			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
-			if (!TryUpdateDirectory (source, target, out err, out errorMessage))
-				ReportError (1022, Errors.MT1022, source, target, err, errorMessage);
+			if (!TryUpdateDirectory (source, target, out err))
+				ReportError (1022, Errors.MT1022, source, target, err, strerror (err));
 		}
 
-		static bool TryUpdateDirectory (string source, string target, out int errno, [NotNullWhen (false)] out string? errorMessage)
-		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-				return TryUpdateDirectoryManaged (source, target, out errno, out errorMessage);
-			}
-
-			return TryUpdateDirectory_macOS (source, target, out errno, out errorMessage);
-		}
-
-		static bool TryUpdateDirectoryManaged (string source, string target, out int errno, [NotNullWhen (false)] out string? errorMessage)
-		{
-			var sourceInfo = new DirectoryInfo (source);
-			var targetInfo = new DirectoryInfo (target);
-			return TryUpdateDirectoryManaged (sourceInfo, targetInfo, out errno, out errorMessage);
-		}
-
-		static bool TryUpdateDirectoryManaged (DirectoryInfo source, DirectoryInfo target, out int errno, [NotNullWhen (false)] out string? errorMessage)
-		{
-			errno = 0;
-			errorMessage = null;
-
-			try {
-				foreach (var dir in source.GetDirectories ())
-					if (!TryUpdateDirectoryManaged (dir, target.CreateSubdirectory (dir.Name), out errno, out errorMessage))
-						return false;
-
-				foreach (var file in source.GetFiles ())
-					file.CopyTo (Path.Combine (target.FullName, file.Name), true);
-
-				return true;
-			} catch (Exception e) {
-				errno = 1;
-				errorMessage = e.Message;
-				Log (1, "Could not update `{0}` content: {1}", target, e);
-				return false;
-			}
-		}
-
-
-		static bool TryUpdateDirectory_macOS (string source, string target, out int errno, [NotNullWhen (false)] out string? errorMessage)
+		static bool TryUpdateDirectory (string source, string target, out int errno)
 		{
 			Directory.CreateDirectory (target);
 
@@ -187,11 +147,9 @@ namespace Xamarin.Bundler {
 				int rv = copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow | CopyFileFlags.Clone);
 				if (rv == 0) {
 					errno = 0; // satisfy compiler and make sure not to pick up some older error code
-					errorMessage = null;
 					return true;
 				} else {
 					errno = Marshal.GetLastWin32Error (); // might not be very useful since the callback signaled an error (CopyFileResult.Quit)
-					errorMessage = strerror (errno);
 					return false;
 				}
 			} finally {
