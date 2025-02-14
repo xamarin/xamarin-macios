@@ -102,7 +102,7 @@ if test -z "$ONLY_CREATE_KEYCHAIN"; then
 	shopt -s nullglob
 	for p12 in provisioning-profiles/certificates-and-profiles/*.p12; do
 		echo "${BLUE}Installing the certificate '${WHITE}$p12${BLUE}'${CLEAR}"
-		security import "$p12" -P '' -A -t cert -f pkcs12 -k "$KEYCHAIN_FILE"
+		security import "$p12" -P "${AUTH_TOKEN_LA_DEV_APPLE_P12}" -A -t cert -f pkcs12 -k "$KEYCHAIN_FILE"
 	done
 
 	for source in provisioning-profiles/certificates-and-profiles/*.mobileprovision; do
