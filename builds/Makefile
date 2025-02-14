@@ -55,10 +55,6 @@ print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) if ! test -f $@-found-it.stamp; then echo "No working urls were found."; exit 1; fi
 	$(Q) rm -f $@-found-it.stamp
 
-# We need https://github.com/dotnet/install-scripts/pull/555, which hasn't been released yet.
-# Revert to using https://dot.net/v1/dotnet-install.sh whenever https://dot.net/v1/dotnet-install.sh has been updated.
-DOTNET_DOWNLOAD_URL?=https://raw.githubusercontent.com/dotnet/install-scripts/d48e000adad7243861d799ec86c0bf7210a8fc7a/src/dotnet-install.sh
-
 DOTNET_DOWNLOAD_URL?=https://dot.net/v1/dotnet-install.sh
 
 dotnet-install.sh: Makefile
