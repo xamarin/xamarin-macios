@@ -100,12 +100,12 @@ if test -z "$ONLY_CREATE_KEYCHAIN"; then
 
 	# Install any certificates or provisioning profiles in the provisioning-profiles subdirectory.
 	shopt -s nullglob
-	for p12 in provisioning-profiles/*.p12; do
+	for p12 in provisioning-profiles/certificates-and-profiles/*.p12; do
 		echo "${BLUE}Installing the certificate '${WHITE}$p12${BLUE}'${CLEAR}"
 		security import "$p12" -P '' -A -t cert -f pkcs12 -k "$KEYCHAIN_FILE"
 	done
 
-	for source in *.mobileprovision; do
+	for source in provisioning-profiles/certificates-and-profiles/*.mobileprovision; do
 		fn="$(basename "$source")"
 		target="$HOME/Library/MobileDevice/Provisioning Profiles/$fn"
 		if ! test -f "$target" || ! diff "$source" "$target" >/dev/null 2>&1; then
