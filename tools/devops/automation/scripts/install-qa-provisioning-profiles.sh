@@ -86,7 +86,7 @@ if test -z "$ONLY_CREATE_KEYCHAIN"; then
 	fi
 	fi
 
-# 	echo "${BLUE}Provisioning${CLEAR}"
+	echo "${BLUE}Provisioning${CLEAR}"
 
 # 	# The provisionator caches downloaded files, assuming they won't change.
 # 	# But we update certificates and provisioning profiles on the server
@@ -98,23 +98,23 @@ if test -z "$ONLY_CREATE_KEYCHAIN"; then
 
 # 	PROVISION_KEYCHAIN=$KEYCHAIN ./provisioning-profiles/provisionator.sh $VERBOSE
 
-# 	# Install any certificates or provisioning profiles in the provisioning-profiles subdirectory.
-# 	shopt -s nullglob
-# 	for p12 in provisioning-profiles/*.p12; do
-# 	echo "${BLUE}Installing the certificate '${WHITE}$p12${BLUE}'${CLEAR}"
-# 	security import "$p12" -P '' -A -t cert -f pkcs12 -k "$KEYCHAIN_FILE"
-# 	done
+	# Install any certificates or provisioning profiles in the provisioning-profiles subdirectory.
+	shopt -s nullglob
+	for p12 in provisioning-profiles/*.p12; do
+		echo "${BLUE}Installing the certificate '${WHITE}$p12${BLUE}'${CLEAR}"
+		security import "$p12" -P '' -A -t cert -f pkcs12 -k "$KEYCHAIN_FILE"
+	done
 
-# 	for source in *.mobileprovision; do
-# 	fn="$(basename "$source")"
-# 	target="$HOME/Library/MobileDevice/Provisioning Profiles/$fn"
-# 	if ! test -f "$target" || ! diff "$source" "$target" >/dev/null 2>&1; then
-# 		cp "$source" "$target"
-# 		echo "${BLUE}Installing provisioning profile '${WHITE}$fn${BLUE}'${CLEAR}"
-# 	else
-# 		echo "${BLUE}Provisioning profile '${WHITE}$fn${BLUE}' is up-to-date${CLEAR}"
-# 	fi
-# 	done
+	for source in *.mobileprovision; do
+		fn="$(basename "$source")"
+		target="$HOME/Library/MobileDevice/Provisioning Profiles/$fn"
+		if ! test -f "$target" || ! diff "$source" "$target" >/dev/null 2>&1; then
+			cp "$source" "$target"
+			echo "${BLUE}Installing provisioning profile '${WHITE}$fn${BLUE}'${CLEAR}"
+		else
+			echo "${BLUE}Provisioning profile '${WHITE}$fn${BLUE}' is up-to-date${CLEAR}"
+		fi
+	done
 
 	echo "${BLUE}Setting partition list on all certificates in the keychain to avoid permission dialogs${CLEAR}"
 	security set-key-partition-list -S "apple-tool:,apple:,codesign:,unsigned:" -s -k "$(cat "$KEYCHAIN_PWD_FILE")" "$KEYCHAIN_FILE" >/dev/null 2>&1
