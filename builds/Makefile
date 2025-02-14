@@ -62,7 +62,6 @@ DOTNET_DOWNLOAD_URL?=https://raw.githubusercontent.com/dotnet/install-scripts/d4
 DOTNET_DOWNLOAD_URL?=https://dot.net/v1/dotnet-install.sh
 
 dotnet-install.sh: Makefile
-	$(Q) echo "Downloading dotnet-install.sh from $(DOTNET_DOWNLOAD_URL) into $@."
 	$(Q) $(CURL_RETRY) $(DOTNET_DOWNLOAD_URL) --output $@.tmp
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
