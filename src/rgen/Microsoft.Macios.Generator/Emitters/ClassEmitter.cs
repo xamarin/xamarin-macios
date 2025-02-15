@@ -310,9 +310,9 @@ return {tempVar};
 
 			if (!bindingContext.Changes.IsStatic) {
 				classBlock.AppendGeneratedCodeAttribute (optimizable: true);
-				classBlock.WriteLine ($"static readonly NativeHandle class_ptr = Class.GetHandle (\"{registrationName}\");");
+				classBlock.WriteLine ($"static readonly NativeHandle {ClassPtr} = Class.GetHandle (\"{registrationName}\");");
 				classBlock.WriteLine ();
-				classBlock.WriteLine ("public override NativeHandle ClassHandle => class_ptr;");
+				classBlock.WriteLine ($"public override NativeHandle ClassHandle => {ClassPtr};");
 				classBlock.WriteLine ();
 
 				EmitDefaultConstructors (bindingContext: bindingContext,
