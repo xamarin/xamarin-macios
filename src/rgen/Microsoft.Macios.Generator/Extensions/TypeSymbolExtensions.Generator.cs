@@ -219,7 +219,7 @@ static partial class TypeSymbolExtensions {
 	/// itself.
 	/// </summary>
 	/// <param name="symbol">The symbol to check if it is wrapped.</param>
-	/// <returns>True if the ymbol is considered to be wrapped.</returns>
+	/// <returns>True if the symbol is considered to be wrapped.</returns>
 	public static bool IsWrapped (this ITypeSymbol symbol)
 	{
 		symbol.GetInheritance (

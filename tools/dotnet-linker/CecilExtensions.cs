@@ -50,6 +50,16 @@ namespace Xamarin.Linker {
 			return body;
 		}
 
+		public static void GenerateILOffsets (this MethodBody body)
+		{
+			// This does not compute precise offsets, it just assigns a unique number to each instruction
+			// The trimmer relies on unique offsets to identify instructions
+			int instructionOffset = 0;
+			foreach (var instruction in body.Instructions) {
+				instruction.Offset = instructionOffset++;
+			}
+		}
+
 		public static void AddRange<T> (this Mono.Collections.Generic.Collection<T> self, IEnumerable<T>? items)
 		{
 			if (items is null)
@@ -124,10 +134,11 @@ namespace Xamarin.Linker {
 		{
 			// Add default ctor that just calls the base ctor
 			var defaultCtor = type.AddMethod (".ctor", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, abr.System_Void);
-			defaultCtor.CreateBody (out var il);
+			var body = defaultCtor.CreateBody (out var il);
 			il.Emit (OpCodes.Ldarg_0);
 			il.Emit (OpCodes.Call, abr.System_Object__ctor);
 			il.Emit (OpCodes.Ret);
+			body.GenerateILOffsets ();
 			return defaultCtor;
 		}
 

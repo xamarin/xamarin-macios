@@ -1668,6 +1668,7 @@ namespace UIKit {
 
 	// NSUInteger -> UIGeometry.h
 	[Native]
+	[Flags]
 	public enum UIRectEdge : ulong {
 		None = 0,
 		Top = 1 << 0,

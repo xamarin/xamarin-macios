@@ -126,7 +126,7 @@ static class AttributesNames {
 	/// The [Internal] attribute can be applied to methods or properties and it has the effect of flagging the
 	/// generated code with the internal C# keyword making the code only accessible to code in the generated assembly.
 	/// </summary>
-	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property)]
+	[BindingFlag (AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Interface)]
 	public const string InternalAttribute = "InternalAttribute";
 
 	public const string IntroducedAttribute = "IntroducedAttribute";

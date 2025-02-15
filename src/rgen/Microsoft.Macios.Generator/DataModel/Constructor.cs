@@ -30,12 +30,12 @@ readonly partial struct Constructor : IEquatable<Constructor> {
 	/// <summary>
 	/// Modifiers list.
 	/// </summary>
-	public ImmutableArray<SyntaxToken> Modifiers { get; } = [];
+	public ImmutableArray<SyntaxToken> Modifiers { get; init; } = [];
 
 	/// <summary>
 	/// Parameters list.
 	/// </summary>
-	public ImmutableArray<Parameter> Parameters { get; } = [];
+	public ImmutableArray<Parameter> Parameters { get; init; } = [];
 
 	public Constructor (string type,
 		SymbolAvailability symbolAvailability,
@@ -54,6 +54,8 @@ readonly partial struct Constructor : IEquatable<Constructor> {
 	public bool Equals (Constructor other)
 	{
 		if (Type != other.Type)
+			return false;
+		if (ExportMethodData != other.ExportMethodData)
 			return false;
 		if (SymbolAvailability != other.SymbolAvailability)
 			return false;
@@ -110,6 +112,8 @@ readonly partial struct Constructor : IEquatable<Constructor> {
 	public override string ToString ()
 	{
 		var sb = new StringBuilder ($"{{ Ctr: Type: {Type}, ");
+		sb.Append ($"ExportMethodData: {ExportMethodData}, ");
+		sb.Append ($"SymbolAvailability: {SymbolAvailability}, ");
 		sb.Append ("Attributes: [");
 		sb.AppendJoin (", ", Attributes);
 		sb.Append ("], Modifiers: [");

@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
@@ -46,6 +47,58 @@ readonly partial struct Method {
 	public bool UsePlainString
 		=> ExportMethodData.Flags.HasFlag (ObjCBindings.Method.PlainString);
 
+	/// <summary>
+	/// True if the generated code should retain the return value.
+	/// </summary>
+	public bool RetainReturnValue => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.RetainReturnValue);
+
+	/// <summary>
+	/// True if the generated code should release the return value.
+	/// </summary>
+	public bool ReleaseReturnValue => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.ReleaseReturnValue);
+
+	/// <summary>
+	/// True if the method was marked as a factory method.
+	/// </summary>
+	public bool IsFactory => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.Factory);
+
+	/// <summary>
+	/// True if the return type of the method was returned as a proxy object.
+	/// </summary>
+	public bool IsProxy => ExportMethodData.Flags.HasFlag (ObjCBindings.Method.Proxy);
+
+	/// <summary>
+	/// True if the generated method should use a temp return variable.
+	/// </summary>
+	public bool UseTempReturn {
+		get {
+			var byRefParameterCount = Parameters.Count (p => p.ReferenceKind != ReferenceKind.None);
+
+			// based on the configuration flags of the method and the return type we can decide if we need a
+			// temp return type
+#pragma warning disable format
+			return (Method: this, ByRefParameterCount: byRefParameterCount) switch {
+				// focus first on the flags, since those are manually added and have more precedence
+				{ ByRefParameterCount: > 0 } => true, 
+				{ Method.ReleaseReturnValue: true } => true, 
+				{ Method.IsFactory: true } => true, 
+				{ Method.IsProxy: true } => true, 
+				{ Method.MarshalNativeExceptions: true, Method.ReturnType.IsVoid: false } => true,
+
+				// focus on the return type
+				{ Method.ReturnType: { IsVoid: false, NeedsStret: true } } => true, 
+				{ Method.ReturnType: { IsVoid: false, IsWrapped: true } } => true, 
+				{ Method.ReturnType.IsNativeEnum: true } => true, 
+				{ Method.ReturnType.SpecialType: SpecialType.System_Boolean 
+					or SpecialType.System_Char or SpecialType.System_Delegate } => true, 
+				{ Method.ReturnType.IsDelegate: true } => true,
+				// default will be false
+				_ => false
+			};
+#pragma warning restore format
+		}
+	}
+
 	public Method (string type, string name, TypeInfo returnType,
 		SymbolAvailability symbolAvailability,
 		ExportData<ObjCBindings.Method> exportMethodData,
@@ -76,7 +129,7 @@ readonly partial struct Method {
 		// loop over the parameters of the construct since changes on those implies a change in the generated code
 		foreach (var parameter in method.Parameters) {
 			var parameterDeclaration = declaration.ParameterList.Parameters [parameter.Ordinal];
-			if (!Parameter.TryCreate (parameter, parameterDeclaration, context.SemanticModel, out var parameterChange))
+			if (!Parameter.TryCreate (parameter, parameterDeclaration, context, out var parameterChange))
 				continue;
 			parametersBucket.Add (parameterChange.Value);
 		}
@@ -90,7 +143,7 @@ readonly partial struct Method {
 		change = new (
 			type: method.ContainingSymbol.ToDisplayString ().Trim (), // we want the full name
 			name: method.Name,
-			returnType: new TypeInfo (method.ReturnType),
+			returnType: new TypeInfo (method.ReturnType, context.Compilation),
 			symbolAvailability: method.GetSupportedPlatforms (),
 			exportMethodData: exportData,
 			attributes: attributes,

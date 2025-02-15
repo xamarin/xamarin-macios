@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
 
-namespace Microsoft.Macios.Generator.Tests.DataModel;
+namespace Microsoft.Macios.Generator.Tests.DataModel.PropertyTests;
 
 public class PropertiesEqualityComparerTests {
 	readonly PropertiesEqualityComparer equalityComparer = new ();

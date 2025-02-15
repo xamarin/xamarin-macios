@@ -455,7 +455,7 @@ namespace EventKit {
 	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
 #if NET
-		EKWeekday DayOfTheWeek { get;  }
+		EKWeekday DayOfTheWeek { get; }
 #else
 		nint DayOfTheWeek { get; }
 #endif
