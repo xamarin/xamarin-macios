@@ -16,7 +16,7 @@ namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
 public class SmartEnumTests : BaseTransformerTestClass {
 
-	readonly BindingEqualityComparer comparer = new ();
+	readonly TransformerBindingEqualityComparer comparer = new ();
 	class TestDataTryCreate : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{

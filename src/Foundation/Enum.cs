@@ -78,7 +78,9 @@ namespace Foundation {
 #if MONOMAC
 
 	/// <summary>The bundle's architecture.</summary>
-	[NoiOS][NoTV][NoMacCatalyst]
+	[NoiOS]
+	[NoTV]
+	[NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 		I386 = 0x00000007,
 		PPC = 0x00000012,

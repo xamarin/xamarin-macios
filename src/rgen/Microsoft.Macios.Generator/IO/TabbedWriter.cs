@@ -149,22 +149,6 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 	}
 
 	/// <summary>
-	/// Append a new tabbed line.
-	/// </summary>
-	/// <param name="line">The line to append.</param>
-	/// <returns>The current builder.</returns>
-	public async Task<TabbedWriter<T>> WriteLineAsync (string line)
-	{
-		if (string.IsNullOrWhiteSpace (line)) {
-			await WriteLineAsync ();
-		} else {
-			await Writer.WriteLineAsync (line);
-		}
-
-		return this;
-	}
-
-	/// <summary>
 	/// Append a new tabbed lien from the span.
 	/// </summary>
 	/// <param name="span">The line to append.</param>
@@ -242,27 +226,6 @@ abstract class TabbedWriter<T> : IDisposable, IAsyncDisposable where T : TextWri
 		return this;
 	}
 #endif
-
-	/// <summary>
-	/// Append a new raw literal by prepending the correct indentation.
-	/// </summary>
-	/// <param name="rawString">The raw string to append.</param>
-	/// <returns>The current builder.</returns>
-	public async Task<TabbedWriter<T>> WriteRawAsync (string rawString)
-	{
-		// we will split the raw string in lines and then append them so that the
-		// tabbing is correct
-		var lines = rawString.Split (['\n'], StringSplitOptions.None);
-		for (var index = 0; index < lines.Length; index++) {
-			var line = lines [index];
-			if (index == lines.Length - 1) {
-				await WriteAsync (line);
-			} else {
-				await WriteLineAsync (line);
-			}
-		}
-		return this;
-	}
 
 	/// <summary>
 	/// Append a new raw literal by prepending the correct indentation.

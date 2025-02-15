@@ -1584,7 +1584,7 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("counterSets")]
 #if NET
-		IMTLCounterSet[] CounterSets { get; }
+		IMTLCounterSet [] CounterSets { get; }
 #else
 		[Obsolete ("Use 'GetIMTLCounterSets' instead.")]
 		MTLCounterSet [] CounterSets { get; }
@@ -2211,10 +2211,6 @@ namespace Metal {
 		[Export ("mipmapLevelCount")]
 		nuint MipmapLevelCount { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 13, 0)]
-		[Deprecated (PlatformName.iOS, 16, 0)]
-		[Deprecated (PlatformName.TvOS, 16, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 

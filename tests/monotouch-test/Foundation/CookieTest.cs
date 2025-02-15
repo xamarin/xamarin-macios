@@ -174,7 +174,9 @@ namespace MonoTouchFixtures.Foundation {
 			c.CommentUri = new Uri ("http://comment.uri");
 			c.Discard = false;
 			c.Expires = DateTime.Now.AddDays (1);
+#pragma warning disable SM02360 // "Websites must specify the HttpOnly attribute on sensitive cookies" - this is a cookie test, we're not sending any requests, so it's safe to ignore
 			c.HttpOnly = false;
+#pragma warning restore SM02360
 			c.Port = "\"80\"";
 			c.Secure = true;
 			c.Version = 1;

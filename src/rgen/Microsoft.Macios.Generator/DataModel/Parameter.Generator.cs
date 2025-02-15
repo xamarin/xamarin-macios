@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
+using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.Extensions;
 
 namespace Microsoft.Macios.Generator.DataModel;
@@ -27,7 +28,20 @@ readonly partial struct Parameter {
 	/// </summary>
 	public BindFromData? BindAs { get; init; }
 
-	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, SemanticModel semanticModel,
+	/// <summary>
+	/// Returns if the parameter needs a null check when the code is generated.
+	/// </summary>
+	public bool NeedsNullCheck {
+		get {
+			if (ReferenceKind != ReferenceKind.None)
+				return false;
+			if (Type.IsNullable)
+				return false;
+			return Type.IsWrapped || Type.IsReferenceType;
+		}
+	}
+
+	public static bool TryCreate (IParameterSymbol symbol, ParameterSyntax declaration, RootContext context,
 		[NotNullWhen (true)] out Parameter? parameter)
 	{
 		DelegateInfo? delegateInfo = null;
@@ -36,7 +50,7 @@ readonly partial struct Parameter {
 			DelegateInfo.TryCreate (namedTypeSymbol.DelegateInvokeMethod, out delegateInfo);
 		}
 
-		parameter = new (symbol.Ordinal, new (symbol.Type), symbol.Name) {
+		parameter = new (symbol.Ordinal, new (symbol.Type, context.Compilation), symbol.Name) {
 			BindAs = symbol.GetBindFromData (),
 			IsOptional = symbol.IsOptional,
 			IsParams = symbol.IsParams,
@@ -44,7 +58,7 @@ readonly partial struct Parameter {
 			DefaultValue = (symbol.HasExplicitDefaultValue) ? symbol.ExplicitDefaultValue?.ToString () : null,
 			ReferenceKind = symbol.RefKind.ToReferenceKind (),
 			Delegate = delegateInfo,
-			Attributes = declaration.GetAttributeCodeChanges (semanticModel),
+			Attributes = declaration.GetAttributeCodeChanges (context.SemanticModel),
 		};
 		return true;
 	}

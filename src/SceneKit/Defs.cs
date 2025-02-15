@@ -276,10 +276,12 @@ namespace SceneKit {
 		Multisampling2X,
 		Multisampling4X,
 #if MONOMAC || __MACCATALYST__
-		[NoiOS][NoTV]
+		[NoiOS]
+		[NoTV]
 		[NoMacCatalyst]
 		Multisampling8X,
-		[NoiOS][NoTV]
+		[NoiOS]
+		[NoTV]
 		[NoMacCatalyst]
 		Multisampling16X,
 #endif
@@ -361,11 +363,17 @@ namespace SceneKit {
 		[NoMac]
 		OpenGLES2,
 #else
-		[NoiOS][NoTV][NoMacCatalyst]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
 		OpenGLLegacy,
-		[NoiOS][NoTV][NoMacCatalyst]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
 		OpenGLCore32,
-		[NoiOS][NoTV][NoMacCatalyst]
+		[NoiOS]
+		[NoTV]
+		[NoMacCatalyst]
 		OpenGLCore41,
 #endif
 	}

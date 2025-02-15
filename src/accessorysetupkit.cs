@@ -11,16 +11,16 @@ namespace AccessorySetupKit {
 	[Native]
 	[iOS (18, 0)]
 	public enum ASAccessoryState : long {
-		Unauthorized            = 0,
-		AwaitingAuthorization   = 10,
-		Authorized              = 20,
+		Unauthorized = 0,
+		AwaitingAuthorization = 10,
+		Authorized = 20,
 	}
 
 	[Flags]
 	[Native]
 	[iOS (18, 0)]
 	public enum ASAccessoryRenameOptions : ulong {
-	    Ssid = 1U << 0,
+		Ssid = 1U << 0,
 	}
 
 	[Flags]
@@ -73,19 +73,19 @@ namespace AccessorySetupKit {
 	[Native]
 	[iOS (18, 0)]
 	public enum ASAccessoryEventType : long {
-		Unknown             = 0,
-		Activated           = 10,
-		Invalidated         = 11,
-		MigrationComplete   = 20,
-		AccessoryAdded      = 30,
-		AccessoryRemoved    = 31,
-		AccessoryChanged    = 32,
-		PickerDidPresent    = 40,
-		PickerDidDismiss    = 50,
+		Unknown = 0,
+		Activated = 10,
+		Invalidated = 11,
+		MigrationComplete = 20,
+		AccessoryAdded = 30,
+		AccessoryRemoved = 31,
+		AccessoryChanged = 32,
+		PickerDidPresent = 40,
+		PickerDidDismiss = 50,
 		PickerSetupBridging = 60,
-		PickerSetupFailed   = 70,
-		PickerSetupPairing  = 80,
-		PickerSetupRename   = 90,
+		PickerSetupFailed = 70,
+		PickerSetupPairing = 80,
+		PickerSetupRename = 90,
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -202,18 +202,18 @@ namespace AccessorySetupKit {
 	[iOS (18, 0)]
 	[ErrorDomain ("ASErrorDomain")]
 	enum ASErrorCode : long {
-		Success             = 0,
-		Unknown             = 1,
-		ActivationFailed    = 100,
-		ConnectionFailed    = 150,
-		DiscoveryTimeout    = 200,
-		ExtensionNotFound   = 300,
-		Invalidated         = 400,
-		InvalidRequest      = 450,
+		Success = 0,
+		Unknown = 1,
+		ActivationFailed = 100,
+		ConnectionFailed = 150,
+		DiscoveryTimeout = 200,
+		ExtensionNotFound = 300,
+		Invalidated = 400,
+		InvalidRequest = 450,
 		PickerAlreadyActive = 500,
-		PickerRestricted    = 550,
-		UserCancelled       = 700,
-		UserRestricted      = 750,
+		PickerRestricted = 550,
+		UserCancelled = 700,
+		UserRestricted = 750,
 	}
 
 	[BaseType (typeof (NSObject))]
