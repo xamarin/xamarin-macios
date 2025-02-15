@@ -131,14 +131,13 @@ namespace AudioUnit {
 
 #if NET
 	[StructLayout (LayoutKind.Sequential)]
-	unsafe struct AURenderCallbackStruct
-	{
+	unsafe struct AURenderCallbackStruct {
 #if COREBUILD
 		public delegate* unmanaged<IntPtr, int*, AudioTimeStamp*, uint, uint, IntPtr, int> Proc;
 #else
 		public delegate* unmanaged<IntPtr, AudioUnitRenderActionFlags*, AudioTimeStamp*, uint, uint, IntPtr, AudioUnitStatus> Proc;
 #endif
-		public IntPtr ProcRefCon; 
+		public IntPtr ProcRefCon;
 	}
 #else
 	[StructLayout (LayoutKind.Sequential)]
@@ -701,7 +700,7 @@ namespace AudioUnit {
 
 #if NET
 		[UnmanagedCallersOnly]
-		static unsafe AudioUnitStatus RenderCallbackImpl (IntPtr clientData,  AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+		static unsafe AudioUnitStatus RenderCallbackImpl (IntPtr clientData, AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 #else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
@@ -1173,7 +1172,7 @@ namespace AudioUnit {
 #endif
 	public unsafe class AURenderEventEnumerator : INativeObject
 #if COREBUILD
-	{}
+	{ }
 #else
 	, IEnumerator<AURenderEvent> {
 		AURenderEvent* current;

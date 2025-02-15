@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using System.Collections.Immutable;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
-namespace Microsoft.Macios.Generator.Tests.DataModel;
+namespace Microsoft.Macios.Generator.Tests.DataModel.MethodTests;
 
 public class MethodEqualityComparerTests {
 	readonly MethodsEqualityComparer equalityComparer = new ();

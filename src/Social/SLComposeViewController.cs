@@ -21,12 +21,12 @@ namespace Social {
 	public partial class SLComposeViewController {
 		public static SLComposeViewController FromService (SLServiceKind serviceKind)
 		{
-			return FromService (SLRequest.KindToType (serviceKind));
+			return FromService (serviceKind.GetConstant ()!);
 		}
 
 		public static bool IsAvailable (SLServiceKind serviceKind)
 		{
-			return IsAvailable (SLRequest.KindToType (serviceKind));
+			return IsAvailable (serviceKind.GetConstant ()!);
 		}
 	}
 }

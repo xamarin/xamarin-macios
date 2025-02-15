@@ -60,10 +60,10 @@ namespace SceneKit {
 	/// The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
 	/// </remarks>
 #if NET
-    [SupportedOSPlatform ("ios")]
-    [SupportedOSPlatform ("maccatalyst")]
-    [SupportedOSPlatform ("macos")]
-    [SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	[Serializable]
 	[StructLayout (LayoutKind.Sequential)]
@@ -836,7 +836,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The column vector to transform</param>
+		/// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed vector</returns>
 #else
@@ -853,7 +853,7 @@ namespace SceneKit {
 
 #if NET
 		/// <summary>Transform a Vector by the given Matrix.</summary>
-        /// <param name="vec">The column vector to transform</param>
+		/// <param name="vec">The column vector to transform</param>
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed vector</param>
 #else
@@ -865,25 +865,25 @@ namespace SceneKit {
 		public static void Transform (ref SCNVector4 vec, ref SCNMatrix4 mat, out SCNVector4 result)
 		{
 #if NET
-            result.X = vec.X * mat.Column0.X +
-                       vec.Y * mat.Column1.X +
-                       vec.Z * mat.Column2.X +
-                       vec.W * mat.Column3.X;
+			result.X = vec.X * mat.Column0.X +
+					   vec.Y * mat.Column1.X +
+					   vec.Z * mat.Column2.X +
+					   vec.W * mat.Column3.X;
 
-            result.Y = vec.X * mat.Column0.Y +
-                       vec.Y * mat.Column1.Y +
-                       vec.Z * mat.Column2.Y +
-                       vec.W * mat.Column3.Y;
+			result.Y = vec.X * mat.Column0.Y +
+					   vec.Y * mat.Column1.Y +
+					   vec.Z * mat.Column2.Y +
+					   vec.W * mat.Column3.Y;
 
-            result.Z = vec.X * mat.Column0.Z +
-                       vec.Y * mat.Column1.Z +
-                       vec.Z * mat.Column2.Z +
-                       vec.W * mat.Column3.Z;
+			result.Z = vec.X * mat.Column0.Z +
+					   vec.Y * mat.Column1.Z +
+					   vec.Z * mat.Column2.Z +
+					   vec.W * mat.Column3.Z;
 
-            result.W = vec.X * mat.Column0.W +
-                       vec.Y * mat.Column1.W +
-                       vec.Z * mat.Column2.W +
-                       vec.W * mat.Column3.W;
+			result.W = vec.X * mat.Column0.W +
+					   vec.Y * mat.Column1.W +
+					   vec.Z * mat.Column2.W +
+					   vec.W * mat.Column3.W;
 #else
 			result.X = vec.X * mat.Row0.X +
 					   vec.Y * mat.Row1.X +
