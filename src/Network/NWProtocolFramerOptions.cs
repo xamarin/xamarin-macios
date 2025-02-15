@@ -22,7 +22,7 @@ using IntPtr = System.IntPtr;
 using OS_nw_protocol_options = System.IntPtr;
 using NativeHandle = System.IntPtr;
 #else
-using OS_nw_protocol_options=ObjCRuntime.NativeHandle;
+using OS_nw_protocol_options = ObjCRuntime.NativeHandle;
 #endif
 
 namespace Network {

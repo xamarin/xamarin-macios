@@ -16,7 +16,7 @@ using Token = System.CommandLine.Parsing.Token;
 
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
 
-public class MethodTests : BaseTransformerTestClass {
+public class GeneralTests : BaseTransformerTestClass {
 
 	[Theory]
 	[InlineData ("Hello", false)]

@@ -97,9 +97,9 @@ namespace AudioUnit {
 	public enum AudioTypeOutput { // OSType in AudioComponentDescription
 		Generic = 0x67656e72, // 'genr'
 #if MONOMAC
-		HAL=0x6168616c, // 'ahal'
-		Default=0x64656620, // 'def'
-		System=0x73797320, // 'sys'
+		HAL = 0x6168616c, // 'ahal'
+		Default = 0x64656620, // 'def'
+		System = 0x73797320, // 'sys'
 #endif
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -113,7 +113,7 @@ namespace AudioUnit {
 
 	public enum AudioTypeMusicDevice { // OSType in AudioComponentDescription
 #if MONOMAC
-		DlsSynth	= 0x646c7320, // 'dls '
+		DlsSynth = 0x646c7320, // 'dls '
 #endif
 		Sampler = 0x73616d70, // 'samp'
 
@@ -137,7 +137,7 @@ namespace AudioUnit {
 		RoundTripAAC = 0x72616163, // 'raac'
 		MultiSplitter = 0x6d73706c, // 'mspl'
 #if MONOMAC
-		TimePitch=0x746d7074, // 'tmpt'
+		TimePitch = 0x746d7074, // 'tmpt'
 #else
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -188,13 +188,13 @@ namespace AudioUnit {
 		Distortion = 0x64697374, // 'dist'
 		BandPassFilter = 0x62706173, // 'bpas'
 #if MONOMAC
-		GraphicEQ=0x67726571, // 'greq'
-		MultiBandCompressor=0x6d636d70, // 'mcmp'
-		MatrixReverb=0x6d726576, // 'mrev'
-		Pitch=0x70697463, // 'pitc'
-		AUFilter=0x66696c74, // 'filt'
-		NetSend=0x6e736e64, // 'nsnd'
-		RogerBeep=0x726f6772, // 'rogr'
+		GraphicEQ = 0x67726571, // 'greq'
+		MultiBandCompressor = 0x6d636d70, // 'mcmp'
+		MatrixReverb = 0x6d726576, // 'mrev'
+		Pitch = 0x70697463, // 'pitc'
+		AUFilter = 0x66696c74, // 'filt'
+		NetSend = 0x6e736e64, // 'nsnd'
+		RogerBeep = 0x726f6772, // 'rogr'
 #else
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -227,7 +227,7 @@ namespace AudioUnit {
 		Matrix = 0x6d786d78, // 'mxmx'
 		Spacial = 0x3364656d, // Same as Embedded3D
 #if MONOMAC
-		Stereo=0x736d7872, // 'smxr'
+		Stereo = 0x736d7872, // 'smxr'
 #if NET
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -237,7 +237,7 @@ namespace AudioUnit {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
 #endif
-		ThreeD=0x33646d78, // '3dmx'
+		ThreeD = 0x33646d78, // '3dmx'
 #else
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -252,16 +252,16 @@ namespace AudioUnit {
 
 	public enum AudioTypePanner { // OSType in AudioComponentDescription
 #if MONOMAC
-		SphericalHead=0x73706872, // 'sphr'
-		Vector=0x76626173, // 'vbas'
-		SoundField=0x616d6269, // 'ambi'
-		rHRTF=0x68727466, // 'hrtf'
+		SphericalHead = 0x73706872, // 'sphr'
+		Vector = 0x76626173, // 'vbas'
+		SoundField = 0x616d6269, // 'ambi'
+		rHRTF = 0x68727466, // 'hrtf'
 #endif
 	}
 
 	public enum AudioTypeGenerator { // OSType in AudioComponentDescription
 #if MONOMAC
-		NetReceive=0x6e726376, // 'nrcv'
+		NetReceive = 0x6e726376, // 'nrcv'
 #endif
 		ScheduledSoundPlayer = 0x7373706c, // 'sspl'
 		AudioFilePlayer = 0x6166706c, // 'afpl'

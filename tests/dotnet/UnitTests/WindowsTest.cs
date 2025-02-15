@@ -207,17 +207,6 @@ namespace Xamarin.Tests {
 				expectedWarnings.AddRange (expectedWarnings);
 			}
 
-			var zippedFrameworks = platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX;
-			foreach (var rid in rids) {
-				if (zippedFrameworks) {
-					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-xcframework-test.resources.zip", "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework {Path.Combine ("obj", configuration, tfm, rid, "bindings-xcframework-test.resources.zip", "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-				} else {
-					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-xcframework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticObjectTest.xcframework", runtimeIdentifiers, "XStaticObjectTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework {Path.Combine (testsDirectory, "bindings-xcframework-test", "dotnet", platformString, "bin", configuration, tfm, "bindings-framework-test.resources", "XStaticArTest.xcframework", runtimeIdentifiers, "XStaticArTest.framework")} is a framework of static libraries, and will not be copied to the app.");
-				}
-			}
-
 			if (signature == BundleStructureTest.CodeSignature.None && (platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX)) {
 				expectedWarnings.Add ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\n{Path.Combine ("bin", configuration, tfm, runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, "BundleStructure.app", "UnknownJ.bin")}");
 			}

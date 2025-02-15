@@ -29,27 +29,22 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 #nullable enable
 
 namespace CoreVideo {
 
 	// CVBuffer.h
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public partial class CVBuffer : NativeObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
@@ -93,7 +88,6 @@ namespace CoreVideo {
 			CVBufferRemoveAttachment (Handle, key.Handle);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -102,12 +96,6 @@ namespace CoreVideo {
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
 		[ObsoletedOSPlatform ("ios15.0")]
-#else
-		[Deprecated (PlatformName.MacOSX, 12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0)]
-		[Deprecated (PlatformName.TvOS, 15, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
 
@@ -119,16 +107,10 @@ namespace CoreVideo {
 
 		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
 		// older method has been deprecatd.
-#if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (15, 0)]
-		[iOS (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		unsafe extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
 
@@ -138,32 +120,29 @@ namespace CoreVideo {
 			return CVBufferCopyAttachment (buffer, key, (CVAttachmentMode*) Unsafe.AsPointer<CVAttachmentMode> (ref attachmentMode));
 		}
 
-		// FIXME: we need to bring the new API to xamcore
-#if !MONOMAC
 		// any CF object can be attached
 		public T? GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
-			if (SystemVersion.CheckiOS (15, 0))
+			if (!SystemVersion.CheckiOS (15, 0))
+				return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 #endif
 			return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
-			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
-#else
+
+#if MONOMAC && !XAMCORE_5_0
+		[Obsolete ("Use the generic 'GetAttachment<T>' method instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NSObject? GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			if (SystemVersion.CheckmacOS (12, 0))
-				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
-			else
-				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
+			return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 		}
 #endif
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -172,37 +151,23 @@ namespace CoreVideo {
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
 		[ObsoletedOSPlatform ("ios15.0")]
-#else
-		[Deprecated (PlatformName.MacOSX, 12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0)]
-		[Deprecated (PlatformName.TvOS, 15, 0)]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferGetAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
-#if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (15, 0)]
-		[iOS (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
 		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
 #if IOS || __MACCATALYST__ || TVOS
-			if (SystemVersion.CheckiOS (15, 0))
-#elif MONOMAC
-			if (SystemVersion.CheckmacOS (12, 0))
+			if (!SystemVersion.CheckiOS (15, 0))
+				return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 #endif
 			return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
-			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
@@ -247,29 +212,17 @@ namespace CoreVideo {
 			CVBufferSetAttachments (Handle, theAttachments.Handle, attachmentMode);
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (15, 0)]
-		[TV (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern byte CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
 
-#if NET
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (15, 0)]
-		[TV (15, 0)]
-		[MacCatalyst (15, 0)]
-#endif
 		public bool HasAttachment (NSString key)
 		{
 			if (key is null)

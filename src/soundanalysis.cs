@@ -210,7 +210,7 @@ namespace SoundAnalysis {
 		SNTimeDurationConstraintType Type { get; }
 
 #if NET
-		[BindAs (typeof (CMTime[]))]
+		[BindAs (typeof (CMTime []))]
 #endif
 		[Export ("enumeratedDurations", ArgumentSemantic.Strong)]
 		NSValue [] EnumeratedDurations { get; }
