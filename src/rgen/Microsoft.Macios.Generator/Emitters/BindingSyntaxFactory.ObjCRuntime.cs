@@ -724,7 +724,7 @@ static partial class BindingSyntaxFactory {
 							.WithInitializer (EqualsValueClause (getHandleInvocation.WithLeadingTrivia (Space)))))
 		).WithModifiers (modifiers);
 	}
-	
+
 	/// <summary>
 	/// Returns a using statement or block for a local declaration.
 	///

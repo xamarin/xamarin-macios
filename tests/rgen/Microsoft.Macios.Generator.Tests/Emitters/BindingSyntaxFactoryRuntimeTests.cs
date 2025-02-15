@@ -22,7 +22,7 @@ public class BindingSyntaxFactoryRuntimeTests {
 		var declaration = GetHandle (selector);
 		Assert.Equal (expectedDeclaration, declaration.ToFullString ());
 	}
-	
+
 	class TestDataMessagingInvocationTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -33,7 +33,7 @@ public class BindingSyntaxFactoryRuntimeTests {
 				ImmutableArray<ArgumentSyntax>.Empty,
 				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"))"
 			];
-			
+
 			// one param extra
 			ImmutableArray<ArgumentSyntax> args = ImmutableArray.Create (
 				Argument (IdentifierName ("arg1"))
@@ -44,7 +44,7 @@ public class BindingSyntaxFactoryRuntimeTests {
 				args,
 				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"), arg1)"
 			];
-			
+
 			// several params
 			args = ImmutableArray.Create (
 				Argument (IdentifierName ("arg1")),
@@ -63,8 +63,8 @@ public class BindingSyntaxFactoryRuntimeTests {
 	}
 
 	[Theory]
-	[ClassData(typeof (TestDataMessagingInvocationTests))]
-	void MessagingInvocationTests (string objcMsgSendMethod, string selector, ImmutableArray<ArgumentSyntax> parameters, 
+	[ClassData (typeof (TestDataMessagingInvocationTests))]
+	void MessagingInvocationTests (string objcMsgSendMethod, string selector, ImmutableArray<ArgumentSyntax> parameters,
 		string expectedDeclaration)
 	{
 		var declaration = MessagingInvocation (objcMsgSendMethod, selector, parameters);

@@ -26,18 +26,18 @@ static partial class BindingSyntaxFactory {
 	public static InvocationExpressionSyntax GetHandle (string selector)
 	{
 		// (selector)
-		var args = ArgumentList ( SingletonSeparatedList (
+		var args = ArgumentList (SingletonSeparatedList (
 					Argument (LiteralExpression (
-						SyntaxKind.StringLiteralExpression, 
+						SyntaxKind.StringLiteralExpression,
 						Literal (selector))))).NormalizeWhitespace ();
-		
+
 		// Selector.GetHandle (selector)
 		return InvocationExpression (
-				MemberAccessExpression(
+				MemberAccessExpression (
 					SyntaxKind.SimpleMemberAccessExpression,
-					IdentifierName("Selector"),
+					IdentifierName ("Selector"),
 					IdentifierName ("GetHandle").WithTrailingTrivia (Space)))
-			.WithArgumentList(args);
+			.WithArgumentList (args);
 	}
 
 	/// <summary>
@@ -51,7 +51,7 @@ static partial class BindingSyntaxFactory {
 			ThisExpression (),
 			IdentifierName ("Handle"));
 	}
-	
+
 	/// <summary>
 	/// Generates the expression to call the objc_msgSend method.
 	/// </summary>
@@ -59,7 +59,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="selector">The selector.</param>
 	/// <param name="parameters">An optional argument list.</param>
 	/// <returns>The expression needed to call a specific messaging method.</returns>
-	public static InvocationExpressionSyntax MessagingInvocation (string objcMsgSendMethod, string selector, 
+	public static InvocationExpressionSyntax MessagingInvocation (string objcMsgSendMethod, string selector,
 		ImmutableArray<ArgumentSyntax> parameters = default)
 	{
 		// the size of the arguments is 2 + the optional arguments
@@ -69,12 +69,12 @@ static partial class BindingSyntaxFactory {
 		// but to be able to use the SeparatedList we need to add a comma for each argument
 		// except for the last one, so we need to add parametersCount - 1 commas
 		var parametersCount = 2 + parameters.Length;
-		var args = new SyntaxNodeOrToken [(2 * parametersCount) - 1]; 
+		var args = new SyntaxNodeOrToken [(2 * parametersCount) - 1];
 		// the first two arguments are the selector and the handle, we add those by hand
-		args [0] = Argument(ThisHandle ());
+		args [0] = Argument (ThisHandle ());
 		args [1] = Token (SyntaxKind.CommaToken).WithTrailingTrivia (Space);
-		args [2] = Argument(GetHandle (selector));
-		
+		args [2] = Argument (GetHandle (selector));
+
 		// we need to add the commas and the arguments provided by the user of the api
 		if (parameters.Length > 0) {
 			// add a comma because we know we added the selector
@@ -89,7 +89,7 @@ static partial class BindingSyntaxFactory {
 				}
 			}
 		}
-		
+
 		// generates: (this.Handle, Selector.GetHandle (selector), args)
 		var argumentList = ArgumentList (SeparatedList<ArgumentSyntax> (args));
 		// generates: ObjCRuntime.Messaging.objc_msgSend (this.Handle, Selector.GetHandle (selector), args)
