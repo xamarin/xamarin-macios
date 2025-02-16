@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using Xunit;
@@ -67,7 +68,8 @@ public partial class AVAudioPcmBuffer
 		var (compilation, _) = CreateCompilation (platform, sources: input);
 
 		// Run generators and retrieve all results.
-		var runResult = Driver.RunGenerators (compilation).GetRunResult ();
+		var driver = CSharpGeneratorDriver.Create (new BindingSourceGeneratorGenerator ());
+		var runResult = driver.RunGenerators (compilation).GetRunResult ();
 		Assert.Empty (runResult.Diagnostics);
 
 		// ensure that we do have all the needed attributes present

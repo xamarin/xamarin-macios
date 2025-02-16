@@ -3,7 +3,9 @@
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.Macios.Generator;
 using Microsoft.Macios.Generator.Tests;
 using Xunit;
 
@@ -14,9 +16,11 @@ public class BaseGeneratorWithAnalyzerTestClass : BaseGeneratorTestClass {
 	protected Task<ImmutableArray<Diagnostic>> RunAnalyzer<T> (T analyzer, Compilation compilation)
 		where T : DiagnosticAnalyzer
 	{
+		
+		var driver = CSharpGeneratorDriver.Create (new BindingSourceGeneratorGenerator ());
 		var compilationWithAnalyzers =
 			// run generators on the compilation
-			RunGeneratorsAndUpdateCompilation (compilation, out _)
+			RunGeneratorsAndUpdateCompilation (driver, compilation, out _)
 				// attach analyzers
 				.WithAnalyzers (ImmutableArray.Create<DiagnosticAnalyzer> (analyzer));
 		return compilationWithAnalyzers.GetAllDiagnosticsAsync ();
