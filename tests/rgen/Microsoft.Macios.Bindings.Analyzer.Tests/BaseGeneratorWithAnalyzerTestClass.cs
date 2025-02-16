@@ -16,7 +16,7 @@ public class BaseGeneratorWithAnalyzerTestClass : BaseGeneratorTestClass {
 	protected Task<ImmutableArray<Diagnostic>> RunAnalyzer<T> (T analyzer, Compilation compilation)
 		where T : DiagnosticAnalyzer
 	{
-		
+
 		var driver = CSharpGeneratorDriver.Create (new BindingSourceGeneratorGenerator ());
 		var compilationWithAnalyzers =
 			// run generators on the compilation

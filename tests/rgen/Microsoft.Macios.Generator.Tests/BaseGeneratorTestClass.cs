@@ -79,7 +79,7 @@ public class BaseGeneratorTestClass {
 
 		return new (CSharpCompilation.Create (name, trees, references, options), trees);
 	}
-	
+
 	readonly static Lock uiNamespaceLock = new ();
 	protected void CompareGeneratedCode (ApplePlatform platform, string className, string inputFileName, string inputText, string outputFileName, string expectedOutputText, string? expectedLibraryText)
 	{
@@ -95,11 +95,11 @@ public class BaseGeneratorTestClass {
 			var runResult = RunGenerators (driver, compilation);
 
 			// All generated files can be found in 'RunResults.GeneratedTrees'.
-			var generatedFileSyntax = runResult.GeneratedTrees.Where(t => t.FilePath.EndsWith ($"{className}.g.cs")).ToArray ();
+			var generatedFileSyntax = runResult.GeneratedTrees.Where (t => t.FilePath.EndsWith ($"{className}.g.cs")).ToArray ();
 			Assert.Single (generatedFileSyntax);
 
 			// Complex generators should be tested using text comparison.
-			Assert.Equal (expectedOutputText, generatedFileSyntax[0].GetText ().ToString (),
+			Assert.Equal (expectedOutputText, generatedFileSyntax [0].GetText ().ToString (),
 				ignoreLineEndingDifferences: true);
 
 			if (expectedLibraryText is not null) {
