@@ -323,7 +323,7 @@ public partial class SKCloudServiceSetupOptions : DictionaryContainer { }
 		Assert.Equal (expectedInterfaces, interfaces);
 		Assert.Equal (expectedDictionaryContainer, isDictionaryContainer);
 	}
-	
+
 	class TestDataInheritanceNSObject : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
@@ -341,7 +341,7 @@ public partial class MyClass {
 }
 ";
 			yield return [nsObject];
-			
+
 			const string nullableNSObject = @"
 using Foundation;
 using ObjCRuntime;
@@ -360,7 +360,7 @@ public partial class MyClass {
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[AllSupportedPlatformsClassData<TestDataInheritanceNSObject>]
 	void NSObjectTests (ApplePlatform platform, string inputText)
@@ -376,7 +376,7 @@ public partial class MyClass {
 		Assert.NotNull (semanticModel);
 		var symbol = semanticModel.GetDeclaredSymbol (declaration);
 		Assert.NotNull (symbol);
-		Assert.True(Property.TryCreate (declaration, semanticModel, out var propertyData));
+		Assert.True (Property.TryCreate (declaration, semanticModel, out var propertyData));
 		Assert.NotNull (propertyData);
 		Assert.True (propertyData.Value.ReturnType.IsNSObject);
 	}
