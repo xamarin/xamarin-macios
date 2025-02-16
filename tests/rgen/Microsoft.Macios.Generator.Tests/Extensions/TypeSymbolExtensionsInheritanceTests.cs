@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -14,8 +15,6 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.Extensions;
 
 public class TypeSymbolExtensionsInheritanceTests : BaseGeneratorTestClass {
-
-	readonly CollectionComparer<string> comparer = new CollectionComparer<string> ();
 
 	class TestDataInheritanceClasses : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
@@ -323,5 +322,62 @@ public partial class SKCloudServiceSetupOptions : DictionaryContainer { }
 		Assert.Equal (expectedParents, parents);
 		Assert.Equal (expectedInterfaces, interfaces);
 		Assert.Equal (expectedDictionaryContainer, isDictionaryContainer);
+	}
+	
+	class TestDataInheritanceNSObject : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			const string nsObject = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial NSObject Parent { get; set; }
+}
+";
+			yield return [nsObject];
+			
+			const string nullableNSObject = @"
+using Foundation;
+using ObjCRuntime;
+using ObjCBindings;
+
+namespace NS;
+
+[BindingType<Class>]
+public partial class MyClass {
+	[Export<Property> (""name"")]
+	public partial NSObject? Parent { get; set; }
+}
+";
+			yield return [nullableNSObject];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+	
+	[Theory]
+	[AllSupportedPlatformsClassData<TestDataInheritanceNSObject>]
+	void NSObjectTests (ApplePlatform platform, string inputText)
+	{
+		var (compilation, syntaxTrees) = CreateCompilation (platform, sources: inputText);
+		Assert.Single (syntaxTrees);
+		var declaration = syntaxTrees [0].GetRoot ()
+			.DescendantNodes ()
+			.OfType<PropertyDeclarationSyntax> ()
+			.LastOrDefault (); // always grab the last one, you might get into failures if you are not careful with this
+		Assert.NotNull (declaration);
+		var semanticModel = compilation.GetSemanticModel (syntaxTrees [0]);
+		Assert.NotNull (semanticModel);
+		var symbol = semanticModel.GetDeclaredSymbol (declaration);
+		Assert.NotNull (symbol);
+		Assert.True(Property.TryCreate (declaration, semanticModel, out var propertyData));
+		Assert.NotNull (propertyData);
+		Assert.True (propertyData.Value.ReturnType.IsNSObject);
 	}
 }
