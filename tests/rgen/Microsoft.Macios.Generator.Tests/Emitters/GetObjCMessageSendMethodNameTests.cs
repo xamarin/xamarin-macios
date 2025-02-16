@@ -335,7 +335,7 @@ class ARAnchor {
 		string [] IncludedKeys { get; set; }
 }
 ";
-			
+
 			yield return [stringArrayProperty, "NativeHandle_objc_msgSend", "void_objc_msgSend_NativeHandle", false, false];
 		}
 
