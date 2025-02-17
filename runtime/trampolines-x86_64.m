@@ -123,7 +123,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 			read_register = false;
 		} else if (register_size - (unsigned long)it->byte_count < total_size) {
 			read_register = false;
-			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, register_size - it->byte_count);
+			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, (int) ((int) register_size - it->byte_count));
 		}
 
 		if (read_register) {
