@@ -118,7 +118,7 @@ static partial class BindingSyntaxFactory {
 		// generates: invocation != 0
 		return BinaryExpression (
 			SyntaxKind.NotEqualsExpression,
-			invocation.WithTrailingTrivia (Space), 
+			invocation.WithTrailingTrivia (Space),
 			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space));
 	}
 

@@ -113,37 +113,37 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.Equal (expectedCast, expression?.ToString ());
 		}
 	}
-	
+
 	class TestDataByteToBoolTests : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
 			yield return [
-				InvocationExpression(
-					MemberAccessExpression(
+				InvocationExpression (
+					MemberAccessExpression (
 						SyntaxKind.SimpleMemberAccessExpression,
-						IdentifierName("NSObject"),
-						IdentifierName("TestFunction").WithTrailingTrivia (Space))),
+						IdentifierName ("NSObject"),
+						IdentifierName ("TestFunction").WithTrailingTrivia (Space))),
 				"NSObject.TestFunction () != 0"
 			];
 
 			yield return [
-				InvocationExpression(
-						MemberAccessExpression(
+				InvocationExpression (
+						MemberAccessExpression (
 							SyntaxKind.SimpleMemberAccessExpression,
-							IdentifierName("NSObject"),
-							IdentifierName("TestFunction").WithTrailingTrivia (Space)))
-					.WithArgumentList(
-						ArgumentList(
-							SingletonSeparatedList<ArgumentSyntax>(
-								Argument(
-									IdentifierName("arg1"))))),
+							IdentifierName ("NSObject"),
+							IdentifierName ("TestFunction").WithTrailingTrivia (Space)))
+					.WithArgumentList (
+						ArgumentList (
+							SingletonSeparatedList<ArgumentSyntax> (
+								Argument (
+									IdentifierName ("arg1"))))),
 				"NSObject.TestFunction (arg1) != 0"
 			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
 	}
-	
+
 	[Theory]
 	[ClassData (typeof (TestDataByteToBoolTests))]
 	void ByteToBoolTests (InvocationExpressionSyntax invocationExpressionSyntax, string expectedDeclaration)
