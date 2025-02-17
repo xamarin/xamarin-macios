@@ -4,9 +4,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.DataModel;
 using Xunit;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.Macios.Generator.Emitters.BindingSyntaxFactory;
 using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
@@ -110,6 +112,44 @@ public class BindingSyntaxFactoryObjCRuntimeTests {
 			Assert.NotNull (expression);
 			Assert.Equal (expectedCast, expression?.ToString ());
 		}
+	}
+	
+	class TestDataByteToBoolTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				InvocationExpression(
+					MemberAccessExpression(
+						SyntaxKind.SimpleMemberAccessExpression,
+						IdentifierName("NSObject"),
+						IdentifierName("TestFunction").WithTrailingTrivia (Space))),
+				"NSObject.TestFunction () != 0"
+			];
+
+			yield return [
+				InvocationExpression(
+						MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							IdentifierName("NSObject"),
+							IdentifierName("TestFunction").WithTrailingTrivia (Space)))
+					.WithArgumentList(
+						ArgumentList(
+							SingletonSeparatedList<ArgumentSyntax>(
+								Argument(
+									IdentifierName("arg1"))))),
+				"NSObject.TestFunction (arg1) != 0"
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+	
+	[Theory]
+	[ClassData (typeof (TestDataByteToBoolTests))]
+	void ByteToBoolTests (InvocationExpressionSyntax invocationExpressionSyntax, string expectedDeclaration)
+	{
+		var declaration = ByteToBool (invocationExpressionSyntax);
+		Assert.Equal (expectedDeclaration, declaration.ToString ());
 	}
 
 	[Fact]
