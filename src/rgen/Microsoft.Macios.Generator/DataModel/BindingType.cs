@@ -28,6 +28,10 @@ enum BindingType : ulong {
 	/// </summary>
 	SmartEnum,
 	/// <summary>
+	/// Binding type for a dictionary with strong value.
+	/// </summary>
+	StrongDictionary,
+	/// <summary>
 	/// Binding type for a core image filter.
 	/// </summary>
 	CoreImageFilter,

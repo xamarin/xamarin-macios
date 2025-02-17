@@ -10,6 +10,7 @@ using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Transformer.DataModel;
 using Xamarin.Tests;
 using Xamarin.Utils;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Transformer.Tests.DataModel;
@@ -381,6 +382,72 @@ interface MyCIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 					Modifiers = [
 						Token (SyntaxKind.PublicKeyword),
 						Token (SyntaxKind.PartialKeyword)]
+				}
+			];
+			
+			const string strongDictionary = @"
+using System;
+using Foundation;
+using CoreImage;
+using ObjCRuntime;
+
+namespace Test;
+
+[StrongDictionary (""CMHevcTemporalLevelInfoKeys"")]
+interface MyCMHevcTemporalLevelInfoSettings {
+
+	int TemporalLevel { get; set; }
+}
+";
+
+			yield return [
+				(Source: strongDictionary, Path: path),
+				new Binding (
+					symbolName: "MyCMHevcTemporalLevelInfoSettings",
+					@namespace: ["Test"],
+					fullyQualifiedSymbol: "Test.MyCMHevcTemporalLevelInfoSettings",
+					info: new BindingInfo (null, BindingType.StrongDictionary),
+					symbolAvailability: availabilityBuilder.ToImmutable (),
+					attributes: new ()
+				) {
+					Base = "Foundation.DictionaryContainer",
+					UsingDirectives = new HashSet<string> {
+						"System",
+						"Foundation",
+						"CoreImage",
+						"ObjCRuntime"
+					},
+					Interfaces = [],
+					Protocols = [],
+					Modifiers = [
+						Token (SyntaxKind.PublicKeyword),
+						Token (SyntaxKind.PartialKeyword)
+					],
+					Properties = [
+						new (
+							name: "TemporalLevel",
+							returnType: ReturnTypeForInt (),
+							symbolAvailability: availabilityBuilder.ToImmutable (),
+							attributes: new (),
+							accessors: [
+								new Accessor (
+									accessorKind: AccessorKind.Getter,
+									symbolAvailability: availabilityBuilder.ToImmutable (),
+									attributes: new ()),
+								new Accessor (
+									accessorKind: AccessorKind.Setter,
+									symbolAvailability: availabilityBuilder.ToImmutable (),
+									attributes: new ())
+							]
+						) {
+							Modifiers = [
+								Token (SyntaxKind.PublicKeyword),
+								Token (SyntaxKind.VirtualKeyword),
+								Token (SyntaxKind.PartialKeyword)
+							],
+							ExportPropertyData = null, // we want to explicitly set this to null
+						}
+					]
 				}
 			];
 		}
