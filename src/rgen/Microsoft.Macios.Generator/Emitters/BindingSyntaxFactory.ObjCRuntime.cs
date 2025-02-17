@@ -109,6 +109,20 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
+	/// Return the expression needed to cast an invocation that returns a byte to a bool.
+	/// </summary>
+	/// <param name="invocation">The byte returning invocation expression.</param>
+	/// <returns>The expression need to cast the invocation to a byte.</returns>
+	internal static BinaryExpressionSyntax ByteToBool (InvocationExpressionSyntax invocation)
+	{
+		// generates: invocation != 0
+		return BinaryExpression (
+			SyntaxKind.NotEqualsExpression,
+			invocation.WithTrailingTrivia (Space),
+			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space));
+	}
+
+	/// <summary>
 	/// Returns the aux nsarray variable for an array object. This method will do the following:
 	/// 1. Check if the object is nullable or not.
 	/// 2. Use the correct NSArray method depending on the content of the array. 
@@ -779,40 +793,7 @@ static partial class BindingSyntaxFactory {
 		return sb.ToString ();
 	}
 
-	public static (string? Getter, string? Setter) GetObjCMessageSendMethods (in Property property,
-		bool isSuper = false, bool isStret = false)
-	{
-		if (property.IsProperty) {
-			// the getter and the setter depend of the accessors that have been set for the property, we do not want
-			// to calculate things that we won't use. The export data used will also depend if the getter/setter has a
-			// export attribute attached
-			var getter = property.GetAccessor (AccessorKind.Getter);
-			string? getterMsgSend = null;
-			if (getter is not null) {
-				var getterExportData = getter.Value.ExportPropertyData ?? property.ExportPropertyData;
-				if (getterExportData is not null) {
-					getterMsgSend = GetObjCMessageSendMethodName (getterExportData.Value, property.ReturnType, [],
-						isSuper, isStret);
-				}
-			}
-
-			var setter = property.GetAccessor (AccessorKind.Setter);
-			string? setterMsgSend = null;
-			if (setter is not null) {
-				var setterExportData = setter.Value.ExportPropertyData ?? property.ExportPropertyData;
-				if (setterExportData is not null) {
-					setterMsgSend = GetObjCMessageSendMethodName (setterExportData.Value, TypeInfo.Void,
-						[property.ValueParameter], isSuper, isStret);
-				}
-			}
-
-			return (Getter: getterMsgSend, Setter: setterMsgSend);
-		}
-
-		return default;
-	}
-
-	public static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
+	internal static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
 		=> GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper,
 			isStret);
 }

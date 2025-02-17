@@ -552,11 +552,13 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
+			Foundation.NSObject? ret;
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				ret = throw new NotImplementedException();
 			} else {
-				throw new NotImplementedException();
+				ret = throw new NotImplementedException();
 			}
+			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
