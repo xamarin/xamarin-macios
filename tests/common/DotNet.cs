@@ -262,14 +262,7 @@ namespace Xamarin.Tests {
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
 				var output = new StringBuilder ();
-				if (timeout is null) {
-					var timeoutVar = Environment.GetEnvironmentVariable ("TIMEOUT_IN_MINUTES");
-					if (int.TryParse (timeoutVar, out var timeoutValue)) {
-						timeout = TimeSpan.FromMinutes (timeoutValue);
-					} else {
-						timeout = TimeSpan.FromMinutes (10);
-					}
-				}
+				timeout ??= TimeSpan.FromMinutes (10);
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: timeout).Result;
 				if (assert_success && rv.ExitCode != 0) {
 					var outputStr = output.ToString ();
