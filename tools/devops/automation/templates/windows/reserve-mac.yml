@@ -31,10 +31,10 @@ steps:
     path: s/$(BUILD_REPOSITORY_TITLE)
     fetchTags: false
 
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
-- bash: '$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
+- bash: '$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/bash/clean-bot.sh'
   displayName: 'Clean bot'
   continueOnError: true
   timeoutInMinutes: 60
@@ -88,13 +88,13 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
 
-- bash: make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops provisioning
+- bash: make -C $(Build.SourcesDirectory)/tools/devops provisioning
   displayName: 'Generate Xcode provisioning csx file'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xcode'
   inputs:
-    provisioning_script: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/provision-xcode.csx
+    provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/provision-xcode.csx
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
@@ -110,7 +110,7 @@ steps:
     SecretsFilter: 'RemoteMacIdRsaPub'
   displayName: 'Download id_rsa.pub'
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
   displayName: "Autorize id_rsa.pub"
   continueOnError: true
 
@@ -156,13 +156,13 @@ steps:
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/artifacts
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/install-workloads.sh
-  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)
   displayName: 'Install .NET + workloads'
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/prepare-for-remote-tests.sh
   displayName: 'Prepare for remote tests'
   continueOnError: true
