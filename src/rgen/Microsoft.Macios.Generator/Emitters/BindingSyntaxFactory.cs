@@ -117,4 +117,35 @@ static partial class BindingSyntaxFactory {
 			.NormalizeWhitespace ();
 		return compilationUnit;
 	}
+	
+	/// <summary>
+	/// Returns a using statement or block for a local declaration.
+	///
+	/// This allows to write the following for a binding:
+	///
+	/// <code>
+	/// var conde = @"
+	/// if ({variable} is not null) {
+	///		{Using (GetAutoreleasePoolVariable ())}
+	/// }
+	/// ";
+	/// </code>
+	/// </summary>
+	/// <param name="declaration"></param>
+	/// <param name="isBlock"></param>
+	/// <returns></returns>
+	internal static LocalDeclarationStatementSyntax Using (LocalDeclarationStatementSyntax declaration)
+	{
+		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
+	}
+	
+	/// <summary>
+	/// Suppresses the nullable warning for the provided expression.
+	/// </summary>
+	/// <param name="expression">The expression whose nullable warning we want to supress.</param>
+	/// <returns>An expression with a suppressed warning operator.</returns>
+	internal static ExpressionSyntax SuppressNullableWarning (ExpressionSyntax expression)
+	{
+		return PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, expression);
+	}
 }

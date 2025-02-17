@@ -724,28 +724,7 @@ static partial class BindingSyntaxFactory {
 							.WithInitializer (EqualsValueClause (getHandleInvocation.WithLeadingTrivia (Space)))))
 		).WithModifiers (modifiers);
 	}
-
-	/// <summary>
-	/// Returns a using statement or block for a local declaration.
-	///
-	/// This allows to write the following for a binding:
-	///
-	/// <code>
-	/// var conde = @"
-	/// if ({variable} is not null) {
-	///		{Using (GetAutoreleasePoolVariable ())}
-	/// }
-	/// ";
-	/// </code>
-	/// </summary>
-	/// <param name="declaration"></param>
-	/// <param name="isBlock"></param>
-	/// <returns></returns>
-	internal static LocalDeclarationStatementSyntax Using (LocalDeclarationStatementSyntax declaration)
-	{
-		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
-	}
-
+	
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
