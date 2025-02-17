@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Xunit;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -56,6 +57,18 @@ public class BindingSyntaxFactoryRuntimeTests {
 				"string",
 				args,
 				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"), arg1, arg2, arg3)"
+			];
+			
+			// out parameter
+			args = ImmutableArray.Create (
+				Argument(PrefixUnaryExpression(SyntaxKind.AddressOfExpression, IdentifierName("errorValue")))
+			);
+			
+			yield return [
+				"IntPtr_objc_msgSend",
+				"string",
+				args,
+				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"), &errorValue)"
 			];
 		}
 
