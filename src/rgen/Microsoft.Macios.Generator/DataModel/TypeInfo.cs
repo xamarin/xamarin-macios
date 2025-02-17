@@ -252,6 +252,9 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 			// structs will use their name
 			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", 
 			{ IsStruct: true } => Name,
+			
+			// arrays
+			{ IsArray: true } => NativeHandle,
 
 			// enums:
 			// IsSmartEnum: We are using a nsstring, so it should be a native handle.
