@@ -492,4 +492,11 @@ xamarin_arch_trampoline (struct XamarinCallState *state)
 	dump_state (state);
 }
 
+bool
+xamarin_arch_param_passed_by_reference (unsigned long size, const char *type, GCHandle *exception_gchandle)
+{
+	*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): not implemented for x64.\n", type, (int) size));
+	return false;
+}
+
 #endif /* __x86_64__ */

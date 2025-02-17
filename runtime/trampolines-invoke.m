@@ -248,11 +248,26 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		}
 #endif
 		
+		bool nativeByref = false;
+		if (size > sizeof (void *)) {
+			nativeByref = xamarin_arch_param_passed_by_reference (size, type, &exception_gchandle);
+			if (exception_gchandle != INVALID_GCHANDLE)
+				goto exception_handling;
+			if (nativeByref) {
+				char *modifiedType = (char *) calloc (1, strlen (type) + 2);
+				modifiedType [0] = _C_PTR;
+				memcpy (&modifiedType [1], type, strlen (type));
+				free_list = s_list_prepend (free_list, modifiedType);
+				type = modifiedType;
+				size = sizeof (void *);
+			}
+		}
+
 		if (size > sizeof (void *)) {
 			iterator (IteratorIterate, context, type, size, &arg_frame [ofs], &exception_gchandle);
 			if (exception_gchandle != INVALID_GCHANDLE)
 				goto exception_handling;
-			ofs += size / sizeof (void *);
+			ofs += (size + sizeof (void *) - 1) / sizeof (void *);
 			arg_ptrs [i + mofs] = &arg_frame [frameofs];
 		} else {
 			void *arg;
@@ -385,6 +400,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							} else {
 								arg_frame [ofs] = arg;
 								if (mono_type_is_byref (p)) {
+									arg_ptrs [i + mofs] = arg;
+								} else if (nativeByref) {
 									arg_ptrs [i + mofs] = arg;
 								} else if (mono_class_is_valuetype (p_klass)) {
 									arg_ptrs [i + mofs] = &arg_frame [frameofs];
