@@ -384,7 +384,7 @@ interface MyCIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 						Token (SyntaxKind.PartialKeyword)]
 				}
 			];
-			
+
 			const string strongDictionary = @"
 using System;
 using Foundation;
