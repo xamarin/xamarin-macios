@@ -58,12 +58,12 @@ public class BindingSyntaxFactoryRuntimeTests {
 				args,
 				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"), arg1, arg2, arg3)"
 			];
-			
+
 			// out parameter
 			args = ImmutableArray.Create (
-				Argument(PrefixUnaryExpression(SyntaxKind.AddressOfExpression, IdentifierName("errorValue")))
+				Argument (PrefixUnaryExpression (SyntaxKind.AddressOfExpression, IdentifierName ("errorValue")))
 			);
-			
+
 			yield return [
 				"IntPtr_objc_msgSend",
 				"string",
