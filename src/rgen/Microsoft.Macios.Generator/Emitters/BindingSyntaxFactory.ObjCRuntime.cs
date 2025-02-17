@@ -109,6 +109,20 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
+	/// Return the expression needed to cast an invocation that returns a byte to a bool.
+	/// </summary>
+	/// <param name="invocation">The byte returning invocation expression.</param>
+	/// <returns>The expression need to cast the invocation to a byte.</returns>
+	internal static BinaryExpressionSyntax ByteToBool (InvocationExpressionSyntax invocation)
+	{
+		// generates: invocation != 0
+		return BinaryExpression (
+			SyntaxKind.NotEqualsExpression,
+			invocation.WithTrailingTrivia (Space),
+			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space));
+	}
+
+	/// <summary>
 	/// Returns the aux nsarray variable for an array object. This method will do the following:
 	/// 1. Check if the object is nullable or not.
 	/// 2. Use the correct NSArray method depending on the content of the array. 
