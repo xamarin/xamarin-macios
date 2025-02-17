@@ -13,7 +13,7 @@ static partial class BindingSyntaxFactory {
 	public const string Runtime = "Runtime";
 	public const string ClassPtr = "class_ptr";
 
-	public static CompilationUnitSyntax GetNSObject (string nsObjectType, ArgumentListSyntax argumentList,
+	public static StatementSyntax GetNSObject (string nsObjectType, ArgumentListSyntax argumentList,
 		bool suppressNullableWarning = false)
 		=> StaticInvocationGenericExpression (Runtime, "GetNSObject", nsObjectType, argumentList,
 			suppressNullableWarning);
