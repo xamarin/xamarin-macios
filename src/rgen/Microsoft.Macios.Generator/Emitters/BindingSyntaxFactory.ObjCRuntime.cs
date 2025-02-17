@@ -724,7 +724,7 @@ static partial class BindingSyntaxFactory {
 							.WithInitializer (EqualsValueClause (getHandleInvocation.WithLeadingTrivia (Space)))))
 		).WithModifiers (modifiers);
 	}
-	
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum

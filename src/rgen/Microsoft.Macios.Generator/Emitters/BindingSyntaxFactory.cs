@@ -117,7 +117,7 @@ static partial class BindingSyntaxFactory {
 			.NormalizeWhitespace ();
 		return compilationUnit;
 	}
-	
+
 	/// <summary>
 	/// Returns a using statement or block for a local declaration.
 	///
@@ -138,7 +138,7 @@ static partial class BindingSyntaxFactory {
 	{
 		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
 	}
-	
+
 	/// <summary>
 	/// Suppresses the nullable warning for the provided expression.
 	/// </summary>
