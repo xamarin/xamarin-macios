@@ -470,11 +470,11 @@ namespace AudioUnit {
 		bool ShouldChangeToFormat (AVAudioFormat format, AUAudioUnitBus bus);
 
 		/// <include file="../docs/api/AudioUnit/AUAudioUnit.xml" path="/Documentation/Docs[@DocId='P:AudioUnit.AUAudioUnit.AudioComponentRegistrationsChangedNotification']/*" />
-	[Notification, Field ("kAudioComponentRegistrationsChangedNotification")]
+		[Notification, Field ("kAudioComponentRegistrationsChangedNotification")]
 		NSString AudioComponentRegistrationsChangedNotification { get; }
 
 		/// <include file="../docs/api/AudioUnit/AUAudioUnit.xml" path="/Documentation/Docs[@DocId='P:AudioUnit.AUAudioUnit.AudioComponentInstanceInvalidationNotification']/*" />
-	[Notification, Field ("kAudioComponentInstanceInvalidationNotification")]
+		[Notification, Field ("kAudioComponentInstanceInvalidationNotification")]
 		NSString AudioComponentInstanceInvalidationNotification { get; }
 
 		/// <summary>To be added.</summary>

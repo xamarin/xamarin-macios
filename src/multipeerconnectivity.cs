@@ -422,7 +422,7 @@ namespace MultipeerConnectivity {
 		NativeHandle Constructor (string serviceType, [NullAllowed] NSDictionary info, MCSession session);
 
 		/// <include file="../docs/api/MultipeerConnectivity/MCAdvertiserAssistant.xml" path="/Documentation/Docs[@DocId='P:MultipeerConnectivity.MCAdvertiserAssistant.DiscoveryInfo']/*" />
-	[NullAllowed]
+		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 

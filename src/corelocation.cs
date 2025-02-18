@@ -843,7 +843,7 @@ namespace CoreLocation {
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	interface CLPlacemark : NSSecureCoding, NSCopying {
 		/// <include file="../docs/api/CoreLocation/CLPlacemark.xml" path="/Documentation/Docs[@DocId='P:CoreLocation.CLPlacemark.AddressDictionary']/*" />
-	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CLPlacemark' properties to access data.")]

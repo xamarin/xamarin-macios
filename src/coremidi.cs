@@ -376,12 +376,12 @@ namespace CoreMidi {
 	[Static]
 	interface Midi {
 		/// <include file="../docs/api/CoreMidi/Midi.xml" path="/Documentation/Docs[@DocId='P:CoreMidi.Midi.NetworkNotificationContactsDidChange']/*" />
-	[Field ("MIDINetworkNotificationContactsDidChange")]
+		[Field ("MIDINetworkNotificationContactsDidChange")]
 		[Notification]
 		NSString NetworkNotificationContactsDidChange { get; }
 
 		/// <include file="../docs/api/CoreMidi/Midi.xml" path="/Documentation/Docs[@DocId='P:CoreMidi.Midi.NetworkNotificationSessionDidChange']/*" />
-	[Field ("MIDINetworkNotificationSessionDidChange")]
+		[Field ("MIDINetworkNotificationSessionDidChange")]
 		[Notification]
 		NSString NetworkNotificationSessionDidChange { get; }
 

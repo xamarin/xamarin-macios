@@ -1394,7 +1394,7 @@ namespace AudioToolbox {
 		}
 
 		/// <include file="../../docs/api/AudioToolbox/AudioQueue.xml" path="/Documentation/Docs[@DocId='P:AudioToolbox.AudioQueue.CurrentLevelMeter']/*" />
-	public AudioQueueLevelMeterState [] CurrentLevelMeter {
+		public AudioQueueLevelMeterState [] CurrentLevelMeter {
 			get {
 				unsafe {
 					int size = DeviceChannels * sizeof (AudioQueueLevelMeterState);
@@ -1412,7 +1412,7 @@ namespace AudioToolbox {
 		}
 
 		/// <include file="../../docs/api/AudioToolbox/AudioQueue.xml" path="/Documentation/Docs[@DocId='P:AudioToolbox.AudioQueue.CurrentLevelMeterDB']/*" />
-	public AudioQueueLevelMeterState [] CurrentLevelMeterDB {
+		public AudioQueueLevelMeterState [] CurrentLevelMeterDB {
 			get {
 				unsafe {
 					int size = DeviceChannels * sizeof (AudioQueueLevelMeterState);
