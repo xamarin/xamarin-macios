@@ -144,4 +144,16 @@ static partial class BindingSyntaxFactory {
 	{
 		return PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, expression);
 	}
-}
+
+	/// <summary>
+	/// Creates the attribute syntaxt for a boolean value.
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	internal static ArgumentSyntax BoolArgument (bool value)
+	{
+		return  Argument (
+			LiteralExpression (
+				value ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
+	}
+} 

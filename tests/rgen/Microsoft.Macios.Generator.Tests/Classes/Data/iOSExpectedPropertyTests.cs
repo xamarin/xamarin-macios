@@ -251,9 +251,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.UIntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("count"));
 			} else {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.UIntPtr_objc_msgSendSuper (this.Handle, Selector.GetHandle ("count"));
 			}
 		}
 	}
@@ -336,9 +336,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.nfloat_objc_msgSend (this.Handle, Selector.GetHandle ("lineSpacing"));
 			} else {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.nfloat_objc_msgSendSuper (this.Handle, Selector.GetHandle ("lineSpacing"));
 			}
 		}
 
@@ -398,9 +398,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return CFString.FromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("name")), false)!;
 			} else {
-				throw new NotImplementedException();
+				return CFString.FromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("name")), false)!;
 			}
 		}
 
@@ -428,9 +428,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return CFString.FromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("name")), false);
 			} else {
-				throw new NotImplementedException();
+				return CFString.FromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("name")), false);
 			}
 		}
 
@@ -458,9 +458,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return CFArray.StringArrayFromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("surnames")), false)!;
 			} else {
-				throw new NotImplementedException();
+				return CFArray.StringArrayFromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("surnames")), false)!;
 			}
 		}
 
@@ -534,9 +534,9 @@ public partial class PropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("sizes"));
 			} else {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("sizes"));
 			}
 		}
 	}

@@ -123,6 +123,7 @@ readonly partial struct Property {
 				{ ReturnType.SpecialType: SpecialType.System_Boolean 
 					or SpecialType.System_Char or SpecialType.System_Delegate } => true, 
 				{ ReturnType.IsDelegate: true } => true,
+				{ ReturnType.IsWrapped: true } => true,
 				// default will be false
 				_ => false
 			};

@@ -191,9 +191,9 @@ return {tempVar};
 					} else {
 						getterBlock.WriteRaw (
 $@"if (IsDirectBinding) {{
-	{invocations.Getter.Send}
+	return {invocations.Getter.Send}
 }} else {{
-	{invocations.Getter.SendSuper}
+	return {invocations.Getter.SendSuper}
 }}
 ");
 					}
