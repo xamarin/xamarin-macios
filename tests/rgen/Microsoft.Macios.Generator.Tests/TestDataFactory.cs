@@ -216,7 +216,8 @@ static class TestDataFactory {
 		bool isBlittable = false,
 		bool isEnum = false,
 		bool isSmartEnum = false,
-		bool isStruct = false)
+		bool isStruct = false,
+		bool isNSObject = false)
 		=> new (
 			name: type,
 			isNullable: isNullable,
@@ -227,6 +228,7 @@ static class TestDataFactory {
 			isStruct: isStruct
 		) {
 			EnumUnderlyingType = isEnum ? SpecialType.System_Int32 : null,
+			ArrayElementTypeIsWrapped = isNSObject,
 			Parents = ["System.Array", "object"],
 			Interfaces = [
 				$"System.Collections.Generic.IList<{type}>",
@@ -324,6 +326,7 @@ static class TestDataFactory {
 			isReferenceType: true
 		) {
 			IsNSObject = true,
+			IsWrapped = true,
 			IsINativeObject = true,
 			Parents = nsObjectName is null ? ["object"] : ["Foundation.NSObject", "object"],
 			Interfaces = isApiDefinition

@@ -9,11 +9,6 @@ namespace Microsoft.Macios.Generator.DataModel;
 readonly partial struct TypeInfo {
 
 	/// <summary>
-	/// Return if the type represents a wrapped object from the objc world.
-	/// </summary>
-	public bool IsWrapped { get; init; }
-
-	/// <summary>
 	/// True if the type needs to use a stret call.
 	/// </summary>
 	public bool NeedsStret { get; init; }
@@ -22,12 +17,7 @@ readonly partial struct TypeInfo {
 	/// True if the type represents a delegate.
 	/// </summary>
 	public bool IsDelegate { get; init; }
-
-	/// <summary>
-	/// Returns, if the type is an array, if its elements are a wrapped object from the objc world.
-	/// </summary>
-	public bool ArrayElementTypeIsWrapped { get; init; }
-
+	
 	/// <summary>
 	/// Get the name of the variable for the type when it is used as a return value.
 	/// </summary>

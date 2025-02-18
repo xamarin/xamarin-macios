@@ -97,7 +97,7 @@ static partial class BindingSyntaxFactory {
 			GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, fieldName),
 		};
 		var argumentList = ArgumentList (SeparatedList<ArgumentSyntax> (arguments)).NormalizeWhitespace ();
-		return StaticInvocationGenericExpression (Dlfcn, methodName, genericName, argumentList);
+		return ExpressionStatement (StaticInvocationGenericExpression (Dlfcn, methodName, genericName, argumentList));
 	}
 
 	/// <summary>
@@ -543,9 +543,7 @@ static partial class BindingSyntaxFactory {
 			)
 		).WithArgumentList (ArgumentList (SeparatedList<ArgumentSyntax> (getIndirectArguments)).NormalizeWhitespace ());
 
-		var getNSObjectArguments =
-			ArgumentList (SingletonSeparatedList (Argument (getIndirectInvocation)));
-		return GetNSObject (nsObjectType, getNSObjectArguments, suppressNullableWarning: true);
+		return ExpressionStatement (GetNSObject (nsObjectType, [Argument (getIndirectInvocation)], suppressNullableWarning: true));
 	}
 
 	public static StatementSyntax GetBlittableField (string blittableType, string libraryName, string fieldName)

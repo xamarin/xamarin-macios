@@ -193,6 +193,81 @@ public class BindingSyntaxFactoryPropertyTests {
 				"global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;",
 				"global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;"
 			];
+			
+			property = new Property (
+				name: "MyProperty",
+				returnType: ReturnTypeForNSObject (),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]
+			) {
+				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+			};
+			
+			yield return [
+				property,
+				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")))!;",
+				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")))!;"
+			];
+			
+			property = new Property (
+				name: "MyProperty",
+				returnType: ReturnTypeForNSObject (isNullable: true),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]
+			) {
+				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+			};
+			
+			yield return [
+				property,
+				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")));",
+				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")));"
+			];
+
+			property = new Property (
+				name: "MyProperty",
+				returnType: ReturnTypeForArray("Foundation.NSObject", isNSObject: true),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]
+			) {
+				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+			};
+
+			yield return [
+				property,
+				"ret = CFArray.ArrayFromHandle<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")))!;",
+				"ret = CFArray.ArrayFromHandle<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")))!;"
+			];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -203,6 +278,8 @@ public class BindingSyntaxFactoryPropertyTests {
 	void PropertyInvocationsGetterTests (Property property, string getter, string superGetter)
 	{
 		var invocations = GetInvocations (property);
+		var s = invocations.Getter.Send.ToString ();
+		var ss = invocations.Getter.SendSuper.ToString ();
 		Assert.Equal (getter, invocations.Getter.Send.ToString ());
 		Assert.Equal (superGetter, invocations.Getter.SendSuper.ToString ());
 	}
