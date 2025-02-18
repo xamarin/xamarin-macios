@@ -152,8 +152,8 @@ static partial class BindingSyntaxFactory {
 	/// <returns></returns>
 	internal static ArgumentSyntax BoolArgument (bool value)
 	{
-		return  Argument (
+		return Argument (
 			LiteralExpression (
 				value ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
 	}
-} 
+}

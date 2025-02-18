@@ -44,22 +44,22 @@ static partial class BindingSyntaxFactory {
 
 		return default;
 	}
-	
-	internal static (StatementSyntax Send, StatementSyntax SendSupper) GetGetterInvocations (in Property property, 
+
+	internal static (StatementSyntax Send, StatementSyntax SendSupper) GetGetterInvocations (in Property property,
 		string? selector, string? sendMethod, string? superSendMethod)
 	{
 		// if any of the methods is null, return a throw statement for both
 		if (selector is null || sendMethod is null || superSendMethod is null) {
 			return (ThrowNotImplementedException (), ThrowNotImplementedException ());
 		}
-		
+
 		// the invocations depend on the property requiring a temp return variable or not
 		if (property.UseTempReturn) {
 			return (
-				Send: ThrowNotImplementedException (), 
+				Send: ThrowNotImplementedException (),
 				SendSupper: ThrowNotImplementedException ()
 			);
-		} 
+		}
 		// this is the simplest case, we just need to call the method and return the result, for that we
 		// use the MessagingInvocation method for each of the methods
 		return (
@@ -101,7 +101,7 @@ static partial class BindingSyntaxFactory {
 		var (superGetter, supperSetter) = GetObjCMessageSendMethods (property, isSuper: true, isStret: property.ReturnType.NeedsStret);
 		var getterSelector = property.GetAccessor (AccessorKind.Getter)?.GetSelector (property);
 		var setterSelector = property.GetAccessor (AccessorKind.Getter)?.GetSelector (property);
-		
+
 		return new () {
 			Getter = GetGetterInvocations (property, getterSelector, getter, superGetter),
 			Setter = (ThrowNotImplementedException (), ThrowNotImplementedException ()),
