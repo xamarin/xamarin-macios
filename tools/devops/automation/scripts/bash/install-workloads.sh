@@ -21,9 +21,14 @@ fi
 if test -z "${BUILD_REPOSITORY_TITLE:-}"; then
   BUILD_REPOSITORY_TITLE="$(basename "$(git remote get-url --push origin)")"
 fi
+
 # Don't assume we're in the right directory (makes it easier to run the script
 # locally).
-cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
+if [[ "$BUILD_SOURCESDIRECTORY" == *"$BUILD_REPOSITORY_TITLE" ]]; then
+  cd "$BUILD_SOURCESDIRECTORY"
+else
+  cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
+fi
 
 # Validate a few things
 ARTIFACTS_PATH=$BUILD_SOURCESDIRECTORY/artifacts
