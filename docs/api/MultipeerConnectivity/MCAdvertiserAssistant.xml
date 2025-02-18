@@ -1,0 +1,11 @@
+<Documentation>
+  <Docs DocId="P:MultipeerConnectivity.MCAdvertiserAssistant.DiscoveryInfo">
+        <summary>A small dictionary of data available to browsers.</summary>
+        <value>This will contain the data passed in to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)&amp;scope=Xamarin" title="C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)">C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)</a></format> constructor.</value>
+        <remarks>
+          <para>The total size of keys and data in this dictionary should be less than ~400 bytes so that it can fit into a single Bluetooth data packet.</para>
+          <para>The dictionary should map <see langword="string" />s to <see langword="string" />s. Each key-value pair must be no more than 255 bytes with the equals sign inserted between them (i.e., <c>System.Text.ASCIIEncoding.Unicode.GetByteCount(String.Format("{0}={1}",key,value)) &lt;= 255 </c>). Keys may not contain equals signs.</para>
+          <para>The dictionary is advertised as a Bonjour TXT record (see <format type="text/html"><a href="https://tools.ietf.org/html/rfc6763">RFC 6763, Section 6</a></format>).</para>
+        </remarks>
+      </Docs>
+</Documentation>

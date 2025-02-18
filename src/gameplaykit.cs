@@ -55,9 +55,13 @@ namespace GameplayKit {
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum GKRTreeSplitStrategy : long {
+		/// <summary>To be added.</summary>
 		Halve = 0,
+		/// <summary>To be added.</summary>
 		Linear = 1,
+		/// <summary>To be added.</summary>
 		Quadratic = 2,
+		/// <summary>To be added.</summary>
 		ReduceOverlap = 3
 	}
 

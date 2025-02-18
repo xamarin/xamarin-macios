@@ -12,6 +12,11 @@ namespace ObjCRuntime {
 
 	public interface INativeObject {
 #if !COREBUILD
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>
+		///           <para>This IntPtr is a handle to the underlying unmanaged representation for this object.</para>
+		///         </remarks>
 		NativeHandle Handle {
 			get;
 		}

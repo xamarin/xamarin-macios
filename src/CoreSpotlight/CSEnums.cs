@@ -21,12 +21,19 @@ namespace CoreSpotlight {
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {
+		/// <summary>An unknown error occured.</summary>
 		UnknownError = -1,
+		/// <summary>The index was not available.</summary>
 		IndexUnavailableError = -1000,
+		/// <summary>The search item was invalid.</summary>
 		InvalidItemError = -1001,
+		/// <summary>The search client was in an invalid state.</summary>
 		InvalidClientStateError = -1002,
+		/// <summary>A remote connection failed.</summary>
 		RemoteConnectionError = -1003,
+		/// <summary>The quota was exceeded.</summary>
 		QuotaExceeded = -1004,
+		/// <summary>The device does not support indexing.</summary>
 		IndexingUnsupported = -1005,
 		MismatchedClientState = -1006,
 	}
@@ -38,9 +45,13 @@ namespace CoreSpotlight {
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
 	public enum CSSearchQueryErrorCode : long {
+		/// <summary>Indicates that an unknown error ocurred.</summary>
 		Unknown = -2000,
+		/// <summary>Indicates that the search index could not be reached.</summary>
 		IndexUnreachable = -2001,
+		/// <summary>Indicates that the query was invalid.</summary>
 		InvalidQuery = -2002,
+		/// <summary>Indicates that the search was canceled.</summary>
 		Cancelled = -2003
 	}
 
@@ -49,9 +60,13 @@ namespace CoreSpotlight {
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	public enum CSFileProtection {
+		/// <summary>The file is not protected.</summary>
 		None,
+		/// <summary>The file is encrypted and cannot be read until after booting and unlocking are completed.</summary>
 		Complete,
+		/// <summary>The file is encrypted. If it was  created when the device was locked, it cannot be accessed after it is closed until after the user unlocks the device.</summary>
 		CompleteUnlessOpen,
+		/// <summary>The file is encrypted and cannot be opened until the user unlocks the device.</summary>
 		CompleteUntilFirstUserAuthentication,
 	}
 

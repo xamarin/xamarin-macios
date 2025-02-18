@@ -92,6 +92,9 @@ namespace GLKit {
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKBaseEffect : GLKNamedEffect {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("colorMaterialEnabled", ArgumentSemantic.Assign)]
 		bool ColorMaterialEnabled { get; set; }
 
@@ -101,27 +104,48 @@ namespace GLKit {
 		[Export ("transform")]
 		GLKEffectPropertyTransform Transform { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("light0")]
 		GLKEffectPropertyLight Light0 { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("light1")]
 		GLKEffectPropertyLight Light1 { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("light2")]
 		GLKEffectPropertyLight Light2 { get; }
 
 		[Export ("lightingType", ArgumentSemantic.Assign)]
 		GLKLightingType LightingType { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("lightModelAmbientColor", ArgumentSemantic.Assign)]
 		Vector4 LightModelAmbientColor { [Align (16)] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("material")]
 		GLKEffectPropertyMaterial Material { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("texture2d0")]
 		GLKEffectPropertyTexture Texture2d0 { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("texture2d1")]
 		GLKEffectPropertyTexture Texture2d1 { get; }
 
@@ -129,17 +153,32 @@ namespace GLKit {
 		[Export ("textureOrder", ArgumentSemantic.Copy)]
 		GLKEffectPropertyTexture [] TextureOrder { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("constantColor", ArgumentSemantic.Assign)]
 		Vector4 ConstantColor { [Align (16)] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("fog")]
 		GLKEffectPropertyFog Fog { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Export ("label", ArgumentSemantic.Copy)]
 		[DisableZeroCopy]
 		[NullAllowed] // default is null on iOS 5.1.1
 		string Label { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("lightModelTwoSided", ArgumentSemantic.Assign)]
 		bool LightModelTwoSided { get; set; }
 	}
@@ -165,9 +204,15 @@ namespace GLKit {
 		[Export ("mode", ArgumentSemantic.Assign)]
 		GLKFogMode Mode { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("color", ArgumentSemantic.Assign)]
 		Vector4 Color { [Align (16)] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("density", ArgumentSemantic.Assign)]
 		float Density { get; set; } /* GLfloat = float */
 
@@ -177,6 +222,9 @@ namespace GLKit {
 		[Export ("end", ArgumentSemantic.Assign)]
 		float End { get; set; } /* GLfloat = float */
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("enabled", ArgumentSemantic.Assign)]
 		bool Enabled { get; set; }
 	}
@@ -309,15 +357,27 @@ namespace GLKit {
 		[return: NullAllowed]
 		GLKMesh [] FromAsset (MDLAsset asset, out NSArray sourceMeshes, out NSError error);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("vertexBuffers")]
 		GLKMeshBuffer [] VertexBuffers { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("vertexDescriptor")]
 		MDLVertexDescriptor VertexDescriptor { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("submeshes")]
 		GLKSubmesh [] Submeshes { get; }
 

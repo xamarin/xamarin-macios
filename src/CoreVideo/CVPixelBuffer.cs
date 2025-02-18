@@ -343,6 +343,9 @@ namespace CoreVideo {
 		extern static /* void* __nullable */ IntPtr CVPixelBufferGetBaseAddress (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>Pointers to the base address storing the pixels.   Must call <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Video%20CVPixel%20Buffer%20Lock&amp;scope=Xamarin" title="M:CoreVideo.CVPixelBuffer.Lock*">M:CoreVideo.CVPixelBuffer.Lock*</a></format> to to lock the base address</summary>
+		///         <value>Pointer to the base address storing the pixels, or <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=System%20Int%20Ptr%20Zero&amp;scope=Xamarin" title="P:System.IntPtr.Zero">P:System.IntPtr.Zero</a></format> if the pixel buffer is not locked.</value>
+		///         <remarks>To be added.</remarks>
 		public IntPtr BaseAddress {
 			get {
 				return CVPixelBufferGetBaseAddress (Handle);
@@ -353,6 +356,9 @@ namespace CoreVideo {
 		extern static /* size_t */ nint CVPixelBufferGetBytesPerRow (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>The number of bytes per row in the pixel buffer.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint BytesPerRow {
 			get {
 				return CVPixelBufferGetBytesPerRow (Handle);
@@ -363,6 +369,9 @@ namespace CoreVideo {
 		extern static /* size_t */ nint CVPixelBufferGetDataSize (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint DataSize {
 			get {
 				return CVPixelBufferGetDataSize (Handle);
@@ -372,6 +381,9 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* size_t */ nint CVPixelBufferGetHeight (/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint Height {
 			get {
 				return CVPixelBufferGetHeight (Handle);
@@ -381,6 +393,9 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* size_t */ nint CVPixelBufferGetWidth (/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint Width {
 			get {
 				return CVPixelBufferGetWidth (Handle);
@@ -391,6 +406,9 @@ namespace CoreVideo {
 		extern static /* size_t */ nint CVPixelBufferGetPlaneCount (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint PlaneCount {
 			get {
 				return CVPixelBufferGetPlaneCount (Handle);
@@ -400,6 +418,9 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* Boolean */ byte CVPixelBufferIsPlanar (/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsPlanar {
 			get {
 				return CVPixelBufferIsPlanar (Handle) != 0;
@@ -410,6 +431,9 @@ namespace CoreVideo {
 		extern static CVPixelFormatType CVPixelBufferGetPixelFormatType (
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CVPixelFormatType PixelFormatType {
 			get {
 				return CVPixelBufferGetPixelFormatType (Handle);

@@ -45,8 +45,11 @@ namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTLine.h
 	public enum CTLineTruncation : uint {
+		/// <summary>To be added.</summary>
 		Start = 0,
+		/// <summary>To be added.</summary>
 		End = 1,
+		/// <summary>To be added.</summary>
 		Middle = 2
 	}
 
@@ -54,11 +57,31 @@ namespace CoreText {
 	[Native]
 	[Flags]
 	public enum CTLineBoundsOptions : ulong {
+		/// <summary>Use this option to exclude the typographic leading from the bounds computation (the space between baselines of different lines of text).</summary>
 		ExcludeTypographicLeading = 1 << 0,
+		/// <summary>Does not take into account kerning or leading information when computing bounds for</summary>
 		ExcludeTypographicShifts = 1 << 1,
+		/// <summary>
+		/// 	    Hanging Punctuation is a way of typesetting
+		/// 	    punctuation marks and bullet points, most commonly quotation
+		/// 	    marks and hyphens, so that they do not disrupt the "flow" of
+		/// 	    a body of text or "break" the margin of alignment.  It is so
+		/// 	    called because the punctuation appears to ‘hang’ in the
+		/// 	    margin of the text, and is not incorporated into the block
+		/// 	    or column of text. It is commonly used when text is fully justified.
+		/// 	  </summary>
 		UseHangingPunctuation = 1 << 2,
+		/// <summary>The bounds of every glyph.   These are typographically not very interesting as they do not take into account the finer details of typography, this returns the bounding box for the actual text rendered.</summary>
 		UseGlyphPathBounds = 1 << 3,
+		/// <summary>
+		///
+		/// 	  This uses the optical bounds.  Some fonts include
+		/// 	  information about the optical perception of the font, and it
+		/// 	  might not align perfectly with the bounding box of the text.
+		///
+		/// 	</summary>
 		UseOpticalBounds = 1 << 4,
+		/// <summary>To be added.</summary>
 		IncludeLanguageExtents = 1 << 5, // iOS8 and Mac 10.11
 	}
 
@@ -107,6 +130,9 @@ namespace CoreText {
 		#region Line Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTLineGetGlyphCount (IntPtr line);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint GlyphCount {
 			get { return CTLineGetGlyphCount (Handle); }
 		}
@@ -125,6 +151,9 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern NSRange CTLineGetStringRange (IntPtr line);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSRange StringRange {
 			get { return CTLineGetStringRange (Handle); }
 		}
@@ -180,6 +209,9 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern double CTLineGetTrailingWhitespaceWidth (IntPtr line);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public double TrailingWhitespaceWidth {
 			get { return CTLineGetTrailingWhitespaceWidth (Handle); }
 		}

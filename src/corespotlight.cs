@@ -294,21 +294,36 @@ namespace CoreSpotlight {
 	[Static]
 	interface CSMailboxKey {
 
+		/// <summary>The key for the Inbox.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("CSMailboxInbox")]
 		NSString Inbox { get; }
 
+		/// <summary>The key for the Drafts mailbox.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("CSMailboxDrafts")]
 		NSString Drafts { get; }
 
+		/// <summary>The key for the Sent mailbox.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("CSMailboxSent")]
 		NSString Sent { get; }
 
+		/// <summary>The key for the Junk mailbox.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("CSMailboxJunk")]
 		NSString Junk { get; }
 
 		[Field ("CSMailboxTrash")]
 		NSString Trash { get; }
 
+		/// <summary>The key for the Archive mailbox.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("CSMailboxArchive")]
 		NSString Archive { get; }
 	}

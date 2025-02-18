@@ -808,9 +808,15 @@ namespace VideoToolbox {
 	[Static]
 	[MacCatalyst (13, 1)]
 	interface VTH264EntropyModeKeys {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTH264EntropyMode_CAVLC")]
 		NSString CAVLC { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTH264EntropyMode_CABAC")]
 		NSString CABAC { get; }
 	}
@@ -1089,27 +1095,48 @@ namespace VideoToolbox {
 	[StrongDictionary ("VTDecompressionPropertyKey")]
 	interface VTDecompressionProperties {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("PixelBufferPoolIsShared")]
 		bool PixelBufferPoolIsShared { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("OutputPoolRequestedMinimumBufferCount")]
 		uint OutputPoolRequestedMinimumBufferCount { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("NumberOfFramesBeingDecoded")]
 		uint NumberOfFramesBeingDecoded { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("MinOutputPresentationTimeStampOfFramesBeingDecoded")]
 		NSDictionary MinOutputPresentationTimeStampOfFramesBeingDecoded { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("MaxOutputPresentationTimeStampOfFramesBeingDecoded")]
 		NSDictionary MaxOutputPresentationTimeStampOfFramesBeingDecoded { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("ContentHasInterframeDependencies")]
 		bool ContentHasInterframeDependencies { get; }
 
 		// Hardware acceleration
 		// hardware acceleration is default behavior on iOS.  no opt-in required.
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("UsingHardwareAcceleratedVideoDecoder")]
 		[MacCatalyst (13, 1)]
 		bool UsingHardwareAcceleratedVideoDecoder { get; }
@@ -1266,18 +1293,33 @@ namespace VideoToolbox {
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("VTPropertyKeys")]
 	interface VTPropertyOptions {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("ShouldBeSerialized")]
 		bool ShouldBeSerialized { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("SupportedValueMinimumKey")]
 		NSNumber SupportedValueMinimum { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("SupportedValueMaximumKey")]
 		NSNumber SupportedValueMaximum { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("SupportedValueListKey")]
 		NSNumber [] SupportedValueList { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("DocumentationKey")]
 		NSString Documentation { get; set; }
 	}
@@ -1286,24 +1328,45 @@ namespace VideoToolbox {
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface VTPropertyKeys {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertyTypeKey")]
 		NSString Type { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertyReadWriteStatusKey")]
 		NSString ReadWriteStatus { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertyShouldBeSerializedKey")]
 		NSString ShouldBeSerialized { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertySupportedValueMinimumKey")]
 		NSString SupportedValueMinimumKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertySupportedValueMaximumKey")]
 		NSString SupportedValueMaximumKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertySupportedValueListKey")]
 		NSString SupportedValueListKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kVTPropertyDocumentationKey")]
 		NSString DocumentationKey { get; }
 	}

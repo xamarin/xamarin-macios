@@ -42,10 +42,20 @@ namespace ObjCRuntime {
 			ProtocolType = protocolType;
 		}
 
+		/// <summary>The name of the protocol type adopted.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string ProtocolType {
 			get; private set;
 		}
 
+		/// <summary>Returns the underlying handle to the Protocol.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public IntPtr ProtocolHandle {
 			get {
 				if (handle == IntPtr.Zero && ProtocolType is not null)

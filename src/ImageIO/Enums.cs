@@ -18,23 +18,36 @@ namespace ImageIO {
 	/// <summary>Enumeration of errors relating to metadata manipulation.</summary>
 	[ErrorDomain ("kCFErrorDomainCGImageMetadata")]
 	public enum CGImageMetadataErrors {
+		/// <summary>To be added.</summary>
 		Unknown = 0,
+		/// <summary>To be added.</summary>
 		UnsupportedFormat = 1,
+		/// <summary>To be added.</summary>
 		BadArgument = 2,
+		/// <summary>To be added.</summary>
 		ConflictingArguments = 3,
+		/// <summary>To be added.</summary>
 		PrefixConflict = 4,
 	}
 
 	// untyped enum -> CGImageMetadata.h
 	/// <summary>Enumerates the type-forms of image metadata.</summary>
 	public enum CGImageMetadataType {
+		/// <summary>To be added.</summary>
 		Invalid = -1,
+		/// <summary>To be added.</summary>
 		Default = 0,
+		/// <summary>To be added.</summary>
 		String = 1,
+		/// <summary>To be added.</summary>
 		ArrayUnordered = 2,
+		/// <summary>To be added.</summary>
 		ArrayOrdered = 3,
+		/// <summary>To be added.</summary>
 		AlternateArray = 4,
+		/// <summary>To be added.</summary>
 		AlternateText = 5,
+		/// <summary>To be added.</summary>
 		Structure = 6
 	}
 

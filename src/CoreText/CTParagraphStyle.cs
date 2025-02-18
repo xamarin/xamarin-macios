@@ -47,32 +47,48 @@ namespace CoreText {
 
 	// defined as uint8_t - /System/Library/Frameworks/CoreText.framework/Headers/CTParagraphStyle.h
 	public enum CTTextAlignment : byte {
+		/// <summary>To be added.</summary>
 		Left = 0,
+		/// <summary>To be added.</summary>
 		Right = 1,
+		/// <summary>To be added.</summary>
 		Center = 2,
+		/// <summary>To be added.</summary>
 		Justified = 3,
+		/// <summary>To be added.</summary>
 		Natural = 4,
 	}
 
 	// defined as uint8_t - /System/Library/Frameworks/CoreText.framework/Headers/CTParagraphStyle.h
 	public enum CTLineBreakMode : byte {
+		/// <summary>To be added.</summary>
 		WordWrapping = 0,
+		/// <summary>To be added.</summary>
 		CharWrapping = 1,
+		/// <summary>To be added.</summary>
 		Clipping = 2,
+		/// <summary>To be added.</summary>
 		TruncatingHead = 3,
+		/// <summary>To be added.</summary>
 		TruncatingTail = 4,
+		/// <summary>To be added.</summary>
 		TruncatingMiddle = 5,
 	}
 
 	[Flags]
 	// defined as int8_t - /System/Library/Frameworks/CoreText.framework/Headers/CTParagraphStyle.h
 	public enum CTWritingDirection : sbyte {
+		/// <summary>To be added.</summary>
 		Natural = -1,
+		/// <summary>To be added.</summary>
 		LeftToRight = 0,
+		/// <summary>To be added.</summary>
 		RightToLeft = 1,
 
 		// part of an unnamed enum inside CTStringAttributes.h
+		/// <summary>To be added.</summary>
 		Embedding = (0 << 1),
+		/// <summary>To be added.</summary>
 		Override = (1 << 1)
 	}
 

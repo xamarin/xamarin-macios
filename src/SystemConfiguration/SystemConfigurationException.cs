@@ -20,6 +20,9 @@ namespace SystemConfiguration {
 			StatusErrorCode = statusErrorCode;
 		}
 
+		/// <summary>The <see cref="T:SystemConfiguration.StatusCode" /> wrapped in this <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:SystemConfigurtion.SystemConfigurationException&amp;scope=Xamarin" title="T:SystemConfigurtion.SystemConfigurationException">T:SystemConfigurtion.SystemConfigurationException</a></format>.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public StatusCode StatusErrorCode { get; private set; }
 
 		internal static SystemConfigurationException FromMostRecentCall ()

@@ -399,6 +399,11 @@ namespace ObjCRuntime {
 			}
 		}
 
+		/// <summary>Returns the target object for the block.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public object Target {
 			get {
 				var target = Context;
@@ -694,14 +699,23 @@ namespace ObjCRuntime {
 
 	[Flags]
 	internal enum BlockFlags : int {
+		/// <summary>Objective-C Block ABI Flags.</summary>
 		BLOCK_REFCOUNT_MASK = (0xffff),
+		/// <summary>Objective-C Block ABI Flags.</summary>
 		BLOCK_NEEDS_FREE = (1 << 24),
+		/// <summary>Objective-C Block ABI Flags</summary>
 		BLOCK_HAS_COPY_DISPOSE = (1 << 25),
+		/// <summary>Objective-C Block ABI Flags</summary>
 		BLOCK_HAS_CTOR = (1 << 26), /* Helpers have C++ code. */
+		/// <summary>Objective-C Block ABI Flags.</summary>
 		BLOCK_IS_GC = (1 << 27),
+		/// <summary>Objective-C Block ABI Flags.</summary>
 		BLOCK_IS_GLOBAL = (1 << 28),
+		/// <summary>Whether the block_descriptor field is filled in.</summary>
 		BLOCK_HAS_DESCRIPTOR = (1 << 29), // This meaning was deprecated 
+		/// <summary>Objective-C Block ABI Flags.</summary>
 		BLOCK_HAS_STRET = (1 << 29),
+		/// <summary>Objective-C Block ABI Flags</summary>
 		BLOCK_HAS_SIGNATURE = (1 << 30),
 	}
 }

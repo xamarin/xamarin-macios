@@ -63,6 +63,9 @@ namespace Foundation {
 			Dictionary = dictionary ?? new NSMutableDictionary ();
 		}
 
+		/// <summary>Gets the wrapped <see cref="T:Foundation.NSDictionary" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary Dictionary { get; private set; }
 
 		protected T []? GetArray<T> (NSString key) where T : NSObject

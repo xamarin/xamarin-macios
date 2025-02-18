@@ -24,7 +24,13 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct VTDataRateLimit {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public uint NumberOfBytes { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public double Seconds { get; set; }
 
 		public VTDataRateLimit (uint numberOfBytes, double seconds) : this ()

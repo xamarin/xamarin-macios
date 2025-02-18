@@ -55,6 +55,10 @@ namespace ObjCRuntime {
 
 #if !__MACCATALYST__
 #if NET
+		/// <summary>The architecture where the code is currently running.</summary>
+		///         <remarks>
+		///           <para>Use this to determine the architecture on which the program is currently running (device or simulator).</para>
+		///         </remarks>
 		public readonly static Arch Arch = (Arch) GetRuntimeArch ();
 #else
 		public static Arch Arch; // default: = Arch.DEVICE;
@@ -158,7 +162,9 @@ namespace ObjCRuntime {
 
 #if !__MACCATALYST__
 	public enum Arch {
+		/// <summary>Running on a physical device.</summary>
 		DEVICE,
+		/// <summary>Running on the desktop simulator.</summary>
 		SIMULATOR
 	}
 #endif

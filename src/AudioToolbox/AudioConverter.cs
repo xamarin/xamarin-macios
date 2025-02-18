@@ -43,42 +43,67 @@ using NativeHandle = System.IntPtr;
 namespace AudioToolbox {
 	public enum AudioConverterError // Impliclty cast to OSStatus in AudioConverter.h
 	{
+		/// <summary>To be added.</summary>
 		None = 0,
+		/// <summary>To be added.</summary>
 		FormatNotSupported = 0x666d743f, // 'fmt?'
+		/// <summary>To be added.</summary>
 		OperationNotSupported = 0x6f703f3f, // 'op??'
+		/// <summary>To be added.</summary>
 		PropertyNotSupported = 0x70726f70, // 'prop'
+		/// <summary>To be added.</summary>
 		InvalidInputSize = 0x696e737a, // 'insz'
+		/// <summary>To be added.</summary>
 		InvalidOutputSize = 0x6f74737a, // 'otsz'
+		/// <summary>To be added.</summary>
 		UnspecifiedError = 0x77686174, // 'what'
+		/// <summary>To be added.</summary>
 		BadPropertySizeError = 0x2173697a, // '!siz'
+		/// <summary>To be added.</summary>
 		RequiresPacketDescriptionsError = 0x21706b64, // '!pkd'
+		/// <summary>To be added.</summary>
 		InputSampleRateOutOfRange = 0x21697372, // '!isr'
+		/// <summary>To be added.</summary>
 		OutputSampleRateOutOfRange = 0x216f7372, // '!osr'
+		/// <summary>To be added.</summary>
 		HardwareInUse = 0x68776975, // 'hwiu'
+		/// <summary>To be added.</summary>
 		NoHardwarePermission = 0x7065726d, // 'perm'
+		/// <summary>To be added.</summary>
 		AudioFormatUnsupported = 0x21646174, // '!dat' From http://lists.apple.com/archives/coreaudio-api/2009/Feb/msg00082.html
 	}
 
 	public enum AudioConverterSampleRateConverterComplexity // typedef UInt32 AudioConverterPropertyID
 	{
+		/// <summary>Represents lowest quality sample rate.</summary>
 		Linear = 0x6c696e65, // 'line'
+		/// <summary>Represents normal quality sample rate.</summary>
 		Normal = 0x6e6f726d, // 'norm'
+		/// <summary>Represents mastering quality sample rate.</summary>
 		Mastering = 0x62617473, // 'bats'
 	}
 
 	public enum AudioConverterQuality // typedef UInt32 AudioConverterPropertyID
 	{
+		/// <summary>Represents maximum quality.</summary>
 		Max = 0x7F,
+		/// <summary>Represents high quality.</summary>
 		High = 0x60,
+		/// <summary>Represents medium quality.</summary>
 		Medium = 0x40,
+		/// <summary>Represents low quality.</summary>
 		Low = 0x20,
+		/// <summary>Represents minimum quality.</summary>
 		Min = 0
 	}
 
 	public enum AudioConverterPrimeMethod // typedef UInt32 AudioConverterPropertyID
 	{
+		/// <summary>Represents primes with both leading and trailing input frames.</summary>
 		Pre = 0,
+		/// <summary>Represents primes with trailing input frames only.</summary>
 		Normal = 1,
+		/// <summary>Represents primes with both leading and trailing input frames to be silence.</summary>
 		None = 2
 	}
 
@@ -104,7 +129,13 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioConverterPrimeInfo {
+		/// <summary>The number of leading input frames.</summary>
+		///         <remarks>
+		///         </remarks>
 		public int LeadingFrames;
+		/// <summary>The number of trailing input frames.</summary>
+		///         <remarks>
+		///         </remarks>
 		public int TrailingFrames;
 	}
 
@@ -135,42 +166,77 @@ namespace AudioToolbox {
 		{
 		}
 
+		/// <summary>The size in bytes of the smallest buffer of input data.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint MinimumInputBufferSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.MinimumInputBufferSize);
 			}
 		}
 
+		/// <summary>The size in bytes of the smallest buffer of output data.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint MinimumOutputBufferSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.MinimumOutputBufferSize);
 			}
 		}
 
+		/// <summary>The size in bytes of the largest single packet of data in the input format.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint MaximumInputPacketSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.MaximumInputPacketSize);
 			}
 		}
 
+		/// <summary>The size in bytes of the largest single packet of data in the output format.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint MaximumOutputPacketSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.MaximumOutputPacketSize);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint CalculateInputBufferSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.CalculateInputBufferSize);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint CalculateOutputBufferSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.CalculateOutputBufferSize);
 			}
 		}
 
+		/// <summary>The initial sub-sample position of the sample rate converter.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public double SampleRateConverterInitialPhase {
 			get {
 				return GetDoubleProperty (AudioConverterPropertyID.SampleRateConverterInitialPhase);
@@ -180,6 +246,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The sample rate converter algorithm.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioConverterSampleRateConverterComplexity SampleRateConverterComplexity {
 			get {
 				return (AudioConverterSampleRateConverterComplexity) GetUIntProperty (AudioConverterPropertyID.SampleRateConverterComplexity);
@@ -189,6 +260,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The rendering quality of the sample rate converter.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioConverterQuality SampleRateConverterQuality {
 			get {
 				return (AudioConverterQuality) GetUIntProperty (AudioConverterPropertyID.SampleRateConverterQuality);
@@ -198,6 +274,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Rendering quality of the converter codec.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioConverterQuality CodecQuality {
 			get {
 				return (AudioConverterQuality) GetUIntProperty (AudioConverterPropertyID.CodecQuality);
@@ -207,6 +288,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The priming information for converter's priming method.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioConverterPrimeMethod PrimeMethod {
 			get {
 				return (AudioConverterPrimeMethod) GetUIntProperty (AudioConverterPropertyID.PrimeMethod);
@@ -216,6 +302,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The priming method.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public unsafe AudioConverterPrimeInfo PrimeInfo {
 			get {
 				AudioConverterPrimeInfo value;
@@ -228,12 +319,22 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Input to Output channel mapping.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public int []? ChannelMap {
 			get {
 				return GetArray<int> (AudioConverterPropertyID.ChannelMap, sizeof (int));
 			}
 		}
 
+		/// <summary>Gets or sets a magic cookie that is used for compression.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public byte []? CompressionMagicCookie {
 			get {
 				int size;
@@ -258,6 +359,10 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets or sets a magic cookie that is used for decompression.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>If the audio data format has a magic cookie associated with it, you must add this information to appropriately decompress the data.</remarks>
 		public byte []? DecompressionMagicCookie {
 			get {
 				int size;
@@ -281,6 +386,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The number of bits per second to aim for when encoding data.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint EncodeBitRate {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.EncodeBitRate);
@@ -290,6 +400,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>An an output sample rate.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public double EncodeAdjustableSampleRate {
 			get {
 				return GetDoubleProperty (AudioConverterPropertyID.EncodeAdjustableSampleRate);
@@ -299,6 +414,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Input audio channels layout.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioChannelLayout? InputChannelLayout {
 			get {
 				int size;
@@ -314,6 +434,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Output audio channels layout.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioChannelLayout? OutputChannelLayout {
 			get {
 				int size;
@@ -329,36 +454,65 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>All applicable bit rates based on current settings.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioValueRange []? ApplicableEncodeBitRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.ApplicableEncodeBitRates);
 			}
 		}
 
+		/// <summary>All available bit rates for the input format.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioValueRange []? AvailableEncodeBitRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.AvailableEncodeBitRates);
 			}
 		}
 
+		/// <summary>All applicable sample rates based on current settings.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioValueRange []? ApplicableEncodeSampleRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.ApplicableEncodeSampleRates);
 			}
 		}
 
+		/// <summary>All applicable sample rates based on current settings.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioValueRange []? AvailableEncodeSampleRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.AvailableEncodeSampleRates);
 			}
 		}
 
+		/// <summary>All audio channel layouts for the input format.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioChannelLayoutTag []? AvailableEncodeChannelLayoutTags {
 			get {
 				return GetArray<AudioChannelLayoutTag> (AudioConverterPropertyID.AvailableEncodeChannelLayoutTags, sizeof (AudioChannelLayoutTag));
 			}
 		}
 
+		/// <summary>Completely filled output audio description.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property can be used to obtain converter filled <see cref="T:AudioToolbox.AudioStreamBasicDescription" /> for output audio stream.</remarks>
 		public unsafe AudioStreamBasicDescription CurrentOutputStreamDescription {
 			get {
 				int size;
@@ -378,6 +532,10 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Completely filled input audio description.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property can be used to obtain converter filled <see cref="T:AudioToolbox.AudioStreamBasicDescription" /> for input audio stream.</remarks>
 		public unsafe AudioStreamBasicDescription CurrentInputStreamDescription {
 			get {
 				int size;
@@ -397,6 +555,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The source bit depth to preserve.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public int BitDepthHint {
 			get {
 				return (int) GetUIntProperty (AudioConverterPropertyID.PropertyBitDepthHint);
@@ -406,6 +569,11 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>All the data formats produced by the converter encoder.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public unsafe AudioFormat []? FormatList {
 			get {
 				return GetArray<AudioFormat> (AudioConverterPropertyID.PropertyFormatList, sizeof (AudioFormat));
@@ -413,6 +581,11 @@ namespace AudioToolbox {
 		}
 
 #if !MONOMAC
+		/// <summary>The underlying codec supports resumption following an interruption.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public bool CanResumeFromInterruption {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.CanResumeFromInterruption) != 0;
@@ -498,12 +671,22 @@ namespace AudioToolbox {
 			return Create (sourceFormat, destinationFormat, options, out var _);
 		}
 
+		/// <summary>All valid converter input formats.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public static AudioFormatType []? DecodeFormats {
 			get {
 				return GetFormats (AudioFormatProperty.DecodeFormatIDs);
 			}
 		}
 
+		/// <summary>All valid converter output formats.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public static AudioFormatType []? EncodeFormats {
 			get {
 				return GetFormats (AudioFormatProperty.EncodeFormatIDs);

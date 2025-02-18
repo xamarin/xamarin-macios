@@ -40,6 +40,10 @@ namespace ObjCRuntime {
 			Safe = safe;
 		}
 
+		/// <summary>If the API is thread-safe or not.</summary>
+		///         <value>If the API is thread-safe or not.</value>
+		///         <remarks>
+		///         </remarks>
 		public bool Safe { get; private set; }
 	}
 }

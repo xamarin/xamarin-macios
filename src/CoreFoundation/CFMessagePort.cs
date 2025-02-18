@@ -28,11 +28,17 @@ namespace CoreFoundation {
 	// untyped enum from CFMessagePort.h
 	// used as a return value of type SInt32 (always 4 bytes)
 	public enum CFMessagePortSendRequestStatus {
+		/// <summary>The message was sent, and any expected reply was received.</summary>
 		Success = 0,
+		/// <summary>The port timed out before the message could be sent.</summary>
 		SendTimeout = -1,
+		/// <summary>The port timed out before the response was received.</summary>
 		ReceiveTimeout = -2,
+		/// <summary>The port became invalid before the message was sent.</summary>
 		IsInvalid = -3,
+		/// <summary>An error occurred.</summary>
 		TransportError = -4,
+		/// <summary>The port became invalid after the message was sent, but before a response was received.</summary>
 		BecameInvalidError = -5
 	}
 
@@ -95,12 +101,18 @@ namespace CoreFoundation {
 
 		IntPtr contextHandle;
 
+		/// <summary>Returns a Boolean value that indicates whether a current instance of CFMessagePort object represents a remote port.</summary>
+		///         <value>Boolean value.</value>
+		///         <remarks>Property returns true if CFMessagePort is remote.</remarks>
 		public bool IsRemote {
 			get {
 				return CFMessagePortIsRemote (GetCheckedHandle ()) != 0;
 			}
 		}
 
+		/// <summary>The registered name of message port.</summary>
+		///         <value>String representation of message port's name.</value>
+		///         <remarks> Property returns null if port have no name.</remarks>
 		public string? Name {
 			get {
 				return CFString.FromHandle (CFMessagePortGetName (GetCheckedHandle ()));
@@ -115,6 +127,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>Returns a boolean value that indicates whether a CFMessagePort object is valid.</summary>
+		///         <value>Boolean value.</value>
+		///         <remarks>Property indicates whether message port can send or receive messages.</remarks>
 		public bool IsValid {
 			get {
 				return CFMessagePortIsValid (GetCheckedHandle ()) != 0;
@@ -139,6 +154,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>Gets or sets the invalidation callback method for a CFMessagePort object.</summary>
+		///         <value>Delegate</value>
+		///         <remarks>Set null value to remove callback. Callback will be fired on message on port invalidation.</remarks>
 		public Action? InvalidationCallback {
 			get {
 				lock (invalidationHandles) {

@@ -45,27 +45,47 @@ using System.Runtime.Versioning;
 namespace AudioUnit {
 	public enum ExtAudioFileError // Implictly cast to OSType
 	{
+		/// <summary>To be added.</summary>
 		OK = 0,
+		/// <summary>To be added.</summary>
 		CodecUnavailableInputConsumed = -66559,
+		/// <summary>To be added.</summary>
 		CodecUnavailableInputNotConsumed = -66560,
+		/// <summary>To be added.</summary>
 		InvalidProperty = -66561,
+		/// <summary>To be added.</summary>
 		InvalidPropertySize = -66562,
+		/// <summary>To be added.</summary>
 		NonPCMClientFormat = -66563,
+		/// <summary>To be added.</summary>
 		InvalidChannelMap = -66564,
+		/// <summary>To be added.</summary>
 		InvalidOperationOrder = -66565,
+		/// <summary>To be added.</summary>
 		InvalidDataFormat = -66566,
+		/// <summary>To be added.</summary>
 		MaxPacketSizeUnknown = -66567,
+		/// <summary>To be added.</summary>
 		InvalidSeek = -66568,
+		/// <summary>To be added.</summary>
 		AsyncWriteTooLarge = -66569,
+		/// <summary>To be added.</summary>
 		AsyncWriteBufferOverflow = -66570,
 
 		// Shared error codes
+		/// <summary>To be added.</summary>
 		NotOpenError = -38,
+		/// <summary>To be added.</summary>
 		EndOfFileError = -39,
+		/// <summary>To be added.</summary>
 		PositionError = -40,
+		/// <summary>To be added.</summary>
 		FileNotFoundError = -43,
+		/// <summary>To be added.</summary>
 		BadFilePathError = 0x21707468, // '!pth'
+		/// <summary>To be added.</summary>
 		FilePermissionError = -54,
+		/// <summary>To be added.</summary>
 		TooManyFilesOpenError = -42,
 	}
 

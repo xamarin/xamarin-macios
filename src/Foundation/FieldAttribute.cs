@@ -42,7 +42,16 @@ namespace Foundation {
 			SymbolName = symbolName;
 			LibraryName = libraryName;
 		}
+		/// <summary>The global symbol that this field represents.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string SymbolName { get; set; }
+		/// <summary>The library name where the global symbol is looked up from.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The special name "__Internal" means that the symbol is looked up on the current executable.</remarks>
 		public string? LibraryName { get; set; }
 	}
 }

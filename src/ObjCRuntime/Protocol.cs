@@ -45,10 +45,20 @@ namespace ObjCRuntime {
 			this.handle = handle;
 		}
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>
+		///           <para>This IntPtr is a handle to the underlying unmanaged representation for this object.</para>
+		///         </remarks>
 		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
+		/// <summary>Name of the protocol.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string? Name {
 			get {
 				IntPtr ptr = protocol_getName (Handle);

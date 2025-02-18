@@ -280,6 +280,12 @@ namespace ObjCRuntime {
 			}
 		}
 
+		/// <summary>If dynamic registration is supported.</summary>
+		///         <value>If dynamic registration is supported.</value>
+		///         <remarks>
+		///           <para>At build time the managed linker can in some cases determine whether dynamic registration is required or not, and if not, it can optimize away the code to support dynamic registration (to minimize app size). If support for dynamic registration has been removed by the linker, this property will return false.</para>
+		///         </remarks>
+		///         <related type="article" href="https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/optimizations#remove-the-dynamic-registrar">Build optimizations (removal of the dynamic registrar)</related>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static bool DynamicRegistrationSupported {
 			get {
@@ -2667,6 +2673,8 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary)]
 		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static bool IsARM64CallingConvention;
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -2759,6 +2767,9 @@ namespace ObjCRuntime {
 		}
 
 #if NET || !MONOMAC // legacy Xamarin.Mac has a different implementation in Runtime.mac.cs
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? OriginalWorkingDirectory {
 			get {
 				return Marshal.PtrToStringUTF8 (xamarin_get_original_working_directory_path ());

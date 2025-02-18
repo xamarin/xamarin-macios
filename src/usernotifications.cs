@@ -28,14 +28,23 @@ namespace UserNotifications {
 	[ErrorDomain ("UNErrorDomain")]
 	[Native]
 	public enum UNErrorCode : long {
+		/// <summary>The app is not allowed to submit notification requests.</summary>
 		NotificationsNotAllowed = 1,
+		/// <summary>The URL for the file is not valid.</summary>
 		AttachmentInvalidUrl = 100,
+		/// <summary>The type of the attached file was not recognized.</summary>
 		AttachmentUnrecognizedType,
+		/// <summary>The attached file is too big.</summary>
 		AttachmentInvalidFileSize,
+		/// <summary>The local attached file was not present.</summary>
 		AttachmentNotInDataStore,
+		/// <summary>The attachment could not be moved onto the system data store.</summary>
 		AttachmentMoveIntoDataStoreFailed,
+		/// <summary>The attached file is corrupt.</summary>
 		AttachmentCorrupt,
+		/// <summary>To be added.</summary>
 		NotificationInvalidNoDate = 1400,
+		/// <summary>To be added.</summary>
 		NotificationInvalidNoContent,
 		ContentProvidingObjectNotAllowed = 1500,
 		ContentProvidingInvalid = 1501,
@@ -76,9 +85,13 @@ namespace UserNotifications {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UNAuthorizationStatus : long {
+		/// <summary>The user has not yet allowed or denied the app permission to post notifications.</summary>
 		NotDetermined = 0,
+		/// <summary>The user has denied the app permission to post notifications.</summary>
 		Denied,
+		/// <summary>The user has allowed the app to post notifications.</summary>
 		Authorized,
+		/// <summary>The user has allowed provisional noncritical notifications.</summary>
 		[MacCatalyst (13, 1)]
 		Provisional,
 		[iOS (14, 0)]
@@ -100,8 +113,11 @@ namespace UserNotifications {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UNAlertStyle : long {
+		/// <summary>The app may not display alerts.</summary>
 		None = 0,
+		/// <summary>The notification may display a temporary slide-down banner alert.</summary>
 		Banner,
+		/// <summary>The notification may display a modal alert.</summary>
 		Alert
 	}
 
@@ -109,15 +125,23 @@ namespace UserNotifications {
 	[Native]
 	[Flags]
 	public enum UNAuthorizationOptions : ulong {
+		/// <summary>Indicates that no request type is specified.</summary>
 		None = 0,
+		/// <summary>Indicates authorization to update the app's badge.</summary>
 		Badge = (1 << 0),
+		/// <summary>Indicates authorization to play sound.</summary>
 		Sound = (1 << 1),
+		/// <summary>Indicates authorization to display alerts.</summary>
 		Alert = (1 << 2),
+		/// <summary>Indicates authorization to display notifications in CarPlay.</summary>
 		CarPlay = (1 << 3),
+		/// <summary>Indicates authorization to display critical alerts.</summary>
 		[MacCatalyst (13, 1)]
 		CriticalAlert = (1 << 4),
+		/// <summary>Indicates that the app should provide a button for notification settings.</summary>
 		[MacCatalyst (13, 1)]
 		ProvidesAppNotificationSettings = (1 << 5),
+		/// <summary>Indicates authorization to make provisional noncritical notifications.</summary>
 		[MacCatalyst (13, 1)]
 		Provisional = (1 << 6),
 		[iOS (13, 0)]
@@ -272,12 +296,21 @@ namespace UserNotifications {
 	[DisableDefaultCtor] // as per docs (use FromIdentifier)
 	interface UNNotificationAttachment : NSCopying, NSSecureCoding {
 
+		/// <summary>Gets the identifier for the attachment.</summary>
+		///         <value>The identifier for the attachment.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("identifier")]
 		string Identifier { get; }
 
+		/// <summary>Gets the URL for the attachment.</summary>
+		///         <value>The URL for the attachment.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
 
+		/// <summary>Gets the type of the attachment.</summary>
+		///         <value>The type of the attachment.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("type")]
 		string Type { get; }
 
@@ -783,6 +816,9 @@ namespace UserNotifications {
 	[BaseType (typeof (UNNotificationTrigger))]
 	interface UNCalendarNotificationTrigger {
 
+		/// <summary>Gets the date components that describe when the notification will be triggered.</summary>
+		///         <value>The date components that describe when the notification will be triggered.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("dateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents DateComponents { get; }
 
@@ -790,6 +826,12 @@ namespace UserNotifications {
 		[Export ("triggerWithDateMatchingComponents:repeats:")]
 		UNCalendarNotificationTrigger CreateTrigger (NSDateComponents dateComponents, bool repeats);
 
+		/// <summary>Gets the date at which the notification will next be triggered.</summary>
+		///         <value>
+		///           <para>The date at which the notification will next be triggered.</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("nextTriggerDate")]
 		NSDate NextTriggerDate { get; }
 	}

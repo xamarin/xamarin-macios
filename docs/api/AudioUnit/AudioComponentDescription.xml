@@ -1,0 +1,62 @@
+<Documentation>
+  <Docs DocId="F:AudioUnit.AudioComponentDescription.ComponentSubType">
+        <summary>Audio Unit component subtype, depending on the <see cref="F:AudioUnit.AudioComponentDescription.ComponentSubType" /> value you should use one of the values from <see cref="T:AudioUnit.AudioTypeOutput" />, <see cref="T:AudioUnit.AudioTypeMusicDevice" />, <see cref="T:AudioUnit.AudioTypeConverter" />, <see cref="T:AudioUnit.AudioTypeEffect" />, <see cref="T:AudioUnit.AudioTypeMixer" />, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AudioUnit.AudioTypePanner,&amp;scope=Xamarin" title="T:AudioUnit.AudioTypePanner,">T:AudioUnit.AudioTypePanner,</a></format> <see cref="T:AudioUnit.AudioTypeGenerator" /></summary>
+        <remarks>
+          <para>Audio Unit component subtype, depending on the <see cref="F:AudioUnit.AudioComponentDescription.ComponentType" /> you should use one of the values from <see cref="T:AudioUnit.AudioTypeOutput" />, <see cref="T:AudioUnit.AudioTypeMusicDevice" />, <see cref="T:AudioUnit.AudioTypeConverter" />, <see cref="T:AudioUnit.AudioTypeEffect" />, <see cref="T:AudioUnit.AudioTypeMixer" />, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AudioUnit.AudioTypePanner,&amp;scope=Xamarin" title="T:AudioUnit.AudioTypePanner,">T:AudioUnit.AudioTypePanner,</a></format> <see cref="T:AudioUnit.AudioTypeGenerator" />.</para>
+          <para />
+          <para>Since this is an integer, and the values on those enumerations are strongly typed, you typically need to cast.   The following example shows this:</para>
+          <para />
+          <para />
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[var processingGraph = new AUGraph ();
+
+int samplerNode, ioNode;
+
+var musicSampler = new AudioComponentDescription () {
+        ComponentManufacturer = AudioComponentManufacturerType.Apple,
+        ComponentType = AudioComponentType.MusicDevice,
+        ComponentSubType = (int)AudioTypeMusicDevice.Sampler
+};
+samplerNode = processingGraph.AddNode (musicSampler);
+
+var remoteOutput = new AudioComponentDescription () {
+        ComponentManufacturer = AudioComponentManufacturerType.Apple,
+        ComponentType = AudioComponentType.Output,
+        ComponentSubType = (int)AudioTypeOutput.Remote
+};
+ioNode = processingGraph.AddNode (remoteOutput);
+
+processingGraph.Open ();]]></code>
+          </example>.</remarks>
+      </Docs>
+  <Docs DocId="F:AudioUnit.AudioComponentDescription.ComponentSubType">
+        <summary>Audio Unit component subtype, depending on the <see cref="F:AudioUnit.AudioComponentDescription.ComponentSubType" /> value you should use one of the values from <see cref="T:AudioUnit.AudioTypeOutput" />, <see cref="T:AudioUnit.AudioTypeMusicDevice" />, <see cref="T:AudioUnit.AudioTypeConverter" />, <see cref="T:AudioUnit.AudioTypeEffect" />, <see cref="T:AudioUnit.AudioTypeMixer" />, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AudioUnit.AudioTypePanner,&amp;scope=Xamarin" title="T:AudioUnit.AudioTypePanner,">T:AudioUnit.AudioTypePanner,</a></format> <see cref="T:AudioUnit.AudioTypeGenerator" /></summary>
+        <remarks>
+          <para>Audio Unit component subtype, depending on the <see cref="F:AudioUnit.AudioComponentDescription.ComponentType" /> you should use one of the values from <see cref="T:AudioUnit.AudioTypeOutput" />, <see cref="T:AudioUnit.AudioTypeMusicDevice" />, <see cref="T:AudioUnit.AudioTypeConverter" />, <see cref="T:AudioUnit.AudioTypeEffect" />, <see cref="T:AudioUnit.AudioTypeMixer" />, <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:AudioUnit.AudioTypePanner,&amp;scope=Xamarin" title="T:AudioUnit.AudioTypePanner,">T:AudioUnit.AudioTypePanner,</a></format> <see cref="T:AudioUnit.AudioTypeGenerator" />.</para>
+          <para />
+          <para>Since this is an integer, and the values on those enumerations are strongly typed, you typically need to cast.   The following example shows this:</para>
+          <para />
+          <para />
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[var processingGraph = new AUGraph ();
+
+int samplerNode, ioNode;
+
+var musicSampler = new AudioComponentDescription () {
+        ComponentManufacturer = AudioComponentManufacturerType.Apple,
+        ComponentType = AudioComponentType.MusicDevice,
+        ComponentSubType = (int)AudioTypeMusicDevice.Sampler
+};
+samplerNode = processingGraph.AddNode (musicSampler);
+
+var remoteOutput = new AudioComponentDescription () {
+        ComponentManufacturer = AudioComponentManufacturerType.Apple,
+        ComponentType = AudioComponentType.Output,
+        ComponentSubType = (int)AudioTypeOutput.Remote
+};
+ioNode = processingGraph.AddNode (remoteOutput);
+
+processingGraph.Open ();]]></code>
+          </example>.</remarks>
+      </Docs>
+</Documentation>

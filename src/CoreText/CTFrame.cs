@@ -45,13 +45,17 @@ namespace CoreText {
 
 	[Flags]
 	public enum CTFrameProgression : uint {
+		/// <summary>To be added.</summary>
 		TopToBottom = 0,
+		/// <summary>To be added.</summary>
 		RightToLeft = 1,
 		LeftToRight = 2,
 	}
 
 	public enum CTFramePathFillRule {
+		/// <summary>To be added.</summary>
 		EvenOdd,
+		/// <summary>To be added.</summary>
 		WindingNumber
 	}
 
@@ -97,8 +101,14 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary Dictionary { get; private set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CTFrameProgression? Progression {
 			get {
 				var value = Adapter.GetUInt32Value (Dictionary, CTFrameAttributeKey.Progression);

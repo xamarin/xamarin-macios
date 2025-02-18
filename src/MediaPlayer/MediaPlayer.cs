@@ -24,11 +24,17 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMoviePlaybackState : long {
+		/// <summary>To be added.</summary>
 		Stopped,
+		/// <summary>To be added.</summary>
 		Playing,
+		/// <summary>To be added.</summary>
 		Paused,
+		/// <summary>To be added.</summary>
 		Interrupted,
+		/// <summary>To be added.</summary>
 		SeekingForward,
+		/// <summary>To be added.</summary>
 		SeekingBackward,
 	}
 
@@ -41,9 +47,13 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[Native]
 	public enum MPMovieLoadState : long {
+		/// <summary>To be added.</summary>
 		Unknown = 0,
+		/// <summary>To be added.</summary>
 		Playable = 1 << 0,
+		/// <summary>To be added.</summary>
 		PlaythroughOK = 1 << 1,
+		/// <summary>To be added.</summary>
 		Stalled = 1 << 2,
 	}
 
@@ -99,8 +109,11 @@ namespace MediaPlayer {
 	[Native ("MPMovieMediaTypeMask")]
 	[Flags]
 	public enum MPMovieMediaType : long {
+		/// <summary>To be added.</summary>
 		None = 0,
+		/// <summary>To be added.</summary>
 		Video = 1 << 0,
+		/// <summary>To be added.</summary>
 		Audio = 1 << 1,
 	}
 
@@ -231,11 +244,17 @@ namespace MediaPlayer {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPMusicPlaybackState : long {
+		/// <summary>To be added.</summary>
 		Stopped,
+		/// <summary>To be added.</summary>
 		Playing,
+		/// <summary>To be added.</summary>
 		Paused,
+		/// <summary>To be added.</summary>
 		Interrupted,
+		/// <summary>To be added.</summary>
 		SeekingForward,
+		/// <summary>To be added.</summary>
 		SeekingBackward,
 	}
 

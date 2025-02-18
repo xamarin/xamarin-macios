@@ -44,7 +44,11 @@ namespace ObjCRuntime {
 		{
 			Type = type;
 		}
+		/// <summary>The managed type.</summary>
+		///         <remarks />
 		public Type Type;
+		/// <summary>The Objective-C type.</summary>
+		///         <remarks />
 		public Type? OriginalType;
 #if BGENERATOR
 		Type? nullable;

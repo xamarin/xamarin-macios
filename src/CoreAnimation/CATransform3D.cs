@@ -96,6 +96,8 @@ namespace CoreAnimation {
 		public nfloat M44 { get => m44; set => m44 = value; }
 #endif
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		static public readonly CATransform3D Identity;
 
 		static CATransform3D ()
@@ -111,6 +113,9 @@ namespace CoreAnimation {
 		[DllImport (Constants.QuartzLibrary)]
 		extern static byte CATransform3DIsIdentity (CATransform3D t);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsIdentity {
 			get {
 				return CATransform3DIsIdentity (this) != 0;
@@ -254,6 +259,9 @@ namespace CoreAnimation {
 		[DllImport (Constants.QuartzLibrary)]
 		extern static byte CATransform3DIsAffine (CATransform3D t);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsAffine {
 			get {
 				return CATransform3DIsAffine (this) != 0;

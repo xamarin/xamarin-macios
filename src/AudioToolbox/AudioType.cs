@@ -45,50 +45,88 @@ using Foundation;
 
 namespace AudioToolbox {
 	public enum AudioFormatType : uint { // UInt32 in AudioStreamBasicDescription -- CoreAudio.framework CoreAudioTypes.h
+		/// <summary>Uncompressed Linear Pulse Code Modulation (LCPM) format.  Each packet contains a single frame.</summary>
 		LinearPCM = 0x6c70636d,
+		/// <summary>AC-3  codec.</summary>
 		AC3 = 0x61632d33,
+		/// <summary>CAC-3 codec.</summary>
 		CAC3 = 0x63616333,
+		/// <summary>Apple's IMA 4:1 ADPCM codec.</summary>
 		AppleIMA4 = 0x696d6134,
+		/// <summary>MPEG-4 AAC codec.</summary>
 		MPEG4AAC = 0x61616320,
+		/// <summary>MPEG-4 CELP codec.</summary>
 		MPEG4CELP = 0x63656c70,
+		/// <summary>MPEG-4 HVXC codec.</summary>
 		MPEG4HVXC = 0x68767863,
+		/// <summary>MPEG-4 TwinVQ codec.</summary>
 		MPEG4TwinVQ = 0x74777671,
+		/// <summary>MACE 3:1 codec.</summary>
 		MACE3 = 0x4d414333,
+		/// <summary>MACE 6:1 codec.</summary>
 		MACE6 = 0x4d414336,
+		/// <summary>μ-Law codec.</summary>
 		ULaw = 0x756c6177,
+		/// <summary>A-law 2:1 compression scheme.</summary>
 		ALaw = 0x616c6177,
+		/// <summary>QDesign audio.</summary>
 		QDesign = 0x51444d43,
+		/// <summary>QDesign2 audio.</summary>
 		QDesign2 = 0x51444d32,
+		/// <summary>QUALCOMM PureVoice data.</summary>
 		QUALCOMM = 0x51636c70,
+		/// <summary>MPEG-1/2, layer 1 codec.</summary>
 		MPEGLayer1 = 0x2e6d7031,
+		/// <summary>MPEG-1/2, layer 2 codec.</summary>
 		MPEGLayer2 = 0x2e6d7032,
+		/// <summary>MPEG-1/2, layer 3 codec.</summary>
 		MPEGLayer3 = 0x2e6d7033,
+		/// <summary>IOAudioTimeStamp data.</summary>
 		TimeCode = 0x74696d65,
+		/// <summary>MIDI stream.</summary>
 		MIDIStream = 0x6d696469,
+		/// <summary>32-bit floating point data on a side chain.</summary>
 		ParameterValueStream = 0x61707673,
+		/// <summary>Apple Lossless format.</summary>
 		AppleLossless = 0x616c6163,
+		/// <summary>MPEG-4 high efficiency AAC codec.</summary>
 		MPEG4AAC_HE = 0x61616368,
+		/// <summary>MPEG-4 AAC low delay codec.</summary>
 		MPEG4AAC_LD = 0x6161636c,
+		/// <summary>MPEG-4 AAC enhanced low delay audio.</summary>
 		MPEG4AAC_ELD = 0x61616365, // 'aace'
+		/// <summary>MPEG-4 AAC enhanced low delay codec with spectral band replication.</summary>
 		MPEG4AAC_ELD_SBR = 0x61616366, // 'aacf',
+		/// <summary>MPEG-4 AAC enhanced low delay codec, version 2.</summary>
 		MPEG4AAC_ELD_V2 = 0x61616367, // 'aacg',    
+		/// <summary>MPEG-4 high efficiency AAC codec, version 2.</summary>
 		MPEG4AAC_HE_V2 = 0x61616370,
+		/// <summary>MPEG-4 spatial codec.</summary>
 		MPEG4AAC_Spatial = 0x61616373,
 		MpegD_Usac = 0x75736163, // 'usac' (Unified Speech and Audio Coding)
+		/// <summary>Adaptive multi-rate codec.</summary>
 		AMR = 0x73616d72, // 'samr'
+		/// <summary>Wide-band adaptive multi-rate (AMR-WB) codec.</summary>
 		AMRWideBand = 0x73617762, // 'sawb'
+		/// <summary>Audible audiobook codec.</summary>
 		Audible = 0x41554442,
+		/// <summary>Internet low bitrate codec for speech.</summary>
 		iLBC = 0x696c6263,
+		/// <summary>DVI/Intel IMA ADPCM codec.</summary>
 		DVIIntelIMA = 0x6d730011,
+		/// <summary>Microsoft GSM 6.10 codec.</summary>
 		MicrosoftGSM = 0x6d730031,
+		/// <summary>AES3-2003 codec.</summary>
 		AES3 = 0x61657333, // 'aes3'
 #if !XAMCORE_5_0
+		/// <summary>Enhanced AES-3.</summary>
 		[Obsolete ("Use 'EnhancedAC3' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		EnhancedAES3 = 0x65632d33, // 'ec-3'
 #endif
 		/// <summary>Enhanced AC-3.</summary>
 		EnhancedAC3 = 0x65632d33, // 'ec-3'
+		/// <summary>To be added.</summary>
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -100,6 +138,7 @@ namespace AudioToolbox {
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
+		/// <summary>To be added.</summary>
 		Opus = 0x6f707573, // 'opus'
 		/// <summary>Apple Positional Audio Codec.</summary>
 #if NET
@@ -406,30 +445,45 @@ namespace AudioToolbox {
 	}
 
 	public enum AudioChannelLabel : int { // UInt32 AudioChannelLabel
+		/// <summary>To be added.</summary>
 		Unknown = -1,
 		Unused = 0,
+		/// <summary>To be added.</summary>
 		UseCoordinates = 100,
 
+		/// <summary>To be added.</summary>
 		Left = 1,
+		/// <summary>To be added.</summary>
 		Right = 2,
+		/// <summary>To be added.</summary>
 		Center = 3,
+		/// <summary>To be added.</summary>
 		LFEScreen = 4,
+		/// <summary>To be added.</summary>
 		LeftSurround = 5,
+		/// <summary>To be added.</summary>
 		RightSurround = 6,
+		/// <summary>To be added.</summary>
 		LeftCenter = 7,
+		/// <summary>To be added.</summary>
 		RightCenter = 8,
+		/// <summary>To be added.</summary>
 		CenterSurround = 9,
+		/// <summary>To be added.</summary>
 		LeftSurroundDirect = 10,
 		RightSurroundDirect = 11,
 		TopCenterSurround = 12,
 		VerticalHeightLeft = 13,
+		/// <summary>To be added.</summary>
 		VerticalHeightCenter = 14,
+		/// <summary>To be added.</summary>
 		VerticalHeightRight = 15,
 		TopBackLeft = 16,
 		TopBackCenter = 17,
 		TopBackRight = 18,
 		RearSurroundLeft = 33,
 		RearSurroundRight = 34,
+		/// <summary>To be added.</summary>
 		LeftWide = 35,
 		RightWide = 36,
 		LFE2 = 37,

@@ -49,6 +49,9 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public unsafe static class AudioFileGlobalInfo {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static AudioFileType []? ReadableTypes {
 			get {
 				uint size;
@@ -62,6 +65,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static AudioFileType []? WritableTypes {
 			get {
 				uint size;
@@ -109,6 +115,9 @@ namespace AudioToolbox {
 			return data;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? []? AllExtensions {
 			get {
 				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllExtensions, out var ptr))
@@ -118,6 +127,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? []? AllUTIs {
 			get {
 				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllUTIs, out var ptr))
@@ -127,6 +139,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? []? AllMIMETypes {
 			get {
 				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllMIMETypes, out var ptr))

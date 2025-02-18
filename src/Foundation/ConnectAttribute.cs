@@ -36,6 +36,9 @@ namespace Foundation {
 			this.name = name;
 		}
 
+		/// <summary>The name of the outlet.</summary>
+		///         <value>The name of the outlet if specified, or null if it should default to the property name to which it is applied.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get { return this.name; }
 			set { this.name = value; }

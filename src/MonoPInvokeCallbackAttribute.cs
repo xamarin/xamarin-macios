@@ -30,6 +30,10 @@ namespace ObjCRuntime {
 			DelegateType = t;
 		}
 
+		/// <summary>The type of the delegate that will be calling us back.</summary>
+		///         <value>The type of the delegate that will be calling us back.</value>
+		///         <remarks>
+		///         </remarks>
 		public Type DelegateType { get; set; }
 	}
 }

@@ -2401,10 +2401,16 @@ namespace CoreData {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSPersistentStoreResult))]
 	interface NSBatchUpdateResult {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("result", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSObject Result { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("resultType")]
 		NSBatchUpdateRequestResultType ResultType { get; }
 	}

@@ -46,7 +46,9 @@ namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	public enum CTFontManagerScope : uint {
+		/// <summary>To be added.</summary>
 		None = 0,
+		/// <summary>To be added.</summary>
 		Process = 1,
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -59,6 +61,7 @@ namespace CoreText {
 #endif
 		Persistent = 2,
 #if NET
+		/// <summary>To be added.</summary>
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -77,10 +80,14 @@ namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	public enum CTFontManagerAutoActivation : uint {
+		/// <summary>To be added.</summary>
 		Default = 0,
+		/// <summary>To be added.</summary>
 		Disabled = 1,
+		/// <summary>To be added.</summary>
 		Enabled = 2,
 #if NET
+		/// <summary>Developers should not use this deprecated field. It's now treated as 'Default'.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]

@@ -19,7 +19,18 @@ namespace ObjCRuntime {
 			Type = type;
 		}
 
+		/// <summary>The type that this category extends.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public Type Type { get; set; }
+		/// <summary>The name of the category.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>This must be a valid Objective-C type name, but is otherwise unused.</para>
+		///         </remarks>
 		public string Name { get; set; }
 	}
 }

@@ -168,6 +168,17 @@ namespace GLKit {
 
 		public GLKTextureOperations (NSDictionary options) : base (options) { }
 
+		/// <summary>Whether the texture should be pre-multiplied with the encoded Alpha channel or not.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This defaults to false.
+		/// 	  </para>
+		///           <para>
+		/// 	    Should not be set to true for textures in compressed formats.
+		/// 	  </para>
+		///         </remarks>
 		public bool? ApplyPremultiplication {
 			get {
 				return GetBoolValue (GLKTextureLoader.ApplyPremultiplication);
@@ -177,6 +188,14 @@ namespace GLKit {
 			}
 		}
 
+		/// <summary>Whether to flip the image coordinates to match the OpenGL coordinate space.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This defaults to true.
+		/// 	  </para>
+		///         </remarks>
 		public bool? OriginBottomLeft {
 			get {
 				return GetBoolValue (GLKTextureLoader.OriginBottomLeft);
@@ -186,6 +205,17 @@ namespace GLKit {
 			}
 		}
 
+		/// <summary>Whether mipmaps should be generated for the texture.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This defaults to false.
+		/// 	  </para>
+		///           <para>
+		/// 	    If set to true, this will generate mipmaps levels on loading.   In addition the texture's GL_TEXTURE_MIN_FILTER is set to GL_LINEAR_MIPMAP_LINEAR.
+		/// 	  </para>
+		///         </remarks>
 		public bool? GenerateMipmaps {
 			get {
 				return GetBoolValue (GLKTextureLoader.GenerateMipmaps);
@@ -195,6 +225,11 @@ namespace GLKit {
 			}
 		}
 
+		/// <summary>On greyscale images, controls whether the image is loaded as GL_ALPHA or GL_LUMINANCE.</summary>
+		///         <value>false by default, so it loads the greyscale image as GL_LUMINANCE.</value>
+		///         <remarks>
+		/// 	  This property controls how greyscale images are loaded.  By default they are loaded as GL_LUMINANCE, but if you set this property to true, they will be loaded as GL_ALPHA.
+		/// 	</remarks>
 		public bool? GrayscaleAsAlpha {
 			get {
 				return GetBoolValue (GLKTextureLoader.GrayscaleAsAlpha);
@@ -205,6 +240,9 @@ namespace GLKit {
 		}
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]

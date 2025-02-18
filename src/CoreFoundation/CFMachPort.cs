@@ -61,6 +61,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFMachPortGetPort (IntPtr handle);
 
+		/// <summary>Gets the pointer to the wrapped Mach port instance.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public IntPtr MachPort {
 			get {
 				return CFMachPortGetPort (Handle);
@@ -77,6 +80,9 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFMachPortIsValid (IntPtr handle);
+		/// <summary>Gets a value that tells whether the port can send and receive messages.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsValid {
 			get {
 				return CFMachPortIsValid (Handle) != 0;

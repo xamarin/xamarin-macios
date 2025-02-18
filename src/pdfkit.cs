@@ -70,129 +70,171 @@ namespace PdfKit {
 	[TV (18, 2)]
 	enum PdfAnnotationKey {
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyAppearanceDictionary", "+PDFKit")]
 		AppearanceDictionary,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyAppearanceState", "+PDFKit")]
 		AppearanceState,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyBorder", "+PDFKit")]
 		Border,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyColor", "+PDFKit")]
 		Color,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyContents", "+PDFKit")]
 		Contents,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyFlags", "+PDFKit")]
 		Flags,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyDate", "+PDFKit")]
 		Date,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyName", "+PDFKit")]
 		Name,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyPage", "+PDFKit")]
 		Page,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyRect", "+PDFKit")]
 		Rect,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeySubtype", "+PDFKit")]
 		Subtype,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyAction", "+PDFKit")]
 		Action,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyAdditionalActions", "+PDFKit")]
 		AdditionalActions,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyBorderStyle", "+PDFKit")]
 		BorderStyle,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyDefaultAppearance", "+PDFKit")]
 		DefaultAppearance,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyDestination", "+PDFKit")]
 		Destination,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyHighlightingMode", "+PDFKit")]
 		HighlightingMode,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyInklist", "+PDFKit")]
 		Inklist,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyInteriorColor", "+PDFKit")]
 		InteriorColor,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyLinePoints", "+PDFKit")]
 		LinePoints,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyLineEndingStyles", "+PDFKit")]
 		LineEndingStyles,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyIconName", "+PDFKit")]
 		IconName,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyOpen", "+PDFKit")]
 		Open,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyParent", "+PDFKit")]
 		Parent,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyPopup")]
 		Popup,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyQuadding", "+PDFKit")]
 		Quadding,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyQuadPoints", "+PDFKit")]
 		QuadPoints,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyTextLabel", "+PDFKit")]
 		TextLabel,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetDownCaption", "+PDFKit")]
 		WidgetDownCaption,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetBorderColor", "+PDFKit")]
 		WidgetBorderColor,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetBackgroundColor", "+PDFKit")]
 		WidgetBackgroundColor,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetCaption", "+PDFKit")]
 		WidgetCaption,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetDefaultValue", "+PDFKit")]
 		WidgetDefaultValue,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetFieldFlags", "+PDFKit")]
 		WidgetFieldFlags,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetFieldType", "+PDFKit")]
 		WidgetFieldType,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetAppearanceDictionary", "+PDFKit")]
 		WidgetAppearanceDictionary,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetMaxLen", "+PDFKit")]
 		WidgetMaxLen,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetOptions", "+PDFKit")]
 		WidgetOptions,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetRotation", "+PDFKit")]
 		WidgetRotation,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetRolloverCaption", "+PDFKit")]
 		WidgetRolloverCaption,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetTextLabelUI", "+PDFKit")]
 		WidgetTextLabelUI,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationKeyWidgetValue", "+PDFKit")]
 		WidgetValue,
 	}
@@ -311,15 +353,19 @@ namespace PdfKit {
 	[TV (18, 2)]
 	enum PdfAnnotationHighlightingMode {
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationHighlightingModeNone", "+PDFKit")]
 		None,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationHighlightingModeInvert", "+PDFKit")]
 		Invert,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationHighlightingModeOutline", "+PDFKit")]
 		Outline,
 
+		/// <summary>To be added.</summary>
 		[Field ("PDFAnnotationHighlightingModePush", "+PDFKit")]
 		Push,
 	}
@@ -556,6 +602,9 @@ namespace PdfKit {
 		//As it is, I can create instances, that segfault when you access the type method.
 		//marking the method as [Abstract] doesn't work because the subclasses do not explictly
 		//define this method (although they implement it)
+		/// <summary>Gets the action type.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("type")]
 		string Type { get; }
 	}
@@ -570,6 +619,9 @@ namespace PdfKit {
 		[Export ("initWithDestination:")]
 		NativeHandle Constructor (PdfDestination destination);
 
+		/// <summary>Gets or sets the destination of the go-to PDF action.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("destination")]
 		PdfDestination Destination { get; set; }
 	}
@@ -584,6 +636,9 @@ namespace PdfKit {
 		[Export ("initWithName:")]
 		NativeHandle Constructor (PdfActionNamedName name);
 
+		/// <summary>Gets or sets the name of the named PDF action.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("name")]
 		PdfActionNamedName Name { get; set; }
 	}
@@ -598,12 +653,21 @@ namespace PdfKit {
 		[Export ("initWithPageIndex:atPoint:fileURL:")]
 		NativeHandle Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
 
+		/// <summary>Gets or sets the zero-based index of the page in the destination document.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("pageIndex")]
 		nint PageIndex { get; set; }
 
+		/// <summary>Gets or sets the page-space point on the page in the destination document.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("point")]
 		CGPoint Point { get; set; }
 
+		/// <summary>Gets or sets the URL for the remote document.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("URL")]
 		NSUrl Url { get; set; }
 	}
@@ -620,9 +684,18 @@ namespace PdfKit {
 		NativeHandle Constructor ();
 
 		//NSArray of NSString
+		/// <summary>Gets or sets the fields that will be affected by the action.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Export ("fields"), NullAllowed]
 		string [] Fields { get; set; }
 
+		/// <summary>Gets or sets a Boolean value that controls whether the fields that are in <see cref="P:PdfKit.PdfActionResetForm.Fields" /> will be cleared.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("fieldsIncludedAreCleared")]
 		bool FieldsIncludedAreCleared { get; set; }
 	}
@@ -637,6 +710,9 @@ namespace PdfKit {
 		[Export ("initWithURL:")]
 		NativeHandle Constructor (NSUrl url);
 
+		/// <summary>Gets or sets the URL for the PDF action.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("URL"), NullAllowed]
 		NSUrl Url { get; set; }
 	}
@@ -664,11 +740,17 @@ namespace PdfKit {
 		[Export ("initWithBounds:")]
 		NativeHandle Constructor (CGRect bounds);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("page")]
 		[NullAllowed]
 		PdfPage Page { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Protected]
 		[Export ("type")]
 		[NullAllowed]
@@ -679,17 +761,29 @@ namespace PdfKit {
 		string Type { get; set; }
 #endif
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("bounds")]
 		CGRect Bounds { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("modificationDate")]
 		[NullAllowed]
 		NSDate ModificationDate { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("userName")]
 		[NullAllowed]
 		string UserName { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("popup")]
 		[NullAllowed]
 #if MONOMAC
@@ -698,16 +792,28 @@ namespace PdfKit {
 		PdfAnnotation Popup { get; set; }
 #endif
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("shouldDisplay")]
 		bool ShouldDisplay { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("shouldPrint")]
 		bool ShouldPrint { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("border")]
 		[NullAllowed]
 		PdfBorder Border { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("color")]
 		NSColor Color { get; set; }
 
@@ -719,6 +825,9 @@ namespace PdfKit {
 		[Export ("mouseUpAction")]
 		PdfAction MouseUpAction { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("contents")]
 		[NullAllowed]
 		string Contents { get; set; }
@@ -731,6 +840,9 @@ namespace PdfKit {
 		[NullAllowed]
 		string ToolTip { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("hasAppearanceStream")]
 		bool HasAppearanceStream { get; }
 
@@ -748,10 +860,19 @@ namespace PdfKit {
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("action", ArgumentSemantic.Strong), NullAllowed]
 		PdfAction Action { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("highlighted")]
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
@@ -789,6 +910,9 @@ namespace PdfKit {
 		[Wrap ("SetValue (rect, key.GetConstant ()!)")]
 		bool SetValue (CGRect rect, PdfAnnotationKey key);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("annotationKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary AnnotationKeyValues { get; }
@@ -804,34 +928,67 @@ namespace PdfKit {
 
 		// PDFAnnotation (PDFAnnotationUtilities) Category
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("font", ArgumentSemantic.Copy)]
 		NSFont Font { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("fontColor", ArgumentSemantic.Copy)]
 		NSColor FontColor { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("interiorColor", ArgumentSemantic.Copy)]
 		NSColor InteriorColor { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("alignment", ArgumentSemantic.Assign)]
 		NSTextAlignment Alignment { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("startPoint", ArgumentSemantic.Assign)]
 		CGPoint StartPoint { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("endPoint", ArgumentSemantic.Assign)]
 		CGPoint EndPoint { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("startLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle StartLineStyle { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("endLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle EndLineStyle { get; set; }
@@ -846,6 +1003,9 @@ namespace PdfKit {
 		[Export ("nameForLineStyle:")]
 		string GetName (PdfLineStyle style);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("iconType", ArgumentSemantic.Assign)]
 		PdfTextAnnotationIconType IconType { get; set; }
@@ -855,78 +1015,150 @@ namespace PdfKit {
 		[NullAllowed, Export ("quadrilateralPoints", ArgumentSemantic.Copy)]
 		IntPtr _QuadrilateralPoints { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("markupType", ArgumentSemantic.Assign)]
 		PdfMarkupType MarkupType { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("widgetFieldType")]
 		string WidgetFieldType { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("widgetControlType", ArgumentSemantic.Assign)]
 		PdfWidgetControlType WidgetControlType { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("multiline")]
 		bool Multiline { [Bind ("isMultiline")] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("isPasswordField")]
 		bool IsPasswordField { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("comb")]
 		bool Comb { [Bind ("hasComb")] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("maximumLength")]
 		nint MaximumLength { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("widgetStringValue")]
 		string WidgetStringValue { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("widgetDefaultStringValue")]
 		string WidgetDefaultStringValue { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("allowsToggleToOff")]
 		bool AllowsToggleToOff { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("radiosInUnison")]
 		bool RadiosInUnison { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("readOnly")]
 		bool ReadOnly { [Bind ("isReadOnly")] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("listChoice")]
 		bool ListChoice { [Bind ("isListChoice")] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("choices", ArgumentSemantic.Copy)]
 		string [] Choices { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("values", ArgumentSemantic.Copy)]
 		string [] Values { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("buttonWidgetState", ArgumentSemantic.Assign)]
 		PdfWidgetCellState ButtonWidgetState { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("buttonWidgetStateString")]
 		string ButtonWidgetStateString { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("open")]
 		bool Open { [Bind ("isOpen")] get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("paths")]
 		NSBezierPath [] Paths { get; }
@@ -939,26 +1171,62 @@ namespace PdfKit {
 		[Export ("removeBezierPath:")]
 		void RemoveBezierPath (NSBezierPath path);
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("destination", ArgumentSemantic.Strong)]
 		PdfDestination Destination { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("fieldName")]
 		string FieldName { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("caption")]
 		string Caption { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("stampName")]
 		string StampName { get; set; }
@@ -1217,15 +1485,30 @@ namespace PdfKit {
 	[TV (18, 2)]
 	[BaseType (typeof (NSObject), Name = "PDFBorder")]
 	interface PdfBorder : NSCoding, NSCopying {
+		/// <summary>Gets or sets the border style.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("style")]
 		PdfBorderStyle Style { get; set; }
 
+		/// <summary>Gets or sets the line width, in points.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("lineWidth")]
 		nfloat LineWidth { get; set; }
 
+		/// <summary>Gets or sets a weak reference to the dash pattern for the border.</summary>
+		///         <value>
+		///           <para>(More documentation for this node is coming)</para>
+		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Export ("dashPattern", ArgumentSemantic.Assign), NullAllowed]
 		NSArray WeakDashPattern { get; set; }
 
+		/// <summary>Gets or sets a weak reference to the border properties dictionary.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("borderKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary WeakBorderKeyValues { get; }
@@ -2304,6 +2587,9 @@ namespace PdfKit {
 	[NoTV]
 	[NoMacCatalyst]
 	interface PdfViewAnnotationHitEventArgs {
+		/// <summary>Gets the annotation that was hit.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }
 	}

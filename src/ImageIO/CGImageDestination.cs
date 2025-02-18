@@ -43,6 +43,9 @@ namespace ImageIO {
 
 	public partial class CGImageDestinationOptions {
 		CGColor? destinationBackgroundColor;
+		/// <summary>The background color used during image compositing for transparent regions of the image.</summary>
+		///         <value>The color used for background compositing.</value>
+		///         <remarks>To be added.</remarks>
 		public CGColor? DestinationBackgroundColor {
 			get { return destinationBackgroundColor; }
 			set {
@@ -59,6 +62,9 @@ namespace ImageIO {
 
 	public partial class CGCopyImageSourceOptions {
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -67,6 +73,9 @@ namespace ImageIO {
 		public CGImageMetadata? Metadata { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -75,6 +84,9 @@ namespace ImageIO {
 		public bool MergeMetadata { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -83,6 +95,9 @@ namespace ImageIO {
 		public bool ShouldExcludeXMP { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -91,6 +106,9 @@ namespace ImageIO {
 		public bool ShouldExcludeGPS { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -99,6 +117,9 @@ namespace ImageIO {
 		public DateTime? DateTime { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -139,6 +160,9 @@ namespace ImageIO {
 
 	public partial class CGImageAuxiliaryDataInfo {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CGImageMetadata? Metadata {
 			get {
 				return GetNativeValue<CGImageMetadata> (CGImageAuxiliaryDataInfoKeys.MetadataKey);
@@ -175,6 +199,9 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CFArrayRef __nonnull */ IntPtr CGImageDestinationCopyTypeIdentifiers ();
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? []? TypeIdentifiers {
 			get {
 				var handle = CGImageDestinationCopyTypeIdentifiers ();

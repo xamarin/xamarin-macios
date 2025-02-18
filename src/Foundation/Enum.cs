@@ -878,6 +878,7 @@ namespace Foundation {
 	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
+		/// <summary>To be added.</summary>
 		None = 0x00,
 		Single = 0x01,
 		Thick = 0x02,
@@ -956,6 +957,7 @@ namespace Foundation {
 	[Native]
 	public enum NSLigatureType : long {
 		None,
+		/// <summary>To be added.</summary>
 		Default,
 		All,
 	}

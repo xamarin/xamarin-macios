@@ -59,6 +59,9 @@ namespace CoreAnimation {
 			return new CGColor (p, false);
 		}
 
+		/// <summary>An array of colors defining the gradient.   These values can be animated.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CGColor [] Colors {
 			get {
 				return NSArray.ArrayFromHandle<CGColor> (_Colors, CreateColor);

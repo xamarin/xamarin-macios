@@ -1,0 +1,132 @@
+<Documentation>
+  <Docs DocId="P:CoreMidi.Midi.NetworkNotificationContactsDidChange">
+        <summary>Notification raised when the MIDI network has changed.</summary>
+        <value>
+        </value>
+        <remarks>
+          <para id="tool-remark">This constant can be used with the <see cref="T:Foundation.NSNotificationCenter" /> to register a listener for this notification.   This is an NSString instead of a string, because these values can be used as tokens in some native libraries instead of being used purely for their actual string content.    The 'notification' parameter to the callback contains extra information that is specific to the notification type.</para>
+          <para id="tool-remark">If you want to subscribe to this notification, you can use the convenience <see cref="T:MediaPlayer.MPMediaLibrary.Notifications" />.<see cref="M:CoreMidi.Midi.Notifications.ObserveNetworkNotificationContactsDidChange(Foundation.NSObject,System.EventHandler{Foundation.NSNotificationEventArgs})" /> method which offers strongly typed access to the parameters of the notification.</para>
+          <para>The following example shows how to use the strongly typed Notifications class, to take the guesswork out of the available properties in the notification:</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+//
+// Lambda style
+//
+
+// listening
+notification = Midi.Notifications.ObserveNetworkNotificationContactsDidChange ((sender, args) => {
+    /* Access strongly typed args */
+    Console.WriteLine ("Notification: {0}", args.Notification);
+});
+
+// To stop listening:
+notification.Dispose ();
+
+//
+// Method style
+//
+NSObject notification;
+void Callback (object sender, Foundation.NSNotificationEventArgs args)
+{
+    // Access strongly typed args
+    Console.WriteLine ("Notification: {0}", args.Notification);
+}
+
+void Setup ()
+{
+    notification = Midi.Notifications.ObserveNetworkNotificationContactsDidChange (Callback);
+}
+
+void Teardown ()
+{
+    notification.Dispose ();
+}]]></code>
+          </example>
+          <para>The following example shows how to use the notification with the DefaultCenter API:</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+// Lambda style
+NSNotificationCenter.DefaultCenter.AddObserver (
+        Midi.NetworkNotificationContactsDidChange, (notification) => {Console.WriteLine ("Received the notification Midi", notification); }
+
+
+// Method style
+void Callback (NSNotification notification)
+{
+    Console.WriteLine ("Received a notification Midi", notification);
+}
+
+void Setup ()
+{
+    NSNotificationCenter.DefaultCenter.AddObserver (Midi.NetworkNotificationContactsDidChange, Callback);
+}
+]]></code>
+          </example>
+        </remarks>
+      </Docs>
+  <Docs DocId="P:CoreMidi.Midi.NetworkNotificationSessionDidChange">
+        <summary>Notification raised when the MIDI session has changed</summary>
+        <value>
+        </value>
+        <remarks>
+          <para id="tool-remark">This constant can be used with the <see cref="T:Foundation.NSNotificationCenter" /> to register a listener for this notification.   This is an NSString instead of a string, because these values can be used as tokens in some native libraries instead of being used purely for their actual string content.    The 'notification' parameter to the callback contains extra information that is specific to the notification type.</para>
+          <para id="tool-remark">If you want to subscribe to this notification, you can use the convenience <see cref="T:MediaPlayer.MPMediaLibrary.Notifications" />.<see cref="M:CoreMidi.Midi.Notifications.ObserveNetworkNotificationSessionDidChange(Foundation.NSObject,System.EventHandler{Foundation.NSNotificationEventArgs})" /> method which offers strongly typed access to the parameters of the notification.</para>
+          <para>The following example shows how to use the strongly typed Notifications class, to take the guesswork out of the available properties in the notification:</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+//
+// Lambda style
+//
+
+// listening
+notification = Midi.Notifications.ObserveNetworkNotificationSessionDidChange ((sender, args) => {
+    /* Access strongly typed args */
+    Console.WriteLine ("Notification: {0}", args.Notification);
+});
+
+// To stop listening:
+notification.Dispose ();
+
+//
+// Method style
+//
+NSObject notification;
+void Callback (object sender, Foundation.NSNotificationEventArgs args)
+{
+    // Access strongly typed args
+    Console.WriteLine ("Notification: {0}", args.Notification);
+}
+
+void Setup ()
+{
+    notification = Midi.Notifications.ObserveNetworkNotificationSessionDidChange (Callback);
+}
+
+void Teardown ()
+{
+    notification.Dispose ();
+}]]></code>
+          </example>
+          <para>The following example shows how to use the notification with the DefaultCenter API:</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+// Lambda style
+NSNotificationCenter.DefaultCenter.AddObserver (
+        Midi.NetworkNotificationSessionDidChange, (notification) => {Console.WriteLine ("Received the notification Midi", notification); }
+
+
+// Method style
+void Callback (NSNotification notification)
+{
+    Console.WriteLine ("Received a notification Midi", notification);
+}
+
+void Setup ()
+{
+    NSNotificationCenter.DefaultCenter.AddObserver (Midi.NetworkNotificationSessionDidChange, Callback);
+}
+]]></code>
+          </example>
+        </remarks>
+      </Docs>
+</Documentation>

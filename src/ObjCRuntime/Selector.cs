@@ -67,10 +67,19 @@ namespace ObjCRuntime {
 			handle = GetHandle (name);
 		}
 
+		/// <summary>Handle (pointer) to the unmanaged selector representation.</summary>
+		///         <value>A pointer to the unmanaged selector representation.</value>
+		///         <remarks>
+		///           <para>This IntPtr is the handle to the underlying unmanaged representation for this selector.</para>
+		///         </remarks>
 		public NativeHandle Handle {
 			get { return handle; }
 		}
 
+		/// <summary>Name of this selector.</summary>
+		///         <value />
+		///         <remarks>
+		///         </remarks>
 		public string Name {
 			get {
 				if (name is null)

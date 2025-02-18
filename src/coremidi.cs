@@ -375,14 +375,21 @@ namespace CoreMidi {
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface Midi {
-		[Field ("MIDINetworkNotificationContactsDidChange")]
+		/// <include file="../docs/api/CoreMidi/Midi.xml" path="/Documentation/Docs[@DocId='P:CoreMidi.Midi.NetworkNotificationContactsDidChange']/*" />
+	[Field ("MIDINetworkNotificationContactsDidChange")]
 		[Notification]
 		NSString NetworkNotificationContactsDidChange { get; }
 
-		[Field ("MIDINetworkNotificationSessionDidChange")]
+		/// <include file="../docs/api/CoreMidi/Midi.xml" path="/Documentation/Docs[@DocId='P:CoreMidi.Midi.NetworkNotificationSessionDidChange']/*" />
+	[Field ("MIDINetworkNotificationSessionDidChange")]
 		[Notification]
 		NSString NetworkNotificationSessionDidChange { get; }
 
+		/// <summary>Represents the value associated with the constant MIDINetworkBonjourServiceType</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>You can pass this type to <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=M:Foundation.NSNetServiceBrowser.SearchForServices(System.String type, System.String domain)&amp;scope=Xamarin" title="M:Foundation.NSNetServiceBrowser.SearchForServices(System.String type, System.String domain)">M:Foundation.NSNetServiceBrowser.SearchForServices(System.String type, System.String domain)</a></format> to find MIDI devices available
+		///         over bonjour.</remarks>
 		[Field ("MIDINetworkBonjourServiceType")]
 		NSString NetworkBonjourServiceType { get; }
 	}
@@ -510,9 +517,15 @@ namespace CoreMidi {
 	[BaseType (typeof (NSObject), Name = "MIDICIProfileState")]
 	[DisableDefaultCtor]
 	interface MidiCIProfileState : NSSecureCoding {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("enabledProfiles")]
 		MidiCIProfile [] EnabledProfiles { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("disabledProfiles")]
 		MidiCIProfile [] DisabledProfiles { get; }
 

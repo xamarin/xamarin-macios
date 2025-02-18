@@ -327,21 +327,27 @@ namespace MediaToolbox {
 	// uint32_t -> MTAudioProcessingTap.h
 	[Flags]
 	public enum MTAudioProcessingTapCreationFlags : uint {
+		/// <summary>To be added.</summary>
 		PreEffects = (1 << 0),
+		/// <summary>To be added.</summary>
 		PostEffects = (1 << 1),
 	}
 
 	// uint32_t -> MTAudioProcessingTap.h
 	[Flags]
 	public enum MTAudioProcessingTapFlags : uint {
+		/// <summary>To be added.</summary>
 		StartOfStream = (1 << 8),
+		/// <summary>To be added.</summary>
 		EndOfStream = (1 << 9),
 	}
 
 	// used as OSStatus (4 bytes)
 	// Not documented error codes
 	public enum MTAudioProcessingTapError {
+		/// <summary>To be added.</summary>
 		None = 0,
+		/// <summary>To be added.</summary>
 		InvalidArgument = -12780
 	}
 
@@ -354,10 +360,25 @@ namespace MediaToolbox {
 			Processing = process;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public MTAudioProcessingTapInitCallback? Initialize { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public Action<MTAudioProcessingTap>? Finalize { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public MTAudioProcessingTapPrepareCallback? Prepare { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public Action<MTAudioProcessingTap>? Unprepare { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public MTAudioProcessingTapProcessDelegate? Processing { get; private set; }
 	}
 

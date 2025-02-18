@@ -135,8 +135,18 @@ namespace Compression {
 			}
 		}
 
+		/// <summary>A stream object that represents the underlying stream.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
+		///         <exception cref="T:System.ObjectDisposedException">
+		///           The underlying stream is closed.
+		///         </exception>
 		public Stream? BaseStream => _stream;
 
+		/// <summary>Gets a value indicating whether the stream supports reading while decompressing a file.</summary>
+		///         <value>
+		///           <see langword="true" /> if the CompressionMode value is Decompress, and the underlying stream is opened and supports reading; otherwise, <see langword="false" />.</value>
+		///         <remarks>To be added.</remarks>
 		public override bool CanRead {
 			get {
 				if (_stream is null) {
@@ -147,6 +157,10 @@ namespace Compression {
 			}
 		}
 
+		/// <summary>Gets a value indicating whether the stream supports writing.</summary>
+		///         <value>
+		///           <see langword="true" /> if the CompressionMode value is Compress, and the underlying stream supports writing and is not closed; otherwise, <see langword="false" /> .</value>
+		///         <remarks>To be added.</remarks>
 		public override bool CanWrite {
 			get {
 				if (_stream is null) {
@@ -157,12 +171,22 @@ namespace Compression {
 			}
 		}
 
+		/// <summary>Gets a value indicating whether the stream supports seeking.</summary>
+		///         <value>
+		///           <see langword="false" /> in all cases.</value>
+		///         <remarks>To be added.</remarks>
 		public override bool CanSeek => false;
 
+		/// <summary>Gets the length in bytes of the stream.</summary>
+		///         <value>A long value representing the length of the stream in bytes.</value>
+		///         <remarks>To be added.</remarks>
 		public override long Length {
 			get { throw new NotSupportedException ("This operation is not supported."); }
 		}
 
+		/// <summary>This property is not supported and always throws a NotSupportedException.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public override long Position {
 			get { throw new NotSupportedException ("This operation is not supported."); }
 			set { throw new NotSupportedException ("This operation is not supported."); }

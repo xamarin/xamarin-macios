@@ -51,6 +51,10 @@ namespace CoreVideo {
 		{
 		}
 
+		/// <summary>The minimum number of buffers allowed in the pixel buffer pool.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property uses constant kCVPixelBufferPoolMinimumBufferCountKey value to access the underlying dictionary.</remarks>
 		public int? MinimumBufferCount {
 			set {
 				SetNumberValue (CVPixelBufferPool.MinimumBufferCountKey, value);
@@ -60,6 +64,9 @@ namespace CoreVideo {
 			}
 		}
 
+		/// <summary>The maximum allowable age in seconds for a buffer in the pixel buffer pool.</summary>
+		///         <value>Using zero value will disable the age out procedure completely.</value>
+		///         <remarks>The property uses constant kCVPixelBufferPoolMaximumBufferAgeKey value to access the underlying dictionary.</remarks>
 		public double? MaximumBufferAgeInSeconds {
 			set {
 				SetNumberValue (CVPixelBufferPool.MaximumBufferAgeKey, value);
@@ -87,6 +94,10 @@ namespace CoreVideo {
 		{
 		}
 
+		/// <summary>The maximum allowed pixel buffer allocations in the pixel buffer pool.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property uses constant kCVPixelBufferPoolAllocationThresholdKey value to access the underlying dictionary.</remarks>
 		public int? Threshold {
 			set {
 				SetNumberValue (ThresholdKey, value);

@@ -38,6 +38,19 @@ namespace ObjCRuntime {
 #if !COREBUILD
 		NativeHandle handle;
 
+		/// <summary>Determines whether Xamarin.iOS will check in the NSObject constructor if the corresponding native object was successfully created (the default value is true).</summary>
+		///         <remarks>
+		///           <para>
+		///       Traditionally Xamarin.iOS has allowed managed objects to be
+		///       created without a native peer. The behavior has however been
+		///       inconsistent between types, and in the case of types from
+		///       third-party libraries it would result in instances that would,
+		///       if used, most likely crash the process with a stack overflow.
+		///     </para>
+		///           <para>
+		///       With this check the behavior will be consistent among all types.
+		///     </para>
+		///         </remarks>
 		public static bool ThrowOnInitFailure = true;
 
 		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
@@ -100,14 +113,27 @@ namespace ObjCRuntime {
 			this.handle = handle;
 		}
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>
+		///           <para>This IntPtr is a handle to the underlying unmanaged representation for this object.</para>
+		///         </remarks>
 		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
+		/// <summary>The Objective-C handle to the super class for this class.</summary>
+		///         <value />
+		///         <remarks>
+		///         </remarks>
 		public NativeHandle SuperClass {
 			get { return class_getSuperclass (Handle); }
 		}
 
+		/// <summary>The Objective-C name for this class.</summary>
+		///         <value />
+		///         <remarks>
+		///         </remarks>
 		public string? Name {
 			get {
 				var ptr = class_getName (Handle);

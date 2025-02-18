@@ -27,18 +27,33 @@ namespace CoreVideo {
 	[Partial]
 	interface CVBuffer {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVBufferMovieTimeKey")]
 		NSString MovieTimeKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVBufferTimeValueKey")]
 		NSString TimeValueKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVBufferTimeScaleKey")]
 		NSString TimeScaleKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVBufferPropagatedAttachmentsKey")]
 		NSString PropagatedAttachmentsKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVBufferNonPropagatedAttachmentsKey")]
 		NSString NonPropagatedAttachmentsKey { get; }
 	}
@@ -407,45 +422,87 @@ namespace CoreVideo {
 	[Partial]
 	interface CVPixelBuffer {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferPixelFormatTypeKey")]
 		NSString PixelFormatTypeKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferMemoryAllocatorKey")]
 		NSString MemoryAllocatorKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferWidthKey")]
 		NSString WidthKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferHeightKey")]
 		NSString HeightKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferExtendedPixelsLeftKey")]
 		NSString ExtendedPixelsLeftKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferExtendedPixelsTopKey")]
 		NSString ExtendedPixelsTopKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferExtendedPixelsRightKey")]
 		NSString ExtendedPixelsRightKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferExtendedPixelsBottomKey")]
 		NSString ExtendedPixelsBottomKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferBytesPerRowAlignmentKey")]
 		NSString BytesPerRowAlignmentKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferCGBitmapContextCompatibilityKey")]
 		NSString CGBitmapContextCompatibilityKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferCGImageCompatibilityKey")]
 		NSString CGImageCompatibilityKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferOpenGLCompatibilityKey")]
 		NSString OpenGLCompatibilityKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferIOSurfacePropertiesKey")]
 		NSString IOSurfacePropertiesKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferPlaneAlignmentKey")]
 		NSString PlaneAlignmentKey { get; }
 
@@ -459,10 +516,16 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
 		NSString MetalCompatibilityKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
@@ -515,9 +578,15 @@ namespace CoreVideo {
 	/// <summary>A reusable set of <see cref="T:CoreVideo.CVPixelBuffer" />s.</summary>
 	[Partial]
 	interface CVPixelBufferPool {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferPoolMinimumBufferCountKey")]
 		NSString MinimumBufferCountKey { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCVPixelBufferPoolMaximumBufferAgeKey")]
 		NSString MaximumBufferAgeKey { get; }
 	}

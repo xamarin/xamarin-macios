@@ -45,6 +45,28 @@ namespace CoreAnimation {
 
 	public partial class CATextLayer {
 
+		/// <summary>Sets the attributed string to display.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This sets the attributed string to display on the layer.   The attributed string should contain CoreText attributes.
+		/// 	  </para>
+		///           <example>
+		///             <code lang="csharp lang-csharp"><![CDATA[
+		/// void DrawHelloWorld (CATextLayer myTextLayer)
+		/// {
+		///     var hello = new NSAttributedString ("Hello, world",
+		///            new CTStringAttributes () {
+		///                   ForegroundColorFromContext =  true,
+		///                   Font = new CTFont ("Arial", 24)
+		///            });
+		///
+		///     myTextLayer.AttributedString = hello;
+		/// }    
+		/// ]]></code>
+		///           </example>
+		///         </remarks>
 		public NSAttributedString? AttributedString {
 			get {
 				return Runtime.GetNSObject (_AttributedString) as NSAttributedString;
@@ -85,6 +107,9 @@ namespace CoreAnimation {
 		}
 #endif
 
+		/// <summary>Gets or sets a weak reference to the font.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public object? WeakFont {
 			get {
 				var handle = _Font;
@@ -146,11 +171,17 @@ namespace CoreAnimation {
 			set { WeakAlignmentMode = (NSString) value; }
 		}
 #endif // !NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CATextLayerTruncationMode TextTruncationMode {
 			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
 			set { WeakTruncationMode = value.GetConstant ()!; }
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CATextLayerAlignmentMode TextAlignmentMode {
 			get { return CATextLayerAlignmentModeExtensions.GetValue (WeakAlignmentMode); }
 			set { WeakAlignmentMode = value.GetConstant ()!; }
