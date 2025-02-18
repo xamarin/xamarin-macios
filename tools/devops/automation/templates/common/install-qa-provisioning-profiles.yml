@@ -26,7 +26,9 @@ parameters:
       { 'name': 'WildCardtvOSDevelopment.mobileprovision', 'secureFile': 'macios-WildCardtvOSDevelopment.mobileprovision' },
       { 'name': 'WildCardtvOSDistribution.mobileprovision', 'secureFile': 'macios-WildCardtvOSDistribution.mobileprovision' },
     ]
-
+- name: xamarin-macios-path
+  type: string
+  default: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)
 steps:
 - pwsh: |
     New-Item $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles -ItemType Directory -Force
@@ -54,7 +56,7 @@ steps:
     gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
   displayName: 'List Certificates and Profiles'
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
+- bash: $(xamarin-macios-path)/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
   displayName: 'Install provisioning profiles'
   workingDirectory: $(Build.SourcesDirectory)/maccore/tools
   env: ${{ parameters.env }}
