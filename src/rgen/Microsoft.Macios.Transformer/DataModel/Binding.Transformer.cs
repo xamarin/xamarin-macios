@@ -118,6 +118,8 @@ readonly partial struct Binding {
 			bindingType = BindingType.Category;
 		} else if (attributes.HasCoreImageFilterAttribute ()) {
 			bindingType = BindingType.CoreImageFilter;
+		} else if (attributes.HasStrongDictionaryAttribute ()) {
+			bindingType = BindingType.StrongDictionary;
 		} else if (baseTypeAttribute is not null) {
 			bindingType = BindingType.Class;
 		} else {
@@ -146,6 +148,8 @@ readonly partial struct Binding {
 			BindingType.Category => "object",
 			// protocols do not have a base class, if anything, they implement other protocols 
 			BindingType.Protocol => string.Empty,
+			// strong dictionary inherit from a dictionary container, we do not support inheritance in the old SDK
+			BindingType.StrongDictionary => "Foundation.DictionaryContainer",
 			// for unknown types, use the default
 			_ => "object"
 		};
@@ -248,8 +252,15 @@ readonly partial struct Binding {
 		Modifiers = flags.ToClassModifiersArray ();
 
 		// loop over the different members and add them to the model
-		GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclarationSyntax, context, Skip, Property.TryCreate,
-			out properties);
+		if (BindingInfo.BindingType == BindingType.StrongDictionary) {
+			// strong dictionaries are a little different, we will get all the properties with no filter since the
+			// properties from a strong dictionary do not have any attribute
+			GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclarationSyntax, context, static (_, _) => false, Property.TryCreate,
+				out properties);
+		} else {
+			GetMembers<PropertyDeclarationSyntax, Property> (interfaceDeclarationSyntax, context, Skip, Property.TryCreate,
+				out properties);
+		}
 		// methods are a little diff, in the old SDK style, both methods and constructors are methods, we will get
 		// all exported methods and then filter accordingly
 		GetMembers<MethodDeclarationSyntax, Method> (interfaceDeclarationSyntax, context, Skip, Method.TryCreate,
