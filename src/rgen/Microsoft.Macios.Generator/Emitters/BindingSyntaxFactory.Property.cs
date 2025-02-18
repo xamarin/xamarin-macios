@@ -88,6 +88,9 @@ static partial class BindingSyntaxFactory {
 				{ SpecialType: SpecialType.System_String, IsNullable: false } =>
 					ExpressionStatement (SuppressNullableWarning (StringFromHandle ([Argument (objMsgSend), BoolArgument (false)]))),
 
+				// bool => global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle ("canDraw")) != 0;
+				{ SpecialType: SpecialType.System_Boolean } => ExpressionStatement ( ByteToBool (objMsgSend)),
+				
 				// general case, just return the result of the send message
 				_ => ExpressionStatement (objMsgSend),
 			}; 
