@@ -57,7 +57,7 @@ steps:
     gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
   displayName: 'List Certificates and Profiles'
 
-- bash: $(parameters.xamarin-macios-path)/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
+- bash: ${{ parameters.xamarin-macios-path }}/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
   displayName: 'Install provisioning profiles'
   workingDirectory: $(Build.SourcesDirectory)/maccore/tools
   env: ${{ parameters.env }}
