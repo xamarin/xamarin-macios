@@ -16,7 +16,7 @@ MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HE
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
 
 
-NEEDED_ADR_VERSION := d466eac70a9b1bba94c18c63e34e590c66f6d044
+NEEDED_ADR_VERSION := b525c456d6af116aa3a1721118b90b465ccef09d
 NEEDED_ADR_BRANCH := main
 
 ADR_DIRECTORY := macios-adr
