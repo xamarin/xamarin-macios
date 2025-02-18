@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Macios.Generator.Extensions;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Macios.Generator.Emitters;
@@ -106,5 +107,47 @@ static partial class BindingSyntaxFactory {
 				IdentifierName (objcMsgSendMethod).WithTrailingTrivia (Space)))
 			.WithArgumentList (argumentList);
 		return invocation;
+	}
+
+	/// <summary>
+	/// Generates the expression to call the CFArray.StringArrayFromHandle method.
+	/// </summary>
+	/// <param name="arguments">The argument list for the invocation.</param>
+	/// <returns>The expression to call CFArray.StringArrayFromHandle method with the provided args.</returns>
+	internal static InvocationExpressionSyntax StringArrayFromHandle (ImmutableArray<ArgumentSyntax> arguments)
+	{
+		// generate: (arg1, arg2, arg3)
+		var argumentList = ArgumentList (
+			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()))
+			.NormalizeWhitespace ();
+
+		// generate: CFArray.StringArrayFromHandle (arg1, arg2, arg3)
+		return InvocationExpression (
+			MemberAccessExpression (
+				SyntaxKind.SimpleMemberAccessExpression,
+				IdentifierName ("CFArray"),
+				IdentifierName ("StringArrayFromHandle").WithTrailingTrivia (Space)))
+			.WithArgumentList (argumentList);
+	}
+
+	/// <summary>
+	/// Generates the expression to call the CFString.FromHandle method.
+	/// </summary>
+	/// <param name="arguments">The argument list for the invocation.</param>
+	/// <returns>The expression to call the CFString.FromHandle method with the provided args.</returns>
+	internal static InvocationExpressionSyntax StringFromHandle (ImmutableArray<ArgumentSyntax> arguments)
+	{
+		// generate: (arg1, arg2, arg3)
+		var argumentList = ArgumentList (
+			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()))
+			.NormalizeWhitespace ();
+
+		// generate: CFString.FromHandle (arg1, arg2, arg3)
+		return InvocationExpression (
+				MemberAccessExpression (
+					SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName ("CFString"),
+					IdentifierName ("FromHandle").WithTrailingTrivia (Space)))
+			.WithArgumentList (argumentList);
 	}
 }

@@ -70,6 +70,7 @@ public class BindingSyntaxFactoryRuntimeTests {
 				args,
 				"global::ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (\"string\"), &errorValue)"
 			];
+
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
@@ -81,6 +82,67 @@ public class BindingSyntaxFactoryRuntimeTests {
 		string expectedDeclaration)
 	{
 		var declaration = MessagingInvocation (objcMsgSendMethod, selector, parameters);
+		Assert.Equal (expectedDeclaration, declaration.ToFullString ());
+	}
+
+
+	class TestDataStringArrayFromHandleTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+
+			yield return [
+				ImmutableArray.Create (
+					Argument (IdentifierName ("arg1"))),
+				"CFArray.StringArrayFromHandle (arg1)"
+			];
+
+			yield return [
+				ImmutableArray.Create (
+					Argument (IdentifierName ("arg1")),
+					Argument (IdentifierName ("arg2")),
+					Argument (IdentifierName ("arg3"))),
+				"CFArray.StringArrayFromHandle (arg1, arg2, arg3)"
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+
+	[Theory]
+	[ClassData (typeof (TestDataStringArrayFromHandleTests))]
+	void StringArrayFromHandleTests (ImmutableArray<ArgumentSyntax> arguments, string expectedDeclaration)
+	{
+		var declaration = StringArrayFromHandle (arguments);
+		Assert.Equal (expectedDeclaration, declaration.ToFullString ());
+	}
+
+	class TestDataStringFromHandleTests : IEnumerable<object []> {
+		public IEnumerator<object []> GetEnumerator ()
+		{
+			yield return [
+				ImmutableArray.Create (
+					Argument (IdentifierName ("arg1"))),
+				"CFString.FromHandle (arg1)"
+			];
+
+			yield return [
+				ImmutableArray.Create (
+					Argument (IdentifierName ("arg1")),
+					Argument (IdentifierName ("arg2")),
+					Argument (IdentifierName ("arg3"))),
+				"CFString.FromHandle (arg1, arg2, arg3)"
+			];
+		}
+
+		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
+	}
+
+	[Theory]
+	[ClassData (typeof (TestDataStringFromHandleTests))]
+	void StringFromHandleTests (ImmutableArray<ArgumentSyntax> arguments, string expectedDeclaration)
+	{
+		var declaration = StringFromHandle (arguments);
 		Assert.Equal (expectedDeclaration, declaration.ToFullString ());
 	}
 }
