@@ -14,3 +14,6 @@ clean:
 	rm -rf bin/ obj/ TestResult.xml
 
 all: build
+
+analyze:
+	$(Q) RUN_AVAILABILITY_WARNING_TEST=1 $(MAKE) run-tests TEST_NAME=--filter=FullyQualifiedName~Cecil.Tests.ApiAvailabilityTest.Warnings WRITE_KNOWN_FAILURES=1

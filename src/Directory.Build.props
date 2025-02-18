@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+	<PropertyGroup Condition="'$(ANALYZE_CSPROJ)' == 'true'">
+		<GenerateMSBuildEditorConfigFile>false</GenerateMSBuildEditorConfigFile> <!-- we generate our own, because the TargetFramework value is wrong in the default one -->
+	</PropertyGroup>
+	<ItemGroup Condition="'$(ANALYZE_CSPROJ)' == 'true'">
+		<Analyzer Include="$(DOTNET_ANALYZERS_DIR)/Microsoft.CodeAnalysis.NetAnalyzers.dll" />
+		<Analyzer Include="$(DOTNET_ANALYZERS_DIR)/Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll" />
+		<EditorConfigFiles Include="$(MSBuildThisFileDirectory)build/dotnet/$(LowerCasePlatform)/GeneratedMSBuildEditorConfig.editorconfig" />
+	</ItemGroup>
+	<Target Name="ReportAvailabilityWarnings" Condition="'$(ANALYZE_CSPROJ)' == 'true'" BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<NoWarn>$(NoWarn.Replace('CA1416','').Replace('CA1422',''))</NoWarn>
+		</PropertyGroup>
+	</Target>
+</Project>

@@ -357,11 +357,16 @@ CSPROJECTS += $$(CORE_$(1)_CSPROJ)
 $$(CORE_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp $(RSP_TO_CSPROJ)
 	$$(Q) rm -f $$@
 	$$(Q) mkdir -p $$(dir $$@)
-	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $$<) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) \
+		--rsp $(abspath $$<) \
+		--working-directory $(abspath .) \
+		--target-framework $(DOTNET_TFM) \
+		--property=LowerCasePlatform=$(3) \
+		--output $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 rsp:: $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp
-$($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources | $($(2)_DOTNET_BUILD_DIR)
+$($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources $($(2)_DOTNET_BUILD_DIR)/GeneratedMSBuildEditorConfig.editorconfig | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) echo \
 		$(DOTNET_FLAGS) \
 		$(DOTNET_CORE_WARNINGS_TO_FIX) \
@@ -376,10 +381,11 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp: Makefile frameworks.sources | $($(2)_DOT
 		> $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
+core:: $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll
 $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) $($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) $(DOTNET_CSC) @$($(2)_DOTNET_BUILD_DIR)/core-$(3).rsp
 
-$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp: Makefile frameworks.sources | $($(2)_DOTNET_BUILD_DIR)
+$($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp: Makefile frameworks.sources $($(2)_DOTNET_BUILD_DIR)/GeneratedMSBuildEditorConfig.editorconfig | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q_DOTNET_GEN) echo \
 		-debug \
 		-unsafe \
@@ -403,9 +409,15 @@ CSPROJECTS += $$(APIDEFINITION_$(1)_CSPROJ)
 $$(APIDEFINITION_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp $(RSP_TO_CSPROJ)
 	$$(Q) rm -f $$@
 	$$(Q) mkdir -p $$(dir $$@)
-	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $$<) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) \
+		--rsp $(abspath $$<) \
+		--working-directory $(abspath .) \
+		--target-framework $(DOTNET_TFM) \
+		--property=LowerCasePlatform=$(3) \
+		--output $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
+apidefinition:: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll
 $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).dll: $($(2)_DOTNET_BUILD_DIR)/apidefinition-$(3).rsp $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES)
 	$$(Q_GEN) $(DOTNET_CSC) $(DOTNET_FLAGS) @$$<
 
@@ -442,6 +454,12 @@ DOTNET_TARGETS_DIRS_$(3) += \
 
 dotnet-gen-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources
 dotnet-gen:: dotnet-gen-$(3)
+
+$($(2)_DOTNET_BUILD_DIR)/GeneratedMSBuildEditorConfig.editorconfig: | $($(2)_DOTNET_BUILD_DIR)
+	$$(Q) rm -f "$$@.tmp"
+	$$(Q) printf "is_global = true\n" >> "$$@.tmp"
+	$$(Q) printf "build_property.TargetFramework = $(DOTNET_TFM)-$(3)\n" >> "$$@.tmp"
+	$$(Q) mv "$$@.tmp" "$$@"
 
 $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $($(2)_DOTNET_BUILD_DIR)
 	$$(call Q_PROF_GEN,$(3)) sed < $$< > $$@ 's|@PRODUCT_NAME@|Microsoft.$(1)|g;'
@@ -516,7 +534,12 @@ CSPROJECTS += $$(PLATFORM_$(1)_CSPROJ)
 $$(PLATFORM_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp Makefile $(RSP_TO_CSPROJ) $($(2)_DOTNET_BUILD_DIR)/embed-files.rsp
 	$$(Q) rm -f $$@
 	$$(Q) mkdir -p $$(dir $$@)
-	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) --rsp $(abspath $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp) --working-directory $(abspath .) --target-framework $(DOTNET_TFM) --output $$@.tmp
+	$$(call Q_PROF_GEN,$(1)) $(RSP_TO_CSPROJ_EXEC) \
+		--rsp $(abspath $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp) \
+		--working-directory $(abspath .) \
+		--target-framework $(DOTNET_TFM) \
+		--property=LowerCasePlatform=$(3) \
+		--output $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 endif
 
@@ -633,6 +656,18 @@ format-csproj: $(CSPROJECTS) $(foreach platform,$(DOTNET_PLATFORMS),$($(shell ec
 		$(DOTNET) format whitespace $$csproj; \
 		echo "Formatted $$csproj successfully."; \
 	done
+
+# This builds the project files, enabling C# analyzers
+analyze:
+	$(Q) $(MAKE) -j $(CSPROJECTS) $(foreach platform,$(DOTNET_PLATFORMS),$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES))
+	$(Q) set -e; \
+	for csproj in $(CSPROJECTS); do \
+		echo "Analyzing $$csproj..."; \
+		$(DOTNET) clean $$csproj; \
+		$(DOTNET) build $$csproj /p:ANALYZE_CSPROJ=true /p:TreatWarningsAsErrors=false /p:DOTNET_ANALYZERS_DIR=$(DOTNET_ANALYZERS_DIR) /bl:$$csproj-analyze.binlog; \
+		echo "Analyzed $$csproj successfully."; \
+	done
+
 
 csproj:: $(CSPROJECTS)
 ALL_TARGETS += $(CSPROJECTS)
