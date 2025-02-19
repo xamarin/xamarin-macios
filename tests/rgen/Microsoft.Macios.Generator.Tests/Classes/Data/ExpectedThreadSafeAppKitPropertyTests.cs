@@ -61,9 +61,9 @@ public partial class ThreadSafeAppKitPropertyTests
 		get
 		{
 			if (IsDirectBinding) {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.UIntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("count"));
 			} else {
-				throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.UIntPtr_objc_msgSendSuper (this.Handle, Selector.GetHandle ("count"));
 			}
 		}
 	}
