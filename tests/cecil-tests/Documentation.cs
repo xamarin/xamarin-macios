@@ -206,7 +206,8 @@ namespace Cecil.Tests {
 
 		static string GetDocId (PropertyDefinition pd)
 		{
-			var name = GetDocId (pd.DeclaringType) + "." + pd.Name;
+			var propertyName = pd.Name.Replace ('.', '#');
+			var name = GetDocId (pd.DeclaringType) + "." + propertyName;
 			if (pd.HasParameters) {
 				name += "(" + string.Join (",", pd.Parameters.Select (p => GetDocId (p.ParameterType))) + ")";
 			}
