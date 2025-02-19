@@ -70,6 +70,41 @@ namespace Social {
 		NSString LinkedIn { get; }
 	}
 
+	/// <summary>Enumeration with the various kinds of social services that can be used.</summary>
+	/// <remarks>This enumeration is used to map into the underlying set of services offered by the social framework.   It is intended to assist code completion while developing and take the gueswork out of using the framework in some entry points that take an NSString as a parameter.</remarks>
+	enum SLServiceKind {
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
+		[Field ("SLServiceTypeFacebook")]
+		Facebook,
+
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Twitter SDK instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Twitter SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Twitter SDK instead.")]
+		[Field ("SLServiceTypeTwitter")]
+		Twitter,
+
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Sina Weibo SDK instead.")]
+		[Field ("SLServiceTypeSinaWeibo")]
+		SinaWeibo,
+
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
+		[Field ("SLServiceTypeTencentWeibo")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Tencent Weibo SDK instead.")]
+		TencentWeibo,
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
+		[Field ("SLServiceTypeLinkedIn")]
+		[NoiOS]
+		[NoMacCatalyst]
+		LinkedIn,
+	}
+
 	/// <summary>A request made to a social service.</summary>
 	///     
 	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/Social/Reference/SLRequest_Class/index.html">Apple documentation for <c>SLRequest</c></related>
@@ -80,6 +115,10 @@ namespace Social {
 		[Static]
 		[Export ("requestForServiceType:requestMethod:URL:parameters:")]
 		SLRequest Create (NSString serviceType, SLRequestMethod requestMethod, NSUrl url, [NullAllowed] NSDictionary parameters);
+
+		[Static]
+		[Wrap ("Create (serviceKind.GetConstant ()!, method, url, parameters)")]
+		SLRequest Create (SLServiceKind serviceKind, SLRequestMethod method, NSUrl url, [NullAllowed] NSDictionary parameters);
 
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]

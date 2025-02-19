@@ -29,54 +29,63 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 	class TestDataGetUINamespaces : IEnumerable<object []> {
 		public IEnumerator<object []> GetEnumerator ()
 		{
-			yield return [
-				ApplePlatform.iOS,
-				new [] {
-					"UIKit",
-					"Twitter",
-					"NewsstandKit",
-					"QuickLook",
-					"EventKitUI",
-					"AddressBookUI",
-					"MessageUI",
-					"PhotosUI",
-					"HealthKitUI",
-					"GameKit",
-					"MapKit"
-				}];
+			if (Configuration.IsEnabled (ApplePlatform.iOS)) {
+				yield return [
+					ApplePlatform.iOS,
+					new [] {
+						"UIKit",
+						"Twitter",
+						"NewsstandKit",
+						"QuickLook",
+						"EventKitUI",
+						"AddressBookUI",
+						"MessageUI",
+						"PhotosUI",
+						"HealthKitUI",
+						"GameKit",
+						"MapKit"
+					}
+				];
+			}
 
-			yield return [
-				ApplePlatform.TVOS,
-				new [] {
-					"UIKit",
-					"PhotosUI",
-					"GameKit",
-					"MapKit",
-				}];
+			if (Configuration.IsEnabled (ApplePlatform.TVOS)) {
+				yield return [
+					ApplePlatform.TVOS,
+					new [] {
+						"UIKit",
+						"PhotosUI",
+						"GameKit",
+						"MapKit",
+					}];
+			}
 
-			yield return [
-				ApplePlatform.MacOSX,
-				new [] {
-					"AppKit",
-					"QuickLook",
-					"PhotosUI",
-					"GameKit",
-					"MapKit",
-				}];
+			if (Configuration.IsEnabled (ApplePlatform.MacOSX)) {
+				yield return [
+					ApplePlatform.MacOSX,
+					new [] {
+						"AppKit",
+						"QuickLook",
+						"PhotosUI",
+						"GameKit",
+						"MapKit",
+					}];
+			}
 
-			yield return [
-				ApplePlatform.MacCatalyst,
-				new [] {
-					"AppKit",
-					"UIKit",
-					"QuickLook",
-					"EventKitUI",
-					"MessageUI",
-					"PhotosUI",
-					"HealthKitUI",
-					"GameKit",
-					"MapKit",
-				}];
+			if (Configuration.IsEnabled (ApplePlatform.MacCatalyst)) {
+				yield return [
+					ApplePlatform.MacCatalyst,
+					new [] {
+						"AppKit",
+						"UIKit",
+						"QuickLook",
+						"EventKitUI",
+						"MessageUI",
+						"PhotosUI",
+						"HealthKitUI",
+						"GameKit",
+						"MapKit",
+					}];
+			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

@@ -4,6 +4,10 @@ if ("$Env:BUILD_REPOSITORY_TITLE" -eq "") {
     $Env:BUILD_REPOSITORY_TITLE = $repoTitle
 }
 
+if ($Env:SYSTEM_DEFAULTWORKINGDIRECTORY.EndsWith($Env:BUILD_REPOSITORY_TITLE)) {
+    $Env:BUILD_REPOSITORY_TITLE = ""
+}
+
 # Dump the environment to see what we're working with.
 & "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\show_bot_info.ps1"
 

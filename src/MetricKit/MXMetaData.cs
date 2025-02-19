@@ -22,7 +22,7 @@ namespace MetricKit {
 #endif
 		public virtual NSDictionary DictionaryRepresentation {
 			get {
-				if (SystemVersion.CheckiOS (14,0))
+				if (SystemVersion.CheckiOS (14, 0))
 					return _DictionaryRepresentation14;
 				else
 					return _DictionaryRepresentation13;

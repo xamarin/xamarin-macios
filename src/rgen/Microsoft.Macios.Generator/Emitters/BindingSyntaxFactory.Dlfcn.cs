@@ -36,7 +36,7 @@ static partial class BindingSyntaxFactory {
 	}
 
 
-	public static CompilationUnitSyntax CachePointer (string libraryName, string fieldName, string storageVariableName)
+	internal static StatementSyntax CachePointer (string libraryName, string fieldName, string storageVariableName)
 	{
 		var arguments = new SyntaxNodeOrToken [] {
 			GetLibraryArgument (libraryName), Token (SyntaxKind.CommaToken),
@@ -55,7 +55,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="suppressNullableWarning">If the ! operator should be used.</param>
 	/// <param name="methodName">The method name for the invocation.</param>
 	/// <returns>The syntax needed to get a constant.</returns>
-	static CompilationUnitSyntax GetConstant (string libraryName, string fieldName, bool suppressNullableWarning = false,
+	static StatementSyntax GetConstant (string libraryName, string fieldName, bool suppressNullableWarning = false,
 		[CallerMemberName] string methodName = "")
 	{
 		var arguments = new SyntaxNodeOrToken [] {
@@ -74,7 +74,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="methodName">The method name for the invocation.</param>
 	/// <param name="castTarget">An optional type to cast to.</param>
 	/// <returns>The sytax needed to set a constant.</returns>
-	static CompilationUnitSyntax SetConstant (string libraryName, string fieldName,
+	static StatementSyntax SetConstant (string libraryName, string fieldName,
 		string variableName, [CallerMemberName] string methodName = "", string? castTarget = null)
 	{
 		var arguments = new SyntaxNodeOrToken [] {
@@ -89,7 +89,7 @@ static partial class BindingSyntaxFactory {
 		return StaticInvocationExpression (Dlfcn, methodName, arguments);
 	}
 
-	static CompilationUnitSyntax GetGenericConstant (string methodName, string genericName, string libraryName,
+	static StatementSyntax GetGenericConstant (string methodName, string genericName, string libraryName,
 		string fieldName)
 	{
 		var arguments = new SyntaxNodeOrToken [] {
@@ -106,7 +106,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetStringConstant (string libraryName, string fieldName)
+	public static StatementSyntax GetStringConstant (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName, suppressNullableWarning: true);
 
 
@@ -116,7 +116,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetIndirect (string libraryName, string fieldName)
+	public static StatementSyntax GetIndirect (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -126,7 +126,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetStruct (string type, string libraryName, string fieldName)
+	public static StatementSyntax GetStruct (string type, string libraryName, string fieldName)
 		=> GetGenericConstant ("GetStruct", type, libraryName, fieldName);
 
 	/// <summary>
@@ -135,7 +135,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetSByte (string libraryName, string fieldName)
+	public static StatementSyntax GetSByte (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -145,7 +145,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetSByte (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetSByte (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -156,7 +156,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetSByte (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetSByte (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -165,7 +165,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetByte (string libraryName, string fieldName)
+	public static StatementSyntax GetByte (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -175,7 +175,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetByte (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetByte (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -186,7 +186,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetByte (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetByte (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -195,7 +195,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetInt16 (string libraryName, string fieldName)
+	public static StatementSyntax GetInt16 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -205,7 +205,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt16 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetInt16 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -216,7 +216,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -225,7 +225,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetUInt16 (string libraryName, string fieldName)
+	public static StatementSyntax GetUInt16 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -235,7 +235,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetUInt16 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -246,7 +246,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetUInt16 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -255,7 +255,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetInt32 (string libraryName, string fieldName)
+	public static StatementSyntax GetInt32 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -265,7 +265,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt32 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetInt32 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -276,7 +276,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -285,7 +285,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetUInt32 (string libraryName, string fieldName)
+	public static StatementSyntax GetUInt32 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -295,7 +295,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt32 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetUInt32 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -306,7 +306,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetUInt32 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -315,7 +315,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetInt64 (string libraryName, string fieldName)
+	public static StatementSyntax GetInt64 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -325,7 +325,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt64 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetInt64 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -336,7 +336,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -345,7 +345,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetUInt64 (string libraryName, string fieldName)
+	public static StatementSyntax GetUInt64 (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -355,7 +355,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt64 (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetUInt64 (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -366,7 +366,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <param name="castTarget">An optional type to cast too.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
+	public static StatementSyntax SetUInt64 (string libraryName, string fieldName, string variableName, string? castTarget)
 		=> SetConstant (libraryName, fieldName, variableName, castTarget: castTarget);
 
 	/// <summary>
@@ -376,7 +376,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetString (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetString (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -386,7 +386,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetArray (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetArray (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -396,7 +396,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetObject (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetObject (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -405,7 +405,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetNFloat (string libraryName, string fieldName)
+	public static StatementSyntax GetNFloat (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -415,7 +415,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetNFloat (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetNFloat (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -424,7 +424,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetIntPtr (string libraryName, string fieldName)
+	public static StatementSyntax GetIntPtr (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -433,7 +433,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetUIntPtr (string libraryName, string fieldName)
+	public static StatementSyntax GetUIntPtr (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -443,7 +443,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetUIntPtr (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetUIntPtr (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -453,7 +453,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetIntPtr (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetIntPtr (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -462,7 +462,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetCGRect (string libraryName, string fieldName)
+	public static StatementSyntax GetCGRect (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -471,7 +471,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetCGSize (string libraryName, string fieldName)
+	public static StatementSyntax GetCGSize (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -481,7 +481,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetCGSize (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetCGSize (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -490,7 +490,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetDouble (string libraryName, string fieldName)
+	public static StatementSyntax GetDouble (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -500,7 +500,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetDouble (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetDouble (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -509,7 +509,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetFloat (string libraryName, string fieldName)
+	public static StatementSyntax GetFloat (string libraryName, string fieldName)
 		=> GetConstant (libraryName, fieldName);
 
 	/// <summary>
@@ -519,7 +519,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="fieldName">The field name.</param>
 	/// <param name="variableName">The name of the variable to get the value from.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax SetFloat (string libraryName, string fieldName, string variableName)
+	public static StatementSyntax SetFloat (string libraryName, string fieldName, string variableName)
 		=> SetConstant (libraryName, fieldName, variableName);
 
 	/// <summary>
@@ -528,7 +528,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="libraryName">The library from where the field will be loaded.</param>
 	/// <param name="fieldName">The field name.</param>
 	/// <returns>A compilation unit with the desired Dlfcn call.</returns>
-	public static CompilationUnitSyntax GetNSObjectField (string nsObjectType, string libraryName, string fieldName)
+	public static StatementSyntax GetNSObjectField (string nsObjectType, string libraryName, string fieldName)
 	{
 		var getIndirectArguments = new SyntaxNodeOrToken [] {
 			GetLibraryArgument (libraryName), Token (SyntaxKind.CommaToken),
@@ -548,7 +548,7 @@ static partial class BindingSyntaxFactory {
 		return GetNSObject (nsObjectType, getNSObjectArguments, suppressNullableWarning: true);
 	}
 
-	public static CompilationUnitSyntax GetBlittableField (string blittableType, string libraryName, string fieldName)
+	public static StatementSyntax GetBlittableField (string blittableType, string libraryName, string fieldName)
 	{
 		var arguments = new SyntaxNodeOrToken [] {
 			GetLibraryArgument (libraryName), Token (SyntaxKind.CommaToken),
@@ -574,12 +574,7 @@ static partial class BindingSyntaxFactory {
 					dlsymInvocation.WithLeadingTrivia (Space)
 				)));
 
-		var compilationUnit = CompilationUnit ().WithMembers (
-			SingletonList<MemberDeclarationSyntax> (
-				GlobalStatement (
-					ExpressionStatement (castExpression
-					))));
-		return compilationUnit;
+		return ExpressionStatement (castExpression);
 	}
 
 	/// <summary>
@@ -589,8 +584,8 @@ static partial class BindingSyntaxFactory {
 	/// <returns>A tuple with the syntax factory methods for the getters and setters.</returns>
 	/// <exception cref="NotSupportedException">When the property is not a field property.</exception>
 	/// <exception cref="NotImplementedException">When the return type of the property is not supported.</exception>
-	public static (Func<string, string, CompilationUnitSyntax> Getter,
-		Func<string, string, string, CompilationUnitSyntax> Setter) FieldConstantGetterSetter (
+	public static (Func<string, string, StatementSyntax> Getter,
+		Func<string, string, string, StatementSyntax> Setter) FieldConstantGetterSetter (
 			in Property property)
 	{
 		// check if this is a field, if it is not, we have an issue with the code generator
@@ -600,18 +595,18 @@ static partial class BindingSyntaxFactory {
 		var fieldType = property.ReturnType.FullyQualifiedName;
 		var underlyingEnumType = property.ReturnType.EnumUnderlyingType.GetKeyword ();
 
-		Func<string, string, CompilationUnitSyntax> WrapGenericCall (string genericType,
-			Func<string, string, string, CompilationUnitSyntax> genericCall)
+		Func<string, string, StatementSyntax> WrapGenericCall (string genericType,
+			Func<string, string, string, StatementSyntax> genericCall)
 		{
 			return (libraryName, fieldName) => genericCall (genericType, libraryName, fieldName);
 		}
 
-		Func<string, string, string, CompilationUnitSyntax> WrapThrow ()
+		Func<string, string, string, StatementSyntax> WrapThrow ()
 		{
 			return (_, _, _) => ThrowNotSupportedException ($"Setting fields of type '{fieldType}' is not supported.");
 		}
 
-		Func<string, string, string, CompilationUnitSyntax> WithCast (Func<string, string, string, string?, CompilationUnitSyntax> setterCall)
+		Func<string, string, string, StatementSyntax> WithCast (Func<string, string, string, string?, StatementSyntax> setterCall)
 		{
 			return (libraryName, fieldName, variableName) =>
 				setterCall (libraryName, fieldName, variableName, underlyingEnumType);
@@ -684,7 +679,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>The appropriate Dlfcn call to retrieve the native value of a field property.</returns>
 	/// <exception cref="NotSupportedException">When the caller tries to generate the call for a no field property.</exception>
 	/// <exception cref="NotImplementedException">When the property type is not supported for a field property.</exception>
-	public static CompilationUnitSyntax FieldConstantGetter (in Property property)
+	public static StatementSyntax FieldConstantGetter (in Property property)
 	{
 		// check if this is a field, if it is not, we have an issue with the code generator
 		if (!property.IsField)
@@ -705,7 +700,7 @@ static partial class BindingSyntaxFactory {
 	/// <returns>The appropriate Dlfcn call to retrieve the native value of a field property.</returns>
 	/// <exception cref="NotSupportedException">When the caller tries to generate the call for a no field property.</exception>
 	/// <exception cref="NotImplementedException">When the property type is not supported for a field property.</exception>
-	public static CompilationUnitSyntax FieldConstantSetter (in Property property, string variableName)
+	public static StatementSyntax FieldConstantSetter (in Property property, string variableName)
 	{
 		if (variableName is null) throw new ArgumentNullException (nameof (variableName));
 		// check if this is a field, if it is not, we have an issue with the code generator

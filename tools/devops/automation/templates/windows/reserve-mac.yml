@@ -31,21 +31,15 @@ steps:
     path: s/$(BUILD_REPOSITORY_TITLE)
     fetchTags: false
 
-- checkout: maccore
-  clean: true
-  fetchDepth: 0
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
-  fetchTags: false
-
-- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/show_bot_info.ps1"'
+- pwsh: '& "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/show_bot_info.ps1"'
   displayName: 'Show Bot Info'
 
-- bash: '$SYSTEM_DEFAULTWORKINGDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops/automation/scripts/bash/clean-bot.sh'
+- bash: $(System.DefaultWorkingDirectory)/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   continueOnError: true
   timeoutInMinutes: 60
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/disable-codeql-arm64.sh
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/disable-codeql-arm64.sh
   displayName: 'Disable CodeQL on arm64'
   name: disableCodeQLOnArm64
 
@@ -59,28 +53,26 @@ steps:
   name: macInfo
   displayName: Set agent information
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/clean-for-remote-tests.sh
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/clean-for-remote-tests.sh
   displayName: 'Clean for remote tests'
   continueOnError: true
 
-- bash: ./install-qa-provisioning-profiles.sh -v
-  displayName: 'Add build provisioning profiles'
-  timeoutInMinutes: 30
-  continueOnError: true # should not stop the build
-  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+- template: ../common/install-qa-provisioning-profiles.yml
+  parameters:
+    xamarinMaciosPath: $(Build.SourcesDirectory)
+    env:
+      AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+      AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+      AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # Sets the AzDO.BearerToken variable used as the auth token to disable/reenable agents
 - template: ./generate-token.yml
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\$Env:BUILD_REPOSITORY_TITLE\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
 
     New-Item -Path "$($Env:HOME)" -Name "remote_build_testing" -Force -ItemType "directory"
     New-Item -Path "$($Env:HOME)/remote_build_testing" -Name "BuildId.txt" -ItemType "file" -Force -Value "$($Env:BUILD_BUILDID)"
@@ -97,18 +89,18 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
 
-- bash: make -C $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops provisioning
+- bash: make -C $(Build.SourcesDirectory)/tools/devops provisioning
   displayName: 'Generate Xcode provisioning csx file'
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xcode'
   inputs:
-    provisioning_script: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/provision-xcode.csx
+    provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/provision-xcode.csx
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
-- bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --ignore-mono --ignore-visual-studio --ignore-mono --ignore-sharpie --ignore-shellcheck --ignore-yamllint --provision-simulators
+- bash: $(Build.SourcesDirectory)/system-dependencies.sh --ignore-mono --ignore-visual-studio --ignore-mono --ignore-sharpie --ignore-shellcheck --ignore-yamllint --provision-simulators
   displayName: 'Provision simulators'
   timeoutInMinutes: 250
 
@@ -119,7 +111,7 @@ steps:
     SecretsFilter: 'RemoteMacIdRsaPub'
   displayName: 'Download id_rsa.pub'
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
   displayName: "Autorize id_rsa.pub"
   continueOnError: true
 
@@ -165,13 +157,13 @@ steps:
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/artifacts
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/install-workloads.sh
-  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)
   displayName: 'Install .NET + workloads'
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
-- bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+- bash: $(Build.SourcesDirectory)/tools/devops/automation/scripts/prepare-for-remote-tests.sh
   displayName: 'Prepare for remote tests'
   continueOnError: true

@@ -20,19 +20,19 @@ namespace AVFoundation {
 				return FromPreset (_Preset640x480);
 			}
 		}
-		
+
 		public AVOutputSettingsAssistant? Preset960x540 {
 			get {
 				return FromPreset (_Preset960x540);
 			}
 		}
-		
+
 		public AVOutputSettingsAssistant? Preset1280x720 {
 			get {
 				return FromPreset (_Preset1280x720);
 			}
 		}
-		
+
 		public AVOutputSettingsAssistant? Preset1920x1080 {
 			get {
 				return FromPreset (_Preset1920x1080);

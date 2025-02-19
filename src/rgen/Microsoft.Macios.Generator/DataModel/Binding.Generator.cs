@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -119,29 +120,6 @@ readonly partial struct Binding {
 		return true;
 	}
 
-	delegate bool SkipDelegate<in T> (T declarationSyntax, SemanticModel semanticModel);
-
-	delegate bool TryCreateDelegate<in T, TR> (T declaration, RootContext context,
-		[NotNullWhen (true)] out TR? change)
-		where T : MemberDeclarationSyntax
-		where TR : struct;
-
-	static void GetMembers<T, TR> (TypeDeclarationSyntax baseDeclarationSyntax, RootContext context,
-		SkipDelegate<T> skip, TryCreateDelegate<T, TR> tryCreate, out ImmutableArray<TR> members)
-		where T : MemberDeclarationSyntax
-		where TR : struct
-	{
-		var bucket = ImmutableArray.CreateBuilder<TR> ();
-		var declarations = baseDeclarationSyntax.Members.OfType<T> ();
-		foreach (var declaration in declarations) {
-			if (skip (declaration, context.SemanticModel))
-				continue;
-			if (tryCreate (declaration, context, out var change))
-				bucket.Add (change.Value);
-		}
-
-		members = bucket.ToImmutable ();
-	}
 
 	/// <summary>
 	/// Internal constructor added for testing purposes.
@@ -289,4 +267,33 @@ readonly partial struct Binding {
 			ClassDeclarationSyntax classDeclarationSyntax => new Binding (classDeclarationSyntax, context),
 			_ => null
 		};
+
+	/// <inheritdoc/>
+	public override string ToString ()
+	{
+		var sb = new StringBuilder ("Changes: {");
+		sb.Append ($"BindingData: '{BindingInfo}', Name: '{Name}', Namespace: [");
+		sb.AppendJoin (", ", Namespace);
+		sb.Append ($"], FullyQualifiedSymbol: '{FullyQualifiedSymbol}', Base: '{Base ?? "null"}', SymbolAvailability: {SymbolAvailability}, ");
+		sb.Append ("Interfaces: [");
+		sb.AppendJoin (", ", Interfaces);
+		sb.Append ("], Attributes: [");
+		sb.AppendJoin (", ", Attributes);
+		sb.Append ("], UsingDirectives: [");
+		sb.AppendJoin (", ", UsingDirectives);
+		sb.Append ("], Modifiers: [");
+		sb.AppendJoin (", ", Modifiers);
+		sb.Append ("], EnumMembers: [");
+		sb.AppendJoin (", ", EnumMembers);
+		sb.Append ("], Constructors: [");
+		sb.AppendJoin (", ", Constructors);
+		sb.Append ("], Properties: [");
+		sb.AppendJoin (", ", Properties);
+		sb.Append ("], Methods: [");
+		sb.AppendJoin (", ", Methods);
+		sb.Append ("], Events: [");
+		sb.AppendJoin (", ", Events);
+		sb.Append ("] }");
+		return sb.ToString ();
+	}
 }
