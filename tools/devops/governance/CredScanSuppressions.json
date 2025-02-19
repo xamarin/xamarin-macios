@@ -10,26 +10,6 @@
             "_justification": "API definition file that cannot contain passwords at all."
         },
         {
-            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
-            "_justification": "External repo dependency, guiunit."
-        },
-        {
-            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.SourceControlTasks.xml",
-            "_justification": "External repo dependency, guiunit."
-        },
-        {
-            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.DotNetTasks.xml",
-            "_justification": "External repo dependency, guiunit."
-        },
-        {
-            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
-            "_justification": "External repo dependency, guiunit."
-        },
-        {
-            "file": "external\\guiunit\\tools\\nant\\bin\\NAnt.Core.xml",
-            "_justification": "External repo dependency, guiunit."
-        },
-        {
             "file": "external\\mono\\data\\net_2_0\\web.config",
             "_justification": "External repo dependency, mono."
         },
@@ -106,15 +86,7 @@
             "_justification": "External repo dependency, mono."
         },
         {
-            "file": "external\\macios-binaries\\docs\\macOS\\classic\\XamMac.xml",
-            "_justification": "External repo dependency, mono."
-        },
-        {
             "file": "external\\mono\\external\\aspnetwebstack\\test\\System.Web.Helpers.Test\\WebMailTest.cs",
-            "_justification": "External repo dependency, mono."
-        },
-        {
-            "file": "external\\macios-binaries\\docs\\macOS\\classic\\XamMac.CFNetwork.xml",
             "_justification": "External repo dependency, mono."
         },
         {
@@ -848,54 +820,6 @@
         {
             "file": "external\\mono\\mcs\\class\\System.Net.Http\\TestData\\testservereku.contoso.com.pfx",
             "_justification": "External repo dependency, mono."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-application-luis-aguilera-jul-2029.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\developer-id-installer-luis-aguilera-jul-2029.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_dev_apple.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_dev_iPhone.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_distr_apple.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_distr_iphone.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_dev.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_dev.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_app_distr.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\la_mac_installer_distr.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\vseng-xamarin-mac-devices-2.p12",
-            "_justification": "Testing certificate."
-        },
-        {
-            "file": "maccore\\tools\\provisioning-profiles\\certificates-and-profiles\\vseng-xamarin-mac-devices.p12",
-            "_justification": "Testing certificate."
         }
     ]
 }

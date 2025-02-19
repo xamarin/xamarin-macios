@@ -129,12 +129,6 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: maccore
-      type: github
-      name: xamarin/maccore
-      ref: refs/heads/main
-      endpoint: xamarin
-
     - repository: macios-adr
       type: git
       name: macios-adr
@@ -205,10 +199,11 @@ extends:
       sourceRepositoriesToScan:
         runInSingleJob: true  # run both maccore and macios in the same job
         include:
-          - repository: maccore
+          - repository: self
+            path: xamarin-macios
         exclude:
           - repository: yaml-templates
-          - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
+          - repository: macios-adr  # macios-adr has it's own build pipeline and should not be included in the source analysis
     stages:
       - template: templates/main-stage.yml
         parameters:
