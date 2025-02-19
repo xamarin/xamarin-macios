@@ -137,6 +137,6 @@ readonly struct FieldData<T> : IEquatable<FieldData<T>> where T : Enum {
 	/// <inheritdoc />
 	public override string ToString ()
 	{
-		return $"{{ SymbolName: '{SymbolName}' LibraryName: '{LibraryName ?? "null"}', Flags: '{Flags}' }}";
+		return $"{{ SymbolName: '{SymbolName}', LibraryName: '{LibraryName ?? "null"}', Flags: '{Flags}' }}";
 	}
 }

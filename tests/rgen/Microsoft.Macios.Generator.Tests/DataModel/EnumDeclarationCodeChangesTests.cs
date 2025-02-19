@@ -10,7 +10,7 @@ using Xunit;
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
 public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
-	CodeChanges CreateCodeChanges (ApplePlatform platform, string name, string inputText)
+	Binding CreateCodeChanges (ApplePlatform platform, string name, string inputText)
 	{
 		var (compilation, sourceTrees) = CreateCompilation (platform, sources: inputText);
 		Assert.Single (sourceTrees);
@@ -20,7 +20,7 @@ public class EnumDeclarationCodeChangesTests : BaseGeneratorTestClass {
 			.FirstOrDefault ();
 		Assert.NotNull (enumDeclaration);
 		var semanticModel = compilation.GetSemanticModel (sourceTrees [0]);
-		var codeChange = CodeChanges.FromDeclaration (enumDeclaration, semanticModel);
+		var codeChange = Binding.FromDeclaration (enumDeclaration, semanticModel);
 		Assert.NotNull (codeChange);
 		return codeChange.Value;
 	}

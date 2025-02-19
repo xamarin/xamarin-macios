@@ -36,14 +36,26 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// <summary>
 	/// Dictionary that contains all the obsoleted versions and their optional data.
 	/// </summary>
-	public readonly IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
+	public IReadOnlyDictionary<Version, string?> UnsupportedVersions => unsupported;
 
 	readonly SortedDictionary<Version, (string? Message, string? Url)> obsoleted = new ();
 
 	/// <summary>
 	/// The Dictionary which contains all the unsupported versions and their optional data.
 	/// </summary>
-	public readonly IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
+	public IReadOnlyDictionary<Version, (string? Message, string? Url)> ObsoletedVersions => obsoleted;
+
+	/// <summary>
+	/// Return if the platform is supported.
+	/// </summary>
+	public bool IsSupported {
+		get {
+			// a platform is supported if:
+			// 1. The supported version is not null, either the default version or a specific one
+			// 2. The default version is not in the unsupported list
+			return SupportedVersion is not null && !unsupported.ContainsKey (defaultVersion);
+		}
+	}
 
 
 	/// <summary>
@@ -52,6 +64,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 	/// <param name="version">Version being tested.</param>
 	/// <returns>True if the version is default.</returns>
 	public static bool IsDefaultVersion (Version version) => version == defaultVersion;
+
 
 	PlatformAvailability (ApplePlatform platform, Version? supportedVersion,
 		SortedDictionary<Version, string?> unsupportedVersions,
@@ -137,6 +150,7 @@ readonly partial struct PlatformAvailability : IEquatable<PlatformAvailability> 
 		var obsoleteComparer = new DictionaryComparer<Version, (string?, string?)> ();
 		var unsupportedComparer = new DictionaryComparer<Version, string?> ();
 
+		var x = Equals (SupportedVersion, other.SupportedVersion);
 		return Platform == other.Platform &&
 			   Equals (SupportedVersion, other.SupportedVersion) &&
 			   unsupportedComparer.Equals (unsupported, other.unsupported) &&

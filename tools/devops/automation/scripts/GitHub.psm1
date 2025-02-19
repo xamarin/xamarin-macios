@@ -904,6 +904,12 @@ function Get-GitHubPRsForHash {
     # loop over the result and remove all the extra noise we are not interested in
     $prs = [System.Collections.ArrayList]@()
     foreach ($prInfo in $request) {
+        $state = $prInfo.state
+        if ($state -ne "open") {
+            Write-Host "Skipping PR #$($prInfo.number) because it is not open"
+            continue
+        }
+        # only returns those PRS whose status is open
         $number = $prInfo.number
         Write-Host "Found PR #$number for commit $hash"
         $prs.Add($number) > $null

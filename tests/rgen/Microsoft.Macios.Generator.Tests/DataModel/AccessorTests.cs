@@ -1,10 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+#pragma warning disable APL0003
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Availability;
 using Microsoft.Macios.Generator.DataModel;
+using ObjCRuntime;
 using Xunit;
+using static Microsoft.Macios.Generator.Tests.TestDataFactory;
 
 namespace Microsoft.Macios.Generator.Tests.DataModel;
 
@@ -308,4 +311,205 @@ public class AccessorTests {
 		Assert.True (x == y);
 		Assert.False (x != y);
 	}
+
+	[Fact]
+	public void GetSelectorForFieldProperty ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportFieldData = new (new ("Constant"), "lib"),
+		};
+
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Getter,
+			symbolAvailability: new (),
+			exportPropertyData: null,
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+
+		Assert.Null (accessor.GetSelector (property));
+	}
+
+	[Fact]
+	public void GetGetterSelectorNoExportData ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("label")
+		};
+
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Getter,
+			symbolAvailability: new (),
+			exportPropertyData: null,
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+
+		var selector = accessor.GetSelector (property);
+		Assert.NotNull (selector);
+		Assert.Equal (property.ExportPropertyData.Value.Selector, selector);
+	}
+
+	[Fact]
+	public void GetGetterSelectorExportData ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("label")
+		};
+
+		var customSelector = "custom";
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Getter,
+			symbolAvailability: new (),
+			exportPropertyData: new (customSelector),
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+
+		var selector = accessor.GetSelector (property);
+		Assert.NotNull (selector);
+		Assert.Equal (customSelector, selector);
+	}
+
+	[Fact]
+	public void GetSetterSelectorNoExportData ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("label")
+		};
+
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Setter,
+			symbolAvailability: new (),
+			exportPropertyData: null,
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+
+		var selector = accessor.GetSelector (property);
+		Assert.NotNull (selector);
+		Assert.Equal ("setLabel:", selector);
+	}
+
+	[Fact]
+	public void GetSetterSelectorExportData ()
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new ("label")
+		};
+
+		var customSelector = "setCustom:";
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Setter,
+			symbolAvailability: new (),
+			exportPropertyData: new (customSelector),
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+
+		var selector = accessor.GetSelector (property);
+		Assert.NotNull (selector);
+		Assert.Equal (customSelector, selector);
+	}
+
+	[Theory]
+	[InlineData (false, false, false)]
+	[InlineData (false, true, true)]
+	[InlineData (true, false, true)]
+	[InlineData (true, true, true)]
+	public void ShouldMarshalNativeExceptionsBothFalse (bool propertyHasFlag, bool accessorHasFalg, bool expectedResult)
+	{
+		var property = new Property (
+			name: "MyProperty",
+			returnType: ReturnTypeForString (),
+			symbolAvailability: new (),
+			attributes: [],
+			modifiers: [],
+			accessors: []
+		) {
+			ExportPropertyData = new (
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
+				flags: propertyHasFlag ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
+		};
+
+		var accessor = new Accessor (
+			accessorKind: AccessorKind.Getter,
+			symbolAvailability: new (),
+			exportPropertyData: new (
+				selector: "selector",
+				argumentSemantic: ArgumentSemantic.None,
+				flags: accessorHasFalg ? ObjCBindings.Property.MarshalNativeExceptions : ObjCBindings.Property.Default),
+			attributes: [
+				new ("First"),
+				new ("Second"),
+			],
+			modifiers: [
+				SyntaxFactory.Token (SyntaxKind.PublicKeyword),
+				SyntaxFactory.Token (SyntaxKind.PrivateKeyword)
+			]);
+		Assert.Equal (expectedResult, accessor.ShouldMarshalNativeExceptions (property));
+	}
+
+
 }
