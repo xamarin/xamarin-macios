@@ -40,12 +40,6 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #define dump_state(...)
 #endif
 
-static uint64_t align_uint64 (uint64_t target, uint64_t alignment)
-{
-	target = (target + (alignment - 1)) & ~(alignment - 1);
-	return target;
-}
-
 static size_t align_size (size_t target, uint64_t alignment)
 {
 	target = (target + (alignment - 1)) & ~(alignment - 1);
@@ -265,7 +259,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	} while (*++t);
 
 	// align stack reads to sizeof(void*) bytes
-	it->nsaa = align_uint64 (it->nsaa, 8);
+	it->nsaa = (uint8_t *) align_ptr (it->nsaa, 8);
 }
 
 static void
