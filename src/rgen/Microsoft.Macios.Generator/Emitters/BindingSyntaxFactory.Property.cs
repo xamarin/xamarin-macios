@@ -45,7 +45,7 @@ static partial class BindingSyntaxFactory {
 		return default;
 	}
 
-	internal static (StatementSyntax Send, StatementSyntax SendSupper) GetGetterInvocations (in Property property,
+	internal static (StatementSyntax Send, StatementSyntax SendSuper) GetGetterInvocations (in Property property,
 		string? selector, string? sendMethod, string? superSendMethod)
 	{
 		// if any of the methods is null, return a throw statement for both
@@ -64,7 +64,7 @@ static partial class BindingSyntaxFactory {
 		// use the MessagingInvocation method for each of the methods
 		return (
 			Send: GetterInvocation (MessagingInvocation (sendMethod, selector, []), property),
-			SendSupper: GetterInvocation (MessagingInvocation (superSendMethod, selector, []), property)
+			SendSuper: GetterInvocation (MessagingInvocation (superSendMethod, selector, []), property)
 		);
 
 #pragma warning disable format
