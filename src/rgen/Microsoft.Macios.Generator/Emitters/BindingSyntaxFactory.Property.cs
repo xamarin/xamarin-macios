@@ -57,7 +57,7 @@ static partial class BindingSyntaxFactory {
 		if (property.UseTempReturn) {
 			return (
 				Send: ThrowNotImplementedException (),
-				SendSupper: ThrowNotImplementedException ()
+				SendSuper: ThrowNotImplementedException ()
 			);
 		}
 		// this is the simplest case, we just need to call the method and return the result, for that we
