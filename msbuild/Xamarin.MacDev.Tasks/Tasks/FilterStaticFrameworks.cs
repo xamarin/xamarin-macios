@@ -52,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 						continue;
 					}
 
-					Log.LogWarning (7091, frameworkExecutablePath, MSBStrings.W7091 /* "The framework {0} is a framework of static libraries, and will not be copied to the app." */, Path.GetDirectoryName (frameworkExecutablePath));
+					Log.LogMessage (MessageImportance.Low, MSBStrings.W7091 /* "The framework {0} is a framework of static libraries, and will not be copied to the app." */, Path.GetDirectoryName (frameworkExecutablePath));
 					list.RemoveAt (i);
 				}
 

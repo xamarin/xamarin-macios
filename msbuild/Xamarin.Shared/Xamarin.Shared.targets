@@ -191,7 +191,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<CompressBindingResourcePackage>auto</CompressBindingResourcePackage>
 		</PropertyGroup>
 
-		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
+		<CreateBindingResourcePackage
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
@@ -202,13 +203,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
 			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
 		/>
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(BundleOriginalResources)' == 'true'"
 			AlwaysCreate="true"
 			Files="$(BindingResourcePath).stamp"
 			>

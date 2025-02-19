@@ -17,6 +17,6 @@ static class EmitterFactory {
 		{ BindingType.Protocol, new InterfaceEmitter () },
 		{ BindingType.Category, new CategoryEmitter () },
 	};
-	public static bool TryCreate (CodeChanges changes, [NotNullWhen (true)] out ICodeEmitter? emitter)
+	public static bool TryCreate (Binding changes, [NotNullWhen (true)] out ICodeEmitter? emitter)
 		=> emitters.TryGetValue (changes.BindingType, out emitter);
 }
