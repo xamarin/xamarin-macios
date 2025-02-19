@@ -218,7 +218,7 @@ namespace Xharness.Jenkins {
 							using (var writer = new StreamWriter (response.OutputStream)) {
 								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
 								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								foreach (var task in find_tasks (writer, request.Url.Query).Shuffle ()) {
+								foreach (var task in System.Linq.Enumerable.Shuffle (find_tasks (writer, request.Url.Query))) {
 									if (task.InProgress || task.Waiting) {
 										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 									} else {
