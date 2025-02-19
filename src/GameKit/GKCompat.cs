@@ -48,8 +48,7 @@ namespace GameKit {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.TvOS)]
 #endif
-	public interface IGKPeerPickerControllerDelegate : INativeObject, IDisposable
-	{
+	public interface IGKPeerPickerControllerDelegate : INativeObject, IDisposable {
 	}
 
 	[EditorBrowsable (EditorBrowsableState.Never)]
@@ -207,7 +206,7 @@ namespace GameKit {
 
 		protected override void Dispose (bool disposing)
 		{
-				throw new PlatformNotSupportedException (Constants.TypeUnavailable);
+			throw new PlatformNotSupportedException (Constants.TypeUnavailable);
 		}
 	} /* class GKPeerPickerController */
 #endif //  __IOS__ || __MACCATALYST__

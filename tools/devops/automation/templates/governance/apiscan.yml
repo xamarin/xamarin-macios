@@ -96,19 +96,19 @@ steps:
 - task: TSAUpload@2
   inputs:
     GdnPublishTsaOnboard: true
-    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\$(Build.RepositoryTitle)\\tools\\devops\\governance\\tsa_config.gdntsa'
     GdnPublishTsaExportedResultsPublishable: true
   displayName: Create bugs for compliance tools results
   condition: succeededOrFailed()
   env:
-    WorkingDirectory: '$(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)'
+    WorkingDirectory: '$(Build.SourcesDirectory)/$(Build.RepositoryTitle)'
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
   displayName: Break on compliance issues
   condition: false # do not break for APIScan until we have fixed the issues
   inputs:
     GdnBreakAllTools: true
-    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
+    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\$(Build.RepositoryTitle)\tools\devops\governance\falsepositives.gdnsuppress
     GdnBreakSuppressionSets: falsepositives
     GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
     GdnBreakOutputSuppressionSet: falsepositives

@@ -58,7 +58,7 @@ namespace CoreLocation {
 
 	[ErrorDomain ("CLLocationPushServiceErrorDomain")]
 #if NET // Apple fixed this in Xcode 13.1
-	[iOS (15,0), NoTV, NoMacCatalyst, NoMac]
+	[iOS (15, 0), NoTV, NoMacCatalyst, NoMac]
 #else
 	[iOS (15, 0), NoTV, MacCatalyst (15, 0), NoMac]
 #endif
@@ -1064,7 +1064,7 @@ namespace CoreLocation {
 	}
 
 #if NET // Apple fixed this in Xcode 13.1
-	[iOS (15,0), NoTV, NoMacCatalyst, NoMac]
+	[iOS (15, 0), NoTV, NoMacCatalyst, NoMac]
 #else
 	[iOS (15, 0), NoTV, MacCatalyst (15, 0), NoMac]
 #endif

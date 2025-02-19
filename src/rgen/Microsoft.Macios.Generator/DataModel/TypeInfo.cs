@@ -239,6 +239,9 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	{
 #pragma warning disable format
 		var type = this switch {
+			// arrays
+			{ IsArray: true } => NativeHandle,
+			
 			// special cases based on name
 			{ Name: "nfloat" or "NFloat" } => "nfloat", 
 			{ Name: "nint" or "nuint" } => MetadataName,
@@ -252,7 +255,7 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 			// structs will use their name
 			{ IsStruct: true, SpecialType: SpecialType.System_Double } => "Double", 
 			{ IsStruct: true } => Name,
-
+			
 			// enums:
 			// IsSmartEnum: We are using a nsstring, so it should be a native handle.
 			// IsNativeEnum: Depends on the enum backing field kind.

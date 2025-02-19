@@ -6,8 +6,7 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
-namespace CoreGraphics
-{
+namespace CoreGraphics {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst")]
@@ -15,8 +14,7 @@ namespace CoreGraphics
 #else
 	[MacCatalyst (13,1)]
 #endif
-	public enum CGCaptureOptions : uint
-	{
+	public enum CGCaptureOptions : uint {
 		None = 0,
 		NoFill = 1 << 0
 	}
@@ -27,19 +25,18 @@ namespace CoreGraphics
 #else
 	[MacCatalyst (13,1)]
 #endif
-	public static class CGDisplay
-	{
+	public static class CGDisplay {
 #if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern uint CGMainDisplayID ();
 
 		public static int MainDisplayID {
 			get {
-				return (int)CGMainDisplayID ();
+				return (int) CGMainDisplayID ();
 			}
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGDisplayModeGetTypeID")]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGDisplayModeGetTypeID")]
 		public static extern nint GetTypeID ();
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -47,7 +44,7 @@ namespace CoreGraphics
 
 		public static CGRect GetBounds (int display)
 		{
-			return CGDisplayBounds ((uint)display);
+			return CGDisplayBounds ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -55,7 +52,7 @@ namespace CoreGraphics
 
 		public static nint GetWidth (int display)
 		{
-			return (nint)CGDisplayPixelsWide ((uint)display);
+			return (nint) CGDisplayPixelsWide ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -63,7 +60,7 @@ namespace CoreGraphics
 
 		public static nint GetHeight (int display)
 		{
-			return (nint)CGDisplayPixelsHigh ((uint)display);
+			return (nint) CGDisplayPixelsHigh ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -71,7 +68,7 @@ namespace CoreGraphics
 
 		public static int SetDisplayTransfer (int display, float redMin, float redMax, float redGamma, float greenMin, float greenMax, float greenGamma, float blueMin, float blueMax, float blueGamma)
 		{
-			return CGSetDisplayTransferByFormula ((uint)display, redMin, redMax, redGamma, greenMin, greenMax, greenGamma, blueMin, blueMax, blueGamma);
+			return CGSetDisplayTransferByFormula ((uint) display, redMin, redMax, redGamma, greenMin, greenMax, greenGamma, blueMin, blueMax, blueGamma);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -79,7 +76,7 @@ namespace CoreGraphics
 
 		public static int GetGammaTableCapacity (int display)
 		{
-			return (int)CGDisplayGammaTableCapacity ((uint)display);
+			return (int) CGDisplayGammaTableCapacity ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGDisplayRestoreColorSyncSettings")]
@@ -96,9 +93,13 @@ namespace CoreGraphics
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern byte CGDisplayIsCaptured (uint display);
 
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		public static bool IsCaptured (int display)
 		{
-			return CGDisplayIsCaptured ((uint)display) != 0;
+			return CGDisplayIsCaptured ((uint) display) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -106,7 +107,7 @@ namespace CoreGraphics
 
 		public static int Capture (int display)
 		{
-			return CGDisplayCapture ((uint)display);
+			return CGDisplayCapture ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -114,7 +115,7 @@ namespace CoreGraphics
 
 		public static int Capture (int display, CGCaptureOptions options)
 		{
-			return CGDisplayCaptureWithOptions ((uint)display, options);
+			return CGDisplayCaptureWithOptions ((uint) display, options);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -122,13 +123,13 @@ namespace CoreGraphics
 
 		public static int Release (int display)
 		{
-			return CGDisplayRelease ((uint)display);
+			return CGDisplayRelease ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGCaptureAllDisplays")]
 		public static extern int CaptureAllDisplays ();
 
-		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGCaptureAllDisplaysWithOptions")]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGCaptureAllDisplaysWithOptions")]
 		static extern int CaptureAllDisplays (CGCaptureOptions options);
 
 
@@ -140,7 +141,7 @@ namespace CoreGraphics
 
 		public static int HideCursor (int display)
 		{
-			return CGDisplayHideCursor ((uint)display);
+			return CGDisplayHideCursor ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -148,7 +149,7 @@ namespace CoreGraphics
 
 		public static int ShowCursor (int display)
 		{
-			return CGDisplayShowCursor ((uint)display);
+			return CGDisplayShowCursor ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -156,7 +157,7 @@ namespace CoreGraphics
 
 		public static int MoveCursor (int display, CGPoint point)
 		{
-			return CGDisplayMoveCursorToPoint ((uint)display, point);
+			return CGDisplayMoveCursorToPoint ((uint) display, point);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -164,7 +165,7 @@ namespace CoreGraphics
 
 		public static int GetOpenGLDisplayMask (int display)
 		{
-			return (int)CGDisplayIDToOpenGLDisplayMask ((uint)display);
+			return (int) CGDisplayIDToOpenGLDisplayMask ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -172,7 +173,7 @@ namespace CoreGraphics
 
 		public static int GetDisplayID (int displayMask)
 		{
-			return (int)CGOpenGLDisplayMaskToDisplayID ((uint)displayMask);
+			return (int) CGOpenGLDisplayMaskToDisplayID ((uint) displayMask);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -180,7 +181,7 @@ namespace CoreGraphics
 
 		public static int GetShieldingWindowID (int display)
 		{
-			return (int)CGShieldingWindowID ((uint)display);
+			return (int) CGShieldingWindowID ((uint) display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

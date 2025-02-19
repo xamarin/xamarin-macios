@@ -24,17 +24,13 @@ namespace CoreMedia {
 	public delegate bool CMBufferGetBool (INativeObject buffer);
 	public delegate int CMBufferCompare (INativeObject first, INativeObject second);
 
-#if NET
 	// [SupportedOSPlatform ("ios")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
-#endif
 	public delegate nint CMBufferGetSize (INativeObject buffer);
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CMBufferQueue : NativeObject {
 #if !COREBUILD
 		GCHandle gch;
@@ -46,37 +42,17 @@ namespace CoreMedia {
 		CMBufferCompare? compare;
 		CMBufferGetSize? getTotalSize;
 
-#if !NET
-		delegate CMTime BufferGetTimeCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
-		[return: MarshalAs (UnmanagedType.I1)]
-		delegate bool BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
-		delegate int BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
-		delegate nint BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);
-#endif
-
 		[StructLayout (LayoutKind.Sequential)]
 		struct CMBufferCallbacks {
 			internal uint version;
 			internal IntPtr refcon;
-#if NET
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDecodeTimeStamp;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetPresentationTimeStamp;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDuration;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, byte> XisDataReady;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, IntPtr, int> Xcompare;
-#else
-			internal IntPtr XgetDecodeTimeStamp;
-			internal IntPtr XgetPresentationTimeStamp;
-			internal IntPtr XgetDuration;
-			internal IntPtr XisDataReady;
-			internal IntPtr Xcompare;
-#endif
 			internal IntPtr cfStringPtr_dataBecameReadyNotification;
-#if NET
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, nint> XgetSize;
-#else
-			internal IntPtr XgetSize;
-#endif
 		}
 
 		// A version with no delegates, just native pointers
@@ -130,7 +106,6 @@ namespace CoreMedia {
 			CMBufferGetBool? isDataReady, CMBufferCompare? compare, NSString dataBecameReadyNotification, CMBufferGetSize? getTotalSize)
 		{
 			var bq = new CMBufferQueue (count);
-#if NET
 			CMBufferCallbacks cbacks;
 			unsafe {
 				cbacks = new CMBufferCallbacks () {
@@ -145,19 +120,6 @@ namespace CoreMedia {
 					XgetSize = getTotalSize is not null ? &GetTotalSize : null
 				};
 			}
-#else
-			var cbacks = new CMBufferCallbacks () {
-				version = (uint) (getTotalSize is null ? 0 : 1),
-				refcon = GCHandle.ToIntPtr (bq.gch),
-				XgetDecodeTimeStamp = getDecodeTimeStamp is not null ? Marshal.GetFunctionPointerForDelegate (GetDecodeTimeStampCallback) : IntPtr.Zero,
-				XgetPresentationTimeStamp = getPresentationTimeStamp is not null ? Marshal.GetFunctionPointerForDelegate (GetPresentationTimeStampCallback) : IntPtr.Zero,
-				XgetDuration = getDuration is not null ? Marshal.GetFunctionPointerForDelegate (GetDurationCallback) : IntPtr.Zero,
-				XisDataReady = isDataReady is not null ? Marshal.GetFunctionPointerForDelegate (GetDataReadyCallback) : IntPtr.Zero,
-				Xcompare = compare is not null ? Marshal.GetFunctionPointerForDelegate (CompareCallback) : IntPtr.Zero,
-				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
-				XgetSize = getTotalSize is not null ? Marshal.GetFunctionPointerForDelegate (GetTotalSizeCallback) : IntPtr.Zero
-			};
-#endif
 
 			bq.getDecodeTimeStamp = getDecodeTimeStamp;
 			bq.getPresentationTimeStamp = getPresentationTimeStamp;
@@ -320,21 +282,17 @@ namespace CoreMedia {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public nint GetTotalSize ()
 		{
 			return CMBufferQueueGetTotalSize (Handle);
@@ -347,14 +305,7 @@ namespace CoreMedia {
 			return queueObjects [v];
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		static BufferGetTimeCallback GetDecodeTimeStampCallback = GetDecodeTimeStamp;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
-#endif
-#endif
 		static CMTime GetDecodeTimeStamp (IntPtr buffer, IntPtr refcon)
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
@@ -363,14 +314,7 @@ namespace CoreMedia {
 			return queue.getDecodeTimeStamp (queue.Surface (buffer));
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		static BufferGetTimeCallback GetPresentationTimeStampCallback = GetPresentationTimeStamp;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
-#endif
-#endif
 		static CMTime GetPresentationTimeStamp (IntPtr buffer, IntPtr refcon)
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
@@ -379,14 +323,7 @@ namespace CoreMedia {
 			return queue.getPresentationTimeStamp (queue.Surface (buffer));
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		static BufferGetTimeCallback GetDurationCallback = GetDuration;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
-#endif
-#endif
 		static CMTime GetDuration (IntPtr buffer, IntPtr refcon)
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
@@ -395,36 +332,16 @@ namespace CoreMedia {
 			return queue.getDuration (queue.Surface (buffer));
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
 		static byte GetDataReady (IntPtr buffer, IntPtr refcon)
-#else
-		static BufferGetBooleanCallback GetDataReadyCallback = GetDataReady;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferGetBooleanCallback))]
-#endif
-		static bool GetDataReady (IntPtr buffer, IntPtr refcon)
-#endif
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
 			if (queue?.isDataReady is null)
-#if NET
 				return 0;
 			return (byte) (queue.isDataReady (queue.Surface (buffer)) ? 1 : 0);
-#else
-				return false;
-			return queue.isDataReady (queue.Surface (buffer));
-#endif
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		static BufferCompareCallback CompareCallback = Compare;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferCompareCallback))]
-#endif
-#endif
 		static int Compare (IntPtr buffer1, IntPtr buffer2, IntPtr refcon)
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
@@ -433,14 +350,7 @@ namespace CoreMedia {
 			return queue.compare (queue.Surface (buffer1), queue.Surface (buffer2));
 		}
 
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		static BufferGetSizeCallback GetTotalSizeCallback = GetTotalSize;
-#if !MONOMAC
-		[MonoPInvokeCallback (typeof (BufferGetSizeCallback))]
-#endif
-#endif
 		static nint GetTotalSize (IntPtr buffer, IntPtr refcon)
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;

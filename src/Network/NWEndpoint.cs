@@ -35,7 +35,7 @@ namespace Network {
 	public class NWEndpoint : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
 		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

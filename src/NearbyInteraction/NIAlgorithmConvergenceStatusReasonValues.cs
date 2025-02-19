@@ -22,8 +22,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace NearbyInteraction {
-	public partial class NIAlgorithmConvergenceStatusReasonValues
-	{
+	public partial class NIAlgorithmConvergenceStatusReasonValues {
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]

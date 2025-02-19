@@ -60,10 +60,10 @@ namespace SceneKit {
 	/// Represents a Quaternion.
 	/// </summary>
 #if NET
-    [SupportedOSPlatform ("ios")]
-    [SupportedOSPlatform ("maccatalyst")]
-    [SupportedOSPlatform ("macos")]
-    [SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	[Serializable]
 	[StructLayout (LayoutKind.Sequential)]
@@ -102,7 +102,7 @@ namespace SceneKit {
 		public SCNQuaternion (ref Matrix3 matrix)
 		{
 #if NET
-            double scale = System.Math.Pow (matrix.GetDeterminant (), 1.0d / 3.0d);
+			double scale = System.Math.Pow (matrix.GetDeterminant (), 1.0d / 3.0d);
 #else
 			double scale = System.Math.Pow (matrix.Determinant, 1.0d / 3.0d);
 #endif
@@ -121,10 +121,10 @@ namespace SceneKit {
 		}
 
 #if NET
-	public SCNQuaternion (Quaternion quaternion)
-		: this (quaternion.X, quaternion.Y, quaternion.Z, quaternion.W)
-	{
-	}
+		public SCNQuaternion (Quaternion quaternion)
+			: this (quaternion.X, quaternion.Y, quaternion.Z, quaternion.W)
+		{
+		}
 #else
 		public SCNQuaternion (Quaternion openTkQuaternion) : this (new SCNVector3 (openTkQuaternion.XYZ), openTkQuaternion.W)
 		{
