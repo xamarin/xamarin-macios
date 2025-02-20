@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.DataModel;
 using Microsoft.Macios.Generator.Extensions;
+using Microsoft.Macios.Generator.Formatters;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using TypeInfo = Microsoft.Macios.Generator.DataModel.TypeInfo;
 using Parameter = Microsoft.Macios.Generator.DataModel.Parameter;
@@ -108,6 +109,20 @@ static partial class BindingSyntaxFactory {
 	}
 
 	/// <summary>
+	/// Return the expression needed to cast an invocation that returns a byte to a bool.
+	/// </summary>
+	/// <param name="invocation">The byte returning invocation expression.</param>
+	/// <returns>The expression need to cast the invocation to a byte.</returns>
+	internal static BinaryExpressionSyntax ByteToBool (InvocationExpressionSyntax invocation)
+	{
+		// generates: invocation != 0
+		return BinaryExpression (
+			SyntaxKind.NotEqualsExpression,
+			invocation.WithTrailingTrivia (Space),
+			LiteralExpression (SyntaxKind.NumericLiteralExpression, Literal (0)).WithLeadingTrivia (Space));
+	}
+
+	/// <summary>
 	/// Returns the aux nsarray variable for an array object. This method will do the following:
 	/// 1. Check if the object is nullable or not.
 	/// 2. Use the correct NSArray method depending on the content of the array. 
@@ -115,8 +130,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="parameter">The parameter whose aux variable we want to generate.</param>
 	/// <param name="withUsing">If the using clause should be added to the declaration.</param>
 	/// <returns>The variable declaration for the NSArray aux variable of the parameter.</returns>
-	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter,
-		bool withUsing = false)
+	internal static LocalDeclarationStatementSyntax? GetNSArrayAuxVariable (in Parameter parameter)
 	{
 		if (!parameter.Type.IsArray)
 			return null;
@@ -161,11 +175,8 @@ static partial class BindingSyntaxFactory {
 				Identifier (TriviaList (), SyntaxKind.VarKeyword, "var", "var", TriviaList ())))
 			.WithTrailingTrivia (Space)
 			.WithVariables (SingletonSeparatedList (declarator));
-		var statement = LocalDeclarationStatement (variableDeclaration);
 		// add using if requested
-		return withUsing
-			? statement.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space))
-			: statement;
+		return LocalDeclarationStatement (variableDeclaration);
 	}
 
 	/// <summary>
@@ -381,8 +392,7 @@ static partial class BindingSyntaxFactory {
 		// - CMTime
 		// - CMTimeMapping
 		// - CATransform3D
-		var t = parameter.Type.Name;
-
+		
 #pragma warning disable format
 		// get the factory method based on the parameter type, if it is not found, return null
 		var factoryMethod = parameter.Type switch { 
@@ -673,6 +683,62 @@ static partial class BindingSyntaxFactory {
 			.NormalizeWhitespace (); // no special mono style
 	}
 
+	internal static (string Name, LocalDeclarationStatementSyntax Declaration) GetReturnValueAuxVariable (in TypeInfo returnType)
+	{
+		var typeSyntax = returnType.GetIdentifierSyntax ();
+		var variableName = returnType.ReturnVariableName;
+		// generates Type ret; The GetIdentifierSyntax will ensure that the correct type and nullable annotation is used
+		var declaration = LocalDeclarationStatement (
+			VariableDeclaration (typeSyntax.WithTrailingTrivia (Space))
+				.WithVariables (SingletonSeparatedList (VariableDeclarator (Identifier (variableName)))));
+		return (Name: variableName, Declaration: declaration);
+	}
+
+	/// <summary>
+	/// Returns the declaration needed for the string field of a given selector.
+	/// </summary>
+	/// <param name="selector">The selector to be store in the field.</param>
+	/// <param name="selectorName">The selector handle name. This will be used to calculate the field name.</param>
+	/// <returns>The declaration statement for the variable.</returns>
+	internal static LocalDeclarationStatementSyntax GetSelectorStringField (string selector, string selectorName)
+	{
+		var fieldName = selectorName.Substring (0, selectorName.Length - 6 /* Handle */);
+		var variableDeclaration =
+			VariableDeclaration (PredefinedType (Token (SyntaxKind.StringKeyword)))
+				.WithVariables (
+					SingletonSeparatedList (
+						VariableDeclarator (Identifier (fieldName))
+							.WithInitializer (EqualsValueClause (
+								LiteralExpression (SyntaxKind.StringLiteralExpression, Literal (selector))))));
+		return LocalDeclarationStatement (variableDeclaration)
+			.WithModifiers (TokenList (Token (SyntaxKind.ConstKeyword))).NormalizeWhitespace ();
+	}
+
+	internal static LocalDeclarationStatementSyntax GetSelectorHandleField (string selector, string selectorName)
+	{
+		// list of the modifiers
+		var modifiers = TokenList (
+			Token (SyntaxKind.StaticKeyword).WithTrailingTrivia (Space),
+			Token (SyntaxKind.ReadOnlyKeyword).WithTrailingTrivia (Space));
+		// generates: Selector.GetHandle (selector);
+		var getHandleInvocation = InvocationExpression (MemberAccessExpression (SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName ("Selector"), IdentifierName ("GetHandle").WithTrailingTrivia (Space)))
+			.WithArgumentList (
+				ArgumentList (
+					SingletonSeparatedList (
+						Argument (
+							LiteralExpression (SyntaxKind.StringLiteralExpression, Literal (selector))))));
+
+		// generates: NativeHandler selectorName = Selector.GetHandle (selector);
+		return LocalDeclarationStatement (
+			VariableDeclaration (IdentifierName ("NativeHandle").WithTrailingTrivia (Space))
+				.WithVariables (
+					SingletonSeparatedList (
+						VariableDeclarator (Identifier (selectorName).WithTrailingTrivia (Space))
+							.WithInitializer (EqualsValueClause (getHandleInvocation.WithLeadingTrivia (Space)))))
+		).WithModifiers (modifiers);
+	}
+
 	static string? GetObjCMessageSendMethodName<T> (ExportData<T> exportData,
 		TypeInfo returnType, ImmutableArray<Parameter> parameters, bool isSuper = false, bool isStret = false)
 		where T : Enum
@@ -727,40 +793,7 @@ static partial class BindingSyntaxFactory {
 		return sb.ToString ();
 	}
 
-	public static (string? Getter, string? Setter) GetObjCMessageSendMethods (in Property property,
-		bool isSuper = false, bool isStret = false)
-	{
-		if (property.IsProperty) {
-			// the getter and the setter depend of the accessors that have been set for the property, we do not want
-			// to calculate things that we won't use. The export data used will also depend if the getter/setter has a
-			// export attribute attached
-			var getter = property.GetAccessor (AccessorKind.Getter);
-			string? getterMsgSend = null;
-			if (getter is not null) {
-				var getterExportData = getter.Value.ExportPropertyData ?? property.ExportPropertyData;
-				if (getterExportData is not null) {
-					getterMsgSend = GetObjCMessageSendMethodName (getterExportData.Value, property.ReturnType, [],
-						isSuper, isStret);
-				}
-			}
-
-			var setter = property.GetAccessor (AccessorKind.Setter);
-			string? setterMsgSend = null;
-			if (setter is not null) {
-				var setterExportData = setter.Value.ExportPropertyData ?? property.ExportPropertyData;
-				if (setterExportData is not null) {
-					setterMsgSend = GetObjCMessageSendMethodName (setterExportData.Value, TypeInfo.Void,
-						[property.ValueParameter], isSuper, isStret);
-				}
-			}
-
-			return (Getter: getterMsgSend, Setter: setterMsgSend);
-		}
-
-		return default;
-	}
-
-	public static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
+	internal static string? GetObjCMessageSendMethod (in Method method, bool isSuper = false, bool isStret = false)
 		=> GetObjCMessageSendMethodName (method.ExportMethodData, method.ReturnType, method.Parameters, isSuper,
 			isStret);
 }

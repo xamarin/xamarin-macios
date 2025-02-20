@@ -53,7 +53,7 @@ namespace CoreImage {
 #if MONOMAC
 		RGBA16 = 2,
 		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBAf instead.")]
-		RGBAf  = 3,
+		RGBAf = 3,
 
 		// Please, do not add values into MonoMac/iOS without adding an explicit value
 #endif

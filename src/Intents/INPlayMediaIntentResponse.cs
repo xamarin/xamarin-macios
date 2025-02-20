@@ -13,6 +13,8 @@ using Foundation;
 using ObjCRuntime;
 using MediaPlayer;
 
+#nullable enable
+
 namespace Intents {
 	public partial class INPlayMediaIntentResponse {
 

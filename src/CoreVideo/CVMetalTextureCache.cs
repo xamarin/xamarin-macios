@@ -15,10 +15,6 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 #nullable enable
 
 namespace CoreVideo {

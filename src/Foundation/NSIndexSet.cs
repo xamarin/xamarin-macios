@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 
 namespace Foundation {
-	
+
 	public partial class NSIndexSet : IEnumerable, IEnumerable<nuint> {
 
 		IEnumerator IEnumerable.GetEnumerator ()
@@ -59,8 +59,8 @@ namespace Foundation {
 				i = this.IndexGreaterThan (i);
 			}
 		}
-		
-		public nuint[] ToArray ()
+
+		public nuint [] ToArray ()
 		{
 			nuint [] indexes = new nuint [Count];
 
@@ -75,54 +75,54 @@ namespace Foundation {
 			return indexes;
 		}
 
-		public static NSIndexSet FromArray (nuint[] items)
-		{
-			if (items is null)
-				return new NSIndexSet ();
-			
-			var indexSet = new NSMutableIndexSet();
-			foreach (var index in items) 
-				indexSet.Add (index);	
-			return indexSet;
-		}
-
-		public static NSIndexSet FromArray (uint[] items)
+		public static NSIndexSet FromArray (nuint [] items)
 		{
 			if (items is null)
 				return new NSIndexSet ();
 
-			var indexSet = new NSMutableIndexSet();
+			var indexSet = new NSMutableIndexSet ();
 			foreach (var index in items)
-				indexSet.Add ((nuint)index);
+				indexSet.Add (index);
 			return indexSet;
 		}
 
-		public static NSIndexSet FromArray (int[] items)
+		public static NSIndexSet FromArray (uint [] items)
 		{
 			if (items is null)
 				return new NSIndexSet ();
-			
-			var indexSet = new NSMutableIndexSet();
-			foreach (var index in items){
+
+			var indexSet = new NSMutableIndexSet ();
+			foreach (var index in items)
+				indexSet.Add ((nuint) index);
+			return indexSet;
+		}
+
+		public static NSIndexSet FromArray (int [] items)
+		{
+			if (items is null)
+				return new NSIndexSet ();
+
+			var indexSet = new NSMutableIndexSet ();
+			foreach (var index in items) {
 				if (index < 0)
 					throw new ArgumentException ("One of the items values is negative");
-				indexSet.Add ((nuint)(uint) index);
+				indexSet.Add ((nuint) (uint) index);
 			}
 			return indexSet;
 		}
 
-		public NSIndexSet (uint value) : this ((nuint)value)
+		public NSIndexSet (uint value) : this ((nuint) value)
 		{
 		}
 
-		public NSIndexSet (nint value) : this ((nuint)value)
+		public NSIndexSet (nint value) : this ((nuint) value)
 		{
 			if (value < 0)
 				throw new ArgumentException ("value must be positive");
 			// init done by the base ctor
 		}
 
-		public NSIndexSet (int value) : this ((nuint)(uint)value)
+		public NSIndexSet (int value) : this ((nuint) (uint) value)
 		{
 			if (value < 0)
 				throw new ArgumentException ("value must be positive");

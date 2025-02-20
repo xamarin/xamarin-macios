@@ -256,14 +256,16 @@ namespace CoreImage {
 		CIContext Create ();
 
 #if HAS_OPENGLES
-		[NoMac][NoMacCatalyst]
+		[NoMac]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
-		[NoMac][NoMacCatalyst]
+		[NoMac]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Static]

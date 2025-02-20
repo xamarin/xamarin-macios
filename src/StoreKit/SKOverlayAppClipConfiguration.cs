@@ -10,10 +10,9 @@ using ObjCRuntime;
 namespace StoreKit {
 
 #if !COREBUILD
-	public partial class SKOverlayAppClipConfiguration
-	{
-		public NSObject? this[string i] {
-			get => GetAdditionalValue (i); 
+	public partial class SKOverlayAppClipConfiguration {
+		public NSObject? this [string i] {
+			get => GetAdditionalValue (i);
 			set => SetAdditionalValue (value, i);
 		}
 	}

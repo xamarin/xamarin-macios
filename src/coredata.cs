@@ -624,7 +624,7 @@ namespace CoreData {
 		string GetSectionIndexTitle (string sectionName);
 
 		[Export ("sectionIndexTitles")]
-		string[] SectionIndexTitles { get; }
+		string [] SectionIndexTitles { get; }
 #endif
 
 		[Static]
@@ -895,7 +895,7 @@ namespace CoreData {
 #if XAMCORE_5_0
 		NSDictionary<NSString, NSObject> GetCommittedValues ([NullAllowed] string[] keys);
 #elif NET
-		NSDictionary GetCommittedValues ([NullAllowed] string[] keys);
+		NSDictionary GetCommittedValues ([NullAllowed] string [] keys);
 #else
 		NSDictionary CommittedValuesForKeys ([NullAllowed] string [] keys);
 #endif
@@ -1271,7 +1271,7 @@ namespace CoreData {
 		[Static, Export ("mergedModelFromBundles:")]
 		[return: NullAllowed]
 #if NET
-		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles);
+		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle [] bundles);
 #else
 		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle [] bundles);
 #endif
@@ -1337,7 +1337,7 @@ namespace CoreData {
 #if XAMCORE_5_0
 		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles, NSDictionary<NSString, NSObject> metadata);
 #elif NET
-		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles, NSDictionary metadata);
+		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle [] bundles, NSDictionary metadata);
 #else
 		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle [] bundles, NSDictionary metadata);
 #endif
@@ -1347,7 +1347,7 @@ namespace CoreData {
 #if XAMCORE_5_0
 		NSManagedObjectModel GetModelByMerging (NSManagedObjectModel[] models, NSDictionary<NSString, NSObject> metadata);
 #elif NET
-		NSManagedObjectModel GetModelByMerging (NSManagedObjectModel[] models, NSDictionary metadata);
+		NSManagedObjectModel GetModelByMerging (NSManagedObjectModel [] models, NSDictionary metadata);
 #else
 		NSManagedObjectModel ModelByMergingModels (NSManagedObjectModel [] models, NSDictionary metadata);
 #endif
@@ -1395,7 +1395,7 @@ namespace CoreData {
 		[Static, Export ("mappingModelFromBundles:forSourceModel:destinationModel:")]
 		[return: NullAllowed]
 #if NET
-		NSMappingModel GetMappingModel ([NullAllowed] NSBundle[] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
+		NSMappingModel GetMappingModel ([NullAllowed] NSBundle [] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #else
 		NSMappingModel MappingModelFromBundles ([NullAllowed] NSBundle [] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #endif
@@ -2386,7 +2386,7 @@ namespace CoreData {
 		[Export ("finalResult", ArgumentSemantic.Retain)]
 		[NullAllowed]
 #if NET
-		INSFetchRequestResult[] FinalResult { get; }
+		INSFetchRequestResult [] FinalResult { get; }
 #else
 		NSObject [] FinalResult { get; }
 #endif

@@ -35,7 +35,6 @@ namespace Cecil.Tests {
 			"GameKit.GKScore::.ctor(System.String)",
 			"GameplayKit.GKPath::.ctor(System.Numerics.Vector2[],System.Single,System.Boolean)",
 			"GameplayKit.GKPath::.ctor(System.Numerics.Vector3[],System.Single,System.Boolean)",
-			"Intents.INPriceRange::.ctor(Intents.INPriceRangeOption,Foundation.NSDecimalNumber,System.String)",
 			"ModelIO.MDLNoiseTexture::.ctor(System.Single,System.String,CoreGraphics.NVector2i,ModelIO.MDLTextureChannelEncoding,ModelIO.MDLNoiseTextureType)",
 			"MultipeerConnectivity.MCSession::.ctor(MultipeerConnectivity.MCPeerID,Security.SecIdentity,MultipeerConnectivity.MCEncryptionPreference)",
 			"MultipeerConnectivity.MCSession::.ctor(MultipeerConnectivity.MCPeerID,Security.SecIdentity,Security.SecCertificate[],MultipeerConnectivity.MCEncryptionPreference)",
