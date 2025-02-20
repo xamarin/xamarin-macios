@@ -2053,7 +2053,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[Ignore ("https://github.com/dotnet/sdk/issues/46790")]
 		public void PublishAotDuringBuild (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -2071,7 +2070,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		[Ignore ("https://github.com/dotnet/sdk/issues/46790")]
 		public void BuildMyNativeAotAppWithTrimAnalysisWarning (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MyNativeAotAppWithTrimAnalysisWarning";
