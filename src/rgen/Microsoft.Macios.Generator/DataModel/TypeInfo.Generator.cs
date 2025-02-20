@@ -17,7 +17,7 @@ readonly partial struct TypeInfo {
 	/// True if the type represents a delegate.
 	/// </summary>
 	public bool IsDelegate { get; init; }
-	
+
 	/// <summary>
 	/// Get the name of the variable for the type when it is used as a return value.
 	/// </summary>

@@ -109,12 +109,12 @@ readonly partial struct TypeInfo : IEquatable<TypeInfo> {
 	/// True if an enumerator was marked with the NativeAttribute.
 	/// </summary>
 	public bool IsNativeEnum { get; init; }
-	
+
 	/// <summary>
 	/// Return if the type represents a wrapped object from the objc world.
 	/// </summary>
 	public bool IsWrapped { get; init; }
-	
+
 	/// <summary>
 	/// Returns, if the type is an array, if its elements are a wrapped object from the objc world.
 	/// </summary>

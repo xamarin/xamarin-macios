@@ -24,8 +24,8 @@ static partial class BindingSyntaxFactory {
 	public static ExpressionSyntax GetNSObject (string nsObjectType, ImmutableArray<ArgumentSyntax> args,
 		bool suppressNullableWarning = false)
 	{
-		var argsList = ArgumentList (SeparatedList<ArgumentSyntax>(args.ToSyntaxNodeOrTokenArray ()));
-		return StaticInvocationGenericExpression (Runtime, "GetNSObject", 
+		var argsList = ArgumentList (SeparatedList<ArgumentSyntax> (args.ToSyntaxNodeOrTokenArray ()));
+		return StaticInvocationGenericExpression (Runtime, "GetNSObject",
 			nsObjectType, argsList, suppressNullableWarning);
 	}
 
@@ -39,8 +39,8 @@ static partial class BindingSyntaxFactory {
 	public static ExpressionSyntax GetNSArrayFromHandle (string nsObjectType, ImmutableArray<ArgumentSyntax> args,
 		bool suppressNullableWarning = false)
 	{
-		var argsList = ArgumentList (SeparatedList<ArgumentSyntax>(args.ToSyntaxNodeOrTokenArray ()));
-		return StaticInvocationGenericExpression ("CFArray", "ArrayFromHandle", 
+		var argsList = ArgumentList (SeparatedList<ArgumentSyntax> (args.ToSyntaxNodeOrTokenArray ()));
+		return StaticInvocationGenericExpression ("CFArray", "ArrayFromHandle",
 			nsObjectType, argsList, suppressNullableWarning);
 	}
 

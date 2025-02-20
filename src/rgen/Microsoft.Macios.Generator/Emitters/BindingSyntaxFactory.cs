@@ -56,8 +56,8 @@ static partial class BindingSyntaxFactory {
 			)
 		).WithArgumentList (argumentList);
 
-		return suppressNullableWarning 
-			? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation) 
+		return suppressNullableWarning
+			? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
 			: invocation;
 	}
 
@@ -155,7 +155,7 @@ static partial class BindingSyntaxFactory {
 			LiteralExpression (
 				value ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
 	}
-	
+
 	/// <summary>
 	/// Create an expression of a variable assignment for a previously declared variable.
 	/// </summary>

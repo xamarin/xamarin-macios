@@ -193,7 +193,7 @@ public class BindingSyntaxFactoryPropertyTests {
 				"global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;",
 				"global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;"
 			];
-			
+
 			property = new Property (
 				name: "MyProperty",
 				returnType: ReturnTypeForNSObject (),
@@ -212,13 +212,13 @@ public class BindingSyntaxFactoryPropertyTests {
 			) {
 				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
 			};
-			
+
 			yield return [
 				property,
 				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")))!;",
 				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")))!;"
 			];
-			
+
 			property = new Property (
 				name: "MyProperty",
 				returnType: ReturnTypeForNSObject (isNullable: true),
@@ -237,7 +237,7 @@ public class BindingSyntaxFactoryPropertyTests {
 			) {
 				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
 			};
-			
+
 			yield return [
 				property,
 				"ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")));",
@@ -246,7 +246,7 @@ public class BindingSyntaxFactoryPropertyTests {
 
 			property = new Property (
 				name: "MyProperty",
-				returnType: ReturnTypeForArray("Foundation.NSObject", isNSObject: true),
+				returnType: ReturnTypeForArray ("Foundation.NSObject", isNSObject: true),
 				symbolAvailability: new (),
 				attributes: [],
 				modifiers: [],
