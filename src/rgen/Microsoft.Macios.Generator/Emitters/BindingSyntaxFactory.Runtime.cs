@@ -61,7 +61,7 @@ static partial class BindingSyntaxFactory {
 	/// <param name="parameters">An optional argument list.</param>
 	/// <returns>The expression needed to call a specific messaging method.</returns>
 	public static InvocationExpressionSyntax MessagingInvocation (string objcMsgSendMethod, string selector,
-		ImmutableArray<ArgumentSyntax> parameters = default)
+		ImmutableArray<ArgumentSyntax> parameters)
 	{
 		// the size of the arguments is 2 + the optional arguments
 		// [0] = the handle
@@ -118,8 +118,7 @@ static partial class BindingSyntaxFactory {
 	{
 		// generate: (arg1, arg2, arg3)
 		var argumentList = ArgumentList (
-			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()))
-			.NormalizeWhitespace ();
+			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()));
 
 		// generate: CFArray.StringArrayFromHandle (arg1, arg2, arg3)
 		return InvocationExpression (
@@ -139,8 +138,7 @@ static partial class BindingSyntaxFactory {
 	{
 		// generate: (arg1, arg2, arg3)
 		var argumentList = ArgumentList (
-			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()))
-			.NormalizeWhitespace ();
+			SeparatedList<ArgumentSyntax> (arguments.ToSyntaxNodeOrTokenArray ()));
 
 		// generate: CFString.FromHandle (arg1, arg2, arg3)
 		return InvocationExpression (

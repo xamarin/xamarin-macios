@@ -668,6 +668,14 @@ analyze:
 		echo "Analyzed $$csproj successfully."; \
 	done
 
+# This target builds the generated project files with StyleCop enabled.
+stylecop-csproj: $(CSPROJECTS) $(foreach platform,$(DOTNET_PLATFORMS),$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES))
+	$(Q) set -e; \
+	for csproj in $(CSPROJECTS); do \
+		echo "Building $$csproj with StyleCop enabled..."; \
+		$(DOTNET) build $$csproj $(DOTNET_BUILD_VERBOSITY) /p:EnableStyleCop=true; \
+		echo "Built $$csproj with StyleCop successfully."; \
+	done
 
 csproj:: $(CSPROJECTS)
 ALL_TARGETS += $(CSPROJECTS)

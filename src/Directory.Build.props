@@ -13,4 +13,10 @@
 			<NoWarn>$(NoWarn.Replace('CA1416','').Replace('CA1422',''))</NoWarn>
 		</PropertyGroup>
 	</Target>
+	<PropertyGroup Condition="'$(EnableStyleCop)' == 'true'">
+		<CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)/stylecop.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(EnableStyleCop)' == 'true'">
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+	</ItemGroup>
 </Project>

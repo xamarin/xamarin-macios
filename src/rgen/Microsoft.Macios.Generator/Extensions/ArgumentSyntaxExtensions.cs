@@ -24,7 +24,7 @@ static class ArgumentSyntaxExtensions {
 			var currentarg = arguments [parametersIndex++];
 			nodes [argsIndex++] = currentarg;
 			if (argsIndex < nodes.Length - 1) {
-				nodes [argsIndex++] = Token (SyntaxKind.CommaToken);
+				nodes [argsIndex++] = Token (SyntaxKind.CommaToken).WithTrailingTrivia (Space);
 			}
 		}
 

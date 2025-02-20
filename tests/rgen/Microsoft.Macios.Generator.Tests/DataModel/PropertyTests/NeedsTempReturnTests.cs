@@ -61,7 +61,7 @@ public class TestClass {
 ";
 			yield return [
 				boolProperty,
-				true
+				false
 			];
 
 			const string charProperty = @"
