@@ -40,7 +40,7 @@ static partial class BindingSyntaxFactory {
 	}
 
 
-	static StatementSyntax StaticInvocationGenericExpression (string staticClassName, string methodName,
+	static ExpressionSyntax StaticInvocationGenericExpression (string staticClassName, string methodName,
 		string genericName,
 		ArgumentListSyntax argumentList, bool suppressNullableWarning = false)
 	{
@@ -56,10 +56,9 @@ static partial class BindingSyntaxFactory {
 			)
 		).WithArgumentList (argumentList);
 
-		return ExpressionStatement (
-			suppressNullableWarning
-				? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
-				: invocation);
+		return suppressNullableWarning
+			? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
+			: invocation;
 	}
 
 	static StatementSyntax ThrowException (string type, string? message = null)
@@ -155,5 +154,19 @@ static partial class BindingSyntaxFactory {
 		return Argument (
 			LiteralExpression (
 				value ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
+	}
+
+	/// <summary>
+	/// Create an expression of a variable assignment for a previously declared variable.
+	/// </summary>
+	/// <param name="variableName">The name of the previously declared variable.</param>
+	/// <param name="value">The expression syntax of the value.</param>
+	/// <returns>An assigment expression.</returns>
+	internal static AssignmentExpressionSyntax AssignVariable (string variableName, ExpressionSyntax value)
+	{
+		return AssignmentExpression (
+			SyntaxKind.SimpleAssignmentExpression,
+			IdentifierName (variableName).WithTrailingTrivia (Space),
+			value.WithLeadingTrivia (Space));
 	}
 }

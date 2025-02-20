@@ -151,9 +151,9 @@ public partial class PropertyTests
 		{
 			Foundation.NSCharacterSet ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSCharacterSet> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("alphanumericCharacterSet")))!;
 			} else {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSCharacterSet> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("alphanumericCharacterSet")))!;
 			}
 			return ret;
 		}
@@ -174,9 +174,9 @@ public partial class PropertyTests
 		{
 			Foundation.NSAttributedString ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSAttributedString> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("attributedStringByInflectingString")))!;
 			} else {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSAttributedString> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("attributedStringByInflectingString")))!;
 			}
 			return ret;
 		}
@@ -359,9 +359,9 @@ public partial class PropertyTests
 		{
 			Foundation.NSLocale ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSLocale> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("locale")))!;
 			} else {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSLocale> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("locale")))!;
 			}
 			return ret;
 		}
@@ -481,9 +481,9 @@ public partial class PropertyTests
 		{
 			Foundation.NSMetadataItem[] ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				ret = CFArray.ArrayFromHandle<Foundation.NSMetadataItem> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("results")))!;
 			} else {
-				ret = throw new NotImplementedException();
+				ret = CFArray.ArrayFromHandle<Foundation.NSMetadataItem> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("results")))!;
 			}
 			return ret;
 		}
@@ -546,9 +546,9 @@ public partial class PropertyTests
 		{
 			Foundation.NSObject? ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle ("delegate")));
 			} else {
-				ret = throw new NotImplementedException();
+				ret = Runtime.GetNSObject<Foundation.NSObject> (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper (this.Handle, Selector.GetHandle ("delegate")));
 			}
 			return ret;
 		}

@@ -14,10 +14,35 @@ static partial class BindingSyntaxFactory {
 	public const string Runtime = "Runtime";
 	public const string ClassPtr = "class_ptr";
 
-	public static StatementSyntax GetNSObject (string nsObjectType, ArgumentListSyntax argumentList,
+	/// <summary>
+	/// Generates a call to the Runtime.GetNSObject&lt;T&gt; method to create a nsobject from a handle.
+	/// </summary>
+	/// <param name="nsObjectType">The type of object to use as T</param>
+	/// <param name="args">The arguments to pass to the GetNSObject method.</param>
+	/// <param name="suppressNullableWarning">If we should suppress the nullable warning.</param>
+	/// <returns>The expression that calls GetNSObject method.</returns>
+	public static ExpressionSyntax GetNSObject (string nsObjectType, ImmutableArray<ArgumentSyntax> args,
 		bool suppressNullableWarning = false)
-		=> StaticInvocationGenericExpression (Runtime, "GetNSObject", nsObjectType, argumentList,
-			suppressNullableWarning);
+	{
+		var argsList = ArgumentList (SeparatedList<ArgumentSyntax> (args.ToSyntaxNodeOrTokenArray ()));
+		return StaticInvocationGenericExpression (Runtime, "GetNSObject",
+			nsObjectType, argsList, suppressNullableWarning);
+	}
+
+	/// <summary>
+	/// Generates a call to the method CFArray.ArrayFromHandle&lt;T&gt; to create a collection of NSObjects.
+	/// </summary>
+	/// <param name="nsObjectType">The type of the object to use as T</param>
+	/// <param name="args">The arguments to bass to the ArrayFromHandle method.</param>
+	/// <param name="suppressNullableWarning">If we should suppress the nullable warning.</param>
+	/// <returns>The expression that calls ArrayFromHandle method.</returns>
+	public static ExpressionSyntax GetNSArrayFromHandle (string nsObjectType, ImmutableArray<ArgumentSyntax> args,
+		bool suppressNullableWarning = false)
+	{
+		var argsList = ArgumentList (SeparatedList<ArgumentSyntax> (args.ToSyntaxNodeOrTokenArray ()));
+		return StaticInvocationGenericExpression ("CFArray", "ArrayFromHandle",
+			nsObjectType, argsList, suppressNullableWarning);
+	}
 
 	/// <summary>
 	/// Returns the expression to get the handle of a selector.

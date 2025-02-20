@@ -182,9 +182,9 @@ return {backingField};
 						getterBlock.WriteRaw (
 $@"{tempDeclaration}
 if (IsDirectBinding) {{
-	{tempVar} = {invocations.Getter.Send}
+	{invocations.Getter.Send}
 }} else {{
-	{tempVar} = {invocations.Getter.SendSuper}
+	{invocations.Getter.SendSuper}
 }}
 return {tempVar};
 ");
