@@ -34,6 +34,12 @@ readonly struct UnsupportedOSPlatformData {
 		(Platform, Version) = platformName.GetPlatformAndVersion ();
 	}
 
+	internal UnsupportedOSPlatformData (ApplePlatform platform)
+	{
+		Platform = platform;
+		Version = new Version ();
+	}
+
 	internal UnsupportedOSPlatformData (string platformName, string? message = null) : this (platformName)
 	{
 		Message = message;

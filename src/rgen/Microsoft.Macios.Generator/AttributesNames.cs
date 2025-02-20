@@ -12,6 +12,8 @@ static class AttributesNames {
 	public const string BindingAttribute = "ObjCBindings.BindingTypeAttribute";
 	public const string BindingCategoryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Category>";
 	public const string BindingClassAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Class>";
+	public const string BindingCoreImageFilterAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.CoreImageFilter>";
+	public const string BindFromAttribute = "ObjCBindings.BindFromAttribute";
 	public const string BindingProtocolAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.Protocol>";
 	public const string BindingStrongDictionaryAttribute = "ObjCBindings.BindingTypeAttribute<ObjCBindings.StrongDictionary>";
 	public const string FieldAttribute = "ObjCBindings.FieldAttribute";
@@ -22,6 +24,7 @@ static class AttributesNames {
 	public const string SupportedOSPlatformAttribute = "System.Runtime.Versioning.SupportedOSPlatformAttribute";
 	public const string UnsupportedOSPlatformAttribute = "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
 	public const string ObsoletedOSPlatformAttribute = "System.Runtime.Versioning.ObsoletedOSPlatformAttribute";
+	public const string NativeEnumAttribute = "ObjCRuntime.NativeAttribute";
 
 	public static readonly string [] BindingTypes = [
 		BindingAttribute,
@@ -29,6 +32,7 @@ static class AttributesNames {
 		BindingClassAttribute,
 		BindingProtocolAttribute,
 		BindingStrongDictionaryAttribute,
+		BindingCoreImageFilterAttribute,
 	];
 
 
