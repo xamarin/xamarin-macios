@@ -155,6 +155,8 @@ return {backingField};
 			if (property.IsField)
 				// ignore fields
 				continue;
+			// use the factory to generate all the needed invocations for the current 
+			var invocations = GetInvocations (property);
 
 			// we expect to always at least have a getter
 			var getter = property.GetAccessor (AccessorKind.Getter);
@@ -180,19 +182,19 @@ return {backingField};
 						getterBlock.WriteRaw (
 $@"{tempDeclaration}
 if (IsDirectBinding) {{
-	{tempVar} = throw new NotImplementedException();
+	{tempVar} = {invocations.Getter.Send}
 }} else {{
-	{tempVar} = throw new NotImplementedException();
+	{tempVar} = {invocations.Getter.SendSuper}
 }}
 return {tempVar};
 ");
 					} else {
 						getterBlock.WriteRaw (
-@"if (IsDirectBinding) {
-	throw new NotImplementedException();
-} else {
-	throw new NotImplementedException();
-}
+$@"if (IsDirectBinding) {{
+	return {invocations.Getter.Send}
+}} else {{
+	return {invocations.Getter.SendSuper}
+}}
 ");
 					}
 				}
@@ -310,9 +312,9 @@ return {tempVar};
 
 			if (!bindingContext.Changes.IsStatic) {
 				classBlock.AppendGeneratedCodeAttribute (optimizable: true);
-				classBlock.WriteLine ($"static readonly NativeHandle class_ptr = Class.GetHandle (\"{registrationName}\");");
+				classBlock.WriteLine ($"static readonly NativeHandle {ClassPtr} = Class.GetHandle (\"{registrationName}\");");
 				classBlock.WriteLine ();
-				classBlock.WriteLine ("public override NativeHandle ClassHandle => class_ptr;");
+				classBlock.WriteLine ($"public override NativeHandle ClassHandle => {ClassPtr};");
 				classBlock.WriteLine ();
 
 				EmitDefaultConstructors (bindingContext: bindingContext,

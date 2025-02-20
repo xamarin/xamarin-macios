@@ -15,6 +15,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\Configuration.cs">
@@ -28,6 +29,9 @@
     </Compile>
     <Compile Include="..\introspection\EnvironmentVariable.cs">
       <Link>EnvironmentVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BinLog.cs">
+      <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>

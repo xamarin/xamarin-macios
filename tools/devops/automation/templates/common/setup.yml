@@ -1,7 +1,9 @@
 # Template that does all the boiler plate needed to build and execute tests on macOS bots
 
 parameters:
-
+- name: disableCodeQL
+  type: boolean
+  default: true
 - name: keyringPass
   type: string
 
@@ -13,6 +15,7 @@ steps:
 - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/disable-codeql-arm64.sh
   displayName: 'Disable CodeQL on arm64'
   name: disableCodeQLOnArm64
+  condition: and(succeeded(), eq('${{ parameters.disableCodeQL }}', 'true'))
 
 - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/fix-github-ssh-key.sh
   displayName: 'Fix GitHub SSH host key'
