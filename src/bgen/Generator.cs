@@ -520,9 +520,15 @@ public partial class Generator : IMemberGatherer {
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)!) {{\n\t\treturn {TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
 			else if (arrType == TypeCache.NSNumber && !arrIsNullable) {
 				if (arrRetType.IsEnum) {
-					append = $"NSNumber.ToEnum<{TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}>";
-				} else if (TypeManager.NSNumberToValueMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
-					append = $"NSNumber.{valueFetcher}";
+					// get the underlying type of the enum and use a callback with the appropiate one
+					var enumType = arrRetType.GetEnumUnderlyingType ();
+					if (TypeManager.NSNumberToValueMap.TryGetValue (enumType, out valueFetcher)) {
+						append = $"ptr => ({TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}) NSNumber.{valueFetcher} (ptr)";
+					} else {
+						throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
+					}
+				} else if (TypeManager.NSNumberToValueMap.TryGetValue (arrRetType, out valueFetcher)) {
+						append = $"NSNumber.{valueFetcher}";
 				} else
 					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 			} else if (arrType == TypeCache.NSValue && !arrIsNullable) {
