@@ -130,6 +130,96 @@ namespace Foundation {
 			return source.BoolValue;
 		}
 
+		public static bool ToBool (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.BoolValue;
+		}
+		
+		public static byte ToByte (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.ByteValue;
+		}
+
+		public static sbyte ToSByte (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.SByteValue;
+		}
+
+		public static short ToInt16 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.Int16Value;
+		}
+
+		public static ushort ToUInt16 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.UInt16Value;
+		}
+
+		public static int ToInt32 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.Int32Value;
+		}
+
+		public static uint ToUInt32 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.UInt32Value;
+		}
+
+		public static long ToInt64 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.Int64Value;
+		}
+
+		public static ulong ToUInt64 (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.UInt64Value;
+		}
+
+		public static float ToFloat (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.FloatValue;
+		}
+
+		public static nfloat ToNFloat (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.NFloatValue;
+		}
+
+		public static double ToDouble (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.DoubleValue;
+		}
+
+		public static nint ToNInt (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.NIntValue;
+		}
+
+		public static nuint ToNUInt (NativeHandle handle)
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return num.NUIntValue;
+		}
+
+		public static T ToEnum<T> (NativeHandle handle) where T : Enum
+		{
+			using var num = Runtime.GetNSObject<NSNumber>(handle)!;
+			return (T) (object) num.Int32Value;
+		}
+
 		public NSNumber (nfloat value) :
 			this ((double) value)
 		{

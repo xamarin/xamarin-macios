@@ -14,6 +14,7 @@ public class TypeManager {
 	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
+	Dictionary<Type, string>? nsnumberToValueMap;
 	HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
 
 	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types)
@@ -57,6 +58,40 @@ public class TypeManager {
 					nsnumberReturnMap [tuple.Item1] = tuple.Item2;
 			}
 			return nsnumberReturnMap;
+		}
+	}
+	
+	/// <summary>
+	/// Maps the NSNumber types to the corresponding ToValue function. For example
+	/// int => "ToInt32"
+	/// </summary>
+	public Dictionary<Type, string> NSNumberToValueMap
+	{
+		get {
+			if (nsnumberToValueMap is not null)
+				return nsnumberToValueMap;
+			Tuple<Type?, string> [] typeMap = {
+				new (TypeCache.System_Boolean, "ToBool"),
+				new (TypeCache.System_Byte, "ToByte"),
+				new (TypeCache.System_Double, "ToDouble"),
+				new (TypeCache.System_Float, "ToFloat"),
+				new (TypeCache.System_Int16, "ToInt16"),
+				new (TypeCache.System_Int32, "ToInt32"),
+				new (TypeCache.System_Int64, "ToInt64"),
+				new (TypeCache.System_SByte, "ToSByte"),
+				new (TypeCache.System_UInt16, "ToUInt16"),
+				new (TypeCache.System_UInt32, "ToUInt32"),
+				new (TypeCache.System_UInt64, "ToUInt64"),
+				new (TypeCache.System_nfloat, "ToNFloat"),
+				new (TypeCache.System_nint, "ToNInt"),
+				new (TypeCache.System_nuint, "ToNUInt"),
+			};
+			nsnumberToValueMap = new ();
+			foreach (var tuple in typeMap) {
+				if (tuple.Item1 is not null)
+					nsnumberToValueMap [tuple.Item1] = tuple.Item2;
+			}
+			return nsnumberToValueMap;
 		}
 	}
 
