@@ -63,7 +63,6 @@ public class BindingSyntaxFactoryPropertyTests {
 				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
 			};
 
-
 			yield return [
 				property,
 				"CFString.FromHandle (global::ObjCRuntime.Messaging.NativeHandle_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")), false);",
@@ -168,6 +167,31 @@ public class BindingSyntaxFactoryPropertyTests {
 				property,
 				"global::ObjCRuntime.Messaging.uint_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\"));",
 				"global::ObjCRuntime.Messaging.uint_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\"));"
+			];
+
+			property = new Property (
+				name: "MyProperty",
+				returnType: ReturnTypeForBool (),
+				symbolAvailability: new (),
+				attributes: [],
+				modifiers: [],
+				accessors: [
+					new (
+						accessorKind: AccessorKind.Getter,
+						symbolAvailability: new (),
+						exportPropertyData: null,
+						attributes: [],
+						modifiers: []
+					)
+				]
+			) {
+				ExportPropertyData = new ("myProperty", ArgumentSemantic.None, ObjCBindings.Property.IsThreadSafe)
+			};
+
+			yield return [
+				property,
+				"global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;",
+				"global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle (\"myProperty\")) != 0;"
 			];
 		}
 

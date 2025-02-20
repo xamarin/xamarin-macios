@@ -195,13 +195,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			bool ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle ("canDraw")) != 0;
 			} else {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle ("canDraw")) != 0;
 			}
-			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -227,13 +225,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			bool ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle ("containsAttachments")) != 0;
 			} else {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle ("containsAttachments")) != 0;
 			}
-			return ret;
 		}
 	}
 
@@ -271,13 +267,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			bool ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle ("isForPersonMassUse")) != 0;
 			} else {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle ("isForPersonMassUse")) != 0;
 			}
-			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
@@ -303,13 +297,11 @@ public partial class PropertyTests
 		[SupportedOSPlatform ("maccatalyst13.1")]
 		get
 		{
-			bool ret;
 			if (IsDirectBinding) {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSend (this.Handle, Selector.GetHandle ("isLenient")) != 0;
 			} else {
-				ret = throw new NotImplementedException();
+				return global::ObjCRuntime.Messaging.bool_objc_msgSendSuper (this.Handle, Selector.GetHandle ("isLenient")) != 0;
 			}
-			return ret;
 		}
 
 		[SupportedOSPlatform ("macos")]
