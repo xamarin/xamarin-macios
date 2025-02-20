@@ -147,6 +147,19 @@ steps:
     }
   displayName: "Verify ssh connection"
 
+- pwsh: |
+    $remoteTmpPath = "${Env:LOCALAPPDATA}\Temp\Xamarin\XMA\Remote"
+    Write-Host "Remote tmp path: $remoteTmpPath"
+    # let's see what's there
+    if (Test-Path -Path $remoteTmpPath) {
+      Get-ChildItem -Path $remoteTmpPath
+      Get-ChildItem -Path $remoteTmpPath | Format-Table | Out-String | Write-Host
+      Remove-Item -Recurse -Force $remoteTmpPath
+    } else {
+      Write-Host "Remote tmp path doesn't exist!"
+    }
+  displayName: "Cleanup temporary files"
+
 # This task fixes errors such as these:
 #     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0".
 #                    Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
