@@ -2955,7 +2955,7 @@ public partial class Generator : IMemberGatherer {
 				var suffix = string.Empty;
 				print ("{0} retvalarrtmp;", NativeHandleType);
 				cast_a = "((retvalarrtmp = ";
-				cast_b = ") == IntPtr.Zero ? null! : (";
+				cast_b = ") == IntPtr.Zero ? [] : (";
 				cast_b += $"NSArray.ArrayFromHandleFunc <{TypeManager.FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)}, {owns})" + suffix;
 				cast_b += $"))";
 			} else if (etype == TypeCache.System_String) {
