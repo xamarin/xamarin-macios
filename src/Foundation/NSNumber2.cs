@@ -216,8 +216,7 @@ namespace Foundation {
 
 		public static T ToEnum<T> (NativeHandle handle) where T : Enum
 		{
-			using var num = Runtime.GetNSObject<NSNumber> (handle)!;
-			return (T) (object) num.Int32Value;
+			return (T) (object) ToInt32 (handle);
 		}
 
 		public NSNumber (nfloat value) :
