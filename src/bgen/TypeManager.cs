@@ -60,13 +60,12 @@ public class TypeManager {
 			return nsnumberReturnMap;
 		}
 	}
-	
+
 	/// <summary>
 	/// Maps the NSNumber types to the corresponding ToValue function. For example
 	/// int => "ToInt32"
 	/// </summary>
-	public Dictionary<Type, string> NSNumberToValueMap
-	{
+	public Dictionary<Type, string> NSNumberToValueMap {
 		get {
 			if (nsnumberToValueMap is not null)
 				return nsnumberToValueMap;

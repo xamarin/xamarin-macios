@@ -521,8 +521,7 @@ public partial class Generator : IMemberGatherer {
 			else if (arrType == TypeCache.NSNumber && !arrIsNullable) {
 				if (arrRetType.IsEnum) {
 					append = $"NSNumber.ToEnum<{TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}>";
-				}
-				else if (TypeManager.NSNumberToValueMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
+				} else if (TypeManager.NSNumberToValueMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
 					append = $"NSNumber.{valueFetcher}";
 				} else
 					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
