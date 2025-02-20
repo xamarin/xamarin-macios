@@ -53,10 +53,6 @@ stages:
       clean: true
       submodules: true
 
-    - task: CodeQL3000Init@0
-      displayName: CodeQL 3000 Init
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-
     - template: /tools/devops/automation/templates/build/build.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
@@ -76,7 +72,3 @@ stages:
           inputs:
             path: $(Build.SourcesDirectory)/package
             artifact: not-signed-package
-
-    - task: CodeQL3000Finalize@0
-      displayName: CodeQL 3000 Finalize
-      condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
