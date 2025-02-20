@@ -58,7 +58,7 @@ namespace Network {
 
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 #else
 		public NWProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif

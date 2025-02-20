@@ -10,12 +10,18 @@ var targetFramework = string.Empty;
 var verbose = false;
 var fullPaths = true;
 
+var customProperties = new Dictionary<string, string> ();
+
 var options = new OptionSet {
 	{ "output=", (v) => output = v },
 	{ "rsp=", (v) => rspFiles.Add (v) },
 	{ "working-directory=", (v) => workingDirectory = v },
 	{ "target-framework=", (v) => targetFramework = v },
 	{ "v|verbose", (v) => verbose = true },
+	{ "p|property=", (v) => {
+		var kp = v.Split ('=');
+		customProperties.Add (kp[0], kp [1]);
+	}},
 };
 
 int exitCode = 0;
@@ -85,6 +91,10 @@ var items = new List<(string Name, string Include)> ();
 
 if (verbose)
 	Console.WriteLine ($"Found {arguments.Count} arguments and {sourceFiles.Count} files.");
+
+foreach (var prop in customProperties) {
+	properties.Add (new (prop.Key, prop.Value));
+}
 
 foreach (var a in arguments) {
 	var splitIndex = a.IndexOfAny (new char [] { ':', '=' });
@@ -178,6 +188,9 @@ foreach (var a in arguments) {
 	case "reportanalyzer":
 		if (!properties.Contains (("ReportAnalyzer", "true")))
 			properties.Add (new ("ReportAnalyzer", "true"));
+		break;
+	case "analyzerconfig":
+		items.Add (new ("EditorConfigFiles", GetFullPath (value)));
 		break;
 	default:
 		ReportError ($"Didn't understand argument '{a}'");

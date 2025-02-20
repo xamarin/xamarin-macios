@@ -21,20 +21,20 @@ using UniformTypeIdentifiers;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.DeviceDiscoveryExtension {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DDDeviceTest {
-		
+
 		[Test]
 		public void NetworkEndpointTest ()
 		{
-			TestRuntime.AssertXcodeVersion (14,0);
+			TestRuntime.AssertXcodeVersion (14, 0);
 
 			var uuid = Guid.NewGuid ();
 			var endpoint = NWEndpoint.Create ("www.microsoft.com", "https");
 			var device = new DDDevice ("MyDevice", DDDeviceCategory.LaptopComputer, UTType.CreateFromIdentifier ("com.adobe.pdf"), uuid.ToString ());
-			
+
 			device.NetworkEndpoint = endpoint;
 			var tmpEndpoint = device.NetworkEndpoint;
 

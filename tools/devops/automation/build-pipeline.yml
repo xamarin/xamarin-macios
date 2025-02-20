@@ -129,12 +129,6 @@ resources:
       ref: refs/heads/main
       endpoint: xamarin
 
-    - repository: maccore
-      type: github
-      name: xamarin/maccore
-      ref: refs/heads/main
-      endpoint: xamarin
-
     - repository: macios-adr
       type: git
       name: macios-adr
@@ -187,28 +181,29 @@ extends:
       os: windows
     sdl:
       baseline:
-        baselineFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\baselines.gdnbaselines'
+        baselineFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/baselines.gdnbaselines'
       suppression:
-        suppressionFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\suppress.gdnsuppress'
+        suppressionFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/suppress.gdnsuppress'
       sourceAnalysisPool:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
       tsa:
-        configFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\tsa_config.gdntsa'
+        configFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/tsa_config.gdntsa'
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\CredScanSuppressions.json'
+        suppressionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/CredScanSuppressions.json'
       policheck:
-        exclusionsFile: '$(System.DefaultWorkingDirectory)\\$(BUILD_REPOSITORY_TITLE)\\tools\\devops\\governance\\PoliCheckExclusions.xml'
+        exclusionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true  # run both maccore and macios in the same job
         include:
-          - repository: maccore
+          - repository: self
+            path: xamarin-macios
         exclude:
           - repository: yaml-templates
-          - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis
+          - repository: macios-adr  # macios-adr has it's own build pipeline and should not be included in the source analysis
     stages:
       - template: templates/main-stage.yml
         parameters:

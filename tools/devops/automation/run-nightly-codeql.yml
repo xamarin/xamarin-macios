@@ -1,0 +1,82 @@
+# xamarin-macios-nightly-codeql
+
+trigger: none
+pr: none
+
+schedules:
+- cron: "0 5 * * *"
+  displayName: Run daily at 5:00 UTC
+  branches:
+    include:
+    - main
+
+parameters:
+- name: macOSName  # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Sequoia'
+
+resources:
+  repositories:
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+  - repository: macios-adr
+    type: git
+    name: macios-adr
+    ref: refs/heads/main
+
+variables:
+- template: /tools/devops/automation/templates/variables/common.yml
+
+stages:
+- stage: build_nightly
+  displayName: Build Nightly
+  dependsOn: []
+  jobs:
+  - job: build_nightly_codeql
+    displayName: CodeQL
+    timeoutInMinutes: 480
+    pool:
+      os: macOS
+      name: $(PRBuildPool)
+      demands:
+      - Agent.OS -equals Darwin
+      - macOS.Name -equals ${{ parameters.macOSName }}
+      - XcodeChannel -equals Stable
+    workspace:
+      clean: all
+    steps:
+    - checkout: self
+      clean: true
+      submodules: true
+
+    - task: CodeQL3000Init@0
+      displayName: CodeQL 3000 Init
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+
+    - template: /tools/devops/automation/templates/build/build.yml
+      parameters:
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        gitHubToken: $(Github.Token)
+        xqaCertPass: $(xqa--certificates--password)
+        use1ES: false
+        disableCodeQL: false
+        buildSteps:
+        - bash: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/bash/build-nugets.sh
+          displayName: 'Build Nugets'
+          condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+          timeoutInMinutes: 360
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish Build Artifacts
+          inputs:
+            path: $(Build.SourcesDirectory)/package
+            artifact: not-signed-package
+
+    - task: CodeQL3000Finalize@0
+      displayName: CodeQL 3000 Finalize
+      condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))

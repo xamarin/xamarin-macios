@@ -201,8 +201,8 @@ namespace VideoToolbox {
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
 								 CMVideoFormatDescription formatDescription,
 #if NET
-							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
-							     CVPixelBufferAttributes? destinationImageBufferAttributes = null)
+								 VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
+								 CVPixelBufferAttributes? destinationImageBufferAttributes = null)
 #else
 								 VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 								 CVPixelBufferAttributes? destinationImageBufferAttributes)
@@ -222,7 +222,7 @@ namespace VideoToolbox {
 							  VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
 							  NSDictionary? destinationImageBufferAttributes,
 #if NET
-						      delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> cback)
+							  delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> cback)
 #else
 							  IntPtr cback)
 #endif

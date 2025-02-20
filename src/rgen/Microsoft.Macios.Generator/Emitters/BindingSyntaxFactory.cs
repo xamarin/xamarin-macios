@@ -22,7 +22,7 @@ static partial class BindingSyntaxFactory {
 		return Argument (LiteralExpression (kind, Literal (literal)));
 	}
 
-	static CompilationUnitSyntax StaticInvocationExpression (string staticClassName, string methodName,
+	static StatementSyntax StaticInvocationExpression (string staticClassName, string methodName,
 		SyntaxNodeOrToken [] argumentList, bool suppressNullableWarning = false)
 	{
 		var invocation = InvocationExpression (
@@ -33,18 +33,14 @@ static partial class BindingSyntaxFactory {
 			)
 		).WithArgumentList (ArgumentList (SeparatedList<ArgumentSyntax> (argumentList)).NormalizeWhitespace ());
 
-		var compilationUnit = CompilationUnit ().WithMembers (
-			SingletonList<MemberDeclarationSyntax> (
-				GlobalStatement (
-					ExpressionStatement (
-						suppressNullableWarning
-							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
-							: invocation))));
-		return compilationUnit;
+		return ExpressionStatement (
+			suppressNullableWarning
+				? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
+				: invocation);
 	}
 
 
-	static CompilationUnitSyntax StaticInvocationGenericExpression (string staticClassName, string methodName,
+	static StatementSyntax StaticInvocationGenericExpression (string staticClassName, string methodName,
 		string genericName,
 		ArgumentListSyntax argumentList, bool suppressNullableWarning = false)
 	{
@@ -60,41 +56,41 @@ static partial class BindingSyntaxFactory {
 			)
 		).WithArgumentList (argumentList);
 
-		var compilationUnit = CompilationUnit ().WithMembers (
-			SingletonList<MemberDeclarationSyntax> (
-				GlobalStatement (
-					ExpressionStatement (
-						suppressNullableWarning
-							? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
-							: invocation
-					))));
-		return compilationUnit;
+		return ExpressionStatement (
+			suppressNullableWarning
+				? PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, invocation)
+				: invocation);
 	}
 
-	static CompilationUnitSyntax ThrowException (string type, string message)
+	static StatementSyntax ThrowException (string type, string? message = null)
 	{
-		var argumentList = ArgumentList (SingletonSeparatedList (
+		var throwExpression = ObjectCreationExpression (IdentifierName (type));
+
+		if (message is not null) {
+			var argumentList = ArgumentList (SingletonSeparatedList (
 				GetLiteralExpressionArgument (SyntaxKind.StringLiteralExpression, message)
 			)).WithLeadingTrivia (Space);
 
-		var throwExpression = ThrowStatement (
-			ObjectCreationExpression (IdentifierName (type))
-				.WithArgumentList (argumentList)).NormalizeWhitespace ();
+			throwExpression = throwExpression.WithArgumentList (argumentList).NormalizeWhitespace ();
+		} else {
+			throwExpression = throwExpression.WithArgumentList (ArgumentList ().WithLeadingTrivia (Space));
+		}
 
-		return CompilationUnit ().WithMembers (
-			SingletonList<MemberDeclarationSyntax> (
-				GlobalStatement (throwExpression)));
+		return ThrowStatement (throwExpression).NormalizeWhitespace ();
 	}
 
-	static CompilationUnitSyntax ThrowNotSupportedException (string message)
+	static StatementSyntax ThrowNotSupportedException (string message)
 		=> ThrowException (type: "NotSupportedException", message: message);
+
+	static StatementSyntax ThrowNotImplementedException ()
+		=> ThrowException (type: "NotImplementedException");
 
 	/// <summary>
 	/// Generates the syntax to declare the variable used by a field property.  
 	/// </summary>
 	/// <param name="property">The field property whose backing variable we want to generate.</param>
 	/// <returns>The variable declaration syntax.</returns>
-	public static CompilationUnitSyntax FieldPropertyBackingVariable (in Property property)
+	internal static CompilationUnitSyntax FieldPropertyBackingVariable (in Property property)
 	{
 		var variableType = property.ReturnType.FullyQualifiedName;
 		if (property.ReturnType.SpecialType is SpecialType.System_IntPtr or SpecialType.System_UIntPtr
@@ -116,5 +112,48 @@ static partial class BindingSyntaxFactory {
 					.WithModifiers (TokenList (Token (SyntaxKind.StaticKeyword))))) // fields are static variables
 			.NormalizeWhitespace ();
 		return compilationUnit;
+	}
+
+	/// <summary>
+	/// Returns a using statement or block for a local declaration.
+	///
+	/// This allows to write the following for a binding:
+	///
+	/// <code>
+	/// var conde = @"
+	/// if ({variable} is not null) {
+	///		{Using (GetAutoreleasePoolVariable ())}
+	/// }
+	/// ";
+	/// </code>
+	/// </summary>
+	/// <param name="declaration"></param>
+	/// <param name="isBlock"></param>
+	/// <returns></returns>
+	internal static LocalDeclarationStatementSyntax Using (LocalDeclarationStatementSyntax declaration)
+	{
+		return declaration.WithUsingKeyword (Token (SyntaxKind.UsingKeyword).WithTrailingTrivia (Space));
+	}
+
+	/// <summary>
+	/// Suppresses the nullable warning for the provided expression.
+	/// </summary>
+	/// <param name="expression">The expression whose nullable warning we want to supress.</param>
+	/// <returns>An expression with a suppressed warning operator.</returns>
+	internal static ExpressionSyntax SuppressNullableWarning (ExpressionSyntax expression)
+	{
+		return PostfixUnaryExpression (SyntaxKind.SuppressNullableWarningExpression, expression);
+	}
+
+	/// <summary>
+	/// Creates the attribute syntaxt for a boolean value.
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	internal static ArgumentSyntax BoolArgument (bool value)
+	{
+		return Argument (
+			LiteralExpression (
+				value ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
 	}
 }

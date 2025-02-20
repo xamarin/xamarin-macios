@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 using System;
 using System.Collections.Generic;
+using Microsoft.Macios.Generator.Context;
 
 namespace Microsoft.Macios.Generator.DataModel;
 
@@ -85,5 +86,20 @@ class BindingEqualityComparer : EqualityComparer<Binding> {
 	public override int GetHashCode (Binding obj)
 	{
 		return HashCode.Combine (obj.FullyQualifiedSymbol, obj.EnumMembers);
+	}
+}
+
+class RootBindingEqualityComparer : EqualityComparer<(RootContext Context, Binding Binding)> {
+	BindingEqualityComparer comparer = new ();
+	/// <inheritdoc />
+	public override bool Equals ((RootContext Context, Binding Binding) x, (RootContext Context, Binding Binding) y)
+	{
+		return comparer.Equals (x.Binding, y.Binding);
+	}
+
+	/// <inheritdoc />
+	public override int GetHashCode ((RootContext Context, Binding Binding) obj)
+	{
+		return comparer.GetHashCode (obj.Binding);
 	}
 }

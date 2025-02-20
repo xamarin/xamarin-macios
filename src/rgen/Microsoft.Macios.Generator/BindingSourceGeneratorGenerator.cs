@@ -25,7 +25,7 @@ namespace Microsoft.Macios.Generator;
 /// </summary>
 [Generator]
 public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
-	static readonly BindingEqualityComparer equalityComparer = new ();
+	static readonly RootBindingEqualityComparer equalityComparer = new ();
 
 	/// <inheritdoc cref="IIncrementalGenerator"/>
 	public void Initialize (IncrementalGeneratorInitializationContext context)
@@ -47,7 +47,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			.Where (tuple => tuple.BindingAttributeFound);
 
 		var bindings = provider
-			.Select (static (tuple, _) => tuple.Bindings)
+			.Select (static (tuple, _) => (tuple.RootBindingContext, tuple.Bindings))
 			.WithComparer (equalityComparer);
 
 		// ideally we could do a distinct, because each code change can return the same libs, this makes the library
@@ -93,8 +93,13 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 			: (bindingContext, default, false);
 	}
 
-	static void GenerateCode (SourceProductionContext context, in ImmutableArray<Binding> bindingsList)
+	static void GenerateCode (SourceProductionContext context, in ImmutableArray<(RootContext Context, Binding Binding)> bindingsList)
 	{
+		if (bindingsList.Length == 0)
+			return;
+		// all items contain the same root context, we can get it from the first item
+		var rootBindingContext = bindingsList [0].Context;
+
 		// The process is as follows, get all the changes we have received from the incremental generator,
 		// loop over them, and based on the CodeChange.BindingType we are going to build the symbol context
 		// and emitter. Those are later used to generate the code.
@@ -102,7 +107,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 		// Once all the enums, classes and interfaces have been processed, we will use the data collected
 		// in the RootBindingContext to generate the library and trampoline code.
 		var sb = new TabbedStringBuilder (new ());
-		foreach (var binding in bindingsList) {
+		foreach (var (_, binding) in bindingsList) {
 			// init sb and add the header
 			sb.Clear ();
 			sb.WriteHeader ();
@@ -110,7 +115,7 @@ public class BindingSourceGeneratorGenerator : IIncrementalGenerator {
 				// write the using statements
 				CollectUsingStatements (binding, sb, emitter);
 
-				var bindingContext = new BindingContext (sb, binding);
+				var bindingContext = new BindingContext (rootBindingContext, sb, binding);
 				if (emitter.TryEmit (bindingContext, out var diagnostics)) {
 					// only add a file when we do generate code
 					var code = sb.ToCode ();
