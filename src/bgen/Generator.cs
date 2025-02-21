@@ -517,7 +517,7 @@ public partial class Generator : IMemberGatherer {
 			var arrRetType = arrIsNullable ? nullableElementType : retType.GetElementType ();
 			var valueFetcher = string.Empty;
 			if (arrType == TypeCache.NSString && !arrIsNullable)
-				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)!) {{\n\t\treturn {TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
+				append = $"{TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue";
 			else if (arrType == TypeCache.NSNumber && !arrIsNullable) {
 				if (arrRetType.IsEnum) {
 					// get the underlying type of the enum and use a callback with the appropiate one

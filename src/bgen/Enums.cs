@@ -307,6 +307,22 @@ public partial class Generator {
 			indent--;
 			print ("}");
 
+			// create a helper method that will be only used by the binding when they encounter a bindas attr for a smart enum with a nsstring
+			if (!isBackingFieldValueType) {
+				if (BindingTouch.SupportsXmlDocumentation) {
+					print ($"/// <summary>Retrieves the <see cref=\"global::{type.FullName}\" /> value represented by the backing field value in <paramref name=\"handle\" />.</summary>");
+					print ($"/// <param name=\"handle\">The native handle with the name of the constant to retrieve.</param>");
+				}
+
+				print ("internal static {0} GetValue ({1} handle)", type.Name, NativeHandleType);
+				print ("{");
+				indent++;
+				print ("using var str = Runtime.GetNSObject<{0}> (handle){1};", backingFieldTypeName, !nullable ? "!" : "");
+				print ("return GetValue (str);");
+				indent--;
+				print ("}");
+			}
+
 			if (BindingTouch.SupportsXmlDocumentation) {
 				print ($"/// <summary>Converts an array of <see cref=\"global::{type.FullName}\" /> enum values into an array of their corresponding constants.</summary>");
 				print ($"/// <param name=\"values\">The array of enum values to convert.</param>");
