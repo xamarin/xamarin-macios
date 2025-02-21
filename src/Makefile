@@ -459,6 +459,8 @@ $($(2)_DOTNET_BUILD_DIR)/GeneratedMSBuildEditorConfig.editorconfig: | $($(2)_DOT
 	$$(Q) rm -f "$$@.tmp"
 	$$(Q) printf "is_global = true\n" >> "$$@.tmp"
 	$$(Q) printf "build_property.TargetFramework = $(DOTNET_TFM)-$(3)\n" >> "$$@.tmp"
+	$$(Q) printf "build_property.TargetFrameworkIdentifier = .NETCoreApp\n" >> "$$@.tmp"
+	$$(Q) printf "build_property.TargetFrameworkVersion = v$(DOTNET_MAJOR_VERSION).0\n" >> "$$@.tmp"
 	$$(Q) mv "$$@.tmp" "$$@"
 
 $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $($(2)_DOTNET_BUILD_DIR)

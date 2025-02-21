@@ -64,10 +64,12 @@ namespace Cecil.Tests {
 			foreach (var kvp in groupedWarnings)
 				failures.Add ($"{kvp.Value.File} has {kvp.Value.Count} occurrences of {kvp.Value.Message}");
 
-			Helper.AssertFailures (failures, knownFailuresAvailabilityWarnings, nameof (knownFailuresAvailabilityWarnings), "Availability warnings.");
-
-			Console.WriteLine ($"There's a total of {totalWarnings} warnings.");
-			Assert.AreEqual (7436, totalWarnings, "Total warnings"); // this is just to see how the warning count changes as issues are fixed.
+			try {
+				Helper.AssertFailures (failures, knownFailuresAvailabilityWarnings, nameof (knownFailuresAvailabilityWarnings), "Availability warnings.");
+			} finally {
+				Console.WriteLine ($"There's a total of {totalWarnings} warnings.");
+			}
+			Assert.AreEqual (3718, totalWarnings, "Total warnings"); // this is just to see how the warning count changes as issues are fixed.
 		}
 
 		public record ObsoletedFailure : IComparable {
