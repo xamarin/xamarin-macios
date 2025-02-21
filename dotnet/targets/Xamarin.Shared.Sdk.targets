@@ -905,7 +905,7 @@
 			<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
 
 			<!-- Strip if we are AOT and Release  -->
-			<EnableAssemblyILStripping Condition="'$(_RunAotCompiler)' == 'true' And '$(Configuration)' == 'Release'">true</EnableAssemblyILStripping>
+			<EnableAssemblyILStripping Condition="'$(_RunAotCompiler)' == 'true' And '$(Configuration)' == 'Release' And '$(_IsMultiRidBuild)' != 'true'">true</EnableAssemblyILStripping>
 
 			<!-- Don't strip if we are running the interpreter  -->
 			<EnableAssemblyILStripping Condition="'$(MtouchInterpreter)' != ''">false</EnableAssemblyILStripping>
