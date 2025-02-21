@@ -212,7 +212,17 @@ namespace Xamarin.Tuner {
 				break;
 			}
 
-			if (LinkedAwayTypes.TryGetValue (name + ": " + tr.FullName, out var latr)) {
+			var key = name + ": " + tr.FullName;
+			var found = LinkedAwayTypes.TryGetValue (key, out var latr);
+
+			// We might see a type stored with the assembly=System.Private.CoreLib, while the lookup happens with assembly=System.Runtime.
+			if (!found && name == "System.Runtime") {
+				name = "System.Private.CoreLib";
+				key = name + ": " + tr.FullName;
+				found = LinkedAwayTypes.TryGetValue (key, out latr);
+			}
+
+			if (found) {
 				module = latr.Module;
 				return latr.Resolve ();
 			}
