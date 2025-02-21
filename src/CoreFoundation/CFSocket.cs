@@ -40,10 +40,6 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	[Flags]
@@ -77,12 +73,10 @@ namespace CoreFoundation {
 		CloseOnInvalidate = 128
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public struct CFSocketNativeHandle {
 		// typedef int CFSocketNativeHandle
 		internal readonly int handle;
@@ -98,12 +92,10 @@ namespace CoreFoundation {
 		}
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CFSocketException : Exception {
 		public CFSocketError Error {
 			get;
@@ -238,39 +230,20 @@ namespace CoreFoundation {
 	struct CFSocketContext {
 		nint Version; // CFIndex
 		public /* void*/ IntPtr Info;
-#if NET
 		unsafe delegate* unmanaged<IntPtr, IntPtr> Retain;
 		unsafe delegate* unmanaged<IntPtr, void> Release;
-#else
-		IntPtr Retain;
-		IntPtr Release;
-#endif
 		IntPtr CopyDescription;
 
 		public CFSocketContext (IntPtr info) : this ()
 		{
 			Info = info;
-#if NET
 			unsafe {
 				Retain = &OnContextRetain;
 				Release = &OnContextRelease;
 			}
-#else
-			Retain = Marshal.GetFunctionPointerForDelegate (retainCallback);
-			Release = Marshal.GetFunctionPointerForDelegate (releaseCallback);
-#endif
 		}
 
-#if !NET
-		delegate IntPtr RetainCallback (IntPtr ptr);
-		static readonly RetainCallback retainCallback = OnContextRetain;
-#endif
-
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		[MonoPInvokeCallback (typeof (RetainCallback))]
-#endif
 		static IntPtr OnContextRetain (IntPtr ptr)
 		{
 			var gch = GCHandle.FromIntPtr (ptr);
@@ -279,16 +252,7 @@ namespace CoreFoundation {
 			return ptr;
 		}
 
-#if !NET
-		delegate void ReleaseCallback (IntPtr ptr);
-		static readonly ReleaseCallback releaseCallback = OnContextRelease;
-#endif
-
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		[MonoPInvokeCallback (typeof (ReleaseCallback))]
-#endif
 		static void OnContextRelease (IntPtr ptr)
 		{
 			var gch = GCHandle.FromIntPtr (ptr);
@@ -297,12 +261,10 @@ namespace CoreFoundation {
 		}
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CFSocket : CFType {
 		int contextRetainCount;
 
@@ -326,15 +288,7 @@ namespace CoreFoundation {
 			base.Dispose (disposing);
 		}
 
-#if !NET
-		delegate void CFSocketCallBack (IntPtr s, nuint type, IntPtr address, IntPtr data, IntPtr info);
-#endif
-
-#if NET
 		[UnmanagedCallersOnly]
-#else
-		[MonoPInvokeCallback (typeof (CFSocketCallBack))]
-#endif
 		static void OnCallback (IntPtr s, nuint type, IntPtr address, IntPtr data, IntPtr info)
 		{
 			var socket = GCHandle.FromIntPtr (info).Target as CFSocket;
@@ -372,29 +326,15 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
 											 nuint /*CFOptionFlags*/ callBackTypes,
 											 delegate* unmanaged<IntPtr, nuint, IntPtr, IntPtr, IntPtr, void> callout, CFSocketContext* ctx);
-#else
-		[DllImport (Constants.CoreFoundationLibrary)]
-		unsafe extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
-											 nuint /*CFOptionFlags*/ callBackTypes,
-											 CFSocketCallBack callout, CFSocketContext* ctx);
-#endif
 
-#if NET
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
 													   nuint /*CFOptionFlags*/ callBackTypes,
 													   delegate* unmanaged<IntPtr, nuint, IntPtr, IntPtr, IntPtr, void> callout, CFSocketContext* ctx);
-#else
-		[DllImport (Constants.CoreFoundationLibrary)]
-		unsafe extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
-													   nuint /*CFOptionFlags*/ callBackTypes,
-													   CFSocketCallBack callout, CFSocketContext* ctx);
-#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateRunLoopSource (IntPtr allocator, IntPtr socket, nint order);
@@ -422,34 +362,20 @@ namespace CoreFoundation {
 		CFSocket (int family, int type, int proto, CFRunLoop loop)
 		{
 			unsafe {
-#if NET
 				Initialize (
 					loop,
 					(CFSocketContext* ctx) => CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, &OnCallback, ctx)
 				);
-#else
-				Initialize (
-					loop,
-					(CFSocketContext* ctx) => CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx)
-				);
-#endif
 			}
 		}
 
 		CFSocket (CFSocketNativeHandle sock)
 		{
 			unsafe {
-#if NET
 				Initialize (
 					CFRunLoop.Current,
 					(CFSocketContext* ctx) => CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, &OnCallback, ctx)
 				);
-#else
-				Initialize (
-					CFRunLoop.Current,
-					(CFSocketContext* ctx) => CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx)
-				);
-#endif
 			}
 		}
 
@@ -460,11 +386,7 @@ namespace CoreFoundation {
 					CFRunLoop.Current,
 					(CFSocketContext* ctx) => {
 						CFSocketSignature localSig = sig;
-#if NET
 						return CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, &localSig, (nuint) (ulong) defaultCallbackTypes, &OnCallback, ctx, timeout);
-#else
-						return CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, &localSig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx, timeout);
-#endif
 					}
 				);
 			}
@@ -494,19 +416,11 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, CFSocketSignature* signature,
 																	   nuint /*CFOptionFlags*/ callBackTypes,
 																	   delegate* unmanaged<IntPtr, nuint, IntPtr, IntPtr, IntPtr, void> callout,
 																	   CFSocketContext* context, double timeout);
-#else
-		[DllImport (Constants.CoreFoundationLibrary)]
-		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, CFSocketSignature* signature,
-																	   nuint /*CFOptionFlags*/ callBackTypes,
-																	   CFSocketCallBack callout,
-																	   CFSocketContext* context, double timeout);
-#endif
 
 		public static CFSocket CreateConnectedToSocketSignature (AddressFamily family, SocketType type,
 																 ProtocolType proto, IPEndPoint endpoint,
@@ -612,12 +526,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class CFSocketAcceptEventArgs : EventArgs {
 			internal CFSocketNativeHandle SocketHandle {
 				get;
@@ -646,12 +558,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class CFSocketConnectEventArgs : EventArgs {
 			public CFSocketError Result {
 				get;
@@ -669,12 +579,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class CFSocketDataEventArgs : EventArgs {
 			public IPEndPoint RemoteEndPoint {
 				get;
@@ -693,22 +601,18 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class CFSocketReadEventArgs : EventArgs {
 			public CFSocketReadEventArgs () { }
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class CFSocketWriteEventArgs : EventArgs {
 			public CFSocketWriteEventArgs () { }
 		}

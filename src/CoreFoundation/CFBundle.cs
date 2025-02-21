@@ -11,10 +11,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	public partial class CFBundle : NativeObject {
@@ -25,12 +21,10 @@ namespace CoreFoundation {
 			Bundle
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public struct PackageInfo {
 			public PackageInfo (CFBundle.PackageType type, string creator)
 			{
@@ -596,21 +590,13 @@ namespace CoreFoundation {
 		}
 
 #if MONOMAC
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsExecutableLoadable (IntPtr bundle);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
 			if (bundle is null)
@@ -619,21 +605,13 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ()) != 0;
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
 			if (url is null)
@@ -642,21 +620,13 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadableForURL (url.Handle) != 0;
 		}
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static byte CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
-#if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[NoMacCatalyst]
-#endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture) != 0;
 
 #endif

@@ -35,19 +35,13 @@ using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	// CFNumber.h
 	partial class CFBoolean : NativeObject {
 		[Preserve (Conditional = true)]

@@ -16,19 +16,13 @@ using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 #if !COREBUILD
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public sealed class DispatchBlock : NativeObject {
 		[Preserve (Conditional = true)]
 		internal DispatchBlock (NativeHandle handle, bool owns)

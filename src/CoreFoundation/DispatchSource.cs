@@ -21,10 +21,6 @@ using dispatch_source_type_t = System.IntPtr;
 using dispatch_source_t = System.IntPtr;
 using dispatch_queue_t = System.IntPtr;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 
 	[Flags]
@@ -53,12 +49,10 @@ namespace CoreFoundation {
 		Revoke = 0x40,
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class DispatchSource : DispatchObject {
 		DispatchQueue? queue;
 
@@ -67,13 +61,6 @@ namespace CoreFoundation {
 		internal DispatchSource (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
-
-#if !NET
-		// constructors for use in bindings
-		internal DispatchSource (NativeHandle handle) : base (handle, false)
-		{
-		}
-#endif
 
 		// Invoked by subclasses in this file that fully initialize both
 		// queue and handle
@@ -225,12 +212,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class Data : DispatchSource {
 			internal Data () { }
 			internal Data (IntPtr handle, bool owns) : base (handle, owns) { }
@@ -247,12 +232,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class DataAdd : Data {
 			static IntPtr type_data_add;
 
@@ -274,12 +257,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class DataOr : Data {
 			static IntPtr type_data_or;
 
@@ -300,12 +281,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class Mach : DispatchSource {
 			internal Mach (IntPtr handle, bool owns) : base (handle, owns) { }
 			internal Mach (IntPtr handle) : base (handle, false) { }
@@ -319,12 +298,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class MachSend : Mach {
 			static IntPtr type_mach_send;
 
@@ -350,12 +327,11 @@ namespace CoreFoundation {
 				}
 			}
 		}
-#if NET
+
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class MachReceive : DispatchSource {
 			static IntPtr type_mach_recv;
 
@@ -377,12 +353,10 @@ namespace CoreFoundation {
 		}
 
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class MemoryPressure : DispatchSource {
 			static IntPtr type_memorypressure;
 			public MemoryPressure (IntPtr handle, bool owns) : base (handle, owns) { }
@@ -408,12 +382,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class ProcessMonitor : DispatchSource {
 			static IntPtr type_proc;
 
@@ -446,12 +418,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class ReadMonitor : DispatchSource {
 			static IntPtr type_read;
 			public ReadMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
@@ -483,12 +453,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class SignalMonitor : DispatchSource {
 			static IntPtr type_signal;
 			public SignalMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
@@ -519,12 +487,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class Timer : DispatchSource {
 			static IntPtr type_timer;
 			public Timer (IntPtr handle, bool owns) : base (handle, owns) { }
@@ -558,12 +524,10 @@ namespace CoreFoundation {
 			}
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class VnodeMonitor : DispatchSource {
 			static IntPtr type_vnode;
 
@@ -638,12 +602,10 @@ namespace CoreFoundation {
 
 		}
 
-#if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#endif
 		public class WriteMonitor : DispatchSource {
 			static IntPtr type_write;
 			public WriteMonitor (IntPtr handle, bool owns) : base (handle, owns) { }

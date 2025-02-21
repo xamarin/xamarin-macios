@@ -16,10 +16,6 @@ using Foundation;
 
 #nullable enable
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 namespace CoreFoundation {
 	//
 	// The NativeObject class is intended to be a base class for many CoreFoundation
@@ -33,12 +29,10 @@ namespace CoreFoundation {
 	// base class to be reused for other patterns that use other retain/release
 	// systems.
 	//
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public abstract class NativeObject : DisposableObject {
 		protected NativeObject ()
 		{

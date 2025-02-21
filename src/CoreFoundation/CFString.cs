@@ -40,20 +40,14 @@ using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
-
 #nullable enable
 
 namespace CoreFoundation {
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFRange {
 		nint loc; // defined as 'long' in native code
@@ -99,12 +93,8 @@ namespace CoreFoundation {
 		}
 	}
 
-#if NET
 	// nothing is exposed publicly
 	internal static class CFObject {
-#else
-	public static class CFObject {
-#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
@@ -113,12 +103,10 @@ namespace CoreFoundation {
 		internal extern static IntPtr CFRetain (IntPtr obj);
 	}
 
-#if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#endif
 	public class CFString
 #if !COREBUILD
 		: NativeObject
@@ -169,19 +157,8 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFStringGetTypeID")]
 		public extern static nint GetTypeID ();
 
-#if !NET
-		public CFString (NativeHandle handle)
-			: this (handle, false)
-		{
-		}
-#endif
-
 		[Preserve (Conditional = true)]
-#if NET
 		internal CFString (NativeHandle handle, bool owns)
-#else
-		protected internal CFString (NativeHandle handle, bool owns)
-#endif
 			: base (handle, owns)
 		{
 		}
