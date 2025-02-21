@@ -40,46 +40,79 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #define dump_state(...)
 #endif
 
+static size_t align_size (size_t target, uint64_t alignment)
+{
+	target = (target + (alignment - 1)) & ~(alignment - 1);
+	return target;
+}
+
+static void* align_ptr (void* target, uint64_t alignment)
+{
+	if (target == NULL)
+		return NULL;
+
+	uint64_t ptr = (uint64_t) target;
+	ptr = (ptr + (alignment - 1)) & ~(alignment - 1);
+	return (void *) ptr;
+}
+
 static int
-param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, GCHandle *exception_gchandle)
+param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, bool prohibit_fp_registers, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	char type = *type_ptr;
-	LOGZ ("        reading primitive %c. total size: %i nsrn: %i ngrn: %i nsaa: %p\n", type, (int) total_size, it->nsrn, it->ngrn, it->nsaa);
+	LOGZ ("        reading primitive %c. total size: %i nsrn: %i ngrn: %i ngrn_offset: %zu nsaa: %p\n", type, (int) total_size, it->nsrn, it->ngrn, it->ngrn_offset, it->nsaa);
 
 	switch (type) {
 	case _C_FLT: {
-		if (it->nsrn < 8) {
+		size_t size = 4;
+		target = align_ptr (target, size);
+		if (prohibit_fp_registers && it->ngrn < 8) {
+			// if we can't use fp registers, then must use the standard logic
+			goto DEFAULT;
+		} else if (!prohibit_fp_registers && it->nsrn < 8) {
+			// if we can use fp registers, and we haven't used up all the fp registers, then read from the fp registers
 			if (target != NULL) {
 				*(float *) target = *(float *) &it->q [it->nsrn];
 				LOGZ ("        reading float at q%i into %p: %f\n", it->nsrn, target, *(float *) target);
 			}
 			it->nsrn++;
 		} else {
+			// read from stack
+			it->nsaa = (uint8_t *) align_ptr (it->nsaa, size); // align to natural alignment for the value we want to read
 			if (target != NULL) {
 				*(float *) target = *(float *) it->nsaa;
 				LOGZ ("        reading float at stack %p into %p: %f\n", it->nsaa, target, *(float *) target);
 			}
-			it->nsaa += 4;
+			it->nsaa += size;
 		}
-		return 4;
+		return (int) size;
 	}
 	case _C_DBL: {
-		if (it->nsrn < 8) {
+		size_t size = 8;
+		target = align_ptr (target, size);
+		if (prohibit_fp_registers && it->ngrn < 8) {
+			// if we can't use fp registers, then must use the standard logic
+			goto DEFAULT;
+		} else if (!prohibit_fp_registers && it->nsrn < 8) {
+			// if we can use fp registers, and we haven't used up all the fp registers, then read from the fp registers
 			if (target != NULL) {
 				*(double *) target = *(double *) &it->q [it->nsrn];
 				LOGZ ("        reading double at q%i into %p: %f\n", it->nsrn, target, *(double *) target);
 			}
 			it->nsrn++;
 		} else {
+			// read from stack
+			it->nsaa = (uint8_t *) align_ptr (it->nsaa, size); // align to natural alignment for the value we want to read
 			if (target != NULL) {
 				*(double *) target = *(double *) it->nsaa;
 				LOGZ ("        reading double at stack %p into %p: %f\n", it->nsaa, target, *(double *) target);
 			}
-			it->nsaa += 8;
+			it->nsaa += size;
 		}
-		return 8;
+		return (int) size;
 	}
+DEFAULT:
 	default: {
 		size_t size = xamarin_get_primitive_size (type);
 
@@ -89,16 +122,38 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 		uint8_t *ptr;
 		bool read_register = it->ngrn < 8;
 
-		if (read_register) {
-			ptr = (uint8_t *) &it->x [it->ngrn];
-			if (target != NULL) {
-				LOGZ ("        reading primitive of size %i from x%i into %p: ", (int) size, it->ngrn, target);
+		target = align_ptr (target, size);
+
+		if (read_register && it->ngrn_offset > 0) {
+			// align the offset we're supposed to read from with the size of the current read
+			it->ngrn_offset = align_size (it->ngrn_offset, size);
+
+			// if we'd read past the end of the current register, advance to the next register
+			if (it->ngrn_offset + size > 8) {
+				it->ngrn++;
+				it->ngrn_offset = 0;
+				read_register = it->ngrn < 8;
 			}
-			it->ngrn++;
+		}
+
+		if (read_register) {
+			ptr = it->ngrn_offset + (uint8_t *) &it->x [it->ngrn];
+			if (target != NULL) {
+				LOGZ ("        reading primitive of type %c and size %i from x%i into %p: ", type, (int) size, it->ngrn, target);
+			}
+
+			it->ngrn_offset += size;
+			// if we're past the current register, advance to the next register
+			if (it->ngrn_offset >= 8) {
+				it->ngrn++;
+				it->ngrn_offset = 0;
+			}
 		} else {
+			// align the pointer we're supposed to read from with the size of the current read
+			it->nsaa = (uint8_t *) align_ptr (it->nsaa, size);
 			ptr = (uint8_t *) it->nsaa;
 			if (target != NULL) {
-				LOGZ ("        reading primitive of size %i from %p into %p: ",  (int) size, ptr, target);
+				LOGZ ("        reading primitive of type %c and size %i from %p into %p: ", type, (int) size, ptr, target);
 			}
 			it->nsaa += size;
 		}
@@ -111,11 +166,11 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 		switch (size) {
 		case 8:
 			*(uint64_t *) target = *(uint64_t *) ptr;
-			LOGZ ("0x%llx = %llu\n", * (uint64_t *) target, * (uint64_t *) target);
+			LOGZ ("0x%llx = %llu = %f\n", * (uint64_t *) target, * (uint64_t *) target, *(double *) target);
 			break;
 		case 4:
 			*(uint32_t *) target = *(uint32_t *) ptr;
-			LOGZ ("0x%x = %u\n", * (uint32_t *) target, * (uint32_t *) target);
+			LOGZ ("0x%x = %u = %f\n", * (uint32_t *) target, * (uint32_t *) target, *(float *) target);
 			break;
 		case 2:
 			*(uint16_t *) target = *(uint16_t *) ptr;
@@ -144,6 +199,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	if (action == IteratorStart) {
 		it->ngrn = 2; // we already have two arguments: self + SEL
 		it->nsrn = 0;
+		it->ngrn_offset = 0;
 		it->nsaa = (uint8_t *) it->state->sp;
 		it->x = &it->state->x0;
 		it->q = &it->state->q0;
@@ -151,6 +207,12 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 		return;
 	} else if (action == IteratorEnd) {
 		return;
+	}
+
+	// if the previous parameter ended up reading a partial register, advance to the next register
+	if (it->ngrn_offset > 0) {
+		it->ngrn++;
+		it->ngrn_offset = 0;
 	}
 
 	// target must be at least pointer sized, and we need to zero it out first.
@@ -162,13 +224,17 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	if (*exception_gchandle != INVALID_GCHANDLE)
 		return;
 
-	if (size > 16 && strcmp (struct_name, "dddd") && strcmp (struct_name, "ddd")) {
-		LOGZ ("    reading parameter passed by reference. type: %s size: %i nsaa: %p\n", type, (int) size, it->nsaa);
-		// passed on the stack
-		if (target != NULL)
-			memcpy (target, it->nsaa, size);
-		// increment stack pointer
-		it->nsaa += size;
+	// a struct with only 2-4 floats or 2-4 doubles (but not a 2-4 mix of floats and doubles) can be passed in floating point registers.
+	size_t struct_length = strlen (struct_name);
+	bool in_fp_registers = struct_length >= 2 && struct_length <= 4;
+	if (in_fp_registers) {
+		for (int i = 1; i < struct_length; i++)
+			in_fp_registers &= struct_name [i] == struct_name [0];
+	}
+
+	if (size > 16 && !in_fp_registers) {
+		LOGZ ("    reading parameter passed by reference. type: %s size: %i next register: %i next fp register: %i nsaa: %p\n", type, (int) size, it->ngrn, it->nsrn, it->nsaa);
+		param_read_primitive (it, "^", target, sizeof (void *), false,  exception_gchandle);
 		return;
 	}
 
@@ -178,16 +244,22 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	}
 
 	// passed in registers (and on the stack if not enough registers)
-	LOGZ ("    reading parameter from registers/stack. type: %s (collapsed: %s) size: %i\n", type, struct_name, (int) size);
+	LOGZ ("    reading parameter from registers/stack. type: %s (collapsed: %s) size: %i in_fp_registers: %i\n", type, struct_name, (int) size, in_fp_registers);
 	const char *t = struct_name;
 	uint8_t *targ = (uint8_t *) target;
+	// members of structs are generally not in floating point registers (except for in_fp_registers structs, see above)
+	// here we detect a struct by checking if we have more than one field to read
+	bool prohibit_fp_registers = !in_fp_registers && strlen (struct_name) > 1;
 	do {
-		int c = param_read_primitive (it, t, targ, size, exception_gchandle);
+		int c = param_read_primitive (it, t, targ, size, prohibit_fp_registers, exception_gchandle);
 		if (*exception_gchandle != INVALID_GCHANDLE)
 			return;
 		if (targ != NULL)
 			targ += c;
 	} while (*++t);
+
+	// align stack reads to sizeof(void*) bytes
+	it->nsaa = (uint8_t *) align_ptr (it->nsaa, 8);
 }
 
 static void
@@ -315,6 +387,26 @@ xamarin_arch_trampoline (struct XamarinCallState *state)
 	iter.state = state;
 	xamarin_invoke_trampoline ((enum TrampolineType) state->type, state->self (), state->sel (), param_iter_next, marshal_return_value, &iter);
 	dump_state (state, "END: ");
+}
+
+bool
+xamarin_arch_param_passed_by_reference (unsigned long size, const char *type, GCHandle *exception_gchandle)
+{
+	if (size <= 16)
+		return false;
+
+	char struct_name [5]; // we don't care about structs with more than 4 fields.
+	xamarin_collapse_struct_name (type, struct_name, sizeof (struct_name), exception_gchandle);
+	if (*exception_gchandle != INVALID_GCHANDLE)
+		return false;
+
+	if (strcmp (struct_name, "dddd") == 0)
+		return false;
+
+	if (strcmp (struct_name, "ddd") == 0)
+		return false;
+
+	return true;
 }
 
 #endif /* __arm64__ */

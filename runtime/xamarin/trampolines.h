@@ -227,6 +227,8 @@ id     xamarin_inativeobject_to_nsobject (MonoObject *object, void *context, GCH
 void * xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void * xamarin_nsobject_to_inativeobject_static (id object, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 
+bool xamarin_arch_param_passed_by_reference (unsigned long size, const char *parameterType, GCHandle *exception_gchandle);
+
 /* Copied from SGen */
 
 static inline void

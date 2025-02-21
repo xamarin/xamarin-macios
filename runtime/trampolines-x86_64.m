@@ -123,7 +123,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 			read_register = false;
 		} else if (register_size - (unsigned long)it->byte_count < total_size) {
 			read_register = false;
-			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, register_size - it->byte_count);
+			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, (int) ((int) register_size - it->byte_count));
 		}
 
 		if (read_register) {
@@ -490,6 +490,13 @@ xamarin_arch_trampoline (struct XamarinCallState *state)
 	iter.state = state;
 	xamarin_invoke_trampoline (type, state->self (), state->sel (), param_iter_next, marshal_return_value, &iter);
 	dump_state (state);
+}
+
+bool
+xamarin_arch_param_passed_by_reference (unsigned long size, const char *type, GCHandle *exception_gchandle)
+{
+	*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): not implemented for x64.\n", type, (int) size));
+	return false;
 }
 
 #endif /* __x86_64__ */

@@ -30,6 +30,7 @@ static class C {
 		/* floating point types */
 		"f:4", "ff:4", "fff:5", "ffff:5",  "fffff:15",
 		"d:4", "dd:5", "ddd:7", "dddd:7",  "ddddd:15",
+		"fd:0", "df:0", "dddf:2", "fffd:2",
 		/* mixed types */
 		"if:4", "fi:4", // 8 bytes
 		"iff:5", // 12 bytes
@@ -44,6 +45,8 @@ static class C {
 		"ldld:15",
 		"fifi:5",
 		"ifif:5",
+		"lllf:5",
+		"llld:15",
 	};
 
 	static string [] structs = structs_and_stret.Select ((v) => v.IndexOf (':') >= 0 ? v.Substring (0, v.IndexOf (':')) : v).ToArray ();
@@ -269,6 +272,13 @@ static class C {
 			w.AppendLine ();
 		}
 
+		w.AppendLine ();
+		foreach (var s in structs) {
+			w.AppendLine ($"\t-(void) setProperty{s}: (struct S{s}) value;");
+			w.AppendLine ($"\t-(void) setProperty{s}:(void *)x2 x3:(void *)x3 x4:(void *)x4 x5:(void *)x5 x6:(void *)x6 x7:(void *)x7 s0:(struct S{s})s0 s1:(void *)s1;");
+			w.AppendLine ($"\t-(void) setProperty{s}:(void *)x2 x3:(void *)x3 x4:(void *)x4 x5:(void *)x5 x6:(void *)x6 x7:(void *)x7 s0:(void *)s0 s1:(void *)s1 s2:(struct S{s})s2 s3:(void *)s3;");
+		}
+
 		File.WriteAllText ("libtest.methods.h", w.ToString ());
 	}
 
@@ -318,6 +328,13 @@ static class C {
 			w.AppendLine ($"\t-(NSArray<NSString *> *) getSmart{v.Managed}Values {{ return self.PSmart{v.Managed}Properties; }}");
 			w.AppendLine ($"\t-(void) setSmart{v.Managed}Values: (NSArray<NSString *> *) value {{ self.PSmart{v.Managed}Properties = value; }}");
 			w.AppendLine ();
+		}
+
+		w.AppendLine ();
+		foreach (var s in structs) {
+			w.AppendLine ($"\t-(void) setProperty{s}: (struct S{s}) value {{ self.PS{s} = value; }}");
+			w.AppendLine ($"\t-(void) setProperty{s}:(void *)x2 x3:(void *)x3 x4:(void *)x4 x5:(void *)x5 x6:(void *)x6 x7:(void *)x7 s0:(struct S{s})s0 s1:(void *)s1 {{ self.PS{s} = s0; }}");
+			w.AppendLine ($"\t-(void) setProperty{s}:(void *)x2 x3:(void *)x3 x4:(void *)x4 x5:(void *)x5 x6:(void *)x6 x7:(void *)x7 s0:(void *)s0 s1:(void *)s1 s2:(struct S{s})s2 s3:(void *)s3 {{ self.PS{s} = s2; }}");
 		}
 
 		File.WriteAllText ("libtest.methods.m", w.ToString ());
@@ -378,6 +395,18 @@ namespace Bindings.Test {
 		foreach (var s in structs) {
 			w.AppendLine ($"\t\t[Export (\"PS{s}\")]");
 			w.AppendLine ($"\t\tS{s} PS{s} {{ get; set; }}");
+			w.AppendLine ();
+
+			w.AppendLine ($"\t\t[Export (\"setProperty{s}:\")]");
+			w.AppendLine ($"\t\tvoid SetProperty{s} (S{s} value);");
+			w.AppendLine ();
+
+			w.AppendLine ($"\t\t[Export (\"setProperty{s}:x3:x4:x5:x6:x7:s0:s1:\")]");
+			w.AppendLine ($"\t\tvoid SetProperty{s} (nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, S{s} s0, nint s1);");
+			w.AppendLine ();
+
+			w.AppendLine ($"\t\t[Export (\"setProperty{s}:x3:x4:x5:x6:x7:s0:s1:s2:s3:\")]");
+			w.AppendLine ($"\t\tvoid SetProperty{s} (nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, nint s0, nint s1, S{s} s2, nint s3);");
 			w.AppendLine ();
 		}
 
@@ -827,6 +856,20 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\ts = tc.PS{s};");
 			for (int i = 0; i < s.Length; i++)
 				w.AppendLine ($"\t\t\t\tAssert.AreEqual (k.x{i}, s.x{i}, \"post-#{i}\");");
+
+			w.AppendLine ();
+			w.Append ($"\t\t\t\tvar v = new S{s} () {{ ");
+			for (int i = 0; i < s.Length; i++) {
+				if (i > 0)
+					w.Append (", ");
+				w.Append ($"x{i} = ").Append (GetValue (s [i], i));
+			}
+			w.AppendLine ("};");
+			w.AppendLine ($"\t\t\t\ttc.SetProperty{s} (v);");
+			w.AppendLine ($"\t\t\t\ts = tc.PS{s};");
+			for (int i = 0; i < s.Length; i++)
+				w.AppendLine ($"\t\t\t\tAssert.AreEqual (v.x{i}, s.x{i}, \"set-#{i}\");");
+
 			w.AppendLine ("\t\t\t}");
 			w.AppendLine ("\t\t}");
 			w.AppendLine ();
@@ -1491,6 +1534,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 		w.AppendLine ("\t\t}");
 
+		w.AppendLine ("\t\t[Preserve (AllMembers = true)]");
+		w.AppendLine ("\t\tpublic class OverrideRegistrarTest : ObjCRegistrarTest {");
+		for (var i = 0; i < 10; i++)
+			w.AppendLine ($"\t\t\tpublic nint RegisterX{i};");
+		for (var i = 0; i < 4; i++)
+			w.AppendLine ($"\t\t\tpublic nint StackS{i};");
+		foreach (var s in structs)
+			w.AppendLine ($"\t\t\tpublic S{s} V{s};");
+		w.AppendLine ();
+		foreach (var s in structs) {
+			w.AppendLine ($"\t\t\tpublic override void SetProperty{s} (S{s} value) {{ V{s} = value; Console.WriteLine ($\"SetProperty ({{value}});\"); base.SetProperty{s} (value); }}");
+			w.AppendLine ($"\t\t\tpublic override void SetProperty{s} (nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, S{s} s0, nint s1) {{ RegisterX2 = x2; RegisterX3 = x3; RegisterX4 = x4; RegisterX5 = x5; RegisterX6 = x6; RegisterX7 = x7; V{s} = s0; StackS1 = s1; Console.WriteLine ($\"SetProperty ({{x2}}, {{x3}}, {{x4}}, {{x5}}, {{x6}}, {{x7}}, {{s0}}, {{s1}});\"); base.SetProperty{s} (x2, x3, x4, x5, x6, x7, s0, s1); }}");
+			w.AppendLine ($"\t\t\tpublic override void SetProperty{s} (nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, nint s0, nint s1, S{s} s2, nint s3) {{ RegisterX2 = x2; RegisterX3 = x3; RegisterX4 = x4; RegisterX5 = x5; RegisterX6 = x6; RegisterX7 = x7; StackS0 = s0; StackS1 = s1; V{s} = s2; StackS3 = s3; Console.WriteLine ($\"SetProperty ({{x2}}, {{x3}}, {{x4}}, {{x5}}, {{x6}}, {{x7}}, {{s0}}, {{s1}}, {{s2}}, {{s3}});\"); base.SetProperty{s} (x2, x3, x4, x5, x6, x7, s0, s1, s2, s3); }}");
+		}
+		w.AppendLine ("\t\t}");
+
 		foreach (var s in structs) {
 			bool never;
 			w.AppendLine ();
@@ -1581,6 +1640,35 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t}}");
+
+			w.AppendLine ();
+			w.AppendLine ($"\t\t\tusing (var obj = new OverrideRegistrarTest ()) {{");
+			w.AppendLine ($"\t\t\t\tvar structValue = {GenerateNewExpression (s, 7)};");
+			w.AppendLine ($"\t\t\t\tvoid_objc_msgSend_{s} (obj.Handle, Selector.GetHandle (\"setProperty{s}:\"), structValue);");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (structValue.ToString (), obj.V{s}.ToString (), \"SetProperty#1\");");
+			w.AppendLine ($"\t\t\t}}");
+			w.AppendLine ();
+			w.AppendLine ($"\t\t\tusing (var obj = new OverrideRegistrarTest ()) {{");
+			w.AppendLine ($"\t\t\t\tvar structValue = {GenerateNewExpression (s, 8)};");
+			w.AppendLine ($"\t\t\t\tvoid_objc_msgSend_{s} (obj.Handle, Selector.GetHandle (\"setProperty{s}:x3:x4:x5:x6:x7:s0:s1:\"), (nint) 2, (nint) 3, (nint) 4, (nint) 5, (nint) 6, (nint) 7, structValue, (nint) 9);");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (structValue.ToString (), obj.V{s}.ToString (), \"SetProperty#2\");");
+			for (var i = 2; i < 8; i++)
+				w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nint) {i}, obj.RegisterX{i}, \"SetProperty#2-X{i}\");");
+			for (var i = 1; i <= 1; i++)
+				w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nint) {i + 8}, obj.StackS{i}, \"SetProperty#2-S{i}\");");
+			w.AppendLine ($"\t\t\t}}");
+			w.AppendLine ();
+			w.AppendLine ($"\t\t\tusing (var obj = new OverrideRegistrarTest ()) {{");
+			w.AppendLine ($"\t\t\t\tvar structValue = {GenerateNewExpression (s, 9)};");
+			w.AppendLine ($"\t\t\t\tvoid_objc_msgSend_{s} (obj.Handle, Selector.GetHandle (\"setProperty{s}:x3:x4:x5:x6:x7:s0:s1:s2:s3:\"), (nint) 2, (nint) 3, (nint) 4, (nint) 5, (nint) 6, (nint) 7, (nint) 8, (nint) 9, structValue, (nint) 11);");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (structValue.ToString (), obj.V{s}.ToString (), \"SetProperty#3\");");
+			for (var i = 2; i < 8; i++)
+				w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nint) {i}, obj.RegisterX{i}, \"SetProperty#3-X{i}\");");
+			for (var i = 0; i < 4; i++) {
+				w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nint) {(i == 2 ? 0 : i + 8)}, obj.StackS{i}, \"SetProperty#3-S{i}\");");
+			}
+			w.AppendLine ($"\t\t\t}}");
+
 			w.AppendLine ($"\t\t}}");
 
 
@@ -1608,6 +1696,18 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ();
 			w.AppendLine ($"\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSend_stret\")]");
 			w.AppendLine ($"\t\textern static void S{s}_objc_msgSend_stret_out_double (out S{s} rv, IntPtr received, IntPtr selector, out double x1);");
+
+			w.AppendLine ();
+			w.AppendLine ($"\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSend\")]");
+			w.AppendLine ($"\t\textern static void void_objc_msgSend_{s} (IntPtr receiver, IntPtr selector, S{s} x1);");
+
+			w.AppendLine ();
+			w.AppendLine ($"\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSend\")]");
+			w.AppendLine ($"\t\textern static void void_objc_msgSend_{s} (IntPtr receiver, IntPtr selector, nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, S{s} s0, nint s1);");
+
+			w.AppendLine ();
+			w.AppendLine ($"\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSend\")]");
+			w.AppendLine ($"\t\textern static void void_objc_msgSend_{s} (IntPtr receiver, IntPtr selector, nint x2, nint x3, nint x4, nint x5, nint x6, nint x7, nint s0, nint s1, S{s} s2, nint s3);");
 		}
 
 		w.AppendLine (@"	}
