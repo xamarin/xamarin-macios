@@ -3231,5 +3231,36 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void BuildPerfFixesOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var project = "MySimpleApp";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			Assert.That (allTargets, Does.Contain ("_CompileNativeExecutable"), "Building target \"_CompileNativeExecutable\" completely");
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
+				Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
+
+			// ensure on an incremental build, we don't execute the _CompileNativeExecutable target again
+			rv = DotNet.AssertBuild (project_path, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			Assert.That (allTargets, Does.Not.Contain ("_CompileNativeExecutable"), "Should NOT be building \"_CompileNativeExecutable\" completely again..but we are");
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
+				Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
+		}
 	}
 }
