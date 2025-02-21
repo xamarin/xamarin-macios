@@ -143,7 +143,7 @@ configuration:
         then:
         - addReply:
             reply: >-
-              Hi @${issueAuthor}. We have added the "need-repro" label to this issue, which indicates that we require steps and sample code to reproduce the issue before we can take further action. Please try to create a minimal sample project/solution or code samples which reproduce the issue, ideally as a GitHub repo that we can clone. See more details about creating repros here: https://github.com/xamarin/xamarin-macios/blob/main/docs/bug-repro.md
+              Hi @${issueAuthor}. We have added the "need-repro" label to this issue, which indicates that we require steps and sample code to reproduce the issue before we can take further action. Please try to create a minimal sample project/solution or code samples which reproduce the issue, ideally as a GitHub repo that we can clone. See more details about creating repros here: https://github.com/dotnet/macios/blob/main/docs/bug-repro.md
 
               This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
       - if:

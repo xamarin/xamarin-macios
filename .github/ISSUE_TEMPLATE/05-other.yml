@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions.
+        Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/dotnet/macios/wiki/Submitting-Bugs-&-Suggestions.
   - type: dropdown
     id: platform
     attributes:
@@ -65,7 +65,7 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy and paste any (short!) relevant log output. Longer logs can be attached as .txt or .zip files. For build logs please provide an [MSBuild binlog](https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#build-logs).
+      description: Please copy and paste any (short!) relevant log output. Longer logs can be attached as .txt or .zip files. For build logs please provide an [MSBuild binlog](https://github.com/dotnet/macios/wiki/Diagnosis#build-logs).
   - type: markdown
     attributes:
       value: |

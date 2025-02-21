@@ -73,7 +73,7 @@ extends:
         runInSingleJob: true  # run both maccore and macios in the same job
         include:
           - repository: self
-            path: xamarin-macios        
+            path: $(BUILD_REPOSITORY_TITLE)
         exclude:
           - repository: yaml-templates
           - repository: macios-adr # macios-adr has it's own build pipeline and should not be included in the source analysis

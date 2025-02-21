@@ -50,9 +50,10 @@ stages:
       clean: all
     steps:
     - checkout: self
+      path: s/$(BUILD_REPOSITORY_NAME)
       clean: true
       submodules: true
-
+      
     - template: /tools/devops/automation/templates/build/build.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
