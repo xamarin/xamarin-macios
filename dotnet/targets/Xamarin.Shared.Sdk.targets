@@ -168,7 +168,18 @@
 
 		<!-- Directory to store project specific stamp files used by certain targets for incremental builds -->
 		<_MaciOSStampDirectory>$(IntermediateOutputPath)stamp\</_MaciOSStampDirectory>
+
+		<!-- Our own runtime features -->
+
+		<!-- Set default DisposeTaggedPointers value, we stop disposing them by default in .NET 10 -->
+		<!-- The default logic here must match the default logic in NSObject.DisposeTaggedPointers -->
+		<DisposeTaggedPointers Condition="'$(DisposeTaggedPointers)' == '' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), 10.0))">false</DisposeTaggedPointers>
+		<DisposeTaggedPointers Condition="'$(DisposeTaggedPointers)' == ''">true</DisposeTaggedPointers>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="Foundation.NSObject.DisposeTaggedPointers" Condition="'$(DisposeTaggedPointers)' != ''" Value="$(DisposeTaggedPointers)" Trim="true" />
+	</ItemGroup>
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>

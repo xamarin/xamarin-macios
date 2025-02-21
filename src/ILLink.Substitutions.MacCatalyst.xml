@@ -1,5 +1,9 @@
 <linker>
   <assembly fullname="Microsoft.MacCatalyst">
+    <type fullname="Foundation.NSObject">
+      <method signature="System.Boolean get_DisposeTaggedPointers()" body="stub" feature="Foundation.NSObject.DisposeTaggedPointers" featurevalue="false" value="false" />
+      <method signature="System.Boolean get_DisposeTaggedPointers()" body="stub" feature="Foundation.NSObject.DisposeTaggedPointers" featurevalue="true" value="true" />
+    </type>
     <type fullname="ObjCRuntime.Dlfcn">
       <method signature="System.Void WarnOnce()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
     </type>

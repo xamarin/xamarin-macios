@@ -3231,5 +3231,29 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
+
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void DisposeTaggedPointersTest (ApplePlatform platform)
+		{
+			var project = "DisposeTaggedPointersTestApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var arguments = new string [] {
+				"-C", Path.GetDirectoryName (project_path)!,
+				"clean-all"
+			};
+			AssertExecute ("make", arguments, out var _);
+
+			arguments = new string [] {
+				"-C", Path.GetDirectoryName (project_path)!,
+				"test-all",
+				"-j",
+			};
+			AssertExecute ("make", arguments, out var _);
+		}
 	}
 }
