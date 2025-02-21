@@ -59,21 +59,37 @@ namespace CoreMidi {
 
 	// anonymous enum - MIDIServices.h
 	public enum MidiError : int {
+		/// <summary>To be added.</summary>
 		Ok = 0,
+		/// <summary>To be added.</summary>
 		InvalidClient = -10830,
+		/// <summary>To be added.</summary>
 		InvalidPort = -10831,
+		/// <summary>To be added.</summary>
 		WrongEndpointType = -10832,
+		/// <summary>To be added.</summary>
 		NoConnection = -10833,
+		/// <summary>To be added.</summary>
 		UnknownEndpoint = -10834,
+		/// <summary>To be added.</summary>
 		UnknownProperty = -10835,
+		/// <summary>To be added.</summary>
 		WrongPropertyType = -10836,
+		/// <summary>To be added.</summary>
 		NoCurrentSetup = -10837,
+		/// <summary>To be added.</summary>
 		MessageSendErr = -10838,
+		/// <summary>To be added.</summary>
 		ServerStartErr = -10839,
+		/// <summary>To be added.</summary>
 		SetupFormatErr = -10840,
+		/// <summary>To be added.</summary>
 		WrongThread = -10841,
+		/// <summary>To be added.</summary>
 		ObjectNotFound = -10842,
+		/// <summary>To be added.</summary>
 		IDNotUnique = -10843,
+		/// <summary>To be added.</summary>
 		NotPermitted = -10844,
 	}
 
@@ -102,12 +118,21 @@ namespace CoreMidi {
 			MIDIRestart ();
 		}
 
+		/// <summary>The number of MIDI destinations.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public static nint DestinationCount {
 			get {
 				return MIDIGetNumberOfDestinations ();
 			}
 		}
 
+		/// <summary>Returns the number of sources in the system.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>Use the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreMidi.MidiEndpoint.GetSource(int)&amp;scope=Xamarin" title="T:CoreMidi.MidiEndpoint.GetSource(int)">T:CoreMidi.MidiEndpoint.GetSource(int)</a></format> to fetch a specific source (represented by a MidiEndpoint).</remarks>
 		public static nint SourceCount {
 			get {
 				return MIDIGetNumberOfSources ();
@@ -125,12 +150,20 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static nint /* ItemCount = unsigned long */ MIDIGetNumberOfDevices ();
 
+		/// <summary>The number of external devices connected to this system.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>You can retrieve a specific MIDI device by using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreMidi.Midi.GetExternalDevice(int)&amp;scope=Xamarin" title="T:CoreMidi.Midi.GetExternalDevice(int)">T:CoreMidi.Midi.GetExternalDevice(int)</a></format>.</remarks>
 		public static nint ExternalDeviceCount {
 			get {
 				return MIDIGetNumberOfExternalDevices ();
 			}
 		}
 
+		/// <summary>The number of MIDI devices in the system (do not confused with external connected devices).</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>You can retrieve a specific MIDI device by using the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=T:CoreMidi.Midi.GetDevice(int)&amp;scope=Xamarin" title="T:CoreMidi.Midi.GetDevice(int)">T:CoreMidi.Midi.GetDevice(int)</a></format>.</remarks>
 		public static nint DeviceCount {
 			get {
 				return MIDIGetNumberOfDevices ();
@@ -175,6 +208,9 @@ namespace CoreMidi {
 		internal MidiObjectRef handle;
 		internal bool owns;
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>This IntPtr is a handle to the underlying unmanaged representation for this object.</remarks>
 		public MidiObjectRef Handle {
 			get { return handle; }
 		}
@@ -416,6 +452,11 @@ namespace CoreMidi {
 			ErrorCode = code;
 		}
 
+		/// <summary>Contains the underlying MIDI error code.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiError ErrorCode { get; private set; }
 	}
 
@@ -486,6 +527,11 @@ namespace CoreMidi {
 				Name = name;
 			}
 		}
+		/// <summary>Name of this MidiClient.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string Name { get; private set; }
 
 		public override string ToString ()
@@ -690,10 +736,15 @@ namespace CoreMidi {
 #endif
 	{
 #if !COREBUILD
+		/// <summary>Time for the event, use zero to mean now.</summary>
+		///         <remarks>This is the time used by the host, this is measured using the Unix mach_absolute_time() result value.</remarks>
 		public long TimeStamp;
 		IntPtr byteptr;
 		byte []? bytes;
 		int start;
+		/// <summary>The number of bytes in the Bytes array</summary>
+		///         <remarks>
+		///         </remarks>
 		public ushort Length;
 
 		public MidiPacket (long timestamp, ushort length, IntPtr bytes)
@@ -759,6 +810,9 @@ namespace CoreMidi {
 		}
 
 #if !XAMCORE_5_0
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("This property may return a pointer to a managed object, and this pointer is never safe to use. Use ByteArray or BytePointer instead.")]
 		public IntPtr Bytes {
@@ -935,7 +989,17 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>The MidiClient that created this port.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiClient Client { get; private set; }
+		/// <summary>The port name specified when the port was created</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string PortName { get; private set; }
 
 		internal override void DisposeHandle ()
@@ -1089,6 +1153,9 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static nint MIDIEntityGetNumberOfDestinations (MidiEntityRef entity);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint Destinations {
 			get {
 				return MIDIEntityGetNumberOfDestinations (handle);
@@ -1098,6 +1165,9 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static nint MIDIEntityGetNumberOfSources (MidiEntityRef entity);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint Sources {
 			get {
 				return MIDIEntityGetNumberOfSources (handle);
@@ -1107,6 +1177,9 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		unsafe extern static int /* OSStatus = SInt32 */ MIDIEntityGetDevice (MidiEntityRef handle, MidiDeviceRef* devRef);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public MidiDevice? Device {
 			get {
 				MidiEntityRef res;
@@ -1118,6 +1191,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int AdvanceScheduleTimeMuSec {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
@@ -1127,6 +1203,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool CanRoute {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute) != 0;
@@ -1136,6 +1215,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int ConnectionUniqueIDInt {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -1145,6 +1227,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -1156,6 +1241,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DeviceID {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID);
@@ -1165,6 +1253,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DisplayName {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
@@ -1176,6 +1267,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DriverOwner {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
@@ -1187,6 +1281,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DriverVersion {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
@@ -1196,6 +1293,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsBroadcast {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast) != 0;
@@ -1205,36 +1305,54 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsDrumMachine {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsDrumMachine) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsEffectUnit {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEffectUnit) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsEmbeddedEntity {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEmbeddedEntity) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsMixer {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsMixer) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsSampler {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsSampler) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxReceiveChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels);
@@ -1244,6 +1362,9 @@ namespace CoreMidi {
 			//}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxSysExSpeed {
 			get {
 				try {
@@ -1259,6 +1380,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxTransmitChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels);
@@ -1268,6 +1392,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Model {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyModel);
@@ -1279,6 +1406,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
@@ -1290,6 +1420,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
@@ -1301,6 +1434,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Offline {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
@@ -1310,6 +1446,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool PanDisruptsStereo {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo) != 0;
@@ -1319,6 +1458,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Private {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
@@ -1328,6 +1470,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesBankSelectLSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB) != 0;
@@ -1337,6 +1482,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesBankSelectMSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB) != 0;
@@ -1346,6 +1494,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesClock {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock) != 0;
@@ -1355,6 +1506,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesMTC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC) != 0;
@@ -1364,6 +1518,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesNotes {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes) != 0;
@@ -1373,6 +1530,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesProgramChanges {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges) != 0;
@@ -1382,6 +1542,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsGeneralMidi {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI) != 0;
@@ -1391,6 +1554,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsMMC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC) != 0;
@@ -1400,6 +1566,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsShowControl {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl) != 0;
@@ -1409,6 +1578,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsBankSelectLSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB) != 0;
@@ -1418,6 +1590,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsBankSelectMSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB) != 0;
@@ -1427,6 +1602,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsClock {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock) != 0;
@@ -1436,6 +1614,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsMTC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC) != 0;
@@ -1445,6 +1626,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsNotes {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes) != 0;
@@ -1454,6 +1638,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsProgramChanges {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges) != 0;
@@ -1569,12 +1756,20 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>Returns the number of MIDI entities in this device.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public nint EntityCount {
 			get {
 				return MIDIDeviceGetNumberOfEntities (handle);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Image {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyImage);
@@ -1586,6 +1781,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DriverDeviceEditorApp {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverDeviceEditorApp);
@@ -1597,6 +1795,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int SingleRealtimeEntity {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySingleRealtimeEntity);
@@ -1606,6 +1807,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int UniqueID {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyUniqueID);
@@ -1615,6 +1819,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool UsesSerial {
 			get {
 				var kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (Libraries.CoreMidi.Handle, "kMIDIDriverPropertyUsesSerial");
@@ -1628,6 +1835,9 @@ namespace CoreMidi {
 
 #if !XAMCORE_5_0 || __MACOS__
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -1657,6 +1867,9 @@ namespace CoreMidi {
 
 #if !XAMCORE_5_0 || __MACOS__
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -1703,6 +1916,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int AdvanceScheduleTimeMuSec {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
@@ -1712,6 +1928,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool CanRoute {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyCanRoute) != 0;
@@ -1721,6 +1940,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int ConnectionUniqueIDInt {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -1730,6 +1952,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -1741,6 +1966,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DeviceID {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyDeviceID);
@@ -1750,6 +1978,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DisplayName {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
@@ -1761,6 +1992,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DriverOwner {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
@@ -1772,6 +2006,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DriverVersion {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
@@ -1781,36 +2018,54 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsDrumMachine {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsDrumMachine) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsEffectUnit {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEffectUnit) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsEmbeddedEntity {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsEmbeddedEntity) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsMixer {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsMixer) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsSampler {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsSampler) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Manufacturer {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyManufacturer);
@@ -1822,6 +2077,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxReceiveChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxReceiveChannels);
@@ -1831,6 +2089,9 @@ namespace CoreMidi {
 			//}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxSysExSpeed {
 			get {
 				try {
@@ -1846,6 +2107,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxTransmitChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyMaxTransmitChannels);
@@ -1855,6 +2119,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Model {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyModel);
@@ -1866,6 +2133,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
@@ -1877,6 +2147,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
@@ -1888,6 +2161,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Offline {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
@@ -1897,6 +2173,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool PanDisruptsStereo {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyPanDisruptsStereo) != 0;
@@ -1906,6 +2185,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Private {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
@@ -1915,6 +2197,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesBankSelectLSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectLSB) != 0;
@@ -1924,6 +2209,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesBankSelectMSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesBankSelectMSB) != 0;
@@ -1933,6 +2221,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesClock {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesClock) != 0;
@@ -1942,6 +2233,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesMTC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesMTC) != 0;
@@ -1951,6 +2245,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesNotes {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesNotes) != 0;
@@ -1960,6 +2257,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ReceivesProgramChanges {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceivesProgramChanges) != 0;
@@ -1969,6 +2269,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsGeneralMidi {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsGeneralMIDI) != 0;
@@ -1978,6 +2281,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsMMC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsMMC) != 0;
@@ -1987,6 +2293,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool SupportsShowControl {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertySupportsShowControl) != 0;
@@ -1996,6 +2305,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsBankSelectLSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectLSB) != 0;
@@ -2005,6 +2317,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsBankSelectMSB {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsBankSelectMSB) != 0;
@@ -2014,6 +2329,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsClock {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsClock) != 0;
@@ -2023,6 +2341,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsMTC {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsMTC) != 0;
@@ -2032,6 +2353,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsNotes {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsNotes) != 0;
@@ -2041,6 +2365,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool TransmitsProgramChanges {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitsProgramChanges) != 0;
@@ -2204,6 +2531,9 @@ namespace CoreMidi {
 				gch.Free ();
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string EndpointName { get; private set; }
 
 		internal MidiEndpoint (MidiEndpointRef handle) : base (handle, false)
@@ -2319,6 +2649,9 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		unsafe extern static int /* OSStatus = SInt32 */ MIDIEndpointGetEntity (MidiEndpointRef endpoint, MidiEntityRef* entity);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public MidiEntity? Entity {
 			get {
 				MidiEntityRef entity;
@@ -2332,6 +2665,10 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>Determines if the Endpoint represents a network session.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>This probes for the apple.midirtp.session property in the endpoint properties.</remarks>
 		public bool IsNetworkSession {
 			get {
 				using (var dict = GetDictionaryProperties (true)) {
@@ -2344,6 +2681,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int AdvanceScheduleTimeMuSec {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyAdvanceScheduleTimeMuSec);
@@ -2353,6 +2693,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int ConnectionUniqueIDInt {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -2362,6 +2705,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (MidiPropertyExtensions.kMIDIPropertyConnectionUniqueID);
@@ -2373,6 +2719,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DisplayName {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDisplayName);
@@ -2384,6 +2733,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? DriverOwner {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyDriverOwner);
@@ -2395,6 +2747,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DriverVersion {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyDriverVersion);
@@ -2404,6 +2759,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsBroadcast {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyIsBroadcast) != 0;
@@ -2413,6 +2771,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Manufacturer {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyManufacturer);
@@ -2424,6 +2785,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaxSysExSpeed {
 			get {
 				try {
@@ -2439,6 +2803,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get {
 				return GetString (MidiPropertyExtensions.kMIDIPropertyName);
@@ -2450,6 +2817,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (MidiPropertyExtensions.kMIDIPropertyNameConfiguration);
@@ -2461,6 +2831,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Offline {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyOffline) != 0;
@@ -2470,6 +2843,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Private {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyPrivate) != 0;
@@ -2479,6 +2855,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int ReceiveChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyReceiveChannels);
@@ -2488,6 +2867,9 @@ namespace CoreMidi {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int TransmitChannels {
 			get {
 				return GetInt (MidiPropertyExtensions.kMIDIPropertyTransmitChannels);
@@ -2601,7 +2983,17 @@ namespace CoreMidi {
 			Parent = parent;
 			Child = child;
 		}
+		/// <summary>The parent object for the added or removed object.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiObject? Parent { get; private set; }
+		/// <summary>The child that was added or removed.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiObject? Child { get; private set; }
 	}
 
@@ -2616,7 +3008,17 @@ namespace CoreMidi {
 			MidiObject = midiObject;
 			PropertyName = propertyName;
 		}
+		/// <summary>The MIDI object whose property has changed.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiObject? MidiObject { get; private set; }
+		/// <summary>The name of the MIDI property that changed.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string? PropertyName { get; private set; }
 	}
 
@@ -2631,7 +3033,17 @@ namespace CoreMidi {
 			Device = device;
 			ErrorCode = errorCode;
 		}
+		/// <summary>Device that raised the error.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiDevice Device { get; set; }
+		/// <summary>OSStatus error code.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public int ErrorCode { get; set; }
 	}
 
@@ -2659,12 +3071,24 @@ namespace CoreMidi {
 			Dispose (false);
 		}
 
+		/// <summary>Low-level pointer to the packet list, use Packets instead.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>This is provided in case you want to decode the value
+		///         using a native library or some other existing MIDI parsing
+		///         code.  Otherwise you can consume the strongly typed Packets
+		///         property.</remarks>
 		public IntPtr PacketListRaw {
 			get {
 				return packetList;
 			}
 		}
 
+		/// <summary>Contains the individual MIDI packets</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public MidiPacket [] Packets {
 			get {
 				if (list is null)

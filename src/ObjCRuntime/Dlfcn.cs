@@ -69,9 +69,13 @@ namespace ObjCRuntime {
 	public static class Dlfcn {
 #if !COREBUILD
 		public enum RTLD {
+			/// <summary>The dynamic linker searches for the symbol in the dylibs the calling image linked against when built. It is usually used when you intentionally have multiply defined symbol across images and want to find the "next" definition. </summary>
 			Next = -1,
+			/// <summary>Searches all Mach-O images in the process (except those loaded with dlopen(xxx, RTLD_LOCAL)) in the order they were loaded.  This can be a costly search and should be avoided.</summary>
 			Default = -2,
+			/// <summary>Search for the symbol starts with the image that called dlsym.  If it is not found, the search continues as if Next was used.</summary>
 			Self = -3,
+			/// <summary>Only searches for symbol in the main executable.</summary>
 			MainOnly = -5
 		}
 

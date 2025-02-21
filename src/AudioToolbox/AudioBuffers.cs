@@ -97,6 +97,11 @@ namespace AudioToolbox {
 			Dispose (false);
 		}
 
+		/// <summary>Returns the number of buffers managed.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public unsafe int Count {
 			get {
 				return *(int*) address;
@@ -136,6 +141,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>This IntPtr is a handle to the underlying unmanaged representation for this object.</remarks>
 		public NativeHandle Handle {
 			get { return address; }
 		}

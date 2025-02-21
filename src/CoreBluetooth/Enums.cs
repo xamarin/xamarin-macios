@@ -61,9 +61,13 @@ namespace CoreBluetooth {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralState : long {
+		/// <summary>Indicates that the peripheral is not connected.</summary>
 		Disconnected,
+		/// <summary>Indicates that the peripheral is connecting.</summary>
 		Connecting,
+		/// <summary>Indicates that the peripheral is connected.</summary>
 		Connected,
+		/// <summary>Indicates that the peripheral is disconnecting.</summary>
 		[MacCatalyst (13, 1)]
 		Disconnecting,
 	}
@@ -131,23 +135,41 @@ namespace CoreBluetooth {
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
 	public enum CBATTError : long {
+		/// <summary>To be added.</summary>
 		Success = 0,
+		/// <summary>To be added.</summary>
 		InvalidHandle,
+		/// <summary>To be added.</summary>
 		ReadNotPermitted,
+		/// <summary>To be added.</summary>
 		WriteNotPermitted,
+		/// <summary>To be added.</summary>
 		InvalidPdu,
+		/// <summary>To be added.</summary>
 		InsufficientAuthentication,
+		/// <summary>To be added.</summary>
 		RequestNotSupported,
+		/// <summary>To be added.</summary>
 		InvalidOffset,
+		/// <summary>To be added.</summary>
 		InsufficientAuthorization,
+		/// <summary>To be added.</summary>
 		PrepareQueueFull,
+		/// <summary>To be added.</summary>
 		AttributeNotFound,
+		/// <summary>To be added.</summary>
 		AttributeNotLong,
+		/// <summary>To be added.</summary>
 		InsufficientEncryptionKeySize,
+		/// <summary>To be added.</summary>
 		InvalidAttributeValueLength,
+		/// <summary>To be added.</summary>
 		UnlikelyError,
+		/// <summary>To be added.</summary>
 		InsufficientEncryption,
+		/// <summary>To be added.</summary>
 		UnsupportedGroupType,
+		/// <summary>To be added.</summary>
 		InsufficientResources
 	}
 
@@ -177,8 +199,11 @@ namespace CoreBluetooth {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralManagerConnectionLatency : long {
+		/// <summary>To be added.</summary>
 		Low = 0,
+		/// <summary>To be added.</summary>
 		Medium,
+		/// <summary>To be added.</summary>
 		High
 	}
 

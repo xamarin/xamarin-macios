@@ -2726,6 +2726,10 @@ namespace SceneKit {
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface SCNRenderingArguments {
+		/// <summary>Represents the value associated with the constant SCNModelTransform</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("SCNModelTransform")]
 		NSString ModelTransform { get; }
 

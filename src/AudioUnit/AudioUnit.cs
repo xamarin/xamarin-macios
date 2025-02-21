@@ -162,8 +162,14 @@ namespace AudioUnit {
 #endif
 	public class SamplerInstrumentData {
 #if !COREBUILD
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public const byte DefaultPercussionBankMSB = 0x78;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public const byte DefaultMelodicBankMSB = 0x79;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public const byte DefaultBankLSB = 0x00;
 
 		public SamplerInstrumentData (CFUrl fileUrl, InstrumentType instrumentType)
@@ -175,10 +181,25 @@ namespace AudioUnit {
 			this.InstrumentType = instrumentType;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CFUrl FileUrl { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public InstrumentType InstrumentType { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public byte BankMSB { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public byte BankLSB { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public byte PresetID { get; set; }
 
 		internal AUSamplerInstrumentData ToStruct ()
@@ -247,11 +268,26 @@ namespace AudioUnit {
 	public class AudioUnitParameterInfo {
 #if !COREBUILD
 		public string? UnitName { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioUnitClumpID ClumpID { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioUnitParameterUnit Unit { get; private set; }
 		public float MinValue { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float MaxValue { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float DefaultValue { get; private set; }
 		public AudioUnitParameterFlag Flags { get; private set; }
 		public AudioUnitParameterType Type { get; private set; }
@@ -298,9 +334,17 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioUnitParameterEvent {
+		/// <summary>The changed parameter's audio unit scope.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint Scope;
+		/// <summary>The audio element whose parameter changed.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint Element;
+		/// <summary>The identifier for the changed parameter.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint Parameter;
+		/// <summary>Whether the change was a step change (immediate) or gradual linear change (ramped).</summary>
+		///         <remarks>To be added.</remarks>
 		public AUParameterEventType EventType;
 
 #if NET
@@ -313,26 +357,44 @@ namespace AudioUnit {
 		public struct EventValuesStruct {
 			[StructLayout (LayoutKind.Sequential)]
 			public struct RampStruct {
+				/// <summary>The offset into the frame buffer at which the change begins.</summary>
+				///         <remarks>To be added.</remarks>
 				public int StartBufferOffset;
+				/// <summary>The number of frames over which the change occurs.</summary>
+				///         <remarks>To be added.</remarks>
 				public uint DurationInFrames;
+				/// <summary>The start value of the parameter.</summary>
+				///         <remarks>To be added.</remarks>
 				public float StartValue;
+				/// <summary>The final value of the parameter.</summary>
+				///         <remarks>To be added.</remarks>
 				public float EndValue;
 			}
 
 
+			/// <summary>A struct for describing events for linear ramp changes in parameters.</summary>
+			///         <remarks>To be added.</remarks>
 			[FieldOffset (0)]
 			public RampStruct Ramp;
 
 			[StructLayout (LayoutKind.Sequential)]
 			public struct ImmediateStruct {
+				/// <summary>The offset into the frame buffer at which the change occurs.</summary>
+				///         <remarks>To be added.</remarks>
 				public uint BufferOffset;
+				/// <summary>The new value of the parameter.</summary>
+				///         <remarks>To be added.</remarks>
 				public float Value;
 			}
 
+			/// <summary>A struct for describing events for step changes in parameters.</summary>
+			///         <remarks>To be added.</remarks>
 			[FieldOffset (0)]
 			public ImmediateStruct Immediate;
 		}
 
+		/// <summary>The values that describe the change event for the parameter.</summary>
+		///         <remarks>To be added.</remarks>
 		public EventValuesStruct EventValues;
 	}
 
@@ -382,12 +444,18 @@ namespace AudioUnit {
 		{
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioComponent Component {
 			get {
 				return new AudioComponent (AudioComponentInstanceGetComponent (Handle), false);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsPlaying { get { return _isPlaying; } }
 
 		public unsafe AudioUnitStatus SetFormat (AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
@@ -1177,8 +1245,17 @@ namespace AudioUnit {
 	, IEnumerator<AURenderEvent> {
 		AURenderEvent* current;
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>This IntPtr is a handle to the underlying unmanaged representation for this object.</remarks>
 		public NativeHandle Handle { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsEmpty { get { return Handle == IntPtr.Zero; } }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsAtEnd { get { return current is null; } }
 
 		public AURenderEventEnumerator (NativeHandle ptr)
@@ -1199,12 +1276,18 @@ namespace AudioUnit {
 			current = null;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent* UnsafeFirst {
 			get {
 				return (AURenderEvent*) (IntPtr) Handle;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent First {
 			get {
 				if (IsEmpty)
@@ -1213,6 +1296,9 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent Current {
 			get {
 				if (IsAtEnd)
@@ -1221,6 +1307,9 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		object IEnumerator.Current {
 			get { return Current; }
 		}
@@ -1256,9 +1345,13 @@ namespace AudioUnit {
 #endif // !COREBUILD
 
 	public enum AURenderEventType : byte {
+		/// <summary>To be added.</summary>
 		Parameter = 1,
+		/// <summary>To be added.</summary>
 		ParameterRamp = 2,
+		/// <summary>To be added.</summary>
 		Midi = 8,
+		/// <summary>To be added.</summary>
 		MidiSysEx = 9,
 #if NET
 		[SupportedOSPlatform ("ios15.0")]
@@ -1281,8 +1374,13 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct AURenderEventHeader {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent* UnsafeNext;
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent? Next {
 			get {
 				if (UnsafeNext is not null)
@@ -1291,10 +1389,16 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public long EventSampleTime;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AURenderEventType EventType;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public byte Reserved;
 	}
 
@@ -1306,6 +1410,8 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterObserverToken {
+		/// <summary>The token that represents a parameter or parameter recording observer delegate.</summary>
+		///         <remarks>To be added.</remarks>
 		public IntPtr ObserverToken;
 		public AUParameterObserverToken (IntPtr observerToken)
 		{
@@ -1321,8 +1427,13 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct AUParameterEvent {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent* UnsafeNext;
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AURenderEvent? Next {
 			get {
 				if (UnsafeNext is not null)
@@ -1331,16 +1442,26 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public long EventSampleTime;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AURenderEventType EventType;
 
 		internal byte reserved1, reserved2, reserved3;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint RampDurationSampleFrames;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ulong ParameterAddress;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public float Value;
 	}
 
@@ -1381,9 +1502,13 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct AURenderEvent {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public AURenderEventHeader Head;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public AUParameterEvent Parameter;
 
@@ -1399,10 +1524,16 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AURecordedParameterEvent {
+		/// <summary>The host time at which the change occured.</summary>
+		///         <remarks>To be added.</remarks>
 		public ulong HostTime;
 
+		/// <summary>The numeric identfier of the parameter.</summary>
+		///         <remarks>To be added.</remarks>
 		public ulong Address;
 
+		/// <summary>The new value of the parameter.</summary>
+		///         <remarks>To be added.</remarks>
 		public float Value;
 	}
 
@@ -1414,13 +1545,21 @@ namespace AudioUnit {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ulong HostTime;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ulong Address;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public float Value;
 #if COREBUILD
 		// keep structure size identical across builds
 		public uint EventType;
 #else
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AUParameterAutomationEventType EventType;
 #endif
 		ulong Reserved;
@@ -1436,21 +1575,33 @@ namespace AudioUnit {
 	//	Configuration Info Keys
 	public static class AudioUnitConfigurationInfo {
 		//		#define kAudioUnitConfigurationInfo_HasCustomView	"HasCustomView"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString HasCustomView = new NSString ("HasCustomView");
 
 		//		#define kAudioUnitConfigurationInfo_ChannelConfigurations	"ChannelConfigurations"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString ChannelConfigurations = new NSString ("ChannelConfigurations");
 
 		//		#define kAudioUnitConfigurationInfo_InitialInputs	"InitialInputs"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString InitialInputs = new NSString ("InitialInputs");
 
 		//		#define kAudioUnitConfigurationInfo_IconURL			"IconURL"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString IconUrl = new NSString ("IconURL");
 
 		//		#define kAudioUnitConfigurationInfo_BusCountWritable	"BusCountWritable"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString BusCountWritable = new NSString ("BusCountWritable");
 
 		//		#define kAudioUnitConfigurationInfo_SupportedChannelLayoutTags	"SupportedChannelLayoutTags"
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public static NSString SupportedChannelLayoutTags = new NSString ("SupportedChannelLayoutTags");
 	}
 #endif

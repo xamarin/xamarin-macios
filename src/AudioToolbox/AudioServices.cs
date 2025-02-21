@@ -37,12 +37,19 @@ using ObjCRuntime;
 namespace AudioToolbox {
 
 	public enum AudioServicesError { // Implictly cast to OSType
+		/// <summary>To be added.</summary>
 		None = 0,
+		/// <summary>To be added.</summary>
 		UnsupportedProperty = 0x7074793f,       // 'pty?'
+		/// <summary>To be added.</summary>
 		BadPropertySize = 0x2173697a,           // '!siz'
+		/// <summary>To be added.</summary>
 		BadSpecifierSizeError = 0x21737063,     // '!spc'
+		/// <summary>To be added.</summary>
 		SystemSoundUnspecifiedError = -1500,
+		/// <summary>To be added.</summary>
 		SystemSoundClientTimedOutError = -1501,
+		/// <summary>To be added.</summary>
 		SystemSoundExceededMaximumDurationError = -1502,
 	}
 

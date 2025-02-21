@@ -69,30 +69,45 @@ namespace CoreFoundation {
 		}
 
 #if !COREBUILD
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static CFAllocator Default {
 			get {
 				return Default_cf ?? (Default_cf = new CFAllocator (default_ptr, false));
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static CFAllocator SystemDefault {
 			get {
 				return SystemDefault_cf ?? (SystemDefault_cf = new CFAllocator (system_default_ptr, false));
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static CFAllocator Malloc {
 			get {
 				return Malloc_cf ?? (Malloc_cf = new CFAllocator (malloc_ptr, false));
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static CFAllocator MallocZone {
 			get {
 				return MallocZone_cf ?? (MallocZone_cf = new CFAllocator (malloc_zone_ptr, false));
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static CFAllocator Null {
 			get {
 				return Null_cf ?? (Null_cf = new CFAllocator (null_ptr, false));

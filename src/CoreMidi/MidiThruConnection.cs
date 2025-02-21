@@ -35,6 +35,9 @@ namespace CoreMidi {
 			this.handle = handle;
 		}
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>This IntPtr is a handle to the underlying unmanaged representation for this object.</remarks>
 		public MidiThruConnectionRef Handle {
 			get { return handle; }
 		}

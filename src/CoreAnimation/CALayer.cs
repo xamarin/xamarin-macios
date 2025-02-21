@@ -136,6 +136,9 @@ namespace CoreAnimation {
 		}
 #endif
 #if NET
+		/// <summary>Gets the contents format for the layer.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]

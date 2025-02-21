@@ -323,8 +323,11 @@ namespace GameKit {
 	// NSUInteger -> GKMatchmaker.h
 	[Native]
 	public enum GKMatchType : ulong {
+		/// <summary>To be added.</summary>
 		PeerToPeer,
+		/// <summary>To be added.</summary>
 		Hosted,
+		/// <summary>To be added.</summary>
 		TurnBased,
 	}
 

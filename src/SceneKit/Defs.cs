@@ -132,8 +132,11 @@ namespace SceneKit {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNPhysicsBodyType : long {
+		/// <summary>To be added.</summary>
 		Static,
+		/// <summary>To be added.</summary>
 		Dynamic,
+		/// <summary>To be added.</summary>
 		Kinematic,
 	}
 

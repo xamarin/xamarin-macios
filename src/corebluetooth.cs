@@ -262,8 +262,17 @@ namespace CoreBluetooth {
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("AdvertisementDataKeys")]
 	interface AdvertisementData {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		string LocalName { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		NSData ManufacturerData { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		NSDictionary<CBUUID, NSData> ServiceData { get; set; }
 		CBUUID [] ServiceUuids { get; set; }
 		CBUUID [] OverflowServiceUuids { get; set; }

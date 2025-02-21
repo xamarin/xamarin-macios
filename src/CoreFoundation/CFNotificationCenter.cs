@@ -29,9 +29,13 @@ namespace CoreFoundation {
 
 	[Native] // CFIndex
 	public enum CFNotificationSuspensionBehavior : long {
+		/// <summary>The notifications will be dropped while the application is in the background.</summary>
 		Drop = 1,
+		/// <summary>Only the last one of the notifications posted while the application was in the background is posted.</summary>
 		Coalesce = 2,
+		/// <summary>Notifications are kept around in a queue, and they are all delivered serially when the application returns to the foreground.   Some notifications might be dropped if the queue overflows.</summary>
 		Hold = 3,
+		/// <summary>The notifications are delivered immediately.  Any pending notifications that might be queued are delivered first.</summary>
 		DeliverImmediately = 4
 	}
 
@@ -70,6 +74,24 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFNotificationCenterRef CFNotificationCenterGetDarwinNotifyCenter ();
 
+		/// <summary>Returns the operating system global notification center.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This is an operating system global notification center,
+		/// 	    and can be used to send messages between applications
+		/// 	    running on the same machine.  There is no notion of user
+		/// 	    session in the Darwin notification center, so all the
+		/// 	    notifications are global.
+		///
+		/// 	  </para>
+		///           <para>
+		/// 	    The main thread loop must be running in one of the common
+		/// 	    modes (RunLoopDefault for example) for these notifications
+		/// 	    to be delivered.
+		/// 	  </para>
+		///         </remarks>
 		static public CFNotificationCenter Darwin {
 			get {
 				return darwinnc ?? (darwinnc = new CFNotificationCenter (CFNotificationCenterGetDarwinNotifyCenter (), false));
@@ -82,6 +104,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFNotificationCenterRef CFNotificationCenterGetDistributedCenter ();
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		static public CFNotificationCenter Distributed {
 			get {
 				return distributednc ?? (distributednc = new CFNotificationCenter (CFNotificationCenterGetDistributedCenter (), false));
@@ -92,6 +117,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFNotificationCenterRef CFNotificationCenterGetLocalCenter ();
 
+		/// <summary>Returns the application local notification center.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		/// 	  This is an application local notification center.   Can be used to post notifications inside an application.
+		/// 	</remarks>
 		static public CFNotificationCenter Local {
 			get {
 				return localnc ?? (localnc = new CFNotificationCenter (CFNotificationCenterGetLocalCenter (), false));

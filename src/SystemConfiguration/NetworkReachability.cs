@@ -25,15 +25,24 @@ namespace SystemConfiguration {
 	// SCNetworkReachabilityFlags -> uint32_t -> SCNetworkReachability.h
 	[Flags]
 	public enum NetworkReachabilityFlags {
+		/// <summary>The host is reachable using a transient connection (PPP for example).</summary>
 		TransientConnection = 1 << 0,
+		/// <summary>The host is reachable.</summary>
 		Reachable = 1 << 1,
+		/// <summary>Reachable, but a connection must first be established.</summary>
 		ConnectionRequired = 1 << 2,
+		/// <summary>Reachable, but a connection must be initiated.   The connection will be initiated on any traffic to the target detected.</summary>
 		ConnectionOnTraffic = 1 << 3,
+		/// <summary>The host is reachable, but it will require user interaction.</summary>
 		InterventionRequired = 1 << 4,
+		/// <summary>Reachable, but a connection must be initiated. The connection will be initiated if you use any of the CFSocketStream APIs, but will not be initiated automatically.</summary>
 		ConnectionOnDemand = 1 << 5,
+		/// <summary>The specified address is the device local name or local device.</summary>
 		IsLocalAddress = 1 << 16,
+		/// <summary>Connection to the host is direct, and will not go through a gateway.</summary>
 		IsDirect = 1 << 17,
 #if NET
+		/// <summary>Reachable over the cellular connection (GPRS, EDGE or 3G).</summary>
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("ios")]
@@ -42,6 +51,7 @@ namespace SystemConfiguration {
 		[Unavailable (PlatformName.MacOSX)]
 #endif
 		IsWWAN = 1 << 18,
+		/// <summary>The connection will happen automatically (alias for ConnectionOnTraffic).</summary>
 		ConnectionAutomatic = ConnectionOnTraffic
 	}
 

@@ -1,0 +1,54 @@
+<Documentation>
+  <Docs DocId="P:AudioUnit.AUAudioUnit.AudioComponentRegistrationsChangedNotification">
+        <summary>Notification constant for AudioComponentRegistrationsChanged</summary>
+        <value>NSString constant, should be used as a token to NSNotificationCenter.</value>
+        <remarks>
+          <para id="tool-remark">This constant can be used with the <see cref="T:Foundation.NSNotificationCenter" /> to register a listener for this notification.   This is an NSString instead of a string, because these values can be used as tokens in some native libraries instead of being used purely for their actual string content.    The 'notification' parameter to the callback contains extra information that is specific to the notification type.</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+// Lambda style
+NSNotificationCenter.DefaultCenter.AddObserver (
+        AUAudioUnit.AudioComponentRegistrationsChangedNotification, (notification) => {Console.WriteLine ("Received the notification AUAudioUnit", notification); }
+
+
+// Method style
+void Callback (NSNotification notification)
+{
+    Console.WriteLine ("Received a notification AUAudioUnit", notification);
+}
+
+void Setup ()
+{
+    NSNotificationCenter.DefaultCenter.AddObserver (AUAudioUnit.AudioComponentRegistrationsChangedNotification, Callback);
+}
+]]></code>
+          </example>
+        </remarks>
+      </Docs>
+  <Docs DocId="P:AudioUnit.AUAudioUnit.AudioComponentInstanceInvalidationNotification">
+        <summary>Notification constant for AudioComponentInstanceInvalidation</summary>
+        <value>NSString constant, should be used as a token to NSNotificationCenter.</value>
+        <remarks>
+          <para id="tool-remark">This constant can be used with the <see cref="T:Foundation.NSNotificationCenter" /> to register a listener for this notification.   This is an NSString instead of a string, because these values can be used as tokens in some native libraries instead of being used purely for their actual string content.    The 'notification' parameter to the callback contains extra information that is specific to the notification type.</para>
+          <example>
+            <code lang="csharp lang-csharp"><![CDATA[
+// Lambda style
+NSNotificationCenter.DefaultCenter.AddObserver (
+        AUAudioUnit.AudioComponentInstanceInvalidationNotification, (notification) => {Console.WriteLine ("Received the notification AUAudioUnit", notification); }
+
+
+// Method style
+void Callback (NSNotification notification)
+{
+    Console.WriteLine ("Received a notification AUAudioUnit", notification);
+}
+
+void Setup ()
+{
+    NSNotificationCenter.DefaultCenter.AddObserver (AUAudioUnit.AudioComponentInstanceInvalidationNotification, Callback);
+}
+]]></code>
+          </example>
+        </remarks>
+      </Docs>
+</Documentation>

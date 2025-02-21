@@ -110,14 +110,23 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSDictionary Dictionary { get; private set; }
 
 		// CFNumber
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public uint? Symbolic {
 			get { return Adapter.GetUInt32Value (Dictionary, CTFontTraitKey.Symbolic); }
 			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic!, value); }
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CTFontSymbolicTraits? SymbolicTraits {
 			get {
 				var v = Symbolic;
@@ -131,6 +140,9 @@ namespace CoreText {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CTFontStylisticClass? StylisticClass {
 			get {
 				var v = Symbolic;
@@ -145,18 +157,27 @@ namespace CoreText {
 		}
 
 		// CFNumber representing a float value 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float? Weight {
 			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Weight); }
 			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Weight!, value); }
 		}
 
 		// CFNumber representing a float value 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float? Width {
 			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Width); }
 			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Width!, value); }
 		}
 
 		// CFNumber representing a float value 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float? Slant {
 			get { return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Slant); }
 			set { Adapter.SetValue (Dictionary, CTFontTraitKey.Slant!, value); }

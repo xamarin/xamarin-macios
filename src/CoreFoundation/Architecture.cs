@@ -18,11 +18,17 @@ namespace CoreFoundation {
 		// #define CPU_TYPE_POWERPC    ((cpu_type_t) 18)
 		// #define CPU_TYPE_POWERPC64  (CPU_TYPE_POWERPC | CPU_ARCH_ABI64)
 		public enum Architecture {
+			/// <summary>To be added.</summary>
 			I386 = 0x00000007,
+			/// <summary>To be added.</summary>
 			X86_64 = 0x01000007,
+			/// <summary>To be added.</summary>
 			ARM = 0x0000000c,
+			/// <summary>To be added.</summary>
 			ARM64 = 0x01000000 | ARM,
+			/// <summary>To be added.</summary>
 			PPC = 0x00000012,
+			/// <summary>To be added.</summary>
 			PPC64 = 0x01000000 | PPC,
 		}
 	}

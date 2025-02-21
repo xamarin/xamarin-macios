@@ -106,6 +106,9 @@ namespace System.Net.Http {
 					"Properties can only be modified before sending the first request.");
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool AllowAutoRedirect {
 			get {
 				return allowAutoRedirect;
@@ -116,6 +119,9 @@ namespace System.Net.Http {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CookieContainer CookieContainer {
 			get {
 				return cookies ?? (cookies = new CookieContainer ());
@@ -126,6 +132,9 @@ namespace System.Net.Http {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool UseSystemProxy {
 			get {
 				return useSystemProxy;

@@ -43,6 +43,11 @@ namespace ObjCRuntime {
 			UserDelegateType = userDelegateType;
 		}
 
+		/// <summary>The managed delegate type that corresponds to the delegate this attribute is applied to.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public Type UserDelegateType {
 			get; private set;
 		}

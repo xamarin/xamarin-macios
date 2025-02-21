@@ -53,9 +53,13 @@ namespace CoreFoundation {
 
 	// anonymous and typeless native enum - System/Library/Frameworks/CoreFoundation.framework/Headers/CFRunLoop.h
 	public enum CFRunLoopExitReason : int {
+		/// <summary>The run loop terminated.</summary>
 		Finished = 1,
+		/// <summary>The run loop was stopped by a call to the <see cref="M:CoreFoundation.CFRunLoop.Stop" /> method.</summary>
 		Stopped = 2,
+		/// <summary>The number of seconds specified in the call to <see cref="M:CoreFoundation.CFRunLoop.RunInMode(Foundation.NSString,System.Double,System.Boolean)" /> elapsed.</summary>
 		TimedOut = 3,
+		/// <summary>An event from a source was handled, and the developer specified that a single source should be processed on the call to <see cref="M:CoreFoundation.CFRunLoop.RunInMode(Foundation.NSString,System.Double,System.Boolean)" /></summary>
 		HandledSource = 4
 	}
 
@@ -111,6 +115,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFRunLoopSourceGetOrder (/* CFRunLoopSourceRef */ IntPtr source);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint Order {
 			get {
 				return CFRunLoopSourceGetOrder (Handle);
@@ -128,6 +135,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* Boolean */ byte CFRunLoopSourceIsValid (/* CFRunLoopSourceRef */ IntPtr source);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsValid {
 			get {
 				return CFRunLoopSourceIsValid (Handle) != 0;
@@ -269,6 +279,15 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetCurrent ();
 
+		/// <summary>Active runloop for the current thread.</summary>
+		///         <value>
+		///           <para>
+		///           </para>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		///           </para>
+		///         </remarks>
 		static public CFRunLoop Current {
 			get {
 				return new CFRunLoop (CFRunLoopGetCurrent (), false);
@@ -278,6 +297,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetMain ();
 
+		/// <summary>Main run loop object for the application.</summary>
+		///         <value>The main runloop object for the application.</value>
+		///         <remarks>
+		///           <para>
+		///           </para>
+		///         </remarks>
 		static public CFRunLoop Main {
 			get {
 				return new CFRunLoop (CFRunLoopGetMain (), false);
@@ -311,6 +336,13 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* Boolean */ byte CFRunLoopIsWaiting (/* CFRunLoopRef */ IntPtr rl);
 
+		/// <summary>Indicates that the run loop is currently waiting for an event.</summary>
+		///         <value>
+		///           <see langword="true" /> if the run loop is waiting for an event, <see langword="false" /> otherwise.</value>
+		///         <remarks>
+		///           <para>
+		///           </para>
+		///         </remarks>
 		public bool IsWaiting {
 			get {
 				return CFRunLoopIsWaiting (Handle) != 0;

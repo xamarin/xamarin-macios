@@ -47,45 +47,79 @@ namespace AudioToolbox {
 
 	[Flags]
 	public enum AudioFileStreamPropertyFlag { // UInt32 in AudioFileStream_PropertyListenerProc
+		/// <summary>To be added.</summary>
 		PropertyIsCached = 1,
+		/// <summary>To be added.</summary>
 		CacheProperty = 2,
 	}
 
 	public enum AudioFileStreamStatus { // Implictly cast to OSType
+		/// <summary>To be added.</summary>
 		Ok = 0,
+		/// <summary>To be added.</summary>
 		UnsupportedFileType = 0x7479703f,
+		/// <summary>To be added.</summary>
 		UnsupportedDataFormat = 0x666d743f,
+		/// <summary>To be added.</summary>
 		UnsupportedProperty = 0x7074793f,
+		/// <summary>To be added.</summary>
 		BadPropertySize = 0x2173697a,
+		/// <summary>To be added.</summary>
 		NotOptimized = 0x6f70746d,
+		/// <summary>To be added.</summary>
 		InvalidPacketOffset = 0x70636b3f,
+		/// <summary>To be added.</summary>
 		InvalidFile = 0x6474613f,
+		/// <summary>To be added.</summary>
 		ValueUnknown = 0x756e6b3f,
+		/// <summary>To be added.</summary>
 		DataUnavailable = 0x6d6f7265,
+		/// <summary>To be added.</summary>
 		IllegalOperation = 0x6e6f7065,
+		/// <summary>To be added.</summary>
 		UnspecifiedError = 0x7768743f,
+		/// <summary>To be added.</summary>
 		DiscontinuityCantRecover = 0x64736321,
 	}
 
 	public enum AudioFileStreamProperty { // UInt32 AudioFileStreamPropertyID
+		/// <summary>To be added.</summary>
 		ReadyToProducePackets = 0x72656479,
+		/// <summary>To be added.</summary>
 		FileFormat = 0x66666d74,
+		/// <summary>To be added.</summary>
 		DataFormat = 0x64666d74,
+		/// <summary>To be added.</summary>
 		FormatList = 0x666c7374,
+		/// <summary>To be added.</summary>
 		MagicCookieData = 0x6d676963,
+		/// <summary>To be added.</summary>
 		AudioDataByteCount = 0x62636e74,
+		/// <summary>To be added.</summary>
 		AudioDataPacketCount = 0x70636e74,
+		/// <summary>To be added.</summary>
 		MaximumPacketSize = 0x70737a65,
+		/// <summary>To be added.</summary>
 		DataOffset = 0x646f6666,
+		/// <summary>To be added.</summary>
 		ChannelLayout = 0x636d6170,
+		/// <summary>To be added.</summary>
 		PacketToFrame = 0x706b6672,
+		/// <summary>To be added.</summary>
 		FrameToPacket = 0x6672706b,
+		/// <summary>To be added.</summary>
 		PacketToByte = 0x706b6279,
+		/// <summary>To be added.</summary>
 		ByteToPacket = 0x6279706b,
+		/// <summary>To be added.</summary>
 		PacketTableInfo = 0x706e666f,
+		/// <summary>To be added.</summary>
 		PacketSizeUpperBound = 0x706b7562,
+		/// <summary>To be added.</summary>
 		AverageBytesPerPacket = 0x61627070,
+		/// <summary>To be added.</summary>
 		BitRate = 0x62726174,
+		/// <summary>To be added.</summary>
 		InfoDictionary = 0x696e666f,
 	}
 
@@ -102,7 +136,13 @@ namespace AudioToolbox {
 			Flags = ioFlags;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileStreamProperty Property { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileStreamPropertyFlag Flags { get; set; }
 
 		public override string ToString ()
@@ -124,8 +164,17 @@ namespace AudioToolbox {
 			this.InputData = inputData;
 			this.PacketDescriptions = packetDescriptions;
 		}
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int Bytes { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public IntPtr InputData { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioStreamPacketDescription []? PacketDescriptions { get; private set; }
 
 		public override string ToString ()
@@ -218,6 +267,8 @@ namespace AudioToolbox {
 			afs!.OnPacketDecoded (numberBytes, inputData, desc);
 		}
 
+		/// <summary>This event is raised when a packet has been decoded.</summary>
+		///         <remarks>To be added.</remarks>
 		public EventHandler<PacketReceivedEventArgs>? PacketDecoded;
 		protected virtual void OnPacketDecoded (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
@@ -226,6 +277,8 @@ namespace AudioToolbox {
 				p (this, new PacketReceivedEventArgs (numberOfBytes, inputData, packetDescriptions));
 		}
 
+		/// <summary>This event is raised when a property has been found on the decoded data.</summary>
+		///         <remarks>The most interesting property that is raised is AudioFileStreamProperty.ReadyToProducePackets;   When this property is parsed there is enough information to create the output queue.   The MagicCookie and the StreamBasicDescription contain the information necessary to create a working instance of the OutputAudioQueue.</remarks>
 		public EventHandler<PropertyFoundEventArgs>? PropertyFound;
 		protected virtual void OnPropertyFound (AudioFileStreamProperty propertyID, ref AudioFileStreamPropertyFlag ioFlags)
 		{
@@ -482,18 +535,42 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileStreamStatus AudioFileStreamClose (AudioFileStreamID inAudioFileStream);
 
+		/// <summary>Set to true once the file stream parser has read enough of the headers to be able to produce audio packets.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public bool ReadyToProducePackets {
 			get {
 				return GetInt (AudioFileStreamProperty.ReadyToProducePackets) == 1;
 			}
 		}
 
+		/// <summary>The audio file type for the audio stream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public AudioFileType FileType {
 			get {
 				return (AudioFileType) GetInt (AudioFileStreamProperty.FileFormat);
 			}
 		}
 
+		/// <summary>Format of the data</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		[Advice ("Use 'DataFormat' instead.")]
 		public AudioStreamBasicDescription StreamBasicDescription {
 			get {
@@ -501,12 +578,35 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Format of the data (as an AudioStreamBasicDescription</summary>
+		///         <value>.</value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public AudioStreamBasicDescription DataFormat {
 			get {
 				return GetProperty<AudioStreamBasicDescription> (AudioFileStreamProperty.DataFormat) ?? default (AudioStreamBasicDescription);
 			}
 		}
 
+		/// <summary>List of formats supported by the audio stream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    Some formats (like AAC) that support multiple encodings
+		/// 	    will set this property to the available audio formats.
+		/// 	    You would typically use one of the returned
+		/// 	    AudioStreamBasicDescription descriptions to create an
+		/// 	    <see cref="T:AudioToolbox.AudioQueue" />.
+		///
+		/// 	  </para>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public unsafe AudioFormat []? FormatList {
 			get {
 				int size;
@@ -527,12 +627,33 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Contains information about the valid frames in the audio file stream (their start and end).</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public AudioFilePacketTableInfo? PacketTableInfo {
 			get {
 				return GetProperty<AudioFilePacketTableInfo> (AudioFileStreamProperty.PacketTableInfo);
 			}
 		}
 
+		/// <summary>The magic cookie for this file.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    Some file formats require that the magic cookie is written
+		/// 	    before data can be written, use this property to retrieve
+		/// 	    the magic cookie for this file stream.
+		/// 	  </para>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public byte [] MagicCookie {
 			get {
 				int size;
@@ -554,24 +675,56 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The number of audio packets on the audio file stream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public long DataPacketCount {
 			get {
 				return GetLong (AudioFileStreamProperty.AudioDataPacketCount);
 			}
 		}
 
+		/// <summary>Maximum packet size for data on the audio file stream</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public int MaximumPacketSize {
 			get {
 				return GetInt (AudioFileStreamProperty.MaximumPacketSize);
 			}
 		}
 
+		/// <summary>Offset of the audio date from the beginning of the audio file stream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public long DataOffset {
 			get {
 				return GetLong (AudioFileStreamProperty.DataOffset);
 			}
 		}
 
+		/// <summary>The channel layout for the audio stream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
@@ -657,24 +810,56 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The stream's bit rate in bits per second.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public int BitRate {
 			get {
 				return GetInt (AudioFileStreamProperty.BitRate);
 			}
 		}
 
+		/// <summary>The largest possible packet size.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public int PacketSizeUpperBound {
 			get {
 				return GetInt (AudioFileStreamProperty.PacketSizeUpperBound);
 			}
 		}
 
+		/// <summary>Average bytes per packet.   This value is precise for audio files with constant bit rates or audio files that have a packet index, otherwise it is a computed average.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    This updates the <see cref="P:AudioToolbox.AudioFileStream.LastError" /> property.
+		/// 	  </para>
+		///         </remarks>
 		public double AverageBytesPerPacket {
 			get {
 				return GetDouble (AudioFileStreamProperty.AverageBytesPerPacket);
 			}
 		}
 
+		/// <summary>Contains the latest error code set by one of the methods in AudioFileStream.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		/// 	  Accessing some properties and methods set this value when
+		/// 	  accessed, you can use this during debugging to identify
+		/// 	  problems in your code.
+		/// 	</remarks>
 		public AudioFileStreamStatus LastError { get; private set; }
 	}
 }

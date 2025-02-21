@@ -37,6 +37,9 @@ namespace CoreBluetooth {
 
 	public partial class PeripheralScanningOptions {
 #if !COREBUILD
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool AllowDuplicatesKey {
 			get {
 				var value = GetBoolValue (CBCentralManager.ScanOptionAllowDuplicatesKey);

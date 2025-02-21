@@ -28,7 +28,9 @@ namespace IntentsUI {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIHostedViewContext : ulong {
+		/// <summary>To be added.</summary>
 		SiriSnippet,
+		/// <summary>To be added.</summary>
 		MapsCard
 	}
 
@@ -45,9 +47,13 @@ namespace IntentsUI {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIAddVoiceShortcutButtonStyle : ulong {
+		/// <summary>To be added.</summary>
 		White = 0,
+		/// <summary>To be added.</summary>
 		WhiteOutline,
+		/// <summary>To be added.</summary>
 		Black,
+		/// <summary>To be added.</summary>
 		BlackOutline,
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]

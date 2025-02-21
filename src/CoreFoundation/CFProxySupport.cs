@@ -41,12 +41,19 @@ using CFNetwork;
 namespace CoreFoundation {
 	// Utility enum for string constants in ObjC
 	public enum CFProxyType {
+		/// <summary>No proxy should be used.</summary>
 		None,
+		/// <summary>An autoconfiguration url.</summary>
 		AutoConfigurationUrl,
+		/// <summary>Proxy types available from the system.</summary>
 		AutoConfigurationJavaScript,
+		/// <summary>An FTP proxy.</summary>
 		FTP,
+		/// <summary>An HTTP proxy.</summary>
 		HTTP,
+		/// <summary>An HTTPS proxy.</summary>
 		HTTPS,
+		/// <summary>A SOCKS proxy.</summary>
 		SOCKS
 	}
 
@@ -263,6 +270,12 @@ namespace CoreFoundation {
 		}
 #endif
 
+		/// <summary>JavaScript source code for auto-configuring the proxy.</summary>
+		///         <value>A string containing the JavaScript source code.</value>
+		///         <remarks>This value is meant to be used with 
+		/// 	<see cref="M:CoreFoundation.CFNetwork.GetProxiesForAutoConfigurationScript(Foundation.NSString,System.Uri)" />
+		/// 	and will only be set if <see cref="P:CoreFoundation.CFProxy.ProxyType" /> is set to
+		/// 	AutoConfigurationJavaScript.</remarks>
 		public NSString? AutoConfigurationJavaScript {
 			get {
 				if (AutoConfigurationJavaScriptKey is null)
@@ -272,6 +285,10 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>URL location of a proxy auto-configuration script.</summary>
+		///         <value>A URL containing the location of the proxy auto-configuration script file.</value>
+		///         <remarks>This property will only set when <see cref="P:CoreFoundation.CFProxy.ProxyType" />
+		/// 	is set to AutoConfigurationUrl.</remarks>
 		public NSUrl? AutoConfigurationUrl {
 			get {
 				if (AutoConfigurationURLKey is null)
@@ -281,6 +298,10 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>The hostname of the proxy server.</summary>
+		///         <value>A string containing the hostname of the proxy server.</value>
+		///         <remarks>This property will be null if the <see cref="P:CoreFoundation.CFProxy.ProxyType" /> is set to
+		/// 	AutoConfigurationJavaScript or AutoConfigurationUrl.</remarks>
 		public string? HostName {
 			get {
 				if (HostNameKey is null)
@@ -292,6 +313,10 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>The password needed to authenticate with the proxy server.</summary>
+		///         <value>A string containing the password or null if not needed.</value>
+		///         <remarks>
+		///         </remarks>
 		public string? Password {
 			get {
 				if (PasswordKey is null)
@@ -303,6 +328,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>The port to connect to on the proxy server.</summary>
+		///         <value>The numeric port to connect to.</value>
+		///         <remarks>This property is not useful if the <see cref="P:CoreFoundation.CFProxy.ProxyType" /> is javascript or a url.</remarks>
 		public int Port {
 			get {
 				if (PortNumberKey is null)
@@ -314,6 +342,10 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>The type of the proxy.</summary>
+		///         <value>Any of the <see cref="T:CoreFoundation.CFProxyType" /> enum values.</value>
+		///         <remarks>
+		///         </remarks>
 		public CFProxyType ProxyType {
 			get {
 				if (ProxyTypeKey is null)
@@ -323,6 +355,10 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>The user name needed for authentication with the proxy server.</summary>
+		///         <value>A string containing the user name or null if not needed.</value>
+		///         <remarks>
+		///         </remarks>
 		public string? Username {
 			get {
 				if (UsernameKey is null)
@@ -347,6 +383,11 @@ namespace CoreFoundation {
 			this.settings = settings;
 		}
 
+		/// <summary>The dictionary holding the settings.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public NSDictionary Dictionary {
 			get { return settings; }
 		}
@@ -415,6 +456,9 @@ namespace CoreFoundation {
 		}
 		#endregion Global Proxy Setting Constants
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool HTTPEnable {
 			get {
 				if (CFNetworkProxiesHTTPEnable is null)
@@ -426,6 +470,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int HTTPPort {
 			get {
 				if (CFNetworkProxiesHTTPPort is null)
@@ -437,6 +484,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? HTTPProxy {
 			get {
 				if (CFNetworkProxiesHTTPProxy is null)
@@ -448,6 +498,9 @@ namespace CoreFoundation {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool ProxyAutoConfigEnable {
 			get {
 				if (CFNetworkProxiesProxyAutoConfigEnable is null)
@@ -472,6 +525,9 @@ namespace CoreFoundation {
 		}
 #endif
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? ProxyAutoConfigURLString {
 			get {
 				if (CFNetworkProxiesProxyAutoConfigURLString is null)

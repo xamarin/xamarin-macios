@@ -184,6 +184,9 @@ namespace GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerDirectionPad {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed]
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerDirectionPadValueChangedHandler ValueChangedHandler { get; set; }
@@ -194,15 +197,27 @@ namespace GameController {
 		[Export ("yAxis")]
 		GCControllerAxisInput YAxis { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("up")]
 		GCControllerButtonInput Up { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("down")]
 		GCControllerButtonInput Down { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("left")]
 		GCControllerButtonInput Left { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("right")]
 		GCControllerButtonInput Right { get; }
 
@@ -722,6 +737,9 @@ namespace GameController {
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCController.Capture()' instead.")]
 	[BaseType (typeof (GCMicroGamepad))]
 	interface GCMicroGamepadSnapshot {
+		/// <summary>Gets or sets the current snapshot data.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("snapshotData", ArgumentSemantic.Copy)]
 		NSData SnapshotData { get; set; }
 
@@ -731,6 +749,9 @@ namespace GameController {
 		[Export ("initWithController:snapshotData:")]
 		NativeHandle Constructor (GCController controller, NSData data);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCControler.GetMicroGamepadController()' instead.")]

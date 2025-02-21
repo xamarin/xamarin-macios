@@ -46,11 +46,17 @@ namespace ImageIO {
 #if !COREBUILD
 	// untyped enum -> CGImageSource.h
 	public enum CGImageSourceStatus {
+		/// <summary>The image loader has completed, the full set of images is loaded.</summary>
 		Complete = 0,
+		/// <summary>The CGImageSource is still expecting data.</summary>
 		Incomplete = -1,
+		/// <summary>The CGImageSource is reading the image header information.</summary>
 		ReadingHeader = -2,
+		/// <summary>The CGImageSource does not have a decoder for the image.</summary>
 		UnknownType = -3,
+		/// <summary>The data fed to the CGImageSource is invalid and does not represent an image that can be decoded.</summary>
 		InvalidData = -4,
+		/// <summary>The image loader detected a premature end-of-file condition.</summary>
 		UnexpectedEOF = -5,
 	}
 
@@ -61,11 +67,22 @@ namespace ImageIO {
 			ShouldCache = true;
 		}
 
+		/// <summary>Provides the best guess for the file format that is going to be loaded.</summary>
+		///         <value>A Uniform Type Identifier (UTI).</value>
+		///         <remarks>To learn more about UTIs, you can read:
+		///
+		/// https://developer.apple.com/library/mac/#documentation/FileManagement/Conceptual/understanding_utis/understand_utis_intro/understand_utis_intro.html</remarks>
 		public string? BestGuessTypeIdentifier { get; set; }
 
+		/// <summary>Determines whether the loaded image should be cached.</summary>
+		///         <value />
+		///         <remarks>To be added.</remarks>
 		public bool ShouldCache { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -73,6 +90,9 @@ namespace ImageIO {
 #endif
 		public bool ShouldCacheImmediately { get; set; }
 
+		/// <summary>Determines whether the image loaded will use floating point values for its components (if the source image has them).</summary>
+		///         <value />
+		///         <remarks>To be added.</remarks>
 		public bool ShouldAllowFloat { get; set; }
 
 		internal virtual NSMutableDictionary ToDictionary ()
@@ -94,12 +114,27 @@ namespace ImageIO {
 
 	public partial class CGImageThumbnailOptions : CGImageOptions {
 
+		/// <summary>Determines whether to create a thumbnail if one is not found on the image source.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool CreateThumbnailFromImageIfAbsent { get; set; }
+		/// <summary>Forces a thumbnail to be created, even if the source image has one.</summary>
+		///         <value />
+		///         <remarks>The thumbnail is created subject to the value set in the MaxPixelSize property.</remarks>
 		public bool CreateThumbnailFromImageAlways { get; set; }
+		/// <summary>Maximum width and height allowed for a thumbnail (in pixels).</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int? MaxPixelSize { get; set; }
+		/// <summary>Determines if the created thumbnail should be rotated and scaled to match the full image.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool CreateThumbnailWithTransform { get; set; }
 
 #if NET
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -136,6 +171,9 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CFArrayRef __nonnull */ IntPtr CGImageSourceCopyTypeIdentifiers ();
 
+		/// <summary>The type identifiers for the formats supported by the image loader.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public static string? []? TypeIdentifiers {
 			get {
 				var handle = CGImageSourceCopyTypeIdentifiers ();
@@ -214,6 +252,9 @@ namespace ImageIO {
 		extern static /* CFStringRef __nullable */ IntPtr CGImageSourceGetType (
 			/* CGImageSourceRef __nonnull */ IntPtr handle);
 
+		/// <summary>The image type of the underling image.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? TypeIdentifier {
 			get {
 				return CFString.FromHandle (CGImageSourceGetType (Handle));
@@ -223,6 +264,9 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* size_t */ nint CGImageSourceGetCount (/* CGImageSourceRef __nonnull */ IntPtr handle);
 
+		/// <summary>Number of images loaded (does not include the Thumbnail).</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public nint ImageCount {
 			get {
 				return CGImageSourceGetCount (Handle);

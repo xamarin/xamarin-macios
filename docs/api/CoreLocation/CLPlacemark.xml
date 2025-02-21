@@ -1,0 +1,41 @@
+<Documentation>
+  <Docs DocId="P:CoreLocation.CLPlacemark.AddressDictionary">
+        <summary>Developers should not use this deprecated property. Developers should use 'CLPlacemark' properties to access data.</summary>
+        <value>To be added.</value>
+        <remarks>
+          <para>Available keys are:</para>
+          <list type="bullet">
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.Street" />
+              </term>
+            </item>
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.City" />
+              </term>
+            </item>
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.State" />
+              </term>
+            </item>
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.Zip" />
+              </term>
+            </item>
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.Country" />
+              </term>
+            </item>
+            <item>
+              <term>
+                <see cref="P:AddressBook.ABPersonAddressKey.CountryCode" />
+              </term>
+            </item>
+          </list>
+        </remarks>
+      </Docs>
+</Documentation>

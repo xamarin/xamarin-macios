@@ -57,6 +57,10 @@ namespace CoreBluetooth {
 		{
 		}
 
+		/// <summary>Represents the local name of a peripheral</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property uses constant CBAdvertisementDataLocalNameKey value to access the underlying dictionary.</remarks>
 		public string? LocalName {
 			set {
 				SetStringValue (CBAdvertisement.DataLocalNameKey, value);
@@ -66,6 +70,10 @@ namespace CoreBluetooth {
 			}
 		}
 
+		/// <summary>One or more <see cref="T:CoreBluetooth.CBUUID" /> objects.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>The property uses constant CBAdvertisementDataServiceUUIDsKey value to access the underlying dictionary.</remarks>
 		public CBUUID []? ServicesUUID {
 			get {
 				return GetArray<CBUUID> (CBAdvertisement.DataServiceUUIDsKey);

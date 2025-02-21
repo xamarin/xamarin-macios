@@ -29,6 +29,11 @@ namespace AdSupport {
 		[Static]
 		ASIdentifierManager SharedManager { get; }
 
+		/// <summary>Whether advertising tracking is allowed by the user.</summary>
+		///         <value>The value is determined by the user in the system Privacy settings.</value>
+		///         <remarks>
+		///           <para>Unlike most other privacy settings, there is not a system-provided dialog that application's can call to ask user's to switch this value. If an application wishes to switch this value, they must provide the user directions on manipulating the system Privacy settings. (Settings application: Privacy / Advertising dialogs)</para>
+		///         </remarks>
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]

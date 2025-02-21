@@ -42,12 +42,19 @@ namespace CoreAnimation {
 	/// <summary>Flags used to determine what side of a layer should be antialiased.</summary>
 	[Flags]
 	public enum CAEdgeAntialiasingMask : uint {
+		/// <summary>Left side of the layer is antialiased.</summary>
 		LeftEdge = 1 << 0,
+		/// <summary>Right side of the layer is antialiased.</summary>
 		RightEdge = 1 << 1,
+		/// <summary>Bottom side of the layer is antialiased.</summary>
 		BottomEdge = 1 << 2,
+		/// <summary>Top side of the layer is antialiased.</summary>
 		TopEdge = 1 << 3,
+		/// <summary>All sides of the layer are antialiased.</summary>
 		All = LeftEdge | RightEdge | BottomEdge | TopEdge,
+		/// <summary>Left and right sides of the layer are antialiased.</summary>
 		LeftRightEdges = LeftEdge | RightEdge,
+		/// <summary>Top and bottom side of the layer are antialiased.</summary>
 		TopBottomEdges = TopEdge | BottomEdge
 	}
 
@@ -55,9 +62,13 @@ namespace CoreAnimation {
 	[Native]
 	[Flags]
 	public enum CACornerMask : ulong {
+		/// <summary>To be added.</summary>
 		MinXMinYCorner = 1 << 0,
+		/// <summary>To be added.</summary>
 		MaxXMinYCorner = 1 << 1,
+		/// <summary>To be added.</summary>
 		MinXMaxYCorner = 1 << 2,
+		/// <summary>To be added.</summary>
 		MaxXMaxYCorner = 1 << 3,
 	}
 

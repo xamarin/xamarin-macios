@@ -45,11 +45,17 @@ namespace CoreText {
 
 	#region Glyph Info Values
 	public enum CTCharacterCollection : ushort {
+		/// <summary>The character identifier is the same as the glyph index.</summary>
 		IdentityMapping = 0,
+		/// <summary>The Adobe-CNS1 character collection.</summary>
 		AdobeCNS1 = 1,
+		/// <summary>The Adobe-GB1 character collection.</summary>
 		AdobeGB1 = 2,
+		/// <summary>The Adobe-Japan1 character collection.</summary>
 		AdobeJapan1 = 3,
+		/// <summary>The Adobe-Japan2 character collection.</summary>
 		AdobeJapan2 = 4,
+		/// <summary>The Adobe-Korea1 mapping.</summary>
 		AdobeKorea1 = 5,
 	}
 	#endregion
@@ -143,6 +149,9 @@ namespace CoreText {
 		#region Glyph Info Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTGlyphInfoGetGlyphName (IntPtr glyphInfo);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? GlyphName {
 			get {
 				var cfStringRef = CTGlyphInfoGetGlyphName (Handle);
@@ -152,12 +161,18 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGFontIndex CTGlyphInfoGetCharacterIdentifier (IntPtr glyphInfo);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CGFontIndex CharacterIdentifier {
 			get { return CTGlyphInfoGetCharacterIdentifier (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTCharacterCollection CTGlyphInfoGetCharacterCollection (IntPtr glyphInfo);
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CTCharacterCollection CharacterCollection {
 			get { return CTGlyphInfoGetCharacterCollection (Handle); }
 		}

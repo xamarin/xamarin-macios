@@ -48,32 +48,58 @@ using AudioQueueTimelineRef = System.IntPtr;
 namespace AudioToolbox {
 
 	public enum AudioQueueStatus { // Implictly cast to OSType 
+		/// <summary>To be added.</summary>
 		Ok = 0,
+		/// <summary>To be added.</summary>
 		InvalidBuffer = -66687,
+		/// <summary>To be added.</summary>
 		BufferEmpty = -66686,
+		/// <summary>To be added.</summary>
 		DisposalPending = -66685,
+		/// <summary>To be added.</summary>
 		InvalidProperty = -66684,
+		/// <summary>To be added.</summary>
 		InvalidPropertySize = -66683,
+		/// <summary>To be added.</summary>
 		InvalidParameter = -66682,
+		/// <summary>To be added.</summary>
 		CannotStart = -66681,
+		/// <summary>To be added.</summary>
 		InvalidDevice = -66680,
+		/// <summary>To be added.</summary>
 		BufferInQueue = -66679,
+		/// <summary>To be added.</summary>
 		InvalidRunState = -66678,
+		/// <summary>To be added.</summary>
 		InvalidQueueType = -66677,
+		/// <summary>To be added.</summary>
 		Permissions = -66676,
+		/// <summary>To be added.</summary>
 		InvalidPropertyValue = -66675,
+		/// <summary>To be added.</summary>
 		PrimeTimedOut = -66674,
+		/// <summary>To be added.</summary>
 		CodecNotFound = -66673,
+		/// <summary>To be added.</summary>
 		InvalidCodecAccess = -66672,
+		/// <summary>To be added.</summary>
 		QueueInvalidated = -66671,
+		/// <summary>To be added.</summary>
 		TooManyTaps = -66670,
+		/// <summary>To be added.</summary>
 		InvalidTapContext = -66669,
+		/// <summary>To be added.</summary>
 		RecordUnderrun = -66668,
+		/// <summary>To be added.</summary>
 		InvalidTapType = -66667,
+		/// <summary>To be added.</summary>
 		EnqueueDuringReset = -66632,
+		/// <summary>To be added.</summary>
 		InvalidOfflineMode = -66626,
+		/// <summary>To be added.</summary>
 		BufferEnqueuedTwice = -66666,
 #if NET
+		/// <summary>To be added.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -82,11 +108,15 @@ namespace AudioToolbox {
 		CannotStartYet = -66665,
 
 		// There is countless of not well documented error codes returned
+		/// <summary>To be added.</summary>
 		QueueStopped = 0x73746f70,  // 'stop'
+		/// <summary>To be added.</summary>
 		DataFormatError = 0x666d743f,   // 'fmt?'
+		/// <summary>To be added.</summary>
 		UnsupportedProperty = 0x70726F70,  // 'prop'
 
 		// From kAudio_
+		/// <summary>To be added.</summary>
 		GeneralParamError = -50
 	}
 
@@ -179,72 +209,116 @@ namespace AudioToolbox {
 			ErrorCode = (AudioQueueStatus) k;
 		}
 
+		/// <summary>The underlying AudioToolbox error code.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioQueueStatus ErrorCode { get; private set; }
 	}
 
 	public enum AudioQueueProperty : uint // UInt32 AudioQueuePropertyID
 	{
+		/// <summary>To be added.</summary>
 		IsRunning = 0x6171726e,
+		/// <summary>To be added.</summary>
 		DeviceSampleRate = 0x61717372,          // 'aqsr'
+		/// <summary>To be added.</summary>
 		DeviceNumberChannels = 0x61716463,
+		/// <summary>To be added.</summary>
 		CurrentDevice = 0x61716364,
+		/// <summary>To be added.</summary>
 		MagicCookie = 0x61716d63,
+		/// <summary>To be added.</summary>
 		MaximumOutputPacketSize = 0x786f7073,   // 'xops'
+		/// <summary>To be added.</summary>
 		StreamDescription = 0x61716674,         // 'aqft'
+		/// <summary>To be added.</summary>
 		ChannelLayout = 0x6171636c,             // 'aqcl'
+		/// <summary>To be added.</summary>
 		EnableLevelMetering = 0x61716d65,
+		/// <summary>To be added.</summary>
 		CurrentLevelMeter = 0x61716d76,
+		/// <summary>To be added.</summary>
 		CurrentLevelMeterDB = 0x61716d64,
+		/// <summary>To be added.</summary>
 		DecodeBufferSizeFrames = 0x64636266,
+		/// <summary>To be added.</summary>
 		ConverterError = 0x71637665,            // 'qcve'
+		/// <summary>To be added.</summary>
 		EnableTimePitch = 0x715f7470,   // 'q_tp'
+		/// <summary>To be added.</summary>
 		TimePitchAlgorithm = 0x71747061,    // 'qtpa'
+		/// <summary>To be added.</summary>
 		TimePitchBypass = 0x71747062,   // 'qtpb'
 #if !MONOMAC
+		/// <summary>To be added.</summary>
 		HardwareCodecPolicy = 0x61716370,   // 'aqcp'
+		/// <summary>To be added.</summary>
 		ChannelAssignments = 0x61716361,    // 'aqca'
 #endif
 	}
 
 	public enum AudioQueueTimePitchAlgorithm : uint {
+		/// <summary>To be added.</summary>
 		Spectral = 0x73706563,                  // spec
+		/// <summary>To be added.</summary>
 		TimeDomain = 0x7469646f,                // tido
 #if !MONOMAC
+		/// <summary>To be added.</summary>
 		LowQualityZeroLatency = 0x6c717a6c,     // lqzl
 #endif
+		/// <summary>To be added.</summary>
 		Varispeed = 0x76737064                  // vspd
 	}
 
 	public enum AudioQueueHardwareCodecPolicy { // A AudioQueuePropertyID (UInt32)
+		/// <summary>To be added.</summary>
 		Default = 0,
+		/// <summary>To be added.</summary>
 		UseSoftwareOnly = 1,
+		/// <summary>To be added.</summary>
 		UseHardwareOnly = 2,
+		/// <summary>To be added.</summary>
 		PreferSoftware = 3,
+		/// <summary>To be added.</summary>
 		PreferHardware = 4
 	}
 
 	public enum AudioQueueParameter : uint // UInt32 AudioQueueParameterID
 	{
+		/// <summary>To be added.</summary>
 		Volume = 1,
+		/// <summary>To be added.</summary>
 		PlayRate = 2,
+		/// <summary>To be added.</summary>
 		Pitch = 3,
+		/// <summary>To be added.</summary>
 		VolumeRampTime = 4,
+		/// <summary>To be added.</summary>
 		Pan = 13,
 	}
 
 	public enum AudioQueueDeviceProperty { // UInt32 AudioQueueParameterID
+		/// <summary>To be added.</summary>
 		SampleRate = 0x61717372,
+		/// <summary>To be added.</summary>
 		NumberChannels = 0x61716463
 	}
 
 	[Flags]
 	public enum AudioQueueProcessingTapFlags : uint // UInt32 in AudioQueueProcessingTapNew
 	{
+		/// <summary>The tap is executed before any effects have run.</summary>
 		PreEffects = (1 << 0),
+		/// <summary>The tap is executed after any effects have run.</summary>
 		PostEffects = (1 << 1),
+		/// <summary>The tap is a siphon tap, it can only examine the AudioBuffers provided to the callback, but should not modify its contents.</summary>
 		Siphon = (1 << 2),
 
+		/// <summary>Indicates the start of audio and is returned by GetSourceAudio.  As a flag passed to a tap processor, this indicates a discontinuity in the audio.   Either because it is starting, or because there is a playback gap.  For the tap processor this means  that the data being requested should correspond to the first frame in the audio source.   This should reset any internal state in the tap processor that might have been saved from previous invocations to the tap handler.</summary>
 		StartOfStream = (1 << 8),
+		/// <summary>Indicates the end of the audio stream, it happens when the queue is being stopped asynchronosuly and is returned by a call to GetSourceAudio.  You must propagate this value to the caller.</summary>
 		EndOfStream = (1 << 9),
 	}
 
@@ -256,15 +330,32 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioQueueBuffer {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint AudioDataBytesCapacity;
+		/// <summary>Pointer to the audio data.</summary>
+		///         <remarks>To be added.</remarks>
 		public IntPtr AudioData;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint AudioDataByteSize;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public IntPtr UserData;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint PacketDescriptionCapacity;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public IntPtr IntPtrPacketDescriptions;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public int PacketDescriptionCount;
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioStreamPacketDescription []? PacketDescriptions {
 			get {
 				return AudioFile.PacketDescriptionFrom (PacketDescriptionCount, IntPtrPacketDescriptions);
@@ -285,13 +376,19 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct AudioQueueParameterEvent {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		[Advice ("Use Parameter.")]
 		public uint ID;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public AudioQueueParameter Parameter;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (4)]
 		public float Value;
 
@@ -311,7 +408,13 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioQueueLevelMeterState {
+		/// <summary>The audio channel average root mean square power.</summary>
+		///         <remarks>
+		///         </remarks>
 		public float AveragePower;
+		/// <summary>The audio channel peak root mean square power.</summary>
+		///         <remarks>
+		///         </remarks>
 		public float PeakPower;
 	}
 
@@ -356,7 +459,13 @@ namespace AudioToolbox {
 			IntPtrBuffer = (IntPtr) audioQueueBuffer;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public IntPtr IntPtrBuffer { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioQueueBuffer* UnsafeBuffer {
 			get { return (AudioQueueBuffer*) IntPtrBuffer; }
 			set { IntPtrBuffer = (IntPtr) value; }
@@ -377,15 +486,30 @@ namespace AudioToolbox {
 			PacketDescriptions = pdec;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public IntPtr IntPtrBuffer { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioQueueBuffer* UnsafeBuffer {
 			get { return (AudioQueueBuffer*) IntPtrBuffer; }
 			set { IntPtrBuffer = (IntPtr) value; }
 		}
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioQueueBuffer Buffer {
 			get { return *(AudioQueueBuffer*) IntPtrBuffer; }
 		}
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioTimeStamp TimeStamp { get; private set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioStreamPacketDescription []? PacketDescriptions { get; private set; }
 	}
 
@@ -396,9 +520,16 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public abstract class AudioQueue : IDisposable {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		internal protected IntPtr handle;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		internal protected GCHandle gch;
 
+		/// <summary>Handle (pointer) to the unmanaged object representation.</summary>
+		///         <value>A pointer</value>
+		///         <remarks>This IntPtr is a handle to the underlying unmanaged representation for this object.</remarks>
 		public IntPtr Handle { get { return handle; } }
 
 		internal AudioQueue ()
@@ -732,6 +863,11 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static AudioQueueStatus AudioQueueDeviceGetCurrentTime (IntPtr AQ, AudioTimeStamp* time);
 
+		/// <summary>Returns the current time for the hardware device.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public AudioTimeStamp CurrentTime {
 			get {
 				AudioTimeStamp stamp = new AudioTimeStamp ();
@@ -780,6 +916,10 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioQueueSetParameter (IntPtr AQ, AudioQueueParameter parameterId, float value);
 
+		/// <summary>The volume</summary>
+		///         <value>Value between 0.0 and 1.0.</value>
+		///         <remarks>
+		///         </remarks>
 		public float Volume {
 			get {
 				float r;
@@ -799,6 +939,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float VolumeRampTime {
 			get {
 				float r;
@@ -818,6 +961,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public float Pan {
 			get {
 				float r;
@@ -1079,24 +1225,38 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsRunning {
 			get {
 				return GetInt (AudioQueueProperty.IsRunning) != 0;
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public double SampleRate {
 			get {
 				return GetDouble (AudioQueueProperty.DeviceSampleRate);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DeviceChannels {
 			get {
 				return GetInt (AudioQueueProperty.DeviceNumberChannels);
 			}
 		}
 
+		/// <summary>Unique identifier for the device associated with this Audio Queue.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public string? CurrentDevice {
 			get {
 				return CFString.FromHandle ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
@@ -1110,6 +1270,16 @@ namespace AudioToolbox {
 
 #pragma warning disable 612
 
+		/// <summary>Audio metadata required by certain formats.</summary>
+		///         <value>Opaque byte array with a codec-specific token.</value>
+		///         <remarks>
+		///
+		/// 	  Certain file format produce a MagicCookie that
+		/// 	  contains audio metadata.  When playing back or recording, you need to copy
+		/// 	  this magic cookie from the AudioQueue to the <see cref="T:AudioToolbox.AudioFileStream" /> by copying this property to the 
+		/// 	  <see cref="P:AudioToolbox.AudioFileStream.MagicCookie" />
+		/// 	  property.   
+		/// 	</remarks>
 		public byte [] MagicCookie {
 			get {
 				int size;
@@ -1139,6 +1309,18 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>The audio queue channel layout.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>
+		///           <para>
+		/// 	    The ChannelLayout must match the number of channels in the
+		/// 	    audio format. 
+		/// 	  </para>
+		///           <para>
+		/// 	    This property is used to configure the channel layout in
+		/// 	    complex scenarios like 5.1 surround sound.
+		/// 	  </para>
+		///         </remarks>
 		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
@@ -1163,6 +1345,14 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Enables level metering on the audio queue.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///           <para>
+		/// 	    Enable level metering in your audio queue if you want to read the level meters with the <see cref="P:AudioToolbox.AudioQueue.CurrentLevelMeter" /> or <see cref="P:AudioToolbox.AudioQueue.CurrentLevelMeterDB" /> properties.n
+		/// 	  </para>
+		///         </remarks>
 		public bool EnableLevelMetering {
 			get {
 				return GetInt (AudioQueueProperty.EnableLevelMetering) != 0;
@@ -1172,18 +1362,27 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaximumOutputPacketSize {
 			get {
 				return GetInt (AudioQueueProperty.MaximumOutputPacketSize);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int DecodeBufferSizeFrames {
 			get {
 				return GetInt (AudioQueueProperty.DecodeBufferSizeFrames);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioStreamBasicDescription AudioStreamDescription {
 			get {
 #if !MONOMAC
@@ -1194,6 +1393,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <include file="../../docs/api/AudioToolbox/AudioQueue.xml" path="/Documentation/Docs[@DocId='P:AudioToolbox.AudioQueue.CurrentLevelMeter']/*" />
 		public AudioQueueLevelMeterState [] CurrentLevelMeter {
 			get {
 				unsafe {
@@ -1211,6 +1411,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <include file="../../docs/api/AudioToolbox/AudioQueue.xml" path="/Documentation/Docs[@DocId='P:AudioToolbox.AudioQueue.CurrentLevelMeterDB']/*" />
 		public AudioQueueLevelMeterState [] CurrentLevelMeterDB {
 			get {
 				unsafe {
@@ -1230,6 +1431,11 @@ namespace AudioToolbox {
 
 #pragma warning restore 612
 
+		/// <summary>Contains the most recent error generated in the audio queue's encoding or decoding process.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public uint ConverterError {
 			get {
 				return (uint) GetInt (AudioQueueProperty.ConverterError);
@@ -1237,6 +1443,9 @@ namespace AudioToolbox {
 		}
 
 #if !MONOMAC
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioQueueHardwareCodecPolicy HardwareCodecPolicy {
 			get {
 				return (AudioQueueHardwareCodecPolicy) GetInt (AudioQueueProperty.HardwareCodecPolicy);
@@ -1668,7 +1877,13 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class AudioQueueTimeline : IDisposable {
+		/// <summary>Handle to the underlying C timeline object.</summary>
+		///         <remarks>
+		///         </remarks>
 		internal protected IntPtr timelineHandle;
+		/// <summary>The handle to the underlying C queue.</summary>
+		///         <remarks>
+		///         </remarks>
 		internal protected IntPtr queueHandle;
 
 		internal AudioQueueTimeline (IntPtr queueHandle, IntPtr timelineHandle)

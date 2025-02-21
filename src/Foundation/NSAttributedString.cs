@@ -226,6 +226,12 @@ namespace Foundation {
 		}
 #endif // __MACOS__
 
+		/// <summary>Contents of the object as a string.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		/// 	  Contains the string representation of the attributed string, without including any attributes in the return value.
+		/// 	</remarks>
 		public string? Value {
 			get {
 				return CFString.FromHandle (LowLevelValue);

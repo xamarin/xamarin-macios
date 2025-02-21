@@ -67,6 +67,9 @@ namespace MultipeerConnectivity {
 		[Export ("disconnect")]
 		void Disconnect ();
 
+		/// <summary>An array of the currently connected devices.</summary>
+		///         <value>The array will be non-null, but of length 0, if no peers are connected.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("connectedPeers")]
 		MCPeerID [] ConnectedPeers { get; }
 
@@ -79,26 +82,58 @@ namespace MultipeerConnectivity {
 		[Export ("startStreamWithName:toPeer:error:")]
 		NSOutputStream StartStream (string streamName, MCPeerID peerID, out NSError error);
 
+		/// <summary>An object that can respond to the delegate protocol for this type</summary>
+		///         <value>The instance that will respond to events and data requests.</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>   Methods must be decorated with the [Export ("selectorName")] attribute to respond to each method from the protocol.   Alternatively use the Delegate method which is strongly typed and does not require the [Export] attributes on methods.</para>
+		///         </remarks>
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
+		/// <summary>An instance of the MultipeerConnectivity.IMCSessionDelegate model class which acts as the class delegate.</summary>
+		///         <value>The instance of the MultipeerConnectivity.IMCSessionDelegate model class</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>This is the strongly typed version of the object, developers should use the WeakDelegate property instead if they want to merely assign a class derived from NSObject that has been decorated with [Export] attributes.</para>
+		///         </remarks>
 		[Wrap ("WeakDelegate")]
 		IMCSessionDelegate Delegate { get; set; }
 
+		/// <summary>The peer ID associated with this device.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
 
 		// we use NSArray because, when non-null, it contains a SecIdentity followed by 0..n SecCertificate - none are NSObject
+		/// <summary>The security identity of this peer.</summary>
+		///         <value>Location [0] holds a <c>SecIdentityRef</c> for the local peer. Additional values (if they exist) will be for connected peers.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed]
 		[Export ("securityIdentity")]
 		NSArray SecurityIdentity { get; }
 
+		/// <summary>What type, if any, encryption s preferred.</summary>
+		///         <value>The default value is <see cref="F:MultipeerConnectivity.MCEncryptionPreference.Optional" />.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("encryptionPreference")]
 		MCEncryptionPreference EncryptionPreference { get; }
 
+		/// <summary>Represents the value associated with the constant kMCSessionMaximumNumberOfPeers</summary>
+		///         <value>The value is 8.</value>
+		///         <remarks>To be added.</remarks>
+		///         <altmember cref="P:MultipeerConnectivity.MCBrowserViewController.MaximumNumberOfPeers" />
 		[Field ("kMCSessionMaximumNumberOfPeers")]
 		nint MaximumNumberOfPeers { get; }
 
+		/// <summary>Represents the value associated with the constant kMCSessionMinimumNumberOfPeers</summary>
+		///         <value>The value is 2.
+		///         </value>
+		///         <remarks>To be added.</remarks>
+		///         <altmember cref="P:MultipeerConnectivity.MCBrowserViewController.MinimumNumberOfPeers" />
 		[Field ("kMCSessionMinimumNumberOfPeers")]
 		nint MinimumNumberOfPeers { get; }
 
@@ -386,19 +421,40 @@ namespace MultipeerConnectivity {
 		[Export ("initWithServiceType:discoveryInfo:session:")]
 		NativeHandle Constructor (string serviceType, [NullAllowed] NSDictionary info, MCSession session);
 
+		/// <include file="../docs/api/MultipeerConnectivity/MCAdvertiserAssistant.xml" path="/Documentation/Docs[@DocId='P:MultipeerConnectivity.MCAdvertiserAssistant.DiscoveryInfo']/*" />
 		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 
+		/// <summary>The <see cref="T:MultipeerConnectivity.MCSession" /> into which peers will be placed.</summary>
+		///         <value>Passed in to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)&amp;scope=Xamarin" title="C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)">C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)</a></format> constructor.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("session")]
 		MCSession Session { get; }
 
+		/// <summary>A string, between 1 and 15 characters long, identifying the network protocol being advertised.</summary>
+		///         <value>Passed in to the <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)&amp;scope=Xamarin" title="C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)">C:MultipeerConnectivity.MCAdvertiserAssistant(string,Foundation.NSDictionary, MultipeerConnectivity.MCSession)</a></format> constructor.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("serviceType")]
 		string ServiceType { get; }
 
+		/// <summary>An object that can respond to the delegate protocol for this type</summary>
+		///         <value>The instance that will respond to events and data requests.</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>   Methods must be decorated with the [Export ("selectorName")] attribute to respond to each method from the protocol.   Alternatively use the Delegate method which is strongly typed and does not require the [Export] attributes on methods.</para>
+		///         </remarks>
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
+		/// <summary>An instance of the MultipeerConnectivity.IMCAdvertiserAssistantDelegate model class which acts as the class delegate.</summary>
+		///         <value>The instance of the MultipeerConnectivity.IMCAdvertiserAssistantDelegate model class</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>This is the strongly typed version of the object, developers should use the WeakDelegate property instead if they want to merely assign a class derived from NSObject that has been decorated with [Export] attributes.</para>
+		///         </remarks>
 		[Wrap ("WeakDelegate")]
 		IMCAdvertiserAssistantDelegate Delegate { get; set; }
 

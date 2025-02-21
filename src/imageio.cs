@@ -55,6 +55,9 @@ namespace ImageIO {
 		NSString GPSDictionary { get; }
 		[Field ("kCGImagePropertyRawDictionary")]
 		NSString RawDictionary { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFDictionary</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFDictionary")]
 		NSString CIFFDictionary { get; }
 		[Field ("kCGImageProperty8BIMDictionary")]
@@ -129,6 +132,9 @@ namespace ImageIO {
 		NSString IsIndexed { get; }
 		[Field ("kCGImagePropertyHasAlpha")]
 		NSString HasAlpha { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyColorModel</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyColorModel")]
 		NSString ColorModel { get; }
 		[Field ("kCGImagePropertyProfileName")]
@@ -136,12 +142,24 @@ namespace ImageIO {
 
 		// Color Model Values
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyColorModelRGB</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyColorModelRGB")]
 		NSString ColorModelRGB { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyColorModelGray</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyColorModelGray")]
 		NSString ColorModelGray { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyColorModelCMYK</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyColorModelCMYK")]
 		NSString ColorModelCMYK { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyColorModelLab</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyColorModelLab")]
 		NSString ColorModelLab { get; }
 
@@ -703,17 +721,26 @@ namespace ImageIO {
 
 		[Field ("kCGImagePropertyDNGVersion")]
 		NSString DNGVersion { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGBackwardVersion</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyDNGBackwardVersion")]
 		NSString DNGBackwardVersion { get; }
 		[Field ("kCGImagePropertyDNGUniqueCameraModel")]
 		NSString DNGUniqueCameraModel { get; }
 		[Field ("kCGImagePropertyDNGLocalizedCameraModel")]
 		NSString DNGLocalizedCameraModel { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCameraSerialNumber</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyDNGCameraSerialNumber")]
 		NSString DNGCameraSerialNumber { get; }
 		[Field ("kCGImagePropertyDNGLensInfo")]
 		NSString DNGLensInfo { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGBlackLevel.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevel")]
 		NSString DNGBlackLevel { get; }
@@ -722,46 +749,79 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyDNGWhiteLevel")]
 		NSString DNGWhiteLevel { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCalibrationIlluminant1.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant1")]
 		NSString DNGCalibrationIlluminant1 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCalibrationIlluminant2.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant2")]
 		NSString DNGCalibrationIlluminant2 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGColorMatrix1.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorMatrix1")]
 		NSString DNGColorMatrix1 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGColorMatrix2.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorMatrix2")]
 		NSString DNGColorMatrix2 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCameraCalibration1.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibration1")]
 		NSString DNGCameraCalibration1 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCameraCalibration2.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibration2")]
 		NSString DNGCameraCalibration2 { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGAsShotNeutral.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotNeutral")]
 		NSString DNGAsShotNeutral { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGAsShotWhiteXY.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotWhiteXY")]
 		NSString DNGAsShotWhiteXY { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGBaselineExposure.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineExposure")]
 		NSString DNGBaselineExposure { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGBaselineNoise.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineNoise")]
 		NSString DNGBaselineNoise { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGBaselineSharpness.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineSharpness")]
 		NSString DNGBaselineSharpness { get; }
@@ -770,6 +830,9 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyDNGPrivateData")]
 		NSString DNGPrivateData { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyDNGCameraCalibrationSignature.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibrationSignature")]
 		NSString DNGCameraCalibrationSignature { get; }
@@ -794,86 +857,149 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyDNGFixVignetteRadial")]
 		NSString DNGFixVignetteRadial { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGActiveArea")]
 		NSString DNGActiveArea { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAnalogBalance")]
 		NSString DNGAnalogBalance { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAntiAliasStrength")]
 		NSString DNGAntiAliasStrength { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotICCProfile")]
 		NSString DNGAsShotICCProfile { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotPreProfileMatrix")]
 		NSString DNGAsShotPreProfileMatrix { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotProfileName")]
 		NSString DNGAsShotProfileName { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineExposureOffset")]
 		NSString DNGBaselineExposureOffset { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBayerGreenSplit")]
 		NSString DNGBayerGreenSplit { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBestQualityScale")]
 		NSString DNGBestQualityScale { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelDeltaH")]
 		NSString DNGBlackLevelDeltaHorizontal { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelDeltaV")]
 		NSString DNGBlackLevelDeltaVertical { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelRepeatDim")]
 		NSString DNGBlackLevelRepeatDim { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCFALayout")]
 		NSString DNGCfaLayout { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCFAPlaneColor")]
 		NSString DNGCfaPlaneColor { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGChromaBlurRadius")]
 		NSString DNGChromaBlurRadius { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorimetricReference")]
 		NSString DNGColorimetricReference { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCurrentICCProfile")]
 		NSString DNGCurrentICCProfile { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCurrentPreProfileMatrix")]
 		NSString DNGCurrentPreProfileMatrix { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultBlackRender")]
 		NSString DNGDefaultBlackRender { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultCropOrigin")]
 		NSString DNGDefaultCropOrigin { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultCropSize")]
 		NSString DNGDefaultCropSize { get; }
@@ -1065,46 +1191,109 @@ namespace ImageIO {
 
 		// CIFF Dictionary Keys
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFDescription</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFDescription")]
 		NSString CIFFDescription { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFFirmware</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFFirmware")]
 		NSString CIFFFirmware { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFOwnerName</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFOwnerName")]
 		NSString CIFFOwnerName { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFImageName</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFImageName")]
 		NSString CIFFImageName { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFImageFileName</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFImageFileName")]
 		NSString CIFFImageFileName { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFReleaseMethod</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFReleaseMethod")]
 		NSString CIFFReleaseMethod { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFReleaseTiming</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFReleaseTiming")]
 		NSString CIFFReleaseTiming { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFRecordID</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFRecordID")]
 		NSString CIFFRecordID { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFSelfTimingTime</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFSelfTimingTime")]
 		NSString CIFFSelfTimingTime { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFCameraSerialNumber</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFCameraSerialNumber")]
 		NSString CIFFCameraSerialNumber { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFImageSerialNumber</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFImageSerialNumber")]
 		NSString CIFFImageSerialNumber { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFContinuousDrive</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFContinuousDrive")]
 		NSString CIFFContinuousDrive { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFFocusMode</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFFocusMode")]
 		NSString CIFFFocusMode { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFMeteringMode</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFMeteringMode")]
 		NSString CIFFMeteringMode { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFShootingMode</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFShootingMode")]
 		NSString CIFFShootingMode { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFLensMaxMM</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFLensMaxMM")]
 		NSString CIFFLensMaxMM { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFLensMinMM</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFLensMinMM")]
 		NSString CIFFLensMinMM { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFLensModel</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFLensModel")]
 		NSString CIFFLensModel { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFWhiteBalanceIndex</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFWhiteBalanceIndex")]
 		NSString CIFFWhiteBalanceIndex { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFFlashExposureComp</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFFlashExposureComp")]
 		NSString CIFFFlashExposureComp { get; }
+		/// <summary>Represents the value associated with the constant kCGImagePropertyCIFFMeasuredEV</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImagePropertyCIFFMeasuredEV")]
 		NSString CIFFMeasuredEV { get; }
 
@@ -1262,6 +1451,9 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyHeight")]
 		NSString Height { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyBytesPerRow</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyBytesPerRow")]
 		NSString BytesPerRow { get; }
@@ -1282,10 +1474,16 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyThumbnailImages")]
 		NSString ThumbnailImages { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyAuxiliaryData</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAuxiliaryData")]
 		NSString AuxiliaryData { get; }
 
+		/// <summary>Represents the value associated with the constant kCGImagePropertyAuxiliaryDataType</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAuxiliaryDataType")]
 		NSString AuxiliaryDataType { get; }
@@ -2149,25 +2347,64 @@ namespace ImageIO {
 	/// <summary>Holds constants specifying standard metadata namespaces. Primarily used with <see cref="P:ImageIO.CGImageMetadataTag.Namespace" />.</summary>
 	[Static]
 	interface CGImageMetadataTagNamespaces {
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceExif</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceExif")]
 		NSString Exif { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceExifAux</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceExifAux")]
 		NSString ExifAux { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceExifEX</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceExifEX")]
 		[MacCatalyst (13, 1)]
 		NSString ExifEx { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceDublinCore</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceDublinCore")]
 		NSString DublinCore { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceIPTCCore</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceIPTCCore")]
 		NSString IPTCCore { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespacePhotoshop</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespacePhotoshop")]
 		NSString Photoshop { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceTIFF</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceTIFF")]
 		NSString TIFF { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceXMPBasic</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceXMPBasic")]
 		NSString XMPBasic { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataNamespaceXMPRights</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataNamespaceXMPRights")]
 		NSString XMPRights { get; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageMetadataNamespaceIPTCExtension")]
 		NSString IPTCExtension { get; }
@@ -2176,25 +2413,64 @@ namespace ImageIO {
 	/// <summary>Constants defining standard prefixes. Primarily used with <see cref="P:ImageIO.CGImageMetadataTag.Prefix" />.</summary>
 	[Static]
 	interface CGImageMetadataTagPrefixes {
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixExif</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixExif")]
 		NSString Exif { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixExifAux</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixExifAux")]
 		NSString ExifAux { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixExifEX</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixExifEX")]
 		[MacCatalyst (13, 1)]
 		NSString ExifEx { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixDublinCore</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixDublinCore")]
 		NSString DublinCore { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixIPTCCore</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixIPTCCore")]
 		NSString IPTCCore { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixPhotoshop</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixPhotoshop")]
 		NSString Photoshop { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixTIFF</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixTIFF")]
 		NSString TIFF { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixXMPBasic</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixXMPBasic")]
 		NSString XMPBasic { get; }
+		/// <summary>Represents the value associated with the constant kCGImageMetadataPrefixXMPRights</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageMetadataPrefixXMPRights")]
 		NSString XMPRights { get; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageMetadataPrefixIPTCExtension")]
 		NSString IPTCExtension { get; }
@@ -2299,60 +2575,108 @@ namespace ImageIO {
 	[StrongDictionary ("CGImageDestinationOptionsKeys")]
 	interface CGImageDestinationOptions {
 
+		/// <summary>The quality used to encode the image.</summary>
+		///         <value>Values between 0.0 (maximum compression) and 1.0 (no compression, use lossless).</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("LossyCompressionQuality")]
 		float LossyCompressionQuality { get; set; }
 
+		/// <summary />
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("ImageMaxPixelSize")]
 		int ImageMaxPixelSize { get; set; }
 
+		/// <summary>Controls whether to embed a JPEG image thumbnail in the destination file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("EmbedThumbnail")]
 		bool EmbedThumbnail { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("OptimizeColorForSharing")]
 		bool OptimizeColorForSharing { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("TIFFDictionary")]
 		CGImagePropertiesTiff TiffDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("GIFDictionary")]
 		NSDictionary GifDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("JFIFDictionary")]
 		CGImagePropertiesJfif JfifDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("ExifDictionary")]
 		CGImagePropertiesExif ExifDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("PNGDictionary")]
 		CGImagePropertiesPng PngDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("IPTCDictionary")]
 		CGImagePropertiesIptc IptcDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[StrongDictionary]
 		[Export ("GPSDictionary")]
 		CGImagePropertiesGps GpsDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("RawDictionary")]
 		NSDictionary RawDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("CIFFDictionary")]
 		NSDictionary CiffDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("EightBIMDictionary")]
 		NSDictionary EightBimDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("DNGDictionary")]
 		NSDictionary DngDictionary { get; set; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("ExifAuxDictionary")]
 		NSDictionary ExifAuxDictionary { get; set; }
 
@@ -2380,80 +2704,131 @@ namespace ImageIO {
 	[Static]
 	interface CGImageDestinationOptionsKeys {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageDestinationLossyCompressionQuality")]
 		NSString LossyCompressionQuality { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCGImageDestinationBackgroundColor")]
 		NSString BackgroundColor { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationImageMaxPixelSize")]
 		NSString ImageMaxPixelSize { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationEmbedThumbnail")]
 		NSString EmbedThumbnail { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationOptimizeColorForSharing")]
 		NSString OptimizeColorForSharing { get; }
 
 		// [Field ("kCGImagePropertyTIFFDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.TIFFDictionary")]
 		NSString TIFFDictionary { get; }
 
 		// [Field ("kCGImagePropertyGIFDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.GIFDictionary")]
 		NSString GIFDictionary { get; }
 
 		// [Field ("kCGImagePropertyJFIFDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.JFIFDictionary")]
 		NSString JFIFDictionary { get; }
 
 		// [Field ("kCGImagePropertyExifDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.ExifDictionary")]
 		NSString ExifDictionary { get; }
 
 		// [Field ("kCGImagePropertyPNGDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.PNGDictionary")]
 		NSString PNGDictionary { get; }
 
 		// [Field ("kCGImagePropertyIPTCDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.IPTCDictionary")]
 		NSString IPTCDictionary { get; }
 
 		// [Field ("kCGImagePropertyGPSDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.GPSDictionary")]
 		NSString GPSDictionary { get; }
 
 		// [Field ("kCGImagePropertyRawDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.RawDictionary")]
 		NSString RawDictionary { get; }
 
 		// [Field ("kCGImagePropertyCIFFDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.CIFFDictionary")]
 		NSString CIFFDictionary { get; }
 
 		// [Field ("kCGImageProperty8BIMDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.EightBIMDictionary")]
 		NSString EightBIMDictionary { get; }
 
 		// [Field ("kCGImagePropertyDNGDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.DNGDictionary")]
 		NSString DNGDictionary { get; }
 
 		// [Field ("kCGImagePropertyExifAuxDictionary")]
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Static]
 		[Wrap ("CGImageProperties.ExifAuxDictionary")]
 		NSString ExifAuxDictionary { get; }
@@ -2543,12 +2918,15 @@ namespace ImageIO {
 
 	[MacCatalyst (13, 1)]
 	enum CGImageAuxiliaryDataType {
+		/// <summary>To be added.</summary>
 		[Field ("kCGImageAuxiliaryDataTypeDepth")]
 		Depth,
 
+		/// <summary>To be added.</summary>
 		[Field ("kCGImageAuxiliaryDataTypeDisparity")]
 		Disparity,
 
+		/// <summary>To be added.</summary>
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageAuxiliaryDataTypePortraitEffectsMatte")]
 		PortraitEffectsMatte,
@@ -2616,7 +2994,13 @@ namespace ImageIO {
 	[StrongDictionary ("CGImageAuxiliaryDataInfoKeys")]
 	interface CGImageAuxiliaryDataInfo {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		NSData Data { get; set; }
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		NSDictionary DataDescription { get; set; }
 		// Bound manually:
 		// CGImageMetadata Metadata { get; set; }))

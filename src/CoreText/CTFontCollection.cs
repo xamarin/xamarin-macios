@@ -80,10 +80,20 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
+		/// <summary>The NSDictionary that represents the current values set.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public NSDictionary Dictionary { get; private set; }
 
 		// The docs (and headers) only imply that this is a numeric value ('set to non-zero to ...')
 		// No mention of the expected type (int? NSNumber?)
+		/// <summary>If set, removes duplicate font descriptors.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public bool RemoveDuplicates {
 			get {
 				if (CTFontCollectionOptionKey.RemoveDuplicates is null)

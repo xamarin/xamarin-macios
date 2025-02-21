@@ -27,6 +27,10 @@ namespace ObjCRuntime {
 			NativeName = name;
 		}
 
+		/// <summary>The name of the corresponding native enum (in case it doesn't match the managed enum's name).</summary>
+		///         <value>The name of the corresponding native enum (in case it doesn't match the managed enum's name).</value>
+		///         <remarks>
+		///         </remarks>
 		public string? NativeName { get; set; }
 
 		// methods to use to convert a managed enum value to native (and vice versa)

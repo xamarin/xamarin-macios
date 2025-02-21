@@ -54,6 +54,9 @@ namespace CoreBluetooth {
 		}
 
 #if !MONOMAC
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool? NotifyOnConnection {
 			get {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
@@ -68,6 +71,9 @@ namespace CoreBluetooth {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool? NotifyOnNotification {
 			get {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
@@ -85,6 +91,9 @@ namespace CoreBluetooth {
 		}
 #endif
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool? NotifyOnDisconnection {
 			get {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);

@@ -44,22 +44,37 @@ namespace CoreData {
 	/// <summary>An enumeration whose values define the valid types for <see cref="T:CoreData.NSAttributeType" /> objects.</summary>
 	[Native]
 	public enum NSAttributeType : ulong {
+		/// <summary>Indicates an undefined type.</summary>
 		Undefined = 0,
+		/// <summary>Indicates a signed 16-bit integer.</summary>
 		Integer16 = 100,
+		/// <summary>Indicates a signed 32-bit integer..</summary>
 		Integer32 = 200,
+		/// <summary>Indicates a signed 64-bit integer.</summary>
 		Integer64 = 300,
+		/// <summary>Indicates an NSDecimalNumber.</summary>
 		Decimal = 400,
+		/// <summary>Indicates a double.</summary>
 		Double = 500,
+		/// <summary>Indicates a float.</summary>
 		Float = 600,
+		/// <summary>Indicates an NSString.</summary>
 		String = 700,
+		/// <summary>Indicates a Boolean value</summary>
 		Boolean = 800,
+		/// <summary>Indicates an NSDate.</summary>
 		Date = 900,
+		/// <summary>Indicates NSData.</summary>
 		Binary = 1000,
+		/// <summary>Indicates a UUID.</summary>
 		[MacCatalyst (13, 1)]
 		Uuid = 1100,
+		/// <summary>Indicates a URI.</summary>
 		[MacCatalyst (13, 1)]
 		Uri = 1200,
+		/// <summary>Indicates a type with an available transformer.</summary>
 		Transformable = 1800,
+		/// <summary>Indicates an Object ID.</summary>
 		ObjectID = 2000,
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		CompositeAttributeType = 2100,
@@ -133,8 +148,11 @@ namespace CoreData {
 	/// <summary>Enumerates the kind of results that can be returned from a batched update request.</summary>
 	[Native]
 	public enum NSBatchUpdateRequestResultType : ulong {
+		/// <summary>To be added.</summary>
 		StatusOnly = 0,
+		/// <summary>To be added.</summary>
 		UpdatedObjectIDs = 1,
+		/// <summary>To be added.</summary>
 		UpdatedObjectsCount = 2,
 	}
 

@@ -39,23 +39,41 @@ namespace CoreText {
 
 	// Utility enum for constant strings in ObjC
 	public enum CTFontNameKey {
+		/// <summary>To be added.</summary>
 		Copyright,
+		/// <summary>To be added.</summary>
 		Family,
+		/// <summary>To be added.</summary>
 		SubFamily,
+		/// <summary>To be added.</summary>
 		Style,
+		/// <summary>To be added.</summary>
 		Unique,
+		/// <summary>To be added.</summary>
 		Full,
+		/// <summary>To be added.</summary>
 		Version,
+		/// <summary>To be added.</summary>
 		PostScript,
+		/// <summary>To be added.</summary>
 		Trademark,
+		/// <summary>To be added.</summary>
 		Manufacturer,
+		/// <summary>To be added.</summary>
 		Designer,
+		/// <summary>To be added.</summary>
 		Description,
+		/// <summary>To be added.</summary>
 		VendorUrl,
+		/// <summary>To be added.</summary>
 		DesignerUrl,
+		/// <summary>To be added.</summary>
 		License,
+		/// <summary>To be added.</summary>
 		LicenseUrl,
+		/// <summary>To be added.</summary>
 		SampleText,
+		/// <summary>To be added.</summary>
 		PostscriptCid,
 	}
 

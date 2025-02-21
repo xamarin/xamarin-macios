@@ -89,6 +89,9 @@ namespace ImageIO {
 		extern static /* CFStringRef __nullable */ IntPtr CGImageMetadataTagCopyNamespace (
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSString? Namespace {
 			get {
 				var result = CGImageMetadataTagCopyNamespace (Handle);
@@ -100,6 +103,9 @@ namespace ImageIO {
 		extern static /* CFStringRef __nullable */ IntPtr CGImageMetadataTagCopyPrefix (
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSString? Prefix {
 			get {
 				var result = CGImageMetadataTagCopyPrefix (Handle);
@@ -111,6 +117,9 @@ namespace ImageIO {
 		extern static /* CFStringRef __nullable */ IntPtr CGImageMetadataTagCopyName (
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSString? Name {
 			get {
 				var result = CGImageMetadataTagCopyName (Handle);
@@ -123,6 +132,9 @@ namespace ImageIO {
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
 		// a boolean is returned as a NSString, i.e. type CGImageMetadataType.String, so NSObject is fine
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSObject? Value {
 			get { return Runtime.GetNSObject<NSObject> (CGImageMetadataTagCopyValue (Handle), true); }
 		}
@@ -131,6 +143,9 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static CGImageMetadataType CGImageMetadataTagGetType (/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CGImageMetadataType Type {
 			get { return CGImageMetadataTagGetType (Handle); }
 		}

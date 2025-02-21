@@ -42,6 +42,9 @@ namespace Foundation {
 			Message = message;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string Message { get; private set; }
 	}
 }

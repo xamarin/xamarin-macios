@@ -21,7 +21,9 @@ namespace MediaAccessibility {
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceDomain : long {
+		/// <summary>To be added.</summary>
 		Default = 0,
+		/// <summary>To be added.</summary>
 		User = 1,
 	}
 
@@ -29,8 +31,11 @@ namespace MediaAccessibility {
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceDisplayType : long {
+		/// <summary>To be added.</summary>
 		ForcedOnly = 0,
+		/// <summary>To be added.</summary>
 		Automatic = 1,
+		/// <summary>To be added.</summary>
 		AlwaysOn = 2,
 	}
 
@@ -38,7 +43,9 @@ namespace MediaAccessibility {
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceBehavior : long {
+		/// <summary>To be added.</summary>
 		UseValue = 0,
+		/// <summary>To be added.</summary>
 		UseContentIfAvailable = 1,
 	}
 
@@ -46,13 +53,21 @@ namespace MediaAccessibility {
 	[Native]
 	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceFontStyle : long {
+		/// <summary>To be added.</summary>
 		Default = 0,
+		/// <summary>To be added.</summary>
 		MonospacedWithSerif = 1,
+		/// <summary>To be added.</summary>
 		ProportionalWithSerif = 2,
+		/// <summary>To be added.</summary>
 		MonospacedWithoutSerif = 3,
+		/// <summary>To be added.</summary>
 		ProportionalWithoutSerif = 4,
+		/// <summary>To be added.</summary>
 		Casual = 5,
+		/// <summary>To be added.</summary>
 		Cursive = 6,
+		/// <summary>To be added.</summary>
 		SmallCapital = 7,
 	}
 

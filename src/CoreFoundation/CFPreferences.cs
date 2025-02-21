@@ -30,6 +30,8 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPreferencesCopyAppValue (IntPtr key, IntPtr applicationId);
 
+		/// <summary>The current application.</summary>
+		///         <remarks>To be added.</remarks>
 		public static readonly NSString? CurrentApplication;
 
 		/*public static readonly NSString AnyApplication;

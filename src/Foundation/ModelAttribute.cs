@@ -31,6 +31,11 @@ namespace Foundation {
 
 		public ModelAttribute () { }
 
+		/// <summary>Specifies if the Objective-C type name for the model.</summary>
+		///         <value>The Objective-C type name for the model.</value>
+		///         <remarks>
+		///           <para>This value is only taken into account when used in binding code / projects.</para>
+		///         </remarks>
 		public string? Name { get; set; }
 	}
 }

@@ -30,6 +30,9 @@ namespace ImageIO {
 #endif
 	public partial class CGImageMetadataEnumerateOptions {
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool Recursive { get; set; }
 
 		internal NSMutableDictionary ToDictionary ()

@@ -37,11 +37,17 @@ namespace CoreText {
 
 	// Convenience enum for string values in ObjC.
 	public enum CTBaselineClass {
+		/// <summary>Used to offset a roman baseline.</summary>
 		Roman,
+		/// <summary>Used to offset a centered ideographic baseline.</summary>
 		IdeographicCentered,
+		/// <summary>Used to offset an ideographic low baseline.</summary>
 		IdeographicLow,
+		/// <summary>Used to offset an ideographic high baseline.</summary>
 		IdeographicHigh,
+		/// <summary>Used to offset a hanging baseline.</summary>
 		Hanging,
+		/// <summary>Used to offset a math baseline.</summary>
 		Math,
 	}
 
@@ -95,7 +101,9 @@ namespace CoreText {
 
 	// Convenience enum for string values in ObjC.
 	public enum CTBaselineFont {
+		/// <summary>To be added.</summary>
 		Reference,
+		/// <summary>To be added.</summary>
 		Original
 	}
 

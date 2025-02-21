@@ -54,7 +54,11 @@ namespace CoreLocation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CLLocationCoordinate2D {
+		/// <summary>Latitude in degrees. Positive values are north of the equator, negative values are south of the equator.</summary>
+		///         <remarks>To be added.</remarks>
 		public /* CLLocationDegrees */ double Latitude;
+		/// <summary>Longitude in degrees.</summary>
+		///         <remarks>The value is relative to the zero meridian. Positive values point east, negative values point west.</remarks>
 		public /* CLLocationDegrees */ double Longitude;
 
 		public CLLocationCoordinate2D (double latitude, double longitude)

@@ -60,9 +60,17 @@ namespace CoreFoundation {
 	[Partial]
 	interface CFRunLoop {
 
+		/// <summary>Represents the value associated with the constant kCFRunLoopDefaultMode</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCFRunLoopDefaultMode")]
 		NSString ModeDefault { get; }
 
+		/// <summary>Represents the value associated with the constant kCFRunLoopCommonModes</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCFRunLoopCommonModes")]
 		NSString ModeCommon { get; }
 	}

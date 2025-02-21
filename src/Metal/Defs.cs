@@ -25,8 +25,14 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLOrigin {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint X;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint Y;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint Z;
 
 		public MTLOrigin (nint x, nint y, nint z)
@@ -49,8 +55,14 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLSize {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint Width;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint Height;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nint Depth;
 
 		public MTLSize (nint width, nint height, nint depth)
@@ -100,9 +112,17 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLScissorRect {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint X;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint Y;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint Width;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint Height;
 
 		public MTLScissorRect (nuint x, nuint y, nuint width, nuint height)
@@ -126,11 +146,23 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLViewport {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double OriginX;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double OriginY;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Width;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Height;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double ZNear;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double ZFar;
 
 		public MTLViewport (double originX, double originY, double width, double height, double znear, double zfar)
@@ -157,8 +189,12 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSamplePosition {
+		/// <summary>The X value, in the range [0.0, 1.0).</summary>
+		///         <remarks>To be added.</remarks>
 		public float X;
 
+		/// <summary>The Y value, in the range [0.0, 1.0).</summary>
+		///         <remarks>To be added.</remarks>
 		public float Y;
 
 		public MTLSamplePosition (float x, float y)
@@ -176,9 +212,17 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLClearColor {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Red;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Green;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Blue;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double Alpha;
 
 		public MTLClearColor (double red, double green, double blue, double alpha)
@@ -197,7 +241,11 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLRegion {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public MTLOrigin Origin;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public MTLSize Size;
 
 		public MTLRegion (MTLOrigin origin, MTLSize size)
@@ -266,10 +314,16 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct MTLClearValue {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public MTLClearColor Color;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public double Depth;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[FieldOffset (0)]
 		public ulong Stencil;
 
@@ -310,8 +364,14 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLDispatchThreadgroupsIndirectArguments {
+		/// <summary>Gets the threadgrops for the first dimension of the grid.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint ThreadGroupsPerGrid1;
+		/// <summary>Gets the threadgrops for the second dimension of the grid.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint ThreadGroupsPerGrid2;
+		/// <summary>Gets the threadgrops for the third dimension of the grid.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint ThreadGroupsPerGrid3;
 	}
 
@@ -323,12 +383,24 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInOrigin1;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInOrigin2;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInOrigin3;
 
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInSize1;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInSize2;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint StageInSize3;
 	}
 
@@ -339,9 +411,17 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLDrawPrimitivesIndirectArguments {
+		/// <summary>The number of vertices.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint VertexCount;
+		/// <summary>The number instances.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint InstanceCount;
+		/// <summary>The first vertex.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint VertexStart;
+		/// <summary>The first primitive.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint BaseInstance;
 	}
 
@@ -352,10 +432,20 @@ namespace Metal {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public struct MTLDrawIndexedPrimitivesIndirectArguments {
+		/// <summary>The number of indices to read from the index buffer for each instance.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint IndexCount;
+		/// <summary>The number of instances.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint InstanceCount;
+		/// <summary>The first index.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint IndexStart;
+		/// <summary>The first vertex.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint BaseVertex;
+		/// <summary>The first primitive.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint BaseInstance;
 	}
 
@@ -367,7 +457,11 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSizeAndAlign {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint Size;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public nuint Align;
 
 		public MTLSizeAndAlign (nuint size, nuint align)
@@ -386,9 +480,17 @@ namespace Metal {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLDrawPatchIndirectArguments {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint PatchCount;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint InstanceCount;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint PatchStart;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint BaseInstance;
 
 		public MTLDrawPatchIndirectArguments (uint pathCount, uint instanceCount, uint patchStart, uint baseInstance)
@@ -441,8 +543,12 @@ namespace Metal {
 			}
 		}
 #else
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
 		public ushort [] EdgeTessellationFactor;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
 		public ushort [] InsideTessellationFactor;
 #endif
@@ -493,9 +599,13 @@ namespace Metal {
 			}
 		}
 #else
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
 		public ushort [] EdgeTessellationFactor;
 #endif
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ushort InsideTessellationFactor;
 
 		public MTLTriangleTessellationFactorsHalf (ushort [] edgeTessellationFactor, ushort insideTessellationFactor)

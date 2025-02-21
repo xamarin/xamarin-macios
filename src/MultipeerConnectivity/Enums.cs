@@ -35,8 +35,11 @@ namespace MultipeerConnectivity {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCEncryptionPreference : long {
+		/// <summary>No preference.</summary>
 		Optional = 0,
+		/// <summary>Connections should be encrypted.</summary>
 		Required = 1,
+		/// <summary>A preference for unencrypted connections.</summary>
 		None = 2
 	}
 
@@ -46,12 +49,19 @@ namespace MultipeerConnectivity {
 	[Native ("MCErrorCode")]
 	[ErrorDomain ("MCErrorDomain")]
 	public enum MCError : long {
+		/// <summary>The type of the error could not be determined.</summary>
 		Unknown,
+		/// <summary>Data was sent to a peer that is not connected.</summary>
 		NotConnected,
+		/// <summary>The relevant operation was called with an invalid parameter.</summary>
 		InvalidParameter,
+		/// <summary>The relevant operation is not supported (for instance, an attempt to send a non-local or non-Web-based resource).</summary>
 		Unsupported,
+		/// <summary>Indicates a connection or data-transmission time-out.</summary>
 		TimedOut,
+		/// <summary>The relevant operation was cancelled.</summary>
 		Cancelled,
+		/// <summary>Indicates that Multipeer Connectivity is not available.</summary>
 		Unavailable
 	}
 }

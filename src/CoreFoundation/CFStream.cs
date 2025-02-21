@@ -61,11 +61,15 @@ namespace CoreFoundation {
 	[Flags]
 	[Native] // System/Library/Frameworks/Foundation.framework/Headers/NSStream.h
 	public enum CFStreamEventType : ulong {
+		/// <summary>No event occurred.</summary>
 		None = 0,
 		OpenCompleted = 1,
+		/// <summary>The stream can now be read.</summary>
 		HasBytesAvailable = 2,
 		CanAcceptBytes = 4,
+		/// <summary>An error occurred on the steeam.</summary>
 		ErrorOccurred = 8,
+		/// <summary>The end of the stream has been reached.</summary>
 		EndEncountered = 16
 	}
 
@@ -78,7 +82,13 @@ namespace CoreFoundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFStreamClientContext {
+		/// <summary>The version of this structure. Currently the only valid value is 0.</summary>
+		///         <remarks>
+		///         </remarks>
 		public nint Version; // CFIndex
+		/// <summary>User-defined data.</summary>
+		///         <remarks>
+		///         </remarks>
 		public /* void*/ IntPtr Info;
 		IntPtr retain;
 		IntPtr release;
@@ -156,13 +166,20 @@ namespace CoreFoundation {
 	// CFIndex
 	[Native] // System/Library/Frameworks/CoreFoundation.framework/Headers/CFStream.h
 	public enum CFStreamStatus : long {
+		/// <summary>To be added.</summary>
 		NotOpen = 0,
 		Opening,
+		/// <summary>To be added.</summary>
 		Open,
+		/// <summary>To be added.</summary>
 		Reading,
+		/// <summary>To be added.</summary>
 		Writing,
+		/// <summary>To be added.</summary>
 		AtEnd,
+		/// <summary>To be added.</summary>
 		Closed,
+		/// <summary>To be added.</summary>
 		Error
 	}
 

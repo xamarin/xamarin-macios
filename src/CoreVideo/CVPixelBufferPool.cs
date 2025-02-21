@@ -52,6 +52,11 @@ namespace CoreVideo {
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static nint CVPixelBufferPoolGetTypeID ();
+		/// <summary>CoreFoundation TypeID for the CVPixelBufferPool.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public nint TypeID {
 			get {
 				return CVPixelBufferPoolGetTypeID ();
@@ -63,6 +68,10 @@ namespace CoreVideo {
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
 		// TODO: Return type is CVPixelBufferAttributes but need different name when this one is not WeakXXXX
+		/// <summary>Loosely typed NSDictionary containing all of the PixelBuffer attributes in the pool, it is easier to use the strogly typed Settings property.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>
+		///         </remarks>
 		public NSDictionary? PixelBufferAttributes {
 			get {
 				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetPixelBufferAttributes (Handle));
@@ -73,12 +82,22 @@ namespace CoreVideo {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CVPixelBufferPoolGetAttributes (
 			/* CVPixelBufferPoolRef __nonnull */ IntPtr pool);
 
+		/// <summary>Returns the attributes of the object, you should use the Settings property instead that returns a strongly-typed version of this instead. </summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public NSDictionary? Attributes {
 			get {
 				return Runtime.GetNSObject<NSDictionary> (CVPixelBufferPoolGetAttributes (Handle));
 			}
 		}
 
+		/// <summary>The settings in use for the PixelBufferPool.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>
+		///         </remarks>
 		public CVPixelBufferPoolSettings? Settings {
 			get {
 				var attr = Attributes;

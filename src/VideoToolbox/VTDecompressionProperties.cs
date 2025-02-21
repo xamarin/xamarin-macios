@@ -20,12 +20,18 @@ using CoreVideo;
 
 namespace VideoToolbox {
 	public partial class VTDecompressionProperties {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CVPixelBufferPool? PixelBufferPool {
 			get {
 				return GetNativeValue<CVPixelBufferPool> (VTDecompressionPropertyKey.PixelBufferPool);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public VTFieldMode FieldMode {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.FieldMode);
@@ -68,6 +74,9 @@ namespace VideoToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public VTDeinterlaceMode DeinterlaceMode {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.DeinterlaceMode);
@@ -95,6 +104,9 @@ namespace VideoToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public VTOnlyTheseFrames OnlyTheseFrames {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.OnlyTheseFrames);

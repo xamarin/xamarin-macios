@@ -43,12 +43,18 @@ namespace CoreVideo {
 			/* float[2] */ IntPtr lowerLeft, /* float[2] */ IntPtr lowerRight, /* float[2] */ IntPtr upperRight,
 			/* float[2] */ IntPtr upperLeft);
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public IMTLTexture? Texture {
 			get {
 				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (Handle), owns: false);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsFlipped {
 			get {
 				return CVMetalTextureIsFlipped (Handle) != 0;

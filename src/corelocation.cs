@@ -127,18 +127,35 @@ namespace CoreLocation {
 
 	[BaseType (typeof (NSObject))]
 	partial interface CLLocation : NSSecureCoding, NSCopying, CKRecordValue {
+		/// <summary>The location's position on the globe.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; }
 
+		/// <summary>The altitude, in meters above sea level.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("altitude")]
 		double Altitude { get; }
 
+		/// <summary>The radius, in meters, of the uncertainty of the location.</summary>
+		///         <value>The radius, in meters.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("horizontalAccuracy")]
 		double HorizontalAccuracy { get; }
 
+		/// <summary>The radius, in meters, of the uncertainty of the location.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("verticalAccuracy")]
 		double VerticalAccuracy { get; }
 
+		/// <summary>The direction, in positive degrees, in which the device is moving relative to true North.</summary>
+		///         <value>Negative values are invalid. Travel due West is 270, not -90.</value>
+		///         <remarks>
+		///           <para>This property is not be available on all devices.</para>
+		///         </remarks>
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
 		[MacCatalyst (13, 1)]
 		[Export ("course")]
@@ -149,6 +166,9 @@ namespace CoreLocation {
 		[Export ("courseAccuracy")]
 		double CourseAccuracy { get; }
 
+		/// <summary>The instantaneous speed of the device, in meters per second.</summary>
+		///         <value>Negative values are invalid.</value>
+		///         <remarks>To be added.</remarks>
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
 		[MacCatalyst (13, 1)]
 		[Export ("speed")]
@@ -159,6 +179,9 @@ namespace CoreLocation {
 		[Export ("speedAccuracy")]
 		double SpeedAccuracy { get; }
 
+		/// <summary>The time at which the <see cref="T:CoreLocation.CLLocation" /> measurement was taken.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("timestamp", ArgumentSemantic.Copy)]
 		NSDate Timestamp { get; }
 
@@ -191,6 +214,9 @@ namespace CoreLocation {
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
 #if !XAMCORE_5_0
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Obsolete ("Use 'AccuracyBestForNavigation' instead.")]
 		[Field ("kCLLocationAccuracyBestForNavigation")]
 		double AccurracyBestForNavigation { get; }
@@ -199,18 +225,33 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyBestForNavigation")]
 		double AccuracyBestForNavigation { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLLocationAccuracyBest")]
 		double AccuracyBest { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLLocationAccuracyNearestTenMeters")]
 		double AccuracyNearestTenMeters { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLLocationAccuracyHundredMeters")]
 		double AccuracyHundredMeters { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLLocationAccuracyKilometer")]
 		double AccuracyKilometer { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLLocationAccuracyThreeKilometers")]
 		double AccuracyThreeKilometers { get; }
 
@@ -219,6 +260,9 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyReduced")]
 		double AccuracyReduced { get; }
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
@@ -235,6 +279,9 @@ namespace CoreLocation {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface CLFloor : NSSecureCoding, NSCopying {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("level")]
 		nint Level { get; }
 	}
@@ -243,19 +290,46 @@ namespace CoreLocation {
 
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (CLLocationManagerDelegate) })]
 	partial interface CLLocationManager {
+		/// <summary>An instance of the CoreLocation.ICLLocationManagerDelegate model class which acts as the class delegate.</summary>
+		///         <value>The instance of the CoreLocation.ICLLocationManagerDelegate model class</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>This is the strongly typed version of the object, developers should use the WeakDelegate property instead if they want to merely assign a class derived from NSObject that has been decorated with [Export] attributes.</para>
+		///         </remarks>
 		[Wrap ("WeakDelegate")]
 		ICLLocationManagerDelegate Delegate { get; set; }
 
+		/// <summary>An object that can respond to the delegate protocol for this type</summary>
+		///         <value>The instance that will respond to events and data requests.</value>
+		///         <remarks>
+		///           <para>The delegate instance assigned to this object will be used to handle events or provide data on demand to this class.</para>
+		///           <para>When setting the Delegate or WeakDelegate values events will be delivered to the specified instance instead of being delivered to the C#-style events</para>
+		///           <para>   Methods must be decorated with the [Export ("selectorName")] attribute to respond to each method from the protocol.   Alternatively use the Delegate method which is strongly typed and does not require the [Export] attributes on methods.</para>
+		///         </remarks>
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
+		/// <summary>The minimum horizontal distance, in meters, the device has to move before issuing a location update.</summary>
+		///         <value>The default value is <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Location%20CLLocation%20Distance%20None&amp;scope=Xamarin" title="P:CoreLocation.CLLocationDistance.None">P:CoreLocation.CLLocationDistance.None</a></format>.</value>
+		///         <remarks>
+		///           <para>If this value is set to <format type="text/html"><a href="https://docs.microsoft.com/en-us/search/index?search=Core%20Location%20CLLocation%20Distance%20None&amp;scope=Xamarin" title="P:CoreLocation.CLLocationDistance.None">P:CoreLocation.CLLocationDistance.None</a></format>, the app will receive all location updates.</para>
+		///         </remarks>
 		[Export ("distanceFilter", ArgumentSemantic.Assign)]
 		double DistanceFilter { get; set; }
 
+		/// <summary>The accuracy preferred by the app. (Coarser accuracies consume less power.)</summary>
+		///         <value>The default value is <see cref="P:CoreLocation.CLLocation.AccuracyBest" />.</value>
+		///         <remarks>
+		///           <para>Application developers should set this value to the coarsest resolution suitable to their needs.</para>
+		///         </remarks>
 		[Export ("desiredAccuracy", ArgumentSemantic.Assign)]
 		double DesiredAccuracy { get; set; }
 
+		/// <summary>The most recently-retrieved <see cref="T:CoreLocation.CLLocation" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get; }
 
@@ -267,6 +341,10 @@ namespace CoreLocation {
 		[Export ("stopUpdatingLocation")]
 		void StopUpdatingLocation ();
 
+		/// <summary>Whether location services are available.</summary>
+		///         <value>
+		///           <see langword="true" /> if the necessary hardware exists and the user has allowed the app's request for access.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("locationServicesEnabled"), Static]
 		bool LocationServicesEnabled { get; }
 
@@ -377,6 +455,12 @@ namespace CoreLocation {
 		[Export ("authorizationStatus")]
 		CLAuthorizationStatus AuthorizationStatus { get; }
 
+		/// <summary>The authorization status of the app (e.g., if the app is denied access to location services).</summary>
+		///         <value>The value is determined by the user's interaction with the standard permissions dialog.</value>
+		///         <remarks>
+		///           <para>See the "Requesting Authorization" discussion in the class-level remarks: <see cref="T:CoreLocation.CLLocationManager" />.</para>
+		///         </remarks>
+		///         <altmember cref="M:CoreLocation.AuthorizationChanged" />
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the instance property 'AuthorizationStatus' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use the instance 'AuthorizationStatus' property instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the instance property AuthorizationStatus' instead.")]
@@ -428,6 +512,10 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
+		/// <summary>Represents the value associated with the constant CLTimeInternalMax</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
@@ -679,10 +767,18 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
+		/// <summary>When used with <see cref="P:CoreLocation.CLLocationManager.DistanceFilter" />, indicates that the maximum distance filter be used.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
 
+		/// <summary>When used with <see cref="P:CoreLocation.CLLocationManager.DistanceFilter" />, indicates that no distance filter be used.</summary>
+		///         <value>
+		///         </value>
+		///         <remarks>To be added.</remarks>
 		[Field ("kCLDistanceFilterNone")]
 		double FilterNone { get; }
 	}
@@ -706,6 +802,9 @@ namespace CoreLocation {
 		[Export ("radius")]
 		double Radius { get; }
 
+		/// <summary>The unique identifier that was used when the region was created.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("identifier")]
 		string Identifier { get; }
 
@@ -725,10 +824,16 @@ namespace CoreLocation {
 		[Export ("containsCoordinate:")]
 		bool Contains (CLLocationCoordinate2D coordinate);
 
+		/// <summary>Whether the app should be notified when the device enters the region.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("notifyOnEntry", ArgumentSemantic.Assign)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnEntry { get; set; }
 
+		/// <summary>Whether the app should be notified when the device leaves the region.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("notifyOnExit", ArgumentSemantic.Assign)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnExit { get; set; }
@@ -737,6 +842,7 @@ namespace CoreLocation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	interface CLPlacemark : NSSecureCoding, NSCopying {
+		/// <include file="../docs/api/CoreLocation/CLPlacemark.xml" path="/Documentation/Docs[@DocId='P:CoreLocation.CLPlacemark.AddressDictionary']/*" />
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CLPlacemark' properties to access data.")]
@@ -744,54 +850,106 @@ namespace CoreLocation {
 		[NullAllowed, Export ("addressDictionary", ArgumentSemantic.Copy)]
 		NSDictionary AddressDictionary { get; }
 
+		/// <summary>The state or province. May be spelled out or abbreviated.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("administrativeArea")]
 		string AdministrativeArea { get; }
 
+		/// <summary>A region, smaller than the <see cref="P:CoreLocation.CLPlacemark.AdministrativeArea" />. Often, the county in which the <see cref="T:CoreLocation.CLPlacemark" /> is located.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("subAdministrativeArea")]
 		string SubAdministrativeArea { get; }
 
+		/// <summary>A small area, such as a neighborhood or landmark name, associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("subLocality")]
 		string SubLocality { get; }
 
+		/// <summary>The city or town associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("locality")]
 		string Locality { get; }
 
+		/// <summary>The name of the country associated with the placemark.</summary>
+		///         <value>The name is spelled out, not an ISO-3166 code (e.g., "United States" not "US").</value>
+		///         <remarks>To be added.</remarks>
+		///         <altmember cref="P:CoreLocation.CLPlacemark.IsoCountryCode" />
 		[NullAllowed, Export ("country")]
 		string Country { get; }
 
+		/// <summary>The postal code associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("postalCode")]
 		string PostalCode { get; }
 
+		/// <summary>The street address associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("thoroughfare")]
 		string Thoroughfare { get; }
 
+		/// <summary>The finest-grained street information, such as the street number of an address.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("subThoroughfare")]
 		string SubThoroughfare { get; }
 
+		/// <summary>The ISO 3166 Code associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
+		///         <altmember cref="P:CoreLocation.CLPlacemark.Country" />
 		[NullAllowed, Export ("ISOcountryCode")]
 		string IsoCountryCode { get; }
 
+		/// <summary>An array of relevant areas of interest (large parks, miltary bases, attractions, etc).</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("areasOfInterest")]
 		string [] AreasOfInterest { get; }
 
 		[Export ("initWithPlacemark:")]
 		NativeHandle Constructor (CLPlacemark placemark);
 
+		/// <summary>The name of the lake, river, or other waterway associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("inlandWater")]
 		string InlandWater { get; }
 
+		/// <summary>The location (contains latitude and longitude) of the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get; }
 
+		/// <summary>The name of the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("name")]
 		string Name { get; }
 
+		/// <summary>The name of the ocean associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("ocean")]
 		string Ocean { get; }
 
+		/// <summary>The geographic region associated with the <see cref="T:CoreLocation.CLPlacemark" />.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>
+		///           <para>The region returned will typically be a <see cref="T:CoreLocation.CLCircularRegion" /> centered on the placemark and with a <see cref="P:CoreLocation.CLCircularRegion.Radius" /> encompassing the region.</para>
+		///         </remarks>
 		[NullAllowed, Export ("region", ArgumentSemantic.Copy)]
 		CLRegion Region { get; }
 
+		/// <summary>Gets or sets the time zone in which the place mark resides.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[NullAllowed, Export ("timeZone")]
 		[MacCatalyst (13, 1)]
 		NSTimeZone TimeZone { get; }
@@ -816,9 +974,15 @@ namespace CoreLocation {
 		[Export ("initWithCenter:radius:identifier:")]
 		NativeHandle Constructor (CLLocationCoordinate2D center, double radius, string identifier);
 
+		/// <summary>The center of the circular region.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("center")]
 		CLLocationCoordinate2D Center { get; }
 
+		/// <summary>The radius of the circular region, in meters.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("radius")]
 		double Radius { get; }
 
@@ -963,6 +1127,10 @@ namespace CoreLocation {
 
 	[BaseType (typeof (NSObject))]
 	interface CLGeocoder {
+		/// <summary>Whether a geocoding request is currently being processed.</summary>
+		///         <value>
+		///           <see langword="true" /> if the <see cref="T:CoreLocation.CLGeocoder" /> is in the process of geocoding.</value>
+		///         <remarks>To be added.</remarks>
 		[Export ("isGeocoding")]
 		bool Geocoding { get; }
 

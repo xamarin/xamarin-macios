@@ -50,31 +50,50 @@ using NativeHandle = System.IntPtr;
 namespace AudioToolbox {
 
 	public enum AudioFileType {  // UInt32 AudioFileTypeID
+		/// <summary>Audio Interchange File Format.</summary>
 		AIFF = 0x41494646, // AIFF
+		/// <summary>Compressed Audio Interchange File Format.</summary>
 		AIFC = 0x41494643, // AIFC
+		/// <summary>Microsoft WAVE format.</summary>
 		WAVE = 0x57415645, // WAVE
 #if NET
+		/// <summary>BWF-compatible RF64 multichannel sound format.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		RF64 = 0x52463634, // RF64
+		/// <summary>Sound Designer 2 file.</summary>
 		SoundDesigner2 = 0x53643266, // Sd2f
+		/// <summary>NeXT/Sun audio file format</summary>
 		Next = 0x4e655854, // NeXT
+		/// <summary>MPEG-1 Audio Layer 3.</summary>
 		MP3 = 0x4d504733, // MPG3
+		/// <summary>MPEG-1 Audio Layer 2.</summary>
 		MP2 = 0x4d504732, // MPG2
+		/// <summary>MPEG-1 Audio Layer 1, largely outdated</summary>
 		MP1 = 0x4d504731, // MPG1
+		/// <summary>Digital Audio Compression Standard (also known as Dolby Digital or Audio Codec 3)</summary>
 		AC3 = 0x61632d33, // ac-3
+		/// <summary>Audio Transport Stream, a contains for Advanced Audio Coding (AAC) data.</summary>
 		AAC_ADTS = 0x61647473, // adts
+		/// <summary>MPEG-4 file.</summary>
 		MPEG4 = 0x6d703466, // mp4f
+		/// <summary>MPEG-4 Audio Layer with no bookmark metadata (use M4B for that).</summary>
 		M4A = 0x6d346166, // m4af
+		/// <summary>MPEG-4 Audio Layer with metadata for bookmarks, chapter markers, images and hyperlinks.</summary>
 		M4B = 0x6d346266, // m4bf
+		/// <summary>Apple Core Audio Format.   CAF files are containers that can contain multiple audio formats, metadata tracks.   Uses 64-bit offsetes, so it is not limited to 4GB.</summary>
 		CAF = 0x63616666, // caff
+		/// <summary>3GP (3GPP file format) is a multimedia container format defined by the Third Generation Partnership Project (3GPP) for 3G UMTS multimedia services. It is used on 3G mobile phones but can also be played on some 2G and 4G phones.</summary>
 		ThreeGP = 0x33677070, // 3gpp
+		/// <summary>3G2 (3GPP2 file format) is a multimedia container format defined by the 3GPP2 for 3G CDMA2000 multimedia services. It is very similar to the 3GP file format, but has some extensions and limitations in comparison to 3GP.</summary>
 		ThreeGP2 = 0x33677032, // 3gp2
+		/// <summary>Adaptive Multi-Rate format, optimized for speech coding   Used widely in GSM an UMTS.</summary>
 		AMR = 0x616d7266, // amrf
 #if NET
+		/// <summary>Free Lossless Audio Codec format.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -94,100 +113,177 @@ namespace AudioToolbox {
 	}
 
 	public enum AudioFileError {// Implictly cast to OSType in AudioFile.h
+		/// <summary>To be added.</summary>
 		Success = 0, // noErr
+		/// <summary>An unspecified error has occurred.</summary>
 		Unspecified = 0x7768743f, // wht?
+		/// <summary>The file type is not supported.</summary>
 		UnsupportedFileType = 0x7479703f, // typ?
+		/// <summary>The data format is not supported.</summary>
 		UnsupportedDataFormat = 0x666d743f, // fmt?
+		/// <summary>The property is not supported.</summary>
 		UnsupportedProperty = 0x7074793f, // pty?
+		/// <summary>The size of the property data was invalid.</summary>
 		BadPropertySize = 0x2173697a, // !siz
+		/// <summary>To be added.</summary>
 		Permissions = 0x70726d3f, // prm?
+		/// <summary>The file must be optimized in order to write more audio data.</summary>
 		NotOptimized = 0x6f70746d, // optm
+		/// <summary>The chunk does not exist or is not supported by the file.</summary>
 		InvalidChunk = 0x63686b3f, // chk?
+		/// <summary>The a file offset was too large for the file type.</summary>
 		DoesNotAllow64BitDataSize = 0x6f66663f, // off?
+		/// <summary>A packet offset is not valid.</summary>
 		InvalidPacketOffset = 0x70636b3f, // pck?
+		/// <summary>The file is invalid.</summary>
 		InvalidFile = 0x6474613f, // dta?
+		/// <summary>To be added.</summary>
 		OperationNotSupported = 0x6F703F3F, // op??
+		/// <summary>The file is not opened.</summary>
 		FileNotOpen = -38,
+		/// <summary>The end of file.</summary>
 		EndOfFile = -39,
+		/// <summary>File not found.</summary>
 		FileNotFound = -43,
+		/// <summary>Invalid file position.</summary>
 		FilePosition = -40,
 	}
 
 	[Flags]
 	public enum AudioFilePermission {
+		/// <summary>To be added.</summary>
 		Read = 0x01,
+		/// <summary>To be added.</summary>
 		Write = 0x02,
+		/// <summary>To be added.</summary>
 		ReadWrite = 0x03
 	}
 
 	[Flags]
 	public enum AudioFileFlags { // UInt32 in AudioFileCreateWithURL()
+		/// <summary>To be added.</summary>
 		EraseFlags = 1,
+		/// <summary>If this flag is set, audio data will be written without page alignment. This will make the data more compact but possibly slow readout.</summary>
 		DontPageAlignAudioData = 2
 	}
 
 	public enum AudioFileProperty { // typedef UInt32 AudioFilePropertyID
+		/// <summary>To be added.</summary>
 		FileFormat = 0x66666d74,
+		/// <summary>To be added.</summary>
 		DataFormat = 0x64666d74,
+		/// <summary>To be added.</summary>
 		IsOptimized = 0x6f70746d,
+		/// <summary>To be added.</summary>
 		MagicCookieData = 0x6d676963,
+		/// <summary>To be added.</summary>
 		AudioDataByteCount = 0x62636e74,
+		/// <summary>To be added.</summary>
 		AudioDataPacketCount = 0x70636e74,
+		/// <summary>To be added.</summary>
 		MaximumPacketSize = 0x70737a65,
+		/// <summary>To be added.</summary>
 		DataOffset = 0x646f6666,
+		/// <summary>To be added.</summary>
 		ChannelLayout = 0x636d6170,
+		/// <summary>To be added.</summary>
 		DeferSizeUpdates = 0x64737a75,
+		/// <summary>To be added.</summary>
 		DataFormatName = 0x666e6d65,
+		/// <summary>To be added.</summary>
 		MarkerList = 0x6d6b6c73,
+		/// <summary>To be added.</summary>
 		RegionList = 0x72676c73,
+		/// <summary>To be added.</summary>
 		PacketToFrame = 0x706b6672,
+		/// <summary>To be added.</summary>
 		FrameToPacket = 0x6672706b,
+		/// <summary>To be added.</summary>
 		PacketToByte = 0x706b6279,
+		/// <summary>To be added.</summary>
 		ByteToPacket = 0x6279706b,
+		/// <summary>To be added.</summary>
 		ChunkIDs = 0x63686964,
+		/// <summary>To be added.</summary>
 		InfoDictionary = 0x696e666f,
+		/// <summary>To be added.</summary>
 		PacketTableInfo = 0x706e666f,
+		/// <summary>To be added.</summary>
 		FormatList = 0x666c7374,
+		/// <summary>To be added.</summary>
 		PacketSizeUpperBound = 0x706b7562,
+		/// <summary>To be added.</summary>
 		ReserveDuration = 0x72737276,
+		/// <summary>To be added.</summary>
 		EstimatedDuration = 0x65647572,
+		/// <summary>To be added.</summary>
 		BitRate = 0x62726174,
+		/// <summary>To be added.</summary>
 		ID3Tag = 0x69643374,
+		/// <summary>To be added.</summary>
 		SourceBitDepth = 0x73627464,
+		/// <summary>To be added.</summary>
 		AlbumArtwork = 0x61617274,
+		/// <summary>To be added.</summary>
 		ReadyToProducePackets = 0x72656479,
+		/// <summary>The average number of bytes per audio packet.</summary>
 		AverageBytesPerPacket = 0x61627070,
+		/// <summary>To be added.</summary>
 		AudioTrackCount = 0x61746374,
+		/// <summary>To be added.</summary>
 		UseAudioTrack = 0x7561746b,
 	}
 
 	public enum AudioFileLoopDirection { // Unused?
+		/// <summary>To be added.</summary>
 		NoLooping = 0,
+		/// <summary>To be added.</summary>
 		Forward = 1,
+		/// <summary>To be added.</summary>
 		ForwardAndBackward = 2,
+		/// <summary>To be added.</summary>
 		Backward = 3
 	}
 
 	public enum AudioFileChunkType : uint // CoreAudio.framework - CoreAudioTypes.h - "four char code IDs"
 	{
+		/// <summary>To be added.</summary>
 		CAFStreamDescription = 0x64657363,  // 'desc'
+		/// <summary>To be added.</summary>
 		CAFAudioData = 0x64617461,  // 'data'
+		/// <summary>To be added.</summary>
 		CAFChannelLayout = 0x6368616e,  // 'chan'
+		/// <summary>To be added.</summary>
 		CAFFiller = 0x66726565, // 'free'
+		/// <summary>To be added.</summary>
 		CAFMarker = 0x6d61726b, // 'mark'
+		/// <summary>To be added.</summary>
 		CAFRegion = 0x7265676e, // 'regn'
+		/// <summary>To be added.</summary>
 		CAFInstrument = 0x696e7374, // 'inst'
+		/// <summary>To be added.</summary>
 		CAFMagicCookieID = 0x6b756b69,  // 'kuki'
+		/// <summary>To be added.</summary>
 		CAFInfoStrings = 0x696e666f,    // 'info'
+		/// <summary>To be added.</summary>
 		CAFEditComments = 0x65646374,   // 'edct'
+		/// <summary>To be added.</summary>
 		CAFPacketTable = 0x70616b74,    // 'pakt'
+		/// <summary>To be added.</summary>
 		CAFStrings = 0x73747267,    // 'strg'
+		/// <summary>To be added.</summary>
 		CAFUUID = 0x75756964,   // 'uuid'
+		/// <summary>To be added.</summary>
 		CAFPeak = 0x7065616b,   // 'peak'
+		/// <summary>To be added.</summary>
 		CAFOverview = 0x6f767677,   // 'ovvw'
+		/// <summary>To be added.</summary>
 		CAFMIDI = 0x6d696469,   // 'midi'
+		/// <summary>To be added.</summary>
 		CAFUMID = 0x756d6964,   // 'umid'
+		/// <summary>To be added.</summary>
 		CAFFormatListID = 0x6c647363,   // 'ldsc'
+		/// <summary>To be added.</summary>
 		CAFiXML = 0x69584d4c,   // 'iXML'
 	}
 
@@ -220,10 +316,20 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileSmpteTime { // AudioFile_SMPTE_Time
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public sbyte Hours;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public byte Minutes;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public byte Seconds;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public byte Frames;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public uint SubFrameSampleOffset;
 	}
 
@@ -235,14 +341,29 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileMarker {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public double FramePosition;
 		internal IntPtr Name_cfstringref;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public int MarkerID;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AudioFileSmpteTime SmpteTime;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public AudioFileMarkerType Type;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ushort Reserved;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public ushort Channel;
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get {
 				return CFString.FromHandle (Name_cfstringref);
@@ -318,29 +439,52 @@ namespace AudioToolbox {
 
 	public enum AudioFileMarkerType : uint // UInt32 in AudioFileMarkerType - AudioFile.h
 	{
+		/// <summary>To be added.</summary>
 		Generic = 0,
 
+		/// <summary>To be added.</summary>
 		CAFProgramStart = 0x70626567,   // 'pbeg'
+		/// <summary>To be added.</summary>
 		CAFProgramEnd = 0x70656e64, // 'pend'
+		/// <summary>To be added.</summary>
 		CAFTrackStart = 0x74626567, // 'tbeg'
+		/// <summary>To be added.</summary>
 		CAFTrackEnd = 0x74656e54,   // 'tend'
+		/// <summary>To be added.</summary>
 		CAFIndex = 0x696e6478,  // 'indx'
+		/// <summary>To be added.</summary>
 		CAFRegionStart = 0x72626567,    // 'rbeg'
+		/// <summary>To be added.</summary>
 		CAFRegionEnd = 0x72626567,  // 'rend'
+		/// <summary>To be added.</summary>
 		CAFRegionSyncPoint = 0x72737963,    // 'rsyc'
+		/// <summary>To be added.</summary>
 		CAFSelectionStart = 0x73626567, // 'sbeg'
+		/// <summary>To be added.</summary>
 		CAFSelectionEnd = 0x73626567,   // 'send'
+		/// <summary>To be added.</summary>
 		CAFEditSourceBegin = 0x63626567,    // 'cbeg'
+		/// <summary>To be added.</summary>
 		CAFEditSourceEnd = 0x63626567,  // 'cend'
+		/// <summary>To be added.</summary>
 		CAFEditDestinationBegin = 0x64626567,   // 'dbeg'
+		/// <summary>To be added.</summary>
 		CAFEditDestinationEnd = 0x64626567, // 'dend'
+		/// <summary>To be added.</summary>
 		CAFSustainLoopStart = 0x736c6267,   // 'slbg'
+		/// <summary>To be added.</summary>
 		CAFSustainLoopEnd = 0x736c6265, // 'slen'
+		/// <summary>To be added.</summary>
 		CAFReleaseLoopStart = 0x726c6267,   // 'rlbg'
+		/// <summary>To be added.</summary>
 		CAFReleaseLoopEnd = 0x726c6265, // 'rlen'
+		/// <summary>To be added.</summary>
 		CAFSavedPlayPosition = 0x73706c79,  // 'sply'
+		/// <summary>To be added.</summary>
 		CAFTempo = 0x746d706f,  // 'tmpo'
+		/// <summary>To be added.</summary>
 		CAFTimeSignature = 0x74736967,  // 'tsig'
+		/// <summary>To be added.</summary>
 		CAFKeySignature = 0x6b736967,   // 'ksig'
 	}
 
@@ -365,12 +509,18 @@ namespace AudioToolbox {
 			Dispose (false);
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public SmpteTimeType SmpteTimeType {
 			get {
 				return (SmpteTimeType) Marshal.ReadInt32 (ptr);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public uint Count {
 			get {
 				return (uint) Marshal.ReadInt32 (ptr, 4);
@@ -427,8 +577,14 @@ namespace AudioToolbox {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFilePacketTableInfo {
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public long ValidFrames;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public int PrimingFrames;
+		/// <summary>To be added.</summary>
+		///         <remarks>To be added.</remarks>
 		public int RemainderFrames;
 	}
 
@@ -458,12 +614,18 @@ namespace AudioToolbox {
 			this.ptr = ptr;
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public uint RegionID {
 			get {
 				return (uint) Marshal.ReadInt32 (ptr);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Name {
 			get {
 				return CFString.FromHandle (NameWeak);
@@ -476,12 +638,18 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioFileRegionFlags Flags {
 			get {
 				return (AudioFileRegionFlags) Marshal.ReadInt32 (ptr, sizeof (uint) + sizeof (IntPtr));
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe int Count {
 			get {
 				return Marshal.ReadInt32 (ptr, 2 * sizeof (uint) + sizeof (IntPtr));
@@ -510,8 +678,11 @@ namespace AudioToolbox {
 	[Flags]
 	public enum AudioFileRegionFlags : uint // UInt32 in AudioFileRegion
 	{
+		/// <summary>In conjunction with at least one other flag, loops the region.</summary>
 		LoopEnable = 1,
+		/// <summary>The region is played normally.</summary>
 		PlayForward = 2,
+		/// <summary>The region is played in reverse.</summary>
 		PlayBackward = 4
 	}
 
@@ -536,12 +707,18 @@ namespace AudioToolbox {
 			Dispose (false);
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public SmpteTimeType SmpteTimeType {
 			get {
 				return (SmpteTimeType) Marshal.ReadInt32 (ptr);
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public uint Count {
 			get {
 				return (uint) Marshal.ReadInt32 (ptr, sizeof (uint));
@@ -629,6 +806,9 @@ namespace AudioToolbox {
 			base.Dispose (disposing);
 		}
 
+		/// <summary>Audio file size, in bytes.</summary>
+		///         <value />
+		///         <remarks>To be added.</remarks>
 		public long Length {
 			get {
 				return GetLong (AudioFileProperty.AudioDataByteCount);
@@ -1546,12 +1726,18 @@ namespace AudioToolbox {
 			return AudioFileSetProperty (Handle, property, sizeof (double), (IntPtr) (&value));
 		}
 
+		/// <summary>Audio file type.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileType FileType {
 			get {
 				return (AudioFileType) GetInt (AudioFileProperty.FileFormat);
 			}
 		}
 
+		/// <summary>The audio basic description, as determined by decoding the file.</summary>
+		///         <value />
+		///         <remarks>To be added.</remarks>
 		[Advice ("Use 'DataFormat' instead.")]
 		public AudioStreamBasicDescription StreamBasicDescription {
 			get {
@@ -1559,14 +1745,23 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets the status of the stream's basic description.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileError StreamBasicDescriptionStatus { get; private set; }
 
+		/// <summary>Gets the <see cref="T:AudioToolbox.AudioStreamBasicDescription" />, if present, that describes the format of the audio data.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioStreamBasicDescription? DataFormat {
 			get {
 				return GetProperty<AudioStreamBasicDescription> (AudioFileProperty.DataFormat);
 			}
 		}
 
+		/// <summary>Returns a list of the supported audio formats.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFormat []? AudioFormats {
 			get {
 				unsafe {
@@ -1588,12 +1783,18 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets a Boolean value that tells whether the audio file has been optimized and is ready to receive sound data.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsOptimized {
 			get {
 				return GetInt (AudioFileProperty.IsOptimized) == 1;
 			}
 		}
 
+		/// <summary>The magic cookie for this file.</summary>
+		///         <value />
+		///         <remarks>Certain files require the magic cookie to be set before they can be written to.   Set this property before you write packets from your source (AudioQueue).</remarks>
 		public byte [] MagicCookie {
 			get {
 				int size;
@@ -1620,30 +1821,45 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets the number of audio data packets in the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public long DataPacketCount {
 			get {
 				return GetLong (AudioFileProperty.AudioDataPacketCount);
 			}
 		}
 
+		/// <summary>Gets the maximum audio packet size.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int MaximumPacketSize {
 			get {
 				return GetInt (AudioFileProperty.MaximumPacketSize);
 			}
 		}
 
+		/// <summary>Gets the offset, in bytes, to the beginning of the audio data in the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public long DataOffset {
 			get {
 				return GetLong (AudioFileProperty.DataOffset);
 			}
 		}
 
+		/// <summary>Gets the album artwork for the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public NSData? AlbumArtwork {
 			get {
 				return Runtime.GetNSObject<NSData> (GetIntPtr (AudioFileProperty.AlbumArtwork));
 			}
 		}
 
+		/// <summary>Gets the channel layout of the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioChannelLayout? ChannelLayout {
 			get {
 				int size;
@@ -1658,6 +1874,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets or sets a Boolean value that controls whether the updating of file size information in the header will be deferred until the file is read, optimized, or closed. The default, which is safer, is <see langword="false" /></summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool DeferSizeUpdates {
 			get {
 				return GetInt (AudioFileProperty.DeferSizeUpdates) == 1;
@@ -1667,30 +1886,45 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Audio file bit rate.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int BitRate {
 			get {
 				return GetInt (AudioFileProperty.BitRate);
 			}
 		}
 
+		/// <summary>Gets the estimated duration, in seconds, of the audio data in the file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public double EstimatedDuration {
 			get {
 				return GetDouble (AudioFileProperty.EstimatedDuration);
 			}
 		}
 
+		/// <summary>Gets the theoretical upper bound for the audio packet size for audio data in the file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public int PacketSizeUpperBound {
 			get {
 				return GetInt (AudioFileProperty.PacketSizeUpperBound);
 			}
 		}
 
+		/// <summary>Gets the amount of recording time to reserve in the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public double ReserveDuration {
 			get {
 				return GetDouble (AudioFileProperty.ReserveDuration);
 			}
 		}
 
+		/// <summary>Gets the <see cref="T:AudioToolbox.AudioFileMarkerList" /> that contains the markers for the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileMarkerList? MarkerList {
 			get {
 				var ptr = GetProperty (AudioFileProperty.MarkerList, out var _);
@@ -1701,6 +1935,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets a list of all the audio regions in the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileRegionList? RegionList {
 			get {
 				var ptr = GetProperty (AudioFileProperty.RegionList, out var _);
@@ -1711,8 +1948,14 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets the status of the audio packet table..</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileError PacketTableInfoStatus { get; private set; }
 
+		/// <summary>Gets or sets the <see cref="T:AudioToolbox.AudioFilePacketTableInfo" /> structure that describes the audio file packet table.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioFilePacketTableInfo? PacketTableInfo {
 			get {
 				return GetProperty<AudioFilePacketTableInfo> (AudioFileProperty.PacketTableInfo);
@@ -1728,6 +1971,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets an array of four-character codes that describe the kind of each chunk in the audio file.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe AudioFileChunkType []? ChunkIDs {
 			get {
 				int size;
@@ -1746,6 +1992,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets a byte array that contains the ID3Tag for the audio data.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public unsafe byte []? ID3Tag {
 			get {
 				int size;
@@ -1764,6 +2013,9 @@ namespace AudioToolbox {
 			}
 		}
 
+		/// <summary>Gets the CF dictionary that contains audio file metadata.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public AudioFileInfoDictionary? InfoDictionary {
 			get {
 				var ptr = GetIntPtr (AudioFileProperty.InfoDictionary);
@@ -1850,132 +2102,198 @@ namespace AudioToolbox {
 		{
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Album {
 			get {
 				return GetStringValue ("album");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? ApproximateDurationInSeconds {
 			get {
 				return GetStringValue ("approximate duration in seconds");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Artist {
 			get {
 				return GetStringValue ("artist");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? ChannelLayout {
 			get {
 				return GetStringValue ("channel layout");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Composer {
 			get {
 				return GetStringValue ("composer");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Comments {
 			get {
 				return GetStringValue ("comments");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Copyright {
 			get {
 				return GetStringValue ("copyright");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? EncodingApplication {
 			get {
 				return GetStringValue ("encoding application");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Genre {
 			get {
 				return GetStringValue ("genre");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? ISRC {
 			get {
 				return GetStringValue ("ISRC");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? KeySignature {
 			get {
 				return GetStringValue ("key signature");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Lyricist {
 			get {
 				return GetStringValue ("lyricist");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? NominalBitRate {
 			get {
 				return GetStringValue ("nominal bit rate");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? RecordedDate {
 			get {
 				return GetStringValue ("recorded date");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? SourceBitDepth {
 			get {
 				return GetStringValue ("source bit depth");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? SourceEncoder {
 			get {
 				return GetStringValue ("source encoder");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? SubTitle {
 			get {
 				return GetStringValue ("subtitle");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Tempo {
 			get {
 				return GetStringValue ("tempo");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? TimeSignature {
 			get {
 				return GetStringValue ("time signature");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Title {
 			get {
 				return GetStringValue ("title");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? TrackNumber {
 			get {
 				return GetStringValue ("track number");
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public string? Year {
 			get {
 				return GetStringValue ("year");
@@ -2082,6 +2400,9 @@ namespace AudioToolbox {
 				audioSource.Size = size;
 			return 0;
 		}
+		/// <summary>Used to set or get the size of the audio stream.</summary>
+		///         <value>The size of the file.</value>
+		///         <remarks>If the AudioSource is created in reading mode, this method should return the size of the audio data.   If the AudioSource is created to write data, this method is invoked to set the audio file size.</remarks>
 		public abstract long Size { get; set; }
 
 		protected override void Dispose (bool disposing)

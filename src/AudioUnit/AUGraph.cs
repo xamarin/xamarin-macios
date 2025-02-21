@@ -50,15 +50,23 @@ using NativeHandle = System.IntPtr;
 namespace AudioUnit {
 	public enum AUGraphError // Implictly cast to OSType
 	{
+		/// <summary>To be added.</summary>
 		OK = 0,
+		/// <summary>To be added.</summary>
 		NodeNotFound = -10860,
+		/// <summary>To be added.</summary>
 		InvalidConnection = -10861,
+		/// <summary>To be added.</summary>
 		OutputNodeError = -10862,
+		/// <summary>To be added.</summary>
 		CannotDoInCurrentContext = -10863,
+		/// <summary>To be added.</summary>
 		InvalidAudioUnit = -10864,
 
 		// Values returned & shared with other error enums
+		/// <summary>To be added.</summary>
 		FormatNotSupported = -10868,
+		/// <summary>To be added.</summary>
 		InvalidElement = -10877,
 	}
 
@@ -116,6 +124,9 @@ namespace AudioUnit {
 			return new AUGraph (handle, true);
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsInitialized {
 			get {
 				byte b;
@@ -125,6 +136,9 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsOpen {
 			get {
 				byte b;
@@ -134,6 +148,9 @@ namespace AudioUnit {
 			}
 		}
 
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public bool IsRunning {
 			get {
 				byte b;

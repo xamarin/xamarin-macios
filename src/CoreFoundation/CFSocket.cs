@@ -50,30 +50,45 @@ namespace CoreFoundation {
 	[Native]
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - System/Library/Frameworks/CoreFoundation.framework/Headers/CFSocket.h
 	public enum CFSocketCallBackType : ulong {
+		/// <summary>To be added.</summary>
 		NoCallBack = 0,
+		/// <summary>To be added.</summary>
 		ReadCallBack = 1,
+		/// <summary>To be added.</summary>
 		AcceptCallBack = 2,
+		/// <summary>To be added.</summary>
 		DataCallBack = 3,
+		/// <summary>To be added.</summary>
 		ConnectCallBack = 4,
+		/// <summary>To be added.</summary>
 		WriteCallBack = 8
 	}
 
 	// defined as CFIndex (long [long] = nint) - System/Library/Frameworks/CoreFoundation.framework/Headers/CFSocket.h
 	[Native]
 	public enum CFSocketError : long {
+		/// <summary>To be added.</summary>
 		Success = 0,
+		/// <summary>To be added.</summary>
 		Error = -1,
+		/// <summary>To be added.</summary>
 		Timeout = -2
 	}
 
 	[Flags]
 	// anonymous and typeless native enum - System/Library/Frameworks/CoreFoundation.framework/Headers/CFSocket.h
 	public enum CFSocketFlags {
+		/// <summary>To be added.</summary>
 		AutomaticallyReenableReadCallBack = 1,
+		/// <summary>To be added.</summary>
 		AutomaticallyReenableAcceptCallBack = 2,
+		/// <summary>To be added.</summary>
 		AutomaticallyReenableDataCallBack = 3,
+		/// <summary>To be added.</summary>
 		AutomaticallyReenableWriteCallBack = 8,
+		/// <summary>To be added.</summary>
 		LeaveErrors = 64,
+		/// <summary>To be added.</summary>
 		CloseOnInvalidate = 128
 	}
 
@@ -105,6 +120,9 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class CFSocketException : Exception {
+		/// <summary>To be added.</summary>
+		///         <value>To be added.</value>
+		///         <remarks>To be added.</remarks>
 		public CFSocketError Error {
 			get;
 			private set;
