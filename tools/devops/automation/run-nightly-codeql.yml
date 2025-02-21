@@ -19,10 +19,9 @@ parameters:
 resources:
   repositories:
   - repository: yaml-templates
-    type: github
-    name: xamarin/yaml-templates
+    type: git
+    name: xamarin.yaml-templates
     ref: refs/heads/main
-    endpoint: xamarin
   - repository: macios-adr
     type: git
     name: macios-adr

@@ -12,10 +12,9 @@ resources:
       submodules: false  # no need
 
   - repository: yaml-templates
-    type: github
-    name: xamarin/yaml-templates
+    type: git
+    name: xamarin.yaml-templates
     ref: refs/heads/main
-    endpoint: xamarin
 
   # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
   # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
