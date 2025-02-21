@@ -7,7 +7,7 @@ MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --sho
 endif
 
 ifdef ENABLE_XAMARIN
-NEEDED_ADR_VERSION := adccd1c48a7c2540b0c37f2bf7add7d2c1398729
+NEEDED_ADR_VERSION := 10394d73ac2bfafa2fafda4e8080b7dd0ea66488
 NEEDED_ADR_BRANCH := main
 
 ADR_DIRECTORY := macios-adr
