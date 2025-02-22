@@ -1,0 +1,69 @@
+parameters:
+- name: env
+  type: object
+
+- name: secureFiles
+  type: object
+  default:
+    [
+      { 'name': 'AppleWWDRCAG3-2.cer', 'secureFile': 'macios-AppleWWDRCAG3-2.cer' },
+      { 'name': 'developer-id-application-luis-aguilera-jul-2029.p12', 'secureFile': 'macios-developer-id-application-luis-aguilera-jul-2029.p12' },
+      { 'name': 'developer-id-installer-luis-aguilera-jul-2029.p12', 'secureFile': 'macios-developer-id-installer-luis-aguilera-jul-2029.p12' },
+      { 'name': 'la_dev_apple.p12', 'secureFile': 'macios-la-dev-apple.p12' },
+      { 'name': 'la_dev_iPhone.p12', 'secureFile': 'macios-la-dev-iPhone.p12' },
+      { 'name': 'la_distr_apple.p12', 'secureFile': 'macios-la-distr-apple.p12' },
+      { 'name': 'la_distr_iphone.p12', 'secureFile': 'macios-la-distr-iphone.p12' },
+      { 'name': 'la_mac_app_dev.p12', 'secureFile': 'macios-la-mac-app-dev.p12' },
+      { 'name': 'la_mac_app_distr.p12', 'secureFile': 'macios-la-mac-app-distr.p12' },
+      { 'name': 'la_mac_installer_distr.p12', 'secureFile': 'macios-la-mac-installer-distr.p12' },
+      { 'name': 'vseng-xamarin-mac-devices-2.p12', 'secureFile': 'macios-vseng-xamarin-mac-devices-2.p12' },
+      { 'name': 'vseng-xamarin-mac-devices.p12', 'secureFile': 'macios-vseng-xamarin-mac-devices.p12' },
+      { 'name': 'vsengxamarinmacdevices.mobileprovision', 'secureFile': 'macios-vsengxamarinmacdevices.mobileprovision' },
+      { 'name': 'WildCardiOSDevelopment.mobileprovision', 'secureFile': 'macios-WildCardiOSDevelopment.mobileprovision' },
+      { 'name': 'WildCardiOSDistribution.mobileprovision', 'secureFile': 'macios-WildCardiOSDistribution.mobileprovision' },
+      { 'name': 'WildCardMacAppDevelopment.provisionprofile', 'secureFile': 'macios-WildCardMacAppDevelopment.provisionprofile' },
+      { 'name': 'WildCardMacDistribution.provisionprofile', 'secureFile': 'macios-WildCardMacDistribution.provisionprofile' },
+      { 'name': 'WildCardtvOSDevelopment.mobileprovision', 'secureFile': 'macios-WildCardtvOSDevelopment.mobileprovision' },
+      { 'name': 'WildCardtvOSDistribution.mobileprovision', 'secureFile': 'macios-WildCardtvOSDistribution.mobileprovision' },
+    ]
+- name: xamarinMaciosPath
+  type: string
+  default: $(Build.SourcesDirectory)/$(BUILD_REPOSITORY_TITLE)
+  
+steps:
+- pwsh: |
+    New-Item $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles -ItemType Directory -Force
+  displayName: 'Create secret files folder'
+
+- ${{ each secureFile in parameters.secureFiles }}:
+  - task: DownloadSecureFile@1
+    displayName: 'Download ${{ secureFile.name }}'
+    inputs:
+      secureFile: ${{ secureFile.secureFile }}
+- pwsh: |
+    gci $(Agent.TempDirectory)
+  displayName: 'List secure files'
+- pwsh: |
+    $secureFiles = '${{ convertToJson(parameters.secureFiles) }}' | ConvertFrom-Json
+    foreach ($secureFile in $secureFiles) {
+        $sourcePath = Join-Path -Path $env:AGENT_TEMPDIRECTORY -ChildPath $secureFile.secureFile
+        $destinationPath = Join-Path -Path "$env:BUILD_SOURCESDIRECTORY/maccore/tools/provisioning-profiles/certificates-and-profiles" -ChildPath $secureFile.name
+
+        Copy-Item -Path $sourcePath -Destination $destinationPath -Force
+    }
+  displayName: 'Copy Certificates and Profiles'
+  
+- pwsh: |
+    gci $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles
+  displayName: 'List Certificates and Profiles'
+
+- bash: ${{ parameters.xamarinMaciosPath }}/tools/devops/automation/scripts/install-qa-provisioning-profiles.sh
+  displayName: 'Install provisioning profiles'
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+  env: ${{ parameters.env }}
+  timeoutInMinutes: 30
+  continueOnError: true  # should not stop the build
+
+- pwsh: |
+    Remove-Item $(Build.SourcesDirectory)/maccore/tools/provisioning-profiles/certificates-and-profiles -Recurse -Force
+  displayName: 'Clean certs and profiles'

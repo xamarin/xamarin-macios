@@ -118,10 +118,11 @@ readonly partial struct Property {
 
 				// focus on the return type
 				{ ReturnType: { IsVoid: false, NeedsStret: true } } => true, 
+				{ ReturnType: { IsVoid: false, IsWrapped: true } } => true, 
 				{ ReturnType.IsNativeEnum: true } => true, 
-				{ ReturnType.SpecialType: SpecialType.System_Boolean 
-					or SpecialType.System_Char or SpecialType.System_Delegate } => true, 
+				{ ReturnType.SpecialType: SpecialType.System_Char or SpecialType.System_Delegate } => true, 
 				{ ReturnType.IsDelegate: true } => true,
+				{ ReturnType.IsWrapped: true } => true,
 				// default will be false
 				_ => false
 			};
