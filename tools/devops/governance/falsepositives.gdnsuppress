@@ -1,0 +1,367 @@
+{
+  "hydrated": false,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/suppressions",
+    "hydrationStatus": "This file does not contain identifying data. It is safe to check into your repo. To hydrate this file with identifying data, run `guardian hydrate --help` and follow the guidance."
+  },
+  "version": "1.0.0",
+  "suppressionSets": {
+    "falsepositives": {
+      "name": "falsepositives",
+      "createdDate": "2023-08-24 10:38:58Z",
+      "lastUpdatedDate": "2023-08-24 10:38:58Z"
+    }
+  },
+  "results": {
+    "2ecb831593d5b4fc3468f49683dca5acf4c6012220ecfc718dbfae73bcb57f31": {
+      "signature": "2ecb831593d5b4fc3468f49683dca5acf4c6012220ecfc718dbfae73bcb57f31",
+      "alternativeSignatures": [
+        "bacb3073e21c0ed9dd006a8f0f7f5d36eec5651704c8ee6f812dacf179809db6"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "eac89c8968b14bd415b33c21f6875b17e4496655820bcc409a0e05d30c66190a": {
+      "signature": "eac89c8968b14bd415b33c21f6875b17e4496655820bcc409a0e05d30c66190a",
+      "alternativeSignatures": [
+        "98b14455853615f2a0cc1d738bdd152483563b2728a17bf7e833cef4614c13ba"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "44de897257cddf389dc3db7c8167e09ca57a1c4bdf9c0ba41a59b2d64c3f4cc0": {
+      "signature": "44de897257cddf389dc3db7c8167e09ca57a1c4bdf9c0ba41a59b2d64c3f4cc0",
+      "alternativeSignatures": [
+        "98b14455853615f2a0cc1d738bdd152483563b2728a17bf7e833cef4614c13ba"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "daf3735561d32f076d0148c04e7a43dd6cb67ef999a4c3569c2508c47ef9f61e": {
+      "signature": "daf3735561d32f076d0148c04e7a43dd6cb67ef999a4c3569c2508c47ef9f61e",
+      "alternativeSignatures": [
+        "ac93f22a9f802b17f4907cabbfb879f5b0356d439242e581eac651b57c3bfce8"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "5b0a5b626200de438e3eaa0c11a390a8e1fa96305d901d4ba29bd7a67ae77140": {
+      "signature": "5b0a5b626200de438e3eaa0c11a390a8e1fa96305d901d4ba29bd7a67ae77140",
+      "alternativeSignatures": [
+        "15c91651642b625bbd3b267456425d9cd507618924a5ad30b11ab3561bcce7f5"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "2b5013458d8c97aee48fd0ce68e6abf3e24b08fa4dd586f39f08d9f3a7b99daf": {
+      "signature": "2b5013458d8c97aee48fd0ce68e6abf3e24b08fa4dd586f39f08d9f3a7b99daf",
+      "alternativeSignatures": [
+        "d7eb3f6739c86160600d913e44253118ac3001baa5a384d3785b2804d3360dc0"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "97362ac4967fe1bee99f3498e9d57dca81e0af0d3b8258c2d948bb2db6883971": {
+      "signature": "97362ac4967fe1bee99f3498e9d57dca81e0af0d3b8258c2d948bb2db6883971",
+      "alternativeSignatures": [
+        "9b76c84824d779e5f11aadd832bb1a7b1fe0d81ac766c23f9068b0db212f50b2"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "fdae304730957740bc537659cd80764e929db822d11b30330145383f217e0423": {
+      "signature": "fdae304730957740bc537659cd80764e929db822d11b30330145383f217e0423",
+      "alternativeSignatures": [
+        "9b76c84824d779e5f11aadd832bb1a7b1fe0d81ac766c23f9068b0db212f50b2"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "654d03df3a3d9d22d06b33b7991cfb49f81ca163b5e071fee23e151df5bb74d6": {
+      "signature": "654d03df3a3d9d22d06b33b7991cfb49f81ca163b5e071fee23e151df5bb74d6",
+      "alternativeSignatures": [
+        "dcc1aeb6e03e496b890c541756b76a978bab573a3ec10405d791d6812d9abe11"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "85a99305548bfb0c9d9e39c8e4a030b4d50ef2c77cccd4084c5d1bdf72755a9a": {
+      "signature": "85a99305548bfb0c9d9e39c8e4a030b4d50ef2c77cccd4084c5d1bdf72755a9a",
+      "alternativeSignatures": [
+        "dcc1aeb6e03e496b890c541756b76a978bab573a3ec10405d791d6812d9abe11"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "74b666fa0f1555be5f6ca2be469f4d1f07cd8f9259e7b4230fcfc0b5393cce55": {
+      "signature": "74b666fa0f1555be5f6ca2be469f4d1f07cd8f9259e7b4230fcfc0b5393cce55",
+      "alternativeSignatures": [
+        "a44bb82351fc2cff992def2b0d7682b590d19b38514edb2f3b3fe3e5864bd07c"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "308b357f5d59978600a1e3baebe8cc182c264da39c46839b17222d7d6ae20dd7": {
+      "signature": "308b357f5d59978600a1e3baebe8cc182c264da39c46839b17222d7d6ae20dd7",
+      "alternativeSignatures": [
+        "a44bb82351fc2cff992def2b0d7682b590d19b38514edb2f3b3fe3e5864bd07c"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "369406436095e349dd29a26e84c981fa7a9096d4c6f37a2765e8f0221655333c": {
+      "signature": "369406436095e349dd29a26e84c981fa7a9096d4c6f37a2765e8f0221655333c",
+      "alternativeSignatures": [
+        "a44bb82351fc2cff992def2b0d7682b590d19b38514edb2f3b3fe3e5864bd07c"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "59b34cc47d164110bb2617d80aa262c9959fe1ada8d9c7cfb13ef325c05bc4f1": {
+      "signature": "59b34cc47d164110bb2617d80aa262c9959fe1ada8d9c7cfb13ef325c05bc4f1",
+      "alternativeSignatures": [
+        "a44bb82351fc2cff992def2b0d7682b590d19b38514edb2f3b3fe3e5864bd07c"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "645f55b2086cdbf348cbdec58929afdef27655fdd152804116fc5f9a0407f3bd": {
+      "signature": "645f55b2086cdbf348cbdec58929afdef27655fdd152804116fc5f9a0407f3bd",
+      "alternativeSignatures": [
+        "726a821fe18196823e07cba47daf30464ae43963ea51d65ced4656c15c2650ff"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "7fc3ed928325a13954a47a4bc84b4802eb9468f66aff9eaa89d37ac5b9fceeab": {
+      "signature": "7fc3ed928325a13954a47a4bc84b4802eb9468f66aff9eaa89d37ac5b9fceeab",
+      "alternativeSignatures": [
+        "726a821fe18196823e07cba47daf30464ae43963ea51d65ced4656c15c2650ff"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "2aa009223113c7130413bc9dd831d585cb486b2c765b3c095bd18651f8cf6f6b": {
+      "signature": "2aa009223113c7130413bc9dd831d585cb486b2c765b3c095bd18651f8cf6f6b",
+      "alternativeSignatures": [
+        "726a821fe18196823e07cba47daf30464ae43963ea51d65ced4656c15c2650ff"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "caa3592fa8e4e9f0c7dc95f3672b137f62db84cd6d571d5a1a453b01ed33942b": {
+      "signature": "caa3592fa8e4e9f0c7dc95f3672b137f62db84cd6d571d5a1a453b01ed33942b",
+      "alternativeSignatures": [
+        "726a821fe18196823e07cba47daf30464ae43963ea51d65ced4656c15c2650ff"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "0df3e36904515ec8622b7b9d0984f582ee930e26e9ccbfa5836cea4e30327f1d": {
+      "signature": "0df3e36904515ec8622b7b9d0984f582ee930e26e9ccbfa5836cea4e30327f1d",
+      "alternativeSignatures": [
+        "726a821fe18196823e07cba47daf30464ae43963ea51d65ced4656c15c2650ff"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "7e6c0ce4d006bd59182ad28a92ff659016b5c5b15a7a44e3e418035686163d96": {
+      "signature": "7e6c0ce4d006bd59182ad28a92ff659016b5c5b15a7a44e3e418035686163d96",
+      "alternativeSignatures": [
+        "7cfe7a059ac3e499d3de6c50575faa91e7eeada4c079add2f3fd51104a3c0b0c"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "a122fa0e308bf8b411da5aea67b229cc246d7c976cce1318de5e4c2d5e1bdb0a": {
+      "signature": "a122fa0e308bf8b411da5aea67b229cc246d7c976cce1318de5e4c2d5e1bdb0a",
+      "alternativeSignatures": [
+        "a9b9a6c4d0c89e215fc3e651266a581898605523b5d34f795d7f8e54395e5895"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "462044b90bac304f6945dc645b25e06f935d945b159aa09e713840402c35bd17": {
+      "signature": "462044b90bac304f6945dc645b25e06f935d945b159aa09e713840402c35bd17",
+      "alternativeSignatures": [
+        "5eb0fb090fcc98091f04efabae6a667485b46a7ace030ead4e3c14be38e7e785"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "98a1a59af6a72ea86e980d49785c863ab5467414c15d8867a265446559335543": {
+      "signature": "98a1a59af6a72ea86e980d49785c863ab5467414c15d8867a265446559335543",
+      "alternativeSignatures": [
+        "f42e0a46bdb1f8f73013d74a8ec188075990fbc5b703b781f45b0aee32c6206b"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "07e536825dfa655d80a410d0906e96637976488aaa2ad8f22e79b75bd1ec62fa": {
+      "signature": "07e536825dfa655d80a410d0906e96637976488aaa2ad8f22e79b75bd1ec62fa",
+      "alternativeSignatures": [
+        "e047c8a83d5b46a28ef8eac244af691d6ef8fbf0bd930243b4ebc20bba8f1abe"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "c3f4344832acfccbb01692a27b4548d963c7551284047516e9fd1192a24100e1": {
+      "signature": "c3f4344832acfccbb01692a27b4548d963c7551284047516e9fd1192a24100e1",
+      "alternativeSignatures": [
+        "a8fc7b095e568925dd64f7ab11d9975e7148b777cdc78477c58be2447e3acd98"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "428d3c3f040733c5febff8c5740099bfee1c53f6abc8d18f942eabdfc109e730": {
+      "signature": "428d3c3f040733c5febff8c5740099bfee1c53f6abc8d18f942eabdfc109e730",
+      "alternativeSignatures": [
+        "0dab3e814bd6e22377a2c0ecef482ed4648227ecabc512afe27f7fe182af039b"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "7ce2190095dcab9ace1cdb47a27866801d47fdcc4cf89cddbad26d5f547cfc1a": {
+      "signature": "7ce2190095dcab9ace1cdb47a27866801d47fdcc4cf89cddbad26d5f547cfc1a",
+      "alternativeSignatures": [
+        "0dab3e814bd6e22377a2c0ecef482ed4648227ecabc512afe27f7fe182af039b"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "7cc3bbee61b4b9cd2736e2a6e4364293207e433cb6298a8669a28c56d3103d1b": {
+      "signature": "7cc3bbee61b4b9cd2736e2a6e4364293207e433cb6298a8669a28c56d3103d1b",
+      "alternativeSignatures": [
+        "79c1f7269bf363653a30355a275c940b3846c12c8c9683997fd5dc5f71b85866"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "25781e2ca8cfd0722d373b120522dbcfcc584a8958a6a0951d2ed268676aa3ec": {
+      "signature": "25781e2ca8cfd0722d373b120522dbcfcc584a8958a6a0951d2ed268676aa3ec",
+      "alternativeSignatures": [
+        "1502671234d4c5c72cb4556cd80014a72be7b52c5adb76a3a7d38cadf7ab99d9"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "5358caf6eb7f50acfc6590b842c823c064235317d1b1418603288ecd832e97c9": {
+      "signature": "5358caf6eb7f50acfc6590b842c823c064235317d1b1418603288ecd832e97c9",
+      "alternativeSignatures": [
+        "1502671234d4c5c72cb4556cd80014a72be7b52c5adb76a3a7d38cadf7ab99d9"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "9b0d2b6feaeab96265e65a41933254cece2139f3114393503dc69c96eb67bea3": {
+      "signature": "9b0d2b6feaeab96265e65a41933254cece2139f3114393503dc69c96eb67bea3",
+      "alternativeSignatures": [
+        "c7e594ab5378aea85f792ff5a4968b85176d800e9100cb8b33a32ead4a7484d1"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-08-23 16:07:36Z"
+    },
+    "07a488a10c61de5e558947195cdfe25577d580f6071ac595818baa19e7b3429a" : {
+      "alternativeSignatures" : [
+        "8f1358d8d4e45b6eff8b98437dbc55a4d5c610305462d8067df52dfdcedc1109"
+      ],
+      "createdDate" : "2023-08-24 10:38:58Z",
+      "memberOf" : [
+        "falsepositives"
+      ],
+      "signature" : "07a488a10c61de5e558947195cdfe25577d580f6071ac595818baa19e7b3429a"
+    },
+    "458bc3f6494492a4909cdbd53b92deb62b825320f71ed6ea217da24ed3f12276" : {
+      "alternativeSignatures" : [
+        "8f1358d8d4e45b6eff8b98437dbc55a4d5c610305462d8067df52dfdcedc1109"
+      ],
+      "createdDate" : "2023-08-24 10:38:58Z",
+      "memberOf" : [
+        "falsepositives"
+      ],
+      "signature" : "458bc3f6494492a4909cdbd53b92deb62b825320f71ed6ea217da24ed3f12276"
+    },
+    "5019c9d2da58d2c51409c708c844f3282ecf16e49105726d3d22fa436dca5dbc": {
+      "signature": "5019c9d2da58d2c51409c708c844f3282ecf16e49105726d3d22fa436dca5dbc",
+      "alternativeSignatures": [
+        "fc43180a280070978fd9ef1b59bb1c4d178d9b202a71db443b660d977dd670a6"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-10-03 17:23:21Z"
+    },
+    "6164e226e9703e4dad253be9c4dc5d7d9c130ce5ce8e3eaea17bb6c0072bcf83": {
+      "signature": "6164e226e9703e4dad253be9c4dc5d7d9c130ce5ce8e3eaea17bb6c0072bcf83",
+      "alternativeSignatures": [
+        "fc43180a280070978fd9ef1b59bb1c4d178d9b202a71db443b660d977dd670a6"
+      ],
+      "memberOf": [
+        "falsepositives"
+      ],
+      "createdDate": "2023-10-03 17:23:21Z"
+    }
+  }
+}

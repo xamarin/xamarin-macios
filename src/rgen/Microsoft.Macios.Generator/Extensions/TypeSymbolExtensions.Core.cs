@@ -429,7 +429,7 @@ static partial class TypeSymbolExtensions {
 		out ImmutableArray<string> parents,
 		out ImmutableArray<string> interfaces)
 	{
-		isNSObject = symbol.ToDisplayString ().Trim () == nsObjectClass;
+		isNSObject = symbol.ToDisplayString ().Trim ('?') == nsObjectClass;
 		isNativeObject = false;
 		isDictionaryContainer = false;
 
