@@ -11,10 +11,10 @@ using Xharness.Jenkins.Reports;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
-	
+
 	class TestServer {
-		
-	static IReadOnlySet<string> AllowedPaths = new HashSet<string> (StringComparer.Ordinal) {
+
+		static IReadOnlySet<string> AllowedPaths = new HashSet<string> (StringComparer.Ordinal) {
 		"/",
 		"/index.html",
 		"/set-option",
@@ -30,13 +30,13 @@ namespace Xharness.Jenkins {
 		"/index.html",
 	};
 
-	static IReadOnlySet<string> AllowedFiles = new HashSet<string> (StringComparer.Ordinal) {
+		static IReadOnlySet<string> AllowedFiles = new HashSet<string> (StringComparer.Ordinal) {
 		"index.html",
 		"xharness.css",
 		"xharness.js",
 	};
-	
-	
+
+
 
 		public Task RunAsync (Jenkins jenkins, HtmlReportWriter htmlReportWriter)
 		{
@@ -130,12 +130,12 @@ namespace Xharness.Jenkins {
 						var file = Path.GetFileName (localPath);
 						var directoryName = Path.GetDirectoryName (localPath);
 						var jenkinsDirectoryName = $"/{Path.GetFileName (jenkins.LogDirectory)}";
-						
+
 						// for the request to be valid the local path has to be one of the following
 						// 1. local path should be one of the supported ones
 						// 2. Be index.html
 						// 3. Its directory name be the same as the log directory name, no other directory is allowed
-						if (!AllowedPaths.Contains (localPath)  && !AllowedFiles.Contains (file) && !directoryName.StartsWith (jenkinsDirectoryName)) {
+						if (!AllowedPaths.Contains (localPath) && !AllowedFiles.Contains (file) && !directoryName.StartsWith (jenkinsDirectoryName)) {
 							// Validate that we're not requested to serve any file on the file system.
 							// Ref: https://devdiv.visualstudio.com/DevDiv/_workitems/edit/2351243
 							response.StatusCode = 400;
