@@ -5,7 +5,7 @@ Invoke-SshCommand `
   -RemoteHost "$Env:MAC_AGENT_IP" `
   -RemoteUserName "$Env:MAC_AGENT_USER" `
   -- `
-  "$Env:MAC_AGENT_BUILD_SOURCESDIRECTORY/$Env:BUILD_REPOSITORY_TITLE/tests/dotnet/Windows/collect-binlogs.sh"
+  "$Env:MAC_AGENT_BUILD_SOURCESDIRECTORY/tests/dotnet/Windows/collect-binlogs.sh"
 
 New-Item -Path "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name "windows-binlogs" -ItemType "directory"
 New-Item -Path "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY\windows-binlogs" -Name "windows-remote-logs.zip" -ItemType "file" -Value "zip"

@@ -9,7 +9,7 @@ body:
 
         Issues with missing Apple APIs or the API not working as documented are tracked here.
 
-        Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions.
+        Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good issue see https://github.com/dotnet/macios/wiki/Submitting-Bugs-&-Suggestions.
 
         If you are not sure how to use an API or how to accomplish your task, better support is available from the community of application writers, available in several forms:
 

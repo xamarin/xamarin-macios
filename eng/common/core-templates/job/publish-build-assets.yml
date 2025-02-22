@@ -73,6 +73,7 @@ jobs:
 
   - ${{ if and(eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
     - checkout: self
+      path: s/$(BUILD_REPOSITORY_NAME)
       fetchDepth: 3
       clean: true
       
