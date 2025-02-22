@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good isse see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions.
+        Thanks for taking the time to fill out this report! Please make sure to add as much detail as you can, preferably with a reproduction if possible. This will help us diagnose the issue faster and thus resolve it quicker. For more information on how to write a good issue see https://github.com/dotnet/macios/wiki/Submitting-Bugs-&-Suggestions.
   - type: dropdown
     id: platform
     attributes:
@@ -65,7 +65,7 @@ body:
     id: logs
     attributes:
       label: Relevant logs
-      description: Please copy and paste any (short!) relevant logs. Longer logs can be attached as .txt or .zip files. This is likely either the Application Output from the IDE, a [crash report](https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#crash-reports) or the [device log](https://support.apple.com/en-in/guide/console/cnsl1012/mac) (or all of these).
+      description: Please copy and paste any (short!) relevant logs. Longer logs can be attached as .txt or .zip files. This is likely either the Application Output from the IDE, a [crash report](https://github.com/dotnet/macios/wiki/Diagnosis#crash-reports) or the [device log](https://support.apple.com/en-in/guide/console/cnsl1012/mac) (or all of these).
   - type: markdown
     attributes:
       value: |

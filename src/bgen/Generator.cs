@@ -519,9 +519,16 @@ public partial class Generator : IMemberGatherer {
 			if (arrType == TypeCache.NSString && !arrIsNullable)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)!) {{\n\t\treturn {TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
 			else if (arrType == TypeCache.NSNumber && !arrIsNullable) {
-				if (TypeManager.NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
-					var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
-					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)!) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, TypeManager.FormatType (arrRetType.DeclaringType, arrRetType));
+				if (arrRetType.IsEnum) {
+					// get the underlying type of the enum and use a callback with the appropiate one
+					var enumType = arrRetType.GetEnumUnderlyingType ();
+					if (TypeManager.NSNumberToValueMap.TryGetValue (enumType, out valueFetcher)) {
+						append = $"ptr => ({TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}) NSNumber.{valueFetcher} (ptr)";
+					} else {
+						throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
+					}
+				} else if (TypeManager.NSNumberToValueMap.TryGetValue (arrRetType, out valueFetcher)) {
+					append = $"NSNumber.{valueFetcher}";
 				} else
 					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 			} else if (arrType == TypeCache.NSValue && !arrIsNullable) {

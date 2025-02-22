@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Macios.Generator.Attributes;
 using Microsoft.Macios.Generator.Context;
 using Microsoft.Macios.Generator.DataModel;
@@ -143,13 +144,19 @@ return {backingField};
 		notificationProperties = notificationsBuilder.ToImmutable ();
 	}
 
-	void EmitProperties (in ImmutableArray<Property> properties, TabbedWriter<StringWriter> classBlock)
+	void EmitProperties (in BindingContext context, TabbedWriter<StringWriter> classBlock)
 	{
 
-		foreach (var property in properties.OrderBy (p => p.Name)) {
+		// use the binding context to decide if we need to insert the ui thread check
+		var uiThreadCheck = (context.NeedsThreadChecks)
+			? EnsureUiThread (context.RootContext.CurrentPlatform) : null;
+
+		foreach (var property in context.Changes.Properties.OrderBy (p => p.Name)) {
 			if (property.IsField)
 				// ignore fields
 				continue;
+			// use the factory to generate all the needed invocations for the current 
+			var invocations = GetInvocations (property);
 
 			// we expect to always at least have a getter
 			var getter = property.GetAccessor (AccessorKind.Getter);
@@ -164,6 +171,10 @@ return {backingField};
 				// be very verbose with the availability, makes the life easier to the dotnet analyzer
 				propertyBlock.AppendMemberAvailability (getter.Value.SymbolAvailability);
 				using (var getterBlock = propertyBlock.CreateBlock ("get", block: true)) {
+					if (uiThreadCheck is not null) {
+						getterBlock.WriteLine (uiThreadCheck.ToString ());
+						getterBlock.WriteLine ();
+					}
 					// depending on the property definition, we might need a temp variable to store
 					// the return value
 					if (property.UseTempReturn) {
@@ -171,19 +182,19 @@ return {backingField};
 						getterBlock.WriteRaw (
 $@"{tempDeclaration}
 if (IsDirectBinding) {{
-	{tempVar} = throw new NotImplementedException();
+	{invocations.Getter.Send}
 }} else {{
-	{tempVar} = throw new NotImplementedException();
+	{invocations.Getter.SendSuper}
 }}
 return {tempVar};
 ");
 					} else {
 						getterBlock.WriteRaw (
-@"if (IsDirectBinding) {
-	throw new NotImplementedException();
-} else {
-	throw new NotImplementedException();
-}
+$@"if (IsDirectBinding) {{
+	return {invocations.Getter.Send}
+}} else {{
+	return {invocations.Getter.SendSuper}
+}}
 ");
 					}
 				}
@@ -196,6 +207,10 @@ return {tempVar};
 				propertyBlock.WriteLine (); // add space between getter and setter since we have the attrs
 				propertyBlock.AppendMemberAvailability (setter.Value.SymbolAvailability);
 				using (var setterBlock = propertyBlock.CreateBlock ("set", block: true)) {
+					if (uiThreadCheck is not null) {
+						setterBlock.WriteLine (uiThreadCheck.ToString ());
+						setterBlock.WriteLine ();
+					}
 					setterBlock.WriteLine ("throw new NotImplementedException();");
 				}
 			}
@@ -297,9 +312,9 @@ return {tempVar};
 
 			if (!bindingContext.Changes.IsStatic) {
 				classBlock.AppendGeneratedCodeAttribute (optimizable: true);
-				classBlock.WriteLine ($"static readonly NativeHandle class_ptr = Class.GetHandle (\"{registrationName}\");");
+				classBlock.WriteLine ($"static readonly NativeHandle {ClassPtr} = Class.GetHandle (\"{registrationName}\");");
 				classBlock.WriteLine ();
-				classBlock.WriteLine ("public override NativeHandle ClassHandle => class_ptr;");
+				classBlock.WriteLine ($"public override NativeHandle ClassHandle => {ClassPtr};");
 				classBlock.WriteLine ();
 
 				EmitDefaultConstructors (bindingContext: bindingContext,
@@ -309,7 +324,7 @@ return {tempVar};
 
 			EmitFields (bindingContext.Changes.Name, bindingContext.Changes.Properties, classBlock,
 				out var notificationProperties);
-			EmitProperties (bindingContext.Changes.Properties, classBlock);
+			EmitProperties (bindingContext, classBlock);
 
 			// emit the notification helper classes, leave this for the very bottom of the class
 			EmitNotifications (notificationProperties, classBlock);

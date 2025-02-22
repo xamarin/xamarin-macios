@@ -319,6 +319,24 @@ class ARAnchor {
 ";
 
 			yield return [doubleProperty, "Double_objc_msgSend", "void_objc_msgSend_Double", false, false];
+
+			const string stringArrayProperty = @"
+using System;
+using Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+using ObjCBindings;
+
+namepsace NS;
+
+[BindingType<ObjCBindings.Class>]
+class ARAnchor {
+		[Export<ObjCBindings.Property> (""includedKeys"", ArgumentSemantic.Copy)]
+		string [] IncludedKeys { get; set; }
+}
+";
+
+			yield return [stringArrayProperty, "NativeHandle_objc_msgSend", "void_objc_msgSend_NativeHandle", false, false];
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();
