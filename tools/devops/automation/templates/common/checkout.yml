@@ -14,12 +14,6 @@ parameters:
   default: HEAD
 
 steps:
-- pwsh: |
-    gci env: 
-    $env:BUILD_REPOSITORY_TITLE = ($env:BUILD_REPOSITORY_NAME -split '/')[-1]
-    Write-Host "##vso[task.setvariable variable=BUILD_REPOSITORY_TITLE;]$env:BUILD_REPOSITORY_TITLE"
-    gci env: 
-  displayName: 'Set BUILD_REPOSITORY_TITLE'
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
