@@ -58,7 +58,7 @@ variables:
 
 # the name of our repository
 - name: BUILD_REPOSITORY_TITLE
-  value: 'xamarin-macios'
+  value: ${{ split( $(Build.Repository.Name), '/' )[1] }}
 
 # point to the vsdrops that we will be using for the diff uploads.
 - name: VSDropsPrefix
