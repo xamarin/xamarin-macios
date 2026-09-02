@@ -18,6 +18,12 @@ namespace MonoTests.System.Net.Http {
 	[Preserve (AllMembers = true)]
 	public class NSUrlSessionHandlerTest {
 
+		// The proxy tests below use in-process servers bound to 127.0.0.1, so local network
+		// connections should be reliable and we don't want to hide any failures by ignoring them
+		// in CI. Set this to true to restore the usual "ignore transient network failures in CI"
+		// behavior if these tests ever turn out to be flaky on the bots.
+		bool ignoreLocalOnlyCIFailures = false;
+
 		// https://github.com/dotnet/macios/issues/23958
 		[Test]
 		public void DecompressedResponseDoesNotHaveContentEncodingOrContentLength ()
@@ -397,6 +403,177 @@ namespace MonoTests.System.Net.Http {
 			} finally {
 				tcpListener.Stop ();
 			}
+		}
+
+		[Test]
+		public void ProxyRoutesRequestsThroughProxy ()
+		{
+			using var proxy = new ProxyTestServer ();
+
+			HttpStatusCode? statusCode = null;
+			bool viaProxy = false;
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				using var handler = new NSUrlSessionHandler ();
+				handler.Proxy = new WebProxy (proxy.Url);
+				Assert.That (handler.UseProxy, Is.True, "UseProxy default");
+				Assert.That (handler.SupportsProxy, Is.True, "SupportsProxy");
+				using var client = new HttpClient (handler);
+				var response = await client.GetAsync (NetworkResources.Httpbin.GetUrl).ConfigureAwait (false);
+				statusCode = response.StatusCode;
+				viaProxy = response.Headers.Contains ("Via-Test-Proxy");
+			}, out var ex);
+
+			if (!done) {
+				if (ignoreLocalOnlyCIFailures)
+					TestRuntime.IgnoreInCI ("Transient localhost server failure - ignore in CI");
+				Assert.Inconclusive ("Request timed out.");
+			}
+			if (ignoreLocalOnlyCIFailures)
+				TestRuntime.IgnoreInCIIfBadNetwork (ex);
+			Assert.That (ex, Is.Null, $"Exception: {ex}");
+			Assert.That (statusCode, Is.EqualTo (HttpStatusCode.OK), "Status code");
+			Assert.That (viaProxy, Is.True, "Response should have gone through the test proxy");
+			Assert.That (proxy.AuthenticatedRequestCount, Is.GreaterThan (0), "Proxy should have forwarded at least one request");
+		}
+
+		[Test]
+		public void ProxyWithCredentialsAuthenticatesWithProxy ()
+		{
+			const string proxyUser = "proxyuser";
+			const string proxyPass = "proxypass";
+
+			// NSUrlSession only delivers a proxy authentication challenge to the delegate for CONNECT
+			// tunnels (i.e. HTTPS destinations); for a plain HTTP forward proxy it returns the 407
+			// directly to the caller. So we route an HTTPS request through the proxy's CONNECT support.
+			// We also request a non-local hostname: CFNetwork bypasses the proxy for localhost HTTPS
+			// destinations, so we must use a hostname that isn't local. The proxy tunnels every CONNECT
+			// to our local TLS test server regardless of the requested host.
+			Network.NWListener? destination = null;
+			HttpStatusCode? statusCode = null;
+
+			try {
+				destination = TlsTestServer.CreateNWTlsListener (requireClientCert: false);
+				var destinationPort = destination.Port;
+				using var proxy = new ProxyTestServer (proxyUser, proxyPass, forceTunnelPort: (int) destinationPort);
+
+				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+					using var handler = new NSUrlSessionHandler ();
+					handler.Proxy = new WebProxy (proxy.Url) {
+						Credentials = new NetworkCredential (proxyUser, proxyPass),
+					};
+					handler.TrustOverrideForUrl = (sender, url, trust) => true;
+					using var client = new HttpClient (handler);
+					var response = await client.GetAsync ("https://proxy-tunnel-target.example/").ConfigureAwait (false);
+					statusCode = response.StatusCode;
+				}, out var ex);
+
+				if (!done) {
+					if (ignoreLocalOnlyCIFailures)
+						TestRuntime.IgnoreInCI ("Transient localhost server failure - ignore in CI");
+					Assert.Inconclusive ("Request timed out.");
+				}
+				if (ignoreLocalOnlyCIFailures)
+					TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.That (ex, Is.Null, $"Exception: {ex}");
+				Assert.That (statusCode, Is.EqualTo (HttpStatusCode.OK), $"Status code (proxy credentials should have been used); status={statusCode}, requestCount={proxy.RequestCount}, authRequestCount={proxy.AuthenticatedRequestCount}");
+				Assert.That (proxy.AuthenticatedRequestCount, Is.GreaterThan (0), "Proxy should have established an authenticated tunnel");
+			} finally {
+				destination?.Cancel ();
+				destination?.Dispose ();
+			}
+		}
+
+		[Test]
+		public void ProxyWithDefaultProxyCredentialsAuthenticatesWithProxy ()
+		{
+			const string proxyUser = "proxyuser";
+			const string proxyPass = "proxypass";
+
+			// See ProxyWithCredentialsAuthenticatesWithProxy for why we use an HTTPS (CONNECT) request
+			// with a non-local hostname and tunnel every CONNECT to a local TLS test server.
+			Network.NWListener? destination = null;
+			HttpStatusCode? statusCode = null;
+
+			try {
+				destination = TlsTestServer.CreateNWTlsListener (requireClientCert: false);
+				var destinationPort = destination.Port;
+				using var proxy = new ProxyTestServer (proxyUser, proxyPass, forceTunnelPort: (int) destinationPort);
+
+				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+					using var handler = new NSUrlSessionHandler ();
+					handler.Proxy = new WebProxy (proxy.Url);
+					handler.DefaultProxyCredentials = new NetworkCredential (proxyUser, proxyPass);
+					handler.TrustOverrideForUrl = (sender, url, trust) => true;
+					using var client = new HttpClient (handler);
+					var response = await client.GetAsync ("https://proxy-tunnel-target.example/").ConfigureAwait (false);
+					statusCode = response.StatusCode;
+				}, out var ex);
+
+				if (!done) {
+					if (ignoreLocalOnlyCIFailures)
+						TestRuntime.IgnoreInCI ("Transient localhost server failure - ignore in CI");
+					Assert.Inconclusive ("Request timed out.");
+				}
+				if (ignoreLocalOnlyCIFailures)
+					TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.That (ex, Is.Null, $"Exception: {ex}");
+				Assert.That (statusCode, Is.EqualTo (HttpStatusCode.OK), $"Status code (default proxy credentials should have been used); status={statusCode}, requestCount={proxy.RequestCount}, authRequestCount={proxy.AuthenticatedRequestCount}");
+				Assert.That (proxy.AuthenticatedRequestCount, Is.GreaterThan (0), "Proxy should have established an authenticated tunnel");
+			} finally {
+				destination?.Cancel ();
+				destination?.Dispose ();
+			}
+		}
+
+		[Test]
+		public void ProxyWithUnsupportedSchemeThrows ()
+		{
+			// A secure ("https") proxy connection can't be expressed via NSUrlSession's connection proxy
+			// dictionary, so instead of silently connecting to the proxy over plain HTTP we should fail
+			// loudly.
+			using var handler = new NSUrlSessionHandler ();
+			handler.Proxy = new WebProxy ("https://127.0.0.1:8888");
+			using var client = new HttpClient (handler);
+
+			Exception? caught = null;
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				try {
+					await client.GetAsync ("http://proxy-scheme-test.example/").ConfigureAwait (false);
+				} catch (Exception e) {
+					caught = e;
+				}
+			}, out var ex);
+
+			Assert.That (done, Is.True, "Request completed");
+			Assert.That (ex, Is.Null, $"Exception: {ex}");
+
+			// The NotSupportedException may be wrapped by HttpClient, so walk the inner exception chain.
+			var notSupported = caught;
+			while (notSupported is not null && notSupported is not NotSupportedException)
+				notSupported = notSupported.InnerException;
+			Assert.That (notSupported, Is.InstanceOf<NotSupportedException> (), $"Should have thrown a NotSupportedException for an unsupported proxy scheme, but was: {caught}");
+		}
+
+		[Test]
+		public void ProxyPropertiesBehaveCorrectly ()
+		{
+			using var handler = new NSUrlSessionHandler ();
+			Assert.That (handler.Proxy, Is.Null, "Proxy default");
+			Assert.That (handler.UseProxy, Is.True, "UseProxy default");
+			Assert.That (handler.SupportsProxy, Is.True, "SupportsProxy");
+			Assert.That (handler.DefaultProxyCredentials, Is.Null, "DefaultProxyCredentials default");
+
+			var proxy = new WebProxy ("http://127.0.0.1:8888");
+			handler.Proxy = proxy;
+			Assert.That (handler.Proxy, Is.SameAs (proxy), "Proxy set");
+
+			handler.UseProxy = false;
+			Assert.That (handler.UseProxy, Is.False, "UseProxy set to false");
+
+			var credentials = new NetworkCredential ("user", "pass");
+			handler.DefaultProxyCredentials = credentials;
+			Assert.That (handler.DefaultProxyCredentials, Is.SameAs (credentials), "DefaultProxyCredentials set");
 		}
 
 		static HttpListener? StartListenerOnAvailablePort (out int listeningPort)
