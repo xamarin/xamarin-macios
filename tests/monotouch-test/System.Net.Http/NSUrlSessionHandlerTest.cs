@@ -783,6 +783,8 @@ namespace MonoTests.System.Net.Http {
 					await sendTask.WaitAsync (TimeSpan.FromSeconds (5)).ConfigureAwait (false);
 					throw new InvalidOperationException ("The pending request completed successfully after the handler was disposed.");
 				} catch (OperationCanceledException) {
+					if (!sendTask.IsCanceled)
+						throw new InvalidOperationException ("The pending request did not complete as canceled.");
 				}
 			} finally {
 				if (!handlerDisposed)

@@ -203,6 +203,7 @@ namespace Foundation {
 		{
 			var requests = new List<KeyValuePair<NSUrlSessionTask, InflightData>> ();
 			lock (inflightRequestsLock) {
+				disposed = true;
 				requests.AddRange (inflightRequests);
 				inflightRequests.Clear ();
 			}
@@ -217,7 +218,6 @@ namespace Foundation {
 			// invalidate the session it created (if it ran first), or it observes 'disposed' and doesn't
 			// create a new session that would never be invalidated (if we ran first).
 			lock (proxyConfigurationLock) {
-				disposed = true;
 				session.InvalidateAndCancel ();
 			}
 			base.Dispose (disposing);
@@ -473,7 +473,7 @@ namespace Foundation {
 
 				// The handler has been disposed (and the session already invalidated); don't create a new
 				// session, since it would never be invalidated.
-				if (disposed)
+				if (Volatile.Read (ref disposed))
 					return;
 
 				if (TryGetProxyDictionary (request.RequestUri, out var proxyDictionary)) {
@@ -577,11 +577,22 @@ namespace Foundation {
 
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
+			var disposeTask = false;
 			lock (inflightRequestsLock) {
-				inflightRequests.Add (dataTask, inflightData);
+				if (disposed)
+					disposeTask = true;
+				else
+					inflightRequests.Add (dataTask, inflightData);
 			}
 
-			if (dataTask.State == NSUrlSessionTaskState.Suspended)
+			if (disposeTask) {
+				inflightData.CancellationTokenSource.Cancel ();
+				inflightData.CompletionSource.TrySetCanceled ();
+				inflightData.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
+				dataTask.Cancel ();
+			}
+
+			if (!disposeTask && dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
 
 			// as per documentation: 
