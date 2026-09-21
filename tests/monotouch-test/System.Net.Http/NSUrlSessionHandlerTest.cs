@@ -412,6 +412,9 @@ namespace MonoTests.System.Net.Http {
 		public void ConcurrentResponseDisposeAndCancellationDoesNotCrash ()
 		{
 			var duration = TestRuntime.IsInCI ? TimeSpan.FromSeconds (15) : TimeSpan.FromSeconds (3);
+			var seed = int.TryParse (Environment.GetEnvironmentVariable ("NSURLSESSIONHANDLER_STRESS_SEED"), out var configuredSeed) ? configuredSeed : Random.Shared.Next ();
+			var random = new Random (seed);
+			var seedMessage = $"Seed: {seed} (set NSURLSESSIONHANDLER_STRESS_SEED to replay)";
 			var started = 0L;
 			var responses = 0L;
 			var disposals = 0L;
@@ -420,7 +423,7 @@ namespace MonoTests.System.Net.Http {
 			var pendingSendDisposals = 0L;
 
 			var done = TestRuntime.TryRunAsync (duration + TimeSpan.FromSeconds (30), async () => {
-				var server = new NSUrlSessionHandlerRaceServer ();
+				var server = new NSUrlSessionHandlerRaceServer (random);
 				server.Start ();
 
 				try {
@@ -448,8 +451,8 @@ namespace MonoTests.System.Net.Http {
 
 									var stream = await response.Content.ReadAsStreamAsync (requestCts.Token).ConfigureAwait (false);
 									var readTask = DrainStreamAsync (stream, requestCts.Token);
-									var disposeTask = DisposeResponseAsync (response, () => Interlocked.Increment (ref disposals));
-									var cancelTask = CancelRequestAsync (requestCts, () => Interlocked.Increment (ref cancellations));
+									var disposeTask = DisposeResponseAsync (response, random, () => Interlocked.Increment (ref disposals));
+									var cancelTask = CancelRequestAsync (requestCts, random, () => Interlocked.Increment (ref cancellations));
 
 									await Task.WhenAll (readTask, disposeTask, cancelTask).ConfigureAwait (false);
 								} catch (OperationCanceledException) {
@@ -469,7 +472,7 @@ namespace MonoTests.System.Net.Http {
 					workers [^2] = Task.Run (async () => {
 						while (!runCts.IsCancellationRequested) {
 							try {
-								await DisposeHandlerWithActiveRequestAsync (server.HangingUrl, () => Interlocked.Increment (ref handlerDisposals)).ConfigureAwait (false);
+								await DisposeHandlerWithActiveRequestAsync (server.HangingUrl, random, () => Interlocked.Increment (ref handlerDisposals)).ConfigureAwait (false);
 							} catch (OperationCanceledException) {
 							} catch (HttpRequestException) {
 							} catch (IOException) {
@@ -496,14 +499,14 @@ namespace MonoTests.System.Net.Http {
 				}
 			}, out var ex);
 
-			Assert.That (done, Is.True, "Stress test timed out");
-			Assert.That (ex, Is.Null, $"Unexpected exception: {ex}");
-			Assert.That (started, Is.GreaterThan (16), "Requests started");
-			Assert.That (responses, Is.GreaterThan (0), "Responses received");
-			Assert.That (disposals, Is.GreaterThan (0), "Responses disposed");
-			Assert.That (cancellations, Is.GreaterThan (0), "Requests cancelled");
-			Assert.That (handlerDisposals, Is.GreaterThan (0), "Handlers disposed with active requests");
-			Assert.That (pendingSendDisposals, Is.GreaterThan (0), "Handlers disposed with pending sends");
+			Assert.That (done, Is.True, $"Stress test timed out. {seedMessage}");
+			Assert.That (ex, Is.Null, $"Unexpected exception: {ex}. {seedMessage}");
+			Assert.That (started, Is.GreaterThan (16), $"Requests started. {seedMessage}");
+			Assert.That (responses, Is.GreaterThan (0), $"Responses received. {seedMessage}");
+			Assert.That (disposals, Is.GreaterThan (0), $"Responses disposed. {seedMessage}");
+			Assert.That (cancellations, Is.GreaterThan (0), $"Requests cancelled. {seedMessage}");
+			Assert.That (handlerDisposals, Is.GreaterThan (0), $"Handlers disposed with active requests. {seedMessage}");
+			Assert.That (pendingSendDisposals, Is.GreaterThan (0), $"Handlers disposed with pending sends. {seedMessage}");
 		}
 
 		[Test]
@@ -712,21 +715,33 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
-		static async Task DisposeResponseAsync (HttpResponseMessage response, Action disposed)
+		static int NextRandom (Random random, int minValue, int maxValue)
 		{
-			await Task.Delay (Random.Shared.Next (0, 40)).ConfigureAwait (false);
+			lock (random)
+				return random.Next (minValue, maxValue);
+		}
+
+		static int NextRandom (Random random, int maxValue)
+		{
+			lock (random)
+				return random.Next (maxValue);
+		}
+
+		static async Task DisposeResponseAsync (HttpResponseMessage response, Random random, Action disposed)
+		{
+			await Task.Delay (NextRandom (random, 0, 40)).ConfigureAwait (false);
 			response.Dispose ();
 			disposed ();
 		}
 
-		static async Task CancelRequestAsync (CancellationTokenSource cts, Action cancelled)
+		static async Task CancelRequestAsync (CancellationTokenSource cts, Random random, Action cancelled)
 		{
-			await Task.Delay (Random.Shared.Next (0, 40)).ConfigureAwait (false);
+			await Task.Delay (NextRandom (random, 0, 40)).ConfigureAwait (false);
 			cts.Cancel ();
 			cancelled ();
 		}
 
-		static async Task DisposeHandlerWithActiveRequestAsync (string url, Action disposed)
+		static async Task DisposeHandlerWithActiveRequestAsync (string url, Random random, Action disposed)
 		{
 			var handler = new NSUrlSessionHandler {
 				DisableCaching = true,
@@ -745,7 +760,7 @@ namespace MonoTests.System.Net.Http {
 				var stream = await response.Content.ReadAsStreamAsync (requestCts.Token).ConfigureAwait (false);
 				var readTask = DrainStreamAsync (stream, requestCts.Token);
 
-				await Task.Delay (Random.Shared.Next (0, 40), requestCts.Token).ConfigureAwait (false);
+				await Task.Delay (NextRandom (random, 0, 40), requestCts.Token).ConfigureAwait (false);
 				handler.Dispose ();
 				handlerDisposed = true;
 				disposed ();
@@ -797,7 +812,13 @@ namespace MonoTests.System.Net.Http {
 			readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
 			readonly ConcurrentBag<Task> clientTasks = new ConcurrentBag<Task> ();
 			readonly SemaphoreSlim noHeadersRequests = new SemaphoreSlim (0);
+			readonly Random random;
 			Task? acceptTask;
+
+			public NSUrlSessionHandlerRaceServer (Random random)
+			{
+				this.random = random;
+			}
 
 			public string Url {
 				get {
@@ -876,14 +897,14 @@ namespace MonoTests.System.Net.Http {
 							return;
 						}
 
-						for (var i = 0; i < Random.Shared.Next (1, 4); i++) {
+						for (var i = 0; i < NextRandom (random, 1, 4); i++) {
 							await stream.WriteAsync (chunk, cancellationTokenSource.Token).ConfigureAwait (false);
 							await stream.FlushAsync (cancellationTokenSource.Token).ConfigureAwait (false);
-							await Task.Delay (Random.Shared.Next (1, 25), cancellationTokenSource.Token).ConfigureAwait (false);
+							await Task.Delay (NextRandom (random, 1, 25), cancellationTokenSource.Token).ConfigureAwait (false);
 						}
 
-						await Task.Delay (Random.Shared.Next (0, 20), cancellationTokenSource.Token).ConfigureAwait (false);
-						switch (Random.Shared.Next (3)) {
+						await Task.Delay (NextRandom (random, 0, 20), cancellationTokenSource.Token).ConfigureAwait (false);
+						switch (NextRandom (random, 3)) {
 						case 0:
 							client.LingerState = new LingerOption (true, 0);
 							client.Client.Close ();
