@@ -201,13 +201,16 @@ namespace Foundation {
 		/// <inheritdoc />
 		protected override void Dispose (bool disposing)
 		{
-			var tasks = new List<NSUrlSessionTask> ();
+			var requests = new List<KeyValuePair<NSUrlSessionTask, InflightData>> ();
 			lock (inflightRequestsLock) {
-				tasks.AddRange (inflightRequests.Keys);
+				requests.AddRange (inflightRequests);
 				inflightRequests.Clear ();
 			}
-			foreach (var task in tasks) {
-				task.Cancel ();
+			foreach (var request in requests) {
+				request.Value.CancellationTokenSource.Cancel ();
+				request.Value.CompletionSource.TrySetCanceled ();
+				request.Value.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
+				request.Key.Cancel ();
 			}
 
 			// Take the proxy configuration lock so we don't race with ConfigureSessionProxy: either we

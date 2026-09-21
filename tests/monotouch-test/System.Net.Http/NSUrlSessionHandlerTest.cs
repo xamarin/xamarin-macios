@@ -468,7 +468,7 @@ namespace MonoTests.System.Net.Http {
 					workers [^1] = Task.Run (async () => {
 						while (!runCts.IsCancellationRequested) {
 							try {
-								await DisposeHandlerWithActiveRequestAsync (server.HangingUrl, runCts.Token, () => Interlocked.Increment (ref handlerDisposals)).ConfigureAwait (false);
+								await DisposeHandlerWithActiveRequestAsync (server.HangingUrl, () => Interlocked.Increment (ref handlerDisposals)).ConfigureAwait (false);
 							} catch (OperationCanceledException) {
 							} catch (HttpRequestException) {
 							} catch (IOException) {
@@ -712,7 +712,7 @@ namespace MonoTests.System.Net.Http {
 			cancelled ();
 		}
 
-		static async Task DisposeHandlerWithActiveRequestAsync (string url, CancellationToken token, Action disposed)
+		static async Task DisposeHandlerWithActiveRequestAsync (string url, Action disposed)
 		{
 			var handler = new NSUrlSessionHandler {
 				DisableCaching = true,
@@ -721,21 +721,22 @@ namespace MonoTests.System.Net.Http {
 			using var client = new HttpClient (handler, disposeHandler: false) {
 				Timeout = Timeout.InfiniteTimeSpan,
 			};
+			using var requestCts = new CancellationTokenSource (TimeSpan.FromSeconds (30));
 			HttpResponseMessage? response = null;
 			var handlerDisposed = false;
 
 			try {
 				using var request = new HttpRequestMessage (HttpMethod.Get, url);
-				response = await client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait (false);
-				var stream = await response.Content.ReadAsStreamAsync (token).ConfigureAwait (false);
-				var readTask = DrainStreamAsync (stream, token);
+				response = await client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, requestCts.Token).ConfigureAwait (false);
+				var stream = await response.Content.ReadAsStreamAsync (requestCts.Token).ConfigureAwait (false);
+				var readTask = DrainStreamAsync (stream, requestCts.Token);
 
-				await Task.Delay (Random.Shared.Next (0, 40), token).ConfigureAwait (false);
+				await Task.Delay (Random.Shared.Next (0, 40), requestCts.Token).ConfigureAwait (false);
 				handler.Dispose ();
 				handlerDisposed = true;
 				disposed ();
 
-				await readTask.ConfigureAwait (false);
+				await readTask.WaitAsync (TimeSpan.FromSeconds (5)).ConfigureAwait (false);
 			} finally {
 				response?.Dispose ();
 				if (!handlerDisposed)
