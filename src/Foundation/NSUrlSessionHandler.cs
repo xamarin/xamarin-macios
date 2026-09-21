@@ -184,17 +184,18 @@ namespace Foundation {
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
+			InflightData? data = null;
 			lock (inflightRequestsLock) {
-				if (inflightRequests.Remove (task, out var data)) {
-					if (cancel)
-						data.CancellationTokenSource.Cancel ();
-				}
+				if (!inflightRequests.Remove (task, out data))
+					return;
 			}
 
-			if (cancel)
-				task?.Cancel ();
+			if (cancel) {
+				data.CancellationTokenSource.Cancel ();
+				task.Cancel ();
+			}
 
-			task?.Dispose ();
+			// Don't dispose the task: NSURLSession may still invoke delegate callbacks, and other callbacks may still reference the managed wrapper.
 		}
 
 		/// <inheritdoc />
@@ -207,7 +208,6 @@ namespace Foundation {
 			}
 			foreach (var task in tasks) {
 				task.Cancel ();
-				task.Dispose ();
 			}
 
 			// Take the proxy configuration lock so we don't race with ConfigureSessionProxy: either we
@@ -928,8 +928,8 @@ namespace Foundation {
 
 				lock (sessionHandler.inflightRequestsLock)
 					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
-						// ensure that we did not cancel the request, if we did, do cancel the task, if we 
-						// cancel the task it means that we are not interested in any of the delegate methods:
+						// Ensure that we did not cancel the request. If we did, return null to indicate
+						// that we are not interested in any of the delegate methods:
 						// 
 						// DidReceiveResponse     We might have received a response, but either the user cancelled or a 
 						//                        timeout did, if that is the case, we do not care about the response.
@@ -937,16 +937,12 @@ namespace Foundation {
 						//                        reason we would like to add more data.
 						// DidCompleteWithError - We are not changing a behaviour compared to the case in which 
 						//                        we did not find the data.
-						if (inflight.CancellationToken.IsCancellationRequested) {
-							task?.Cancel ();
-							// return null so that we break out of any delegate method.
+						if (inflight.CancellationToken.IsCancellationRequested)
 							return null;
-						}
 						return inflight;
 					}
 
-				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
-				task?.Cancel ();
+				// If we did not manage to get the inflight data, another cleanup path already owns the task.
 				return null;
 			}
 
@@ -985,10 +981,6 @@ namespace Foundation {
 					var absoluteUri = new Uri (urlResponse.Url.AbsoluteString!);
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
-						if (!inflight.Completed) {
-							dataTask.Cancel ();
-						}
-
 						inflight.Disposed = true;
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
