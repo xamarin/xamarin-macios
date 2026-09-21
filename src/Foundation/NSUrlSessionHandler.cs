@@ -1626,19 +1626,25 @@ namespace Foundation {
 
 			public void TrySetReceivedAllData ()
 			{
-				receivedAllData = true;
+				lock (dataLock) {
+					receivedAllData = true;
+				}
 			}
 
 			public void TrySetException (Exception e)
 			{
-				exc = e;
-				TrySetReceivedAllData ();
+				lock (dataLock) {
+					exc = e;
+					receivedAllData = true;
+				}
 			}
 
 			void ThrowIfNeeded (CancellationToken cancellationToken)
 			{
-				if (exc is not null)
-					throw exc;
+				lock (dataLock) {
+					if (exc is not null)
+						throw exc;
+				}
 
 				cancellationToken.ThrowIfCancellationRequested ();
 			}
