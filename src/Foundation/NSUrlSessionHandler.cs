@@ -182,13 +182,16 @@ namespace Foundation {
 		/// </remarks>
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
-		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
+		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true, bool unregisterCancellation = true)
 		{
 			InflightData? data = null;
 			lock (inflightRequestsLock) {
 				if (!inflightRequests.Remove (task, out data))
 					return;
 			}
+
+			if (unregisterCancellation)
+				data.CancellationRegistration.Dispose ();
 
 			if (cancel) {
 				data.CancellationTokenSource.Cancel ();
@@ -208,6 +211,7 @@ namespace Foundation {
 				inflightRequests.Clear ();
 			}
 			foreach (var request in requests) {
+				request.Value.CancellationRegistration.Dispose ();
 				request.Value.CancellationTokenSource.Cancel ();
 				request.Value.CompletionSource.TrySetCanceled ();
 				request.Value.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
@@ -581,8 +585,29 @@ namespace Foundation {
 			lock (inflightRequestsLock) {
 				if (disposed)
 					disposeTask = true;
-				else
+				else {
 					inflightRequests.Add (dataTask, inflightData);
+
+					// as per documentation:
+					// If this token is already in the canceled state, the
+					// delegate will be run immediately and synchronously.
+					// Any exception the delegate generates will be
+					// propagated out of this method call.
+					//
+					// The execution of the register ensures that if we
+					// receive a already cancelled token or it is cancelled
+					// just before this call, we will cancel the task.
+					// Other approaches are harder, since querying the state
+					// of the token does not guarantee that in the next
+					// execution a threads cancels it.
+					inflightData.CancellationRegistration = cancellationToken.Register (() => {
+						RemoveInflightData (dataTask, unregisterCancellation: false);
+						inflightData.CompletionSource.TrySetCanceled ();
+					});
+
+					if (inflightRequests.ContainsKey (dataTask) && dataTask.State == NSUrlSessionTaskState.Suspended)
+						dataTask.Resume ();
+				}
 			}
 
 			if (disposeTask) {
@@ -591,26 +616,6 @@ namespace Foundation {
 				inflightData.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
 				dataTask.Cancel ();
 			}
-
-			if (!disposeTask && dataTask.State == NSUrlSessionTaskState.Suspended)
-				dataTask.Resume ();
-
-			// as per documentation: 
-			// If this token is already in the canceled state, the 
-			// delegate will be run immediately and synchronously.
-			// Any exception the delegate generates will be 
-			// propagated out of this method call.
-			//
-			// The execution of the register ensures that if we 
-			// receive a already cancelled token or it is cancelled
-			// just before this call, we will cancel the task. 
-			// Other approaches are harder, since querying the state
-			// of the token does not guarantee that in the next
-			// execution a threads cancels it.
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
-				inflightData.CompletionSource.TrySetCanceled ();
-			});
 
 			return await inflightData.CompletionSource.Task.ConfigureAwait (false);
 		}
@@ -1467,6 +1472,7 @@ namespace Foundation {
 
 			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 			public CancellationToken CancellationToken { get; set; }
+			public CancellationTokenRegistration CancellationRegistration { get; set; }
 			public CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource ();
 			public NSUrlSessionDataTaskStream Stream { get; } = new NSUrlSessionDataTaskStream ();
 			public HttpRequestMessage Request { get; set; }
