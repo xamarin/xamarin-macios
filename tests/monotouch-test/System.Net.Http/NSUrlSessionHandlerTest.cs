@@ -416,6 +416,7 @@ namespace MonoTests.System.Net.Http {
 			var responses = 0L;
 			var disposals = 0L;
 			var cancellations = 0L;
+			var handlerDisposals = 0L;
 
 			var done = TestRuntime.TryRunAsync (duration + TimeSpan.FromSeconds (30), async () => {
 				var server = new NSUrlSessionHandlerRaceServer ();
@@ -430,9 +431,9 @@ namespace MonoTests.System.Net.Http {
 						Timeout = Timeout.InfiniteTimeSpan,
 					};
 					using var runCts = new CancellationTokenSource (duration);
-					var workers = new Task [16];
+					var workers = new Task [17];
 
-					for (var i = 0; i < workers.Length; i++) {
+					for (var i = 0; i < workers.Length - 1; i++) {
 						workers [i] = Task.Run (async () => {
 							while (!runCts.IsCancellationRequested) {
 								using var requestCts = CancellationTokenSource.CreateLinkedTokenSource (runCts.Token);
@@ -464,6 +465,18 @@ namespace MonoTests.System.Net.Http {
 						});
 					}
 
+					workers [^1] = Task.Run (async () => {
+						while (!runCts.IsCancellationRequested) {
+							try {
+								await DisposeHandlerWithActiveRequestAsync (server.HangingUrl, runCts.Token, () => Interlocked.Increment (ref handlerDisposals)).ConfigureAwait (false);
+							} catch (OperationCanceledException) {
+							} catch (HttpRequestException) {
+							} catch (IOException) {
+							} catch (ObjectDisposedException) {
+							}
+						}
+					});
+
 					await Task.WhenAll (workers).ConfigureAwait (false);
 				} finally {
 					await server.StopAsync ().ConfigureAwait (false);
@@ -476,6 +489,7 @@ namespace MonoTests.System.Net.Http {
 			Assert.That (responses, Is.GreaterThan (0), "Responses received");
 			Assert.That (disposals, Is.GreaterThan (0), "Responses disposed");
 			Assert.That (cancellations, Is.GreaterThan (0), "Requests cancelled");
+			Assert.That (handlerDisposals, Is.GreaterThan (0), "Handlers disposed with active requests");
 		}
 
 		[Test]
@@ -698,6 +712,37 @@ namespace MonoTests.System.Net.Http {
 			cancelled ();
 		}
 
+		static async Task DisposeHandlerWithActiveRequestAsync (string url, CancellationToken token, Action disposed)
+		{
+			var handler = new NSUrlSessionHandler {
+				DisableCaching = true,
+				AllowAutoRedirect = false,
+			};
+			using var client = new HttpClient (handler, disposeHandler: false) {
+				Timeout = Timeout.InfiniteTimeSpan,
+			};
+			HttpResponseMessage? response = null;
+			var handlerDisposed = false;
+
+			try {
+				using var request = new HttpRequestMessage (HttpMethod.Get, url);
+				response = await client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait (false);
+				var stream = await response.Content.ReadAsStreamAsync (token).ConfigureAwait (false);
+				var readTask = DrainStreamAsync (stream, token);
+
+				await Task.Delay (Random.Shared.Next (0, 40), token).ConfigureAwait (false);
+				handler.Dispose ();
+				handlerDisposed = true;
+				disposed ();
+
+				await readTask.ConfigureAwait (false);
+			} finally {
+				response?.Dispose ();
+				if (!handlerDisposed)
+					handler.Dispose ();
+			}
+		}
+
 		sealed class NSUrlSessionHandlerRaceServer {
 			readonly TcpListener listener = new TcpListener (IPAddress.Loopback, 0);
 			readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
@@ -705,6 +750,13 @@ namespace MonoTests.System.Net.Http {
 			Task? acceptTask;
 
 			public string Url {
+				get {
+					var port = ((IPEndPoint) listener.LocalEndpoint).Port;
+					return $"http://127.0.0.1:{port}/race";
+				}
+			}
+
+			public string HangingUrl {
 				get {
 					var port = ((IPEndPoint) listener.LocalEndpoint).Port;
 					return $"http://127.0.0.1:{port}/hang";
@@ -738,7 +790,7 @@ namespace MonoTests.System.Net.Http {
 				using (client) {
 					try {
 						using var stream = client.GetStream ();
-						await DrainRequestHeadersAsync (stream, cancellationTokenSource.Token).ConfigureAwait (false);
+						var isHangingRequest = await DrainRequestHeadersAsync (stream, cancellationTokenSource.Token).ConfigureAwait (false);
 
 						var headers = Encoding.ASCII.GetBytes (
 							"HTTP/1.1 200 OK\r\n" +
@@ -749,6 +801,13 @@ namespace MonoTests.System.Net.Http {
 						await stream.WriteAsync (headers, cancellationTokenSource.Token).ConfigureAwait (false);
 
 						var chunk = Encoding.ASCII.GetBytes ("5\r\nhello\r\n");
+						if (isHangingRequest) {
+							await stream.WriteAsync (chunk, cancellationTokenSource.Token).ConfigureAwait (false);
+							await stream.FlushAsync (cancellationTokenSource.Token).ConfigureAwait (false);
+							await Task.Delay (Timeout.Infinite, cancellationTokenSource.Token).ConfigureAwait (false);
+							return;
+						}
+
 						for (var i = 0; i < Random.Shared.Next (1, 4); i++) {
 							await stream.WriteAsync (chunk, cancellationTokenSource.Token).ConfigureAwait (false);
 							await stream.FlushAsync (cancellationTokenSource.Token).ConfigureAwait (false);
@@ -777,21 +836,32 @@ namespace MonoTests.System.Net.Http {
 				}
 			}
 
-			static async Task DrainRequestHeadersAsync (NetworkStream stream, CancellationToken token)
+			static async Task<bool> DrainRequestHeadersAsync (NetworkStream stream, CancellationToken token)
 			{
 				var buffer = new byte [1];
 				var matched = 0;
+				var requestLine = new StringBuilder ();
+				var readingRequestLine = true;
 
 				while (matched < 4) {
 					if (await stream.ReadAsync (buffer, token).ConfigureAwait (false) == 0)
 						throw new EndOfStreamException ();
 
 					var value = buffer [0];
+					if (readingRequestLine) {
+						if (value == (byte) '\n')
+							readingRequestLine = false;
+						else if (value != (byte) '\r')
+							requestLine.Append ((char) value);
+					}
+
 					if ((matched is 0 or 2 && value == (byte) '\r') || (matched is 1 or 3 && value == (byte) '\n'))
 						matched++;
 					else
 						matched = value == (byte) '\r' ? 1 : 0;
 				}
+
+				return requestLine.ToString ().StartsWith ("GET /hang ", StringComparison.Ordinal);
 			}
 
 			public async Task StopAsync ()
