@@ -409,6 +409,34 @@ namespace MonoTests.System.Net.Http {
 
 		// https://github.com/dotnet/macios/issues/20345
 		[Test]
+		public void AlreadyCanceledRequestCompletesAsCanceled ()
+		{
+			using var handler = new NSUrlSessionHandler ();
+			using var client = new HttpClient (handler) {
+				Timeout = Timeout.InfiniteTimeSpan,
+			};
+			using var requestCts = new CancellationTokenSource ();
+			requestCts.Cancel ();
+
+			Task<HttpResponseMessage>? sendTask = null;
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				using var request = new HttpRequestMessage (HttpMethod.Get, "http://127.0.0.1:1/");
+				sendTask = client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, requestCts.Token);
+
+				try {
+					await sendTask.ConfigureAwait (false);
+					Assert.Fail ("The request completed successfully with an already-canceled token.");
+				} catch (OperationCanceledException) {
+					Assert.That (sendTask.IsCanceled, Is.True, "SendAsync task");
+				}
+			}, out var ex);
+
+			Assert.That (done, Is.True, "Test timed out");
+			Assert.That (ex, Is.Null, $"Unexpected exception: {ex}");
+		}
+
+		// https://github.com/dotnet/macios/issues/20345
+		[Test]
 		public void ConcurrentResponseDisposeAndCancellationDoesNotCrash ()
 		{
 			var duration = TestRuntime.IsInCI ? TimeSpan.FromSeconds (15) : TimeSpan.FromSeconds (3);
