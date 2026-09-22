@@ -877,7 +877,7 @@ namespace MonoTests.System.Net.Http {
 
 						if (requestLine.StartsWith ("GET /no-headers ", StringComparison.Ordinal)) {
 							noHeadersRequests.Release ();
-							await Task.Delay (Timeout.Infinite, cancellationTokenSource.Token).ConfigureAwait (false);
+							await WaitForClientDisconnectAsync (stream, cancellationTokenSource.Token).ConfigureAwait (false);
 							return;
 						}
 
@@ -893,7 +893,7 @@ namespace MonoTests.System.Net.Http {
 						if (requestLine.StartsWith ("GET /hang ", StringComparison.Ordinal)) {
 							await stream.WriteAsync (chunk, cancellationTokenSource.Token).ConfigureAwait (false);
 							await stream.FlushAsync (cancellationTokenSource.Token).ConfigureAwait (false);
-							await Task.Delay (Timeout.Infinite, cancellationTokenSource.Token).ConfigureAwait (false);
+							await WaitForClientDisconnectAsync (stream, cancellationTokenSource.Token).ConfigureAwait (false);
 							return;
 						}
 
@@ -914,7 +914,7 @@ namespace MonoTests.System.Net.Http {
 							client.Client.Shutdown (SocketShutdown.Both);
 							break;
 						default:
-							await Task.Delay (Timeout.Infinite, cancellationTokenSource.Token).ConfigureAwait (false);
+							await WaitForClientDisconnectAsync (stream, cancellationTokenSource.Token).ConfigureAwait (false);
 							break;
 						}
 					} catch (OperationCanceledException) {
@@ -922,6 +922,13 @@ namespace MonoTests.System.Net.Http {
 					} catch (ObjectDisposedException) {
 					} catch (SocketException) {
 					}
+				}
+			}
+
+			static async Task WaitForClientDisconnectAsync (NetworkStream stream, CancellationToken token)
+			{
+				var buffer = new byte [1];
+				while (await stream.ReadAsync (buffer, token).ConfigureAwait (false) != 0) {
 				}
 			}
 
