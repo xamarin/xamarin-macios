@@ -515,13 +515,7 @@ namespace MonoTests.System.Net.Http {
 
 					workers [^1] = Task.Run (async () => {
 						while (!runCts.IsCancellationRequested) {
-							try {
-								await DisposeHandlerWithPendingRequestAsync (server, () => Interlocked.Increment (ref pendingSendDisposals)).ConfigureAwait (false);
-							} catch (OperationCanceledException) {
-							} catch (HttpRequestException) {
-							} catch (IOException) {
-							} catch (ObjectDisposedException) {
-							}
+							await DisposeHandlerWithPendingRequestAsync (server, () => Interlocked.Increment (ref pendingSendDisposals)).ConfigureAwait (false);
 
 							await Task.Delay (25).ConfigureAwait (false);
 						}
