@@ -1079,8 +1079,12 @@ namespace Foundation {
 					// We don't want to send the response back to the task just yet.  Because we want to mimic .NET behavior
 					// as much as possible.  When the response is sent back in .NET, the content stream is ready to read or the
 					// request has completed, because of this we want to send back the response in DidReceiveData or DidCompleteWithError
-					if (dataTask.State == NSUrlSessionTaskState.Suspended)
-						dataTask.Resume ();
+					lock (sessionHandler.inflightRequestsLock) {
+						if (sessionHandler.inflightRequests.TryGetValue (dataTask, out var currentInflight) &&
+							ReferenceEquals (currentInflight, inflight) &&
+							dataTask.State == NSUrlSessionTaskState.Suspended)
+							dataTask.Resume ();
+					}
 
 				} catch (Exception ex) {
 					inflight.CompletionSource.TrySetException (ex);
