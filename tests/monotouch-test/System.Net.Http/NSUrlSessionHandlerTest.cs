@@ -465,6 +465,8 @@ namespace MonoTests.System.Net.Http {
 
 								if ((requestNumber & 63) == 0)
 									GC.Collect ();
+
+								await Task.Delay (25).ConfigureAwait (false);
 							}
 						});
 					}
@@ -478,6 +480,8 @@ namespace MonoTests.System.Net.Http {
 							} catch (IOException) {
 							} catch (ObjectDisposedException) {
 							}
+
+							await Task.Delay (25).ConfigureAwait (false);
 						}
 					});
 
@@ -490,6 +494,8 @@ namespace MonoTests.System.Net.Http {
 							} catch (IOException) {
 							} catch (ObjectDisposedException) {
 							}
+
+							await Task.Delay (25).ConfigureAwait (false);
 						}
 					});
 
