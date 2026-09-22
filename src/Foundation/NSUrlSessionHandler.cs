@@ -605,8 +605,14 @@ namespace Foundation {
 						inflightData.CompletionSource.TrySetCanceled ();
 					});
 
-					if (inflightRequests.ContainsKey (dataTask) && dataTask.State == NSUrlSessionTaskState.Suspended)
-						dataTask.Resume ();
+					if (inflightRequests.ContainsKey (dataTask)) {
+						if (dataTask.State == NSUrlSessionTaskState.Suspended)
+							dataTask.Resume ();
+					} else {
+						// Register invokes the callback synchronously for an already-canceled token,
+						// before the returned registration can be assigned above.
+						inflightData.CancellationRegistration.Dispose ();
+					}
 				}
 			}
 
