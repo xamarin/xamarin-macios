@@ -5,8 +5,6 @@ using System.IO.Compression;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 
-using Mono.Cecil;
-
 #nullable enable
 
 namespace Xamarin.Tests {
@@ -339,7 +337,7 @@ namespace Xamarin.Tests {
 			var assemblyPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers), "linked", "TrimmerMetadataLibrary.dll");
 			Assert.That (assemblyPath, Does.Exist, "Linked library should be copied back to Windows");
 
-			using var assembly = AssemblyDefinition.ReadAssembly (assemblyPath);
+			using var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly (assemblyPath);
 			var model = assembly.MainModule.GetType ("TrimmerMetadataLibrary.MetadataModel");
 			Assert.That (model, Is.Not.Null, "Trimmable model should survive linking");
 
