@@ -339,9 +339,12 @@ namespace Xamarin.Tests {
 
 			using var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly (assemblyPath);
 			var model = assembly.MainModule.GetType ("TrimmerMetadataLibrary.MetadataModel");
-			Assert.That (model, Is.Not.Null, "Trimmable model should survive linking");
+			if (model is null) {
+				Assert.Fail ("Trimmable model should survive linking");
+				return;
+			}
 
-			var constructor = model!.Methods.Single (method => method.IsConstructor && method.Parameters.Count == 2);
+			var constructor = model.Methods.Single (method => method.IsConstructor && method.Parameters.Count == 2);
 			var withValue = model.Methods.Single (method => method.Name == "WithValue");
 			Assert.That (constructor.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "identifier", "description" }), "Constructor parameter names");
 			Assert.That (withValue.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "value" }), "Method parameter name");
