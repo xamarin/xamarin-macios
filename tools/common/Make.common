@@ -4,8 +4,9 @@ LAST_XCODE_BUMP:=$(shell git blame -- $(TOP)/Make.config HEAD | grep " XCODE_VER
 XCODE_BUMP_COMMIT_DISTANCE:=$(shell git log "$(LAST_XCODE_BUMP)..HEAD" --oneline | wc -l | sed -e 's/ //g')
 
 all-local:: $(abspath ../common/SdkVersions.cs)
-$(abspath ../common/SdkVersions.cs): ../common/SdkVersions.in.cs Makefile $(TOP)/Make.config $(TOP)/Make.versions
-	$(Q_GEN) sed \
+$(abspath ../common/SdkVersions.cs): ../common/SdkVersions.in.cs ../common/Make.common Makefile $(TOP)/Make.config $(TOP)/Make.config.inc $(TOP)/Make.versions
+	$(Q_GEN) set -e; tmp="$@.tmp.$$$$"; trap 'rm -f "$$tmp"' EXIT; \
+	sed \
 		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@MACOS_SDK_VERSION@/$(MACOS_SDK_VERSION)/' \
 		-e 's/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g' \
 		\
@@ -46,13 +47,14 @@ $(abspath ../common/SdkVersions.cs): ../common/SdkVersions.in.cs Makefile $(TOP)
 		\
 		-e "s/@DOTNET_TFM@/$(DOTNET_TFM)/g" \
 		-e "s/@DOTNET_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
-		$< > $@.tmp
-	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; exit 1; fi
-	$(Q) touch $@
+		$< > "$$tmp"; \
+	if ! diff "$@" "$$tmp" >/dev/null; then mv -f "$$tmp" "$@"; git diff "$@"; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; exit 1; fi; \
+	touch "$@"
 
 all-local:: $(abspath ../common/ProductConstants.cs)
-$(abspath ../common/ProductConstants.cs): ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config $(GIT_DIRECTORY)/index
-	$(Q_GEN) sed \
+$(abspath ../common/ProductConstants.cs): ../common/ProductConstants.in.cs ../common/Make.common Makefile $(TOP)/Make.config $(TOP)/Make.config.inc $(TOP)/Make.versions $(GIT_DIRECTORY)/index
+	$(Q_GEN) set -e; tmp="$@.tmp.$$$$"; trap 'rm -f "$$tmp"' EXIT; \
+	sed \
 		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e 's/@$(platform)_REVISION@/$($(platform)_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(CURRENT_HASH))/g')  \
 		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e 's/@$(platform)_NUGET_VERSION@/$($(platform)_NUGET_VERSION)/g')  \
 		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e "s/@$(platform)_NUGET_REVISION@/$(NUGET_PRERELEASE_IDENTIFIER)$($(platform)_NUGET_COMMIT_DISTANCE)$(NUGET_BUILD_METADATA)/g")  \
@@ -61,5 +63,5 @@ $(abspath ../common/ProductConstants.cs): ../common/ProductConstants.in.cs Makef
 		\
 		-e "s/@XCODE_VERSION@/$(XCODE_VERSION)/g" \
 		-e "s/@XCODE_BUMP_COMMIT_DISTANCE@/$(XCODE_BUMP_COMMIT_DISTANCE)/g" \
-		$< > $@
-
+		$< > "$$tmp"; \
+	mv -f "$$tmp" "$@"

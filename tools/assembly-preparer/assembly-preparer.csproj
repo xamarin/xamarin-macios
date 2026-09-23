@@ -374,10 +374,8 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<Target Name="BuildSdkVersions"
-			Inputs="../common/../SdkVersions.in.cs;../../common/ProductConstants.in.cs" Outputs="../../common/SdkVersions.cs;../../common/ProductConstants.cs"
-			BeforeTargets="CoreCompile"
-	>
-		<Exec Command="make generated-files -C $(MSBuildProjectDirectory)" IgnoreStandardErrorWarningFormat="true" />
+	<!-- Make tracks all generation inputs, including version configuration and the Git index. -->
+	<Target Name="BuildSdkVersions" BeforeTargets="CoreCompile">
+		<Exec Command="make generated-files -C &quot;$(MSBuildProjectDirectory)&quot;" IgnoreStandardErrorWarningFormat="true" />
 	</Target>
 </Project>
