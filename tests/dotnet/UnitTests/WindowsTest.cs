@@ -5,6 +5,8 @@ using System.IO.Compression;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 
+using Mono.Cecil;
+
 #nullable enable
 
 namespace Xamarin.Tests {
@@ -313,6 +315,38 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (15));
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void TrimmerKeepsParameterNamesWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var projectPath = GetProjectPath ("TrimmerMetadata", platform: platform);
+			Clean (projectPath);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = "Debug";
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_CopyLinkerOutputToWindows"] = "true";
+
+			var result = DotNet.AssertBuild (projectPath, properties, timeout: TimeSpan.FromMinutes (15));
+			AssertThatLinkerExecuted (result);
+
+			var assemblyPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers), "linked", "TrimmerMetadataLibrary.dll");
+			Assert.That (assemblyPath, Does.Exist, "Linked library should be copied back to Windows");
+
+			using var assembly = AssemblyDefinition.ReadAssembly (assemblyPath);
+			var model = assembly.MainModule.GetType ("TrimmerMetadataLibrary.MetadataModel");
+			Assert.That (model, Is.Not.Null, "Trimmable model should survive linking");
+
+			var constructor = model!.Methods.Single (method => method.IsConstructor && method.Parameters.Count == 2);
+			var withValue = model.Methods.Single (method => method.Name == "WithValue");
+			Assert.That (constructor.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "identifier", "description" }), "Constructor parameter names");
+			Assert.That (withValue.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "value" }), "Method parameter name");
 		}
 
 		static void AssertWarningsEqual (IList<string> expected, IList<string> actual, string message)
