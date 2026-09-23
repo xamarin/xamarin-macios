@@ -1111,7 +1111,7 @@ namespace Foundation {
 					return;
 
 				inflight.Stream.Add (data);
-				SetResponse (inflight);
+				SetResponse (dataTask, inflight);
 			}
 
 			[Preserve (Conditional = true)]
@@ -1136,30 +1136,35 @@ namespace Foundation {
 						inflight.Stream.TrySetReceivedAllData ();
 
 						inflight.Completed = true;
-						SetResponse (inflight);
+						SetResponse (task, inflight);
 					}
 
 					sessionHandler.RemoveInflightData (task, cancel: false);
 				}
 			}
 
-			void SetResponse (InflightData inflight)
+			void SetResponse (NSUrlSessionTask task, InflightData inflight)
 			{
-				lock (inflight.Lock) {
-					if (inflight.ResponseSent)
+				lock (sessionHandler.inflightRequestsLock) {
+					if (!sessionHandler.inflightRequests.TryGetValue (task, out var current) || !ReferenceEquals (current, inflight))
 						return;
 
-					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
-						return;
+					lock (inflight.Lock) {
+						if (inflight.ResponseSent)
+							return;
 
-					if (inflight.CompletionSource.Task.IsCompleted)
-						return;
+						if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
+							return;
 
-					var httpResponse = inflight.Response;
+						if (inflight.CompletionSource.Task.IsCompleted)
+							return;
 
-					inflight.ResponseSent = true;
+						var httpResponse = inflight.Response;
 
-					inflight.CompletionSource.TrySetResult (httpResponse!);
+						inflight.ResponseSent = true;
+
+						inflight.CompletionSource.TrySetResult (httpResponse!);
+					}
 				}
 			}
 
