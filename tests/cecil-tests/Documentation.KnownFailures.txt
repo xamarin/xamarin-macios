@@ -35800,6 +35800,15 @@ P:AVFoundation.IAVVideoCompositing.CanConformColorOfSourceFrames
 P:AVFoundation.IAVVideoCompositing.SupportsHdrSourceFrames
 P:AVFoundation.IAVVideoCompositing.SupportsSourceTaggedBuffers
 P:AVFoundation.IAVVideoCompositing.SupportsWideColorSourceFrames
+P:AVKit.AVCaptureDeviceDescriptor.DeviceType
+P:AVKit.AVCaptureDeviceDescriptor.LocalizedName
+P:AVKit.AVCaptureDeviceDescriptor.MediaTypes
+P:AVKit.AVCaptureDeviceDescriptor.Position
+P:AVKit.AVCaptureDeviceDescriptor.UniqueId
+P:AVKit.AVCaptureDeviceDescriptor.WeakMediaTypes
+P:AVKit.AVCaptureDeviceDirectionCoordinator.DeviceDirections
+P:AVKit.AVCaptureDeviceDirectionMap.BackwardFacingDeviceDescriptors
+P:AVKit.AVCaptureDeviceDirectionMap.ForwardFacingDeviceDescriptors
 P:AVKit.AVCaptureEvent.Phase
 P:AVKit.AVCaptureEvent.ShouldPlaySound
 P:AVKit.AVCaptureEventInteraction.DefaultCaptureSoundDisabled
@@ -54904,6 +54913,10 @@ T:AVFoundation.CMTagCollectionVideoOutputPreset
 T:AVFoundation.CMTagCollectionVideoOutputPreset_Extensions
 T:AVKit.AVAudioSession_AVPlaybackRouteSelecting
 T:AVKit.AVAudioSessionRouteSelection
+T:AVKit.AVCaptureDeviceDescriptor
+T:AVKit.AVCaptureDeviceDirectionCoordinator
+T:AVKit.AVCaptureDeviceDirectionCoordinatorChangeHandler
+T:AVKit.AVCaptureDeviceDirectionMap
 T:AVKit.AVCaptureEvent
 T:AVKit.AVCaptureEventInteraction
 T:AVKit.AVCaptureEventPhase
