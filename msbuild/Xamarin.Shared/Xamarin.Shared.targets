@@ -704,7 +704,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileAppManifest"
 		Condition="'$(_BundleOriginalResources)' != 'true'"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
-		Inputs="@(_CompileAppManifestInputFile)"
+		Inputs="@(_CompileAppManifestInputFile);$(AppBundleManifest)"
 		Outputs="$(_TemporaryAppManifest)"
 		>
 

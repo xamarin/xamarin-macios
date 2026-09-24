@@ -2512,6 +2512,7 @@
 			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
 			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
+			<_LinkNativeExecutableInputs Include="$(_CompiledEntitlements)" Condition="Exists('$(_CompiledEntitlements)')" />
 
 			<_LinkNativeExecutableOutputs Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)" />
 			<_LinkNativeExecutableOutputs Include="$(_MtouchSymbolsList)" />

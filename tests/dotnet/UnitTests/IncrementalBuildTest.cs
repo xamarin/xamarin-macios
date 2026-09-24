@@ -124,6 +124,99 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void AppManifest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, nameof (AppManifest), runtimeIdentifiers, out var appPath);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var appManifestPath = Path.Combine (projectDirectory, "Info.plist");
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			WriteAppManifest (appManifestPath, "Initial");
+
+			DotNet.AssertBuild (projectPath, properties);
+			var bundledAppManifestPath = GetInfoPListPath (platform, appPath!);
+			var appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Initial"), "Initial value");
+
+			WriteAppManifest (appManifestPath, "Updated");
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_CompileAppManifest", "Updated manifest");
+
+			appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Updated"), "Updated value");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_CompileAppManifest", "Unchanged manifest");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsAreNativeLinkInput (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, nameof (CompiledEntitlementsAreNativeLinkInput), runtimeIdentifiers, out _);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var entitlementsPath = Path.Combine (projectDirectory, "Entitlements.plist");
+			var projectContents = File.ReadAllText (projectPath);
+
+			projectContents = projectContents.Replace (
+				"	</PropertyGroup>",
+				"		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>\n" +
+				"		<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>\n" +
+				"	</PropertyGroup>");
+			projectContents = projectContents.Replace (
+				"</Project>",
+				"	<Target Name=\"AssertCompiledEntitlementsIsNativeLinkInput\" AfterTargets=\"_ComputeLinkNativeExecutableInputs\">\n" +
+				"		<ItemGroup>\n" +
+				"			<_CompiledEntitlementsNativeLinkInput Include=\"@(_LinkNativeExecutableInputs)\" Condition=\"'%(_LinkNativeExecutableInputs.Identity)' == '$(_CompiledEntitlements)'\" />\n" +
+				"		</ItemGroup>\n" +
+				"		<Error Condition=\"'$(_CompiledEntitlements)' != '' And '@(_CompiledEntitlementsNativeLinkInput)' == ''\" Text=\"The compiled entitlements are not a native link input.\" />\n" +
+				"	</Target>\n" +
+				"</Project>");
+			File.WriteAllText (projectPath, projectContents);
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			File.WriteAllText (entitlementsPath, """
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>com.apple.developer.associated-domains</key>
+					<array>
+						<string>applinks:example.com</string>
+					</array>
+				</dict>
+				</plist>
+				""");
+
+			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
+		}
+
+		static void WriteAppManifest (string path, string value)
+		{
+			File.WriteAllText (path, $"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>IncrementalBuildValue</key>
+					<string>{value}</string>
+				</dict>
+				</plist>
+				""");
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void NativeLink (ApplePlatform platform, string runtimeIdentifiers)
 		{
