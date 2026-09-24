@@ -21,7 +21,7 @@
 # IMPORTANT: There must be *no* managed API differences unless the two first
 # numbers (major.minor) changes.
 
-IOS_NUGET_OS_VERSION=27.0
+IOS_NUGET_OS_VERSION=27.1
 TVOS_NUGET_OS_VERSION=27.0
 MACOS_NUGET_OS_VERSION=27.0
 MACCATALYST_NUGET_OS_VERSION=27.0
