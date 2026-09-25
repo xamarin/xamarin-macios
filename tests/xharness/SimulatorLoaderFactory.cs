@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 #nullable enable
 
@@ -19,10 +22,23 @@ namespace Xharness {
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 
-		public ISimulatorLoader CreateLoader () => new SimulatorLoader (processManager, new SimulatorSelector ());
+		public ISimulatorLoader CreateLoader () => new SimulatorLoader (processManager, new SimulatorSelector (processManager.XcodeRoot));
 	}
 
 	public class SimulatorSelector : DefaultSimulatorSelector {
+		readonly string xcodeBuildVersion;
+
+		public SimulatorSelector (string xcodeRoot)
+		{
+			ArgumentNullException.ThrowIfNull (xcodeRoot);
+
+			var versionPlistPath = Path.Combine (xcodeRoot, "Contents", "version.plist");
+			var versionPlist = new XmlDocument ();
+			versionPlist.LoadWithoutNetworkAccess (versionPlistPath);
+			xcodeBuildVersion = versionPlist.SelectSingleNode ("/plist/dict/key[. = 'ProductBuildVersion']/following-sibling::string[1]")?.InnerText
+				?? throw new InvalidOperationException ($"Could not find ProductBuildVersion in '{versionPlistPath}'.");
+		}
+
 		public override string GetDeviceType (TestTargetOs target, bool minVersion)
 		{
 			return target.Platform switch {
@@ -42,6 +58,10 @@ namespace Xharness {
 				return "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
 			if (iOSVersion.Major < 16)
 				return "com.apple.CoreSimulator.SimDeviceType.iPhone-11";
+
+			// Xcode 27.1 beta 1's iOS 27.1 runtime only supports iPhone Duo.
+			if (iOSVersion.Major == 27 && iOSVersion.Minor == 1 && xcodeBuildVersion == "27A9269")
+				return "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo";
 
 			return "com.apple.CoreSimulator.SimDeviceType.iPhone-14";
 		}
