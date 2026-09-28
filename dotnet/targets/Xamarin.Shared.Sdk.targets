@@ -449,6 +449,7 @@
 				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
 				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
 				_CompiledEntitlements=$(_CompiledEntitlements);
+				_CompiledEntitlementsHash=$(_CompiledEntitlementsHash);
 				_CompiledEntitlementsPath=$(_CompiledEntitlementsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
@@ -2512,7 +2513,6 @@
 			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
 			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
-			<_LinkNativeExecutableInputs Include="$(_CompiledEntitlements)" Condition="Exists('$(_CompiledEntitlements)')" />
 
 			<_LinkNativeExecutableOutputs Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)" />
 			<_LinkNativeExecutableOutputs Include="$(_MtouchSymbolsList)" />
@@ -2549,6 +2549,7 @@
 			<_LinkNativeExecutableCache Include="@(_AllLinkerFlags)" />
 			<_LinkNativeExecutableCache Include="$(_DylibRPath)" />
 			<_LinkNativeExecutableCache Include="$(_CompiledEntitlements)" />
+			<_LinkNativeExecutableCache Include="$(_CompiledEntitlementsHash)" />
 			<_LinkNativeExecutableCache Include="$(_EmbeddedFrameworksRPath)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryFrameworks)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryLinkWith)" />

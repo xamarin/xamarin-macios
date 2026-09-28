@@ -159,12 +159,26 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
-		public void CompiledEntitlementsAreNativeLinkInput (ApplePlatform platform, string runtimeIdentifiers)
+		public void CompiledEntitlementsTriggerNativeLink (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		[Test]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsTriggerNativeLinkOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		void CompiledEntitlementsTriggerNativeLinkImpl (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
-			var projectPath = GenerateProject (platform, nameof (CompiledEntitlementsAreNativeLinkInput), runtimeIdentifiers, out _);
+			var projectPath = GenerateProject (platform, TestName, runtimeIdentifiers, out _);
 			var projectDirectory = Path.GetDirectoryName (projectPath)!;
 			var mainFile = Path.Combine (projectDirectory, "Main.cs");
 			var entitlementsPath = Path.Combine (projectDirectory, "Entitlements.plist");
@@ -175,31 +189,42 @@ namespace Xamarin.Tests {
 				"		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>\n" +
 				"		<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>\n" +
 				"	</PropertyGroup>");
-			projectContents = projectContents.Replace (
-				"</Project>",
-				"	<Target Name=\"AssertCompiledEntitlementsIsNativeLinkInput\" AfterTargets=\"_ComputeLinkNativeExecutableInputs\">\n" +
-				"		<ItemGroup>\n" +
-				"			<_CompiledEntitlementsNativeLinkInput Include=\"@(_LinkNativeExecutableInputs)\" Condition=\"'%(_LinkNativeExecutableInputs.Identity)' == '$(_CompiledEntitlements)'\" />\n" +
-				"		</ItemGroup>\n" +
-				"		<Error Condition=\"'$(_CompiledEntitlements)' != '' And '@(_CompiledEntitlementsNativeLinkInput)' == ''\" Text=\"The compiled entitlements are not a native link input.\" />\n" +
-				"	</Target>\n" +
-				"</Project>");
 			File.WriteAllText (projectPath, projectContents);
 			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
-			File.WriteAllText (entitlementsPath, """
+			WriteEntitlements (entitlementsPath, "example.com");
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (projectPath, properties);
+
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements");
+
+			WriteEntitlements (entitlementsPath, "example.org");
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_ForceLinkNativeExecutable", "Updated entitlements");
+			AssertTargetExecuted (allTargets, "_LinkNativeExecutable", "Updated entitlements");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements after update");
+		}
+
+		static void WriteEntitlements (string path, string domain)
+		{
+			File.WriteAllText (path, $"""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 				<plist version="1.0">
 				<dict>
 					<key>com.apple.developer.associated-domains</key>
 					<array>
-						<string>applinks:example.com</string>
+						<string>applinks:{domain}</string>
 					</array>
 				</dict>
 				</plist>
 				""");
-
-			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
 		static void WriteAppManifest (string path, string value)
