@@ -173,11 +173,8 @@ namespace Xamarin.MacDev.Tasks {
 					if (sortedItem is null)
 						continue; // this item does not need to be signed
 					if (sortedItem.ItemSpec.StartsWith (itemPath, StringComparison.OrdinalIgnoreCase)) {
-						if (StampFileNeedsUpdate (sortedItem)) {
-							Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too.", item.ItemSpec, sortedItem.ItemSpec);
-							return true; // there's an item inside this directory that needs to be signed, so this directory must be signed too
-						}
-						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too; however this other item has an up-to-date signature.", item.ItemSpec, sortedItem.ItemSpec);
+						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too.", item.ItemSpec, sortedItem.ItemSpec);
+						return true; // there's an item inside this directory that needs to be signed, so this directory must be signed too
 					}
 				}
 
