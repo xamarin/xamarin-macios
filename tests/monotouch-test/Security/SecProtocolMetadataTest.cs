@@ -121,7 +121,7 @@ namespace MonoTouchFixtures.Security {
 					}
 				}
 
-				Assert.That (keys, Has.Count.EqualTo (1), "PSK callback count");
+				Assert.That (keys.Count, Is.EqualTo (1), "PSK callback count");
 				Assert.That (keys [0].Key.ToArray (), Is.EqualTo (keyBytes), "Key after callback and connection disposal");
 				Assert.That (keys [0].Identity.ToArray (), Is.EqualTo (identityBytes), "Identity after callback and connection disposal");
 			} finally {
