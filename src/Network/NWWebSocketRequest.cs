@@ -38,6 +38,11 @@ namespace Network {
 			return 1;
 		}
 
+		/// <summary>Enumerates the additional HTTP headers in the client's WebSocket request.</summary>
+		/// <param name="handler">The callback invoked for each header, with the header name and value.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="handler" /> is <see langword="null" />.</exception>
+		/// <exception cref="ObjectDisposedException">This request has been disposed.</exception>
+		/// <remarks>The callback is invoked synchronously and cannot stop enumeration early.</remarks>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateAdditionalHeaders (Action<string?, string?> handler)
 		{
@@ -65,6 +70,11 @@ namespace Network {
 			return 1;
 		}
 
+		/// <summary>Enumerates the subprotocols in the client's WebSocket request.</summary>
+		/// <param name="handler">The callback invoked for each subprotocol, with the subprotocol name.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="handler" /> is <see langword="null" />.</exception>
+		/// <exception cref="ObjectDisposedException">This request has been disposed.</exception>
+		/// <remarks>The callback is invoked synchronously and cannot stop enumeration early.</remarks>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateSubprotocols (Action<string?> handler)
 		{
