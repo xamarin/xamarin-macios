@@ -48,7 +48,6 @@
 !missing-enum! nw_parameters_attribution_t not bound
 
 # updated sharpie results
-!missing-enum! nw_browser_state_t not bound
 !missing-enum! nw_connection_group_state_t not bound
 !missing-enum! nw_connection_state_t not bound
 !missing-enum! nw_data_transfer_report_state_t not bound

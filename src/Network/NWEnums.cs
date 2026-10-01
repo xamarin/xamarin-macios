@@ -37,17 +37,21 @@ namespace Network {
 		InterfaceRemoved = 0x10,
 	}
 
-	/// <summary>Describes the state of a network browser.</summary>
+	/// <summary>States reported by a network browser through its state changes handler.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_browser_state_t")]
 	public enum NWBrowserState {
-		/// <summary>The browser state is invalid.</summary>
+		/// <summary>The browser state is invalid. This value is not delivered to the state changes handler.</summary>
 		Invalid = 0,
-		/// <summary>The browser can receive endpoint updates.</summary>
+		/// <summary>The browser is ready to browse and deliver result updates.</summary>
 		Ready = 1,
-		/// <summary>The browser has failed and cannot be restarted.</summary>
+		/// <summary>The browser has failed and cannot be restarted. Cancel it and create a new browser instead.</summary>
 		Failed = 2,
-		/// <summary>The browser was cancelled and cannot be restarted.</summary>
+		/// <summary>The browser has been cancelled and cannot be restarted.</summary>
 		Cancelled = 3,
+		/// <summary>The browser is waiting for connectivity and will not deliver results until it becomes ready.</summary>
+		/// <remarks>A browser can enter this state after being ready. The associated error indicates why browsing is unavailable.</remarks>
+		Waiting = 4,
 	}
 
 	/// <summary>Describes the state of a network connection.</summary>
