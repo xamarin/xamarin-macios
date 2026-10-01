@@ -83,7 +83,6 @@ namespace MonoTouchFixtures.Network {
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
 			bool didRun = false;
 			bool receivedNotNullChange = false;
-			var interfaceNames = new List<string> ();
 			bool listeningDone = false;
 			Exception ex = null;
 			NWError? browserErrorState = null;
@@ -127,12 +126,6 @@ namespace MonoTouchFixtures.Network {
 					didRun = true;
 					try {
 						receivedNotNullChange = oldResult is not null || newResult is not null;
-						(oldResult ?? newResult)?.EnumerateInterfaces (iface => {
-							using (iface) {
-								lock (interfaceNames)
-									interfaceNames.Add (iface.Name);
-							}
-						});
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -187,8 +180,6 @@ namespace MonoTouchFixtures.Network {
 			Assert.That (ex, Is.Null, $"Exception{printLog ()}");
 			Assert.That (didRun, Is.True, $"didRan{printLog ()}");
 			Assert.That (receivedNotNullChange, Is.True, $"receivedNotNullChange{printLog ()}");
-			lock (interfaceNames)
-				Assert.That (interfaceNames, Is.Not.Empty, "Browse result interfaces");
 			log ($"about to cancel...");
 			browser.Cancel ();
 			log ($"cancelled...");

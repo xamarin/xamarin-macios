@@ -397,7 +397,8 @@ namespace CoreFoundation {
 		static void static_dispatcher_iterations_to_managed (IntPtr context, IntPtr count)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
-			var obj = gch.Target as Tuple<Action<int>, DispatchQueue>;
+			var obj = gch.Target as Tuple<Action<long>, DispatchQueue>;
+			gch.Free ();
 			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
@@ -411,7 +412,7 @@ namespace CoreFoundation {
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
-					obj.Item1 ((int) count);
+					obj.Item1 ((long) count);
 				} finally {
 					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
@@ -576,13 +577,8 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-			var gch = GCHandle.Alloc (Tuple.Create (action, this));
-			try {
-				unsafe {
-					dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) gch, &static_dispatcher_iterations_to_managed);
-				}
-			} finally {
-				gch.Free ();
+			unsafe {
+				dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_iterations_to_managed);
 			}
 		}
 

@@ -56,7 +56,7 @@ namespace Network {
 		unsafe static extern byte nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
 
 		[UnmanagedCallersOnly]
-		static byte TrampolineEnumerateHeadersHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
+		static void TrampolineEnumerateHeadersHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
 		{
 			var del = BlockLiteral.GetTarget<Action<string?, string?>> (block);
 			if (del is not null) {
@@ -64,7 +64,6 @@ namespace Network {
 				var value = Marshal.PtrToStringAuto (valuePointer);
 				del (header, value);
 			}
-			return 1;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -74,7 +73,7 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
-				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte> trampoline = &TrampolineEnumerateHeadersHandler;
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateHeadersHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketResponse), nameof (TrampolineEnumerateHeadersHandler));
 				var result = nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), &block) != 0;
 				GC.KeepAlive (this);
@@ -89,7 +88,7 @@ namespace Network {
 		{
 			using var namePtr = new TransientString (name);
 			using var valuePtr = new TransientString (value);
-			nw_ws_response_add_additional_header (response, namePtr, valuePtr);
+			nw_ws_response_add_additional_header (response, name, value);
 		}
 
 		public void SetHeader (string header, string value) => nw_ws_response_add_additional_header (GetCheckedHandle (), header, value);

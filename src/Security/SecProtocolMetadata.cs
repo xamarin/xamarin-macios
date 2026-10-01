@@ -225,7 +225,7 @@ namespace Security {
 				var result = sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), &block);
 				GC.KeepAlive (this);
 				if (result == 0)
-					throw new InvalidOperationException ("The OCSP response is not accessible.");
+					throw new InvalidOperationException ("The OSCP response is not accessible.");
 			}
 		}
 
@@ -234,8 +234,8 @@ namespace Security {
 		{
 			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
 			if (del is not null) {
-				using var secCertificate = new SecCertificate2 (certificate, owns: false);
-				del (secCertificate.Certificate);
+				var secCertificate = new SecCertificate (certificate, owns: false);
+				del (secCertificate);
 			}
 		}
 
@@ -287,7 +287,7 @@ namespace Security {
 				using var block = new BlockLiteral (trampoline, callback, typeof (SecProtocolMetadata), nameof (TrampolineSignatureAlgorithmsForPeer));
 				var result = sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), &block);
 				GC.KeepAlive (this);
-				if (result == 0)
+				if (result != 0)
 					throw new InvalidOperationException ("The supported signature list is not accessible.");
 			}
 		}
@@ -372,9 +372,9 @@ namespace Security {
 		[UnmanagedCallersOnly]
 		static void TrampolineAccessPreSharedKeys (IntPtr block, IntPtr psk, IntPtr psk_identity)
 		{
-			var del = BlockLiteral.GetTarget<SecAccessPreSharedKeysHandler> (block);
+			var del = BlockLiteral.GetTarget<Action<DispatchData?, DispatchData?>> (block);
 			if (del is not null)
-				del (new DispatchData (psk, owns: false), new DispatchData (psk_identity, owns: false));
+				del (CreateDispatchData (psk), CreateDispatchData (psk_identity));
 		}
 
 		[SupportedOSPlatform ("tvos")]

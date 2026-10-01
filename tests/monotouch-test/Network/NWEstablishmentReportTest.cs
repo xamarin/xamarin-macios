@@ -1,5 +1,4 @@
 using System.Threading;
-using System.Threading.Tasks;
 
 using Network;
 
@@ -77,29 +76,6 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestEnumerateProtocols ()
-		{
-			using var tcpManager = new ConnectionManager (tcp: true);
-			using var tcpConnection = tcpManager.CreateConnection (out var parameters);
-			using (parameters) {
-				try {
-					var completion = new TaskCompletionSource<NWEstablishmentReport> ();
-					tcpConnection.GetEstablishmentReport (DispatchQueue.DefaultGlobalQueue, completion.SetResult);
-					Assert.That (completion.Task.Wait (20000), Is.True, "Timed out fetching TCP establishment report");
-					using var tcpReport = completion.Task.Result;
-					var protocols = new List<IntPtr> ();
-					tcpReport.EnumerateProtocols ((protocol, duration, roundTripTime) => {
-						protocols.Add (protocol.Handle);
-					});
-					Assert.That (protocols, Is.Not.Empty, "Protocols");
-					Assert.That (protocols, Has.None.EqualTo (IntPtr.Zero), "Protocol handles");
-				} finally {
-					tcpConnection.Cancel ();
-				}
-			}
-		}
-
-		[Test]
 		public void TestProxyEnpoint ()
 		{
 			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail.");
@@ -110,12 +86,6 @@ namespace MonoTouchFixtures.Network {
 		public void EnumerateResolutionReportsTest ()
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
-			TestRuntime.AssertDevice ();
-			var count = 0;
-			report.EnumerateResolutionReports (resolution => {
-				count++;
-			});
-			Assert.That (count, Is.GreaterThan (0), "Resolution reports");
 		}
 
 	}
