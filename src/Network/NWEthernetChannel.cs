@@ -166,8 +166,26 @@ namespace Network {
 			}
 		}
 
+#if !XAMCORE_5_0
 		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the other overload.")]
+		[OverloadResolutionPriority (-1)]
 		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
+		{
+			if (handler is null) {
+				unsafe {
+					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), null);
+				}
+				return;
+			}
+
+			SetStateChangesHandler ((NWEthernetChannelState state, NWError? error) => handler ((NWBrowserState) state, error));
+		}
+#endif
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetStateChangesHandler (Action<NWEthernetChannelState, NWError?> handler)
 		{
 			unsafe {
 				if (handler is null) {
