@@ -60,7 +60,8 @@ namespace Xharness {
 				return "com.apple.CoreSimulator.SimDeviceType.iPhone-11";
 
 			// Xcode 27.1 beta 1's iOS 27.1 runtime only supports iPhone Duo.
-			if (iOSVersion.Major == 27 && iOSVersion.Minor == 1 && xcodeBuildVersion == "27A9269")
+			// The release candidate's 27.1 runtime has the same device restriction.
+			if (iOSVersion.Major == 27 && iOSVersion.Minor == 1 && (xcodeBuildVersion == "27A9269" || xcodeBuildVersion == "27A9275"))
 				return "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo";
 
 			return "com.apple.CoreSimulator.SimDeviceType.iPhone-14";

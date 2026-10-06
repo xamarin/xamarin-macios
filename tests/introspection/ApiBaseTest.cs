@@ -203,6 +203,18 @@ namespace Introspection {
 			}
 		}
 
+		protected static bool SkipMissingSimulatorField (PropertyInfo property)
+		{
+			if (!TestRuntime.IsSimulator || PlatformInfo.Host.Version is not { Major: 17, Minor: 0 })
+				return false;
+
+			if (property.DeclaringType?.FullName != "CoreMedia.CMFormatDescriptionExtensionKeys")
+				return false;
+
+			// Declared for 17.0, but these symbols are missing from the iOS/tvOS 17.0 simulators.
+			return property.Name is "HasAdditionalViews" or "HasLeftStereoEyeView" or "HasRightStereoEyeView";
+		}
+
 		public bool MemberHasObsolete (MemberInfo member)
 		{
 			return TestRuntime.HasOSPlatformAttributeForCurrentPlatform<ObsoletedOSPlatformAttribute> (member);
