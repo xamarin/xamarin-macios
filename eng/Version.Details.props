@@ -6,14 +6,14 @@ This file should be imported by eng/Versions.props
 <Project>
   <PropertyGroup>
     <!-- dotnet-dotnet dependencies -->
-    <MicrosoftDotNetArcadeSdkPackageVersion>10.0.0-beta.26507.119</MicrosoftDotNetArcadeSdkPackageVersion>
-    <MicrosoftDotNetBuildTasksFeedPackageVersion>10.0.0-beta.26507.119</MicrosoftDotNetBuildTasksFeedPackageVersion>
+    <MicrosoftDotNetArcadeSdkPackageVersion>10.0.0-beta.26509.104</MicrosoftDotNetArcadeSdkPackageVersion>
+    <MicrosoftDotNetBuildTasksFeedPackageVersion>10.0.0-beta.26509.104</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.5-alpha.26070.104</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetSharedFrameworkSdkPackageVersion>10.0.0-beta.26507.119</MicrosoftDotNetSharedFrameworkSdkPackageVersion>
+    <MicrosoftDotNetSharedFrameworkSdkPackageVersion>10.0.0-beta.26509.104</MicrosoftDotNetSharedFrameworkSdkPackageVersion>
     <MicrosoftNETILLinkPackageVersion>10.0.3-servicing.26070.104</MicrosoftNETILLinkPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>10.0.3</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>10.0.3</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
-    <MicrosoftNETSdkPackageVersion>10.0.403-servicing.26507.119</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETSdkPackageVersion>10.0.403-servicing.26509.104</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>10.0.3</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftTemplateEngineAuthoringTasksPackageVersion>10.0.403</MicrosoftTemplateEngineAuthoringTasksPackageVersion>
     <!-- dotnet-macios dependencies -->
