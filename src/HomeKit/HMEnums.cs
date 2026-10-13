@@ -1965,11 +1965,14 @@ namespace HomeKit {
 		Configured,
 	}
 
+	/// <summary>Indicates the requested state of a television's door.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetDoorState : long {
+		/// <summary>The door is open.</summary>
 		Open = 0,
+		/// <summary>The door is closed.</summary>
 		Closed = 1,
 	}
 

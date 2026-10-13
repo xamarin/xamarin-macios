@@ -3799,8 +3799,6 @@ F:HomeKit.HMCharacteristicValueRemoteKey.Rewind
 F:HomeKit.HMCharacteristicValueRemoteKey.Select
 F:HomeKit.HMCharacteristicValueRouterStatus.NotReady
 F:HomeKit.HMCharacteristicValueRouterStatus.Ready
-F:HomeKit.HMCharacteristicValueTargetDoorState.Closed
-F:HomeKit.HMCharacteristicValueTargetDoorState.Open
 F:HomeKit.HMCharacteristicValueTargetLockMechanismState.Secured
 F:HomeKit.HMCharacteristicValueTargetLockMechanismState.Unsecured
 F:HomeKit.HMCharacteristicValueTargetMediaState.Pause
@@ -56766,7 +56764,6 @@ T:HomeKit.HMCharacteristicValuePictureMode
 T:HomeKit.HMCharacteristicValuePowerModeSelection
 T:HomeKit.HMCharacteristicValueRemoteKey
 T:HomeKit.HMCharacteristicValueRouterStatus
-T:HomeKit.HMCharacteristicValueTargetDoorState
 T:HomeKit.HMCharacteristicValueTargetLockMechanismState
 T:HomeKit.HMCharacteristicValueTargetMediaState
 T:HomeKit.HMCharacteristicValueTargetVisibilityState
