@@ -121,22 +121,22 @@ namespace CoreImage {
 			NSMutableDictionary dict = new NSMutableDictionary ();
 
 			if (Enhance.HasValue && Enhance.Value == false) {
-				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustEnhanceKey.Handle);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustEnhanceKey);
 			}
 			if (RedEye.HasValue && RedEye.Value == false) {
-				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey.Handle);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey);
 			}
 			if (Features is not null && Features.Length != 0) {
-				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
+				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey);
 			}
 			if (ImageOrientation.HasValue) {
-				dict.LowlevelSetObject (new NSNumber ((int) ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
+				dict.LowlevelSetObject (new NSNumber ((int) ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation);
 			}
 			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true) {
-				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustCrop.Handle);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustCrop);
 			}
 			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true) {
-				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustLevel.Handle);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustLevel);
 			}
 
 #if false
