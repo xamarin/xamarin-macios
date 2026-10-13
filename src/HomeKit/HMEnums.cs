@@ -2230,11 +2230,15 @@ namespace HomeKit {
 		VolumeDecrement,
 	}
 
+	/// <summary>Identifies the requested media playback state of a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetMediaState : long {
+		/// <summary>Start or resume media playback.</summary>
 		Play = 0,
+		/// <summary>Pause media playback.</summary>
 		Pause = 1,
+		/// <summary>Stop media playback.</summary>
 		Stop = 2,
 	}
 }
