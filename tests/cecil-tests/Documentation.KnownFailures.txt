@@ -3740,8 +3740,6 @@ F:HomeKit.HMCharacteristicValueRouterStatus.Ready
 F:HomeKit.HMCharacteristicValueTargetMediaState.Pause
 F:HomeKit.HMCharacteristicValueTargetMediaState.Play
 F:HomeKit.HMCharacteristicValueTargetMediaState.Stop
-F:HomeKit.HMCharacteristicValueTargetVisibilityState.Hide
-F:HomeKit.HMCharacteristicValueTargetVisibilityState.Show
 F:HomeKit.HMCharacteristicValueVolumeControlType.Absolute
 F:HomeKit.HMCharacteristicValueVolumeControlType.None
 F:HomeKit.HMCharacteristicValueVolumeControlType.Relative
@@ -56693,7 +56691,6 @@ T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
 T:HomeKit.HMCharacteristicValueRouterStatus
 T:HomeKit.HMCharacteristicValueTargetMediaState
-T:HomeKit.HMCharacteristicValueTargetVisibilityState
 T:HomeKit.HMCharacteristicValueVolumeControlType
 T:HomeKit.HMCharacteristicValueVolumeSelector
 T:HomeKit.HMCharacteristicValueWiFiSatelliteStatus

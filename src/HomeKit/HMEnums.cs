@@ -2160,10 +2160,13 @@ namespace HomeKit {
 		Custom3 = 13,
 	}
 
+	/// <summary>Indicates whether a television input source should be shown.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetVisibilityState : long {
+		/// <summary>Show the input source.</summary>
 		Show = 0,
+		/// <summary>Hide the input source.</summary>
 		Hide = 1,
 	}
 
