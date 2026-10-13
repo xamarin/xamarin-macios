@@ -1965,7 +1965,7 @@ namespace HomeKit {
 		Configured,
 	}
 
-	/// <summary>Indicates the requested state of a television's door.</summary>
+	/// <summary>Indicates the requested state of a door.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
