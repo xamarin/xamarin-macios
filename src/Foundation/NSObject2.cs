@@ -401,6 +401,14 @@ namespace Foundation {
 				return IntPtr.Zero;
 
 			try {
+				// A native initializer may chain to another managed constructor on the same
+				// object. Reuse the wrapper created before the initializer was invoked.
+				var existing = Runtime.TryGetNSObjectFromIvar (handle);
+				if (existing is not null && !existing.disposed && !existing.InFinalizerQueue && existing.Handle == handle && type.IsAssignableFrom (existing.GetType ())) {
+					existing.flags |= flags;
+					return Runtime.AllocGCHandle (existing);
+				}
+
 				var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
 				obj.handle = handle;
 				obj.flags = flags;
@@ -408,6 +416,21 @@ namespace Foundation {
 			} catch (Exception e) {
 				throw ErrorHelper.CreateError (8041, e, Errors.MX8041 /* Unable to create an instance of the type {0} */, type.FullName);
 			}
+		}
+
+		internal static T GetOrCreateNSObjectForConstructor<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (IntPtr handle, uint flags)
+			where T : NSObject
+		{
+			var existing = Runtime.TryGetNSObjectFromIvar (handle);
+			if (existing is T typedExisting && !existing.disposed && !existing.InFinalizerQueue && existing.Handle == handle) {
+				existing.flags |= (Flags) flags;
+				return typedExisting;
+			}
+
+			var obj = (T) RuntimeHelpers.GetUninitializedObject (typeof (T));
+			obj.handle = handle;
+			obj.flags = (Flags) flags;
+			return obj;
 		}
 
 #if !XAMCORE_5_0
@@ -542,9 +565,18 @@ namespace Foundation {
 
 		void CreateManagedRef (bool isUserType, bool retain)
 		{
+			var hadManagedRef = HasManagedRef;
 			HasManagedRef = true;
 
 			if (isUserType) {
+				if (hadManagedRef) {
+					var existing = Runtime.GetGCHandleForObject (handle);
+					// Constructor chaining may initialize the same wrapper more than once.
+					// The existing wrapper already owns the native reference, so don't retain it again.
+					if (ReferenceEquals (Runtime.GetGCHandleTarget (existing), this))
+						return;
+				}
+
 				var gchandle_flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet;
 				var gchandle = GCHandle.Alloc (this, GCHandleType.WeakTrackResurrection);
 				var h = GCHandle.ToIntPtr (gchandle);

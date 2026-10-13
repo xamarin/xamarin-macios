@@ -1,4 +1,4 @@
-AppBundleSize: 8,570,203 bytes (8,369.3 KB = 8.2 MB)
+AppBundleSize: 8,570,126 bytes (8,369.3 KB = 8.2 MB)
 # The following list of files and their sizes is just informational / for review, and isn't used in the test:
 _Microsoft.iOS.TypeMap.dll:
     17,920 bytes (17.5 KB = 0.0 MB)
@@ -7,39 +7,39 @@ _Microsoft.iOS.TypeMaps.dll:
 _SizeTestApp.TypeMap.dll:
     3,584 bytes (3.5 KB = 0.0 MB)
 Frameworks/libcoreclr.framework/Info.plist:
-    839 bytes (0.8 KB = 0.0 MB)
+    828 bytes (0.8 KB = 0.0 MB)
 Frameworks/libcoreclr.framework/libcoreclr:
     4,226,368 bytes (4,127.3 KB = 4.0 MB)
 Frameworks/libSystem.Globalization.Native.framework/Info.plist:
-    881 bytes (0.9 KB = 0.0 MB)
+    870 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.Globalization.Native.framework/libSystem.Globalization.Native:
     124,608 bytes (121.7 KB = 0.1 MB)
 Frameworks/libSystem.IO.Compression.Native.framework/Info.plist:
-    883 bytes (0.9 KB = 0.0 MB)
+    872 bytes (0.9 KB = 0.0 MB)
 Frameworks/libSystem.IO.Compression.Native.framework/libSystem.IO.Compression.Native:
     1,438,032 bytes (1,404.3 KB = 1.4 MB)
 Frameworks/libSystem.Native.framework/Info.plist:
-    853 bytes (0.8 KB = 0.0 MB)
+    842 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.Native.framework/libSystem.Native:
     178,592 bytes (174.4 KB = 0.2 MB)
 Frameworks/libSystem.Net.Security.Native.framework/Info.plist:
-    879 bytes (0.9 KB = 0.0 MB)
+    868 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.Net.Security.Native.framework/libSystem.Net.Security.Native:
     103,072 bytes (100.7 KB = 0.1 MB)
 Frameworks/libSystem.Security.Cryptography.Native.Apple.framework/Info.plist:
-    909 bytes (0.9 KB = 0.0 MB)
+    898 bytes (0.9 KB = 0.0 MB)
 Frameworks/libSystem.Security.Cryptography.Native.Apple.framework/libSystem.Security.Cryptography.Native.Apple:
     252,592 bytes (246.7 KB = 0.2 MB)
 Info.plist:
-    1,167 bytes (1.1 KB = 0.0 MB)
+    1,156 bytes (1.1 KB = 0.0 MB)
 Microsoft.iOS.dll:
-    96,256 bytes (94.0 KB = 0.1 MB)
+    96,768 bytes (94.5 KB = 0.1 MB)
 PkgInfo:
     8 bytes (0.0 KB = 0.0 MB)
 SizeTestApp:
     111,112 bytes (108.5 KB = 0.1 MB)
 SizeTestApp.dll:
-    6,656 bytes (6.5 KB = 0.0 MB)
+    6,144 bytes (6.0 KB = 0.0 MB)
 System.Collections.Immutable.dll:
     14,336 bytes (14.0 KB = 0.0 MB)
 System.Diagnostics.StackTrace.dll:

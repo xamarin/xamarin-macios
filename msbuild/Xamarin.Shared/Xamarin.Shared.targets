@@ -704,7 +704,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileAppManifest"
 		Condition="'$(_BundleOriginalResources)' != 'true'"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
-		Inputs="@(_CompileAppManifestInputFile)"
+		Inputs="@(_CompileAppManifestInputFile);$(AppBundleManifest)"
 		Outputs="$(_TemporaryAppManifest)"
 		>
 
@@ -857,6 +857,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<!-- $(_CompiledEntitlements) will be passed to the native compiler, it's used to embed the entitlements in the executable -->
 			<Output TaskParameter="EntitlementsInExecutable" PropertyName="_CompiledEntitlements" />
+			<Output TaskParameter="EntitlementsInExecutableHash" PropertyName="_CompiledEntitlementsHash" />
 
 			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device or desktop. MUST NOT BE SET for iOS Simulator builds. -->
 			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />

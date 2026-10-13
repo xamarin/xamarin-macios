@@ -1,9 +1,9 @@
-AppBundleSize: 333,357,796 bytes (325,544.7 KB = 317.9 MB)
+AppBundleSize: 333,314,217 bytes (325,502.2 KB = 317.9 MB)
 # The following list of files and their sizes is just informational / for review, and isn't used in the test:
 Contents/Info.plist:
-    756 bytes (0.7 KB = 0.0 MB)
+    745 bytes (0.7 KB = 0.0 MB)
 Contents/MacOS/SizeTestApp:
-    7,439,352 bytes (7,265.0 KB = 7.1 MB)
+    7,439,304 bytes (7,264.9 KB = 7.1 MB)
 Contents/MonoBundle/_Microsoft.macOS.TypeMaps.dll:
     2,560 bytes (2.5 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/_Microsoft.macOS.TypeMap.dll:
@@ -31,7 +31,7 @@ Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Options.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Primitives.dll:
     90,448 bytes (88.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.macOS.dll:
-    74,899,968 bytes (73,144.5 KB = 71.4 MB)
+    74,878,464 bytes (73,123.5 KB = 71.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.VisualBasic.Core.dll:
     1,337,128 bytes (1,305.8 KB = 1.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.VisualBasic.dll:
@@ -45,7 +45,7 @@ Contents/MonoBundle/.xamarin/osx-arm64/mscorlib.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/netstandard.dll:
     101,200 bytes (98.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/SizeTestApp.dll:
-    8,192 bytes (8.0 KB = 0.0 MB)
+    7,680 bytes (7.5 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.AppContext.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Buffers.dll:
@@ -401,7 +401,7 @@ Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Options.dll:
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Primitives.dll:
     83,240 bytes (81.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.macOS.dll:
-    64,060,928 bytes (62,559.5 KB = 61.1 MB)
+    64,039,424 bytes (62,538.5 KB = 61.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.VisualBasic.Core.dll:
     1,191,720 bytes (1,163.8 KB = 1.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.VisualBasic.dll:

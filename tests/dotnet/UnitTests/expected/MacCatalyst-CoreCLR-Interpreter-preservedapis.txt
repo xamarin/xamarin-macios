@@ -124,8 +124,9 @@ _SizeTestApp.TypeMap.dll:System.Runtime.CompilerServices.IgnoresAccessChecksToAt
 Microsoft.MacCatalyst.dll:<Module>
 Microsoft.MacCatalyst.dll:<Module>..cctor()
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher..cctor()
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher..ctor()
-Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher..ctor(System.IntPtr, ObjCRuntime.IManagedRegistrar)
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher..ctor(System.EventHandler)
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.get_WorksWhenModal()
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.OnActivated(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.OnActivated2(Foundation.NSObject)
@@ -301,12 +302,14 @@ Microsoft.MacCatalyst.dll:Foundation.NSObject.get_flags()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_FlagsInternal()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_handle()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_Handle()
+Microsoft.MacCatalyst.dll:Foundation.NSObject.get_HasManagedRef()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_InFinalizerQueue()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_IsDirectBinding()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.get_IsRegisteredToggleRef()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.GetData()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.GetHashCode()
 Microsoft.MacCatalyst.dll:Foundation.NSObject.GetNativeHash()
+Microsoft.MacCatalyst.dll:Foundation.NSObject.GetOrCreateNSObjectForConstructor`1(System.IntPtr, System.UInt32)
 Microsoft.MacCatalyst.dll:Foundation.NSObject.InitializeHandle(ObjCRuntime.NativeHandle, System.String, System.Boolean)
 Microsoft.MacCatalyst.dll:Foundation.NSObject.InitializeHandle(ObjCRuntime.NativeHandle, System.String)
 Microsoft.MacCatalyst.dll:Foundation.NSObject.InitializeObject()
@@ -342,7 +345,6 @@ Microsoft.MacCatalyst.dll:Foundation.NSObject/Flags Foundation.NSObjectData::fla
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer..cctor()
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer..ctor()
-Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer..ctor(System.IntPtr, ObjCRuntime.IManagedRegistrar)
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.Add(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.Drain(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.ScheduleDrain()
@@ -974,6 +976,8 @@ Microsoft.MacCatalyst.dll:ObjCRuntime.RuntimeTypeHandleEqualityComparer..ctor()
 Microsoft.MacCatalyst.dll:ObjCRuntime.RuntimeTypeHandleEqualityComparer.Equals(System.RuntimeTypeHandle, System.RuntimeTypeHandle)
 Microsoft.MacCatalyst.dll:ObjCRuntime.RuntimeTypeHandleEqualityComparer.GetHashCode(System.RuntimeTypeHandle)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Selector
+Microsoft.MacCatalyst.dll:ObjCRuntime.Selector AppKit.ActionDispatcher::Action
+Microsoft.MacCatalyst.dll:ObjCRuntime.Selector AppKit.ActionDispatcher::DoubleAction
 Microsoft.MacCatalyst.dll:ObjCRuntime.Selector Foundation.NSDispatcher::Selector
 Microsoft.MacCatalyst.dll:ObjCRuntime.Selector._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Selector..cctor()
@@ -1315,8 +1319,8 @@ Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate..cctor()
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate..ctor()
+Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate..ctor(Foundation.NSObjectFlag)
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate..ctor(ObjCRuntime.NativeHandle)
-Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate..ctor(System.IntPtr, ObjCRuntime.IManagedRegistrar)
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate.FinishedLaunching(UIKit.UIApplication, Foundation.NSDictionary)
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate/__Registrar_Callbacks__
 Microsoft.MacCatalyst.dll:UIKit.UIApplicationDelegate/__Registrar_Callbacks__.callback_573_UIKit_UIApplicationDelegate__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
@@ -1392,7 +1396,6 @@ Microsoft.MacCatalyst.dll:UIKit.UIWindow.set_RootViewController(UIKit.UIViewCont
 SizeTestApp.dll:<Module>
 SizeTestApp.dll:MySimpleApp.AppDelegate
 SizeTestApp.dll:MySimpleApp.AppDelegate..ctor()
-SizeTestApp.dll:MySimpleApp.AppDelegate..ctor(System.IntPtr, ObjCRuntime.IManagedRegistrar)
 SizeTestApp.dll:MySimpleApp.AppDelegate.FinishedLaunching(UIKit.UIApplication, Foundation.NSDictionary)
 SizeTestApp.dll:MySimpleApp.AppDelegate/__Registrar_Callbacks__
 SizeTestApp.dll:MySimpleApp.AppDelegate/__Registrar_Callbacks__.callback_0_MySimpleApp_AppDelegate_FinishedLaunching(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)

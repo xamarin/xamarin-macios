@@ -1,4 +1,4 @@
-AppBundleSize: 11,813,255 bytes (11,536.4 KB = 11.3 MB)
+AppBundleSize: 11,813,690 bytes (11,536.8 KB = 11.3 MB)
 # The following list of files and their sizes is just informational / for review, and isn't used in the test:
 _Microsoft.tvOS.TypeMap.dll:
     16,384 bytes (16.0 KB = 0.0 MB)
@@ -7,33 +7,33 @@ _Microsoft.tvOS.TypeMaps.dll:
 _SizeTestApp.TypeMap.dll:
     2,560 bytes (2.5 KB = 0.0 MB)
 Frameworks/libcoreclr.framework/Info.plist:
-    815 bytes (0.8 KB = 0.0 MB)
+    804 bytes (0.8 KB = 0.0 MB)
 Frameworks/libcoreclr.framework/libcoreclr:
     4,225,168 bytes (4,126.1 KB = 4.0 MB)
 Frameworks/libSystem.Globalization.Native.framework/Info.plist:
-    857 bytes (0.8 KB = 0.0 MB)
+    846 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.Globalization.Native.framework/libSystem.Globalization.Native:
     124,608 bytes (121.7 KB = 0.1 MB)
 Frameworks/libSystem.IO.Compression.Native.framework/Info.plist:
-    859 bytes (0.8 KB = 0.0 MB)
+    848 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.IO.Compression.Native.framework/libSystem.IO.Compression.Native:
     1,438,032 bytes (1,404.3 KB = 1.4 MB)
 Frameworks/libSystem.Native.framework/Info.plist:
-    829 bytes (0.8 KB = 0.0 MB)
+    818 bytes (0.8 KB = 0.0 MB)
 Frameworks/libSystem.Native.framework/libSystem.Native:
     177,984 bytes (173.8 KB = 0.2 MB)
 Frameworks/libSystem.Security.Cryptography.Native.Apple.framework/Info.plist:
-    885 bytes (0.9 KB = 0.0 MB)
+    874 bytes (0.9 KB = 0.0 MB)
 Frameworks/libSystem.Security.Cryptography.Native.Apple.framework/libSystem.Security.Cryptography.Native.Apple:
     252,096 bytes (246.2 KB = 0.2 MB)
 Frameworks/SizeTestApp.r2r.framework/Info.plist:
-    827 bytes (0.8 KB = 0.0 MB)
+    816 bytes (0.8 KB = 0.0 MB)
 Frameworks/SizeTestApp.r2r.framework/SizeTestApp.r2r:
     3,925,048 bytes (3,833.1 KB = 3.7 MB)
 Info.plist:
-    1,143 bytes (1.1 KB = 0.0 MB)
+    1,132 bytes (1.1 KB = 0.0 MB)
 Microsoft.tvOS.dll:
-    64,000 bytes (62.5 KB = 0.1 MB)
+    64,512 bytes (63.0 KB = 0.1 MB)
 PkgInfo:
     8 bytes (0.0 KB = 0.0 MB)
 SizeTestApp:

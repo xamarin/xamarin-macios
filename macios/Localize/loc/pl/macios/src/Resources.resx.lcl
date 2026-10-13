@@ -28,15 +28,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";BI0002" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the API bindings.]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nie można skompilować powiązań interfejsu API.]D;]A;		{0}]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";BI0003" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Frameworks were not loaded for platform {0}.]]></Val>
@@ -69,15 +60,6 @@
           <Val><![CDATA[Could not parse the command line argument '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Nie można przeanalizować argumentu wiersza polecenia „{0}”: {1}]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI0028" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[No C# compiler has been specified (using --compiler or --compile-command).]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nie określono kompilatora języka C# (przy użyciu polecenia --compiler lub --compile-command).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,15 +114,6 @@
           <Val><![CDATA[Internal error {0}. Please file a bug report with a test case (https://github.com/dotnet/macios/issues/new).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Wewnętrzny błąd spójności {0}. Zgłoś usterkę z przypadkiem testowym (https://github.com/dotnet/macios/issues/new).]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI1000" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the generated API bindings.	]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nie można skompilować wygenerowanych powiązań interfejsu API.	]D;]A;		{0}]D;]A;		]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -582,10 +555,13 @@
       </Item>
       <Item ItemId=";BI1050" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[[BindAs]5D; cannot be used inside Protocol or Model types. Type: {0}]]></Val>
+          <Val><![CDATA[[BindAs]5D; cannot be used on properties or return values inside Protocol or Model types. Type: {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nie można używać elementu [BindAs]5D; wewnątrz typów Protokół ani Model. Typ: {0}]]></Val>
+            <Val><![CDATA[Elementu [BindAs]5D; nie można używać na właściwościach ani wartościach zwracanych wewnątrz typów Protocol lub Model. Typ: {0}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[[BindAs]5D; cannot be used inside Protocol or Model types. Type: {0}]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1140,6 +1116,51 @@
           <Val><![CDATA[Found a [Preserve]5D; attribute on {0}: [Preserve]5D; is deprecated; use [DynamicDependency]5D; instead.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Znaleziono atrybut [Preserve]5D; na {0}: Atrybut [Preserve]5D; jest przestarzały; zamiast niego użyj atrybutu [DynamicDependency]5D;.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1125" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The [FactoryMethod]5D; binding method '{0}.{1}' has an 'out NSError' parameter, but its return value is not nullable. Add [return: NullAllowed]5D; to the binding method so the generated factory method can return null when the native initializer fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Metoda powiązania [FactoryMethod]5D; „{0}.{1}” ma parametr „out NSError”, ale jej wartość zwracana nie dopuszcza wartości null. Dodaj [return: NullAllowed]5D; do metody powiązania, aby wygenerowana metoda fabryczna mogła zwracać wartość null, gdy natywny inicjator zakończy się niepowodzeniem.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1126" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The [FactoryMethod]5D; attribute on '{0}.{1}' can only be used with an Objective-C 'init' selector (the selector must be 'init' or start with 'init' followed by an uppercase letter), but the selector is '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Atrybut [FactoryMethod]5D; w „{0}.{1}” można używać tylko z selektorem Objective-C „init” (selektor musi mieć wartość „init” albo zaczynać się od „init” i być dalej uzupełniony wielką literą), ale selektor ma wartość „{2}”.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1127" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The [FactoryMethod]5D; attribute on '{0}.{1}' can't specify a method name when applied to a method that isn't a constructor. Remove the method name from the [FactoryMethod]5D; attribute; the name of the binding method is used instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Atrybut [FactoryMethod]5D; w „{0}.{1}” nie może określać nazwy metody, gdy jest stosowany do metody, która nie jest konstruktorem. Usuń nazwę metody z atrybutu [FactoryMethod]5D;; zamiast niej używana jest nazwa metody powiązania.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1128" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The [Field]5D; member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Element członkowski [Field]5D; „{0}.{1}” ustawia element SymbolAddress, ale jego typem jest „{2}”; obsługiwany jest tylko element System.IntPtr.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1129" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The selector '{0}' on '{1}' contains invalid characters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Selektor „{0}" w przypadku „{1}” zawiera nieprawidłowe znaki.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
