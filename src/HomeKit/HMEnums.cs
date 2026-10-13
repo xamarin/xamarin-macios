@@ -2206,12 +2206,17 @@ namespace HomeKit {
 		NotConnected = 2,
 	}
 
+	/// <summary>Specifies how a television's volume control operates.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueVolumeControlType : long {
+		/// <summary>No volume control is available.</summary>
 		None = 0,
+		/// <summary>Volume changes are relative, without a current volume value.</summary>
 		Relative,
+		/// <summary>Volume changes are relative and a current volume value is available.</summary>
 		RelativeWithCurrent,
+		/// <summary>The volume is set to an absolute value.</summary>
 		Absolute,
 	}
 

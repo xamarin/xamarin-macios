@@ -3734,10 +3734,6 @@ F:HomeKit.HMCharacteristicType.WiFiSatelliteStatus
 F:HomeKit.HMCharacteristicValueTargetMediaState.Pause
 F:HomeKit.HMCharacteristicValueTargetMediaState.Play
 F:HomeKit.HMCharacteristicValueTargetMediaState.Stop
-F:HomeKit.HMCharacteristicValueVolumeControlType.Absolute
-F:HomeKit.HMCharacteristicValueVolumeControlType.None
-F:HomeKit.HMCharacteristicValueVolumeControlType.Relative
-F:HomeKit.HMCharacteristicValueVolumeControlType.RelativeWithCurrent
 F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeDecrement
 F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeIncrement
 F:HomeKit.HMError.AccessoryCommunicationFailure
@@ -56680,7 +56676,6 @@ T:HomeKit.HMCharacteristicEvent
 T:HomeKit.HMCharacteristicMetadata
 T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueTargetMediaState
-T:HomeKit.HMCharacteristicValueVolumeControlType
 T:HomeKit.HMCharacteristicValueVolumeSelector
 T:HomeKit.HMCharacteristicWriteAction
 T:HomeKit.HMDurationEvent
