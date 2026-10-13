@@ -170,23 +170,25 @@ namespace CoreWlan {
 		WEP104 = 2,
 	}
 
+	/// <summary>Specifies the channel width of a wireless network.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelWidth : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The channel width is unknown.</summary>
 		Unknown = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>A 20 MHz channel width.</summary>
 		TwentyMHz = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>A 40 MHz channel width.</summary>
 		FortyMHz = 2,
 #if !XAMCORE_5_0
+		/// <summary>A 40 MHz channel width. Use <see cref="CWChannelWidth.FortyMHz"/> instead.</summary>
 		[Obsolete ("Use 'FortyMHz' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		FourtyMHz = FortyMHz,
 #endif
-		/// <summary>To be added.</summary>
+		/// <summary>An 80 MHz channel width.</summary>
 		EightyMHz = 3,
-		/// <summary>To be added.</summary>
+		/// <summary>A 160 MHz channel width.</summary>
 		OneHundredSixtyMHz = 4,
 	}
 
