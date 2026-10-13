@@ -108,10 +108,7 @@ namespace Network {
 			using var nwRequest = new NWWebSocketRequest (request, owns: false);
 			var response = del (nwRequest);
 			response ??= new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
-
-			var responseHandle = response.GetCheckedHandle ();
-			GC.KeepAlive (response);
-			return responseHandle;
+			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
 		}
 
 		void SetClientRequestHandlerCore (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
