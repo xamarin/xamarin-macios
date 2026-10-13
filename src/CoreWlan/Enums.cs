@@ -222,14 +222,15 @@ namespace CoreWlan {
 		Rx = 1 << 4,
 	}
 
+	/// <summary>Specifies the keychain domain for a wireless network credential.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWKeychainDomain : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>No keychain domain is specified.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The user's keychain.</summary>
 		User = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The system keychain.</summary>
 		System = 2,
 	}
 

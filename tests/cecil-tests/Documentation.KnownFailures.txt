@@ -55751,7 +55751,6 @@ T:CoreWlan.CWChannel
 T:CoreWlan.CWEventType
 T:CoreWlan.CWIbssModeSecurity
 T:CoreWlan.CWKeychain
-T:CoreWlan.CWKeychainDomain
 T:CoreWlan.CWMutableConfiguration
 T:CoreWlan.CWMutableNetworkProfile
 T:CoreWlan.CWNetwork
