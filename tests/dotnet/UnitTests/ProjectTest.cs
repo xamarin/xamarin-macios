@@ -282,6 +282,7 @@ namespace Xamarin.Tests {
 				"FSharpOptimizationCompressedDataB.fsharplibrary",
 				"FSharpSignatureCompressedData.fsharplibrary",
 				"FSharpSignatureCompressedDataB.fsharplibrary",
+				"ILLink.Substitutions.xml",
 			};
 			if (platform != ApplePlatform.MacOSX)
 				expectedFSharpResources.Add ("__monotouch_item_PartialAppManifest_shared-dotnet.plist");

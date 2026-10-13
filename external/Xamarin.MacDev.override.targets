@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup>
+		<RestoreConfigFile Condition="'$(RestoreConfigFile)' == ''">$(MSBuildThisFileDirectory)../NuGet.config</RestoreConfigFile>
+	</PropertyGroup>
+</Project>

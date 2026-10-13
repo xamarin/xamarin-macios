@@ -136,8 +136,9 @@ endif
 
 # I haven't found a way to execute ilrepack.exe on .NET (it will probably have to be built for .NET), so run it using Mono.
 
-.build-stamp: $(ALL_SOURCES)
-	$(Q) $(DOTNET) build "/bl:$@.binlog" $(XBUILD_VERBOSITY) /p:NuGetPackageRoot=$(abspath $(TOP)/packages)/
+# The Xamarin.MacDev submodule clears parent NuGet sources, so use our feed list for the whole build.
+.build-stamp: $(ALL_SOURCES) $(TOP)/NuGet.config
+	$(Q) $(DOTNET) build "/bl:$@.binlog" $(XBUILD_VERBOSITY) /p:NuGetPackageRoot=$(abspath $(TOP)/packages)/ "/p:RestoreConfigFile=$(abspath $(TOP)/NuGet.config)"
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
