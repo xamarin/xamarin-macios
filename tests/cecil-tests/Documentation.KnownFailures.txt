@@ -55769,7 +55769,6 @@ T:CoreWlan.CWNetwork
 T:CoreWlan.CWNetworkProfile
 T:CoreWlan.CWPhyMode
 T:CoreWlan.CWSecurity
-T:CoreWlan.CWStatus
 T:CoreWlan.CWWiFiClient
 T:CryptoTokenKit.TKBerTlvRecord
 T:CryptoTokenKit.TKCompactTlvRecord

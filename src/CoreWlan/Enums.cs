@@ -6,77 +6,78 @@ using System.ComponentModel;
 
 namespace CoreWlan {
 
+	/// <summary>Indicates the result of a Core WLAN operation.</summary>
 	[NoMacCatalyst]
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
-		/// <summary>To be added.</summary>
+		/// <summary>The operation completed successfully.</summary>
 		Ok = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>An Extensible Authentication Protocol over LAN (EAPOL) operation failed.</summary>
 		EAPOL = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>A parameter is invalid.</summary>
 		InvalidParameter = -3900,
-		/// <summary>To be added.</summary>
+		/// <summary>There is not enough memory to complete the operation.</summary>
 		NoMemory = -3901,
-		/// <summary>To be added.</summary>
+		/// <summary>An unknown error occurred.</summary>
 		Unknown = -3902,
-		/// <summary>To be added.</summary>
+		/// <summary>The operation is not supported.</summary>
 		NotSupported = -3903,
-		/// <summary>To be added.</summary>
+		/// <summary>The data format is invalid.</summary>
 		InvalidFormat = -3904,
-		/// <summary>To be added.</summary>
+		/// <summary>The operation timed out.</summary>
 		Timeout = -3905,
-		/// <summary>To be added.</summary>
+		/// <summary>An unspecified failure occurred.</summary>
 		UnspecifiedFailure = -3906,
-		/// <summary>To be added.</summary>
+		/// <summary>The requested capabilities are not supported.</summary>
 		UnsupportedCapabilities = -3907,
-		/// <summary>To be added.</summary>
+		/// <summary>The access point denied reassociation.</summary>
 		ReassociationDenied = -3908,
-		/// <summary>To be added.</summary>
+		/// <summary>The access point denied association.</summary>
 		AssociationDenied = -3909,
-		/// <summary>To be added.</summary>
+		/// <summary>The authentication algorithm is not supported.</summary>
 		AuthenticationAlgorithmUnsupported = -3910,
-		/// <summary>To be added.</summary>
+		/// <summary>The authentication sequence number is invalid.</summary>
 		InvalidAuthenticationSequenceNumber = -3911,
-		/// <summary>To be added.</summary>
+		/// <summary>The authentication challenge failed.</summary>
 		ChallengeFailure = -3912,
-		/// <summary>To be added.</summary>
+		/// <summary>The access point has reached its client capacity.</summary>
 		APFull = -3913,
-		/// <summary>To be added.</summary>
+		/// <summary>The rate set is not supported.</summary>
 		UnsupportedRateSet = -3914,
-		/// <summary>To be added.</summary>
+		/// <summary>Short slot time is not supported.</summary>
 		ShortSlotUnsupported = -3915,
-		/// <summary>To be added.</summary>
+		/// <summary>DSSS-OFDM is not supported.</summary>
 		DSSSOFDMUnsupported = -3916,
-		/// <summary>To be added.</summary>
+		/// <summary>An information element is invalid.</summary>
 		InvalidInformationElement = -3917,
-		/// <summary>To be added.</summary>
+		/// <summary>The group cipher is invalid.</summary>
 		InvalidGroupCipher = -3918,
-		/// <summary>To be added.</summary>
+		/// <summary>The pairwise cipher is invalid.</summary>
 		InvalidPairwiseCipher = -3919,
-		/// <summary>To be added.</summary>
+		/// <summary>The authentication and key management protocol is invalid.</summary>
 		InvalidAKMP = -3920,
-		/// <summary>To be added.</summary>
+		/// <summary>The Robust Security Network (RSN) version is not supported.</summary>
 		UnsupportedRSNVersion = -3921,
-		/// <summary>To be added.</summary>
+		/// <summary>The RSN capabilities are invalid.</summary>
 		InvalidRSNCapabilities = -3922,
-		/// <summary>To be added.</summary>
+		/// <summary>The cipher suite was rejected.</summary>
 		CipherSuiteRejected = -3923,
-		/// <summary>To be added.</summary>
+		/// <summary>The Pairwise Master Key (PMK) is invalid.</summary>
 		InvalidPMK = -3924,
-		/// <summary>To be added.</summary>
+		/// <summary>The supplicant operation timed out.</summary>
 		SupplicantTimeout = -3925,
-		/// <summary>To be added.</summary>
+		/// <summary>High Throughput (HT) features are not supported.</summary>
 		HTFeaturesNotSupported = -3926,
-		/// <summary>To be added.</summary>
+		/// <summary>The PCO transition time is not supported.</summary>
 		PCOTransitionTimeNotSupported = -3927,
-		/// <summary>To be added.</summary>
+		/// <summary>The reference is not bound.</summary>
 		ReferenceNotBound = -3928,
-		/// <summary>To be added.</summary>
+		/// <summary>An interprocess communication (IPC) operation failed.</summary>
 		IPCFailure = -3929,
-		/// <summary>To be added.</summary>
+		/// <summary>The operation is not permitted.</summary>
 		OperationNotPermitted = -3930,
-		/// <summary>To be added.</summary>
+		/// <summary>An unspecified status was returned.</summary>
 		Status = -3931,
 	}
 
