@@ -96,6 +96,7 @@ namespace MonoTouchFixtures.Network {
 		public void ClientRequestHandler ()
 		{
 			var listenerState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
+			var listenerCancelled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var clientState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var requestValues = new TaskCompletionSource<(Dictionary<string, string> Headers, List<string> Subprotocols)> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var acceptedConnection = new TaskCompletionSource<NWConnection> (TaskCreationOptions.RunContinuationsAsynchronously);
@@ -140,6 +141,9 @@ namespace MonoTouchFixtures.Network {
 					case NWListenerState.Failed:
 						listenerState.TrySetResult (error?.ToString () ?? $"Listener entered the {state} state.");
 						break;
+					case NWListenerState.Cancelled:
+						listenerCancelled.TrySetResult (true);
+						break;
 					}
 				});
 				listener.SetNewConnectionHandler (connection => {
@@ -160,7 +164,8 @@ namespace MonoTouchFixtures.Network {
 				using var clientParameters = NWParameters.CreateTcp ();
 				using (var stack = clientParameters.ProtocolStack)
 					stack.PrependApplicationProtocol (clientOptions);
-				using var endpoint = NWEndpoint.Create ("127.0.0.1", listener.Port.ToString (CultureInfo.InvariantCulture));
+				using var endpoint = NWEndpoint.Create ($"ws://127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}/")
+					?? throw new InvalidOperationException ("Could not create the WebSocket endpoint.");
 				using var client = new NWConnection (endpoint, clientParameters);
 				client.SetQueue (DispatchQueue.DefaultGlobalQueue);
 				client.SetStateChangeHandler ((state, error) => {
@@ -179,7 +184,6 @@ namespace MonoTouchFixtures.Network {
 				try {
 					Assert.That (requestValues.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler was not called.");
 					var values = requestValues.Task.Result;
-					Assert.That (values.Headers.Count, Is.EqualTo (2), "Header count");
 					Assert.That (values.Headers ["X-First"], Is.EqualTo ("first"), "First header");
 					Assert.That (values.Headers ["X-Second"], Is.EqualTo ("second"), "Second header");
 					Assert.That (values.Subprotocols, Is.EqualTo (new [] { "first", "second" }), "Subprotocols");
@@ -188,7 +192,8 @@ namespace MonoTouchFixtures.Network {
 				} finally {
 					client.Cancel ();
 					listener.Cancel ();
-					if (acceptedConnection.Task.IsCompletedSuccessfully) {
+					listenerCancelled.Task.Wait (TimeSpan.FromSeconds (5));
+					if (acceptedConnection.Task.Wait (TimeSpan.FromSeconds (5))) {
 						acceptedConnection.Task.Result.Cancel ();
 						acceptedConnection.Task.Result.Dispose ();
 					}

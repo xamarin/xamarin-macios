@@ -150,9 +150,8 @@ namespace Network {
 #endif
 
 #if !XAMCORE_5_0
-		[Obsolete ("Use 'SetClientRequestHandler2' instead.")]
+		[Obsolete ("This overload cannot return a WebSocket response and rejects every handshake. Use 'SetClientRequestHandler2' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[OverloadResolutionPriority (-1)]
 		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
 		{
 			if (handler is null)
