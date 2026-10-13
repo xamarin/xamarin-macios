@@ -2194,11 +2194,15 @@ namespace HomeKit {
 		NotReady = 1,
 	}
 
+	/// <summary>Describes the connection state of a Wi-Fi satellite.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueWiFiSatelliteStatus : long {
+		/// <summary>The satellite connection state is unknown.</summary>
 		Unknown = 0,
+		/// <summary>The satellite is connected.</summary>
 		Connected = 1,
+		/// <summary>The satellite is not connected.</summary>
 		NotConnected = 2,
 	}
 

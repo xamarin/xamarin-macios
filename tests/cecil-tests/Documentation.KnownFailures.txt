@@ -3740,9 +3740,6 @@ F:HomeKit.HMCharacteristicValueVolumeControlType.Relative
 F:HomeKit.HMCharacteristicValueVolumeControlType.RelativeWithCurrent
 F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeDecrement
 F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeIncrement
-F:HomeKit.HMCharacteristicValueWiFiSatelliteStatus.Connected
-F:HomeKit.HMCharacteristicValueWiFiSatelliteStatus.NotConnected
-F:HomeKit.HMCharacteristicValueWiFiSatelliteStatus.Unknown
 F:HomeKit.HMError.AccessoryCommunicationFailure
 F:HomeKit.HMError.AccessoryIsSuspended
 F:HomeKit.HMError.EnterpriseNetworkNotSupported
@@ -56685,7 +56682,6 @@ T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueTargetMediaState
 T:HomeKit.HMCharacteristicValueVolumeControlType
 T:HomeKit.HMCharacteristicValueVolumeSelector
-T:HomeKit.HMCharacteristicValueWiFiSatelliteStatus
 T:HomeKit.HMCharacteristicWriteAction
 T:HomeKit.HMDurationEvent
 T:HomeKit.HMEvent
