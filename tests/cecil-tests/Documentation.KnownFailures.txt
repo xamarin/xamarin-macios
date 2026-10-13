@@ -3755,8 +3755,6 @@ F:HomeKit.HMCharacteristicValuePictureMode.Photo
 F:HomeKit.HMCharacteristicValuePictureMode.Sport
 F:HomeKit.HMCharacteristicValuePictureMode.Standard
 F:HomeKit.HMCharacteristicValuePictureMode.Vivid
-F:HomeKit.HMCharacteristicValuePowerModeSelection.Hide
-F:HomeKit.HMCharacteristicValuePowerModeSelection.Show
 F:HomeKit.HMCharacteristicValueRemoteKey.ArrowDown
 F:HomeKit.HMCharacteristicValueRemoteKey.ArrowLeft
 F:HomeKit.HMCharacteristicValueRemoteKey.ArrowRight
@@ -56732,7 +56730,6 @@ T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueCurrentMediaState
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
 T:HomeKit.HMCharacteristicValuePictureMode
-T:HomeKit.HMCharacteristicValuePowerModeSelection
 T:HomeKit.HMCharacteristicValueRemoteKey
 T:HomeKit.HMCharacteristicValueRouterStatus
 T:HomeKit.HMCharacteristicValueTargetMediaState

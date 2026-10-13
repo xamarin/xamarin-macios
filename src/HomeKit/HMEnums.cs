@@ -2058,10 +2058,13 @@ namespace HomeKit {
 		Enabled = 1,
 	}
 
+	/// <summary>Indicates whether the power mode selection is shown.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValuePowerModeSelection : long {
+		/// <summary>Show the power mode selection.</summary>
 		Show = 0,
+		/// <summary>Hide the power mode selection.</summary>
 		Hide = 1,
 	}
 
