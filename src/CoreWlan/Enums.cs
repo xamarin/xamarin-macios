@@ -27,7 +27,7 @@ namespace CoreWlan {
 		InvalidFormat = -3904,
 		/// <summary>The operation timed out.</summary>
 		Timeout = -3905,
-		/// <summary>An unspecified failure occurred.</summary>
+		/// <summary>The access point did not specify a reason for the authentication or association failure.</summary>
 		UnspecifiedFailure = -3906,
 		/// <summary>The requested capabilities are not supported.</summary>
 		UnsupportedCapabilities = -3907,
