@@ -104,16 +104,17 @@ namespace CoreWlan {
 		BE = 7,
 	}
 
+	/// <summary>Specifies the operating mode of a wireless interface.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWInterfaceMode : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The interface mode is unknown or unavailable.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The interface operates as a station connected to a wireless network.</summary>
 		Station = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The interface operates as an independent basic service set (IBSS) peer.</summary>
 		Ibss = 2,
-		/// <summary>To be added.</summary>
+		/// <summary>The interface operates as a host access point.</summary>
 		HostAP = 3,
 	}
 

@@ -55759,7 +55759,6 @@ T:CoreWlan.CWChannelWidth
 T:CoreWlan.CWCipherKeyFlags
 T:CoreWlan.CWEventType
 T:CoreWlan.CWIbssModeSecurity
-T:CoreWlan.CWInterfaceMode
 T:CoreWlan.CWKeychain
 T:CoreWlan.CWKeychainDomain
 T:CoreWlan.CWMutableConfiguration
