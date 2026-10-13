@@ -19,7 +19,7 @@ namespace CoreWlan {
 		InvalidParameter = -3900,
 		/// <summary>There is not enough memory to complete the operation.</summary>
 		NoMemory = -3901,
-		/// <summary>An unknown error occurred.</summary>
+		/// <summary>An unexpected error condition occurred for which no error code exists.</summary>
 		Unknown = -3902,
 		/// <summary>The operation is not supported.</summary>
 		NotSupported = -3903,
@@ -31,7 +31,7 @@ namespace CoreWlan {
 		UnspecifiedFailure = -3906,
 		/// <summary>The requested capabilities are not supported.</summary>
 		UnsupportedCapabilities = -3907,
-		/// <summary>The access point denied reassociation.</summary>
+		/// <summary>The access point could not determine that an association existed and denied reassociation.</summary>
 		ReassociationDenied = -3908,
 		/// <summary>The access point denied association.</summary>
 		AssociationDenied = -3909,
