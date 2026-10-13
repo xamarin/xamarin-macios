@@ -2170,12 +2170,17 @@ namespace HomeKit {
 		Hide = 1,
 	}
 
+	/// <summary>Describes the current visibility state of a television input source.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentVisibilityState : long {
+		/// <summary>The input source is shown.</summary>
 		Shown = 0,
+		/// <summary>The input source is hidden.</summary>
 		Hidden = 1,
+		/// <summary>The input source is shown when its device is connected.</summary>
 		Connected = 2,
+		/// <summary>The input source is always shown.</summary>
 		AlwaysShown = 3,
 	}
 
