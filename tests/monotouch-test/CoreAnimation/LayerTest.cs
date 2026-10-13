@@ -179,6 +179,7 @@ namespace MonoTouchFixtures.CoreAnimation {
 				var l = new Layer ();
 				l.Delegate = del;
 				l.Dispose ();
+				CATransaction.Flush ();
 			}) {
 				IsBackground = true,
 			};

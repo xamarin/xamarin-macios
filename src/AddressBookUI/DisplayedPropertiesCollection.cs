@@ -21,8 +21,7 @@ namespace AddressBookUI {
 	///     <remarks>To be added.</remarks>
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("ios", "Use the 'Contacts' API instead.")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[ObsoletedOSPlatform ("maccatalyst", "Use the 'Contacts' API instead.")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {

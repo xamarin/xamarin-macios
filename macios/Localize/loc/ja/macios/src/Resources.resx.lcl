@@ -28,15 +28,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";BI0002" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the API bindings.]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[API バインドをコンパイルできませんでした。]D;]A;		{0}]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";BI0003" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Frameworks were not loaded for platform {0}.]]></Val>
@@ -69,15 +60,6 @@
           <Val><![CDATA[Could not parse the command line argument '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[コマンド ライン引数 '{0}' を解析できませんでした: {1}]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI0028" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[No C# compiler has been specified (using --compiler or --compile-command).]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[C# コンパイラが指定されていません (--compiler または --compile-command を使用)。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,15 +114,6 @@
           <Val><![CDATA[Internal error {0}. Please file a bug report with a test case (https://github.com/dotnet/macios/issues/new).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[内部エラー {0}。テスト ケースを添えて、バグ レポートを提出してください (https://github.com/dotnet/macios/issues/new)。]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI1000" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the generated API bindings.	]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[生成された API バインドをコンパイルできませんでした。	]D;]A;		{0}]D;]A;		]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1150,6 +1123,9 @@
       <Item ItemId=";BI1125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The [FactoryMethod]5D; binding method '{0}.{1}' has an 'out NSError' parameter, but its return value is not nullable. Add [return: NullAllowed]5D; to the binding method so the generated factory method can return null when the native initializer fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[FactoryMethod]5D; バインド メソッド '{0}.{1}' には 'out NSError' パラメーターがありますが、その戻り値は Null 許容ではありません。バインド メソッドに [return: NullAllowed]5D; を追加して、ネイティブ初期化子が失敗した場合に、生成されたファクトリ メソッドが null 値を返せるようにします。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1165,12 +1141,27 @@
       <Item ItemId=";BI1127" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The [FactoryMethod]5D; attribute on '{0}.{1}' can't specify a method name when applied to a method that isn't a constructor. Remove the method name from the [FactoryMethod]5D; attribute; the name of the binding method is used instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}.{1}' の [FactoryMethod]5D; 属性は、コンストラクターではないメソッドに適用される場合、メソッド名を指定できません。[FactoryMethod]5D; 属性からメソッド名を削除してください。代わりに、バインド メソッドの名前が使用されます。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";BI1128" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The [Field]5D; member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[[Field]5D; メンバー '{0}.{1}' は SymbolAddress を設定していますが、その型は '{2}' です。サポートされているのは System.IntPtr のみです。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1129" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The selector '{0}' on '{1}' contains invalid characters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' のセレクター '{0}' に無効な文字が含まれています。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

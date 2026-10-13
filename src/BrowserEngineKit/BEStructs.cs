@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BrowserEngineKit {
 #if IOS || MACCATALYST || TVOS
 	[SupportedOSPlatform ("ios17.4")]
-	[SupportedOSPlatform ("maccatalyst17.4")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos17.4")]
 	[UnsupportedOSPlatform ("macos")]
 	[StructLayout (LayoutKind.Sequential)]
