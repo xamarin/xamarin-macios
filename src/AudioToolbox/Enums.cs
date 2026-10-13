@@ -163,30 +163,53 @@ namespace AudioToolbox {
 		Capture = 4,
 	}
 
+	/// <summary>Identifies the type and origin of audio content reported to a codec.</summary>
 	[iOS (26, 0), TV (26, 0), Mac (26, 0), MacCatalyst (26, 0)]
 	public enum AudioCodecContentSource : int {
+		/// <summary>The content source is unspecified.</summary>
 		Unspecified = -1,
+		/// <summary>A reserved content source index.</summary>
 		Reserved = 0,
+		/// <summary>Traditional audio captured by an Apple device.</summary>
 		AppleCaptureTraditional = 1,
+		/// <summary>Spatial audio captured by an Apple device.</summary>
 		AppleCaptureSpatial = 2,
+		/// <summary>A spatial capture format reserved for Apple use.</summary>
 		AppleCaptureSpatialEnhanced = 3,
+		/// <summary>Traditional Apple music or music video content, such as stereo or multichannel audio.</summary>
 		AppleMusicTraditional = 4,
+		/// <summary>Spatial Apple music or music video content.</summary>
 		AppleMusicSpatial = 5,
+		/// <summary>Traditional Apple professional audio-visual content encoded offline, such as stereo or multichannel audio.</summary>
 		AppleAVTraditionalOffline = 6,
+		/// <summary>Spatial Apple professional audio-visual content encoded offline.</summary>
 		AppleAVSpatialOffline = 7,
+		/// <summary>Traditional Apple professional live audio-visual content, such as stereo or multichannel audio.</summary>
 		AppleAVTraditionalLive = 8,
+		/// <summary>Spatial Apple professional live audio-visual content.</summary>
 		AppleAVSpatialLive = 9,
+		/// <summary>Apple passthrough content; use only when source information is unavailable.</summary>
 		ApplePassthrough = 10,
 
+		/// <summary>Traditional audio captured by a device.</summary>
 		CaptureTraditional = 33,
+		/// <summary>Spatial audio captured by a device.</summary>
 		CaptureSpatial = 34,
+		/// <summary>A spatial capture format reserved for future use.</summary>
 		CaptureSpatialEnhanced = 35,
+		/// <summary>Traditional music or music video content, such as stereo or multichannel audio.</summary>
 		MusicTraditional = 36,
+		/// <summary>Spatial music or music video content.</summary>
 		MusicSpatial = 37,
+		/// <summary>Traditional professional audio-visual content encoded offline, such as stereo or multichannel audio.</summary>
 		AVTraditionalOffline = 38,
+		/// <summary>Spatial professional audio-visual content encoded offline.</summary>
 		AVSpatialOffline = 39,
+		/// <summary>Traditional professional live audio-visual content, such as stereo or multichannel audio.</summary>
 		AVTraditionalLive = 40,
+		/// <summary>Spatial professional live audio-visual content.</summary>
 		AVSpatialLive = 41,
+		/// <summary>Passthrough content; use only when source information is unavailable.</summary>
 		Passthrough = 42,
 	}
 }
