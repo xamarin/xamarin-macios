@@ -3750,17 +3750,6 @@ F:HomeKit.HMCharacteristicValueInputDeviceType.Playback
 F:HomeKit.HMCharacteristicValueInputDeviceType.Recording
 F:HomeKit.HMCharacteristicValueInputDeviceType.Tuner
 F:HomeKit.HMCharacteristicValueInputDeviceType.TV
-F:HomeKit.HMCharacteristicValueInputSourceType.AirPlay
-F:HomeKit.HMCharacteristicValueInputSourceType.Application
-F:HomeKit.HMCharacteristicValueInputSourceType.ComponentVideo
-F:HomeKit.HMCharacteristicValueInputSourceType.CompositeVideo
-F:HomeKit.HMCharacteristicValueInputSourceType.Dvi
-F:HomeKit.HMCharacteristicValueInputSourceType.Hdmi
-F:HomeKit.HMCharacteristicValueInputSourceType.HomeScreen
-F:HomeKit.HMCharacteristicValueInputSourceType.Other
-F:HomeKit.HMCharacteristicValueInputSourceType.SVideo
-F:HomeKit.HMCharacteristicValueInputSourceType.Tuner
-F:HomeKit.HMCharacteristicValueInputSourceType.Usb
 F:HomeKit.HMCharacteristicValuePictureMode.Bright
 F:HomeKit.HMCharacteristicValuePictureMode.Calibrated
 F:HomeKit.HMCharacteristicValuePictureMode.Computer
@@ -56753,7 +56742,6 @@ T:HomeKit.HMCharacteristicValueClosedCaptions
 T:HomeKit.HMCharacteristicValueCurrentMediaState
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
 T:HomeKit.HMCharacteristicValueInputDeviceType
-T:HomeKit.HMCharacteristicValueInputSourceType
 T:HomeKit.HMCharacteristicValuePictureMode
 T:HomeKit.HMCharacteristicValuePowerModeSelection
 T:HomeKit.HMCharacteristicValueRemoteKey

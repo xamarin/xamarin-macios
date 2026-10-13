@@ -2000,19 +2000,31 @@ namespace HomeKit {
 		Secured = 1,
 	}
 
+	/// <summary>Identifies the category of a television input source.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputSourceType : long {
+		/// <summary>An input source of another type.</summary>
 		Other = 0,
+		/// <summary>The television's home screen.</summary>
 		HomeScreen = 1,
+		/// <summary>A television tuner input.</summary>
 		Tuner = 2,
+		/// <summary>An HDMI input.</summary>
 		Hdmi = 3,
+		/// <summary>A composite-video input.</summary>
 		CompositeVideo = 4,
+		/// <summary>An S-Video input.</summary>
 		SVideo = 5,
+		/// <summary>A component-video input.</summary>
 		ComponentVideo = 6,
+		/// <summary>A DVI input.</summary>
 		Dvi = 7,
+		/// <summary>An AirPlay input.</summary>
 		AirPlay = 8,
+		/// <summary>A USB input.</summary>
 		Usb = 9,
+		/// <summary>An application input.</summary>
 		Application = 10,
 	}
 
