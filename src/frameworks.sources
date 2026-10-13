@@ -94,6 +94,7 @@ APPKIT_SOURCES = \
 	AppKit/DoubleWrapper.cs \
 	AppKit/EventArgs.cs \
 	AppKit/Functions.cs \
+	AppKit/NSAccessibilityElementLoading.cs \
 	AppKit/NSActionCell.cs \
 	AppKit/NSAlert.cs \
 	AppKit/NSApplication.cs \

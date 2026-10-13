@@ -9,6 +9,7 @@
 #if !__MACCATALYST__
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using CoreFoundation;
 using CoreGraphics;
@@ -229,6 +230,36 @@ namespace AppKit {
 		{
 			return NSAccessibilitySetMayContainProtectedContent (flag ? (byte) 1 : (byte) 0) != 0;
 		}
+	}
+
+#if !XAMCORE_5_0
+	partial interface INSAccessibility {
+		/// <summary>Use <see cref="AccessibilityChildrenInNavigationOrder2" /> instead.</summary>
+		/// <remarks>This property is declared with the wrong property type (it's declared using the <see cref="NSAccessibilityElement" /> type instead of the <see cref="INSAccessibilityElementProtocol" /> interface). The property accessors for this property will try to convert between the type and the interface, and if unsuccessful an exception will be thrown at runtime.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement[]? AccessibilityChildrenInNavigationOrder {
+			get {
+				var result = _GetAccessibilityChildrenInNavigationOrder2 (this);
+				if (result is null)
+					return null;
+				var rv = new NSAccessibilityElement [result.Length];
+				for (var i = 0; i < rv.Length; i++)
+					rv [i] = (NSAccessibilityElement) result [i];
+				return rv;
+			}
+			set {
+				if (value is null) {
+					_SetAccessibilityChildrenInNavigationOrder2 (this, null);
+					return;
+				}
+				var rv = new INSAccessibilityElementProtocol [value.Length];
+				for (var i = 0; i < rv.Length; i++)
+					rv [i] = (INSAccessibilityElementProtocol) value [i];
+				_SetAccessibilityChildrenInNavigationOrder2 (this, rv);
+			}
+		}
+#endif // XAMCORE_5_0
 #endif
 	}
 }
