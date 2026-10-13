@@ -2184,13 +2184,13 @@ namespace HomeKit {
 		AlwaysShown = 3,
 	}
 
-	/// <summary>Describes whether a router is ready to provide network service.</summary>
+	/// <summary>Indicates whether the router has deployed its HomeKit configuration.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueRouterStatus : long {
-		/// <summary>The router is ready.</summary>
+		/// <summary>The router has deployed its HomeKit configuration.</summary>
 		Ready = 0,
-		/// <summary>The router is not ready.</summary>
+		/// <summary>The router has not deployed its HomeKit configuration.</summary>
 		NotReady = 1,
 	}
 
