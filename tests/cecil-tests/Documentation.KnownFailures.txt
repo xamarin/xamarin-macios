@@ -55748,7 +55748,6 @@ T:CoreVideo.CVPixelFormatKeys
 T:CoreVideo.CVPixelFormatTypeExtensions
 T:CoreVideo.CVVersatileBayerPattern
 T:CoreWlan.CWChannel
-T:CoreWlan.CWEventType
 T:CoreWlan.CWIbssModeSecurity
 T:CoreWlan.CWKeychain
 T:CoreWlan.CWMutableConfiguration

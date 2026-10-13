@@ -234,36 +234,37 @@ namespace CoreWlan {
 		System = 2,
 	}
 
+	/// <summary>Identifies events that a wireless interface can report.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWEventType : long {
-		/// <summary>To be added.</summary>
+		/// <summary>No event is specified.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The interface's power state changed.</summary>
 		PowerDidChange = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The network name (SSID) changed.</summary>
 		SsidDidChange = 2,
-		/// <summary>To be added.</summary>
+		/// <summary>The access point's basic service set identifier (BSSID) changed.</summary>
 		BssidDidChange = 3,
-		/// <summary>To be added.</summary>
+		/// <summary>The country code changed.</summary>
 		CountryCodeDidChange = 4,
-		/// <summary>To be added.</summary>
+		/// <summary>The wireless link state changed.</summary>
 		LinkDidChange = 5,
-		/// <summary>To be added.</summary>
+		/// <summary>The wireless link quality changed.</summary>
 		LinkQualityDidChange = 6,
-		/// <summary>To be added.</summary>
+		/// <summary>The interface mode changed.</summary>
 		ModeDidChange = 7,
-		/// <summary>To be added.</summary>
+		/// <summary>The scan cache was updated.</summary>
 		ScanCacheUpdated = 8,
 
-		/// <summary>To be added.</summary>
+		/// <summary>The state of a virtual interface changed.</summary>
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		VirtualInterfaceStateChanged = 9,
 
-		/// <summary>To be added.</summary>
+		/// <summary>A ranging report was received.</summary>
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 		RangingReportEvent = 10,
-		/// <summary>To be added.</summary>
+		/// <summary>An unknown event occurred.</summary>
 		Unknown = long.MaxValue,
 	}
 }
