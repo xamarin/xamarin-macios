@@ -148,12 +148,18 @@ namespace AudioToolbox {
 		AspFrequency = 0x61737066, // 'aspf'
 	}
 
+	/// <summary>Specifies the dynamic range compression configuration for encoded audio.</summary>
 	[iOS (26, 0), TV (26, 0), Mac (26, 0), MacCatalyst (26, 0)]
 	public enum AudioCodecDynamicRangeControlConfiguration : uint {
+		/// <summary>Disable dynamic range compression.</summary>
 		None = 0,
+		/// <summary>Apply dynamic range compression for music.</summary>
 		Music = 1,
+		/// <summary>Apply dynamic range compression for speech.</summary>
 		Speech = 2,
+		/// <summary>Apply dynamic range compression for movie soundtracks.</summary>
 		Movie = 3,
+		/// <summary>Apply dynamic range compression for live encoding.</summary>
 		Capture = 4,
 	}
 

@@ -542,11 +542,6 @@ F:AudioToolbox.AudioCodecContentSource.MusicTraditional
 F:AudioToolbox.AudioCodecContentSource.Passthrough
 F:AudioToolbox.AudioCodecContentSource.Reserved
 F:AudioToolbox.AudioCodecContentSource.Unspecified
-F:AudioToolbox.AudioCodecDynamicRangeControlConfiguration.Capture
-F:AudioToolbox.AudioCodecDynamicRangeControlConfiguration.Movie
-F:AudioToolbox.AudioCodecDynamicRangeControlConfiguration.Music
-F:AudioToolbox.AudioCodecDynamicRangeControlConfiguration.None
-F:AudioToolbox.AudioCodecDynamicRangeControlConfiguration.Speech
 F:AudioToolbox.AudioCodecPropertyId.AdjustCompressionProfile
 F:AudioToolbox.AudioCodecPropertyId.AdjustLocalQuality
 F:AudioToolbox.AudioCodecPropertyId.AdjustTargetLevel
@@ -54214,7 +54209,6 @@ T:ARKit.ARSkeletonJointName
 T:ARKit.ARTrackedRaycast
 T:ARKit.GetGeolocationCallback
 T:AudioToolbox.AudioCodecContentSource
-T:AudioToolbox.AudioCodecDynamicRangeControlConfiguration
 T:AudioToolbox.AudioCodecPropertyId
 T:AudioToolbox.AudioConverter.PrepareCompletionCallback
 T:AudioToolbox.AudioConverterOptions
