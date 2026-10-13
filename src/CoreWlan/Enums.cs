@@ -77,7 +77,7 @@ namespace CoreWlan {
 		IPCFailure = -3929,
 		/// <summary>The operation is not permitted.</summary>
 		OperationNotPermitted = -3930,
-		/// <summary>An unspecified status was returned.</summary>
+		/// <summary>A generic error occurred, and no specific error code is available.</summary>
 		Status = -3931,
 	}
 
