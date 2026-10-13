@@ -2086,25 +2086,43 @@ namespace HomeKit {
 		Interrupted = 5,
 	}
 
+	/// <summary>Identifies a remote-control command for a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueRemoteKey : long {
+		/// <summary>Rewind playback.</summary>
 		Rewind = 0,
+		/// <summary>Fast-forward playback.</summary>
 		FastForward = 1,
+		/// <summary>Skip to the next track.</summary>
 		NextTrack = 2,
+		/// <summary>Skip to the previous track.</summary>
 		PreviousTrack = 3,
+		/// <summary>Move the selection up.</summary>
 		ArrowUp = 4,
+		/// <summary>Move the selection down.</summary>
 		ArrowDown = 5,
+		/// <summary>Move the selection left.</summary>
 		ArrowLeft = 6,
+		/// <summary>Move the selection right.</summary>
 		ArrowRight = 7,
+		/// <summary>Select the current item.</summary>
 		Select = 8,
+		/// <summary>Navigate back.</summary>
 		Back = 9,
+		/// <summary>Exit the current view.</summary>
 		Exit = 10,
+		/// <summary>Toggle between playing and pausing.</summary>
 		PlayPause = 11,
+		/// <summary>Start or resume playback.</summary>
 		Play = 12,
+		/// <summary>Pause playback.</summary>
 		Pause = 13,
+		/// <summary>Open the menu.</summary>
 		Menu = 14,
+		/// <summary>Show information about the current item.</summary>
 		Info = 15,
+		/// <summary>Navigate to the home screen.</summary>
 		Home = 16,
 	}
 
