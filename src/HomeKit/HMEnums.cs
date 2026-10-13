@@ -2220,10 +2220,13 @@ namespace HomeKit {
 		Absolute,
 	}
 
+	/// <summary>Identifies the direction of a relative volume change.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueVolumeSelector : long {
+		/// <summary>Increase the volume.</summary>
 		VolumeIncrement = 0,
+		/// <summary>Decrease the volume.</summary>
 		VolumeDecrement,
 	}
 

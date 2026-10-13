@@ -3734,8 +3734,6 @@ F:HomeKit.HMCharacteristicType.WiFiSatelliteStatus
 F:HomeKit.HMCharacteristicValueTargetMediaState.Pause
 F:HomeKit.HMCharacteristicValueTargetMediaState.Play
 F:HomeKit.HMCharacteristicValueTargetMediaState.Stop
-F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeDecrement
-F:HomeKit.HMCharacteristicValueVolumeSelector.VolumeIncrement
 F:HomeKit.HMError.AccessoryCommunicationFailure
 F:HomeKit.HMError.AccessoryIsSuspended
 F:HomeKit.HMError.EnterpriseNetworkNotSupported
@@ -56676,7 +56674,6 @@ T:HomeKit.HMCharacteristicEvent
 T:HomeKit.HMCharacteristicMetadata
 T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueTargetMediaState
-T:HomeKit.HMCharacteristicValueVolumeSelector
 T:HomeKit.HMCharacteristicWriteAction
 T:HomeKit.HMDurationEvent
 T:HomeKit.HMEvent
