@@ -2048,10 +2048,13 @@ namespace HomeKit {
 		None = 6,
 	}
 
+	/// <summary>Indicates whether closed captions are enabled.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueClosedCaptions : long {
+		/// <summary>Closed captions are disabled.</summary>
 		Disabled = 0,
+		/// <summary>Closed captions are enabled.</summary>
 		Enabled = 1,
 	}
 

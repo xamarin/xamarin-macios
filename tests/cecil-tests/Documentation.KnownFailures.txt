@@ -3731,8 +3731,6 @@ F:HomeKit.HMCharacteristicType.VolumeControlType
 F:HomeKit.HMCharacteristicType.VolumeSelector
 F:HomeKit.HMCharacteristicType.WanStatusList
 F:HomeKit.HMCharacteristicType.WiFiSatelliteStatus
-F:HomeKit.HMCharacteristicValueClosedCaptions.Disabled
-F:HomeKit.HMCharacteristicValueClosedCaptions.Enabled
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Interrupted
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Loading
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Paused
@@ -56731,7 +56729,6 @@ T:HomeKit.HMCharacteristic
 T:HomeKit.HMCharacteristicEvent
 T:HomeKit.HMCharacteristicMetadata
 T:HomeKit.HMCharacteristicThresholdRangeEvent
-T:HomeKit.HMCharacteristicValueClosedCaptions
 T:HomeKit.HMCharacteristicValueCurrentMediaState
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
 T:HomeKit.HMCharacteristicValuePictureMode
