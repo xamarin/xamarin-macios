@@ -1989,11 +1989,14 @@ namespace HomeKit {
 		Cool = 2,
 	}
 
+	/// <summary>Indicates the requested state of a lock mechanism.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetLockMechanismState : long {
+		/// <summary>The lock mechanism should be unsecured.</summary>
 		Unsecured = 0,
+		/// <summary>The lock mechanism should be secured.</summary>
 		Secured = 1,
 	}
 

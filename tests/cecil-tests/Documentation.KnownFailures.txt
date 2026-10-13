@@ -3796,8 +3796,6 @@ F:HomeKit.HMCharacteristicValueRemoteKey.Rewind
 F:HomeKit.HMCharacteristicValueRemoteKey.Select
 F:HomeKit.HMCharacteristicValueRouterStatus.NotReady
 F:HomeKit.HMCharacteristicValueRouterStatus.Ready
-F:HomeKit.HMCharacteristicValueTargetLockMechanismState.Secured
-F:HomeKit.HMCharacteristicValueTargetLockMechanismState.Unsecured
 F:HomeKit.HMCharacteristicValueTargetMediaState.Pause
 F:HomeKit.HMCharacteristicValueTargetMediaState.Play
 F:HomeKit.HMCharacteristicValueTargetMediaState.Stop
@@ -56760,7 +56758,6 @@ T:HomeKit.HMCharacteristicValuePictureMode
 T:HomeKit.HMCharacteristicValuePowerModeSelection
 T:HomeKit.HMCharacteristicValueRemoteKey
 T:HomeKit.HMCharacteristicValueRouterStatus
-T:HomeKit.HMCharacteristicValueTargetLockMechanismState
 T:HomeKit.HMCharacteristicValueTargetMediaState
 T:HomeKit.HMCharacteristicValueTargetVisibilityState
 T:HomeKit.HMCharacteristicValueVolumeControlType
