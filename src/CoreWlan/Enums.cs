@@ -108,7 +108,7 @@ namespace CoreWlan {
 	[NoMacCatalyst]
 	[Native]
 	public enum CWInterfaceMode : ulong {
-		/// <summary>The interface mode is unknown or unavailable.</summary>
+		/// <summary>The interface is not operating in any mode.</summary>
 		None = 0,
 		/// <summary>The interface operates as a station connected to a wireless network.</summary>
 		Station = 1,
