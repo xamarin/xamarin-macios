@@ -2028,15 +2028,23 @@ namespace HomeKit {
 		Application = 10,
 	}
 
+	/// <summary>Identifies the category of a television input device.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputDeviceType : long {
+		/// <summary>An input device of another type.</summary>
 		Other = 0,
+		/// <summary>A television.</summary>
 		TV = 1,
+		/// <summary>A recording device.</summary>
 		Recording = 2,
+		/// <summary>A tuner.</summary>
 		Tuner = 3,
+		/// <summary>A playback device.</summary>
 		Playback = 4,
+		/// <summary>An audio system.</summary>
 		AudioSystem = 5,
+		/// <summary>No input device.</summary>
 		None = 6,
 	}
 

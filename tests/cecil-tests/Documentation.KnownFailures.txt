@@ -3743,13 +3743,6 @@ F:HomeKit.HMCharacteristicValueCurrentVisibilityState.AlwaysShown
 F:HomeKit.HMCharacteristicValueCurrentVisibilityState.Connected
 F:HomeKit.HMCharacteristicValueCurrentVisibilityState.Hidden
 F:HomeKit.HMCharacteristicValueCurrentVisibilityState.Shown
-F:HomeKit.HMCharacteristicValueInputDeviceType.AudioSystem
-F:HomeKit.HMCharacteristicValueInputDeviceType.None
-F:HomeKit.HMCharacteristicValueInputDeviceType.Other
-F:HomeKit.HMCharacteristicValueInputDeviceType.Playback
-F:HomeKit.HMCharacteristicValueInputDeviceType.Recording
-F:HomeKit.HMCharacteristicValueInputDeviceType.Tuner
-F:HomeKit.HMCharacteristicValueInputDeviceType.TV
 F:HomeKit.HMCharacteristicValuePictureMode.Bright
 F:HomeKit.HMCharacteristicValuePictureMode.Calibrated
 F:HomeKit.HMCharacteristicValuePictureMode.Computer
@@ -56741,7 +56734,6 @@ T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueClosedCaptions
 T:HomeKit.HMCharacteristicValueCurrentMediaState
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
-T:HomeKit.HMCharacteristicValueInputDeviceType
 T:HomeKit.HMCharacteristicValuePictureMode
 T:HomeKit.HMCharacteristicValuePowerModeSelection
 T:HomeKit.HMCharacteristicValueRemoteKey
