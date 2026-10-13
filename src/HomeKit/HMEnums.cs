@@ -2126,22 +2126,37 @@ namespace HomeKit {
 		Home = 16,
 	}
 
+	/// <summary>Identifies a picture mode preset for a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValuePictureMode : long {
+		/// <summary>The standard picture mode.</summary>
 		Standard = 0,
+		/// <summary>The movie picture mode.</summary>
 		Movie = 1,
+		/// <summary>The sports picture mode.</summary>
 		Sport = 2,
+		/// <summary>The game picture mode.</summary>
 		Game = 3,
+		/// <summary>The photo picture mode.</summary>
 		Photo = 4,
+		/// <summary>The vivid picture mode.</summary>
 		Vivid = 5,
+		/// <summary>The dark picture mode.</summary>
 		Dark = 6,
+		/// <summary>The bright picture mode.</summary>
 		Bright = 7,
+		/// <summary>The computer picture mode.</summary>
 		Computer = 8,
+		/// <summary>The night picture mode.</summary>
 		Night = 9,
+		/// <summary>The calibrated picture mode.</summary>
 		Calibrated = 10,
+		/// <summary>The first custom picture mode.</summary>
 		Custom1 = 11,
+		/// <summary>The second custom picture mode.</summary>
 		Custom2 = 12,
+		/// <summary>The third custom picture mode.</summary>
 		Custom3 = 13,
 	}
 
