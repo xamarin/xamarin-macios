@@ -4,6 +4,7 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <pthread.h>
 #include <unistd.h>
 #include <zlib.h>
 #include "libtest.h"
@@ -1681,6 +1682,42 @@ void x_set_reuse_alloc_callback (reuse_alloc_callback callback)
 	// a managed ObjCException; the alloc'd instance must be cleaned up so a later GC
 	// doesn't crash releasing a managed reference for it.
 	@throw [NSException exceptionWithName: @"InitReturnsNilClassException" reason: @"init failed" userInfo: nil];
+}
+@end
+
+static pthread_key_t thread_exit_object_key;
+static pthread_once_t thread_exit_object_key_once = PTHREAD_ONCE_INIT;
+static int thread_exit_object_key_status;
+static int thread_exit_released_object_count;
+
+static void release_thread_exit_object (void *value)
+{
+	[(NSObject *) value release];
+	__sync_add_and_fetch (&thread_exit_released_object_count, 1);
+}
+
+static void create_thread_exit_object_key (void)
+{
+	thread_exit_object_key_status = pthread_key_create (&thread_exit_object_key, release_thread_exit_object);
+}
+
+@implementation ThreadExitObject
++ (BOOL) releaseOnThreadExit: (NSObject *) object
+{
+	if (pthread_once (&thread_exit_object_key_once, create_thread_exit_object_key) != 0 || thread_exit_object_key_status != 0)
+		return NO;
+	if (pthread_getspecific (thread_exit_object_key) != NULL)
+		return NO;
+	if (pthread_setspecific (thread_exit_object_key, [object retain]) != 0) {
+		[object release];
+		return NO;
+	}
+	return YES;
+}
+
++ (int) releasedObjectCount
+{
+	return __sync_add_and_fetch (&thread_exit_released_object_count, 0);
 }
 @end
 

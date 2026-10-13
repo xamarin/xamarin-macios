@@ -417,15 +417,9 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public MethodReference Foundation_NSObject_HandleSetterMethod {
+		public MethodReference Foundation_NSObject_GetOrCreateNSObjectForConstructor {
 			get {
-				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "set_handle", "Foundation.NSObject::set_handle", predicate: null, out var _);
-			}
-		}
-
-		public MethodReference Foundation_NSObject_FlagsSetterMethod {
-			get {
-				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "set_flags", "Foundation.NSObject::set_flags", predicate: null, out var _);
+				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "GetOrCreateNSObjectForConstructor", "Foundation.NSObject::GetOrCreateNSObjectForConstructor", true, 1, System_IntPtr, System_UInt32);
 			}
 		}
 
@@ -614,12 +608,6 @@ namespace Xamarin.Linker {
 		public TypeReference System_Runtime_CompilerServices_RuntimeHelpers {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Runtime.CompilerServices.RuntimeHelpers", out var _);
-			}
-		}
-
-		public MethodReference RuntimeHelpers_GetUninitializedObject {
-			get {
-				return GetMethodReference (CorlibAssembly, System_Runtime_CompilerServices_RuntimeHelpers, "GetUninitializedObject", isStatic: true, System_Type);
 			}
 		}
 

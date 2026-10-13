@@ -1199,5 +1199,14 @@ namespace bgen {
                 return ResourceManager.GetString("BI1128", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selector &apos;{0}&apos; on &apos;{1}&apos; contains invalid characters..
+        /// </summary>
+        internal static string BI1129 {
+            get {
+                return ResourceManager.GetString("BI1129", resourceCulture);
+            }
+        }
     }
 }

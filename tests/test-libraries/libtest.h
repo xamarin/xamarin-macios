@@ -441,6 +441,11 @@ typedef void (^outerBlock) (innerBlock callback);
 -(instancetype) init;
 @end
 
+@interface ThreadExitObject : NSObject
++ (BOOL) releaseOnThreadExit: (NSObject *) object;
++ (int) releasedObjectCount;
+@end
+
 #pragma clang diagnostic pop
 // NS_ASSUME_NONNULL_END
 

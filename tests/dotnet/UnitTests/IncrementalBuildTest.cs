@@ -108,6 +108,124 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void AppManifest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, nameof (AppManifest), runtimeIdentifiers, out var appPath);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var appManifestPath = Path.Combine (projectDirectory, "Info.plist");
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			WriteAppManifest (appManifestPath, "Initial");
+
+			DotNet.AssertBuild (projectPath, properties);
+			var bundledAppManifestPath = GetInfoPListPath (platform, appPath!);
+			var appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Initial"), "Initial value");
+
+			WriteAppManifest (appManifestPath, "Updated");
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_CompileAppManifest", "Updated manifest");
+
+			appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Updated"), "Updated value");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_CompileAppManifest", "Unchanged manifest");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsTriggerNativeLink (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		[Test]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsTriggerNativeLinkOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		void CompiledEntitlementsTriggerNativeLinkImpl (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, TestName, runtimeIdentifiers, out _);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var entitlementsPath = Path.Combine (projectDirectory, "Entitlements.plist");
+			var projectContents = File.ReadAllText (projectPath);
+
+			projectContents = projectContents.Replace (
+				"	</PropertyGroup>",
+				"		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>\n" +
+				"		<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>\n" +
+				"	</PropertyGroup>");
+			File.WriteAllText (projectPath, projectContents);
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			WriteEntitlements (entitlementsPath, "example.com");
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (projectPath, properties);
+
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements");
+
+			WriteEntitlements (entitlementsPath, "example.org");
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_ForceLinkNativeExecutable", "Updated entitlements");
+			AssertTargetExecuted (allTargets, "_LinkNativeExecutable", "Updated entitlements");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements after update");
+		}
+
+		static void WriteEntitlements (string path, string domain)
+		{
+			File.WriteAllText (path, $"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>com.apple.developer.associated-domains</key>
+					<array>
+						<string>applinks:{domain}</string>
+					</array>
+				</dict>
+				</plist>
+				""");
+		}
+
+		static void WriteAppManifest (string path, string value)
+		{
+			File.WriteAllText (path, $"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>IncrementalBuildValue</key>
+					<string>{value}</string>
+				</dict>
+				</plist>
+				""");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		public void CodeChangeSkipsTargets (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			CodeChangeSkipsTargetsImpl (platform, runtimeIdentifiers);
@@ -189,10 +307,29 @@ kernel void myKernel (texture2d<half, access::read> inTexture [[texture(0)]],
 			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
 			AssertTargetExecuted (allTargets, "_SelectR2RAssemblies", "First build");
 			AssertTargetExecuted (allTargets, "_CreateR2RImages", "First build");
+			var r2rInputHashesCachePath = Path.Combine (GetObjDir (project_path, platform, runtimeIdentifiers), "r2r-input-hashes.json");
+			Assert.That (r2rInputHashesCachePath, Does.Exist, "R2R input hash cache");
+			Assert.That (BinLog.TryFindPropertyValue (rv.BinLogPath, "_R2RInputFilesHashed", out var initialFilesHashed), Is.True, "Initial hash count");
+			Assert.That (int.TryParse (initialFilesHashed, out var initialHashCount), Is.True, "Initial hash count value");
+			Assert.That (initialHashCount, Is.GreaterThan (0), "Initial input files hashed");
 
 			rv = DotNet.AssertBuild (project_path, properties);
 			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
 			AssertTargetNotExecuted (allTargets, "_CreateR2RImages", "Unchanged build");
+			Assert.That (BinLog.TryFindPropertyValue (rv.BinLogPath, "_R2RInputFilesHashed", out var unchangedFilesHashed), Is.True, "Unchanged hash count");
+			Assert.That (int.TryParse (unchangedFilesHashed, out var unchangedHashCount), Is.True, "Unchanged hash count value");
+			Assert.That (unchangedHashCount, Is.LessThan (initialHashCount), "Unchanged build rehashes fewer files");
+
+			var coreLibPath = Path.Combine (GetObjDir (project_path, platform, runtimeIdentifiers), "postprocessed-assemblies", "System.Private.CoreLib.dll");
+			Assert.That (coreLibPath, Does.Exist, "R2R input assembly");
+			File.SetLastWriteTimeUtc (coreLibPath, DateTime.UtcNow.AddSeconds (-2));
+
+			rv = DotNet.AssertBuild (project_path, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_TouchR2ROutputs", "Timestamp-only input change");
+			AssertTargetNotExecuted (allTargets, "_CreateR2RImages", "Timestamp-only input change");
+			Assert.That (BinLog.TryFindPropertyValue (rv.BinLogPath, "_R2RInputFilesHashed", out var touchedFilesHashed), Is.True, "Timestamp-only hash count");
+			Assert.That (touchedFilesHashed, Is.EqualTo ("1"), "Only the touched input was rehashed");
 
 			var r2rInputHashPath = Path.Combine (GetObjDir (project_path, platform, runtimeIdentifiers), "r2r-input.hash");
 			Assert.That (r2rInputHashPath, Does.Exist, "R2R input hash");

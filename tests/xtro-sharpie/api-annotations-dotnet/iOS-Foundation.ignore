@@ -12,7 +12,6 @@
 
 !missing-null-allowed! 'System.Void Foundation.NSFileManager::GetFileProviderServices(Foundation.NSUrl,System.Action`2<Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSFileProviderService>,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSFileManager::GetFileProviderServices(Foundation.NSUrl,System.Action`2<Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSFileProviderService>,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1
-!missing-null-allowed! 'System.Void Foundation.INSFilePresenter::AccommodatePresentedItemEviction(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSFileProviderService::GetFileProviderConnection(System.Action`2<Foundation.NSXpcConnection,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSFileProviderService::GetFileProviderConnection(System.Action`2<Foundation.NSXpcConnection,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1
 

@@ -923,4 +923,15 @@ namespace Bindings.Test {
 	[BaseType (typeof (NSObject))]
 	interface InitReturnsNilClass {
 	}
+
+	[BaseType (typeof (NSObject))]
+	interface ThreadExitObject {
+		[Static]
+		[Export ("releaseOnThreadExit:")]
+		bool ReleaseOnThreadExit (NSObject obj);
+
+		[Static]
+		[Export ("releasedObjectCount")]
+		int ReleasedObjectCount { get; }
+	}
 }

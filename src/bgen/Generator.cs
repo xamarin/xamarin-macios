@@ -757,9 +757,9 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					if (!AttributeManager.HasAttribute<CCallbackAttribute> (pi)) {
 						if (t.FullName?.StartsWith ("System.Action`", StringComparison.Ordinal) == true || t.FullName?.StartsWith ("System.Func`", StringComparison.Ordinal) == true) {
-							ErrorHelper.Warning (1116, safe_name, t.FullName);
+							ErrorHelper.Warning (BindingTouch, 1116, safe_name, t.FullName);
 						} else {
-							ErrorHelper.Warning (1115, safe_name, t.FullName);
+							ErrorHelper.Warning (BindingTouch, 1115, safe_name, t.FullName);
 						}
 					}
 					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
@@ -1248,10 +1248,8 @@ public partial class Generator : IMemberGatherer {
 		if (string.IsNullOrEmpty (export.Selector))
 			throw new BindingException (1024, true, mo.DeclaringType!.FullName, mo.Name);
 
-		if (export.Selector.IndexOfAny (invalid_selector_chars) != -1) {
-			Console.Error.WriteLine ("Export attribute contains invalid selector name: {0}", export.Selector);
-			Environment.Exit (1);
-		}
+		if (export.Selector.IndexOfAny (invalid_selector_chars) != -1)
+			throw new BindingException (1129, true, export.Selector, FormatProvider (mo));
 
 		return export;
 	}
@@ -1558,7 +1556,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (exceptions.All (v => v is BindingException pe && !pe.Error)) {
 			foreach (var e in exceptions)
-				ErrorHelper.Show (e);
+				ErrorHelper.Show (BindingTouch, e);
 			return;
 		}
 
@@ -2110,7 +2108,7 @@ public partial class Generator : IMemberGatherer {
 					try {
 						getter = String.Format (getter, keyname, castToEnum);
 					} catch {
-						Console.WriteLine ("OOPS: g={0} k={1} c={2}", og, keyname, castToEnum);
+						BindingTouch.Log ($"OOPS: g={og} k={keyname} c={castToEnum}");
 						throw;
 					}
 					setter = String.Format (setter, keyname, castToUnderlying);
@@ -2599,7 +2597,7 @@ public partial class Generator : IMemberGatherer {
 		return parentAvailability;
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo? mi, Type? inlinedType = null)
+	public bool PrintPlatformAttributes (MemberInfo? mi, Type? inlinedType = null, PlatformName? excludedPlatform = null)
 	{
 		bool printed = false;
 		if (mi is null)
@@ -2608,6 +2606,8 @@ public partial class Generator : IMemberGatherer {
 		AvailabilityBaseAttribute []? type_ca = null;
 
 		foreach (var availability in GetPlatformAttributesToPrint (mi, null, inlinedType)) {
+			if (availability.Platform == excludedPlatform)
+				continue;
 			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca is null) {
 				if (t is not null)
@@ -2846,10 +2846,10 @@ public partial class Generator : IMemberGatherer {
 			if (!BindThirdPartyLibrary) {
 				if (minfo.Method?.ReturnType?.TryIsArray (out var et) == true) {
 					if (IsModel (et))
-						ErrorHelper.Warning (1109, minfo.Method.DeclaringType, minfo.Method.Name, et, et.Namespace, et.Name);
+						ErrorHelper.Warning (BindingTouch, 1109, minfo.Method.DeclaringType, minfo.Method.Name, et, et.Namespace, et.Name);
 				}
 				if (IsModel (minfo.Method?.ReturnType))
-					ErrorHelper.Warning (1107, minfo.Method?.DeclaringType, minfo.Method?.Name, minfo.Method?.ReturnType, minfo.Method?.ReturnType?.Namespace, minfo.Method?.ReturnType?.Name);
+					ErrorHelper.Warning (BindingTouch, 1107, minfo.Method?.DeclaringType, minfo.Method?.Name, minfo.Method?.ReturnType, minfo.Method?.ReturnType?.Namespace, minfo.Method?.ReturnType?.Name);
 			}
 
 			if (minfo.is_bindAs) {
@@ -3138,7 +3138,7 @@ public partial class Generator : IMemberGatherer {
 						var mai = new MarshalInfo (this, mi, pi);
 
 						if (mai.PlainString)
-							ErrorHelper.Warning (1101);
+							ErrorHelper.Warning (BindingTouch, 1101);
 
 						target_name = "ns" + pi.Name;
 						handle = "";
@@ -3519,7 +3519,7 @@ public partial class Generator : IMemberGatherer {
 					// don't warn on obsoleted API, there's likely a new version that fix this
 					// any no good reason for using the obsolete API anyway
 					if (!AttributeManager.HasAttribute<ObsoleteAttribute> (mi) && !AttributeManager.HasAttribute<ObsoleteAttribute> (mi.DeclaringType))
-						ErrorHelper.Warning (1106, mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
+						ErrorHelper.Warning (BindingTouch, 1106, mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
 				}
 			}
 
@@ -3608,7 +3608,7 @@ public partial class Generator : IMemberGatherer {
 		var hasStaticAtt = AttributeManager.HasAttribute<StaticAttribute> (mi);
 		if (category_type is not null && hasStaticAtt && !minfo.ignore_category_static_warnings) {
 			var baseTypeAtt = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (minfo.type);
-			ErrorHelper.Warning (1117, mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName);
+			ErrorHelper.Warning (BindingTouch, 1117, mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName);
 		}
 
 		indent++;
@@ -4008,9 +4008,10 @@ public partial class Generator : IMemberGatherer {
 		PrintPropertyAttributes (pi, minfo, skipTypeInjection);
 	}
 
-	void PrintPropertyAttributes (PropertyInfo pi, MemberInformation minfo, bool skipTypeInjection = false)
+	void PrintPropertyAttributes (PropertyInfo pi, MemberInformation minfo, bool skipTypeInjection = false, bool is_appearance = false)
 	{
 		Type type = minfo.type;
+		var excludedPlatform = is_appearance ? PlatformName.MacOSX : (PlatformName?) null;
 		PrintObsoleteAttributes (pi);
 
 		foreach (var ba in AttributeManager.GetCustomAttributes<DebuggerBrowsableAttribute> (pi))
@@ -4029,13 +4030,15 @@ public partial class Generator : IMemberGatherer {
 		// we must look if the type has an [Availability] attribute
 		if (type != pi.DeclaringType) {
 			// print, if not duplicated from the type (being inlined into), the property availability
-			if (!PrintPlatformAttributes (pi, type) && !skipTypeInjection) {
+			if (!PrintPlatformAttributes (pi, type, excludedPlatform) && !skipTypeInjection) {
 				// print, if not duplicated from the type (being inlined into), the property declaring type (protocol) availability
-				PrintPlatformAttributes (pi.DeclaringType, type);
+				PrintPlatformAttributes (pi.DeclaringType, type, excludedPlatform);
 			}
 		} else {
-			PrintPlatformAttributes (pi);
+			PrintPlatformAttributes (pi, excludedPlatform: excludedPlatform);
 		}
+		if (is_appearance)
+			print (AttributeFactory.CreateUnsupportedAttribute (PlatformName.MacOSX).ToString ());
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
@@ -4088,7 +4091,7 @@ public partial class Generator : IMemberGatherer {
 			var elType = pi.PropertyType.IsArray ? pi.PropertyType.GetElementType () : pi.PropertyType;
 
 			if (IsModel (elType)) {
-				ErrorHelper.Warning (1110, pi.DeclaringType, pi.Name, pi.PropertyType, pi.PropertyType.Namespace, pi.PropertyType.Name);
+				ErrorHelper.Warning (BindingTouch, 1110, pi.DeclaringType, pi.Name, pi.PropertyType, pi.PropertyType.Namespace, pi.PropertyType.Name);
 			}
 		}
 
@@ -4096,7 +4099,7 @@ public partial class Generator : IMemberGatherer {
 			if (!WriteDocumentation (pi) && is_appearance)
 				WriteAppearanceMemberDocumentation (type, pi.Name);
 			print_generated_code ();
-			PrintPropertyAttributes (pi, minfo);
+			PrintPropertyAttributes (pi, minfo, is_appearance: is_appearance);
 			PrintAttributes (pi, preserve: true, advice: true);
 			var wrapNullabilityBytes = AttributeManager.GetNullabilityBytes (pi);
 			print ("{0} {1}{2}{3} {4} {{",
@@ -4175,7 +4178,7 @@ public partial class Generator : IMemberGatherer {
 		if (!WriteDocumentation (pi) && is_appearance)
 			WriteAppearanceMemberDocumentation (type, pi.Name);
 		print_generated_code (optimizable: IsOptimizable (pi));
-		PrintPropertyAttributes (pi, minfo);
+		PrintPropertyAttributes (pi, minfo, is_appearance: is_appearance);
 
 		PrintAttributes (pi, preserve: true, advice: true, bindAs: true);
 
@@ -4843,7 +4846,7 @@ public partial class Generator : IMemberGatherer {
 		// author added one but didn't mark the return value as nullable, the factory method
 		// won't be able to return null on failure, which is almost certainly a mistake.
 		if (!minfo.is_factory_method_nullable && HasOutNSErrorParameter (mi))
-			ErrorHelper.Warning (1125, mi.DeclaringType, mi.Name);
+			ErrorHelper.Warning (BindingTouch, 1125, mi.DeclaringType, mi.Name);
 
 		minfo.render_as_factory_method = true;
 
@@ -5519,7 +5522,7 @@ public partial class Generator : IMemberGatherer {
 					// Check that all the duplicates use the same selector, and if not show a warning.
 					exportAttributes [i] = GetOneExportAttribute (properties [i]);
 					if (i > 0 && exportAttributes [i].Selector != exportAttributes [0].Selector) {
-						ErrorHelper.Warning (1068, type.FullName, gr.Key, properties [0].DeclaringType?.FullName, properties [i].DeclaringType?.FullName,
+						ErrorHelper.Warning (BindingTouch, 1068, type.FullName, gr.Key, properties [0].DeclaringType?.FullName, properties [i].DeclaringType?.FullName,
 							properties [0].DeclaringType?.Name, properties [0].Name, exportAttributes [0].Selector, properties [i].DeclaringType?.Name, properties [i].Name, exportAttributes [i].Selector);
 					}
 					if (properties [i].CanRead && properties [i].CanWrite) {
@@ -5630,7 +5633,7 @@ public partial class Generator : IMemberGatherer {
 	StreamWriter GetOutputStreamForType (Type type)
 	{
 		if (type.Namespace is null)
-			ErrorHelper.Warning (1103, type.FullName);
+			ErrorHelper.Warning (BindingTouch, 1103, type.FullName);
 
 		var tn = Nomenclator.GetGeneratedTypeName (type);
 		if (type.IsGenericType)
@@ -6046,7 +6049,7 @@ public partial class Generator : IMemberGatherer {
 				if (is_static_class)
 					throw new BindingException (1025, true, type.FullName);
 				if (is_model && base_type == TypeCache.System_Object)
-					ErrorHelper.Warning (1060, type.FullName);
+					ErrorHelper.Warning (BindingTouch, 1060, type.FullName);
 
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol!.Name ?? objc_type_name, protocol);
 			}
@@ -6111,7 +6114,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (is_model) {
 				if (is_category_class)
-					ErrorHelper.Show (new BindingException (1022, true));
+					ErrorHelper.Show (BindingTouch, new BindingException (1022, true));
 				print ("[Model]");
 			}
 
@@ -6157,7 +6160,7 @@ public partial class Generator : IMemberGatherer {
 					if (type.Name == "MKUserLocation" && protocolType.Name == "IMKAnnotation")
 						continue;
 
-					ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
+					ErrorHelper.Warning (BindingTouch, 1111, protocolType, type, nonInterfaceName);
 					continue;
 				}
 

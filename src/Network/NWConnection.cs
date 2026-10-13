@@ -656,8 +656,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
 			if (del is not null) {
-				// the ownerthip of the object is for the caller
-				var nwReport = new NWEstablishmentReport (report, owns: true);
+				// The report is borrowed by the callback; retain it for the caller.
+				var nwReport = new NWEstablishmentReport (report, owns: false);
 				del (nwReport);
 			}
 		}

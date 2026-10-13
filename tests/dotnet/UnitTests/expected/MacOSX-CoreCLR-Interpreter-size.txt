@@ -1,9 +1,9 @@
-AppBundleSize: 221,403,255 bytes (216,214.1 KB = 211.1 MB)
+AppBundleSize: 221,516,457 bytes (216,324.7 KB = 211.3 MB)
 # The following list of files and their sizes is just informational / for review, and isn't used in the test:
 Contents/Info.plist:
-    719 bytes (0.7 KB = 0.0 MB)
+    745 bytes (0.7 KB = 0.0 MB)
 Contents/MacOS/SizeTestApp:
-    7,438,456 bytes (7,264.1 KB = 7.1 MB)
+    7,439,304 bytes (7,264.9 KB = 7.1 MB)
 Contents/MonoBundle/_Microsoft.macOS.TypeMap.dll:
     4,834,304 bytes (4,721.0 KB = 4.6 MB)
 Contents/MonoBundle/_Microsoft.macOS.TypeMaps.dll:
@@ -11,31 +11,31 @@ Contents/MonoBundle/_Microsoft.macOS.TypeMaps.dll:
 Contents/MonoBundle/_SizeTestApp.TypeMap.dll:
     3,584 bytes (3.5 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.CSharp.dll:
-    882,984 bytes (862.3 KB = 0.8 MB)
+    883,496 bytes (862.8 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Caching.Abstractions.dll:
     81,232 bytes (79.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Configuration.Abstractions.dll:
-    38,224 bytes (37.3 KB = 0.0 MB)
+    38,184 bytes (37.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.DependencyInjection.Abstractions.dll:
-    157,008 bytes (153.3 KB = 0.1 MB)
+    157,520 bytes (153.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Diagnostics.Abstractions.dll:
-    39,248 bytes (38.3 KB = 0.0 MB)
+    39,208 bytes (38.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.FileProviders.Abstractions.dll:
     25,384 bytes (24.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Hosting.Abstractions.dll:
     48,936 bytes (47.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Logging.Abstractions.dll:
-    159,568 bytes (155.8 KB = 0.2 MB)
+    159,528 bytes (155.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Options.dll:
     224,040 bytes (218.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Extensions.Primitives.dll:
-    90,408 bytes (88.3 KB = 0.1 MB)
+    90,448 bytes (88.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.VisualBasic.Core.dll:
     1,337,128 bytes (1,305.8 KB = 1.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.VisualBasic.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Win32.Primitives.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/Microsoft.Win32.Registry.dll:
     33,576 bytes (32.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/mscorlib.dll:
@@ -43,63 +43,63 @@ Contents/MonoBundle/.xamarin/osx-arm64/mscorlib.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/netstandard.dll:
     101,200 bytes (98.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/SizeTestApp.dll:
-    5,632 bytes (5.5 KB = 0.0 MB)
+    5,120 bytes (5.0 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.AppContext.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Buffers.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Collections.Concurrent.dll:
-    145,704 bytes (142.3 KB = 0.1 MB)
+    145,744 bytes (142.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Collections.dll:
-    323,880 bytes (316.3 KB = 0.3 MB)
+    324,944 bytes (317.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Collections.Immutable.dll:
-    1,176,872 bytes (1,149.3 KB = 1.1 MB)
+    1,179,944 bytes (1,152.3 KB = 1.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Collections.NonGeneric.dll:
-    103,248 bytes (100.8 KB = 0.1 MB)
+    103,208 bytes (100.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Collections.Specialized.dll:
-    104,272 bytes (101.8 KB = 0.1 MB)
+    104,232 bytes (101.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.Annotations.dll:
-    254,760 bytes (248.8 KB = 0.2 MB)
+    254,800 bytes (248.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.DataAnnotations.dll:
     16,720 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.EventBasedAsync.dll:
-    38,696 bytes (37.8 KB = 0.0 MB)
+    38,736 bytes (37.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.Primitives.dll:
     78,120 bytes (76.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ComponentModel.TypeConverter.dll:
-    865,064 bytes (844.8 KB = 0.8 MB)
+    865,576 bytes (845.3 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Configuration.dll:
     19,240 bytes (18.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Console.dll:
-    224,080 bytes (218.8 KB = 0.2 MB)
+    223,528 bytes (218.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Core.dll:
     23,336 bytes (22.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Data.Common.dll:
-    3,177,768 bytes (3,103.3 KB = 3.0 MB)
+    3,178,320 bytes (3,103.8 KB = 3.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Data.DataSetExtensions.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Data.dll:
-    25,384 bytes (24.8 KB = 0.0 MB)
+    25,424 bytes (24.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.Contracts.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.Debug.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.DiagnosticSource.dll:
-    568,616 bytes (555.3 KB = 0.5 MB)
+    570,152 bytes (556.8 KB = 0.5 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.FileVersionInfo.dll:
     45,864 bytes (44.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.Process.dll:
-    397,608 bytes (388.3 KB = 0.4 MB)
+    403,280 bytes (393.8 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.StackTrace.dll:
     29,992 bytes (29.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.TextWriterTraceListener.dll:
-    64,848 bytes (63.3 KB = 0.1 MB)
+    64,808 bytes (63.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.Tools.dll:
-    15,144 bytes (14.8 KB = 0.0 MB)
+    15,184 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.TraceSource.dll:
-    150,352 bytes (146.8 KB = 0.1 MB)
+    150,312 bytes (146.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Diagnostics.Tracing.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.dll:
@@ -107,31 +107,31 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Drawing.dll:
     20,304 bytes (19.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Drawing.Primitives.dll:
-    126,248 bytes (123.3 KB = 0.1 MB)
+    126,288 bytes (123.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Dynamic.Runtime.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Formats.Asn1.dll:
-    277,288 bytes (270.8 KB = 0.3 MB)
+    276,776 bytes (270.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Formats.Tar.dll:
-    370,984 bytes (362.3 KB = 0.4 MB)
+    372,520 bytes (363.8 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Globalization.Calendars.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Globalization.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Globalization.Extensions.dll:
-    15,144 bytes (14.8 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Compression.Brotli.dll:
-    81,232 bytes (79.3 KB = 0.1 MB)
+    82,728 bytes (80.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Compression.dll:
-    667,472 bytes (651.8 KB = 0.6 MB)
+    673,064 bytes (657.3 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Compression.FileSystem.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Compression.ZipFile.dll:
-    134,440 bytes (131.3 KB = 0.1 MB)
+    132,432 bytes (129.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.dll:
     15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.FileSystem.AccessControl.dll:
-    32,552 bytes (31.8 KB = 0.0 MB)
+    32,592 bytes (31.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.FileSystem.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.FileSystem.DriveInfo.dll:
@@ -141,11 +141,11 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.IO.FileSystem.Primitives.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.FileSystem.Watcher.dll:
     120,616 bytes (117.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.IsolatedStorage.dll:
-    83,240 bytes (81.3 KB = 0.1 MB)
+    83,280 bytes (81.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.MemoryMappedFiles.dll:
     93,480 bytes (91.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Pipelines.dll:
-    209,744 bytes (204.8 KB = 0.2 MB)
+    209,704 bytes (204.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Pipes.AccessControl.dll:
     23,848 bytes (23.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Pipes.dll:
@@ -153,47 +153,47 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.IO.Pipes.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.IO.UnmanagedMemoryStream.dll:
     15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Linq.AsyncEnumerable.dll:
-    1,641,768 bytes (1,603.3 KB = 1.6 MB)
+    1,643,344 bytes (1,604.8 KB = 1.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Linq.dll:
     861,992 bytes (841.8 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Linq.Expressions.dll:
-    4,820,816 bytes (4,707.8 KB = 4.6 MB)
+    4,817,232 bytes (4,704.3 KB = 4.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Linq.Parallel.dll:
-    1,009,960 bytes (986.3 KB = 1.0 MB)
+    1,010,984 bytes (987.3 KB = 1.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Linq.Queryable.dll:
-    222,504 bytes (217.3 KB = 0.2 MB)
+    222,544 bytes (217.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Memory.dll:
-    176,424 bytes (172.3 KB = 0.2 MB)
+    180,008 bytes (175.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Http.dll:
     1,910,056 bytes (1,865.3 KB = 1.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Http.Json.dll:
-    127,784 bytes (124.8 KB = 0.1 MB)
+    127,824 bytes (124.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.HttpListener.dll:
-    322,384 bytes (314.8 KB = 0.3 MB)
+    322,344 bytes (314.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Mail.dll:
-    530,768 bytes (518.3 KB = 0.5 MB)
+    538,408 bytes (525.8 KB = 0.5 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.NameResolution.dll:
-    273,192 bytes (266.8 KB = 0.3 MB)
+    308,008 bytes (300.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.NetworkInformation.dll:
-    151,376 bytes (147.8 KB = 0.1 MB)
+    151,336 bytes (147.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Ping.dll:
     97,616 bytes (95.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Primitives.dll:
-    248,616 bytes (242.8 KB = 0.2 MB)
+    248,656 bytes (242.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Quic.dll:
-    376,144 bytes (367.3 KB = 0.4 MB)
+    376,104 bytes (367.3 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Requests.dll:
     408,360 bytes (398.8 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Security.dll:
-    890,152 bytes (869.3 KB = 0.8 MB)
+    891,176 bytes (870.3 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.ServerSentEvents.dll:
-    79,144 bytes (77.3 KB = 0.1 MB)
+    78,160 bytes (76.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.ServicePoint.dll:
-    15,144 bytes (14.8 KB = 0.0 MB)
+    15,184 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.Sockets.dll:
-    702,760 bytes (686.3 KB = 0.7 MB)
+    666,448 bytes (650.8 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.WebClient.dll:
     175,400 bytes (171.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.WebHeaderCollection.dll:
@@ -203,61 +203,61 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Net.WebProxy.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.WebSockets.Client.dll:
     98,088 bytes (95.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Net.WebSockets.dll:
-    259,408 bytes (253.3 KB = 0.2 MB)
+    260,432 bytes (254.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Numerics.dll:
-    15,184 bytes (14.8 KB = 0.0 MB)
+    15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Numerics.Vectors.dll:
     16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ObjectModel.dll:
     76,584 bytes (74.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Private.CoreLib.dll:
-    18,968,360 bytes (18,523.8 KB = 18.1 MB)
+    18,972,456 bytes (18,527.8 KB = 18.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Private.DataContractSerialization.dll:
-    2,352,424 bytes (2,297.3 KB = 2.2 MB)
+    2,353,448 bytes (2,298.3 KB = 2.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Private.Uri.dll:
-    259,368 bytes (253.3 KB = 0.2 MB)
+    259,920 bytes (253.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Private.Xml.dll:
-    8,694,096 bytes (8,490.3 KB = 8.3 MB)
+    8,702,248 bytes (8,498.3 KB = 8.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Private.Xml.Linq.dll:
-    413,992 bytes (404.3 KB = 0.4 MB)
+    415,056 bytes (405.3 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.DispatchProxy.dll:
     72,488 bytes (70.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.dll:
-    16,208 bytes (15.8 KB = 0.0 MB)
+    16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Emit.dll:
     341,800 bytes (333.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Emit.ILGeneration.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
-Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Emit.Lightweight.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
+Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Emit.Lightweight.dll:
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Extensions.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Metadata.dll:
-    1,275,688 bytes (1,245.8 KB = 1.2 MB)
+    1,276,200 bytes (1,246.3 KB = 1.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.Primitives.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Reflection.TypeExtensions.dll:
-    33,576 bytes (32.8 KB = 0.0 MB)
+    33,616 bytes (32.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Resources.Reader.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Resources.ResourceManager.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Resources.Writer.dll:
-    45,352 bytes (44.3 KB = 0.0 MB)
+    45,392 bytes (44.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.CompilerServices.Unsafe.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.CompilerServices.VisualC.dll:
-    18,768 bytes (18.3 KB = 0.0 MB)
+    18,728 bytes (18.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.dll:
     45,864 bytes (44.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Extensions.dll:
     17,744 bytes (17.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Handles.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.InteropServices.dll:
-    110,376 bytes (107.8 KB = 0.1 MB)
+    111,912 bytes (109.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.InteropServices.JavaScript.dll:
-    37,200 bytes (36.3 KB = 0.0 MB)
+    37,160 bytes (36.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.InteropServices.RuntimeInformation.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Intrinsics.dll:
@@ -265,13 +265,13 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Intrinsics.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Loader.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Numerics.dll:
-    570,152 bytes (556.8 KB = 0.5 MB)
+    672,080 bytes (656.3 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.dll:
-    17,232 bytes (16.8 KB = 0.0 MB)
+    17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.Formatters.dll:
-    126,760 bytes (123.8 KB = 0.1 MB)
+    127,824 bytes (124.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.Json.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.Primitives.dll:
     29,480 bytes (28.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.Xml.dll:
@@ -279,23 +279,23 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Runtime.Serialization.Xml.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.AccessControl.dll:
     55,080 bytes (53.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Claims.dll:
-    101,160 bytes (98.8 KB = 0.1 MB)
+    101,200 bytes (98.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.Algorithms.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.Cng.dll:
     16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.Csp.dll:
-    16,208 bytes (15.8 KB = 0.0 MB)
+    16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.dll:
-    2,578,216 bytes (2,517.8 KB = 2.5 MB)
+    2,683,176 bytes (2,620.3 KB = 2.6 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.Encoding.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.OpenSsl.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.Primitives.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Cryptography.X509Certificates.dll:
-    17,232 bytes (16.8 KB = 0.0 MB)
+    17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.dll:
     18,216 bytes (17.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Principal.dll:
@@ -303,13 +303,13 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Principal.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.Principal.Windows.dll:
     37,672 bytes (36.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Security.SecureString.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ServiceModel.Web.dll:
     16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ServiceProcess.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Encoding.CodePages.dll:
-    864,552 bytes (844.3 KB = 0.8 MB)
+    864,592 bytes (844.3 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Encoding.dll:
     15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Encoding.Extensions.dll:
@@ -317,27 +317,27 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Encoding.Extensions.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Encodings.Web.dll:
     122,664 bytes (119.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.Json.dll:
-    2,783,528 bytes (2,718.3 KB = 2.7 MB)
+    2,788,688 bytes (2,723.3 KB = 2.7 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Text.RegularExpressions.dll:
-    1,185,576 bytes (1,157.8 KB = 1.1 MB)
+    1,186,088 bytes (1,158.3 KB = 1.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.AccessControl.dll:
     33,576 bytes (32.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Channels.dll:
     165,160 bytes (161.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.dll:
-    80,680 bytes (78.8 KB = 0.1 MB)
+    80,720 bytes (78.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Overlapped.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Tasks.Dataflow.dll:
-    526,632 bytes (514.3 KB = 0.5 MB)
+    527,184 bytes (514.8 KB = 0.5 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Tasks.dll:
     16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Tasks.Extensions.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Tasks.Parallel.dll:
-    136,528 bytes (133.3 KB = 0.1 MB)
+    136,488 bytes (133.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Thread.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.ThreadPool.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Threading.Timer.dll:
@@ -347,7 +347,7 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Transactions.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Transactions.Local.dll:
     389,928 bytes (380.8 KB = 0.4 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.ValueTuple.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Web.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Web.HttpUtility.dll:
@@ -357,41 +357,41 @@ Contents/MonoBundle/.xamarin/osx-arm64/System.Windows.dll:
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.dll:
     23,336 bytes (22.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.Linq.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.ReaderWriter.dll:
     21,800 bytes (21.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.Serialization.dll:
-    16,168 bytes (15.8 KB = 0.0 MB)
+    16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.XDocument.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.XmlDocument.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.XmlSerializer.dll:
-    17,744 bytes (17.3 KB = 0.0 MB)
+    17,704 bytes (17.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.XPath.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/System.Xml.XPath.XDocument.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-arm64/WindowsBase.dll:
-    16,208 bytes (15.8 KB = 0.0 MB)
+    16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.CSharp.dll:
-    802,088 bytes (783.3 KB = 0.8 MB)
+    802,128 bytes (783.3 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Caching.Abstractions.dll:
-    76,584 bytes (74.8 KB = 0.1 MB)
+    76,624 bytes (74.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Configuration.Abstractions.dll:
-    36,648 bytes (35.8 KB = 0.0 MB)
+    36,688 bytes (35.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.DependencyInjection.Abstractions.dll:
-    140,584 bytes (137.3 KB = 0.1 MB)
+    141,608 bytes (138.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Diagnostics.Abstractions.dll:
     37,160 bytes (36.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.FileProviders.Abstractions.dll:
-    24,912 bytes (24.3 KB = 0.0 MB)
+    24,872 bytes (24.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Hosting.Abstractions.dll:
     46,888 bytes (45.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Logging.Abstractions.dll:
     146,216 bytes (142.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Options.dll:
-    205,648 bytes (200.8 KB = 0.2 MB)
+    205,608 bytes (200.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Extensions.Primitives.dll:
     83,240 bytes (81.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.VisualBasic.Core.dll:
@@ -403,29 +403,29 @@ Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Win32.Primitives.dll:
 Contents/MonoBundle/.xamarin/osx-x64/Microsoft.Win32.Registry.dll:
     33,064 bytes (32.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/mscorlib.dll:
-    59,688 bytes (58.3 KB = 0.1 MB)
+    59,728 bytes (58.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/netstandard.dll:
     101,160 bytes (98.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/SizeTestApp.dll:
-    5,632 bytes (5.5 KB = 0.0 MB)
+    5,120 bytes (5.0 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.AppContext.dll:
-    15,184 bytes (14.8 KB = 0.0 MB)
+    15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Buffers.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Collections.Concurrent.dll:
-    132,392 bytes (129.3 KB = 0.1 MB)
+    132,944 bytes (129.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Collections.dll:
-    288,552 bytes (281.8 KB = 0.3 MB)
+    290,088 bytes (283.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Collections.Immutable.dll:
-    1,051,944 bytes (1,027.3 KB = 1.0 MB)
+    1,055,528 bytes (1,030.8 KB = 1.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Collections.NonGeneric.dll:
-    92,496 bytes (90.3 KB = 0.1 MB)
+    92,456 bytes (90.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Collections.Specialized.dll:
-    91,944 bytes (89.8 KB = 0.1 MB)
+    92,496 bytes (90.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.Annotations.dll:
     230,184 bytes (224.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.DataAnnotations.dll:
-    16,680 bytes (16.3 KB = 0.0 MB)
+    16,720 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.EventBasedAsync.dll:
@@ -433,79 +433,79 @@ Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.EventBasedAsync.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.Primitives.dll:
     70,440 bytes (68.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ComponentModel.TypeConverter.dll:
-    764,712 bytes (746.8 KB = 0.7 MB)
+    765,736 bytes (747.8 KB = 0.7 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Configuration.dll:
     19,240 bytes (18.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Console.dll:
-    198,952 bytes (194.3 KB = 0.2 MB)
+    198,440 bytes (193.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Core.dll:
     23,336 bytes (22.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Data.Common.dll:
-    2,802,472 bytes (2,736.8 KB = 2.7 MB)
+    2,801,960 bytes (2,736.3 KB = 2.7 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Data.DataSetExtensions.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Data.dll:
-    25,384 bytes (24.8 KB = 0.0 MB)
+    25,424 bytes (24.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.Contracts.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.Debug.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.DiagnosticSource.dll:
-    515,880 bytes (503.8 KB = 0.5 MB)
+    517,928 bytes (505.8 KB = 0.5 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.FileVersionInfo.dll:
     43,304 bytes (42.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.Process.dll:
-    353,064 bytes (344.8 KB = 0.3 MB)
+    358,224 bytes (349.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.StackTrace.dll:
-    29,992 bytes (29.3 KB = 0.0 MB)
+    30,032 bytes (29.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.TextWriterTraceListener.dll:
     59,176 bytes (57.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.Tools.dll:
-    15,184 bytes (14.8 KB = 0.0 MB)
+    15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.TraceSource.dll:
-    130,896 bytes (127.8 KB = 0.1 MB)
+    130,856 bytes (127.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Diagnostics.Tracing.dll:
-    16,168 bytes (15.8 KB = 0.0 MB)
+    16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.dll:
     50,472 bytes (49.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Drawing.dll:
-    20,304 bytes (19.8 KB = 0.0 MB)
+    20,264 bytes (19.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Drawing.Primitives.dll:
-    123,176 bytes (120.3 KB = 0.1 MB)
+    123,216 bytes (120.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Dynamic.Runtime.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Formats.Asn1.dll:
-    251,728 bytes (245.8 KB = 0.2 MB)
+    251,176 bytes (245.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Formats.Tar.dll:
-    331,560 bytes (323.8 KB = 0.3 MB)
+    332,072 bytes (324.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Globalization.Calendars.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Globalization.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Globalization.Extensions.dll:
-    15,144 bytes (14.8 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.Compression.Brotli.dll:
-    72,488 bytes (70.8 KB = 0.1 MB)
+    73,552 bytes (71.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.Compression.dll:
-    591,656 bytes (577.8 KB = 0.6 MB)
+    595,280 bytes (581.3 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.Compression.FileSystem.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.Compression.ZipFile.dll:
-    123,216 bytes (120.3 KB = 0.1 MB)
+    121,128 bytes (118.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.FileSystem.AccessControl.dll:
     32,552 bytes (31.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.FileSystem.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.FileSystem.DriveInfo.dll:
-    79,696 bytes (77.8 KB = 0.1 MB)
+    79,656 bytes (77.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.FileSystem.Primitives.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.FileSystem.Watcher.dll:
     108,840 bytes (106.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.IsolatedStorage.dll:
-    76,624 bytes (74.8 KB = 0.1 MB)
+    76,584 bytes (74.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.MemoryMappedFiles.dll:
     82,728 bytes (80.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.Pipelines.dll:
@@ -517,17 +517,17 @@ Contents/MonoBundle/.xamarin/osx-x64/System.IO.Pipes.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.IO.UnmanagedMemoryStream.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Linq.AsyncEnumerable.dll:
-    1,513,768 bytes (1,478.3 KB = 1.4 MB)
+    1,515,304 bytes (1,479.8 KB = 1.4 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Linq.dll:
-    763,728 bytes (745.8 KB = 0.7 MB)
+    764,200 bytes (746.3 KB = 0.7 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Linq.Expressions.dll:
-    3,965,224 bytes (3,872.3 KB = 3.8 MB)
+    3,962,664 bytes (3,869.8 KB = 3.8 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Linq.Parallel.dll:
-    898,344 bytes (877.3 KB = 0.9 MB)
+    899,880 bytes (878.8 KB = 0.9 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Linq.Queryable.dll:
-    188,712 bytes (184.3 KB = 0.2 MB)
+    188,752 bytes (184.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Memory.dll:
-    166,696 bytes (162.8 KB = 0.2 MB)
+    169,256 bytes (165.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Http.dll:
@@ -537,27 +537,27 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Net.Http.Json.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.HttpListener.dll:
     289,064 bytes (282.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Mail.dll:
-    474,448 bytes (463.3 KB = 0.5 MB)
+    482,088 bytes (470.8 KB = 0.5 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.NameResolution.dll:
-    252,240 bytes (246.3 KB = 0.2 MB)
+    283,944 bytes (277.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.NetworkInformation.dll:
-    134,480 bytes (131.3 KB = 0.1 MB)
+    134,440 bytes (131.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Ping.dll:
     88,360 bytes (86.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Primitives.dll:
-    223,528 bytes (218.3 KB = 0.2 MB)
+    223,016 bytes (217.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Quic.dll:
     340,776 bytes (332.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Requests.dll:
-    362,320 bytes (353.8 KB = 0.3 MB)
+    362,280 bytes (353.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Security.dll:
-    787,240 bytes (768.8 KB = 0.8 MB)
+    787,280 bytes (768.8 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.ServerSentEvents.dll:
     74,576 bytes (72.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.ServicePoint.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.Sockets.dll:
-    616,744 bytes (602.3 KB = 0.6 MB)
+    584,016 bytes (570.3 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.WebClient.dll:
     158,032 bytes (154.3 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.WebHeaderCollection.dll:
@@ -567,7 +567,7 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Net.WebProxy.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.WebSockets.Client.dll:
     90,408 bytes (88.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Net.WebSockets.dll:
-    237,864 bytes (232.3 KB = 0.2 MB)
+    238,416 bytes (232.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Numerics.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Numerics.Vectors.dll:
@@ -575,41 +575,41 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Numerics.Vectors.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.ObjectModel.dll:
     68,944 bytes (67.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Private.CoreLib.dll:
-    17,661,224 bytes (17,247.3 KB = 16.8 MB)
+    17,619,280 bytes (17,206.3 KB = 16.8 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Private.DataContractSerialization.dll:
-    2,060,624 bytes (2,012.3 KB = 2.0 MB)
+    2,061,608 bytes (2,013.3 KB = 2.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Private.Uri.dll:
-    239,912 bytes (234.3 KB = 0.2 MB)
+    240,424 bytes (234.8 KB = 0.2 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Private.Xml.dll:
-    7,713,064 bytes (7,532.3 KB = 7.4 MB)
+    7,722,832 bytes (7,541.8 KB = 7.4 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Private.Xml.Linq.dll:
-    366,928 bytes (358.3 KB = 0.3 MB)
+    366,888 bytes (358.3 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.DispatchProxy.dll:
-    67,368 bytes (65.8 KB = 0.1 MB)
+    67,408 bytes (65.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.dll:
-    16,168 bytes (15.8 KB = 0.0 MB)
+    16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Emit.dll:
-    304,936 bytes (297.8 KB = 0.3 MB)
+    304,976 bytes (297.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Emit.ILGeneration.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Emit.Lightweight.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Extensions.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Metadata.dll:
-    1,154,896 bytes (1,127.8 KB = 1.1 MB)
+    1,155,880 bytes (1,128.8 KB = 1.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.Primitives.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Reflection.TypeExtensions.dll:
-    31,528 bytes (30.8 KB = 0.0 MB)
+    32,040 bytes (31.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Resources.Reader.dll:
-    15,184 bytes (14.8 KB = 0.0 MB)
+    15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Resources.ResourceManager.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Resources.Writer.dll:
     42,320 bytes (41.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.CompilerServices.Unsafe.dll:
-    15,184 bytes (14.8 KB = 0.0 MB)
+    15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.CompilerServices.VisualC.dll:
     18,728 bytes (18.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.dll:
@@ -619,41 +619,41 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Extensions.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Handles.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.InteropServices.dll:
-    102,184 bytes (99.8 KB = 0.1 MB)
+    103,248 bytes (100.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.InteropServices.JavaScript.dll:
     37,160 bytes (36.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.InteropServices.RuntimeInformation.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Intrinsics.dll:
-    18,768 bytes (18.3 KB = 0.0 MB)
+    18,728 bytes (18.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Loader.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Numerics.dll:
-    530,216 bytes (517.8 KB = 0.5 MB)
+    630,056 bytes (615.3 KB = 0.6 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Serialization.dll:
-    17,232 bytes (16.8 KB = 0.0 MB)
+    17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Serialization.Formatters.dll:
-    115,536 bytes (112.8 KB = 0.1 MB)
+    117,072 bytes (114.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Serialization.Json.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Serialization.Primitives.dll:
-    28,496 bytes (27.8 KB = 0.0 MB)
+    28,456 bytes (27.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Runtime.Serialization.Xml.dll:
-    16,720 bytes (16.3 KB = 0.0 MB)
+    16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.AccessControl.dll:
-    55,080 bytes (53.8 KB = 0.1 MB)
+    55,120 bytes (53.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Claims.dll:
-    92,456 bytes (90.3 KB = 0.1 MB)
+    92,968 bytes (90.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Algorithms.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Cng.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Csp.dll:
-    16,168 bytes (15.8 KB = 0.0 MB)
+    16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.dll:
-    2,273,104 bytes (2,219.8 KB = 2.2 MB)
+    2,365,224 bytes (2,309.8 KB = 2.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Encoding.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.OpenSsl.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Primitives.dll:
@@ -661,7 +661,7 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.Primitives.dll
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Cryptography.X509Certificates.dll:
     17,192 bytes (16.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.dll:
-    18,216 bytes (17.8 KB = 0.0 MB)
+    18,256 bytes (17.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Principal.dll:
     15,144 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Security.Principal.Windows.dll:
@@ -671,19 +671,19 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Security.SecureString.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.ServiceModel.Web.dll:
     16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ServiceProcess.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.Encoding.CodePages.dll:
-    849,704 bytes (829.8 KB = 0.8 MB)
+    849,744 bytes (829.8 KB = 0.8 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.Encoding.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.Encoding.Extensions.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.Encodings.Web.dll:
-    114,512 bytes (111.8 KB = 0.1 MB)
+    114,472 bytes (111.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.Json.dll:
-    2,501,968 bytes (2,443.3 KB = 2.4 MB)
+    2,507,048 bytes (2,448.3 KB = 2.4 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Text.RegularExpressions.dll:
-    1,073,488 bytes (1,048.3 KB = 1.0 MB)
+    1,074,472 bytes (1,049.3 KB = 1.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.AccessControl.dll:
     33,104 bytes (32.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Channels.dll:
@@ -697,17 +697,17 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Tasks.Dataflow.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Tasks.dll:
     16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Tasks.Extensions.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Tasks.Parallel.dll:
     124,200 bytes (121.3 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Thread.dll:
     15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.ThreadPool.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Threading.Timer.dll:
-    15,144 bytes (14.8 KB = 0.0 MB)
+    15,184 bytes (14.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Transactions.dll:
-    16,720 bytes (16.3 KB = 0.0 MB)
+    16,680 bytes (16.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Transactions.Local.dll:
     349,992 bytes (341.8 KB = 0.3 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.ValueTuple.dll:
@@ -717,21 +717,21 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Web.dll:
 Contents/MonoBundle/.xamarin/osx-x64/System.Web.HttpUtility.dll:
     53,072 bytes (51.8 KB = 0.1 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Windows.dll:
-    15,696 bytes (15.3 KB = 0.0 MB)
+    15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.dll:
     23,336 bytes (22.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.Linq.dll:
-    15,656 bytes (15.3 KB = 0.0 MB)
+    15,696 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.ReaderWriter.dll:
-    21,800 bytes (21.3 KB = 0.0 MB)
+    21,840 bytes (21.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.Serialization.dll:
-    16,168 bytes (15.8 KB = 0.0 MB)
+    16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XDocument.dll:
     16,168 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XmlDocument.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XmlSerializer.dll:
-    17,744 bytes (17.3 KB = 0.0 MB)
+    17,704 bytes (17.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XPath.dll:
     15,656 bytes (15.3 KB = 0.0 MB)
 Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XPath.XDocument.dll:
@@ -739,32 +739,32 @@ Contents/MonoBundle/.xamarin/osx-x64/System.Xml.XPath.XDocument.dll:
 Contents/MonoBundle/.xamarin/osx-x64/WindowsBase.dll:
     16,208 bytes (15.8 KB = 0.0 MB)
 Contents/MonoBundle/libclrgc.dylib:
-    1,673,168 bytes (1,634.0 KB = 1.6 MB)
+    1,689,152 bytes (1,649.6 KB = 1.6 MB)
 Contents/MonoBundle/libclrgcexp.dylib:
-    1,830,656 bytes (1,787.8 KB = 1.7 MB)
+    1,830,256 bytes (1,787.4 KB = 1.7 MB)
 Contents/MonoBundle/libclrjit.dylib:
-    6,031,776 bytes (5,890.4 KB = 5.8 MB)
+    6,113,184 bytes (5,969.9 KB = 5.8 MB)
 Contents/MonoBundle/libcoreclr.dylib:
-    11,152,624 bytes (10,891.2 KB = 10.6 MB)
+    10,871,600 bytes (10,616.8 KB = 10.4 MB)
 Contents/MonoBundle/libhostfxr.dylib:
-    861,280 bytes (841.1 KB = 0.8 MB)
+    826,816 bytes (807.4 KB = 0.8 MB)
 Contents/MonoBundle/libhostpolicy.dylib:
-    817,680 bytes (798.5 KB = 0.8 MB)
+    784,432 bytes (766.0 KB = 0.7 MB)
 Contents/MonoBundle/libmscordaccore.dylib:
-    3,744,832 bytes (3,657.1 KB = 3.6 MB)
+    3,651,792 bytes (3,566.2 KB = 3.5 MB)
 Contents/MonoBundle/libmscordbi.dylib:
-    3,030,656 bytes (2,959.6 KB = 2.9 MB)
+    2,982,176 bytes (2,912.3 KB = 2.8 MB)
 Contents/MonoBundle/libSystem.Globalization.Native.dylib:
     302,528 bytes (295.4 KB = 0.3 MB)
 Contents/MonoBundle/libSystem.IO.Compression.Native.dylib:
-    3,109,632 bytes (3,036.8 KB = 3.0 MB)
+    3,158,544 bytes (3,084.5 KB = 3.0 MB)
 Contents/MonoBundle/libSystem.Native.dylib:
-    312,368 bytes (305.0 KB = 0.3 MB)
+    313,232 bytes (305.9 KB = 0.3 MB)
 Contents/MonoBundle/libSystem.Net.Security.Native.dylib:
     152,128 bytes (148.6 KB = 0.1 MB)
 Contents/MonoBundle/libSystem.Security.Cryptography.Native.Apple.dylib:
-    511,248 bytes (499.3 KB = 0.5 MB)
+    530,720 bytes (518.3 KB = 0.5 MB)
 Contents/MonoBundle/Microsoft.macOS.dll:
-    36,854,272 bytes (35,990.5 KB = 35.1 MB)
+    36,831,744 bytes (35,968.5 KB = 35.1 MB)
 Contents/PkgInfo:
     8 bytes (0.0 KB = 0.0 MB)

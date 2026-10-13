@@ -28,15 +28,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";BI0002" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the API bindings.]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nepovedlo se zkompilovat vazby rozhraní API.]D;]A;		{0}]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";BI0003" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Frameworks were not loaded for platform {0}.]]></Val>
@@ -69,15 +60,6 @@
           <Val><![CDATA[Could not parse the command line argument '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Nepovedlo se parsovat argument příkazového řádku {0}: {1}]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI0028" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[No C# compiler has been specified (using --compiler or --compile-command).]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nebyl zadán žádný kompilátor jazyka C# (pomocí --compiler nebo --compile-command).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,15 +114,6 @@
           <Val><![CDATA[Internal error {0}. Please file a bug report with a test case (https://github.com/dotnet/macios/issues/new).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Vnitřní chyba {0}. Nahlaste prosím chybu a přiložte testovací případ (https://github.com/dotnet/macios/issues/new).]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI1000" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the generated API bindings.	]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nepovedlo se zkompilovat vygenerované vazby rozhraní API.	]D;]A;		{0}]D;]A;		]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1179,6 +1152,15 @@
           <Val><![CDATA[The [Field]5D; member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Člen [Field]5D; „{0}.{1}“ nastavuje SymbolAddress, ale jeho typ je „{2}“. Podporuje se jen System.IntPtr.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1129" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The selector '{0}' on '{1}' contains invalid characters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Selektor {0} v {1} obsahuje neplatné znaky.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

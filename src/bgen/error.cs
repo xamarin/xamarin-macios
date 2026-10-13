@@ -96,17 +96,17 @@ public static class ErrorHelper {
 		return new ProductException (code, false, args);
 	}
 
-	public static void Warning (int code)
+	public static void Warning (IToolLog log, int code)
 	{
-		Show (new ProductException (code, false));
+		Show (log, new ProductException (code, false));
 	}
 
-	public static void Warning (int code, params object? [] args)
+	public static void Warning (IToolLog log, int code, params object? [] args)
 	{
-		Show (new ProductException (code, false, args));
+		Show (log, new ProductException (code, false, args));
 	}
 
-	static public void Show (Exception e, bool rethrow_errors = true)
+	static public void Show (IToolLog log, Exception e, bool rethrow_errors = true)
 	{
 		var exceptions = new List<Exception> ();
 		bool error = false;
@@ -125,7 +125,7 @@ public static class ErrorHelper {
 		}
 
 		foreach (var ex in exceptions)
-			ShowInternal (ex);
+			ShowInternal (log, ex);
 	}
 
 	static void CollectExceptions (Exception ex, List<Exception> exceptions)
@@ -144,7 +144,7 @@ public static class ErrorHelper {
 #endif
 	}
 
-	static bool ShowInternal (Exception e)
+	static bool ShowInternal (IToolLog log, Exception e)
 	{
 		var mte = (e as BindingException);
 		bool error = true;
@@ -155,27 +155,34 @@ public static class ErrorHelper {
 			if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
 				return false;
 
-			Console.Out.WriteLine (mte.ToString ());
+			if (error)
+				log.LogError (mte);
+			else
+				log.LogWarning (mte);
 
-			if (Verbosity > 1) {
+			if (log.Verbosity > 1) {
 				var ie = e.InnerException;
 				if (ie is not null) {
-					if (Verbosity > 3) {
-						Console.Error.WriteLine ("--- inner exception");
-						Console.Error.WriteLine (ie);
-						Console.Error.WriteLine ("---");
+					if (log.Verbosity > 3) {
+						log.LogError ("--- inner exception");
+						log.LogError (ie.ToString ());
+						log.LogError ("---");
 					} else {
-						Console.Error.WriteLine ("\t{0}", ie.Message);
+						log.LogError ($"\t{ie.Message}");
 					}
 				}
 			}
 
-			if (Verbosity > 2)
-				Console.Error.WriteLine (e.StackTrace);
+			if (log.Verbosity > 2 && e.StackTrace is not null) {
+				if (error)
+					log.LogError (e.StackTrace);
+				else
+					log.Log (e.StackTrace);
+			}
 		} else {
-			Console.Out.WriteLine ("error BI0000: Unexpected error - Please file a bug report at https://github.com/dotnet/macios/issues/new");
-			Console.Out.WriteLine (e.ToString ());
-			Console.Out.WriteLine (Environment.StackTrace);
+			log.LogError ("error BI0000: Unexpected error - Please file a bug report at https://github.com/dotnet/macios/issues/new");
+			log.LogException (e);
+			log.LogError (Environment.StackTrace);
 		}
 		return error;
 	}
