@@ -4,6 +4,7 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <dispatch/dispatch.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <zlib.h>
@@ -1500,6 +1501,71 @@ static void block_called ()
 	return 666;
 }
 @end
+
+@interface AssociatedObjectLockHolder : NSObject {
+@public
+	dispatch_semaphore_t entered;
+	dispatch_semaphore_t unlock;
+}
+@end
+
+@implementation AssociatedObjectLockHolder
+-(id) retain
+{
+	id result = [super retain];
+	if (entered != NULL) {
+		dispatch_semaphore_signal (entered);
+		dispatch_semaphore_wait (unlock, DISPATCH_TIME_FOREVER);
+	}
+	return result;
+}
+@end
+
+int
+x_get_nsobject_data_with_association_lock (id object, void **data)
+{
+	static char key;
+	NSObject *lock_object = [[NSObject alloc] init];
+	AssociatedObjectLockHolder *holder = [[AssociatedObjectLockHolder alloc] init];
+	dispatch_semaphore_t entered = dispatch_semaphore_create (0);
+	dispatch_semaphore_t unlock = dispatch_semaphore_create (0);
+	dispatch_semaphore_t completed = dispatch_semaphore_create (0);
+	dispatch_group_t group = dispatch_group_create ();
+	dispatch_queue_t queue = dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+
+	// The atomic getter retains its value while holding AssociationsManagerLock.
+	objc_setAssociatedObject (lock_object, &key, holder, OBJC_ASSOCIATION_RETAIN);
+	holder->entered = entered;
+	holder->unlock = unlock;
+	dispatch_group_async (group, queue, ^{
+		@autoreleasepool {
+			objc_getAssociatedObject (lock_object, &key);
+		}
+	});
+
+	int result = 1;
+	if (dispatch_semaphore_wait (entered, dispatch_time (DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC)) == 0) {
+		// Do not capture the managed object's native peer as an Objective-C object:
+		// copying the block would retain it while the association lock is held.
+		void *native_object = object;
+		dispatch_group_async (group, queue, ^{
+			*data = ((void *(*)(id, SEL)) objc_msgSend) ((id) native_object, @selector(xamarinGetNSObjectData));
+			dispatch_semaphore_signal (completed);
+		});
+		result = dispatch_semaphore_wait (completed, dispatch_time (DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC)) == 0 ? 0 : 2;
+	}
+
+	dispatch_semaphore_signal (unlock);
+	dispatch_group_wait (group, DISPATCH_TIME_FOREVER);
+	holder->entered = NULL;
+	[lock_object release];
+	[holder release];
+	dispatch_release (group);
+	dispatch_release (completed);
+	dispatch_release (unlock);
+	dispatch_release (entered);
+	return result;
+}
 
 @implementation WeakReferenceHolder : NSObject
 -(id) init
