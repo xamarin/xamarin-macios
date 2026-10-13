@@ -118,37 +118,43 @@ namespace CoreWlan {
 		HostAP = 3,
 	}
 
+	/// <summary>Specifies the security mode of a wireless network.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWSecurity : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The network has no security.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Wired Equivalent Privacy (WEP).</summary>
 		WEP = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>Wi-Fi Protected Access (WPA) Personal.</summary>
 		WPAPersonal = 2,
-		/// <summary>To be added.</summary>
+		/// <summary>Mixed WPA and WPA2 Personal.</summary>
 		WPAPersonalMixed = 3,
-		/// <summary>To be added.</summary>
+		/// <summary>Wi-Fi Protected Access 2 (WPA2) Personal.</summary>
 		WPA2Personal = 4,
-		/// <summary>To be added.</summary>
+		/// <summary>WPA or WPA2 Personal.</summary>
 		Personal = 5,
-		/// <summary>To be added.</summary>
+		/// <summary>Dynamic WEP.</summary>
 		DynamicWEP = 6,
-		/// <summary>To be added.</summary>
+		/// <summary>WPA Enterprise.</summary>
 		WPAEnterprise = 7,
-		/// <summary>To be added.</summary>
+		/// <summary>Mixed WPA and WPA2 Enterprise.</summary>
 		WPAEnterpriseMixed = 8,
-		/// <summary>To be added.</summary>
+		/// <summary>WPA2 Enterprise.</summary>
 		WPA2Enterprise = 9,
-		/// <summary>To be added.</summary>
+		/// <summary>WPA or WPA2 Enterprise.</summary>
 		Enterprise = 10,
+		/// <summary>WPA3 Personal.</summary>
 		Wpa3Personal = 11,
+		/// <summary>WPA3 Enterprise.</summary>
 		Wpa3Enterprise = 12,
+		/// <summary>WPA3 Personal transition mode, which supports WPA2 Personal clients.</summary>
 		Wpa3Transition = 13,
+		/// <summary>Opportunistic Wireless Encryption (OWE).</summary>
 		Owe = 14,
+		/// <summary>OWE transition mode, which supports clients that do not support OWE.</summary>
 		OweTransition = 15,
-		/// <summary>To be added.</summary>
+		/// <summary>The security mode is unknown.</summary>
 		Unknown = long.MaxValue,
 	}
 

@@ -2651,11 +2651,6 @@ F:CoreVideo.CVVersatileBayerPattern.Gbrg
 F:CoreVideo.CVVersatileBayerPattern.Grbg
 F:CoreVideo.CVVersatileBayerPattern.Rggb
 F:CoreWlan.CWChannelBand.SixGHz
-F:CoreWlan.CWSecurity.Owe
-F:CoreWlan.CWSecurity.OweTransition
-F:CoreWlan.CWSecurity.Wpa3Enterprise
-F:CoreWlan.CWSecurity.Wpa3Personal
-F:CoreWlan.CWSecurity.Wpa3Transition
 F:CryptoTokenKit.TKErrorCode.AuthenticationFailed
 F:CryptoTokenKit.TKErrorCode.AuthenticationNeeded
 F:CryptoTokenKit.TKErrorCode.BadParameter
@@ -55765,7 +55760,6 @@ T:CoreWlan.CWMutableConfiguration
 T:CoreWlan.CWMutableNetworkProfile
 T:CoreWlan.CWNetwork
 T:CoreWlan.CWNetworkProfile
-T:CoreWlan.CWSecurity
 T:CoreWlan.CWWiFiClient
 T:CryptoTokenKit.TKBerTlvRecord
 T:CryptoTokenKit.TKCompactTlvRecord
