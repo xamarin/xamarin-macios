@@ -48,6 +48,7 @@ network:
     - "microsoft.com"
     - "vsassets.io"
 tools:
+  bash: ["cat", "ls", "find", "grep", "head", "tail", "wc", "az", "gh", "python3", "mkdir", "zip"]
   github:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     toolsets: [issues, repos]

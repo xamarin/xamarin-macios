@@ -28,15 +28,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";BI0002" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the API bindings.]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Die API-Bindungen konnten nicht kompiliert werden.]D;]A;		{0}]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";BI0003" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Frameworks were not loaded for platform {0}.]]></Val>
@@ -69,15 +60,6 @@
           <Val><![CDATA[Could not parse the command line argument '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Das Befehlszeilenargument "-{0}" konnte nicht analysiert werden: {1}]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI0028" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[No C# compiler has been specified (using --compiler or --compile-command).]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Es wurde kein C#-Compiler angegeben (mit "--compiler" oder "--compile-command").]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -132,15 +114,6 @@
           <Val><![CDATA[Internal error {0}. Please file a bug report with a test case (https://github.com/dotnet/macios/issues/new).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Interner Fehler: {0}. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/dotnet/macios/issues/new).]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
-      <Item ItemId=";BI1000" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not compile the generated API bindings.	]D;]A;		{0}]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Die generierten API-Bindungen konnten nicht kompiliert werden.	]D;]A;		{0}]D;]A;		]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -1150,6 +1123,9 @@
       <Item ItemId=";BI1125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The [FactoryMethod]5D; binding method '{0}.{1}' has an 'out NSError' parameter, but its return value is not nullable. Add [return: NullAllowed]5D; to the binding method so the generated factory method can return null when the native initializer fails.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Bindungsmethode [FactoryMethod]5D; „{0}.{1}“ hat einen „out NSError“-Parameter, aber ihr Rückgabewert lässt keine Nullwerte zu. Fügen Sie [return: NullAllowed]5D; zur Bindungsmethode hinzu, damit die generierte Factorymethode null zurückgeben kann, wenn der native Initialisierer fehlschlägt.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1176,6 +1152,15 @@
           <Val><![CDATA[The [Field]5D; member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Der [Field]5D; Member "{0}.{1}" legt "SymbolAddress" fest, aber sein Typ ist '{2}'; wird nur System.IntPtr unterstützt.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";BI1129" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The selector '{0}' on '{1}' contains invalid characters.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Der Selektor '{0}' '{1}' enthält ungültige Zeichen.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

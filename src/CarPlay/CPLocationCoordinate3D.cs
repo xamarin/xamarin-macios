@@ -6,7 +6,7 @@ using System.Runtime.Versioning;
 namespace CarPlay {
 
 	[SupportedOSPlatform ("ios26.4")]
-	[SupportedOSPlatform ("maccatalyst26.4")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos")]
 	[StructLayout (LayoutKind.Sequential)]

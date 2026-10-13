@@ -1,0 +1,19 @@
+<!-- Copyright (c) Microsoft Corporation. -->
+<!-- Licensed under the MIT License. -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<ApplicationTitle>TrimmerMetadata</ApplicationTitle>
+		<ApplicationId>com.xamarin.trimmermetadata</ApplicationId>
+		<ExcludeNUnitLiteReference>true</ExcludeNUnitLiteReference>
+		<ExcludeTouchUnitReference>true</ExcludeTouchUnitReference>
+	</PropertyGroup>
+
+	<Import Project="../../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<ProjectReference Include="../Library/TrimmerMetadataLibrary.csproj" />
+	</ItemGroup>
+</Project>

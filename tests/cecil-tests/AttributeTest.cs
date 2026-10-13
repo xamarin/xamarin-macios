@@ -179,32 +179,30 @@ namespace Cecil.Tests {
 				string currentPlatform = AssemblyToAttributeName (assembly);
 
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
-				foreach (var module in assembly.Modules) {
-					foreach (var type in module.Types) {
-						if (!type.IsPubliclyVisible ())
-							continue;
+				foreach (var type in assembly.EnumerateTypes ()) {
+					if (!type.IsPubliclyVisible ())
+						continue;
 
-						switch (type.Namespace) {
-						case "AppKit":
-						case "UIKit":
-							// The availability attributes between AppKit and UIKit are quite inconsistent:
-							// https://github.com/dotnet/macios/issues/17292
-							// So let's just skip these two namespaces for now.
-							continue;
-						}
-						foreach (var member in GetAllTypeMembers (type)) {
-							var mentionedPlatforms = GetAvailabilityAttributes (member).ToList ();
-							if (mentionedPlatforms.Any ()) {
-								var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList ();
-								string key = GetMemberLookupKey (member);
-								if (!harvestedInfo.ContainsKey (key)) {
-									harvestedInfo [key] = new Dictionary<string, PlatformClaimInfo> ();
-								}
-								var claimInfo = new PlatformClaimInfo (mentionedPlatforms, claimedPlatforms, member);
-								if (harvestedInfo [key].TryGetValue (currentPlatform, out var existingClaim))
-									throw new InvalidOperationException ($"The key {key} was computed for two different members:\n\tMember 1: {existingClaim.Member.FullName}\n\tMember 2: {member.FullName}\n\tKey: {key}");
-								harvestedInfo [key] [currentPlatform] = claimInfo;
+					switch (type.Namespace) {
+					case "AppKit":
+					case "UIKit":
+						// The availability attributes between AppKit and UIKit are quite inconsistent:
+						// https://github.com/dotnet/macios/issues/17292
+						// So let's just skip these two namespaces for now.
+						continue;
+					}
+					foreach (var member in GetAllTypeMembers (type)) {
+						var mentionedPlatforms = GetAvailabilityAttributes (member).ToList ();
+						if (mentionedPlatforms.Any ()) {
+							var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList ();
+							string key = GetMemberLookupKey (member);
+							if (!harvestedInfo.ContainsKey (key)) {
+								harvestedInfo [key] = new Dictionary<string, PlatformClaimInfo> ();
 							}
+							var claimInfo = new PlatformClaimInfo (mentionedPlatforms, claimedPlatforms, member);
+							if (harvestedInfo [key].TryGetValue (currentPlatform, out var existingClaim))
+								throw new InvalidOperationException ($"The key {key} was computed for two different members:\n\tMember 1: {existingClaim.Member.FullName}\n\tMember 2: {member.FullName}\n\tKey: {key}");
+							harvestedInfo [key] [currentPlatform] = claimInfo;
 						}
 					}
 				}
@@ -297,6 +295,7 @@ namespace Cecil.Tests {
 					"SceneKit.SCNRenderer.FromContext (OpenGL.CGLContext, Foundation.NSDictionary)",
 
 					// For historical reasons, MPMediaItem and MPMediaEntity are wildly different between platforms (https://github.com/dotnet/macios/issues/17291).
+					"MediaPlayer.MPMediaEntity",
 					"MediaPlayer.MPMediaEntity.EncodeTo (Foundation.NSCoder)",
 					"MediaPlayer.MPMediaEntity.get_PropertyPersistentID ()",
 					"MediaPlayer.MPMediaEntity.GetObject (Foundation.NSObject)",
@@ -304,6 +303,9 @@ namespace Cecil.Tests {
 					"MediaPlayer.MPMediaItem.get_PropertyPersistentID ()",
 					"MediaPlayer.MPMediaItem.GetObject (Foundation.NSObject)",
 					"MediaPlayer.MPMediaItem.PropertyPersistentID",
+
+					// The generator only creates NIErrorCodeExtensions where NIErrorDomain is available.
+					"NearbyInteraction.NIErrorCodeExtensions",
 
 					// Despite what headers say, NSAttributedString only implements NSItemProviderReading and NSItemProviderWriting on iOS (headers say tvOS as well).
 					// Ref: https://github.com/dotnet/macios/pull/17306
@@ -329,8 +331,9 @@ namespace Cecil.Tests {
 					"PdfKit.PdfView.ShouldRecognizeSimultaneously (XKit.XGestureRecognizer, XKit.XGestureRecognizer)",
 					"PdfKit.PdfView.ShouldRequireFailureOf (XKit.XGestureRecognizer, XKit.XGestureRecognizer)",
 
-#if !XAMCORE_5_0
 					// The ARQuickLookPreviewItem type is in the QuickLook framework for Mac Catalyst, and ARKit for all other platforms.
+					"QuickLook.ARQuickLookPreviewItem",
+#if !XAMCORE_5_0
 					"QuickLook.ARQuickLookPreviewItem.get_PreviewItemTitle ()",
 					"QuickLook.ARQuickLookPreviewItem.get_PreviewItemUrl ()",
 					"QuickLook.ARQuickLookPreviewItem.PreviewItemTitle",
@@ -431,6 +434,8 @@ namespace Cecil.Tests {
 
 		IEnumerable<IMemberDefinition> GetAllTypeMembers (TypeDefinition type)
 		{
+			yield return type;
+
 			foreach (var method in type.Methods.Where (m => m.IsPublic)) {
 				yield return method;
 			}

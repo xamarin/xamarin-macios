@@ -1769,4 +1769,31 @@
             {1}: user-provided value
         </comment>
     </data>
+    <data name="E7193" xml:space="preserve">
+        <value>The cache does not contain any entries.</value>
+        <comment>Shown when an R2R input hash cache contains JSON null instead of a cache object.</comment>
+    </data>
+    <data name="W7194" xml:space="preserve">
+        <value>Ignoring invalid R2R input hash cache '{0}': {1}</value>
+        <comment>Shown when the R2R input hash cache cannot be parsed.
+{0} - The path to the cache file.
+{1} - The parsing error.</comment>
+    </data>
+    <data name="E7195" xml:space="preserve">
+        <value>R2R input file '{0}' does not exist.</value>
+        <comment>Shown when an assembly to be hashed for ReadyToRun compilation is missing.
+{0} - The path to the missing file.</comment>
+    </data>
+    <data name="W7196" xml:space="preserve">
+        <value>Ignoring invalid R2R input hash for '{0}' in cache '{1}'.</value>
+        <comment>Shown when a cached R2R input hash is missing or malformed.
+{0} - The path to the assembly being hashed.
+{1} - The path to the cache file.</comment>
+    </data>
+    <data name="M7197" xml:space="preserve">
+        <value>Hashed {0} of {1} R2R input files.</value>
+        <comment>Reports how many R2R input files needed to be hashed in this build.
+{0} - The number of files hashed.
+{1} - The total number of input files.</comment>
+    </data>
 </root>
