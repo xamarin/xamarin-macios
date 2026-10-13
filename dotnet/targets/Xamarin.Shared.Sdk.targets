@@ -449,6 +449,7 @@
 				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
 				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
 				_CompiledEntitlements=$(_CompiledEntitlements);
+				_CompiledEntitlementsHash=$(_CompiledEntitlementsHash);
 				_CompiledEntitlementsPath=$(_CompiledEntitlementsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
@@ -2548,6 +2549,7 @@
 			<_LinkNativeExecutableCache Include="@(_AllLinkerFlags)" />
 			<_LinkNativeExecutableCache Include="$(_DylibRPath)" />
 			<_LinkNativeExecutableCache Include="$(_CompiledEntitlements)" />
+			<_LinkNativeExecutableCache Include="$(_CompiledEntitlementsHash)" />
 			<_LinkNativeExecutableCache Include="$(_EmbeddedFrameworksRPath)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryFrameworks)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryLinkWith)" />
