@@ -192,15 +192,17 @@ namespace CoreWlan {
 		OneHundredSixtyMHz = 4,
 	}
 
+	/// <summary>Specifies the frequency band of a wireless channel.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelBand : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The channel band is unknown.</summary>
 		Unknown = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The 2.4 GHz band.</summary>
 		TwoGHz = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The 5 GHz band.</summary>
 		FiveGHz = 2,
+		/// <summary>The 6 GHz band.</summary>
 		SixGHz = 3,
 	}
 

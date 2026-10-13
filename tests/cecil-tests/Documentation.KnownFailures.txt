@@ -2650,7 +2650,6 @@ F:CoreVideo.CVVersatileBayerPattern.Bggr
 F:CoreVideo.CVVersatileBayerPattern.Gbrg
 F:CoreVideo.CVVersatileBayerPattern.Grbg
 F:CoreVideo.CVVersatileBayerPattern.Rggb
-F:CoreWlan.CWChannelBand.SixGHz
 F:CryptoTokenKit.TKErrorCode.AuthenticationFailed
 F:CryptoTokenKit.TKErrorCode.AuthenticationNeeded
 F:CryptoTokenKit.TKErrorCode.BadParameter
@@ -55749,7 +55748,6 @@ T:CoreVideo.CVPixelFormatKeys
 T:CoreVideo.CVPixelFormatTypeExtensions
 T:CoreVideo.CVVersatileBayerPattern
 T:CoreWlan.CWChannel
-T:CoreWlan.CWChannelBand
 T:CoreWlan.CWCipherKeyFlags
 T:CoreWlan.CWEventType
 T:CoreWlan.CWIbssModeSecurity
