@@ -1970,9 +1970,9 @@ namespace HomeKit {
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetDoorState : long {
-		/// <summary>The door is open.</summary>
+		/// <summary>The door should be open.</summary>
 		Open = 0,
-		/// <summary>The door is closed.</summary>
+		/// <summary>The door should be closed.</summary>
 		Closed = 1,
 	}
 
