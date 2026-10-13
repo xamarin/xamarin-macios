@@ -206,18 +206,19 @@ namespace CoreWlan {
 		SixGHz = 3,
 	}
 
+	/// <summary>Specifies the flags associated with a cipher key.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>No cipher key flags are set.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The key is used for unicast traffic.</summary>
 		Unicast = 1 << 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The key is used for multicast traffic.</summary>
 		Multicast = 1 << 2,
-		/// <summary>To be added.</summary>
+		/// <summary>The key is used to transmit data.</summary>
 		Tx = 1 << 3,
-		/// <summary>To be added.</summary>
+		/// <summary>The key is used to receive data.</summary>
 		Rx = 1 << 4,
 	}
 
