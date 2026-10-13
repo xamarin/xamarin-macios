@@ -98,17 +98,17 @@ namespace ContactsUI {
 
 	interface ICNContactPickerDelegate { }
 
-#if MONOMAC
-	[NoiOS]
-	[NoMacCatalyst]
-	[NoTV]
+	/// <summary>Delegate object that provides methods relating to picking a contact.</summary>
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
+	[MacCatalyst (13, 1)]
 	interface CNContactPickerDelegate {
+#if MONOMAC
 		/// <param name="picker">To be added.</param>
 		///         <param name="contact">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Export ("contactPicker:didSelectContact:")]
 		void ContactSelected (CNContactPicker picker, CNContact contact);
 
@@ -116,34 +116,28 @@ namespace ContactsUI {
 		///         <param name="contactProperty">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Export ("contactPicker:didSelectContactProperty:")]
 		void ContactPropertySelected (CNContactPicker picker, CNContactProperty contactProperty);
 
 		/// <param name="picker">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Export ("contactPickerWillClose:")]
 		void WillClose (CNContactPicker picker);
 
 		/// <param name="picker">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Export ("contactPickerDidClose:")]
 		void DidClose (CNContactPicker picker);
-	}
 #else
-	/// <summary>Delegate object that provides methods relating to picking a contact from a <see cref="ContactsUI.CNContactPickerViewController" />.</summary>
-	///     
-	///     <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactPickerDelegate_Protocol/index.html">Apple documentation for <c>CNContactPickerDelegate</c></related>
-	[NoMac]
-	[MacCatalyst (13, 1)]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface CNContactPickerDelegate {
-
 		/// <param name="picker">To be added.</param>
 		///         <summary>Called after the user selects the "Cancel" button.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoMac]
 		[Export ("contactPickerDidCancel:")]
 		void ContactPickerDidCancel (CNContactPickerViewController picker);
 
@@ -151,6 +145,7 @@ namespace ContactsUI {
 		///         <param name="contact">To be added.</param>
 		///         <summary>Called after the user selects the <paramref name="contact" />.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoMac]
 		[Export ("contactPicker:didSelectContact:")]
 		void DidSelectContact (CNContactPickerViewController picker, CNContact contact);
 
@@ -158,6 +153,7 @@ namespace ContactsUI {
 		///         <param name="contactProperty">To be added.</param>
 		///         <summary>Called after the user selects a property of the contact.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoMac]
 		[Export ("contactPicker:didSelectContactProperty:")]
 		void DidSelectContactProperty (CNContactPickerViewController picker, CNContactProperty contactProperty);
 
@@ -165,6 +161,7 @@ namespace ContactsUI {
 		///         <param name="contacts">To be added.</param>
 		///         <summary>Called after the user selects multiple contacts. Devs must override this method to configure the <see cref="ContactsUI.CNContactPickerViewController" /> for multiple selection.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoMac]
 		[Export ("contactPicker:didSelectContacts:")]
 		void DidSelectContacts (CNContactPickerViewController picker, CNContact [] contacts);
 
@@ -172,10 +169,11 @@ namespace ContactsUI {
 		///         <param name="contactProperties">To be added.</param>
 		///         <summary>Called after the user selects multiple properties. Devs must override this method to configure the <see cref="ContactsUI.CNContactPickerViewController" /> for multiple selection.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoMac]
 		[Export ("contactPicker:didSelectContactProperties:")]
 		void DidSelectContactProperties (CNContactPickerViewController picker, CNContactProperty [] contactProperties);
-	}
 #endif // MONOMAC
+	}
 
 	/// <summary>A standard <see cref="XViewController" /> that allows the user to view or edit a <see cref="Contacts.CNContact" />.</summary>
 	/// <related type="externalDocumentation" href="https://developer.apple.com/library/ios/documentation/ContactsUI/Reference/CNContactViewController_Class/index.html">Apple documentation for <c>CNContactViewController</c></related>

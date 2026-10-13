@@ -351,6 +351,8 @@ and rename the binding method if a different factory method name is desired.
 
 ### <a name='BI1128'/>BI1128: The [Field] member '\*.\*' sets SymbolAddress, but its type is '\*'; only System.IntPtr is supported.
 
+### <a name='BI1129'/>BI1129: The selector '\*' on '\*' contains invalid characters.
+
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->
 <!-- 4xxx: reserved -->

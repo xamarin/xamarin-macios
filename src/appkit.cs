@@ -403,7 +403,7 @@ namespace AppKit {
 		[Export ("duration")]
 		double Duration { get; set; }
 
-		[Export ("completionHandler", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
 		Action CompletionHandler { get; set; }
 
 		[Static]
@@ -3876,7 +3876,7 @@ namespace AppKit {
 		void MoveItem (NSIndexPath indexPath, NSIndexPath newIndexPath);
 
 		[Export ("performBatchUpdates:completionHandler:")]
-		void PerformBatchUpdates (Action updates, Action<bool> completionHandler);
+		void PerformBatchUpdates ([NullAllowed] Action updates, [NullAllowed] Action<bool> completionHandler);
 
 		[Export ("scrollToItemsAtIndexPaths:scrollPosition:")]
 		void ScrollToItems (NSSet<NSIndexPath> indexPaths, NSCollectionViewScrollPosition scrollPosition);
@@ -7053,7 +7053,7 @@ namespace AppKit {
 	/// <param name="document">The opened document, or <see langword="null"/> if opening failed.</param>
 	/// <param name="documentWasAlreadyOpen">Whether the document was already open.</param>
 	/// <param name="error">The error that prevented the document from opening, or <see langword="null"/> on success.</param>
-	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
+	delegate void OpenDocumentCompletionHandler ([NullAllowed] NSDocument document, bool documentWasAlreadyOpen, [NullAllowed] NSError error);
 
 	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
@@ -9075,6 +9075,7 @@ namespace AppKit {
 	/// <param name="theEvent">The event received by the monitor.</param>
 	/// <returns>The event to dispatch, or <see langword="null"/> to suppress the event.</returns>
 	[NoMacCatalyst]
+	[return: NullAllowed]
 	delegate NSEvent LocalEventHandler (NSEvent theEvent);
 	/// <summary>Tracks progress during a swipe gesture.</summary>
 	/// <param name="gestureAmount">The current progress of the gesture.</param>
@@ -17639,10 +17640,10 @@ namespace AppKit {
 		NSTextCheckingResult [] CheckString (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, out NSOrthography orthography, out nint wordCount);
 
 		[Export ("requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:")]
-		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
+		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 
 		[Wrap ("RequestChecking (stringToCheck, range, checkingTypes, options.GetDictionary (), tag, completionHandler)")]
-		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
+		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 
 		[Export ("menuForResult:string:options:atLocation:inView:")]
 		NSMenu MenuForResults (NSTextCheckingResult result, string checkedString, NSDictionary options, CGPoint location, NSView view);
@@ -18790,7 +18791,8 @@ namespace AppKit {
 
 	/// <summary>Creates a storyboard controller using a coder.</summary>
 	/// <param name="coder">The coder containing the controller's archived state.</param>
-	/// <returns>The controller created for the storyboard.</returns>
+	/// <returns>The controller created for the storyboard, or <see langword="null"/> if none could be created.</returns>
+	[return: NullAllowed]
 	delegate NSObject NSStoryboardControllerCreator (NSCoder coder);
 
 	[NoMacCatalyst]
@@ -20403,7 +20405,7 @@ namespace AppKit {
 		void PresentViewController (NSViewController viewController, CGRect positioningRect, NSView positioningView, nuint preferredEdge, NSPopoverBehavior behavior);
 
 		[Export ("transitionFromViewController:toViewController:options:completionHandler:")]
-		void TransitionFromViewController (NSViewController fromViewController, NSViewController toViewController, NSViewControllerTransitionOptions options, Action completion);
+		void TransitionFromViewController (NSViewController fromViewController, NSViewController toViewController, NSViewControllerTransitionOptions options, [NullAllowed] Action completion);
 
 		[Export ("parentViewController")]
 		NSViewController ParentViewController { get; }
@@ -25413,9 +25415,9 @@ namespace AppKit {
 	}
 
 	/// <summary>Handles an event matched while a window tracks events.</summary>
-	/// <param name="evt">The matching event.</param>
+	/// <param name="evt">The matching event, or <see langword="null"/> when tracking finishes.</param>
 	/// <param name="stop">Set to <see langword="true"/> to stop tracking events.</param>
-	delegate void NSWindowTrackEventsMatchingCompletionHandler (NSEvent evt, ref bool stop);
+	delegate void NSWindowTrackEventsMatchingCompletionHandler ([NullAllowed] NSEvent evt, ref bool stop);
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSResponder), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSWindowDelegate) })]
@@ -26374,10 +26376,10 @@ namespace AppKit {
 		NSWindowOcclusionState OcclusionState { get; }
 
 		[Export ("beginSheet:completionHandler:")]
-		void BeginSheet (NSWindow sheetWindow, Action<nint> completionHandler);
+		void BeginSheet (NSWindow sheetWindow, [NullAllowed] Action<nint> completionHandler);
 
 		[Export ("beginCriticalSheet:completionHandler:")]
-		void BeginCriticalSheet (NSWindow sheetWindow, Action<nint> completionHandler);
+		void BeginCriticalSheet (NSWindow sheetWindow, [NullAllowed] Action<nint> completionHandler);
 
 		[Export ("endSheet:")]
 		void EndSheet (NSWindow sheetWindow);
@@ -26516,7 +26518,7 @@ namespace AppKit {
 	/// <param name="window">The restored window, or <see langword="null"/> if restoration failed.</param>
 	/// <param name="error">The restoration error, or <see langword="null"/> on success.</param>
 	[NoMacCatalyst]
-	delegate void NSWindowCompletionHandler (NSWindow window, NSError error);
+	delegate void NSWindowCompletionHandler ([NullAllowed] NSWindow window, [NullAllowed] NSError error);
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -27179,9 +27181,9 @@ namespace AppKit {
 	}
 
 	/// <summary>Handles completion of a workspace URL operation.</summary>
-	/// <param name="newUrls">The resulting URLs, or <see langword="null"/> if the operation failed.</param>
+	/// <param name="newUrls">The resulting URLs.</param>
 	/// <param name="error">The operation error, or <see langword="null"/> on success.</param>
-	delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, NSError error);
+	delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, [NullAllowed] NSError error);
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -27277,10 +27279,10 @@ namespace AppKit {
 		NSColor [] FileLabelColors { get; }
 
 		[Export ("recycleURLs:completionHandler:"), ThreadSafe]
-		void RecycleUrls (NSArray urls, NSWorkspaceUrlHandler completionHandler);
+		void RecycleUrls (NSArray urls, [NullAllowed] NSWorkspaceUrlHandler completionHandler);
 
 		[Export ("duplicateURLs:completionHandler:"), ThreadSafe]
-		void DuplicateUrls (NSArray urls, NSWorkspaceUrlHandler completionHandler);
+		void DuplicateUrls (NSArray urls, [NullAllowed] NSWorkspaceUrlHandler completionHandler);
 
 		[Export ("getFileSystemInfoForPath:isRemovable:isWritable:isUnmountable:description:type:"), ThreadSafe]
 		bool GetFileSystemInfo (string fullPath, out bool removableFlag, out bool writableFlag, out bool unmountableFlag, out string description, out string fileSystemType);
@@ -28934,8 +28936,8 @@ namespace AppKit {
 	}
 
 	/// <summary>Handles a spelling correction selected from the correction indicator.</summary>
-	/// <param name="acceptedString">The correction accepted by the user.</param>
-	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
+	/// <param name="acceptedString">The correction accepted by the user, or <see langword="null"/> if none was accepted.</param>
+	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler ([NullAllowed] string acceptedString);
 
 	partial interface NSSpellChecker {
 		[Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
@@ -28952,7 +28954,7 @@ namespace AppKit {
 
 		[Export ("showCorrectionIndicatorOfType:primaryString:alternativeStrings:forStringInRect:view:completionHandler:")]
 		void ShowCorrectionIndicatorOfType (NSCorrectionIndicatorType type, string primaryString, string [] alternativeStrings,
-			CGRect forStringInRect, NSRulerView view, NSSpellCheckerShowCorrectionIndicatorOfTypeHandler completionHandler);
+			CGRect forStringInRect, NSRulerView view, [NullAllowed] NSSpellCheckerShowCorrectionIndicatorOfTypeHandler completionHandler);
 
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
@@ -29197,7 +29199,7 @@ namespace AppKit {
 		[Export ("initWithSize:flipped:drawingHandler:")]
 		NativeHandle Constructor (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
 
-		[Export ("drawingHandler")]
+		[NullAllowed, Export ("drawingHandler")]
 		NSCustomImageRepDrawingHandler DrawingHandler { get; }
 	}
 
@@ -29206,7 +29208,7 @@ namespace AppKit {
 	delegate void NSDocumentMoveCompletionHandler (bool didMove);
 	/// <summary>Handles completion of moving a document to a URL.</summary>
 	/// <param name="error">The move error, or <see langword="null"/> on success.</param>
-	delegate void NSDocumentMoveToUrlCompletionHandler (NSError error);
+	delegate void NSDocumentMoveToUrlCompletionHandler ([NullAllowed] NSError error);
 	/// <summary>Handles completion of locking a document.</summary>
 	/// <param name="didLock">Whether the document was locked.</param>
 	delegate void NSDocumentLockDocumentCompletionHandler (bool didLock);
@@ -29215,10 +29217,10 @@ namespace AppKit {
 	delegate void NSDocumentUnlockDocumentCompletionHandler (bool didUnlock);
 	/// <summary>Handles the completion of an asynchronous document lock operation.</summary>
 	/// <param name="error">The error that occurred, or <see langword="null"/> if the operation succeeded.</param>
-	delegate void NSDocumentLockCompletionHandler (NSError error);
+	delegate void NSDocumentLockCompletionHandler ([NullAllowed] NSError error);
 	/// <summary>Handles completion of an asynchronous document unlock operation.</summary>
 	/// <param name="error">The unlock error, or <see langword="null"/> on success.</param>
-	delegate void NSDocumentUnlockCompletionHandler (NSError error);
+	delegate void NSDocumentUnlockCompletionHandler ([NullAllowed] NSError error);
 
 	partial interface NSDocument : NSEditorRegistration, NSFilePresenter, NSMenuItemValidation
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -29248,10 +29250,10 @@ namespace AppKit {
 		void MoveDocument (NSObject sender);
 
 		[Export ("moveDocumentWithCompletionHandler:")]
-		void MoveDocumentWithCompletionHandler (NSDocumentMoveCompletionHandler completionHandler);
+		void MoveDocumentWithCompletionHandler ([NullAllowed] NSDocumentMoveCompletionHandler completionHandler);
 
 		[Export ("moveToURL:completionHandler:")]
-		void MoveToUrl (NSUrl url, NSDocumentMoveToUrlCompletionHandler completionHandler);
+		void MoveToUrl (NSUrl url, [NullAllowed] NSDocumentMoveToUrlCompletionHandler completionHandler);
 
 		[Export ("lockDocument:")]
 		void LockDocument (NSObject sender);
@@ -29260,16 +29262,16 @@ namespace AppKit {
 		void UnlockDocument (NSObject sender);
 
 		[Export ("lockDocumentWithCompletionHandler:")]
-		void LockDocumentWithCompletionHandler (NSDocumentLockDocumentCompletionHandler completionHandler);
+		void LockDocumentWithCompletionHandler ([NullAllowed] NSDocumentLockDocumentCompletionHandler completionHandler);
 
 		[Export ("lockWithCompletionHandler:")]
-		void LockWithCompletionHandler (NSDocumentLockCompletionHandler completionHandler);
+		void LockWithCompletionHandler ([NullAllowed] NSDocumentLockCompletionHandler completionHandler);
 
 		[Export ("unlockDocumentWithCompletionHandler:")]
-		void UnlockDocumentWithCompletionHandler (NSDocumentUnlockDocumentCompletionHandler completionHandler);
+		void UnlockDocumentWithCompletionHandler ([NullAllowed] NSDocumentUnlockDocumentCompletionHandler completionHandler);
 
 		[Export ("unlockWithCompletionHandler:")]
-		void UnlockWithCompletionHandler (NSDocumentUnlockCompletionHandler completionHandler);
+		void UnlockWithCompletionHandler ([NullAllowed] NSDocumentUnlockCompletionHandler completionHandler);
 
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
@@ -29290,7 +29292,7 @@ namespace AppKit {
 
 	/// <summary>Handles the completion of the document controller's open panel.</summary>
 	/// <param name="urlsToOpen">The URLs selected in the open panel, or <see langword="null"/> if the user canceled the panel.</param>
-	delegate void NSDocumentControllerOpenPanelWithCompletionHandler (NSArray urlsToOpen);
+	delegate void NSDocumentControllerOpenPanelWithCompletionHandler ([NullAllowed] NSArray urlsToOpen);
 	/// <summary>Handles the response from a document controller open panel.</summary>
 	/// <param name="result">The modal response returned by the open panel.</param>
 	delegate void NSDocumentControllerOpenPanelResultHandler (nint result);
@@ -32833,7 +32835,7 @@ namespace AppKit {
 
 		[Abstract]
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
-		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError?> completionHandler);
+		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, Action<NSError?> completionHandler);
 
 		/// <param name="filePromiseProvider">To be added.</param>
 		/// <summary>To be added.</summary>
@@ -32857,7 +32859,7 @@ namespace AppKit {
 		string [] FileNames { get; }
 
 		[Export ("receivePromisedFilesAtDestination:options:operationQueue:reader:")]
-		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl?, NSError?> reader);
+		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError?> reader);
 	}
 
 	interface INSValidatedUserInterfaceItem { }
@@ -33835,7 +33837,7 @@ namespace AppKit {
 	/// <summary>Handles an error or the successful completion of a font asset download.</summary>
 	/// <param name="error">The download error, or <see langword="null"/> when all fonts have downloaded.</param>
 	/// <returns><see langword="true"/> to continue downloading the remaining fonts; otherwise, <see langword="false"/> to stop.</returns>
-	delegate bool DownloadFontAssetsRequestCompletionHandler (NSError error);
+	delegate bool DownloadFontAssetsRequestCompletionHandler ([NullAllowed] NSError error);
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -34177,7 +34179,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	interface NSColorSampler {
 		[Export ("showSamplerWithSelectionHandler:")]
-		void ShowSampler (Action<NSColor> selectionHandler);
+		void ShowSampler (Action<NSColor?> selectionHandler);
 	}
 
 	[NoMacCatalyst]
@@ -34214,8 +34216,9 @@ namespace AppKit {
 	/// <summary>Provides a layout section for a collection view.</summary>
 	/// <param name="section">The index of the section to lay out.</param>
 	/// <param name="layout">The environment in which the section is laid out.</param>
-	/// <returns>The layout section to use.</returns>
+	/// <returns>The layout section to use, or <see langword="null"/> if none is available.</returns>
 	[NoMacCatalyst]
+	[return: NullAllowed]
 	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
 	[NoMacCatalyst]
@@ -34491,16 +34494,18 @@ namespace AppKit {
 	/// <param name="collectionView">The collection view requesting the item.</param>
 	/// <param name="indexPath">The index path of the item.</param>
 	/// <param name="itemIdentifierType">The identifier of the item.</param>
-	/// <returns>The item to display.</returns>
+	/// <returns>The item to display, or <see langword="null"/> if none is available.</returns>
 	[NoMacCatalyst]
+	[return: NullAllowed]
 	delegate NSCollectionViewItem NSCollectionViewDiffableDataSourceItemProvider (NSCollectionView collectionView, NSIndexPath indexPath, NSObject itemIdentifierType);
 
 	/// <summary>Provides a supplementary view for a collection view's diffable data source.</summary>
 	/// <param name="collectionView">The collection view requesting the supplementary view.</param>
 	/// <param name="str">The kind of supplementary view to provide.</param>
 	/// <param name="indexPath">The index path of the supplementary view.</param>
-	/// <returns>The supplementary view to display.</returns>
+	/// <returns>The supplementary view to display, or <see langword="null"/> if none is available.</returns>
 	[NoMacCatalyst]
+	[return: NullAllowed]
 	delegate NSView NSCollectionViewDiffableDataSourceSupplementaryViewProvider (NSCollectionView collectionView, string str, NSIndexPath indexPath);
 
 	[NoMacCatalyst]

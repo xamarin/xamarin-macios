@@ -63,6 +63,30 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			public void Method () { }
 		}
 
+		class ThreadExitSubclass : NSObject { }
+
+		[Test]
+		[Ignore ("https://github.com/dotnet/macios/issues/26696")]
+		public void NativeObjectReleasedDuringThreadExit ()
+		{
+			var releasedObjectCount = ThreadExitObject.ReleasedObjectCount;
+			bool scheduled = false;
+			var thread = new Thread (() => {
+				using (var obj = new ThreadExitSubclass ())
+					scheduled = ThreadExitObject.ReleaseOnThreadExit (obj);
+			}) {
+				IsBackground = true,
+			};
+			thread.Start ();
+			Assert.That (thread.Join (TimeSpan.FromSeconds (5)), Is.True, "Thread.Join timed out");
+			Assert.That (scheduled, Is.True, "Object was not retained for thread exit");
+			// Managed Thread.Join can return before pthread destructors have finished.
+			var watch = Stopwatch.StartNew ();
+			while (ThreadExitObject.ReleasedObjectCount == releasedObjectCount && watch.Elapsed < TimeSpan.FromSeconds (5))
+				Thread.Sleep (10);
+			Assert.That (ThreadExitObject.ReleasedObjectCount, Is.EqualTo (releasedObjectCount + 1), "Object was not released during thread exit");
+		}
+
 		[Test]
 		public void GetNSObject_IntPtrZero ()
 		{

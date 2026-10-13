@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -83,6 +84,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public ITaskItem? EntitlementsInExecutable { get; set; }
+
+		[Output]
+		public string EntitlementsInExecutableHash { get; set; } = string.Empty;
 
 		[Output]
 		public ITaskItem? EntitlementsInSignature { get; set; }
@@ -529,6 +533,9 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				EntitlementsInExecutable = new TaskItem (simulatedXcent);
+				using (var stream = File.OpenRead (simulatedXcent))
+				using (var sha = SHA256.Create ())
+					EntitlementsInExecutableHash = Convert.ToBase64String (sha.ComputeHash (stream));
 
 				// No matter what, I haven't been able to make Xcode apply any entitlements to the when signing simulator apps
 				compiled = new PDictionary ();

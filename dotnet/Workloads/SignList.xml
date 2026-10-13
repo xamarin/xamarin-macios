@@ -15,6 +15,7 @@
     <Skip Include="tools\msbuild\iOS\System.Security.Principal.Windows.dll" />
     <Skip Include="tools\msbuild\iOS\ws2_32.dll" />
     <!-- Broker.zip -->
+    <Skip Include="Broker\Microsoft.Bcl.Cryptography.dll" />
     <Skip Include="Broker\Newtonsoft.Json.dll" />
     <Skip Include="Broker\MQTTnet.dll" />
     <Skip Include="Broker\System.Reactive.dll" />
@@ -24,6 +25,7 @@
     <Skip Include="Broker\System.ValueTuple.dll" />
     <!-- Build.zip -->
     <Skip Include="Build\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <Skip Include="Build\Microsoft.VisualStudio.SolutionPersistence.dll" />
     <Skip Include="Build\System.Buffers.dll" />
     <Skip Include="Build\System.Collections.Immutable.dll" />
     <Skip Include="Build\System.Memory.dll" />
@@ -146,6 +148,7 @@
     <FirstParty Include="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
     <FirstParty Include="Microsoft.Extensions.Logging.Abstractions.dll" />
     <!-- Broker.zip -->
+    <FirstParty Include="Broker.dll" />
     <FirstParty Include="Broker.exe" />
     <FirstParty Include="Broker.resources.dll" />
     <!-- Build.zip -->

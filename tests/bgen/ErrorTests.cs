@@ -78,6 +78,20 @@ namespace GeneratorTests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
+		public void InvalidSelectorDoesNotExitProcess (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool {
+				Profile = profile,
+			};
+			bgen.AddTestApiDefinition ("invalid-selector.cs");
+
+			bgen.AssertExecuteError ("invalid selector");
+			bgen.AssertError (1129, "The selector 'invalid(selector' on 'InvalidSelector.InvalidSelectorType.InvalidSelector' contains invalid characters.");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
 		public void BI1036 (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());

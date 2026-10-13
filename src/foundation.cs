@@ -31,8 +31,6 @@
 //
 //
 
-#define DOUBLE_BLOCKS
-
 global using nfloat = global::System.Runtime.InteropServices.NFloat;
 
 using CloudKit;
@@ -11068,9 +11066,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		/// <remarks>To be added.</remarks>
 		[Export ("URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:")]
-#nullable enable
 		void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest?> completionHandler);
-#nullable disable
 
 		/// <param name="session">To be added.</param>
 		/// <param name="task">To be added.</param>
@@ -18400,7 +18396,6 @@ namespace Foundation {
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue PresentedItemOperationQueue { get; }
 
-#if DOUBLE_BLOCKS
 		/// <param name="readerAction">To be added.</param>
 		/// <summary>To be added.</summary>
 		/// <remarks>To be added.</remarks>
@@ -18412,23 +18407,22 @@ namespace Foundation {
 		/// <remarks>To be added.</remarks>
 		[Export ("relinquishPresentedItemToWriter:")]
 		void RelinquishPresentedItemToWriter (NSFilePresenterReacquirer writerAction);
-#endif
 
 		/// <param name="completionHandler">To be added.</param>
 		/// <summary>To be added.</summary>
 		/// <remarks>To be added.</remarks>
 		[Export ("savePresentedItemChangesWithCompletionHandler:")]
-		void SavePresentedItemChanges (Action<NSError> completionHandler);
+		void SavePresentedItemChanges (Action<NSError?> completionHandler);
 
 		/// <param name="completionHandler">To be added.</param>
 		/// <summary>To be added.</summary>
 		/// <remarks>To be added.</remarks>
 		[Export ("accommodatePresentedItemDeletionWithCompletionHandler:")]
-		void AccommodatePresentedItemDeletion (Action<NSError> completionHandler);
+		void AccommodatePresentedItemDeletion (Action<NSError?> completionHandler);
 
 		[NoTV, Mac (14, 4), iOS (17, 4), MacCatalyst (17, 4)]
 		[Export ("accommodatePresentedItemEvictionWithCompletionHandler:")]
-		void AccommodatePresentedItemEviction (Action<NSError> completionHandler);
+		void AccommodatePresentedItemEviction (Action<NSError?> completionHandler);
 
 		/// <param name="newURL">To be added.</param>
 		/// <summary>To be added.</summary>
@@ -18464,7 +18458,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		/// <remarks>To be added.</remarks>
 		[Export ("accommodatePresentedSubitemDeletionAtURL:completionHandler:")]
-		void AccommodatePresentedSubitemDeletion (NSUrl url, Action<NSError> completionHandler);
+		void AccommodatePresentedSubitemDeletion (NSUrl url, Action<NSError?> completionHandler);
 
 		/// <param name="atUrl">To be added.</param>
 		/// <summary>To be added.</summary>

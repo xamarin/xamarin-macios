@@ -99,4 +99,50 @@ public class InlineDlfcnMethodsStepTests : BaseClass {
 		var requiredSymbol = preparer.Configuration.DerivedLinkContext.RequiredSymbols.Find ("NativeSymbol");
 		Assert.That (requiredSymbol, Is.Not.Null, "The referenced native symbol must still be collected for native linking.");
 	}
+
+	[Test]
+	public void HotReloadCompatibleBuildSkipsUntrimmedPlatformAssembly ()
+	{
+		var code = @"
+		using System;
+		using Foundation;
+		using ObjCRuntime;
+
+		class MyClass : NSObject {
+			[Field (""NativeSymbol"", ""__Internal"")]
+			static IntPtr MyField => Dlfcn.GetIntPtr (0, ""NativeSymbol"");
+		}";
+
+		// Strict mode ensures the platform's Dlfcn calls would collect symbols if it were scanned.
+		var modified = AssertPrepare (ApplePlatform.iOS, false, RegistrarMode.Dynamic, code, out _, out var preparer,
+			hotReloadCompatibleBuild: true, testAssemblyTrimMode: "copy", inlineDlfcnMethods: "strict",
+			extraConfig: "AreAnyAssembliesTrimmed=false\nPublishTrimmed=false");
+
+		Assert.That (modified, Is.False, "The user assembly should remain unmodified.");
+		var fieldSymbols = preparer.Configuration.DerivedLinkContext.RequiredSymbols
+			.Where (v => v.Type == SymbolType.Field)
+			.Select (v => v.Name);
+		Assert.That (fieldSymbols, Is.EquivalentTo (new [] { "NativeSymbol" }), "Only the user assembly's Dlfcn symbol should be collected.");
+	}
+
+	[Test]
+	public void HotReloadCompatibleBuildStillInlinesTrimmedPlatformAssembly ()
+	{
+		AssertPrepare (ApplePlatform.iOS, false, RegistrarMode.Dynamic, "class MyClass {}", out _, out var preparer,
+			hotReloadCompatibleBuild: true, testAssemblyTrimMode: "copy", inlineDlfcnMethods: "strict");
+
+		Assert.That (preparer.Configuration.InlinedDlfcnFields.TryGetValue ("Microsoft.iOS", out var inlinedFields), Is.True);
+		Assert.That (inlinedFields, Is.Not.Empty, "The linked platform assembly should still be inlined.");
+	}
+
+	[Test]
+	public void NonHotReloadBuildStillInlinesUntrimmedPlatformAssembly ()
+	{
+		AssertPrepare (ApplePlatform.iOS, false, RegistrarMode.Dynamic, "class MyClass {}", out _, out var preparer,
+			testAssemblyTrimMode: "copy", inlineDlfcnMethods: "strict",
+			extraConfig: "AreAnyAssembliesTrimmed=false\nPublishTrimmed=false");
+
+		Assert.That (preparer.Configuration.InlinedDlfcnFields.TryGetValue ("Microsoft.iOS", out var inlinedFields), Is.True);
+		Assert.That (inlinedFields, Is.Not.Empty, "The platform assembly should still be inlined when Hot Reload compatibility is disabled.");
+	}
 }

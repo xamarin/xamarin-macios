@@ -59,6 +59,14 @@ public class InlineDlfcnMethodsStep : AssemblyModifierStep {
 		// so we don't have to worry about the post-NativeAOT native symbol collection here.
 		inlining_enabled = !(Configuration.HotReloadCompatibleBuild && Annotations.GetAction (assembly) != AssemblyAction.Link);
 
+#if ASSEMBLY_PREPARER
+		// If we're not inlining anything, this task's only other purpose is to collect some information about native symbols.
+		// However, our product assembly doesn't have any native symbols we care about, so we don't need to process
+		// the product assembly at all in this case (which speeds up this task significantly for debug builds).
+		if (!inlining_enabled && Configuration.Profile.IsProductAssembly (assembly))
+			return false;
+#endif
+
 		var modified = base.ModifyAssembly (assembly);
 		inlining_enabled = true;
 		return modified;
