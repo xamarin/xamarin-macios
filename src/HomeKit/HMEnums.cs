@@ -2068,14 +2068,21 @@ namespace HomeKit {
 		Hide = 1,
 	}
 
+	/// <summary>Describes the current playback state of a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentMediaState : long {
+		/// <summary>Media is playing.</summary>
 		Playing = 0,
+		/// <summary>Media playback is paused.</summary>
 		Paused = 1,
+		/// <summary>Media playback is stopped.</summary>
 		Stopped = 2,
+		/// <summary>The media state is unknown.</summary>
 		Unknown = 3,
+		/// <summary>Media is loading.</summary>
 		Loading = 4,
+		/// <summary>Media playback is interrupted.</summary>
 		Interrupted = 5,
 	}
 
