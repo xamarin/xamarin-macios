@@ -2651,7 +2651,6 @@ F:CoreVideo.CVVersatileBayerPattern.Gbrg
 F:CoreVideo.CVVersatileBayerPattern.Grbg
 F:CoreVideo.CVVersatileBayerPattern.Rggb
 F:CoreWlan.CWChannelBand.SixGHz
-F:CoreWlan.CWPhyMode.AX
 F:CoreWlan.CWSecurity.Owe
 F:CoreWlan.CWSecurity.OweTransition
 F:CoreWlan.CWSecurity.Wpa3Enterprise
@@ -55767,7 +55766,6 @@ T:CoreWlan.CWMutableConfiguration
 T:CoreWlan.CWMutableNetworkProfile
 T:CoreWlan.CWNetwork
 T:CoreWlan.CWNetworkProfile
-T:CoreWlan.CWPhyMode
 T:CoreWlan.CWSecurity
 T:CoreWlan.CWWiFiClient
 T:CryptoTokenKit.TKBerTlvRecord

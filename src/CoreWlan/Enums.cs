@@ -81,23 +81,25 @@ namespace CoreWlan {
 		Status = -3931,
 	}
 
+	/// <summary>Specifies the IEEE 802.11 physical-layer mode of a wireless interface.</summary>
 	[NoMacCatalyst]
 	[Native]
 	public enum CWPhyMode : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The physical-layer mode is unknown or unavailable.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>IEEE 802.11a.</summary>
 		A = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>IEEE 802.11b.</summary>
 		B = 2,
-		/// <summary>To be added.</summary>
+		/// <summary>IEEE 802.11g.</summary>
 		G = 3,
-		/// <summary>To be added.</summary>
+		/// <summary>IEEE 802.11n (Wi-Fi 4).</summary>
 		N = 4,
-		/// <summary>To be added.</summary>
+		/// <summary>IEEE 802.11ac (Wi-Fi 5).</summary>
 		AC = 5,
+		/// <summary>IEEE 802.11ax (Wi-Fi 6).</summary>
 		AX = 6,
-		/// <summary>802.11be (Wi-Fi 7).</summary>
+		/// <summary>IEEE 802.11be (Wi-Fi 7).</summary>
 		[Mac (26, 4)]
 		BE = 7,
 	}
