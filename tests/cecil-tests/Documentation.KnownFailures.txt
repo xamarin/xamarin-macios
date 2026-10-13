@@ -3733,9 +3733,6 @@ F:HomeKit.HMCharacteristicType.WanStatusList
 F:HomeKit.HMCharacteristicType.WiFiSatelliteStatus
 F:HomeKit.HMCharacteristicValueClosedCaptions.Disabled
 F:HomeKit.HMCharacteristicValueClosedCaptions.Enabled
-F:HomeKit.HMCharacteristicValueCurrentHeatingCooling.Cool
-F:HomeKit.HMCharacteristicValueCurrentHeatingCooling.Heat
-F:HomeKit.HMCharacteristicValueCurrentHeatingCooling.Off
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Interrupted
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Loading
 F:HomeKit.HMCharacteristicValueCurrentMediaState.Paused
@@ -56755,7 +56752,6 @@ T:HomeKit.HMCharacteristicEvent
 T:HomeKit.HMCharacteristicMetadata
 T:HomeKit.HMCharacteristicThresholdRangeEvent
 T:HomeKit.HMCharacteristicValueClosedCaptions
-T:HomeKit.HMCharacteristicValueCurrentHeatingCooling
 T:HomeKit.HMCharacteristicValueCurrentMediaState
 T:HomeKit.HMCharacteristicValueCurrentVisibilityState
 T:HomeKit.HMCharacteristicValueInputDeviceType

@@ -1976,12 +1976,16 @@ namespace HomeKit {
 		Closed = 1,
 	}
 
+	/// <summary>Indicates the current heating or cooling state.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeatingCooling : long {
+		/// <summary>Neither heating nor cooling is active.</summary>
 		Off = 0,
+		/// <summary>Heating is active.</summary>
 		Heat = 1,
+		/// <summary>Cooling is active.</summary>
 		Cool = 2,
 	}
 
