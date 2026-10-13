@@ -107,12 +107,15 @@ namespace Network {
 
 			using var nwRequest = new NWWebSocketRequest (request, owns: false);
 			var response = del (nwRequest);
-			response ??= new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
-			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
+			if (response is not null)
+				return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
+
+			using var rejectResponse = new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
+			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (rejectResponse);
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		void SetClientRequestHandlerCore (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
+		public void SetClientRequestHandler (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
 		{
 			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
@@ -127,40 +130,37 @@ namespace Network {
 			}
 		}
 
-#if XAMCORE_5_0
-		/// <summary>Sets the callback that handles incoming WebSocket handshake requests.</summary>
-		/// <param name="queue">The queue on which to invoke <paramref name="handler" />.</param>
-		/// <param name="handler">The callback that returns the server's response to each request.</param>
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetClientRequestHandler (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
-			=> SetClientRequestHandlerCore (queue, handler);
-#endif
-
-#if !XAMCORE_6_0
-		/// <summary>Sets the callback that handles incoming WebSocket handshake requests.</summary>
-		/// <param name="queue">The queue on which to invoke <paramref name="handler" />.</param>
-		/// <param name="handler">The callback that returns the server's response to each request.</param>
-#if XAMCORE_5_0
-		[Obsolete ("Use 'SetClientRequestHandler' instead.")]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-#endif
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetClientRequestHandler2 (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
-			=> SetClientRequestHandlerCore (queue, handler);
-#endif
-
 #if !XAMCORE_5_0
-		[Obsolete ("This overload cannot return a WebSocket response and rejects every handshake. Use 'SetClientRequestHandler2' instead.")]
+		[UnmanagedCallersOnly]
+		static IntPtr TrampolineClientRequestHandlerAction (IntPtr block, nw_ws_request_t request)
+		{
+			var handler = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
+			if (handler is null)
+				return IntPtr.Zero;
+
+			using var nwRequest = new NWWebSocketRequest (request, owns: false);
+			handler (nwRequest);
+			using var response = new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
+			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
+		}
+
+		[Obsolete ("This overload cannot return a WebSocket response and rejects every handshake. Use the overload that takes an 'NWWebSocketClientRequestHandler' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
+		[OverloadResolutionPriority (-1)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
 		{
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			SetClientRequestHandler2 (queue, request => {
-				handler (request);
-				return new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
-			});
+			unsafe {
+				delegate* unmanaged<IntPtr, nw_ws_request_t, IntPtr> trampoline = &TrampolineClientRequestHandlerAction;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketOptions), nameof (TrampolineClientRequestHandlerAction));
+				nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, &block);
+				GC.KeepAlive (queue);
+			}
 		}
 #endif
 	}
