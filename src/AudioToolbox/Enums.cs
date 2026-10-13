@@ -159,7 +159,7 @@ namespace AudioToolbox {
 		Speech = 2,
 		/// <summary>Apply dynamic range compression for movie soundtracks.</summary>
 		Movie = 3,
-		/// <summary>Apply dynamic range compression for live encoding.</summary>
+		/// <summary>Apply dynamic range compression for audio capture (live encoding).</summary>
 		Capture = 4,
 	}
 
