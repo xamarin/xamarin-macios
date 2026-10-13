@@ -111,6 +111,7 @@ namespace Network {
 			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetClientRequestHandlerCore (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
 		{
 			if (queue is null)
