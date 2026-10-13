@@ -71,7 +71,7 @@ namespace CoreWlan {
 		HTFeaturesNotSupported = -3926,
 		/// <summary>The PCO transition time is not supported.</summary>
 		PCOTransitionTimeNotSupported = -3927,
-		/// <summary>The reference is not bound.</summary>
+		/// <summary>No interface is bound to the CWInterface object.</summary>
 		ReferenceNotBound = -3928,
 		/// <summary>An interprocess communication (IPC) operation failed.</summary>
 		IPCFailure = -3929,
