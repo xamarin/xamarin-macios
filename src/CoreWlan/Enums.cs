@@ -85,7 +85,7 @@ namespace CoreWlan {
 	[NoMacCatalyst]
 	[Native]
 	public enum CWPhyMode : ulong {
-		/// <summary>The physical-layer mode is unknown or unavailable.</summary>
+		/// <summary>No physical-layer mode is specified.</summary>
 		None = 0,
 		/// <summary>IEEE 802.11a.</summary>
 		A = 1,
