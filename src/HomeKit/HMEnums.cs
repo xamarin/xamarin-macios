@@ -2184,10 +2184,13 @@ namespace HomeKit {
 		AlwaysShown = 3,
 	}
 
+	/// <summary>Describes whether a router is ready to provide network service.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueRouterStatus : long {
+		/// <summary>The router is ready.</summary>
 		Ready = 0,
+		/// <summary>The router is not ready.</summary>
 		NotReady = 1,
 	}
 
