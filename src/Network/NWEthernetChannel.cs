@@ -184,8 +184,10 @@ namespace Network {
 		}
 #endif
 
+		/// <summary>Sets the callback invoked when the Ethernet channel state changes.</summary>
+		/// <param name="handler">The callback receives the new <see cref="NWEthernetChannelState"/> and an associated <see cref="NWError"/>, if any. Pass <see langword="null"/> to remove the callback.</param>
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetStateChangesHandler (Action<NWEthernetChannelState, NWError?> handler)
+		public void SetStateChangesHandler (Action<NWEthernetChannelState, NWError?>? handler)
 		{
 			unsafe {
 				if (handler is null) {
