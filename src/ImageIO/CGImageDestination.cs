@@ -42,8 +42,7 @@ namespace ImageIO {
 			get { return destinationBackgroundColor; }
 			set {
 				destinationBackgroundColor = value;
-				(Dictionary as NSMutableDictionary)?.LowlevelSetObject (destinationBackgroundColor.GetHandle (), CGImageDestinationOptionsKeys.BackgroundColor.Handle);
-				GC.KeepAlive (destinationBackgroundColor);
+				(Dictionary as NSMutableDictionary)?.LowlevelSetObject (destinationBackgroundColor!, CGImageDestinationOptionsKeys.BackgroundColor);
 			}
 		}
 
