@@ -1949,6 +1949,13 @@ var strongDemo = new Demo ();
 demo.Delegate = new MyDelegate ();
 ```
 
+When the strongly-typed property's type is a protocol interface (for example,
+`IDemoDelegate`), its getter returns a protocol wrapper if the weakly-typed
+object does not implement that interface in managed code. Its setter also accepts
+protocol wrappers that do not inherit from `NSObject`, resolving the underlying
+`NSObject` before assigning the weakly-typed property. Both accessors continue to
+call the weakly-typed property, preserving any overrides in managed subclasses.
+
 Another use of the `[Wrap]` attribute is to support strongly-typed version
 of methods.  For example:
 

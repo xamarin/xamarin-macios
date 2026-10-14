@@ -505,8 +505,13 @@ $@"if (IsDirectBinding) {{
 				   classBlock.CreateBlock (strongDelegate.ToDeclaration ().ToString (), block: true)) {
 				using (var getterBlock =
 					   propertyBlock.CreateBlock ("get", block: true)) {
-					getterBlock.WriteLine (
-						$"return {property.Name} as {strongDelegate.ReturnType.WithNullable (isNullable: false).GetIdentifierSyntax ()};");
+					var delegateType = strongDelegate.ReturnType.WithNullable (isNullable: false).GetIdentifierSyntax ();
+					getterBlock.WriteRaw (
+$@"var wrapped = {property.Name};
+var ret = wrapped as {delegateType} ?? global::ObjCRuntime.Runtime.GetINativeObject<{delegateType}> (wrapped.GetHandle (), false);
+global::System.GC.KeepAlive (wrapped);
+return ret;
+");
 				}
 
 				using (var setterBlock =
@@ -514,9 +519,10 @@ $@"if (IsDirectBinding) {{
 					setterBlock.WriteRaw (
 $@"var rvalue = value as NSObject;
 if (!(value is null) && rvalue is null) {{
-	throw new ArgumentException ($""The object passed of type {{value.GetType ()}} does not derive from NSObject"");
+	rvalue = global::ObjCRuntime.Runtime.GetNSObject (value.GetHandle ());
 }}
 {property.Name} = rvalue;
+global::System.GC.KeepAlive (value);
 ");
 				}
 			}

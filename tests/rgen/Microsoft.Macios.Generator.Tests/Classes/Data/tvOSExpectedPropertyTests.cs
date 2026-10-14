@@ -1166,15 +1166,19 @@ public partial class PropertyTests
 	{
 		get
 		{
-			return WeakDelegate as global::Foundation.INSUserActivityDelegate;
+			var wrapped = WeakDelegate;
+			var ret = wrapped as global::Foundation.INSUserActivityDelegate ?? global::ObjCRuntime.Runtime.GetINativeObject<global::Foundation.INSUserActivityDelegate> (wrapped.GetHandle (), false);
+			global::System.GC.KeepAlive (wrapped);
+			return ret;
 		}
 		set
 		{
 			var rvalue = value as NSObject;
 			if (!(value is null) && rvalue is null) {
-				throw new ArgumentException ($"The object passed of type {value.GetType ()} does not derive from NSObject");
+				rvalue = global::ObjCRuntime.Runtime.GetNSObject (value.GetHandle ());
 			}
 			WeakDelegate = rvalue;
+			global::System.GC.KeepAlive (value);
 		}
 	}
 

@@ -728,6 +728,26 @@ namespace GeneratorTests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.MacCatalyst)]
+		[TestCase (Profile.macOSMobile)]
+		public void WrappedProtocol (Profile profile)
+		{
+			var bgen = BuildFile (profile, "wrapped-protocol.cs");
+			var generatedFile = Path.Combine (bgen.TmpDirectory!, "WrappedProtocol", "DelegateOwner.g.cs");
+			var contents = File.ReadAllText (generatedFile);
+			Assert.That (contents, Does.Contain ("var wrapped = WeakDelegate;"), "Read through the weak property");
+			Assert.That (contents, Does.Contain ("Runtime.GetINativeObject<INSUserActivityDelegate> (wrapped.GetHandle (), false)"), "Imported protocol wrapper");
+			Assert.That (contents, Does.Contain ("Runtime.GetINativeObject<ILocalDelegate> (wrapped.GetHandle (), false)"), "Local protocol wrapper");
+			Assert.That (contents, Does.Contain ("rvalue = Runtime.GetNSObject (value.GetHandle ());"), "Convert protocol wrappers to NSObject");
+			Assert.That (contents, Does.Contain ("WeakDelegate = rvalue;"), "Write through the weak property");
+			Assert.That (contents, Does.Contain ("WeakSharedDelegate = rvalue;"), "Static wrapper");
+			Assert.That (contents, Does.Contain ("return (WeakDelegate as NSObject)!;"), "Non-protocol wrappers are unchanged");
+			Assert.That (contents, Does.Not.Contain ("does not derive from NSObject"), "Protocol wrappers are accepted");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
 		public void NoAsyncInternalWrapper (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());

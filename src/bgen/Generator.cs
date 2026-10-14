@@ -4122,7 +4122,12 @@ public partial class Generator : IMemberGatherer {
 						print ("return NSArray.FromArray<{0}>({1} as NSArray){2};", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType.GetElementType ()), wrap, nullable ? "" : "!");
 					else if (pi.PropertyType.IsValueType)
 						print ("return ({0}) ({1});", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType, wrapNullabilityBytes), wrap);
-					else
+					else if (IsProtocolInterface (pi.PropertyType, false)) {
+						print ("var wrapped = {0};", wrap);
+						print ("var ret = wrapped as {0} ?? Runtime.GetINativeObject<{0}> (wrapped.GetHandle (), false);", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType, wrapNullabilityBytes));
+						print ("GC.KeepAlive (wrapped);");
+						print ("return ret{0};", nullable ? "" : "!");
+					} else
 						print ("return ({0} as {1})!;", wrap, TypeManager.FormatType (pi.DeclaringType, pi.PropertyType, wrapNullabilityBytes));
 				}
 				indent--;
@@ -4138,7 +4143,7 @@ public partial class Generator : IMemberGatherer {
 				if (is_protocol_wrapper) {
 					print ("var rvalue = value as NSObject;");
 					print ("if (!(value is null) && rvalue is null)");
-					print ("\tthrow new ArgumentException (\"The object passed of type \" + value.GetType () + \" does not derive from NSObject\");");
+					print ("\trvalue = Runtime.GetNSObject (value.GetHandle ());");
 				}
 
 				if (TypeManager.IsDictionaryContainerType (pi.PropertyType))
@@ -4149,6 +4154,8 @@ public partial class Generator : IMemberGatherer {
 					else
 						print ("{0} = {1}value;", wrap, is_protocol_wrapper ? "r" : "");
 				}
+				if (is_protocol_wrapper)
+					print ("GC.KeepAlive (value);");
 				indent--;
 				print ("}");
 			}
