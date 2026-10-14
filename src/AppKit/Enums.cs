@@ -234,8 +234,8 @@ namespace AppKit {
 
 	/// <summary>Specifies how a window's drawing is buffered before being flushed to the screen.</summary>
 	[NoMacCatalyst]
-	[Native]
 	[NativeName ("NSBackingStoreType")]
+	[Native]
 	public enum NSBackingStore : ulong {
 		/// <summary>The window renders visible portions directly to the screen and retains obscured portions in a buffer.</summary>
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Buffered' instead.")]
@@ -510,8 +510,8 @@ namespace AppKit {
 	/// <summary>Specifies which part of a cell, if any, a hit-test point falls within.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSCellHitResult")]
+	[Native]
 	public enum NSCellHit : ulong {
 		/// <summary>The point does not fall within any part of the cell.</summary>
 		None,
@@ -1299,8 +1299,8 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of options that describe how a view resizes relative to its superview.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSAutoresizingMaskOptions")]
+	[Native]
 	public enum NSViewResizingMask : ulong {
 		/// <summary>The view does not resize with its superview.</summary>
 		NotSizable = 0,
@@ -1902,8 +1902,8 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of the color-picking modes available in the shared color panel.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSColorPanelOptions")]
+	[Native]
 	public enum NSColorPanelFlags : ulong {
 		/// <summary>The grayscale picker.</summary>
 		Gray = 0x00000001,
@@ -2184,8 +2184,8 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of the properties of a menu item that should be observed for changes, or included in comparisons.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSMenuProperties")]
+	[Native]
 	public enum NSMenuProperty : ulong {
 		/// <summary>The menu item's title.</summary>
 		Title = 1 << 0,
@@ -2413,8 +2413,8 @@ namespace AppKit {
 
 	/// <summary>Specifies the orientation of printed pages.</summary>
 	[NoMacCatalyst]
-	[Native]
 	[NativeName ("NSPaperOrientation")]
+	[Native]
 	public enum NSPrintingOrientation : ulong {
 		/// <summary>Prints pages in portrait orientation.</summary>
 		Portrait,
@@ -2784,8 +2784,8 @@ namespace AppKit {
 	/// <summary>Specifies how a table column can be resized.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSTableColumnResizingOptions")]
+	[Native]
 	public enum NSTableColumnResizing : long {
 		/// <summary>Represents -1, which sets all table column resizing option bits.</summary>
 		None = -1,
@@ -2798,8 +2798,8 @@ namespace AppKit {
 	/// <summary>Specifies which grid lines a table view draws.</summary>
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
 	[NativeName ("NSTableViewGridLineStyle")]
+	[Native]
 	public enum NSTableViewGridStyle : ulong {
 		/// <summary>Does not draw grid lines.</summary>
 		None = 0,

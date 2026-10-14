@@ -43,9 +43,6 @@
 ## no documentation from apple. So we do nothing, specially with the _ prefix. Leak?
 !missing-field! _nw_data_transfer_report_all_paths not bound
 
-## the enum is bound as NWParametersAttribution. Apple uses _t for types, probably was an error 
-## in their part which confuses xtro
-
 # updated sharpie results
 !missing-enum! nw_browser_state_t not bound
 

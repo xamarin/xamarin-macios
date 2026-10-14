@@ -254,9 +254,9 @@ namespace Foundation {
 
 	/// <summary>A flagging enumeration whose values specify options in calls to <see cref="Foundation.NSMachPort.FromMachPort(System.UInt32,Foundation.NSMachPortRights)" />.</summary>
 	/// <remarks>To be added.</remarks>
+	[NativeName ("NSMachPortOptions")]
 	[Native]
 	[Flags]
-	[NativeName ("NSMachPortOptions")]
 	public enum NSMachPortRights : ulong {
 		/// <summary>To be added.</summary>
 		None = 0,
@@ -268,8 +268,8 @@ namespace Foundation {
 
 	/// <summary>Status codes for the NSNetService.</summary>
 	/// <remarks>To be added.</remarks>
-	[Native]
 	[NativeName ("NSNetServicesError")]
+	[Native]
 	public enum NSNetServicesStatus : long {
 		/// <summary>To be added.</summary>
 		UnknownError = -72000,
@@ -1113,8 +1113,8 @@ namespace Foundation {
 	/// <summary>An enumeration of values specifying search path domain constants for use with <see cref="Foundation.NSSearchPathDirectory" />.</summary>
 	/// <remarks>The domain is used to specify the kind of directory you want to get from the <see cref="Foundation.NSFileManager.GetUrls(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain)" /> method.</remarks>
 	[Flags]
-	[Native]
 	[NativeName ("NSSearchPathDomainMask")]
+	[Native]
 	public enum NSSearchPathDomain : ulong {
 		/// <summary>Do not return anything.</summary>
 		None = 0,
