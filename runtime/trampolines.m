@@ -50,7 +50,7 @@ static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 // table, so that xamarin_get_gchandle_trampoline does not have to call any
 // associated object API to get the gchandle.
 // Also cache NSObjectData: looking it up with associated-object APIs from
-// retainWeakReference would invert Objective-C's lock order during fork.
+// retainWeakReference would invert Objective-C's lock order during fork (see bug #26844).
 static CFMutableDictionaryRef gchandle_hash = NULL;
 static pthread_mutex_t gchandle_hash_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -800,10 +800,22 @@ xamarin_notify_dealloc (id self, GCHandle gchandle)
 	xamarin_unregister_nsobject (self, gchandle, &exception_gchandle);
 	xamarin_free_gchandle (self, gchandle);
 
-	pthread_mutex_lock (&gchandle_hash_lock);
-	if (gchandle_hash != NULL)
-		CFDictionaryRemoveValue (gchandle_hash, self);
-	pthread_mutex_unlock (&gchandle_hash_lock);
+	// Check if gchandle_hash is NULL before trying to acquire the lock (to avoid the expense of locking unless it's necessary).
+	// This is safe for a few reasons:
+	// * The only potential failure scenario is if another thread created 'gchandle_hash' + added 'self' to it, and this thread doesn't see this.
+	// * The 'gchandle_hash' dictionary only exists when using the dynamic registrar, and it should be created a *long* time if we're using the dynamic registrar.
+	// * Even if that weren't the case, at this point no other thread should know about 'self' (the object we're deallocating), thus no other thread should
+	//   try to add this 'self' to the 'gchandle_hash' dictionary concurrently with this thread.
+	// * The only remamining thread safety issue is due to memory ordering and things executing on different CPUs: as mentioned the 'gchandle_hash' dictionary must
+	//   have been created a long time ago if 'self' is in it (at least one garbage collection occurred in the meantime + at least one managed-to-native transition and
+	//   back again).
+	// Also note that by checking 'gchandle_hash' for NULL before locking, we speed up all configurations, when 'gchandle_hash' can only be non-NULL when using the dynamic registrar.
+	if (gchandle_hash != NULL) {
+		pthread_mutex_lock (&gchandle_hash_lock);
+		if (gchandle_hash != NULL)
+			CFDictionaryRemoveValue (gchandle_hash, self);
+		pthread_mutex_unlock (&gchandle_hash_lock);
+	}
 
 	MONO_THREAD_DETACH;
 
@@ -912,15 +924,14 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 		if (data != NULL)
 			obj->data = data;
 		obj->gchandle_flags = gchandle_flags;
-	}
-	
-	pthread_mutex_lock (&gchandle_hash_lock);
-	if (gchandle_hash == NULL) {
-		CFDictionaryValueCallBacks value_callbacks = { };
-		value_callbacks.release = release_gchandle_dictionary_entry;
-		gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, &value_callbacks);
-	}
-	if (obj != NULL) {
+
+		pthread_mutex_lock (&gchandle_hash_lock);
+		if (gchandle_hash == NULL) {
+			CFDictionaryValueCallBacks value_callbacks = { };
+			value_callbacks.release = release_gchandle_dictionary_entry;
+			gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, &value_callbacks);
+		}
+
 		struct gchandle_dictionary_entry *entry = (struct gchandle_dictionary_entry *) CFDictionaryGetValue (gchandle_hash, self);
 		if (entry == NULL) {
 			entry = (struct gchandle_dictionary_entry *) calloc (1, sizeof (struct gchandle_dictionary_entry));
@@ -931,8 +942,9 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 		// A GCHandle can be cleared temporarily (for example by copyWithZone).
 		// Keep the data until native deallocation, just like the associated object.
 		entry->data = obj->data;
+
+		pthread_mutex_unlock (&gchandle_hash_lock);
 	}
-	pthread_mutex_unlock (&gchandle_hash_lock);
 
 	return true;
 }
