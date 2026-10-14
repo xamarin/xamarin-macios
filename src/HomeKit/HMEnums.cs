@@ -2180,7 +2180,7 @@ namespace HomeKit {
 		Hidden = 1,
 		/// <summary>The input source is shown when its device is connected.</summary>
 		Connected = 2,
-		/// <summary>The input source is always shown.</summary>
+		/// <summary>The input source is always shown and cannot be hidden by changing its target visibility state.</summary>
 		AlwaysShown = 3,
 	}
 
