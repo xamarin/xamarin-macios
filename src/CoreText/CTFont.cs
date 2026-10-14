@@ -441,12 +441,12 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public bool Exclusive {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTFontFeatureKey.Exclusive.Handle);
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTFontFeatureKey.Exclusive);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTFontFeatureKey.Exclusive.Handle,
+				CFMutableDictionary.SetValue (Dictionary,
+						CTFontFeatureKey.Exclusive,
 						value);
 			}
 		}
@@ -614,12 +614,12 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public bool Default {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTFontFeatureSelectorKey.Default.Handle);
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTFontFeatureSelectorKey.Default);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTFontFeatureSelectorKey.Default.Handle,
+				CFMutableDictionary.SetValue (Dictionary,
+						CTFontFeatureSelectorKey.Default,
 						value);
 			}
 		}
@@ -629,12 +629,12 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public bool Setting {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTFontFeatureSelectorKey.Setting.Handle);
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTFontFeatureSelectorKey.Setting);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTFontFeatureSelectorKey.Setting.Handle,
+				CFMutableDictionary.SetValue (Dictionary,
+						CTFontFeatureSelectorKey.Setting,
 						value);
 			}
 		}
