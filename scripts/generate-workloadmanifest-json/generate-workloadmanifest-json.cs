@@ -75,10 +75,14 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			],");
 	writer.WriteLine ($"			\"extends\": [");
 	if (platform == "macOS") {
+		// Hopefully when https://github.com/dotnet/runtime/issues/122264 is done we can use the versioned workload for every version
+		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling\",");
 		for (var i = earliestDotNetVersion; i <= latestDotNetVersion; i++) {
 			writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net{i}\",");
 		}
 	} else {
+		// Hopefully when https://github.com/dotnet/runtime/issues/122264 is done we can use the versioned workload for every version
+		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}\",");
 		for (var i = earliestDotNetVersion; i <= latestDotNetVersion; i++) {
 			writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net{i}\",");
 		}
