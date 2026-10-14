@@ -9070,6 +9070,8 @@ System.Private.CoreLib.dll:System.Int32 System.Reflection.CerHashtable`2/Table::
 System.Private.CoreLib.dll:System.Int32 System.Reflection.ConstArray::Length()
 System.Private.CoreLib.dll:System.Int32 System.Reflection.ConstArray::m_length
 System.Private.CoreLib.dll:System.Int32 System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser::_curr
+System.Private.CoreLib.dll:System.Int32 System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser::Consumed()
+System.Private.CoreLib.dll:System.Int32 System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser::Remaining()
 System.Private.CoreLib.dll:System.Int32 System.Reflection.CustomAttributeEncoding::value__
 System.Private.CoreLib.dll:System.Int32 System.Reflection.Emit.__FixupData::m_fixupInstSize
 System.Private.CoreLib.dll:System.Int32 System.Reflection.Emit.__FixupData::m_fixupPos
@@ -12697,7 +12699,10 @@ System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument.set_
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument[] System.Reflection.CustomAttributeEncodedArgument::<ArrayValue>k__BackingField
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument[] System.Reflection.CustomAttributeEncodedArgument::ArrayValue()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser
+System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser..ctor(System.ReadOnlySpan`1<System.Byte>)
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser..ctor(System.Reflection.ConstArray)
+System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.get_Consumed()
+System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.get_Remaining()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetI1()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetI2()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetI4()
@@ -12708,6 +12713,7 @@ System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/Cust
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetR4()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetR8()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetString()
+System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetStringBytes(out System.Boolean&)
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetTag()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetU1()
 System.Private.CoreLib.dll:System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser.GetU2()
@@ -15123,7 +15129,7 @@ System.Private.CoreLib.dll:System.Reflection.RuntimeAssembly.InternalLoad(System
 System.Private.CoreLib.dll:System.Reflection.RuntimeAssembly.InternalLoad(System.String, System.Threading.StackCrawlMark&, System.Runtime.Loader.AssemblyLoadContext)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo..ctor(System.RuntimeMethodHandleInternal, System.RuntimeType, System.RuntimeType/RuntimeTypeCache, System.Reflection.MethodAttributes, System.Reflection.BindingFlags)
-System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.<get_Signature>g__LazyCreateSignature|19_0()
+System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.<get_Signature>g__LazyCreateSignature|20_0()
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.CacheEquals(System.Object)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.CheckCanCreateInstance(System.Type, System.Boolean)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.ComputeAndUpdateInvocationFlags()
@@ -15157,19 +15163,17 @@ System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.HasSameMetad
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.Invoke(System.Object, System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.Invoke(System.Reflection.BindingFlags, System.Reflection.Binder, System.Object[], System.Globalization.CultureInfo)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.InvokeClassConstructor()
+System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.InvokeDirectByRef(System.IntPtr*)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.IsDefined(System.Type, System.Boolean)
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.ThrowNoInvokeException()
 System.Private.CoreLib.dll:System.Reflection.RuntimeConstructorInfo.ToString()
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute
-System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.<CreateCustomAttributeInstance>g____PInvoke|7_0(System.Runtime.CompilerServices.QCallModule, System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack, System.IntPtr*, System.IntPtr, System.Int32*, System.Runtime.CompilerServices.ObjectHandleOnStack, System.IntPtr*)
-System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.<CreatePropertyOrFieldData>g____PInvoke|9_0(System.Runtime.CompilerServices.QCallModule, System.IntPtr*, System.IntPtr, System.Runtime.CompilerServices.StringHandleOnStack, System.Int32*, System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack, System.IntPtr*)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.AddCustomAttributes(System.ListBuilder`1<System.Object>&, System.Reflection.QCustomAttributeList, System.RuntimeType, System.Boolean, System.ListBuilder`1<System.Object>)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.AttributeUsageCheck(System.RuntimeType, System.Boolean, System.ListBuilder`1<System.Object>&)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.CreateAttributeArrayHelper(System.RuntimeType, System.Int32)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.CreateCustomAttributeInstance(System.Reflection.RuntimeModule, System.RuntimeType, System.IRuntimeMethodInfo, System.IntPtr&, System.IntPtr, out System.Int32&)
-System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.CreateCustomAttributeInstance(System.Runtime.CompilerServices.QCallModule, System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack, System.IntPtr&, System.IntPtr, out System.Int32&, System.Runtime.CompilerServices.ObjectHandleOnStack)
-System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.CreatePropertyOrFieldData(System.Runtime.CompilerServices.QCallModule, System.IntPtr&, System.IntPtr, System.Runtime.CompilerServices.StringHandleOnStack, out System.Boolean&, System.Runtime.CompilerServices.ObjectHandleOnStack, System.Runtime.CompilerServices.ObjectHandleOnStack)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.FilterCustomAttributeRecord(System.Reflection.MetadataToken, System.Reflection.MetadataImport&, System.Reflection.RuntimeModule, System.Reflection.MetadataToken, System.RuntimeType, System.Boolean, System.ListBuilder`1<System.Object>&, out System.RuntimeType&, out System.IRuntimeMethodInfo&, out System.Boolean&)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetAttributeBlob(System.IntPtr, System.IntPtr)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetAttributeUsage(System.RuntimeType)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAttributes(System.Reflection.QCustomAttributeList, System.Int32, System.RuntimeType)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAttributes(System.Reflection.RuntimeAssembly, System.RuntimeType)
@@ -15181,6 +15185,8 @@ System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAtt
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAttributes(System.Reflection.RuntimeParameterInfo, System.RuntimeType)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAttributes(System.Reflection.RuntimePropertyInfo, System.RuntimeType)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetCustomAttributes(System.RuntimeType, System.RuntimeType, System.Boolean)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetPrimitiveEncoding(System.RuntimeType)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetPrimitiveSize(System.Reflection.CustomAttributeEncoding)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.GetPropertyOrFieldData(System.Reflection.RuntimeModule, System.IntPtr&, System.IntPtr, out System.String&, out System.Boolean&, out System.RuntimeType&, out System.Object&)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.IsCustomAttributeDefined(System.Reflection.QCustomAttributeList, System.RuntimeType, System.Boolean, System.Int32)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.IsDefined(System.Reflection.RuntimeConstructorInfo, System.RuntimeType)
@@ -15193,6 +15199,12 @@ System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.IsDefined(Sy
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.MatchesTypeFilter(System.RuntimeType, System.RuntimeType)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ParseAttributeUsageAttribute(System.IntPtr, System.Int32, System.Int32*, System.Int32*, System.Int32*)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ParseAttributeUsageAttribute(System.Reflection.ConstArray, out System.AttributeTargets&, out System.Boolean&, out System.Boolean&)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ReadAttributeArray(System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser&, System.RuntimeType, System.Reflection.RuntimeModule)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ReadAttributeType(System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser&, System.Reflection.CustomAttributeEncoding, System.Reflection.RuntimeModule, System.Boolean)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ReadAttributeTypeName(System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser&, System.Reflection.RuntimeModule)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ReadAttributeValue(System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser&, System.RuntimeType, System.Reflection.RuntimeModule)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.ReadPrimitiveData(System.Reflection.CustomAttributeEncodedArgument/CustomAttributeDataParser&, System.Reflection.CustomAttributeEncoding)
+System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttribute.StoreArgumentReference`1(System.IntPtr*, T&)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttributeData
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttributeData..ctor(System.Attribute)
 System.Private.CoreLib.dll:System.Reflection.RuntimeCustomAttributeData..ctor(System.Reflection.RuntimeModule, System.Reflection.MetadataToken, System.Reflection.ConstArray&)
