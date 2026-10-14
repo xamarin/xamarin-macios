@@ -241,24 +241,19 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => _AccessibilityChildrenInNavigationOrder;
+			set => _AccessibilityChildrenInNavigationOrder = value;
+		}
+
+		internal NSAccessibilityElement []? _AccessibilityChildrenInNavigationOrder {
 			get {
-				var result = _GetAccessibilityChildrenInNavigationOrder2 (this);
+				var result = AccessibilityChildrenInNavigationOrder2;
 				if (result is null)
 					return null;
-				var rv = new NSAccessibilityElement [result.Length];
-				for (var i = 0; i < rv.Length; i++)
-					rv [i] = (NSAccessibilityElement) result [i];
-				return rv;
+				return Array.ConvertAll (result, element => (NSAccessibilityElement) element);
 			}
 			set {
-				if (value is null) {
-					_SetAccessibilityChildrenInNavigationOrder2 (this, null);
-					return;
-				}
-				var rv = new INSAccessibilityElementProtocol [value.Length];
-				for (var i = 0; i < rv.Length; i++)
-					rv [i] = (INSAccessibilityElementProtocol) value [i];
-				_SetAccessibilityChildrenInNavigationOrder2 (this, rv);
+				AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
 			}
 		}
 	}
@@ -267,11 +262,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -279,11 +271,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -291,11 +280,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -303,11 +289,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -315,11 +298,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -327,11 +307,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -339,11 +316,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -351,11 +325,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -363,11 +334,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 
@@ -375,11 +343,8 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
 		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
-			get {
-				var result = AccessibilityChildrenInNavigationOrder2;
-				return result is null ? null : Array.ConvertAll (result, element => (NSAccessibilityElement) element);
-			}
-			set => AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
 		}
 	}
 #endif
