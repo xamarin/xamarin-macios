@@ -11,6 +11,47 @@ using Xamarin.Linker;
 namespace AssemblyPreparerTests;
 
 public class ManagedRegistrarStepTests : BaseClass {
+	[TestCase (false)]
+	[TestCase (true)]
+	public void StaticRegistrarFindsTrimmedBaseMethodExport (bool removeBaseMethod)
+	{
+		var code = @"
+		using System;
+		using System.Runtime.InteropServices;
+		using Foundation;
+		using ObjCRuntime;
+
+		public class BaseClass : NSObject {
+			[Export (""func:"")]
+			public virtual IntPtr Func ([Out] ref NSObject value) { value = null; return IntPtr.Zero; }
+		}
+
+		public class DerivedClass : BaseClass {
+			public override IntPtr Func (ref NSObject value) { value = null; return IntPtr.Zero; }
+		}
+		";
+
+		using var preparer = CreatePreparer (ApplePlatform.iOS, false, p => p.Registrar = RegistrarMode.Static,
+			code, out _);
+		var context = preparer.Configuration.DerivedLinkContext;
+		new LoadAssembliesStep ().Process (context);
+		var resolver = new PreTrimTestResolver ();
+		resolver.AddPaths (preparer.Assemblies.Select (v => v.InputPath));
+		preparer.Configuration.Application.PreTrimAssemblyResolver = resolver;
+		preparer.Configuration.Application.IsPostProcessingAssemblies = true;
+
+		var assembly = context.GetAssemblies ().Single (v => v.Name.Name == "Test");
+		var baseType = assembly.MainModule.Types.Single (v => v.Name == "BaseClass");
+		var baseMethod = baseType.Methods.Single (v => v.Name == "Func");
+		if (removeBaseMethod)
+			baseType.Methods.Remove (baseMethod);
+		else
+			baseMethod.CustomAttributes.Clear ();
+		new RegistrarStep ().Process (context);
+		var registrarPath = Path.Combine (preparer.Configuration.CacheDirectory, "registrar.mm");
+		Assert.That (File.ReadAllText (registrarPath), Does.Match (@"(?s)@implementation DerivedClass\b(?:(?!@end).)*\bfunc:"), "Inherited selector on derived class");
+	}
+
 	[Test]
 	public void FactoryMethodsNotAddedToReloadableAssemblies ()
 	{
@@ -194,7 +235,6 @@ public class ManagedRegistrarStepTests : BaseClass {
 		var typeMapDir = Path.Combine (tempDir, "typemaps");
 		var config = $@"
 		AssemblyName=Microsoft.iOS.dll
-		PrepareAssemblies=true
 		TypeMapAssemblyName=_TypeMap
 		TypeMapOutputDirectory={typeMapDir}
 		UnmanagedCallersOnlyMapPath={Path.Combine (tempDir, "uco.txt")}

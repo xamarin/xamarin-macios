@@ -1327,7 +1327,7 @@
 
 
 	<!--
-		When building for NativeAOT with the trimmable-static registrar (and PrepareAssemblies), we generate
+		When building for NativeAOT with the trimmable-static registrar, we generate
 		the native registrar code *after* the NativeAOT compiler (ILC) has run, instead of before. This lets
 		the registrar inspect ILC's output to see which UnmanagedCallersOnly trampolines survived trimming, and
 		avoid emitting direct native references to trampolines ILC trimmed away (which would be undefined symbols

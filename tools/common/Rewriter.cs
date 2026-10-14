@@ -11,7 +11,7 @@ using Mono.Linker;
 #nullable enable
 
 namespace ClassRedirector {
-#if NET
+#if NET || ASSEMBLY_PREPARER
 	public class Rewriter {
 		// Rewriter exists to do three things:
 		// 0. For each class identified by the static registrar,
@@ -35,11 +35,13 @@ namespace ClassRedirector {
 		IEnumerable<AssemblyDefinition> assemblies;
 		AssemblyDefinition xamarinAssembly;
 		Xamarin.Tuner.DerivedLinkContext derivedLinkContext;
+		Action<AssemblyDefinition>? assemblyModified;
 
-		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? derivedLinkContext)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? derivedLinkContext, Action<AssemblyDefinition>? assemblyModified = null)
 		{
 			this.map = map;
 			this.assemblies = assembliesToPatch;
+			this.assemblyModified = assemblyModified;
 			var xasm = assembliesToPatch.Select (assem => assem.MainModule).FirstOrDefault (ContainsNativeHandle)?.Assembly;
 			if (xasm is null) {
 				throw new Exception ("Unable to find Xamarin assembly.");
@@ -407,17 +409,12 @@ namespace ClassRedirector {
 			throw new NotImplementedException ();
 #else
 			var annotations = derivedLinkContext.Annotations;
-			if (!annotations.HasAction (assembly)) {
-				annotations.SetAction (assembly, AssemblyAction.Link);
-			} else {
-				var action = annotations.GetAction (assembly);
-				if (action != AssemblyAction.Link) {
-					annotations.SetAction (assembly, AssemblyAction.Save);
-				}
-			}
+			if (annotations.GetAction (assembly) != AssemblyAction.Link)
+				annotations.SetAction (assembly, AssemblyAction.Save);
+			assemblyModified?.Invoke (assembly);
 #endif
 		}
+
 	}
 #endif
 }
-

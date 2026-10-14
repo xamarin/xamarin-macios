@@ -9,6 +9,26 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public class PrepareAssembliesTest : TestBaseClass {
 		[Test]
+		public void LegacySwitchesCannotDisableAssemblyProcessing ()
+		{
+			var platform = ApplePlatform.iOS;
+			var runtimeIdentifier = "iossimulator-arm64";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
+
+			var projectPath = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out _);
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["PrepareAssemblies"] = "false";
+			properties ["PostProcessAssemblies"] = "false";
+
+			var result = DotNet.AssertBuild (projectPath, properties);
+			var targets = BinLog.GetAllTargets (result.BinLogPath);
+			AssertTargetExecuted (targets, "_ExecutePrepareAssemblies", "Preparation with legacy false properties");
+			AssertTargetExecuted (targets, "_ExecutePostprocessAssemblies", "Post-processing with legacy false properties");
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "managed-static", "SdkOnly", "Release")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "dynamic", "None", "Debug")]
 		public void IncrementalBuild (ApplePlatform platform, string runtimeIdentifiers, string registrar, string linkMode, string configuration)

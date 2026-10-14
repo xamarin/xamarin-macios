@@ -252,7 +252,6 @@ public class AssemblyPreparer : IDisposable {
 			// The ListExportedSymbols must run after ExtractBindingLibrariesStep, otherwise we won't properly list exported Objective-C classes from binding libraries
 			new ListExportedSymbols (),
 			new RemoveUserResourcesSubStep (), // from PreOutputDispatcher.
-			// We're not doing ClassHandleRewriterStep, that's replaced by InlineClassGetHandleStep, which is run in Prepare().
 
 			// ManagedRegistrarStep/TrimmableRegistrarStep/ManagedRegistrarLookupTablesStep
 			// must run before SaveAssembliesStep because they modify assemblies (adding
@@ -266,6 +265,7 @@ public class AssemblyPreparer : IDisposable {
 			// and before SaveAssembliesStep (so that the modification is written to disk).
 			new RemoveStaleTypeMapAssemblyTargetsStep (),
 
+			new ClassHandleRewriterStep (),
 			new SaveAssembliesStep (),
 
 			// post-output

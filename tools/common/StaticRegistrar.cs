@@ -713,7 +713,7 @@ namespace Registrar {
 			if (name == StringConstants.ProtocolMemberAttribute)
 				return true;
 
-			return App.TrimExportAttributes == true && name == StringConstants.ExportAttribute;
+			return name == StringConstants.ExportAttribute && (App.TrimExportAttributes == true || App.Registrar == RegistrarMode.Static);
 		}
 
 		ICustomAttributeProvider? GetPreTrimAttributeProvider (ICustomAttributeProvider postTrimProvider)
@@ -2184,7 +2184,16 @@ namespace Registrar {
 
 			var @base = GetBaseType (method.DeclaringType);
 			while (@base is not null) {
-				var base_method = TryMatchMethod (@base.Resolve (), method);
+				var baseType = @base.Resolve ();
+				var base_method = TryMatchMethod (baseType, method);
+#if ASSEMBLY_PREPARER
+				if (base_method is null && App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null) {
+					var originalAssembly = App.PreTrimAssemblyResolver.Resolve (baseType.Module.Assembly.Name);
+					var originalBaseType = originalAssembly?.MainModule.GetType (baseType.FullName);
+					if (originalBaseType is not null)
+						base_method = TryMatchMethod (originalBaseType, method);
+				}
+#endif
 				if (base_method is not null)
 					return GetBaseMethodInTypeHierarchy (base_method) ?? base_method;
 
@@ -2971,13 +2980,13 @@ namespace Registrar {
 			return type_map_dictionary;
 		}
 
-		public void Rewrite ()
+		public void Rewrite (Action<AssemblyDefinition>? assemblyModified = null)
 		{
-#if !LEGACY_TOOLS && !ASSEMBLY_PREPARER
+#if !LEGACY_TOOLS
 			if (App.Optimizations.RedirectClassHandles == true) {
 				var exceptions = new List<Exception> ();
 				var map_dict = GetTypeMapDictionary (exceptions);
-				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
+				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext, assemblyModified);
 				var result = rewriter.Process ();
 				if (!string.IsNullOrEmpty (result)) {
 					App.Log (5, $"Not redirecting class handles because {result}");
