@@ -42,6 +42,7 @@ namespace CoreFoundation {
 	///       <para>
 	///       </para>
 	///     </remarks>
+	[NativeName ("CFRunLoopRunResult")]
 	public enum CFRunLoopExitReason : int {
 		/// <summary>The run loop terminated.</summary>
 		Finished = 1,

@@ -293,6 +293,7 @@ namespace CoreFoundation {
 	}
 
 	[Native]
+	[NativeName ("__CFByteOrder")]
 	public enum CFByteOrder : long {
 		Unknown,
 		LittleEndian,

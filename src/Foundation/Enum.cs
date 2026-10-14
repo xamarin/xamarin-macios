@@ -256,6 +256,7 @@ namespace Foundation {
 	/// <remarks>To be added.</remarks>
 	[Native]
 	[Flags]
+	[NativeName ("NSMachPortOptions")]
 	public enum NSMachPortRights : ulong {
 		/// <summary>To be added.</summary>
 		None = 0,
@@ -268,6 +269,7 @@ namespace Foundation {
 	/// <summary>Status codes for the NSNetService.</summary>
 	/// <remarks>To be added.</remarks>
 	[Native]
+	[NativeName ("NSNetServicesError")]
 	public enum NSNetServicesStatus : long {
 		/// <summary>To be added.</summary>
 		UnknownError = -72000,
@@ -1112,6 +1114,7 @@ namespace Foundation {
 	/// <remarks>The domain is used to specify the kind of directory you want to get from the <see cref="Foundation.NSFileManager.GetUrls(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain)" /> method.</remarks>
 	[Flags]
 	[Native]
+	[NativeName ("NSSearchPathDomainMask")]
 	public enum NSSearchPathDomain : ulong {
 		/// <summary>Do not return anything.</summary>
 		None = 0,

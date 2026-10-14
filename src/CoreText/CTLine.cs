@@ -38,6 +38,7 @@ namespace CoreText {
 	/// <summary>An enumeration whose values specify valid options for line truncation.</summary>
 	///     <remarks>To be added.</remarks>
 	///     <altmember cref="CoreText.CTLine.GetTruncatedLine" />
+	[NativeName ("CTLineTruncationType")]
 	public enum CTLineTruncation : uint {
 		/// <summary>To be added.</summary>
 		Start = 0,
@@ -343,4 +344,3 @@ namespace CoreText {
 		#endregion
 	}
 }
-

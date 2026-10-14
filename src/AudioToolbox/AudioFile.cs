@@ -139,6 +139,7 @@ namespace AudioToolbox {
 
 	/// <summary>An enumeration whose values specify the <c>permissions</c> argument when opening an <see cref="AudioFile" />.</summary>
 	[Flags]
+	[NativeName ("AudioFilePermissions")]
 	public enum AudioFilePermission {
 		/// <summary>The file is opened for reading.</summary>
 		Read = 0x01,
@@ -304,6 +305,7 @@ namespace AudioToolbox {
 	}
 
 	[Flags]
+	[NativeName ("AudioBytePacketTranslationFlags")]
 	enum BytePacketTranslationFlags : uint  // Stored in UInt32 in AudioBytePacketTranslation - AudioFile.h
 	{
 		IsEstimate = 1,

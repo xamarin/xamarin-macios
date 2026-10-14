@@ -3,13 +3,8 @@
 
 ## unsorted
 
-!missing-enum! AudioBytePacketTranslationFlags not bound
-!missing-enum! AudioComponentFlags not bound
-!missing-enum! AudioFilePermissions not bound
 !missing-enum! AudioFileStreamParseFlags not bound
-!missing-enum! AudioFileStreamPropertyFlags not bound
 !missing-enum! AudioFileStreamSeekFlags not bound
-!missing-enum! AudioPanningMode not bound
 !missing-enum! CAFFormatFlags not bound
 !missing-enum! CAFRegionFlags not bound
 !missing-pinvoke! AudioComponentCount is not bound

@@ -145,20 +145,13 @@
 !missing-selector! NSTextStorage::words not bound
 !missing-selector! NSWindow::anchorAttributeForOrientation: not bound
 !unknown-native-enum! NSAlertButtonReturn bound
-!unknown-native-enum! NSBackingStore bound
-!unknown-native-enum! NSCellHit bound
 !unknown-native-enum! NSCellStateValue bound
-!unknown-native-enum! NSColorPanelFlags bound
 !unknown-native-enum! NSComposite bound
 !unknown-native-enum! NSEventModifierMask bound
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSImageScale bound
-!unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSRunResponse bound
-!unknown-native-enum! NSTableColumnResizing bound
 !unknown-native-enum! NSTableViewAnimation bound
-!unknown-native-enum! NSTableViewGridStyle bound
-!unknown-native-enum! NSViewResizingMask bound
 
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
@@ -962,21 +955,12 @@
 !missing-selector! NSTabViewController::viewDidLoad not bound
 
 ## unsorted
-!missing-enum! NSAutoresizingMaskOptions not bound
-!missing-enum! NSBackingStoreType not bound
-!missing-enum! NSCellHitResult not bound
-!missing-enum! NSColorPanelOptions not bound
 !missing-enum! NSFindPanelAction not bound
 !missing-enum! NSFindPanelSubstringMatchType not bound
 !missing-enum! NSFontAction not bound
-!missing-enum! NSFontDescriptorSymbolicTraits not bound
 !missing-enum! NSMediaLibrary not bound
-!missing-enum! NSMenuProperties not bound
 !missing-enum! NSPDFPanelOptions not bound
-!missing-enum! NSPaperOrientation not bound
 !missing-enum! NSSplitViewItemCollapseBehavior not bound
-!missing-enum! NSTableColumnResizingOptions not bound
-!missing-enum! NSTableViewGridLineStyle not bound
 !missing-field! NSAbortModalException not bound
 !missing-field! NSAbortPrintingException not bound
 !missing-field! NSAccessibilityAscendingSortDirectionValue not bound

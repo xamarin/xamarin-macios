@@ -235,6 +235,7 @@ namespace AppKit {
 	/// <summary>Specifies how a window's drawing is buffered before being flushed to the screen.</summary>
 	[NoMacCatalyst]
 	[Native]
+	[NativeName ("NSBackingStoreType")]
 	public enum NSBackingStore : ulong {
 		/// <summary>The window renders visible portions directly to the screen and retains obscured portions in a buffer.</summary>
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Buffered' instead.")]
@@ -510,6 +511,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSCellHitResult")]
 	public enum NSCellHit : ulong {
 		/// <summary>The point does not fall within any part of the cell.</summary>
 		None,
@@ -1298,6 +1300,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSAutoresizingMaskOptions")]
 	public enum NSViewResizingMask : ulong {
 		/// <summary>The view does not resize with its superview.</summary>
 		NotSizable = 0,
@@ -1900,6 +1903,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSColorPanelOptions")]
 	public enum NSColorPanelFlags : ulong {
 		/// <summary>The grayscale picker.</summary>
 		Gray = 0x00000001,
@@ -2181,6 +2185,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSMenuProperties")]
 	public enum NSMenuProperty : ulong {
 		/// <summary>The menu item's title.</summary>
 		Title = 1 << 0,
@@ -2409,6 +2414,7 @@ namespace AppKit {
 	/// <summary>Specifies the orientation of printed pages.</summary>
 	[NoMacCatalyst]
 	[Native]
+	[NativeName ("NSPaperOrientation")]
 	public enum NSPrintingOrientation : ulong {
 		/// <summary>Prints pages in portrait orientation.</summary>
 		Portrait,
@@ -2605,6 +2611,7 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of stylistic traits, such as weight, slant, and font-family classification, associated with a font descriptor.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSFontDescriptorSymbolicTraits")]
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
 		/// <summary>The font has an italic or oblique style.</summary>
 		ItalicTrait = (1 << 0),
@@ -2778,6 +2785,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSTableColumnResizingOptions")]
 	public enum NSTableColumnResizing : long {
 		/// <summary>Represents -1, which sets all table column resizing option bits.</summary>
 		None = -1,
@@ -2791,6 +2799,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[Native]
+	[NativeName ("NSTableViewGridLineStyle")]
 	public enum NSTableViewGridStyle : ulong {
 		/// <summary>Does not draw grid lines.</summary>
 		None = 0,
