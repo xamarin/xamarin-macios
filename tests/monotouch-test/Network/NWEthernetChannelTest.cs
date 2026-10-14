@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 #if MONOMAC
-using System.Threading;
+using System.Threading.Tasks;
 
 using Network;
 
@@ -18,16 +18,18 @@ namespace MonoTouchFixtures.Network {
 			TestRuntime.IgnoreInCI ("This test requires a wired interface and the custom-protocol entitlement.");
 
 			using var monitor = new NWPathMonitor ();
-			using var pathUpdated = new AutoResetEvent (false);
-			NWPath? path = null;
+			var pathUpdated = new TaskCompletionSource<NWPath> ();
 			monitor.SetQueue (DispatchQueue.DefaultGlobalQueue);
 			monitor.SnapshotHandler = currentPath => {
-				path = currentPath;
-				pathUpdated.Set ();
+				pathUpdated.TrySetResult (currentPath);
 			};
 			monitor.Start ();
-			Assert.That (pathUpdated.WaitOne (30000), Is.True, "Path update");
-			monitor.Cancel ();
+			try {
+				Assert.That (pathUpdated.Task.Wait (30000), Is.True, "Path update");
+			} finally {
+				monitor.Cancel ();
+			}
+			var path = pathUpdated.Task.Result;
 			Assert.That (path, Is.Not.Null, "Current path");
 
 			NWInterface? ethernetInterface = null;
@@ -40,25 +42,22 @@ namespace MonoTouchFixtures.Network {
 				Assert.Ignore ("This test requires a wired interface.");
 
 			using var channel = new NWEthernetChannel (0x88b5, ethernetInterface);
-			using var stateChanged = new AutoResetEvent (false);
-			NWEthernetChannelState state = NWEthernetChannelState.Invalid;
+			var stateChanged = new TaskCompletionSource<NWEthernetChannelState> ();
 			channel.SetQueue (DispatchQueue.DefaultGlobalQueue);
 			if (useLegacyHandler) {
 				Action<NWBrowserState, NWError?> legacyHandler = (currentState, error) => {
-					state = (NWEthernetChannelState) currentState;
-					stateChanged.Set ();
+					stateChanged.TrySetResult ((NWEthernetChannelState) currentState);
 				};
 				channel.SetStateChangesHandler (legacyHandler);
 			} else {
 				channel.SetStateChangesHandler ((currentState, error) => {
-					state = currentState;
-					stateChanged.Set ();
+					stateChanged.TrySetResult (currentState);
 				});
 			}
 			channel.Start ();
 			try {
-				Assert.That (stateChanged.WaitOne (30000), Is.True, "State callback");
-				Assert.That (state, Is.AnyOf (
+				Assert.That (stateChanged.Task.Wait (30000), Is.True, "State callback");
+				Assert.That (stateChanged.Task.Result, Is.AnyOf (
 					NWEthernetChannelState.Waiting, NWEthernetChannelState.Preparing, NWEthernetChannelState.Ready,
 					NWEthernetChannelState.Failed, NWEthernetChannelState.Cancelled), "Ethernet channel state");
 			} finally {

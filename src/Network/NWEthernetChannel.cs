@@ -10,6 +10,7 @@
 #nullable enable
 
 #if MONOMAC
+using System.ComponentModel;
 using System.Text;
 using System.Runtime.CompilerServices;
 using CoreFoundation;
