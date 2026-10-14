@@ -106,6 +106,78 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", true)]
+		public void InstallerPackage (ApplePlatform platform, string runtimeIdentifiers, bool customPackagePath)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, TestName, runtimeIdentifiers, out var appPath);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			File.WriteAllText (Path.Combine (projectDirectory, "Main.cs"), "class MainClass { static int Main () => 0; }");
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["CreatePackage"] = "true";
+			properties ["ApplicationDisplayVersion"] = "1.0";
+			properties ["ProductDefinition"] = Path.Combine (projectDirectory, "Product.plist");
+			var packagePath = customPackagePath ?
+				Path.Combine (projectDirectory, "packages", "Custom.pkg") :
+				Path.Combine (Path.GetDirectoryName (appPath)!, $"{TestName}-1.0.pkg");
+			if (customPackagePath)
+				properties ["PkgPackagePath"] = packagePath;
+			var packageOnly = false;
+
+			void BuildAndAssertPackage (bool expectedExecution, string message)
+			{
+				var result = DotNet.AssertBuild (projectPath, properties, target: packageOnly ? "_CreateInstaller" : null);
+				var targets = BinLog.GetAllTargets (result.BinLogPath);
+				if (expectedExecution)
+					AssertTargetExecuted (targets, "_CreateInstaller", message);
+				else
+					AssertTargetNotExecuted (targets, "_CreateInstaller", message);
+				Assert.That (packagePath, Does.Exist, message);
+			}
+
+			BuildAndAssertPackage (true, "Initial build");
+			var packageTimestamp = File.GetLastWriteTimeUtc (packagePath);
+			BuildAndAssertPackage (false, "Unchanged build");
+			Assert.That (File.GetLastWriteTimeUtc (packagePath), Is.EqualTo (packageTimestamp), "Unchanged package");
+
+			properties ["PackagingExtraArgs"] = "--quiet";
+			BuildAndAssertPackage (true, "Changed packaging arguments");
+			BuildAndAssertPackage (false, "Unchanged packaging arguments");
+
+			var product = new PDictionary {
+				{ "os", new PArray { new PString ("15.0") } },
+			};
+			product.Save (properties ["ProductDefinition"]);
+			BuildAndAssertPackage (true, "Changed product definition");
+			BuildAndAssertPackage (false, "Unchanged product definition");
+
+			File.Delete (packagePath);
+			BuildAndAssertPackage (true, "Deleted package");
+
+			properties ["ApplicationDisplayVersion"] = "2.0";
+			if (!customPackagePath)
+				packagePath = Path.Combine (Path.GetDirectoryName (appPath)!, $"{TestName}-2.0.pkg");
+			BuildAndAssertPackage (true, "Changed application version");
+			BuildAndAssertPackage (false, "Unchanged application version");
+
+			// Isolate packaging from the bundle build so additions and removals in the finished bundle are preserved.
+			packageOnly = true;
+			properties ["_CreateInstallerDependsOn"] = "_GenerateBundleName;_CompileProductDefinition;_WriteAppManifest";
+			var resourcePath = Path.Combine (GetResourcesDirectory (platform, appPath!), "InstallerResource.txt");
+			File.WriteAllText (resourcePath, "Initial");
+			BuildAndAssertPackage (true, "Added bundle resource");
+			File.WriteAllText (resourcePath, "Updated");
+			BuildAndAssertPackage (true, "Changed bundle resource");
+			File.Delete (resourcePath);
+			BuildAndAssertPackage (true, "Removed bundle resource");
+			BuildAndAssertPackage (false, "Unchanged bundle after removing resource");
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		public void AppManifest (ApplePlatform platform, string runtimeIdentifiers)

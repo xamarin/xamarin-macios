@@ -3639,6 +3639,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		>
 			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
 		</CompileProductDefinition>
+		<ItemGroup>
+			<FileWrites Include="$(_CompiledProductDefinition)" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -3651,10 +3654,50 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CreateInstallerDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true' And '$(SdkIsDesktop)' == 'true'" DependsOnTargets="$(_CreateInstallerDependsOn)">
+	<Target Name="_PrepareInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true' And '$(SdkIsDesktop)' == 'true'" DependsOnTargets="$(_CreateInstallerDependsOn)">
+		<ReadAppManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(PkgPackagePath)' == ''"
+			AppManifest="$(_AppBundleManifestPath)"
+			DisableMinimumOSVersion="true"
+			SdkDevPath="$(_SdkDevPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="CFBundleShortVersionString" PropertyName="_InstallerPackageVersion" />
+		</ReadAppManifest>
 		<PropertyGroup>
 			<PkgPackageDir Condition="'$(PkgPackageDir)' == ''">$(TargetDir)</PkgPackageDir>
+			<_InstallerPackageVersionSuffix Condition="'$(_InstallerPackageVersion)' != ''">-$(_InstallerPackageVersion)</_InstallerPackageVersionSuffix>
+			<PkgPackagePath Condition="'$(PkgPackagePath)' == ''">$([MSBuild]::EnsureTrailingSlash('$(PkgPackageDir)'))$(AssemblyName)$(_InstallerPackageVersionSuffix).pkg</PkgPackagePath>
+			<_InstallerInputsFile>$(DeviceSpecificIntermediateOutputPath)installer-package-inputs.txt</_InstallerInputsFile>
 		</PropertyGroup>
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="*"
+			Recursive="true"
+			IncludeDirectories="false"
+		>
+			<Output TaskParameter="Entries" ItemName="_InstallerBundleEntries" />
+		</GetFileSystemEntries>
+		<WriteLinesToFile
+			File="$(_InstallerInputsFile)"
+			Lines="AppBundleDir=$(AppBundleDir);PkgPackagePath=$(PkgPackagePath);EnablePackageSigning=$(EnablePackageSigning);PackageSigningKey=$(PackageSigningKey);PackagingExtraArgs=$(PackagingExtraArgs);ProductBuildPath=$(ProductBuildPath);ProductDefinition=$(_CompiledProductDefinition);@(_InstallerBundleEntries)"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_InstallerInputsFile);$(PkgPackagePath)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CreateInstaller"
+		Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true' And '$(SdkIsDesktop)' == 'true'"
+		DependsOnTargets="_PrepareInstaller"
+		Inputs="@(_InstallerBundleEntries);$(_CompiledProductDefinition);$(_InstallerInputsFile)"
+		Outputs="$(PkgPackagePath)"
+	>
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"

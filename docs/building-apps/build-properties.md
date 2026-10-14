@@ -424,6 +424,10 @@ If a package (.pkg) should be created for the app bundle at the end of the build
 
 Only applicable to macOS and Mac Catalyst projects.
 
+Package creation is incremental: an existing package is reused when the app
+bundle, product definition, and packaging settings are unchanged. Deleting the
+package causes it to be created again on the next build.
+
 See [BuildIpa](#buildipa) for iOS and tvOS projects.
 
 Created PKG packages are exposed in the [ApplicationArtifact](build-items.md#applicationartifact) item group.
