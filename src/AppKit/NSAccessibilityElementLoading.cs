@@ -21,5 +21,5 @@ namespace AppKit {
 	}
 #endif // COREBUILD
 #endif // XAMCORE_5_0
-#endif // !__MACCATALYST__
 }
+#endif // !__MACCATALYST__
