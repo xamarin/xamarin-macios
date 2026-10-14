@@ -64,6 +64,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			// Make sure AppBundleDir has a trailing slash
 			var appBundlePath = PathUtils.EnsureTrailingSlash (Path.GetFullPath (AppBundleDir)!);
+			var appBundleStampPath = Path.Combine (CodesignStampPath, Path.GetFileName (appBundlePath.TrimEnd (Path.DirectorySeparatorChar)));
 
 			// Add the app bundles themselves
 			foreach (var bundle in CodesignBundle) {
@@ -116,8 +117,9 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var lib in filesToSign) {
 					if (Array.Find (CodesignItems, (v) => string.Equals (v.ItemSpec, lib, StringComparison.OrdinalIgnoreCase)) is not null)
 						continue;
-					var relativeLib = Path.Combine (AppBundleDir, lib.Substring (appBundlePath.Length));
-					var stampFile = Path.Combine (CodesignStampPath, Path.GetFileName (appBundlePath.TrimEnd (Path.DirectorySeparatorChar)), lib.Substring (appBundlePath.Length));
+					var pathInBundle = lib.Substring (appBundlePath.Length);
+					var relativeLib = Path.Combine (AppBundleDir, pathInBundle);
+					var stampFile = Path.Combine (appBundleStampPath, pathInBundle);
 					var item = new TaskItem (relativeLib);
 					bundle.CopyMetadataTo (item);
 

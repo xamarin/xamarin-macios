@@ -48,7 +48,7 @@ namespace Xamarin.MacDev.Tasks {
 				var stampPath = "obj/Debug/codesign";
 
 				foreach (var bundle in bundles) {
-					var bundlePath = Path.Combine (Path.GetDirectoryName (appBundleDir)!, bundle);
+					var bundlePath = Path.Combine (Path.GetDirectoryName (appBundleDir) ?? throw new InvalidOperationException ("App bundle directory has no parent"), bundle);
 					codesignBundle.Add (new TaskItem (bundle, new Dictionary<string, string> { { "RequireCodeSigning", "true" } }));
 					expectedStamps.Add (bundlePath, Path.Combine (stampPath, Path.GetFileName (bundle), ".stampfile"));
 					foreach (var entry in entries) {
@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 							Directory.CreateDirectory (itemPath);
 							stampFile = Path.Combine (stampFile, ".stampfile");
 						} else {
-							Directory.CreateDirectory (Path.GetDirectoryName (itemPath)!);
+							Directory.CreateDirectory (Path.GetDirectoryName (itemPath) ?? throw new InvalidOperationException ("Signing item has no parent directory"));
 							File.WriteAllText (itemPath, "");
 						}
 						expectedStamps.Add (itemPath, stampFile);
@@ -74,7 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				Assert.That (task.OutputCodesignItems.Length, Is.EqualTo (expectedStamps.Count), "Item count");
 				foreach (var item in task.OutputCodesignItems) {
-					Assert.That (expectedStamps.ContainsKey (item.ItemSpec), Is.True, $"Unexpected item: {item.ItemSpec}");
+					Assert.That (expectedStamps, Does.ContainKey (item.ItemSpec), $"Unexpected item: {item.ItemSpec}");
 					Assert.That (item.GetMetadata ("CodesignStampFile"), Is.EqualTo (expectedStamps [item.ItemSpec]), item.ItemSpec);
 				}
 			} finally {
