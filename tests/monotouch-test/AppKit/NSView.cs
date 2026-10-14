@@ -15,6 +15,41 @@ namespace Xamarin.Mac.Tests {
 			view = new NSView ();
 		}
 
+#if !XAMCORE_5_0
+		class CompatibilityAccessibilityElement : NSAccessibilityElement, INSAccessibilityElementProtocol {
+		}
+
+		[Test]
+		public void AccessibilityChildrenInNavigationOrder ()
+		{
+			using var parent = new NSView ();
+			using var child = new CompatibilityAccessibilityElement ();
+			using var childView = new NSView ();
+			using var incompatibleChild = new NSAccessibilityElement ();
+
+#pragma warning disable CS0618
+			parent.AccessibilityChildrenInNavigationOrder = null;
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder, Is.Null.Or.Empty, "Null");
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder2, Is.Null.Or.Empty, "Null2");
+
+			parent.AccessibilityChildrenInNavigationOrder = [];
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder, Is.Empty, "Empty");
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder2, Is.Empty, "Empty2");
+
+			parent.AccessibilityChildrenInNavigationOrder = [child];
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder, Is.EqualTo (new [] { child }), "Children");
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder2, Is.EqualTo (new [] { child }), "Children2");
+
+			parent.AccessibilityChildrenInNavigationOrder2 = [child];
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder, Is.EqualTo (new [] { child }), "FromChildren2");
+
+			parent.AccessibilityChildrenInNavigationOrder2 = [childView];
+			Assert.Throws<InvalidCastException> (() => _ = parent.AccessibilityChildrenInNavigationOrder, "InvalidElementType");
+			Assert.Throws<InvalidCastException> (() => parent.AccessibilityChildrenInNavigationOrder = [incompatibleChild], "InvalidSetterElementType");
+#pragma warning restore CS0618
+		}
+#endif
+
 		[Test]
 		public void NSViewShouldAddGestureRecognizer ()
 		{
