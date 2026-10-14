@@ -238,7 +238,7 @@ namespace AppKit {
 		/// <remarks>This property is declared with the wrong property type (it's declared using the <see cref="NSAccessibilityElement" /> type instead of the <see cref="INSAccessibilityElementProtocol" /> interface). The property accessors for this property will try to convert between the type and the interface, and if unsuccessful an exception will be thrown at runtime.</remarks>
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
-		public virtual NSAccessibilityElement[]? AccessibilityChildrenInNavigationOrder {
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
 			get {
 				var result = _GetAccessibilityChildrenInNavigationOrder2 (this);
 				if (result is null)

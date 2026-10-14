@@ -10,8 +10,7 @@ using Foundation;
 namespace AppKit {
 #if !XAMCORE_5_0
 #if !COREBUILD
-	public partial interface INSAccessibilityElementLoading
-	{
+	public partial interface INSAccessibilityElementLoading {
 		/// <summary>Use <see cref="GetAccessibilityElement2" /> instead.</summary>
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'GetAccessibilityElement2' instead.")]
