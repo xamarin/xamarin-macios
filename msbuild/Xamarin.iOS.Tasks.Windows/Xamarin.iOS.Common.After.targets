@@ -397,6 +397,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				TrimMode="$(TrimMode)"
 				DefaultAction="$(_TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
+				PreserveSymbolPaths="$(_TrimmerPreserveSymbolPaths)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"
 
@@ -406,6 +407,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				UnusedInterfaces="$(_TrimmerUnusedInterfaces)"
 				IPConstProp="$(_TrimmerIPConstProp)"
 				Sealer="$(_TrimmerSealer)"
+				KeepMetadata="@(_TrimmerKeepMetadata)"
 
 				Warn="$(ILLinkWarningLevel)"
 				NoWarn="$(NoWarn)"
