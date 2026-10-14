@@ -27,7 +27,7 @@ namespace Extrospection {
 			if (!type.IsEnum || type.IsNested)
 				return;
 
-			var name = type.Name;
+			var name = type.GetName () ?? type.Name;
 
 			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
 			if (type.IsObsolete ()) {
@@ -82,18 +82,18 @@ namespace Extrospection {
 			if (framework is null)
 				return;
 
-			var mname = Helpers.GetManagedName (name);
-
 			// If our enum is obsoleted, then don't process it.
-			if (obsoleted_enums.ContainsKey (mname))
+			if (obsoleted_enums.ContainsKey (name))
 				return;
 
-			if (!enums.TryGetValue (mname, out var type)) {
+			if (!enums.TryGetValue (name, out var type)) {
 				if (!decl.IsDeprecated ()) // don't report deprecated enums as unbound
 					Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else
-				enums.Remove (mname);
+				enums.Remove (name);
+
+			var mname = type.Name;
 
 			int native_size = 4;
 			bool native = false;
@@ -404,12 +404,12 @@ namespace Extrospection {
 			// e.g. a typo in the name
 			foreach (var extra in enums) {
 				var t = extra.Value;
-				if (obsoleted_enums.ContainsKey (t.Name))
+				if (obsoleted_enums.ContainsKey (extra.Key))
 					continue;
 				if (!IsNative (t))
 					continue;
 				var framework = Helpers.GetFramework (t);
-				Log.On (framework).Add ($"!unknown-native-enum! {extra.Key} bound");
+				Log.On (framework).Add ($"!unknown-native-enum! {t.Name} bound");
 			}
 		}
 	}

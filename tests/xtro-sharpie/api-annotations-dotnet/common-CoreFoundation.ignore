@@ -82,7 +82,9 @@
 !missing-pinvoke! CFAllocatorReallocateTyped is not bound
 !missing-pinvoke! CFAllocatorSetDefault is not bound
 
-## We've named the CFByteOrder enum slightly differently than it shows up in the headers
+## CFByteOrder has a native-sized backing type for historical reasons; changing it would break binary compatibility.
+!extra-enum-native! __CFByteOrder
+!wrong-enum-size! __CFByteOrder managed 8 vs native 4
 
 ## unsorted
 

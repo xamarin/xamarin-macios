@@ -109,12 +109,6 @@
 
 ## property not decorated as unavailable but UIPinchGestureRecognizer, the returned type, is not available in tvOS
 
-## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
-!unknown-native-enum! UILineBreakMode bound
-
-## Apple renamed NSTextAlignment from NSTextAlignment and we kept the old name
-!unknown-native-enum! UITextAlignment bound
-
 ## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
 !missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)

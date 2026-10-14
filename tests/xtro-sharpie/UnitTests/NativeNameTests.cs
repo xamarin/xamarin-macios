@@ -5,10 +5,12 @@
 
 using Extrospection;
 using Mono.Cecil;
+using Sharpie.Bind;
 
 namespace Xamarin.Tests;
 
 [TestFixture]
+[NonParallelizable]
 public class NativeNameTests {
 	static CustomAttribute CreateAttribute (ModuleDefinition module, string name, string? nativeName)
 	{
@@ -47,5 +49,29 @@ public class NativeNameTests {
 		type.CustomAttributes.Add (CreateAttribute (module, "NativeAttribute", nativeName));
 
 		Assert.That (Helpers.GetName (type), Is.EqualTo (expected));
+	}
+
+	[Test]
+	public void EnumsWithDifferentNativeNamesDoNotCollide ()
+	{
+		using var module = ModuleDefinition.CreateModule ("NativeNameTests", ModuleKind.Dll);
+		var enumType = new TypeReference ("System", "Enum", module, module.TypeSystem.CoreLibrary);
+		var first = new TypeDefinition ("FirstFramework", "PathStatus", TypeAttributes.Public, enumType);
+		var second = new TypeDefinition ("SecondFramework", "PathStatus", TypeAttributes.Public, enumType);
+		first.CustomAttributes.Add (CreateAttribute (module, "NativeNameAttribute", "native_path_status_t"));
+		second.CustomAttributes.Add (CreateAttribute (module, "NativeAttribute", null));
+		var check = new EnumCheck (new BindingResult ());
+		Log.On (first.Namespace).Clear ();
+		Log.On (second.Namespace).Clear ();
+		try {
+			check.VisitManagedType (first);
+			check.VisitManagedType (second);
+
+			Assert.That (Log.On (first.Namespace), Is.Empty);
+			Assert.That (Log.On (second.Namespace), Is.Empty);
+		} finally {
+			Log.On (first.Namespace).Clear ();
+			Log.On (second.Namespace).Clear ();
+		}
 	}
 }

@@ -48,3 +48,18 @@
 
 ## nw_link_quality_t - changing the backing type from uint to byte is a breaking change; fixed in XAMCORE_5_0
 !wrong-enum-size! nw_link_quality_t managed 4 vs native 1
+
+## NWParametersAttribution has a 32-bit backing type; changing it would break binary compatibility.
+!wrong-enum-size! nw_parameters_attribution_t managed 4 vs native 1
+
+## Preserve existing NWIPVersion values; correcting these values is a separate behavioral change.
+!missing-enum-value! NWIPVersion native value nw_ip_version_4 = 4 not bound
+!missing-enum-value! NWIPVersion native value nw_ip_version_6 = 6 not bound
+!extra-enum-value! Managed value 1 for NWIPVersion.Version4 not found in native headers
+!extra-enum-value! Managed value 2 for NWIPVersion.Version6 not found in native headers
+
+## NWFramerStartResult.Unknown is an additional managed sentinel.
+!extra-enum-value! Managed value 0 for NWFramerStartResult.Unknown not found in native headers
+
+## Newly detected missing value; adding enum members is outside the native-name correction.
+!missing-enum-value! NWPathUnsatisfiedReason native value nw_path_unsatisfied_reason_vpn_inactive = 4 not bound
