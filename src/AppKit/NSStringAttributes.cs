@@ -179,9 +179,7 @@ namespace AppKit {
 
 		IntPtr Get (NSString key)
 		{
-			IntPtr result = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-			GC.KeepAlive (key);
-			return result;
+			return Dictionary.LowlevelObjectForKey (key);
 		}
 
 		T? Get<T> (NSString key, Func<IntPtr, T> ctor)
