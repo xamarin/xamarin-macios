@@ -23,7 +23,7 @@ public class ManagedRegistrarStepTests : BaseClass {
 
 		public class BaseClass : NSObject {
 			[Export (""func:"")]
-			public virtual IntPtr Func ([Out] ref NSObject value) { value = null; return IntPtr.Zero; }
+			public virtual IntPtr Func ([In, Out] ref NSObject value) { value = null; return IntPtr.Zero; }
 		}
 
 		public class DerivedClass : BaseClass {
