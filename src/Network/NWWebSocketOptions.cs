@@ -114,6 +114,12 @@ namespace Network {
 			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (rejectResponse);
 		}
 
+		/// <summary>Sets the callback that handles incoming WebSocket handshake requests.</summary>
+		/// <param name="queue">The queue on which to invoke <paramref name="handler" />.</param>
+		/// <param name="handler">The callback that returns the server's response to each request.</param>
+		/// <exception cref="ArgumentNullException">
+		///   <paramref name="queue" /> or <paramref name="handler" /> is <see langword="null" />.
+		/// </exception>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetClientRequestHandler (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
 		{

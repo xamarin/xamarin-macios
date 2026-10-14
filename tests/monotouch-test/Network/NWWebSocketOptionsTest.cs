@@ -146,6 +146,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.That (listenerState.Task.Result, Is.Null, "Listener state");
 
 				using var clientOptions = new NWWebSocketOptions (NWWebSocketVersion.Version13);
+				clientOptions.AddSubprotocol ("accepted");
 				using var clientParameters = NWParameters.CreateTcp ();
 				using (var stack = clientParameters.ProtocolStack)
 					stack.PrependApplicationProtocol (clientOptions);
@@ -159,6 +160,7 @@ namespace MonoTouchFixtures.Network {
 						clientState.TrySetResult (null);
 						break;
 					case NWConnectionState.Invalid:
+					case NWConnectionState.Waiting:
 					case NWConnectionState.Failed:
 						clientState.TrySetResult (error?.ToString () ?? $"Client entered the {state} state.");
 						break;
