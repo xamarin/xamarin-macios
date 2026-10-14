@@ -1525,6 +1525,7 @@ int
 x_get_nsobject_data_with_association_lock (id object, void **data)
 {
 	static char key;
+	*data = NULL;
 	NSObject *lock_object = [[NSObject alloc] init];
 	AssociatedObjectLockHolder *holder = [[AssociatedObjectLockHolder alloc] init];
 	dispatch_semaphore_t entered = dispatch_semaphore_create (0);
