@@ -185,6 +185,13 @@ public class NativeObjectHandleAnalyzer : DiagnosticAnalyzer {
 			if (statement is null)
 				return;
 
+			accessedAfter = statement.DescendantNodes ()
+				.OfType<IdentifierNameSyntax> ()
+				.Where (identifier => identifier.SpanStart > memberAccess.Span.End)
+				.Any (identifier => SymbolEqualityComparer.Default.Equals (
+					context.SemanticModel.GetSymbolInfo (identifier, context.CancellationToken).Symbol,
+					symbol));
+
 			int index = block.Statements.IndexOf (statement);
 
 			// we have to deal with two possible scenarions:
@@ -194,7 +201,7 @@ public class NativeObjectHandleAnalyzer : DiagnosticAnalyzer {
 
 			// case 1 check in the enclosing block
 			DataFlowAnalysis? df;
-			if (index >= 0 && index + 1 < block.Statements.Count) {
+			if (!accessedAfter && index >= 0 && index + 1 < block.Statements.Count) {
 				df = context.SemanticModel.AnalyzeDataFlow (block.Statements [index + 1], block.Statements.Last ());
 				if (df is null)
 					return;

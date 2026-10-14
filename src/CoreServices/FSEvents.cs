@@ -453,11 +453,11 @@ namespace CoreServices {
 				} else if (eventDataType == CFDictionaryTypeID) {
 					path = CFString.FromHandle (CFDictionary.GetValue (
 						eventDataHandle,
-						kFSEventStreamEventExtendedDataPathKey.Handle));
+						kFSEventStreamEventExtendedDataPathKey));
 
 					var fileIdHandle = CFDictionary.GetValue (
 						eventDataHandle,
-						kFSEventStreamEventExtendedFileIDKey.Handle);
+						kFSEventStreamEventExtendedFileIDKey);
 					if (fileIdHandle != IntPtr.Zero) {
 						unsafe {
 							CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, &fileId);
