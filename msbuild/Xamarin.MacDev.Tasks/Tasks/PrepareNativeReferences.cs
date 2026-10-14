@@ -74,6 +74,20 @@ namespace Xamarin.MacDev.Tasks {
 				builder.AppendFormat (", {0} = true", property);
 		}
 
+		void AppendDlsymProperty (StringBuilder builder, ITaskItem item)
+		{
+			var value = item.GetMetadata ("Dlsym");
+			if (string.IsNullOrEmpty (value))
+				return;
+
+			if (!Enum.TryParse<ObjCRuntime.DlsymOption> (value, true, out var option) || !Enum.IsDefined (typeof (ObjCRuntime.DlsymOption), option)) {
+				Log.LogError (MSBStrings.E7198, value, item.ItemSpec);
+				return;
+			}
+
+			builder.AppendFormat (", Dlsym = ObjCRuntime.DlsymOption.{0}", option);
+		}
+
 		void AppendStringProperty (StringBuilder builder, ITaskItem item, string property)
 		{
 			var value = item.GetMetadata (property);
@@ -140,6 +154,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				text.AppendFormat ("[assembly: ObjCRuntime.LinkWith (\"{0}\"", logicalName);
 				AppendLinkTargetProperty (text, NativeReferences [i]);
+				AppendDlsymProperty (text, NativeReferences [i]);
 				AppendBooleanProperty (text, NativeReferences [i], "IsCxx");
 				AppendBooleanProperty (text, NativeReferences [i], "LinkWithSwiftSystemLibraries");
 				AppendBooleanProperty (text, NativeReferences [i], "NeedsGccExceptionHandling");

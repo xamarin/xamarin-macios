@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -32,6 +33,42 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return task;
+		}
+
+		[Test]
+		public void DlsymMetadata ([Values ("true", "false")] string compress, [Values ("Default", "Required", "Disabled")] string dlsym)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var library = Path.Combine (tmpdir, "libNative.a");
+			File.WriteAllText (library, "");
+			var reference = new TaskItem (library);
+			reference.SetMetadata ("Kind", "Static");
+			reference.SetMetadata ("Dlsym", dlsym);
+
+			var package = CreateTask<CreateBindingResourcePackage> ();
+			package.Compress = compress;
+			package.BindingResourcePath = Path.Combine (tmpdir, "Binding.resources");
+			package.IntermediateOutputPath = Path.Combine (tmpdir, "obj");
+			package.NativeReferences = new ITaskItem [] { reference };
+			ExecuteTask (package);
+
+			var resources = package.BindingResourcePath;
+			if (compress == "true") {
+				resources = Path.Combine (tmpdir, "Extracted");
+				Extract (package.BindingResourcePath + ".zip", resources);
+			}
+			var manifest = new XmlDocument ();
+			manifest.Load (Path.Combine (resources, "manifest"));
+			Assert.That (manifest.SelectSingleNode ("/BindingAssembly/NativeReference/Dlsym")?.InnerText, Is.EqualTo (dlsym), "Packaged Dlsym");
+
+			var resolve = CreateTask<ResolveNativeReferences> ();
+			resolve.Architectures = "arm64";
+			resolve.FrameworksDirectory = "Frameworks";
+			resolve.IntermediateOutputPath = Path.Combine (tmpdir, "resolved");
+			resolve.TargetFrameworkMoniker = "net11.0-ios";
+			resolve.References = new ITaskItem [] { new TaskItem (Path.Combine (tmpdir, "Binding.dll")) };
+			ExecuteTask (resolve);
+			Assert.That (resolve.NativeFrameworks?.Select (v => v.GetMetadata ("Dlsym")), Is.EqualTo (new [] { dlsym }), "Resolved Dlsym");
 		}
 
 		[Test]
@@ -189,4 +226,3 @@ namespace Xamarin.MacDev.Tasks {
 
 	}
 }
-

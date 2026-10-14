@@ -317,6 +317,20 @@ See also the [GetApplicationArtifacts](build-targets.md#getapplicationartifacts)
 An item group that contains any native references that should be linked into
 or linked with when building the native executable.
 
+In binding projects, the `Dlsym` metadata sets the `Dlsym` property of the
+generated `ObjCRuntime.LinkWithAttribute`. Supported values (case-insensitive)
+are `Default`, `Required`, and `Disabled`. Omitting this metadata preserves
+the default behavior.
+
+```xml
+<ItemGroup>
+    <NativeReference Include="libMyLibrary.a">
+        <Kind>Static</Kind>
+        <Dlsym>Required</Dlsym>
+    </NativeReference>
+</ItemGroup>
+```
+
 ## ObjcBindingApiDefinition
 
 An item group that lists all the API definitions for binding projects.
