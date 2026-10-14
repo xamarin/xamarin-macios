@@ -117,6 +117,7 @@ namespace Xamarin.MacDev.Tasks {
 					if (Array.Find (CodesignItems, (v) => string.Equals (v.ItemSpec, lib, StringComparison.OrdinalIgnoreCase)) is not null)
 						continue;
 					var relativeLib = Path.Combine (AppBundleDir, lib.Substring (appBundlePath.Length));
+					var stampFile = Path.Combine (CodesignStampPath, Path.GetFileName (appBundlePath.TrimEnd (Path.DirectorySeparatorChar)), lib.Substring (appBundlePath.Length));
 					var item = new TaskItem (relativeLib);
 					bundle.CopyMetadataTo (item);
 
@@ -130,9 +131,9 @@ namespace Xamarin.MacDev.Tasks {
 					// Set the stamp file even if already set (because any existing values would be copied from
 					// the bundle, which would be the wrong stamp file, so it must be overridden)
 					if (Directory.Exists (relativeLib)) {
-						item.SetMetadata ("CodesignStampFile", Path.Combine (CodesignStampPath, relativeLib, ".stampfile"));
+						item.SetMetadata ("CodesignStampFile", Path.Combine (stampFile, ".stampfile"));
 					} else {
-						item.SetMetadata ("CodesignStampFile", Path.Combine (CodesignStampPath, relativeLib));
+						item.SetMetadata ("CodesignStampFile", stampFile);
 					}
 
 					output.Add (item);
