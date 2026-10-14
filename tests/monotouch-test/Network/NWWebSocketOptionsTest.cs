@@ -100,6 +100,7 @@ namespace MonoTouchFixtures.Network {
 			var listenerCancelled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var clientState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var requestHandled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
+			var responseStatus = new TaskCompletionSource<NWWebSocketResponseStatus> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var acceptedConnection = new TaskCompletionSource<NWConnection> (TaskCreationOptions.RunContinuationsAsynchronously);
 
 			using var serverOptions = new NWWebSocketOptions (NWWebSocketVersion.Version13);
@@ -153,14 +154,19 @@ namespace MonoTouchFixtures.Network {
 				using var endpoint = NWEndpoint.Create ($"ws://127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}/")
 					?? throw new InvalidOperationException ("Could not create the WebSocket endpoint.");
 				using var client = new NWConnection (endpoint, clientParameters);
+				using var webSocketDefinition = NWProtocolDefinition.CreateWebSocketDefinition ();
 				client.SetQueue (DispatchQueue.DefaultGlobalQueue);
 				client.SetStateChangeHandler ((state, error) => {
+					using var metadata = client.GetProtocolMetadata<NWWebSocketMetadata> (webSocketDefinition);
+					using var response = metadata?.ServerResponse;
+					if (response is not null)
+						responseStatus.TrySetResult (response.Status);
+
 					switch (state) {
 					case NWConnectionState.Ready:
 						clientState.TrySetResult (null);
 						break;
 					case NWConnectionState.Invalid:
-					case NWConnectionState.Waiting:
 					case NWConnectionState.Failed:
 						clientState.TrySetResult (error?.ToString () ?? $"Client entered the {state} state.");
 						break;
@@ -170,11 +176,12 @@ namespace MonoTouchFixtures.Network {
 
 				try {
 					Assert.That (requestHandled.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler was not called.");
-					Assert.That (clientState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not reach a terminal handshake state.");
-					if (returnNull)
-						Assert.That (clientState.Task.Result, Is.Not.Null, "Rejected client state");
-					else
+					Assert.That (responseStatus.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not receive the server response.");
+					Assert.That (responseStatus.Task.Result, Is.EqualTo (returnNull ? NWWebSocketResponseStatus.Reject : NWWebSocketResponseStatus.Accept), "Response status");
+					if (!returnNull) {
+						Assert.That (clientState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not reach a terminal handshake state.");
 						Assert.That (clientState.Task.Result, Is.Null, "Accepted client state");
+					}
 				} finally {
 					client.Cancel ();
 					listener.Cancel ();
