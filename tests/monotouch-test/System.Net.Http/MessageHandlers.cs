@@ -818,7 +818,7 @@ namespace MonoTests.System.Net.Http {
 		{
 			NWListener? listener = null;
 			try {
-				listener = CreateNWTlsListener (requireClientCert: false);
+				listener = TlsTestServer.CreateNWTlsListener (requireClientCert: false);
 				var port = listener.Port;
 
 				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
@@ -841,7 +841,7 @@ namespace MonoTests.System.Net.Http {
 		{
 			NWListener? listener = null;
 			try {
-				listener = CreateNWTlsListener (requireClientCert: true);
+				listener = TlsTestServer.CreateNWTlsListener (requireClientCert: true);
 				var port = listener.Port;
 
 				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
@@ -869,7 +869,7 @@ namespace MonoTests.System.Net.Http {
 			NWListener? listener = null;
 			try {
 				AppContext.SetSwitch ("Foundation.NSUrlSessionHandler.NoMissingCertificateHandling", true);
-				listener = CreateNWTlsListener (requireClientCert: true);
+				listener = TlsTestServer.CreateNWTlsListener (requireClientCert: true);
 				var port = listener.Port;
 
 				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
@@ -890,77 +890,6 @@ namespace MonoTests.System.Net.Http {
 				listener?.Cancel ();
 				listener?.Dispose ();
 			}
-		}
-
-		static NWListener CreateNWTlsListener (bool requireClientCert)
-		{
-			var (pfxData, pfxPassword) = CreateSelfSignedServerCertificatePfx ();
-			using var secIdentity = SecIdentity.Import (pfxData, pfxPassword);
-			using var secIdentity2 = new SecIdentity2 (secIdentity);
-			using var readyEvent = new ManualResetEventSlim (false);
-			NWError? listenerError = null;
-
-			var parameters = NWParameters.CreateSecureTcp (
-				configureTls: tlsOptions => {
-					var tls = (NWProtocolTlsOptions) tlsOptions;
-					var secOptions = tls.ProtocolOptions;
-					secOptions.SetLocalIdentity (secIdentity2);
-					secOptions.SetPeerAuthenticationRequired (requireClientCert);
-				});
-			using var localEndpoint = NWEndpoint.Create ("127.0.0.1", "0");
-			parameters.LocalEndpoint = localEndpoint;
-
-			var listener = NWListener.Create (parameters);
-			parameters.Dispose ();
-
-			listener.SetQueue (CoreFoundation.DispatchQueue.DefaultGlobalQueue);
-
-			listener.SetStateChangedHandler ((state, error) => {
-				if (state == NWListenerState.Failed)
-					listenerError = error;
-				if (state == NWListenerState.Ready || state == NWListenerState.Failed)
-					readyEvent.Set ();
-			});
-
-			listener.SetNewConnectionHandler (connection => {
-				connection.SetQueue (CoreFoundation.DispatchQueue.DefaultGlobalQueue);
-				connection.SetStateChangeHandler ((connState, connError) => {
-					if (connState == NWConnectionState.Ready) {
-						// Read the HTTP request (just consume it), then send a response
-						connection.ReceiveReadOnlyData (1, 4096, (data, context, isComplete, error) => {
-							var response = Encoding.UTF8.GetBytes ("HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK");
-							connection.Send (response, NWContentContext.FinalMessage, true, sendError => {
-								connection.Cancel ();
-							});
-						});
-					}
-				});
-				connection.Start ();
-			});
-
-			listener.Start ();
-
-			if (!readyEvent.Wait (TimeSpan.FromSeconds (10)))
-				throw new TimeoutException ("NWListener did not become ready in time.");
-
-			if (listenerError is not null)
-				throw new InvalidOperationException ($"NWListener failed to start: {listenerError}");
-
-			return listener;
-		}
-
-		static (byte [] Data, string Password) CreateSelfSignedServerCertificatePfx ()
-		{
-			using var rsa = RSA.Create (2048);
-			var certRequest = new CertificateRequest (
-				"CN=localhost", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-			var sanBuilder = new SubjectAlternativeNameBuilder ();
-			sanBuilder.AddIpAddress (IPAddress.Loopback);
-			sanBuilder.AddDnsName ("localhost");
-			certRequest.CertificateExtensions.Add (sanBuilder.Build ());
-			var cert = certRequest.CreateSelfSigned (DateTimeOffset.UtcNow.AddDays (-1), DateTimeOffset.UtcNow.AddYears (1));
-			var password = Guid.NewGuid ().ToString ();
-			return (cert.Export (X509ContentType.Pfx, password), password);
 		}
 
 		static HttpResponseMessage GetResponseWithTimeout (HttpClient client, Uri uri)
