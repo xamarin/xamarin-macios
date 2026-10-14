@@ -1793,6 +1793,18 @@ namespace GeneratorTests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
+		public void OverloadResolutionPriority (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = BuildFile (profile, "overload-resolution-priority.cs");
+
+			var generatedFile = Path.Combine (bgen.TmpDirectory!, "NS", "PriorityClass.g.cs");
+			Assert.That (File.Exists (generatedFile), Is.True, "Generated file exists");
+			Assert.That (File.ReadAllText (generatedFile), Does.Contain ("[OverloadResolutionPriority (-1)]"), "Priority attribute");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
 		public void NativeFieldGeneration (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());

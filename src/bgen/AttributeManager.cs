@@ -19,7 +19,6 @@ public class AttributeManager {
 		"System.Runtime.CompilerServices.NullableContextAttribute",
 		"System.Runtime.CompilerServices.NativeIntegerAttribute",
 		"System.Diagnostics.CodeAnalysis.DynamicDependencyAttribute",
-		"System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute",
 	};
 
 	// Cache raw GetCustomAttributesData() results per provider to avoid repeated reflection allocations.
@@ -282,7 +281,8 @@ public class AttributeManager {
 					continue;
 				}
 				// we will just throw if we do find a type multiple times but if it was not injected by the compiler.
-				if (rv is not null && !ignoredAttributes.Contains (rv.FullName)) {
+				if (rv is not null && !ignoredAttributes.Contains (rv.FullName) &&
+				    rv.FullName != typeof (System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute).FullName) {
 					ErrorHelper.Warning (log, 1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/dotnet/macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
