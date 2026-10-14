@@ -1801,4 +1801,9 @@
 {0} - The number of files hashed.
 {1} - The total number of input files.</comment>
     </data>
+    <data name="W7198" xml:space="preserve">
+        <value>The framework '{0}' has an incorrectly capitalized extension. Rename it to use the lowercase '.framework' extension to ensure it is linked and bundled correctly.</value>
+        <comment>Shown when a native framework's extension contains uppercase letters.
+{0} - The path to the framework. Do not translate '.framework'.</comment>
+    </data>
 </root>

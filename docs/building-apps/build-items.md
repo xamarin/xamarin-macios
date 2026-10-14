@@ -317,6 +317,11 @@ See also the [GetApplicationArtifacts](build-targets.md#getapplicationartifacts)
 An item group that contains any native references that should be linked into
 or linked with when building the native executable.
 
+Native framework directory names must use the lowercase `.framework` extension.
+Other capitalization, such as `.Framework` or `.FRAMEWORK`, produces warning
+`MT7198` because the framework may not be linked or bundled
+correctly. Rename the directory and update the reference to use `.framework`.
+
 ## ObjcBindingApiDefinition
 
 An item group that lists all the API definitions for binding projects.

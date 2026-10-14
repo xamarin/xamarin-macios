@@ -102,6 +102,22 @@ namespace Xamarin.MacDev.Tasks {
 			return path;
 		}
 
+		static void WarnIfIncorrectFrameworkExtension (TaskLoggingHelper log, string path)
+		{
+			if (path.EndsWith (".zip", StringComparison.OrdinalIgnoreCase))
+				path = Path.ChangeExtension (path, null);
+
+			if (!path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+				var parent = Path.GetDirectoryName (path);
+				if (parent is null || Path.GetFileName (path) != Path.GetFileNameWithoutExtension (parent))
+					return;
+				path = parent;
+			}
+
+			if (path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && !path.EndsWith (".framework", StringComparison.Ordinal))
+				log.LogWarning (7198, path, MSBStrings.W7198 /* The framework '{0}' has an incorrectly capitalized extension. Rename it to use the lowercase '.framework' extension to ensure it is linked and bundled correctly. */, path);
+		}
+
 		public override bool Execute ()
 		{
 			if (NativeReferences.Length == 0 && References.Length == 0)
@@ -154,6 +170,8 @@ namespace Xamarin.MacDev.Tasks {
 			// '.' can be used to represent a file (instead of the directory)
 			if (Path.GetFileName (name) == ".")
 				name = Path.GetDirectoryName (name)!;
+
+			WarnIfIncorrectFrameworkExtension (Log, name);
 
 			var parentDirectory = Path.GetDirectoryName (name)!;
 
@@ -359,6 +377,7 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E7180 /* The native reference '{0}' in the binding resource package '{1}' is invalid: the name must be a relative path without '..' segments. */, name, r.ItemSpec);
 					continue;
 				}
+				WarnIfIncorrectFrameworkExtension (Log, Path.Combine (resources, name));
 				if (name.EndsWith (".xcframework", StringComparison.Ordinal) || name.EndsWith (".xcframework.zip", StringComparison.Ordinal)) {
 					if (!TryResolveXCFramework (this, TargetFrameworkMoniker, SdkIsSimulator, Architectures, resources, name, GetIntermediateDecompressionDir (resources), createdFiles, cancellationToken, out var nativeLibraryPath))
 						continue;
@@ -592,7 +611,9 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				var library_path = (PString?) item ["LibraryPath"];
 				var library_identifier = (PString?) item ["LibraryIdentifier"];
-				nativeLibraryPath = GetActualLibrary (Path.Combine (library_identifier!, library_path!));
+				var libraryPath = Path.Combine (library_identifier!, library_path!);
+				WarnIfIncorrectFrameworkExtension (log, Path.Combine (xcframeworkPath, libraryPath));
+				nativeLibraryPath = GetActualLibrary (libraryPath);
 				return true;
 			}
 

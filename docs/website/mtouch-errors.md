@@ -3508,6 +3508,16 @@ Where * can be:
 
 *MSBuild task: IntentDefinitionCompilerTaskBase*
 
+<a name="MT7198"></a>
+
+### MT7198: The framework '*' has an incorrectly capitalized extension. Rename it to use the lowercase '.framework' extension to ensure it is linked and bundled correctly.
+
+Native framework directory names must end in lowercase `.framework`. Other
+capitalization, such as `.Framework`, may prevent the framework from being linked
+or bundled correctly. Rename the directory and update the native reference.
+For frameworks inside an archive or binding resource package, correct the
+framework name in the package as well.
+
 ## MT8xxx: Runtime error messages
 
 <!--

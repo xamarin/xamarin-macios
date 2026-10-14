@@ -135,5 +135,28 @@ namespace Xamarin.MacDev.Tasks {
 
 			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Does.Contain ("'..'"), "error mentions traversal");
 		}
+
+		[TestCase (".framework", false)]
+		[TestCase (".Framework", true)]
+		[TestCase (".FRAMEWORK", true)]
+		public void WarnsForIncorrectFrameworkExtension (string extension, bool expectWarning)
+		{
+			var name = "XTest" + extension;
+			var task = CreateSidecarTask ($@"<BindingAssembly>
+	<NativeReference Name=""{name}"">
+		<Kind>Framework</Kind>
+	</NativeReference>
+</BindingAssembly>", out var tmpdir);
+			var framework = Path.Combine (tmpdir, "Binding.resources", name);
+			Directory.CreateDirectory (framework);
+			File.WriteAllText (Path.Combine (framework, "XTest"), "fake framework");
+
+			ExecuteTask (task);
+
+			var warnings = Engine.Logger.WarningsEvents.Where (v => (v.Code ?? "").EndsWith ("7198")).ToArray ();
+			Assert.That (warnings.Length, Is.EqualTo (expectWarning ? 1 : 0), "Framework extension warning count");
+			if (expectWarning)
+				Assert.That (warnings [0].Message, Does.Contain (framework), "Warning identifies the framework");
+		}
 	}
 }
