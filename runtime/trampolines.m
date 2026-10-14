@@ -800,22 +800,14 @@ xamarin_notify_dealloc (id self, GCHandle gchandle)
 	xamarin_unregister_nsobject (self, gchandle, &exception_gchandle);
 	xamarin_free_gchandle (self, gchandle);
 
-	// Check if gchandle_hash is NULL before trying to acquire the lock (to avoid the expense of locking unless it's necessary).
-	// This is safe for a few reasons:
-	// * The only potential failure scenario is if another thread created 'gchandle_hash' + added 'self' to it, and this thread doesn't see this.
-	// * The 'gchandle_hash' dictionary only exists when using the dynamic registrar, and it should be created a *long* time if we're using the dynamic registrar.
-	// * Even if that weren't the case, at this point no other thread should know about 'self' (the object we're deallocating), thus no other thread should
-	//   try to add this 'self' to the 'gchandle_hash' dictionary concurrently with this thread.
-	// * The only remamining thread safety issue is due to memory ordering and things executing on different CPUs: as mentioned the 'gchandle_hash' dictionary must
-	//   have been created a long time ago if 'self' is in it (at least one garbage collection occurred in the meantime + at least one managed-to-native transition and
-	//   back again).
-	// Also note that by checking 'gchandle_hash' for NULL before locking, we speed up all configurations, when 'gchandle_hash' can only be non-NULL when using the dynamic registrar.
-	if (gchandle_hash != NULL) {
+#if SUPPORTS_DYNAMIC_REGISTRATION
+	if (xamarin_supports_dynamic_registration) {
 		pthread_mutex_lock (&gchandle_hash_lock);
 		if (gchandle_hash != NULL)
 			CFDictionaryRemoveValue (gchandle_hash, self);
 		pthread_mutex_unlock (&gchandle_hash_lock);
 	}
+#endif
 
 	MONO_THREAD_DETACH;
 
