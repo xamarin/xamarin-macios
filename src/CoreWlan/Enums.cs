@@ -210,7 +210,7 @@ namespace CoreWlan {
 	[NoMacCatalyst]
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
-		/// <summary>No cipher key flags are set.</summary>
+		/// <summary>Specifies Open System authentication.</summary>
 		None = 0,
 		/// <summary>The key is used for unicast traffic.</summary>
 		Unicast = 1 << 1,
