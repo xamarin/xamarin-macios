@@ -593,6 +593,15 @@ namespace Foundation {
 #endif
 		}
 
+		/// <summary>Gets the pointer for a key.</summary>
+		/// <param name="key">The key.</param>
+		internal IntPtr LowlevelObjectForKey (INativeObject? key)
+		{
+			var rv = LowlevelObjectForKey (key.GetHandle ());
+			GC.KeepAlive (key);
+			return rv;
+		}
+
 		/// <summary>
 		/// Converts the dictionary to an <see cref="NSFileAttributes"/> object.
 		/// </summary>
