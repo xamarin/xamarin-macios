@@ -2429,6 +2429,7 @@ namespace WebKit {
 			<summary>To be added.</summary>
 			<remarks>To be added.</remarks>
 			""")]
+		[NoDefaultValue]
 		void DecidePolicyForNavigation (WebView webView, NSDictionary actionInformation, NSUrlRequest request, WebFrame frame, NSObject decisionToken);
 
 		/// <param name="webView">To be added.</param>
@@ -2442,6 +2443,7 @@ namespace WebKit {
 			<summary>To be added.</summary>
 			<remarks>To be added.</remarks>
 			""")]
+		[NoDefaultValue]
 		void DecidePolicyForNewWindow (WebView webView, NSDictionary actionInformation, NSUrlRequest request, string newFrameName, NSObject decisionToken);
 
 		/// <param name="webView">To be added.</param>
@@ -2455,6 +2457,7 @@ namespace WebKit {
 			<summary>To be added.</summary>
 			<remarks>To be added.</remarks>
 			""")]
+		[NoDefaultValue]
 		void DecidePolicyForMimeType (WebView webView, string mimeType, NSUrlRequest request, WebFrame frame, NSObject decisionToken);
 
 		/// <param name="webView">To be added.</param>
