@@ -81,9 +81,7 @@ namespace CoreText {
 		{
 			if (key is null)
 				return null;
-			var cfArrayRef = CFDictionary.GetValue (dictionary.Handle, key.Handle);
-			GC.KeepAlive (dictionary);
-			GC.KeepAlive (key);
+			var cfArrayRef = dictionary.LowlevelObjectForKey (key);
 			return NSArray.NonNullArrayFromHandleDropNullElements (cfArrayRef, converter);
 		}
 
@@ -250,10 +248,7 @@ namespace CoreText {
 				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value is not null) {
 				AssertWritable (dictionary);
-				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.Handle);
-				GC.KeepAlive (dictionary);
-				GC.KeepAlive (key);
-				GC.KeepAlive (value);
+				CFMutableDictionary.SetValue (dictionary, key, value);
 			} else {
 				IDictionary<NSObject, NSObject> d = dictionary;
 				d.Remove (key);

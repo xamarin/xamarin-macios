@@ -83,22 +83,18 @@ namespace UIKit
 							views = new NSMutableDictionary ();
 						views [nskey] = (NSObject) value;
 						continue;
-					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View))) != 0) {
+					} else if (value is INativeObject iNativeObjectValue && Messaging.bool_objc_msgSend_IntPtr (iNativeObjectValue.Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View))) != 0) {
 						if (views is null)
 							views = new NSMutableDictionary ();
-						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
-						GC.KeepAlive (value);
-						GC.KeepAlive (nskey);
+						views.LowlevelSetObject (iNativeObjectValue, nskey);
 						continue;
 					}
 #if !MONOMAC
 					// This requires UILayoutSupport class which is not exist on Mac
-					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name)) != 0) {
+					else if (value is INativeObject iNativeObjectValue2 && Messaging.bool_objc_msgSend_IntPtr (iNativeObjectValue2.Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name)) != 0) {
 						if (views is null)
 							views = new NSMutableDictionary ();
-						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
-						GC.KeepAlive (value);
-						GC.KeepAlive (nskey);
+						views.LowlevelSetObject (iNativeObjectValue2, nskey);
 						continue;
 					}
 #endif // !MONOMAC
