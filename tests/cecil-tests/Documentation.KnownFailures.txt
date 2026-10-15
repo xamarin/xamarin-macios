@@ -55349,7 +55349,6 @@ T:CoreGraphics.CGBitmapContext.OnResolveCallback
 T:CoreGraphics.CGBitmapInfo
 T:CoreGraphics.CGBitmapInfoExtensions
 T:CoreGraphics.CGBitmapLayout
-T:CoreGraphics.CGColorConversionInfoTransformType
 T:CoreGraphics.CGColorConversionOptions
 T:CoreGraphics.CGColorModel
 T:CoreGraphics.CGComponent
