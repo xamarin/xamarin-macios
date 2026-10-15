@@ -427,16 +427,16 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies the global event-state table used by an event source.</summary>
+	/// <remarks>Use this value when creating an event source to select which event state it reads and updates.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventSourceStateID : int {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses an independent event-state table owned by the event source.</summary>
 		Private = -1,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the combined state of event sources posting to the current login session.</summary>
 		CombinedSession = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the combined state of hardware event sources posting from the HID system.</summary>
 		HidSystem = 1,
 	}
 
