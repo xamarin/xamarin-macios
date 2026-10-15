@@ -337,9 +337,8 @@
 
 			<!--
 				If we're not trimming anything (the link mode is 'None', which means no assemblies are trimmed) and
-				we're not running any custom trimmer steps (they run in the assembly-preparer instead),
-				then there's nothing for the trimmer to do, so
-				default PublishTrimmed to false to skip running the trimmer entirely.
+				there's nothing for the trimmer to do, so default PublishTrimmed to false to skip running
+				the trimmer entirely.
 			-->
 			<_CanSkipTrimmer Condition="'$(_CanSkipTrimmer)' == '' And '$(_LinkMode)' == 'None' And '$(TrimMode)' == 'copy'">true</_CanSkipTrimmer>
 
@@ -798,23 +797,6 @@
 		</PropertyGroup>
 
 		<PropertyGroup>
-			<!--
-				When using NativeAOT, all our custom linker steps are executed by the assembly-preparer
-				(in the _PrepareAssemblies / _PostprocessAssemblies targets) instead of inside ILLink.
-				The only reason we run ILLink for NativeAOT is to execute those custom steps (NativeAOT
-				sets RunILLink=false by default and does its own trimming via ILC); now that the custom steps run
-				elsewhere, running ILLink first is redundant - it just trims the assemblies before ILC, but ILC
-				trims them again anyway. So we skip ILLink entirely here and let ILC do all the trimming (the
-				standard NativeAOT flow). This simplifies the pipeline and makes it possible to run ILC before the
-				native registrar code is generated. When ILLink is skipped, we copy the prepared assemblies to the
-				IntermediateLinkDir ourselves (see _PopulateLinkDirWhenSkippingILLink).
-			-->
-			<_SkipILLink Condition="'$(_SkipILLink)' == '' And '$(_UseNativeAot)' == 'true'">true</_SkipILLink>
-			<_SkipILLink Condition="'$(_SkipILLink)' == ''">false</_SkipILLink>
-
-			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true), unless we're skipping ILLink (see _SkipILLink above) -->
-			<RunILLink Condition="'$(PublishAot)' == 'true' And '$(_SkipILLink)' != 'true'">true</RunILLink>
-
 			<TypeMapEntryAssembly Condition="'$(Registrar)' == 'trimmable-static'">$(_TypeMapAssemblyName)</TypeMapEntryAssembly>
 			<!-- ILLink targets add typemap-entry-assembly to _ExtraTrimmerArgs in a static PropertyGroup,
 			     but that's evaluated at import time before TypeMapEntryAssembly is set. Add it here instead. -->
@@ -1331,11 +1313,10 @@
 		the native registrar code *after* the NativeAOT compiler (ILC) has run, instead of before. This lets
 		the registrar inspect ILC's output to see which UnmanagedCallersOnly trampolines survived trimming, and
 		avoid emitting direct native references to trampolines ILC trimmed away (which would be undefined symbols
-		at native link time). This is only possible because ILLink is skipped in this scenario (see _SkipILLink),
+		at native link time). This is only possible because ILLink is skipped for NativeAOT,
 		so ILC consumes the prepared (pre-postprocessing) assemblies and the postprocessing output no longer feeds
 		ILC. The gate is computed statically (all the properties are available at evaluation time) so it can be
-		used both in static target wiring and in runtime target conditions. It mirrors the conditions that make
-		_SkipILLink true (see _SkipILLink), because this reorder is only valid when ILLink is skipped.
+		used both in static target wiring and in runtime target conditions.
 	-->
 	<PropertyGroup>
 		<_PostprocessAssembliesAfterIlc Condition="'$(_PostprocessAssembliesAfterIlc)' == '' And '$(_UseNativeAot)' == 'true' And '$(Registrar)' == 'trimmable-static'">true</_PostprocessAssembliesAfterIlc>
@@ -1396,13 +1377,6 @@
 			<FileWrites Include="@(_RegistrarFile)" />
 			<FileWrites Include="@(_RegistrarFile -> '%(AdditionalDependencies)')" />
 		</ItemGroup>
-		<PropertyGroup Condition="'$(RunILLink)' == 'true' And '$(_UseNativeAot)' == 'true' And @(_TrimmerRootDescriptorFromCustomLinkerSteps->Count()) &gt; 0">
-			<!-- When the custom linker steps produce xml root descriptors, those xml root descriptors may refer to types and members that are removed
-			     during linking (for members that are conditionally preserved). If we then pass those xml root descriptors to ilc, ilc will show
-			     a IL2008 warning about those members that have been trimmed away. So ignore any IL2008 warnings when we add trimmer root descriptors
-			     from a custom linker step. This will become unnecessary when we stop using custom linker steps. -->
-			<NoWarn>$(NoWarn);IL2008</NoWarn> <!-- Could not resolve type '...' -->
-		</PropertyGroup>
 	</Target>
 
 	<!--
@@ -1964,12 +1938,12 @@
 	</Target>
 
 	<!--
-		When we skip ILLink (see _SkipILLink), nobody populates the IntermediateLinkDir with the assemblies
+		For NativeAOT, ILLink does not run, so nobody populates the IntermediateLinkDir with the assemblies
 		that ILC compiles (ILLink normally does this). So do it ourselves here: copy the prepared assemblies
 		(and their PDBs) into the IntermediateLinkDir. This must run before the assemblies are fed to ILC.
 	-->
-	<Target Name="_PopulateLinkDirWhenSkippingILLink"
-			Condition="'$(_SkipILLink)' == 'true'"
+	<Target Name="_PopulateLinkDirForNativeAot"
+			Condition="'$(_UseNativeAot)' == 'true'"
 			BeforeTargets="_PostprocessAssemblies;_XamarinComputeIlcCompileInputs"
 			DependsOnTargets="_PrepareAssemblies;PrepareForILLink">
 		<Copy SourceFiles="@(ManagedAssemblyToLink);@(_PDBToLink)"

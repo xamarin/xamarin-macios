@@ -11,11 +11,6 @@ MSBuild properties control the behavior of the
 They're specified within the project file, for example *MyApp.csproj*, within
 an MSBuild PropertyGroup.
 
-Assembly preparation and post-processing always run as part of the applicable
-Apple platform build pipeline. `PrepareAssemblies` and `PostProcessAssemblies`
-are no longer configurable MSBuild switches; setting either property to `false`
-does not disable the corresponding targets.
-
 > [!IMPORTANT]
 > Runtime-specific Mono properties on this page apply to supported builds targeting
 > .NET 10 or earlier that use the Mono runtime. Starting with .NET 11, CoreCLR

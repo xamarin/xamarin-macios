@@ -15,7 +15,10 @@ namespace MonoTouch.Tuner {
 				return;
 
 			App.StaticRegistrar.Register (Configuration.GetNonDeletedAssemblies (this));
-			App.StaticRegistrar.Rewrite (assembly => Configuration.ModifiedAssemblies.Add (assembly));
+			App.StaticRegistrar.Rewrite (assembly => {
+				Configuration.ModifiedAssemblies.Add (assembly);
+				Configuration.AppBundleRewriter.AssemblySaved?.Invoke (assembly);
+			});
 		}
 	}
 }
