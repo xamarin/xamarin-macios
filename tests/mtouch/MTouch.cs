@@ -1771,7 +1771,6 @@ public class TestApp {
 		}
 
 		[TestCase ("foo")]
-		[TestCase ("redirect-class-handles")]
 		public void MT0132 (string optimization)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1781,6 +1780,21 @@ public class TestApp {
 				mtouch.Optimize = new string [] { optimization };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertWarning (132, $"Unknown optimization: '{optimization}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
+			}
+		}
+
+		[TestCase ("redirect-class-handles")]
+		[TestCase ("+redirect-class-handles")]
+		[TestCase ("-redirect-class-handles")]
+		public void MT0134 (string optimization)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Optimize = new string [] { optimization };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (134, "The optimization 'redirect-class-handles' is no longer supported.");
+				mtouch.AssertErrorCount (1);
 			}
 		}
 

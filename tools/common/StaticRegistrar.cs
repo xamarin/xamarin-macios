@@ -2123,12 +2123,27 @@ namespace Registrar {
 
 		PropertyDefinition GetBasePropertyInTypeHierarchy (PropertyDefinition property)
 		{
-			if (!IsOverride (property))
+			if (!IsOverride (property)) {
+#if ASSEMBLY_PREPARER
+				if (App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null &&
+					GetPreTrimAttributeProvider (property) is PropertyDefinition originalProperty && IsOverride (originalProperty))
+					return GetBasePropertyInTypeHierarchy (originalProperty);
+#endif
 				return property;
+			}
 
 			var @base = GetBaseType (property.DeclaringType);
 			while (@base is not null) {
-				var base_property = TryMatchProperty (@base.Resolve (), property);
+				var baseType = @base.Resolve ();
+				var base_property = TryMatchProperty (baseType, property);
+#if ASSEMBLY_PREPARER
+				if (base_property is null && App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null) {
+					var originalAssembly = App.PreTrimAssemblyResolver.Resolve (baseType.Module.Assembly.Name);
+					var originalBaseType = originalAssembly?.MainModule.GetType (baseType.FullName);
+					if (originalBaseType is not null)
+						base_property = TryMatchProperty (originalBaseType, property);
+				}
+#endif
 				if (base_property is not null)
 					return GetBasePropertyInTypeHierarchy (base_property) ?? base_property;
 
@@ -2178,8 +2193,14 @@ namespace Registrar {
 
 		public MethodDefinition GetBaseMethodInTypeHierarchy (MethodDefinition method)
 		{
-			if (!IsOverride (method))
+			if (!IsOverride (method)) {
+#if ASSEMBLY_PREPARER
+				if (App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null &&
+					GetPreTrimAttributeProvider (method) is MethodDefinition originalMethod && IsOverride (originalMethod))
+					return GetBaseMethodInTypeHierarchy (originalMethod);
+#endif
 				return method;
+			}
 
 			var @base = GetBaseType (method.DeclaringType);
 			while (@base is not null) {

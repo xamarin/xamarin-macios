@@ -11,9 +11,11 @@ using Xamarin.Linker;
 namespace AssemblyPreparerTests;
 
 public class ManagedRegistrarStepTests : BaseClass {
-	[TestCase (false)]
-	[TestCase (true)]
-	public void StaticRegistrarFindsTrimmedBaseMethodExport (bool removeBaseMethod)
+	[TestCase (false, false)]
+	[TestCase (true, false)]
+	[TestCase (false, true)]
+	[TestCase (true, true)]
+	public void StaticRegistrarFindsTrimmedBaseMethodExport (bool removeBaseMethod, bool devirtualizeOverride)
 	{
 		var code = @"
 		using System;
@@ -43,6 +45,8 @@ public class ManagedRegistrarStepTests : BaseClass {
 		var assembly = context.GetAssemblies ().Single (v => v.Name.Name == "Test");
 		var baseType = assembly.MainModule.Types.Single (v => v.Name == "BaseClass");
 		var baseMethod = baseType.Methods.Single (v => v.Name == "Func");
+		if (devirtualizeOverride)
+			assembly.MainModule.Types.Single (v => v.Name == "DerivedClass").Methods.Single (v => v.Name == "Func").IsVirtual = false;
 		if (removeBaseMethod)
 			baseType.Methods.Remove (baseMethod);
 		else
@@ -50,6 +54,52 @@ public class ManagedRegistrarStepTests : BaseClass {
 		new RegistrarStep ().Process (context);
 		var registrarPath = Path.Combine (preparer.Configuration.CacheDirectory, "registrar.mm");
 		Assert.That (File.ReadAllText (registrarPath), Does.Match (@"(?s)@implementation DerivedClass\b(?:(?!@end).)*\bfunc:"), "Inherited selector on derived class");
+	}
+
+	[TestCase (false, false)]
+	[TestCase (true, false)]
+	[TestCase (false, true)]
+	[TestCase (true, true)]
+	public void StaticRegistrarFindsTrimmedBasePropertyExport (bool removeBaseProperty, bool devirtualizeOverride)
+	{
+		var code = @"
+		using Foundation;
+
+		public class BaseClass : NSObject {
+			[Export (""value"")]
+			public virtual string Value { get; set; }
+		}
+
+		public class DerivedClass : BaseClass {
+			public override string Value { get; set; }
+		}
+		";
+
+		using var preparer = CreatePreparer (ApplePlatform.iOS, false, p => p.Registrar = RegistrarMode.Static,
+			code, out _);
+		var context = preparer.Configuration.DerivedLinkContext;
+		new LoadAssembliesStep ().Process (context);
+		var resolver = new PreTrimTestResolver ();
+		resolver.AddPaths (preparer.Assemblies.Select (v => v.InputPath));
+		preparer.Configuration.Application.PreTrimAssemblyResolver = resolver;
+		preparer.Configuration.Application.IsPostProcessingAssemblies = true;
+
+		var assembly = context.GetAssemblies ().Single (v => v.Name.Name == "Test");
+		var baseType = assembly.MainModule.Types.Single (v => v.Name == "BaseClass");
+		var baseProperty = baseType.Properties.Single (v => v.Name == "Value");
+		if (devirtualizeOverride) {
+			var derivedProperty = assembly.MainModule.Types.Single (v => v.Name == "DerivedClass").Properties.Single (v => v.Name == "Value");
+			derivedProperty.GetMethod.IsVirtual = false;
+			derivedProperty.SetMethod.IsVirtual = false;
+		}
+		if (removeBaseProperty)
+			baseType.Properties.Remove (baseProperty);
+		else
+			baseProperty.CustomAttributes.Clear ();
+		new RegistrarStep ().Process (context);
+		var registrarPath = Path.Combine (preparer.Configuration.CacheDirectory, "registrar.mm");
+		Assert.That (File.ReadAllText (registrarPath), Does.Match (@"(?s)@implementation DerivedClass\b(?:(?!@end).)*\bvalue\b"), "Inherited getter on derived class");
+		Assert.That (File.ReadAllText (registrarPath), Does.Match (@"(?s)@implementation DerivedClass\b(?:(?!@end).)*\bsetValue:"), "Inherited setter on derived class");
 	}
 
 	[Test]

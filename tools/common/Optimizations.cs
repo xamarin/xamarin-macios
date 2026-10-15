@@ -28,6 +28,7 @@ namespace Xamarin.Bundler {
 			"custom-attributes-removal",
 			"experimental-xforms-product-type",
 			"force-rejected-types-removal",
+			"redirect-class-handles",
 		};
 
 		static readonly ApplePlatform [] [] valid_platforms = new ApplePlatform [] [] {
@@ -48,6 +49,7 @@ namespace Xamarin.Bundler {
 			/* Opt.CustomAttributesRemoval            */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ExperimentalFormsProductType       */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ForceRejectedTypesRemoval          */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
+			/* Opt.RedirectClassHandles               */ new ApplePlatform [] {                                                                                        },
 		};
 
 		enum Opt {
@@ -68,6 +70,7 @@ namespace Xamarin.Bundler {
 			CustomAttributesRemoval,
 			ExperimentalFormsProductType,
 			ForceRejectedTypesRemoval,
+			RedirectClassHandles,
 		}
 
 		bool? [] values;
@@ -329,7 +332,9 @@ namespace Xamarin.Bundler {
 				break;
 			}
 
-			if (opt == "all") {
+			if (opt == "redirect-class-handles") {
+				messages.Add (ErrorHelper.CreateError (134, Errors.MX0134, opt));
+			} else if (opt == "all") {
 				for (int i = 0; i < values.Length; i++) {
 					var valid = valid_platforms [i];
 					if (Array.IndexOf (valid, platform) < 0)
