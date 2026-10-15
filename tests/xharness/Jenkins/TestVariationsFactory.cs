@@ -29,14 +29,8 @@ namespace Xharness.Jenkins {
 			var arm64_runtime_identifier = string.Empty;
 			var x64_runtime_identifier = string.Empty;
 			var arm64_sim_runtime_identifier = string.Empty;
-			var x64_sim_runtime_identifier = string.Empty;
 			var supports_coreclr = true;
 			var supports_x64 = string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("ACES")); // x64 is not supported on ACES machines
-																								   // Xcode 27 only ships arm64 simulator runtimes (there's no x86_64/universal variant available
-																								   // to download), so x64 simulator apps can't run there. Skip x64 *simulator* configurations on
-																								   // Xcode 27+. x64 macOS / Mac Catalyst configs are unaffected (they run on macOS via Rosetta,
-																								   // not in a simulator), so they keep using 'supports_x64'.
-			var supports_x64_simulator = supports_x64 && ((IMacOSProcessManager) processManager).XcodeVersion.Major < 27;
 
 			switch (test.Platform) {
 			case TestPlatform.Mac:
@@ -49,11 +43,9 @@ namespace Xharness.Jenkins {
 				break;
 			case TestPlatform.iOS:
 				arm64_sim_runtime_identifier = "iossimulator-arm64";
-				x64_sim_runtime_identifier = "iossimulator-x64";
 				break;
 			case TestPlatform.tvOS:
 				arm64_sim_runtime_identifier = "tvossimulator-arm64";
-				x64_sim_runtime_identifier = "tvossimulator-x64";
 				break;
 			}
 
@@ -141,8 +133,6 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug (trimmable static registrar, all optimizations)", TestVariation = "trimmable-static-registrar-all-optimizations-linkall", Ignored = ignore };
 						yield return new TestData { Variation = "Release (trimmable static registrar, all optimizations)", TestVariation = "release|trimmable-static-registrar-all-optimizations-linkall", Ignored = ignore };
 					}
-					yield return new TestData { Variation = "Release (NativeAOT, x64)", TestVariation = "release|nativeaot", Ignored = !supports_x64 ? true : ignore, RuntimeIdentifier = x64_sim_runtime_identifier };
-					yield return new TestData { Variation = "Release (trimmable static registrar, NativeAOT, x64)", TestVariation = "trimmable-static-registrar|release|nativeaot", Ignored = !supports_x64 ? true : ignore, RuntimeIdentifier = x64_sim_runtime_identifier };
 					yield return new TestData { Variation = $"Release (compat inline Class.GetHandle)", TestVariation = "inline-class-gethandle-compat|release", Ignored = ignore };
 					yield return new TestData { Variation = $"Release (strict inline Class.GetHandle)", TestVariation = "inline-class-gethandle-strict|release", Ignored = ignore };
 					yield return new TestData { Variation = $"Release (compat inline dlfcn)", TestVariation = "inline-dlfcn-methods-compat|release", Ignored = ignore };
