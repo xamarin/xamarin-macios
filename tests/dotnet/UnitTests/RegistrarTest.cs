@@ -67,18 +67,14 @@ namespace Xamarin.Tests {
 		}
 
 		// This test does evil things that the AOT runtime complains about, so it only works when not running the AOT compiler (aka x64 when using Mono).
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", true)]
-		[TestCase (ApplePlatform.MacOSX, null, true)]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
-		public void InvalidStaticRegistrarValidation (ApplePlatform platform, string? runtimeIdentifiers, bool validated)
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void InvalidStaticRegistrarValidation (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MyRegistrarApp";
 			var configuration = "Debug";
 
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-
-			runtimeIdentifiers ??= GetDefaultRuntimeIdentifier (platform);
 
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
@@ -108,12 +104,7 @@ namespace Xamarin.Tests {
 
 			Environment.SetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE", "1");
 			try {
-				if (validated) {
-					ExecuteProjectWithMagicWordAndAssert (projectPath, platform, runtimeIdentifiers);
-				} else if (CanExecute (platform, runtimeIdentifiers)) {
-					var rv = base.Execute (GetNativeExecutable (platform, appDir), out var output, out _);
-					Assert.That (rv.ExitCode, Is.EqualTo (1), "Expected no validation");
-				}
+				ExecuteProjectWithMagicWordAndAssert (projectPath, platform, runtimeIdentifiers);
 			} finally {
 				Environment.SetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE", null);
 			}

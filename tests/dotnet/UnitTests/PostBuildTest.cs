@@ -486,9 +486,9 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void PublishFailureTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -639,7 +639,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		public void FrameworkPostProcessingItems (ApplePlatform platform, string runtimeIdentifiers)
 		{
