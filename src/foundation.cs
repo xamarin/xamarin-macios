@@ -2563,7 +2563,7 @@ namespace Foundation {
 		NSData Subdata (NSRange range);
 
 		/// <summary>Copies bytes from the beginning of the data into unmanaged memory.</summary>
-		/// <param name="buffer">A pointer to writable memory large enough to contain the copied bytes.</param>
+		/// <param name="buffer">A pointer to at least <paramref name="length" /> writable bytes.</param>
 		/// <param name="length">The maximum number of bytes to copy. At most <see cref="Length" /> bytes are copied.</param>
 		/// <remarks>The copy completes during this call; the pointer is not retained. Do not modify mutable data concurrently with this call.</remarks>
 		[Export ("getBytes:length:")]
