@@ -1,5 +1,6 @@
 Build.props
 Make.config.inc
+Make.config.inc.tmp.*
 Make.config.local
 configure.inc
 dotnet.config

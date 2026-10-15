@@ -4,9 +4,10 @@ set -o pipefail
 IFS=$'\n\t '
 
 OUTPUT=Make.config.inc
-OUTPUT_FILE=Make.config.inc.tmp
+OUTPUT_FILE="$OUTPUT.tmp.$$"
+trap 'rm -f "$OUTPUT_FILE"' EXIT
 
-rm -f "$OUTPUT_FILE" "$OUTPUT"
+: > "$OUTPUT_FILE"
 
 LANG=C
 export LANG
