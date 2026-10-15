@@ -55358,7 +55358,6 @@ T:CoreGraphics.CGDisplayStreamKeys
 T:CoreGraphics.CGDisplayStreamYCbCrMatrixOptionKeys
 T:CoreGraphics.CGDynamicRange
 T:CoreGraphics.CGImageComponentInfo
-T:CoreGraphics.CGPDFAccessPermissions
 T:CoreGraphics.CGPDFOutlineOptions
 T:CoreGraphics.CGPdfTagProperties
 T:CoreGraphics.CGPdfTagType

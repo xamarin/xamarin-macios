@@ -288,23 +288,29 @@ namespace CoreGraphics {
 		Stream,
 	};
 
+	/// <summary>Permission flags that describe operations allowed for a PDF document.</summary>
+	/// <remarks>
+	///   <para>When setting permissions for a PDF document, Quartz treats some permissions as supersets of others. For example, allowing document changes also grants commenting and form-field entry.</para>
+	///   <para>Allowing high-quality printing also grants low-quality printing, content copying grants accessibility extraction, and commenting grants form-field entry.</para>
+	///   <para>Existing documents may not follow these relationships, so check the narrowest permission that applies when reading permissions.</para>
+	/// </remarks>
 	[MacCatalyst (13, 1)]
 	public enum CGPDFAccessPermissions : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Allows printing at up to 150 DPI.</summary>
 		AllowsLowQualityPrinting = (1 << 0),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows printing at any resolution.</summary>
 		AllowsHighQualityPrinting = (1 << 1),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows changes to document contents other than page management.</summary>
 		AllowsDocumentChanges = (1 << 2),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows inserting, deleting, and rotating pages.</summary>
 		AllowsDocumentAssembly = (1 << 3),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows extracting document content, such as text and images.</summary>
 		AllowsContentCopying = (1 << 4),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows extracting document content for accessibility purposes.</summary>
 		AllowsContentAccessibility = (1 << 5),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows creating or modifying annotations, including form-field entries.</summary>
 		AllowsCommenting = (1 << 6),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows modifying form-field entries.</summary>
 		AllowsFormFieldEntry = (1 << 7),
 	}
 
