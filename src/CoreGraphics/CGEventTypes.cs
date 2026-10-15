@@ -45,14 +45,14 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies whether an event tap filters events or only observes them.</summary>
+	/// <remarks>The default option creates an active filter; listen-only taps cannot modify events.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapOptions : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Creates an active event filter.</summary>
 		Default,
-		/// <summary>To be added.</summary>
+		/// <summary>Creates a passive listener that observes events without modifying them.</summary>
 		ListenOnly,
 	}
 
