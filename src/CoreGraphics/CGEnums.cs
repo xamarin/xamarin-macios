@@ -319,11 +319,11 @@ namespace CoreGraphics {
 	/// <remarks>Use this value as the <see cref="CGColorConversionInfoTriple.Transform"/> in a color conversion sequence.</remarks>
 	[MacCatalyst (13, 1)]
 	public enum CGColorConversionInfoTransformType : uint {
-		/// <summary>Converts from a device color space to a color profile.</summary>
+		/// <summary>Marks the source color space in a conversion sequence.</summary>
 		FromSpace = 0,
-		/// <summary>Converts from a color profile to a device color space.</summary>
+		/// <summary>Marks the destination color space in a conversion sequence.</summary>
 		ToSpace,
-		/// <summary>Applies a conversion between color profiles.</summary>
+		/// <summary>Applies a conversion in this color space within the sequence.</summary>
 		ApplySpace,
 	}
 }
