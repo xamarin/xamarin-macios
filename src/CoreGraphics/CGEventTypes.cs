@@ -19,16 +19,16 @@ using CoreFoundation;
 namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapLocation;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the point in the event system where an event tap observes events.</summary>
+	/// <remarks>Event taps can observe or filter events at different stages, depending on the selected location and tap options.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapLocation : int {
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap at the HID system level.</summary>
 		HID,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap in the current login session.</summary>
 		Session,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap at the annotated session point.</summary>
 		AnnotatedSession,
 	}
 
