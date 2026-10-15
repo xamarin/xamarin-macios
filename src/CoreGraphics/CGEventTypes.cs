@@ -71,14 +71,14 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the unit used to express a scrolling event's delta.</summary>
+	/// <remarks>Use this value to indicate whether scroll deltas are measured in pixels or lines.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGScrollEventUnit : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Measures scroll deltas in pixels.</summary>
 		Pixel,
-		/// <summary>To be added.</summary>
+		/// <summary>Measures scroll deltas in lines.</summary>
 		Line,
 	}
 
