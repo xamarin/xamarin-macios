@@ -83,45 +83,45 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>A mask that identifies Quartz event types for an event tap to observe.</summary>
+	/// <remarks>Combine values to select the events delivered to the tap's callback.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGEventMask : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a null event.</summary>
 		Null = 0x00000001,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a left mouse button press.</summary>
 		LeftMouseDown = 0x00000002,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a left mouse button release.</summary>
 		LeftMouseUp = 0x00000004,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a right mouse button press.</summary>
 		RightMouseDown = 0x00000008,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a right mouse button release.</summary>
 		RightMouseUp = 0x00000010,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement without a button drag.</summary>
 		MouseMoved = 0x00000020,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement while the left button is held down.</summary>
 		LeftMouseDragged = 0x00000040,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement while the right button is held down.</summary>
 		RightMouseDragged = 0x00000080,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a keyboard key press.</summary>
 		KeyDown = 0x00000400,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a keyboard key release.</summary>
 		KeyUp = 0x00000800,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a change in modifier-key state.</summary>
 		FlagsChanged = 0x00001000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a scroll-wheel event.</summary>
 		ScrollWheel = 0x00400000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a tablet pointer event.</summary>
 		TabletPointer = 0x00800000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a tablet proximity event.</summary>
 		TabletProximity = 0x01000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a non-left or non-right mouse button press.</summary>
 		OtherMouseDown = 0x02000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a non-left or non-right mouse button release.</summary>
 		OtherMouseUp = 0x04000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for movement while a non-left or non-right mouse button is held down.</summary>
 		OtherMouseDragged = 0x08000000,
 	}
 
