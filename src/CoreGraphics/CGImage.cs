@@ -53,23 +53,23 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Options that control which windows are returned by a window-list operation.</summary>
+	/// <remarks>Combine <see cref="CGWindowListOption.IncludingWindow"/> with an above- or below-window option to include the relative window in the list.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGWindowListOption : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Lists all windows in the current user session, including on-screen and off-screen windows.</summary>
 		All = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows in front-to-back order.</summary>
 		OnScreenOnly = (1 << 0),
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows above the relative window in front-to-back order.</summary>
 		OnScreenAboveWindow = (1 << 1),
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows below the relative window in front-to-back order.</summary>
 		OnScreenBelowWindow = (1 << 2),
-		/// <summary>To be added.</summary>
+		/// <summary>Includes the relative window in an above- or below-window list.</summary>
 		IncludingWindow = (1 << 3),
-		/// <summary>To be added.</summary>
+		/// <summary>Excludes windows that are elements of the desktop.</summary>
 		ExcludeDesktopElements = (1 << 4),
 	}
 #endif
