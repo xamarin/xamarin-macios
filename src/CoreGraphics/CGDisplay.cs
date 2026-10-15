@@ -3,14 +3,14 @@
 #if MONOMAC || __MACCATALYST__
 
 namespace CoreGraphics {
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Options that control display capture behavior.</summary>
+	/// <remarks>These options can be used when capturing one display or all displays.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGCaptureOptions : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default display-capture behavior.</summary>
 		None = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Disables filling captured display areas with black.</summary>
 		NoFill = 1 << 0,
 	}
 
