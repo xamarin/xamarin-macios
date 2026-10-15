@@ -57,16 +57,16 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies a standard button on a mouse.</summary>
+	/// <remarks>The enumeration provides button identifiers for mice with up to three buttons.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGMouseButton : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>The left mouse button.</summary>
 		Left,
-		/// <summary>To be added.</summary>
+		/// <summary>The right mouse button.</summary>
 		Right,
-		/// <summary>To be added.</summary>
+		/// <summary>The center mouse button.</summary>
 		Center,
 	}
 
