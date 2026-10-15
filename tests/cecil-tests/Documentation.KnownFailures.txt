@@ -55371,7 +55371,6 @@ T:CoreGraphics.CGSessionKeys
 T:CoreGraphics.CGSessionProperties
 T:CoreGraphics.CGToneMapping
 T:CoreGraphics.CGToneMappingOptionKeys
-T:CoreGraphics.MatrixOrder
 T:CoreGraphics.NMatrix2
 T:CoreGraphics.NMatrix3
 T:CoreGraphics.NMatrix4

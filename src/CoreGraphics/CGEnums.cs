@@ -13,10 +13,11 @@ using System.ComponentModel;
 
 namespace CoreGraphics {
 
+	/// <summary>Specifies the order in which an affine transformation is combined with the current transformation.</summary>
 	public enum MatrixOrder {
-		/// <summary>To be added.</summary>
+		/// <summary>Applies the new transformation before the current transformation.</summary>
 		Prepend = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Applies the new transformation after the current transformation.</summary>
 		Append = 1,
 	}
 
