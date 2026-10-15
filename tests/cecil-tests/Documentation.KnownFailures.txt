@@ -1813,8 +1813,6 @@ F:CoreGraphics.CGDynamicRange.Constrained
 F:CoreGraphics.CGDynamicRange.High
 F:CoreGraphics.CGDynamicRange.Standard
 F:CoreGraphics.CGEventSuppressionState.NumberOfEventSuppressionStates
-F:CoreGraphics.CGEventType.TapDisabledByTimeout
-F:CoreGraphics.CGEventType.TapDisabledByUserInput
 F:CoreGraphics.CGImageComponentInfo.Float
 F:CoreGraphics.CGImageComponentInfo.Integer
 F:CoreGraphics.CGPdfTagType.Annotation

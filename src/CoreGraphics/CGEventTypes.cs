@@ -367,46 +367,48 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies a Quartz input event or an event-tap status notification.</summary>
+	/// <remarks>The tap-disabled values are out-of-band notifications delivered to an event-tap callback.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventType : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>A null event.</summary>
 		Null = 0x0,
-		/// <summary>To be added.</summary>
+		/// <summary>A left mouse button press.</summary>
 		LeftMouseDown = 0x1,
-		/// <summary>To be added.</summary>
+		/// <summary>A left mouse button release.</summary>
 		LeftMouseUp = 0x2,
-		/// <summary>To be added.</summary>
+		/// <summary>A right mouse button press.</summary>
 		RightMouseDown = 0x3,
-		/// <summary>To be added.</summary>
+		/// <summary>A right mouse button release.</summary>
 		RightMouseUp = 0x4,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement without a button drag.</summary>
 		MouseMoved = 0x5,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while the left button is held down.</summary>
 		LeftMouseDragged = 0x6,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while the right button is held down.</summary>
 		RightMouseDragged = 0x7,
-		/// <summary>To be added.</summary>
+		/// <summary>A keyboard key press.</summary>
 		KeyDown = 0xa,
-		/// <summary>To be added.</summary>
+		/// <summary>A keyboard key release.</summary>
 		KeyUp = 0xb,
-		/// <summary>To be added.</summary>
+		/// <summary>A change in modifier-key state.</summary>
 		FlagsChanged = 0xc,
-		/// <summary>To be added.</summary>
+		/// <summary>A scroll-wheel event.</summary>
 		ScrollWheel = 0x16,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet pointer event.</summary>
 		TabletPointer = 0x17,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet proximity event.</summary>
 		TabletProximity = 0x18,
-		/// <summary>To be added.</summary>
+		/// <summary>A non-left or non-right mouse button press.</summary>
 		OtherMouseDown = 0x19,
-		/// <summary>To be added.</summary>
+		/// <summary>A non-left or non-right mouse button release.</summary>
 		OtherMouseUp = 0x1a,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while a non-left or non-right mouse button is held down.</summary>
 		OtherMouseDragged = 0x1b,
+		/// <summary>Notification that an event tap was disabled because it exceeded the allowed event-handling time.</summary>
 		TapDisabledByTimeout = 4294967294,
+		/// <summary>Notification that an event tap was disabled by user input.</summary>
 		TapDisabledByUserInput = 4294967295,
 	}
 
