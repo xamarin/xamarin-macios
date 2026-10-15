@@ -268,23 +268,23 @@ namespace CoreGraphics {
 	// untyped enum -> CGPDFObject.h
 	/// <summary>Enumerates the various types of values that are found in a PDF document.</summary>
 	public enum CGPDFObjectType {
-		/// <summary>To be added.</summary>
+		/// <summary>A null object.</summary>
 		Null = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>A Boolean value.</summary>
 		Boolean,
-		/// <summary>To be added.</summary>
+		/// <summary>An integer number.</summary>
 		Integer,
-		/// <summary>To be added.</summary>
+		/// <summary>A real number.</summary>
 		Real,
-		/// <summary>To be added.</summary>
+		/// <summary>A name object.</summary>
 		Name,
-		/// <summary>To be added.</summary>
+		/// <summary>A string object.</summary>
 		String,
-		/// <summary>To be added.</summary>
+		/// <summary>An ordered array of objects.</summary>
 		Array,
-		/// <summary>To be added.</summary>
+		/// <summary>A dictionary of key-value pairs.</summary>
 		Dictionary,
-		/// <summary>To be added.</summary>
+		/// <summary>A stream object containing data and an associated dictionary.</summary>
 		Stream,
 	};
 
