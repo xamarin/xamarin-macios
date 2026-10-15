@@ -126,29 +126,29 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventFlags;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Flags that describe the modifier-key state and other event-related states.</summary>
+	/// <remarks>Combine values to represent the flags associated with a Quartz event.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGEventFlags : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>Indicates that mouse or pen movement events are not being coalesced.</summary>
 		NonCoalesced = 0x00000100,
-		/// <summary>To be added.</summary>
+		/// <summary>The Alpha Shift (Caps Lock) modifier is active.</summary>
 		AlphaShift = 0x00010000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Shift modifier is active.</summary>
 		Shift = 0x00020000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Control modifier is active.</summary>
 		Control = 0x00040000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Alternate (Option) modifier is active.</summary>
 		Alternate = 0x00080000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Command modifier is active.</summary>
 		Command = 0x00100000,
-		/// <summary>To be added.</summary>
+		/// <summary>The event originated from the numeric keypad area of an extended keyboard.</summary>
 		NumericPad = 0x00200000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Help key is active.</summary>
 		Help = 0x00400000,
-		/// <summary>To be added.</summary>
+		/// <summary>The secondary Function key is active.</summary>
 		SecondaryFn = 0x00800000,
 	}
 
