@@ -177,14 +177,10 @@ namespace CoreImage {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
 
 			CIImage result;
-			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })) {
-				using (var keys = NSArray.FromIntPtrs (new [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle })) {
-					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)) {
-						result = FromCGImage (image, dict);
-					}
-				}
+			using (var dict = new NSMutableDictionary ()) {
+				dict.LowlevelSetObject (colorSpace, CIImageInitializationOptionsKeys.ColorSpaceKey);
+				result = FromCGImage (image, dict);
 			}
-			GC.KeepAlive (colorSpace);
 			return result;
 		}
 
