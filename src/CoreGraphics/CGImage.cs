@@ -106,20 +106,20 @@ namespace CoreGraphics {
 		Only,
 	}
 
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Pixel-format bits that describe an image's packed RGB representation.</summary>
+	/// <remarks>Combine these values with alpha, component, and byte-order information to describe image pixels.</remarks>
 	public enum CGImagePixelFormatInfo : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default packed pixel format.</summary>
 		Packed = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit RGB pixels with 5 bits per color component and an alpha component.</summary>
 		Rgb555 = 1 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit RGB pixels with 5 bits for red, 6 bits for green, and 5 bits for blue, without alpha.</summary>
 		Rgb565 = 2 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit RGB pixels with 10 bits per color component and an alpha component.</summary>
 		Rgb101010 = 3 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit little-endian RGB pixels with 10 bits per component; the two most significant bits must be set.</summary>
 		RgbCif10 = 4 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Mask for the pixel-format information bits.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
