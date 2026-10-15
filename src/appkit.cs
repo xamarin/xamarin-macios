@@ -30588,6 +30588,8 @@ namespace AppKit {
 		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
 		NSString AnnouncementRequestedNotification { get; }
 
+		/// <summary>Gets or sets the child accessibility elements in navigation order.</summary>
+		/// <value>The child accessibility elements in navigation order, or <see langword="null" /> if no explicit navigation order is specified.</value>
 		[Abstract]
 		[NullAllowed, Export ("accessibilityChildrenInNavigationOrder", ArgumentSemantic.Copy)]
 #if XAMCORE_5_0

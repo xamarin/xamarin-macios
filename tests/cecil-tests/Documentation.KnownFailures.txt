@@ -29477,7 +29477,6 @@ P:AppKit.INSAccessibility.AccessibilityApplicationFocusedUIElement
 P:AppKit.INSAccessibility.AccessibilityAttributedUserInputLabels
 P:AppKit.INSAccessibility.AccessibilityCancelButton
 P:AppKit.INSAccessibility.AccessibilityChildren
-P:AppKit.INSAccessibility.AccessibilityChildrenInNavigationOrder
 P:AppKit.INSAccessibility.AccessibilityClearButton
 P:AppKit.INSAccessibility.AccessibilityCloseButton
 P:AppKit.INSAccessibility.AccessibilityColumnCount
@@ -29689,7 +29688,6 @@ P:AppKit.NSAccessibilityElement.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSAccessibilityElement.AccessibilityAttributedUserInputLabels
 P:AppKit.NSAccessibilityElement.AccessibilityCancelButton
 P:AppKit.NSAccessibilityElement.AccessibilityChildren
-P:AppKit.NSAccessibilityElement.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSAccessibilityElement.AccessibilityClearButton
 P:AppKit.NSAccessibilityElement.AccessibilityCloseButton
 P:AppKit.NSAccessibilityElement.AccessibilityColumnCount
@@ -29840,7 +29838,6 @@ P:AppKit.NSApplication.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSApplication.AccessibilityAttributedUserInputLabels
 P:AppKit.NSApplication.AccessibilityCancelButton
 P:AppKit.NSApplication.AccessibilityChildren
-P:AppKit.NSApplication.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSApplication.AccessibilityClearButton
 P:AppKit.NSApplication.AccessibilityCloseButton
 P:AppKit.NSApplication.AccessibilityColumnCount
@@ -30161,7 +30158,6 @@ P:AppKit.NSCell.AccessibilityAttributedUserInputLabels
 P:AppKit.NSCell.AccessibilityAttributeNames
 P:AppKit.NSCell.AccessibilityCancelButton
 P:AppKit.NSCell.AccessibilityChildren
-P:AppKit.NSCell.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSCell.AccessibilityClearButton
 P:AppKit.NSCell.AccessibilityCloseButton
 P:AppKit.NSCell.AccessibilityColumnCount
@@ -30808,7 +30804,6 @@ P:AppKit.NSDrawer.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSDrawer.AccessibilityAttributedUserInputLabels
 P:AppKit.NSDrawer.AccessibilityCancelButton
 P:AppKit.NSDrawer.AccessibilityChildren
-P:AppKit.NSDrawer.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSDrawer.AccessibilityClearButton
 P:AppKit.NSDrawer.AccessibilityCloseButton
 P:AppKit.NSDrawer.AccessibilityColumnCount
@@ -31257,7 +31252,6 @@ P:AppKit.NSMenu.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSMenu.AccessibilityAttributedUserInputLabels
 P:AppKit.NSMenu.AccessibilityCancelButton
 P:AppKit.NSMenu.AccessibilityChildren
-P:AppKit.NSMenu.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSMenu.AccessibilityClearButton
 P:AppKit.NSMenu.AccessibilityCloseButton
 P:AppKit.NSMenu.AccessibilityColumnCount
@@ -31392,7 +31386,6 @@ P:AppKit.NSMenuItem.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSMenuItem.AccessibilityAttributedUserInputLabels
 P:AppKit.NSMenuItem.AccessibilityCancelButton
 P:AppKit.NSMenuItem.AccessibilityChildren
-P:AppKit.NSMenuItem.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSMenuItem.AccessibilityClearButton
 P:AppKit.NSMenuItem.AccessibilityCloseButton
 P:AppKit.NSMenuItem.AccessibilityColumnCount
@@ -31702,7 +31695,6 @@ P:AppKit.NSPopover.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSPopover.AccessibilityAttributedUserInputLabels
 P:AppKit.NSPopover.AccessibilityCancelButton
 P:AppKit.NSPopover.AccessibilityChildren
-P:AppKit.NSPopover.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSPopover.AccessibilityClearButton
 P:AppKit.NSPopover.AccessibilityCloseButton
 P:AppKit.NSPopover.AccessibilityColumnCount
@@ -32208,7 +32200,6 @@ P:AppKit.NSSliderAccessory.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSSliderAccessory.AccessibilityAttributedUserInputLabels
 P:AppKit.NSSliderAccessory.AccessibilityCancelButton
 P:AppKit.NSSliderAccessory.AccessibilityChildren
-P:AppKit.NSSliderAccessory.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSSliderAccessory.AccessibilityClearButton
 P:AppKit.NSSliderAccessory.AccessibilityCloseButton
 P:AppKit.NSSliderAccessory.AccessibilityColumnCount
@@ -33038,7 +33029,6 @@ P:AppKit.NSView.AccessibilityAttributedUserInputLabels
 P:AppKit.NSView.AccessibilityAttributeNames
 P:AppKit.NSView.AccessibilityCancelButton
 P:AppKit.NSView.AccessibilityChildren
-P:AppKit.NSView.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSView.AccessibilityClearButton
 P:AppKit.NSView.AccessibilityCloseButton
 P:AppKit.NSView.AccessibilityColumnCount
@@ -33294,7 +33284,6 @@ P:AppKit.NSWindow.AccessibilityApplicationFocusedUIElement
 P:AppKit.NSWindow.AccessibilityAttributedUserInputLabels
 P:AppKit.NSWindow.AccessibilityCancelButton
 P:AppKit.NSWindow.AccessibilityChildren
-P:AppKit.NSWindow.AccessibilityChildrenInNavigationOrder
 P:AppKit.NSWindow.AccessibilityClearButton
 P:AppKit.NSWindow.AccessibilityCloseButton
 P:AppKit.NSWindow.AccessibilityColumnCount
