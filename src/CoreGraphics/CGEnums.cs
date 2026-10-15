@@ -73,7 +73,7 @@ namespace CoreGraphics {
 		Invisible,
 		/// <summary>Perform a Fill operation on the text glyphs followed by a clip operation using the current clip path.</summary>
 		FillClip,
-		/// <summary>To be added.</summary>
+		/// <summary>Strokes the text glyphs and uses the resulting text as the clipping path.</summary>
 		StrokeClip,
 		/// <summary>Perform a Stroke operation on the text glyphs followed by a clip operation using the current clip path.</summary>
 		FillStrokeClip,
