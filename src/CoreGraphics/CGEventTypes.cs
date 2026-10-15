@@ -33,14 +33,14 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies where a new event tap is inserted in the active event tap list.</summary>
+	/// <remarks>The placement determines the tap's position relative to other active event taps.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapPlacement : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Inserts the event tap at the head of the active tap list.</summary>
 		HeadInsert,
-		/// <summary>To be added.</summary>
+		/// <summary>Appends the event tap at the tail of the active tap list.</summary>
 		TailAppend,
 	}
 
