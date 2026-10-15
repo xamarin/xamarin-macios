@@ -105,7 +105,7 @@ namespace CoreGraphics {
 		Low,
 		/// <summary>High quality, at the cost of speed.</summary>
 		High,
-		/// <summary>To be added.</summary>
+		/// <summary>Use medium-quality interpolation as a balance between speed and image quality.</summary>
 		Medium,            /* Yes, in this order, since Medium was added in 4 */
 	}
 
