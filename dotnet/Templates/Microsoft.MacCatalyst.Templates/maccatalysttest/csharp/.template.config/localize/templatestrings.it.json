@@ -2,6 +2,9 @@
   "author": "Microsoft",
   "name": "Mac Catalyst Test Project",
   "description": "A project for creating a .NET Mac Catalyst test project using MSTest",
+  "symbols/Framework/description": "The target framework for the project.",
+  "symbols/Framework/choices/net11.0-maccatalyst/description": "Target net11.0-maccatalyst",
+  "symbols/Framework/choices/net10.0-maccatalyst/description": "Target net10.0-maccatalyst",
   "symbols/bundleId/description": "Overrides the ApplicationId in the project file",
   "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
 }
