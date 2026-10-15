@@ -170,7 +170,7 @@ namespace Network {
 #if !XAMCORE_5_0
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use the other overload.")]
+		[Obsolete ("Use the overload that takes an 'Action<NWEthernetChannelState, NWError?>' instead.")]
 		[OverloadResolutionPriority (-1)]
 		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
 		{
