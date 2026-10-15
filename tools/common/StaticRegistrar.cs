@@ -31,7 +31,6 @@ using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
-using ClassRedirector;
 
 #nullable enable
 
@@ -2959,43 +2958,6 @@ namespace Registrar {
 			return all_types;
 		}
 
-		CSToObjCMap? type_map_dictionary;
-		public CSToObjCMap GetTypeMapDictionary (List<Exception> exceptions)
-		{
-			if (type_map_dictionary is not null)
-				return type_map_dictionary;
-
-			var allTypes = GetAllTypes (exceptions);
-			var map_dict = new CSToObjCMap ();
-
-			foreach (var @class in allTypes) {
-				if (!@class.IsProtocol && !@class.IsCategory) {
-					var name = GetAssemblyQualifiedName (@class.Type);
-					@class.ClassMapIndex = map_dict.Count;
-					map_dict [name] = new ObjCNameIndex (@class.ExportedName, @class.ClassMapIndex);
-				}
-			}
-
-			type_map_dictionary = map_dict;
-			return type_map_dictionary;
-		}
-
-		public void Rewrite (Action<AssemblyDefinition>? assemblyModified = null)
-		{
-#if !LEGACY_TOOLS
-			if (App.Optimizations.RedirectClassHandles == true) {
-				var exceptions = new List<Exception> ();
-				var map_dict = GetTypeMapDictionary (exceptions);
-				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext, assemblyModified);
-				var result = rewriter.Process ();
-				if (!string.IsNullOrEmpty (result)) {
-					App.Log (5, $"Not redirecting class handles because {result}");
-				}
-				ErrorHelper.ThrowIfErrors (App, exceptions);
-			}
-#endif
-		}
-
 		void Specialize (AutoIndentStringBuilder sb, out string initialization_method, AutoIndentStringBuilder? assembly_source, bool assembly_object)
 		{
 			if (interfaces is null)
@@ -3009,9 +2971,6 @@ namespace Registrar {
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
-#if !LEGACY_TOOLS
-			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
-#endif
 			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
 			var protocols = new List<ProtocolInfo> ();
 
@@ -3041,8 +3000,11 @@ namespace Registrar {
 				registered_assemblies.Add (new (GetAssemblies ().Single (v => GetAssemblyName (v) == single_assembly), single_assembly));
 			}
 
-			// Don't need this dictionary, but do need ClassMapIndex
-			GetTypeMapDictionary (exceptions);
+			var classMapIndex = 0;
+			foreach (var @class in allTypes) {
+				if (!@class.IsProtocol && !@class.IsCategory)
+					@class.ClassMapIndex = classMapIndex++;
+			}
 
 #if !LEGACY_TOOLS
 			// When we know which UnmanagedCallersOnly trampolines survived the NativeAOT compiler (ILC) - which
@@ -3143,8 +3105,6 @@ namespace Registrar {
 					}
 
 					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, @class.ClassMapIndex);
-					if (App.Optimizations.RedirectClassHandles == true)
-						map_init.AppendLine ("__xamarin_class_handles [{0}] = __xamarin_class_map [{0}].handle;", @class.ClassMapIndex);
 					i++;
 				} else if (App.Registrar == RegistrarMode.TrimmableStatic && @class.IsStubClass) {
 					map_init.AppendLine ("[{0} class];", EncodeNonAsciiCharacters (@class.ExportedName));
@@ -3381,9 +3341,6 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
-			if (App.Optimizations.RedirectClassHandles == true)
-				map.AppendLine ("static void *__xamarin_class_handles [{0}];", i);
-
 			var has_skipped_map = App.Registrar != RegistrarMode.TrimmableStatic && skipped_types.Count > 0;
 			if (has_skipped_map) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
@@ -3492,10 +3449,6 @@ namespace Registrar {
 			map.AppendLine ("{0},", has_skipped_map ? skipped_types.Count : 0);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
 			map.AppendLine ("{0},", needs_protocol_map ? protocols.Count : 0);
-			if (App.Optimizations.RedirectClassHandles == true)
-				map.AppendLine ("&__xamarin_class_handles [0]");
-			else
-				map.AppendLine ("(void **)0");
 			map.AppendLine ("};");
 
 

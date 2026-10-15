@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="class-redirector-tests/class-redirector-tests.csproj" />
-  <Project Path="class-redirector/class-redirector.csproj" />
-</Solution>

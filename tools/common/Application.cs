@@ -20,10 +20,6 @@ using ObjCRuntime;
 
 using Registrar;
 
-#if !LEGACY_TOOLS && !ASSEMBLY_PREPARER
-using ClassRedirector;
-#endif
-
 #if LEGACY_TOOLS
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
 #else

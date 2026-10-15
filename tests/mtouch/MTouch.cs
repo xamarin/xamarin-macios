@@ -1770,16 +1770,17 @@ public class TestApp {
 			}
 		}
 
-		[Test]
-		public void MT0132 ()
+		[TestCase ("foo")]
+		[TestCase ("redirect-class-handles")]
+		public void MT0132 (string optimization)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Linker = MTouchLinker.LinkSdk;
-				mtouch.Optimize = new string [] { "foo" };
+				mtouch.Optimize = new string [] { optimization };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal, redirect-class-handles.");
+				mtouch.AssertWarning (132, $"Unknown optimization: '{optimization}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
 			}
 		}
 
@@ -3671,8 +3672,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=custom-attributes-removal' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=experimental-xforms-product-type' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=force-rejected-types-removal' will be ignored since linking is disabled");
-				mtouch.AssertWarning (2003, "Option '--optimize=redirect-class-handles' will be ignored since the static registrar is not enabled");
-				mtouch.AssertWarningCount (17);
+				mtouch.AssertWarningCount (16);
 			}
 
 			using (var mtouch = new MTouchTool ()) {

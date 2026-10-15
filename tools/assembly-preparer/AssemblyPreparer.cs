@@ -265,7 +265,6 @@ public class AssemblyPreparer : IDisposable {
 			// and before SaveAssembliesStep (so that the modification is written to disk).
 			new RemoveStaleTypeMapAssemblyTargetsStep (),
 
-			new ClassHandleRewriterStep (),
 			new SaveAssembliesStep (),
 
 			// post-output

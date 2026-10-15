@@ -585,7 +585,6 @@ Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.INativeObject::Handle()
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::Zero
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.ObjCSuper::classHandle
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.ObjCSuper::receiver
-Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.Runtime/ClassHandles::unused
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.Selector::handle
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle ObjCRuntime.Selector::Handle()
 Microsoft.tvOS.dll:ObjCRuntime.NativeHandle UIKit.UIApplication::class_ptr
@@ -879,9 +878,6 @@ Microsoft.tvOS.dll:ObjCRuntime.Runtime.xamarin_log(System.IntPtr)
 Microsoft.tvOS.dll:ObjCRuntime.Runtime.xamarin_mono_object_retain(ObjCRuntime.Runtime/MonoObject*)
 Microsoft.tvOS.dll:ObjCRuntime.Runtime.xamarin_mono_object_retain(System.IntPtr)
 Microsoft.tvOS.dll:ObjCRuntime.Runtime/<>O
-Microsoft.tvOS.dll:ObjCRuntime.Runtime/ClassHandles
-Microsoft.tvOS.dll:ObjCRuntime.Runtime/ClassHandles.InitializeClassHandles(System.IntPtr*)
-Microsoft.tvOS.dll:ObjCRuntime.Runtime/ClassHandles.SetHandle(System.Int32, ObjCRuntime.NativeHandle*, System.IntPtr*)
 Microsoft.tvOS.dll:ObjCRuntime.Runtime/Delegates
 Microsoft.tvOS.dll:ObjCRuntime.Runtime/Delegates* ObjCRuntime.Runtime/InitializationOptions::Delegates
 Microsoft.tvOS.dll:ObjCRuntime.Runtime/ExceptionType
@@ -1227,7 +1223,6 @@ Microsoft.tvOS.dll:System.IntPtr ObjCRuntime.Runtime/Trampolines::tramp
 Microsoft.tvOS.dll:System.IntPtr ObjCRuntime.TransientCFString::ptr
 Microsoft.tvOS.dll:System.IntPtr ObjCRuntime.TransientString::ptr
 Microsoft.tvOS.dll:System.IntPtr* ObjCRuntime.Runtime/MTProtocolMap::protocols
-Microsoft.tvOS.dll:System.IntPtr* ObjCRuntime.Runtime/MTRegistrationMap::classHandles
 Microsoft.tvOS.dll:System.Object Foundation.NSAsyncSynchronizationContextDispatcher::state
 Microsoft.tvOS.dll:System.Object Foundation.NSObject/NSObject_Disposer::lock_obj
 Microsoft.tvOS.dll:System.Object Foundation.NSSynchronizationContextDispatcher::state

@@ -566,7 +566,6 @@ namespace Cecil.Tests {
 			"ObjCRuntime.Protocol..ctor(ObjCRuntime.NativeHandle, System.Boolean)",
 			"ObjCRuntime.Runtime.Initialize(ObjCRuntime.Runtime/InitializationOptions*)",
 			"ObjCRuntime.Runtime.SafeInitialize(ObjCRuntime.Runtime/InitializationOptions*, System.IntPtr*)",
-			"ObjCRuntime.Runtime/ClassHandles.SetHandle(System.Int32, ObjCRuntime.NativeHandle*, System.IntPtr*)",
 			"ObjCRuntime.Selector..ctor(ObjCRuntime.NativeHandle, System.Boolean)",
 			"OpenGL.CGLContext..ctor(ObjCRuntime.NativeHandle, System.Boolean)",
 			"OpenGL.CGLPixelFormat..ctor(ObjCRuntime.NativeHandle, System.Boolean)",

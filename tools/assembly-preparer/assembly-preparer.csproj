@@ -81,15 +81,6 @@
 		<Compile Include="../common/NullableAttributes.cs">
 			<Link>external/tools/common/NullableAttributes.cs</Link>
 		</Compile>
-		<Compile Include="../common/CSToObjCMap.cs">
-			<Link>external/tools/common/CSToObjCMap.cs</Link>
-		</Compile>
-		<Compile Include="../common/ObjCNameIndex.cs">
-			<Link>external/tools/common/ObjCNameIndex.cs</Link>
-		</Compile>
-		<Compile Include="../common/Rewriter.cs">
-			<Link>external/tools/common/Rewriter.cs</Link>
-		</Compile>
 		<Compile Include="../common/Optimizations.cs">
 			<Link>external/tools/common/Optimizations.cs</Link>
 		</Compile>
