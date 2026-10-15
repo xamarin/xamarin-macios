@@ -10,7 +10,7 @@ namespace CoreGraphics {
 	public enum CGCaptureOptions : uint {
 		/// <summary>Uses the default display-capture behavior.</summary>
 		None = 0,
-		/// <summary>Disables filling captured display areas with black.</summary>
+		/// <summary>Disables filling captured display areas with black; Apple has deprecated this option.</summary>
 		NoFill = 1 << 0,
 	}
 
