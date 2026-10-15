@@ -1055,12 +1055,11 @@ namespace UIKit {
 #if __MACCATALYST__
 	/// <summary>An enumeration of text alignments.</summary>
 	/// <remarks>To be added.</remarks>
-	[NativeName ("NSTextAlignment")]
 	[Native (ConvertToNative = "UITextAlignmentExtensions.ToNative", ConvertToManaged = "UITextAlignmentExtensions.ToManaged")]
 #else
-	[NativeName ("NSTextAlignment")]
 	[Native]
 #endif
+	[NativeName ("NSTextAlignment")]
 	public enum UITextAlignment : long {
 		/// <summary>Text is left-aligned.</summary>
 		Left,

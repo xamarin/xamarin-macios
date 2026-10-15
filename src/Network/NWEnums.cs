@@ -467,7 +467,11 @@ namespace Network {
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[NativeName ("nw_parameters_attribution_t")]
+#if XAMCORE_5_0
+	public enum NWParametersAttribution : byte {
+#else
 	public enum NWParametersAttribution {
+#endif
 		/// <summary>The developer selected the content.</summary>
 		Developer = 1,
 		/// <summary>The user selected the content.</summary>

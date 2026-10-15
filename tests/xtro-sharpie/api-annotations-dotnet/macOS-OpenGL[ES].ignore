@@ -1,11 +1,5 @@
 # OpenGL (not in OpenGLES)
 
-## CGLPixelFormatAttribute is obsolete; do not expand the deprecated OpenGL API as part of native-name corrections.
-!missing-enum-value! CGLPixelFormatAttribute native value kCGLPFATripleBuffer = 3 not bound
-!missing-enum-value! CGLPixelFormatAttribute native value kCGLPFABackingVolatile = 77 not bound
-!missing-enum-value! CGLPixelFormatAttribute native value kCGLPFAOpenGLProfile = 99 not bound
-!missing-enum-value! CGLPixelFormatAttribute native value kCGLPFASupportsAutomaticGraphicsSwitching = 101 not bound
-
 !missing-enum! _CGLContextEnable not bound
 !missing-enum! _CGLContextParameter not bound
 !missing-enum! _CGLGlobalOption not bound

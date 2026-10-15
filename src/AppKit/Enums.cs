@@ -2612,7 +2612,11 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Flags]
 	[NativeName ("NSFontDescriptorSymbolicTraits")]
+#if XAMCORE_5_0
+	public enum NSFontSymbolicTraits : uint {
+#else
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
+#endif
 		/// <summary>The font has an italic or oblique style.</summary>
 		ItalicTrait = (1 << 0),
 		/// <summary>The font has a bold weight.</summary>
@@ -2648,16 +2652,36 @@ namespace AppKit {
 		/// <summary>The font belongs to the freeform serif design classification.</summary>
 		FreeformSerifsClass = 7 << 28,
 		/// <summary>The font belongs to the sans-serif design classification.</summary>
+#if XAMCORE_5_0
+		SansSerifClass = 8u << 28,
+#else
 		SansSerifClass = 8 << 28,
+#endif
 		/// <summary>The font belongs to the ornamental design classification, such as display or decorative faces.</summary>
+#if XAMCORE_5_0
+		OrnamentalsClass = 9u << 28,
+#else
 		OrnamentalsClass = 9 << 28,
+#endif
 		/// <summary>The font belongs to the script design classification, resembling handwriting.</summary>
+#if XAMCORE_5_0
+		ScriptsClass = 10u << 28,
+#else
 		ScriptsClass = 10 << 28,
+#endif
 		/// <summary>The font belongs to the symbolic design classification, such as an icon or dingbat font.</summary>
+#if XAMCORE_5_0
+		SymbolicClass = 12u << 28,
+#else
 		SymbolicClass = 12 << 28,
+#endif
 
 		/// <summary>A mask that isolates the font-family classification bits.</summary>
+#if XAMCORE_5_0
+		FamilyClassMask = 15u << 28,
+#else
 		FamilyClassMask = (int) -268435456,
+#endif
 	}
 
 	/// <summary>Specifies a bitmask of stylistic traits used with the legacy <see cref="T:AppKit.NSFontManager" /> font-selection APIs.</summary>

@@ -3,7 +3,7 @@
 
 ## unsorted
 
-## AudioFilePermission has a 32-bit backing type for historical reasons; changing it would break binary compatibility.
+## AudioFilePermission has a 32-bit backing type for binary compatibility; fixed in XAMCORE_5_0.
 !wrong-enum-size! AudioFilePermissions managed 4 vs native 1
 
 !missing-enum! AudioFileStreamParseFlags not bound

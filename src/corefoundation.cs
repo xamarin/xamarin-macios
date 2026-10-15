@@ -292,7 +292,6 @@ namespace CoreFoundation {
 		Fault = 0x11,
 	}
 
-	[NativeName ("__CFByteOrder")]
 	[Native]
 	public enum CFByteOrder : long {
 		Unknown,

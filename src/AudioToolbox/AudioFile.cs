@@ -140,7 +140,11 @@ namespace AudioToolbox {
 	/// <summary>An enumeration whose values specify the <c>permissions</c> argument when opening an <see cref="AudioFile" />.</summary>
 	[Flags]
 	[NativeName ("AudioFilePermissions")]
+#if XAMCORE_5_0
+	public enum AudioFilePermission : sbyte {
+#else
 	public enum AudioFilePermission {
+#endif
 		/// <summary>The file is opened for reading.</summary>
 		Read = 0x01,
 		/// <summary>The file is opened for writing.</summary>
@@ -849,7 +853,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static AudioFileError AudioFileOpenURL (IntPtr cfurlref_infile, byte permissions, AudioFileType fileTypeHint, IntPtr* file_id);
+		unsafe extern static AudioFileError AudioFileOpenURL (IntPtr cfurlref_infile, sbyte permissions, AudioFileType fileTypeHint, IntPtr* file_id);
 
 		/// <summary>Opens an audio file for reading.</summary>
 		/// <param name="url">A url to a local file name.</param>
@@ -976,7 +980,7 @@ namespace AudioToolbox {
 		{
 			var file = default (IntPtr);
 			unsafe {
-				error = AudioFileOpenURL (urlHandle, (byte) permissions, fileTypeHint, &file);
+				error = AudioFileOpenURL (urlHandle, (sbyte) permissions, fileTypeHint, &file);
 			}
 			if (error == AudioFileError.Success)
 				return new AudioFile (file, true);

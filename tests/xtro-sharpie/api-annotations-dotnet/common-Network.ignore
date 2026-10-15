@@ -49,7 +49,7 @@
 ## nw_link_quality_t - changing the backing type from uint to byte is a breaking change; fixed in XAMCORE_5_0
 !wrong-enum-size! nw_link_quality_t managed 4 vs native 1
 
-## NWParametersAttribution has a 32-bit backing type; changing it would break binary compatibility.
+## NWParametersAttribution has a 32-bit backing type for binary compatibility; fixed in XAMCORE_5_0.
 !wrong-enum-size! nw_parameters_attribution_t managed 4 vs native 1
 
 ## Preserve existing NWIPVersion values; correcting these values is a separate behavioral change.

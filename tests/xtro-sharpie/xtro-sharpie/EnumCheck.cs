@@ -7,7 +7,7 @@ namespace Extrospection {
 		}
 
 		Dictionary<string, TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
-		Dictionary<string, TypeDefinition> obsoleted_enums = new Dictionary<string, TypeDefinition> ();
+		Dictionary<string, TypeDefinition> obsoleted_enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
 		Dictionary<object, ManagedValue> managed_values = new Dictionary<object, ManagedValue> ();
 		Dictionary<object, (string Name, EnumConstantDecl Decl)> native_values = new Dictionary<object, (string Name, EnumConstantDecl Decl)> ();
 
@@ -35,7 +35,8 @@ namespace Extrospection {
 				return;
 			}
 
-			if (AttributeHelpers.HasAnyObsoleted (type)) {
+			if (AttributeHelpers.HasAnyObsoleted (type) || (type.HasCustomAttributes && type.CustomAttributes.Any (attribute =>
+				AttributeHelpers.HasObsoletedOSPlatform (attribute, Helpers.Platform) || AttributeHelpers.HasDeprecated (attribute, Helpers.Platform)))) {
 				obsoleted_enums [name] = type;
 				return;
 			}
@@ -92,6 +93,9 @@ namespace Extrospection {
 				return;
 			} else
 				enums.Remove (name);
+
+			if (decl.IsDeprecated ())
+				return;
 
 			var mname = type.Name;
 
