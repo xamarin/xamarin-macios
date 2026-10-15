@@ -110,64 +110,95 @@ namespace CoreGraphics {
 	}
 
 	// untyped enum -> CGContext.h
-	/// <include file="../../docs/api/CoreGraphics/CGBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGBlendMode']/*" />
+	/// <summary>Specifies how Quartz blends source content with existing destination content.</summary>
+	/// <remarks>
+	///   <para>Blend modes combine source and destination colors and alpha values when compositing images. The Porter-Duff modes define how source and destination coverage contribute to the result.</para>
+	///   <para>The PDF reference manual provides a detailed explanation of these blend modes.</para>
+	///   <para>The blend equations use the following terms:</para>
+	///   <list type="table">
+	///     <listheader>
+	///       <term>Term</term>
+	///       <description>Description</description>
+	///     </listheader>
+	///     <item>
+	///       <term>R</term>
+	///       <description>Premultiplied result color.</description>
+	///     </item>
+	///     <item>
+	///       <term>S</term>
+	///       <description>Source color.</description>
+	///     </item>
+	///     <item>
+	///       <term>D</term>
+	///       <description>Destination color.</description>
+	///     </item>
+	///     <item>
+	///       <term>Sa</term>
+	///       <description>Source alpha value.</description>
+	///     </item>
+	///     <item>
+	///       <term>Da</term>
+	///       <description>Destination alpha value.</description>
+	///     </item>
+	///   </list>
+	/// </remarks>
 	public enum CGBlendMode {
-		/// <summary>To be added.</summary>
+		/// <summary>Draws the source over the destination using normal source-over blending.</summary>
 		Normal,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies source and destination color components, producing a darker result.</summary>
 		Multiply,
-		/// <summary>To be added.</summary>
+		/// <summary>Inverts, multiplies, and inverts source and destination color components, producing a lighter result.</summary>
 		Screen,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies or screens the colors depending on the destination color.</summary>
 		Overlay,
-		/// <summary>To be added.</summary>
+		/// <summary>Selects the darker source or destination color component by component.</summary>
 		Darken,
-		/// <summary>To be added.</summary>
+		/// <summary>Selects the lighter source or destination color component by component.</summary>
 		Lighten,
-		/// <summary>To be added.</summary>
+		/// <summary>Brightens the destination color to reflect the source color.</summary>
 		ColorDodge,
-		/// <summary>To be added.</summary>
+		/// <summary>Darkens the destination color to reflect the source color.</summary>
 		ColorBurn,
-		/// <summary>To be added.</summary>
+		/// <summary>Softly darkens or lightens the destination color according to the source color.</summary>
 		SoftLight,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies or screens the colors depending on the source color.</summary>
 		HardLight,
-		/// <summary>To be added.</summary>
+		/// <summary>Subtracts the darker color from the lighter color component by component.</summary>
 		Difference,
-		/// <summary>To be added.</summary>
+		/// <summary>Creates an effect similar to Difference with lower contrast.</summary>
 		Exclusion,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source hue with the destination saturation and luminosity.</summary>
 		Hue,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source saturation with the destination hue and luminosity.</summary>
 		Saturation,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source hue and saturation with the destination luminosity.</summary>
 		Color,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source luminosity with the destination hue and saturation.</summary>
 		Luminosity,
 
 		/// <summary>Clears the destination and makes it transparent (R=0).</summary>
 		Clear,
-		/// <summary>Copies the source color with alpha to the target (R=S)</summary>
+		/// <summary>Copies the source color and alpha to the destination (R=S).</summary>
 		Copy,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the source only where the destination has alpha.</summary>
 		SourceIn,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the source only where the destination is transparent.</summary>
 		SourceOut,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the source over the destination, restricted to the destination's opaque area.</summary>
 		SourceAtop,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the destination over the source.</summary>
 		DestinationOver,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the destination only where the source has alpha.</summary>
 		DestinationIn,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the destination only where the source is transparent.</summary>
 		DestinationOut,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the destination over the source, restricted to the source's opaque area.</summary>
 		DestinationAtop,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the portions of the source and destination that are not covered by the other.</summary>
 		XOR,
-		/// <summary>To be added.</summary>
+		/// <summary>Adds source and destination color components and subtracts full intensity, clamping the result at zero.</summary>
 		PlusDarker,
-		/// <summary>To be added.</summary>
+		/// <summary>Adds source and destination color components, clamping the result at full intensity.</summary>
 		PlusLighter,
 	}
 
