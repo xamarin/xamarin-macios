@@ -177,21 +177,21 @@ namespace CoreGraphics {
 		ByteOrder32Big = (4 << 12),
 	}
 
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the byte order of image pixel data.</summary>
+	/// <remarks>Use these flags with bitmap information to describe the byte order of pixel values.</remarks>
 	[Flags]
 	public enum CGImageByteOrderInfo : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Mask for the byte-order bits.</summary>
 		ByteOrderMask = 0x7000,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default byte order.</summary>
 		ByteOrderDefault = (0 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit little-endian byte order.</summary>
 		ByteOrder16Little = (1 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit little-endian byte order.</summary>
 		ByteOrder32Little = (2 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit big-endian byte order.</summary>
 		ByteOrder16Big = (3 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit big-endian byte order.</summary>
 		ByteOrder32Big = (4 << 12),
 	}
 
