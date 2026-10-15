@@ -413,16 +413,16 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies the subtype of a mouse event.</summary>
+	/// <remarks>The subtype distinguishes standard mouse events from tablet pointer and proximity events.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventMouseSubtype : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>A standard mouse event.</summary>
 		Default,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet pointer event.</summary>
 		TabletPoint,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet proximity event.</summary>
 		TabletProximity,
 	}
 
