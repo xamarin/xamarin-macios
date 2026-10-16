@@ -2,7 +2,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="_PrePublish">
 		<PropertyGroup>
-			<_IsApplePublishing>true</_IsApplePublishing>
+			<_PostProcessAppBundleDependsOn>
+				$(_PostProcessAppBundleDependsOn);
+				_CopyDSymToPublishDirectory;
+			</_PostProcessAppBundleDependsOn>
 			<BuildIpa Condition="'$(BuildIpa)' == '' And '$(SdkIsMobile)' == 'true'">true</BuildIpa>
 			<CreatePackage Condition="'$(CreatePackage)' == '' And '$(SdkIsDesktop)' == 'true'">true</CreatePackage>
 
@@ -25,12 +28,6 @@
 		<Message Importance="high" Text="Created the package: $(IpaPackagePath)" Condition="'$(BuildIpa)' == 'true' And '$(SdkIsMobile)' == 'true'" />
 		<Message Importance="high" Text="Created the package: $(PkgPackagePath)" Condition="'$(CreatePackage)' == 'true' And '$(SdkIsDesktop)' == 'true'" />
 	</Target>
-
-	<!-- Remote builds disconnect before GetApplicationArtifacts returns to Publish. -->
-	<Target Name="_CopyDSymToPublishDirectoryBeforeDisconnect"
-		BeforeTargets="BeforeDisconnect"
-		Condition="'$(_IsApplePublishing)' == 'true'"
-		DependsOnTargets="_CopyDSymToPublishDirectory" />
 
 	<!--
 		Copy any generated *.dSYM directories (which are created next to the app bundle) to the

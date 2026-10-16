@@ -809,6 +809,15 @@ namespace Xamarin.Tests {
 			var directory = Cache.CreateTemporaryDirectory ();
 			var publishTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.Publish.targets"));
 			var ns = publishTargets.Root!.Name.Namespace;
+			var sharedTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.Shared", "Xamarin.Shared.targets"));
+			var postProcessDependencies = sharedTargets.Root!.Elements (ns + "PropertyGroup").Single (v => v.Element (ns + "_PostProcessAppBundleDependsOn") is not null);
+			publishTargets.Root.AddFirst (new XElement (postProcessDependencies));
+			publishTargets.Root.Add (new XElement (sharedTargets.Root.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_PostProcessAppBundle")));
+			var dependencies = postProcessDependencies.Element (ns + "_PostProcessAppBundleDependsOn")!.Value.Split (';')
+				.Select (v => v.Trim ())
+				.Where (v => v.Length > 0 && !v.StartsWith ("$(", StringComparison.Ordinal) && v != "_GenerateDSym");
+			foreach (var dependency in dependencies)
+				publishTargets.Root.Add (new XElement (ns + "Target", new XAttribute ("Name", dependency)));
 			var copyTarget = publishTargets.Root.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_CopyDSymToPublishDirectory");
 			// Keep the real target graph and conditions, replacing only the session-aware task bodies.
 			copyTarget.ReplaceNodes (
@@ -824,7 +833,7 @@ namespace Xamarin.Tests {
 				<Project>
 					<PropertyGroup>
 						<_TaskAssemblyName>$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll</_TaskAssemblyName>
-						<BuildDependsOn>_GenerateDSymForTest</BuildDependsOn>
+						<BuildDependsOn>_PostProcessAppBundle</BuildDependsOn>
 						<_CanOutputAppBundle>true</_CanOutputAppBundle>
 						<IsMacEnabled>true</IsMacEnabled>
 					</PropertyGroup>
@@ -836,7 +845,7 @@ namespace Xamarin.Tests {
 					<Target Name="_GenerateBundleName" />
 					<Target Name="_GenerateBuildSessionId" />
 					<Target Name="_VerifyBuildSignature" />
-					<Target Name="_GenerateDSymForTest">
+					<Target Name="_GenerateDSym">
 						<PropertyGroup>
 							<_DSymGenerated>true</_DSymGenerated>
 						</PropertyGroup>
