@@ -1704,7 +1704,14 @@ namespace Foundation {
 						waitForData = (dataAvailable ??= new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously)).Task;
 					}
 
-					await waitForData.WaitAsync (cancellationToken).ConfigureAwait (false);
+					try {
+						await waitForData.WaitAsync (cancellationToken).ConfigureAwait (false);
+					} catch (OperationCanceledException) {
+						// WaitAsync cancellation can run inline on NSURLSession's delegate queue.
+						// Complete the read asynchronously so consumers cannot block that queue.
+						await Task.CompletedTask.ConfigureAwait (ConfigureAwaitOptions.ForceYielding);
+						throw;
+					}
 					ThrowIfNeeded (cancellationToken);
 				}
 
