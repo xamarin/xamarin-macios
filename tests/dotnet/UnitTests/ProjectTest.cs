@@ -3325,6 +3325,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation",
 			"/System/Library/Frameworks/LinkSecurity.framework/LinkSecurity",
 			"/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication",
+			"/System/Library/Frameworks/LocalAuthenticationEmbeddedUI.framework/LocalAuthenticationEmbeddedUI",
 			"/System/Library/Frameworks/MapKit.framework/MapKit",
 			"/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility",
 			"/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
@@ -4002,6 +4003,41 @@ namespace Xamarin.Tests {
 				actualFrameworks.OrderBy (v => v).ToArray (),
 				Is.EquivalentTo (expectedFrameworks.OrderBy (v => v).ToArray ()),
 				"Frameworks");
+			if (platform == ApplePlatform.iOS)
+				AssertLocalAuthenticationUILinked (appExecutable, linkMode == "None");
+		}
+
+		[TestCase ("KEEP_LARIGHT", true)]
+		[TestCase ("KEEP_LAPERSISTEDRIGHT", true)]
+		[TestCase ("KEEP_LACONTEXT", false)]
+		public void LocalAuthenticationUILinking (string defineConstant, bool expected)
+		{
+			var platform = ApplePlatform.iOS;
+			var runtimeIdentifier = "ios-arm64";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
+			var projectPath = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["AdditionalDefineConstants"] = defineConstant;
+			properties ["MtouchLink"] = "Full";
+			properties ["LinkMode"] = "Full";
+			properties ["UseInterpreter"] = "true";
+			DotNet.AssertBuild (projectPath, properties);
+			var executable = GetNativeExecutable (platform, appPath);
+			Assert.That (GetLinkedWithFrameworks (executable), Does.Contain ("/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication"), "LocalAuthentication must be retained");
+			AssertLocalAuthenticationUILinked (executable, expected);
+		}
+
+		static void AssertLocalAuthenticationUILinked (string executable, bool expected)
+		{
+			const string library = "/System/Library/Frameworks/LocalAuthenticationEmbeddedUI.framework/LocalAuthenticationEmbeddedUI";
+			foreach (var file in MachO.Read (executable)) {
+				var commands = file.load_commands.OfType<DylibLoadCommand> ().Where (v => v.name == library).ToArray ();
+				Assert.That (commands.Length, Is.EqualTo (expected ? 1 : 0), "LocalAuthenticationEmbeddedUI load commands");
+				if (expected)
+					Assert.That (commands [0].cmd, Is.EqualTo ((uint) MachO.LoadCommands.LoadWeakDylib), "LocalAuthenticationEmbeddedUI must be weakly linked");
+			}
 		}
 
 		static HashSet<string> GetLinkedWithFrameworks (string path)

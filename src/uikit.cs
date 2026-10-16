@@ -5492,6 +5492,10 @@ namespace UIKit {
 		[TV (27, 0), iOS (27, 0), MacCatalyst (27, 0)]
 		[Export ("paddingRemoved")]
 		bool PaddingRemoved { [Bind ("isPaddingRemoved")] get; [Bind ("setPaddingRemoved:")] set; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("axisBehavior", ArgumentSemantic.Assign)]
+		UIBarButtonItemAxisBehavior AxisBehavior { get; set; }
 	}
 
 	[Static]
@@ -10597,6 +10601,16 @@ namespace UIKit {
 		[Static]
 		[Export ("readableContentLayoutRegionWithCornerAdaptation:")]
 		UIViewLayoutRegion CreateReadableContentLayoutRegion (UIViewLayoutRegionAdaptivityAxis cornerAdaptivityAxis);
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Static]
+		[Export ("layoutRegionForBarOnEdge:extent:")]
+		UIViewLayoutRegion CreateBarLayoutRegion (UIRectEdge edge, nfloat extent);
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Static]
+		[Export ("layoutRegionForBarOnDirectionalEdge:extent:")]
+		UIViewLayoutRegion CreateBarLayoutRegion (NSDirectionalRectEdge edge, nfloat extent);
 	}
 
 	[iOS (26, 0), TV (26, 0), MacCatalyst (26, 0)]
@@ -13773,6 +13787,10 @@ namespace UIKit {
 		[NullAllowed] // by default this property is null
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("verticalBarCompressionBehavior", ArgumentSemantic.Assign)]
+		UIVerticalBarCompressionBehavior VerticalBarCompressionBehavior { get; set; }
 
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -22548,6 +22566,14 @@ namespace UIKit {
 		[Export ("layoutGuideForLayoutRegion:")]
 		UILayoutGuide GetLayoutGuide (UIViewLayoutRegion layoutRegion);
 
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("reservedRegionsOfKind:")]
+		UIViewReservedRegion [] GetReservedRegions (UIViewReservedRegionKind kind);
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("reservedRegionsOfKind:options:")]
+		UIViewReservedRegion [] GetReservedRegions (UIViewReservedRegionKind kind, UIViewReservedRegionQueryOptions options);
+
 		[iOS (26, 0), TV (26, 0), MacCatalyst (26, 0)]
 		[Export ("cornerConfiguration", ArgumentSemantic.Copy)]
 		UICornerConfiguration CornerConfiguration { get; set; }
@@ -23512,6 +23538,22 @@ namespace UIKit {
 		[NoTV, NoMacCatalyst, iOS (27, 0)]
 		[Export ("unregisterSceneAccessory:")]
 		void UnregisterSceneAccessory (UISceneAccessoryRegistration registration);
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[NullAllowed, Export ("arrangementViewController")]
+		UIArrangementViewController ArrangementViewController { get; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("preferredVerticalBarBehavior")]
+		UIVerticalBarBehavior PreferredVerticalBarBehavior { get; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[NullAllowed, Export ("childViewControllerForPreferredVerticalBarBehavior")]
+		UIViewController ChildViewControllerForPreferredVerticalBarBehavior { get; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("setNeedsUpdateOfVerticalBarConfiguration")]
+		void SetNeedsUpdateOfVerticalBarConfiguration ();
 	}
 
 	[MacCatalyst (13, 1)]
@@ -23940,6 +23982,15 @@ namespace UIKit {
 		[Sealed]
 		Class [] SystemTraitsAffectingImageLookup2 { get; }
 #endif
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Static]
+		[Export ("systemTraitsAffectingVerticalBarEdge")]
+		Class [] SystemTraitsAffectingVerticalBarEdge { get; }
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Export ("verticalBarEdge")]
+		UIVerticalBarEdge VerticalBarEdge { get; }
 
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("typesettingLanguage")]
@@ -32317,6 +32368,16 @@ namespace UIKit {
 		[Static]
 		[Export ("externalNonInteractiveSceneAccessoryWithConfiguration:userInfo:")]
 		UISceneAccessory CreateExternalNonInteractive (UISceneConfiguration sceneConfiguration, NSObject userInfo);
+
+		[iOS (27, 1)]
+		[Static]
+		[Export ("cameraCaptureSceneAccessoryWithConfiguration:")]
+		UISceneAccessory CreateCameraCapture (UISceneConfiguration sceneConfiguration);
+
+		[iOS (27, 1)]
+		[Static]
+		[Export ("cameraCaptureSceneAccessoryWithConfiguration:userInfo:")]
+		UISceneAccessory CreateCameraCapture (UISceneConfiguration sceneConfiguration, NSObject userInfo);
 	}
 
 	[NoTV, NoMacCatalyst, iOS (27, 0)]
@@ -38639,6 +38700,237 @@ namespace UIKit {
 		[Static]
 		[Export ("effectWithColor:")]
 		UIColorEffect Create ([NullAllowed] UIColor color);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIArrangementViewState : NSCopying {
+		[Export ("zIndex")]
+		nint ZIndex { get; }
+
+		[Export ("splitAxis")]
+		UIAxis SplitAxis { get; }
+
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIArrangement : NSCopying { }
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (UIViewController))]
+	[DisableDefaultCtor]
+	interface UIArrangementViewController {
+		[DesignatedInitializer]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
+		[Export ("updateArrangement:")]
+		void UpdateArrangement (UIArrangement arrangement);
+
+		[Export ("updateArrangement:animated:")]
+		void UpdateArrangement (UIArrangement arrangement, bool animated);
+
+		[Export ("stateForPlacement:")]
+		[return: NullAllowed]
+		UIArrangementViewState GetState (UIArrangementViewControllerViewPlacement placement);
+
+		[Export ("viewControllerForPlacement:")]
+		[return: NullAllowed]
+		UIViewController GetViewController (UIArrangementViewControllerViewPlacement placement);
+
+		[Export ("placementForViewController:")]
+		UIArrangementViewControllerViewPlacement GetPlacement (UIViewController viewController);
+
+		[Export ("setViewController:forPlacement:")]
+		void SetViewController ([NullAllowed] UIViewController viewController, UIArrangementViewControllerViewPlacement placement);
+
+		[Export ("setViewController:forPlacement:animated:")]
+		void SetViewController ([NullAllowed] UIViewController viewController, UIArrangementViewControllerViewPlacement placement, bool animated);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIOverlayArrangementViewProperties : NSCopying {
+		[DesignatedInitializer]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
+		[Export ("edge", ArgumentSemantic.Assign)]
+		NSDirectionalRectEdge Edge { get; set; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (UIArrangement))]
+	[DisableDefaultCtor]
+	interface UIOverlayArrangement {
+		[Static]
+		[Export ("overlayArrangement")]
+		UIOverlayArrangement Create ();
+
+		[Export ("axes", ArgumentSemantic.Assign)]
+		UIAxis Axes { get; set; }
+
+		[Export ("defaultViewProperties", ArgumentSemantic.Copy)]
+		UIOverlayArrangementViewProperties DefaultViewProperties { get; }
+
+		[Export ("setViewProperties:forPlacement:")]
+		void SetViewProperties (UIOverlayArrangementViewProperties viewProperties, UIArrangementViewControllerViewPlacement placement);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UISplitArrangementDimension : NSCopying {
+		[Static]
+		[Export ("automaticDimension")]
+		UISplitArrangementDimension CreateAutomatic ();
+
+		[Static]
+		[Export ("intrinsicDimension")]
+		UISplitArrangementDimension CreateIntrinsic ();
+
+		[Static]
+		[Export ("fractionalDimension:")]
+		UISplitArrangementDimension CreateFractional (nfloat fraction);
+
+		[Static]
+		[Export ("absoluteDimension:")]
+		UISplitArrangementDimension CreateAbsolute (nfloat absoluteValue);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UISplitArrangementDimensionRange : NSCopying {
+		[DesignatedInitializer]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
+		[Export ("minimum", ArgumentSemantic.Copy)]
+		UISplitArrangementDimension Minimum { get; set; }
+
+		[Export ("preferred", ArgumentSemantic.Copy)]
+		UISplitArrangementDimension Preferred { get; set; }
+
+		[Export ("maximum", ArgumentSemantic.Copy)]
+		UISplitArrangementDimension Maximum { get; set; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UISplitArrangementViewProperties : NSCopying {
+		[DesignatedInitializer]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
+		[Export ("width", ArgumentSemantic.Copy)]
+		UISplitArrangementDimensionRange Width { get; set; }
+
+		[Export ("height", ArgumentSemantic.Copy)]
+		UISplitArrangementDimensionRange Height { get; set; }
+
+		[Export ("layoutPriority")]
+		nfloat LayoutPriority { get; set; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (UIArrangement))]
+	[DisableDefaultCtor]
+	interface UISplitArrangement {
+		[Static]
+		[Export ("splitArrangement")]
+		UISplitArrangement Create ();
+
+		[Export ("axes", ArgumentSemantic.Assign)]
+		UIAxis Axes { get; set; }
+
+		[Export ("defaultViewProperties", ArgumentSemantic.Copy)]
+		UISplitArrangementViewProperties DefaultViewProperties { get; }
+
+		[Export ("setViewProperties:forPlacement:")]
+		void SetViewProperties (UISplitArrangementViewProperties viewProperties, UIArrangementViewControllerViewPlacement placement);
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIHinge : NSCopying {
+		[Export ("status")]
+		UIHingeStatus Status { get; }
+
+		[Export ("angle")]
+		nfloat Angle { get; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIHingeInteractionUpdate : NSCopying {
+		[NullAllowed, Export ("hinge", ArgumentSemantic.Copy)]
+		UIHinge Hinge { get; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	delegate void UIHingeInteractionUpdateHandler (UIHingeInteraction interaction, UIHingeInteractionUpdate update);
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIHingeInteraction : UIInteraction {
+		[DesignatedInitializer]
+		[Export ("initWithUpdateHandler:")]
+		NativeHandle Constructor (UIHingeInteractionUpdateHandler updateHandler);
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	[Sealed]
+	interface UIViewReservedRegion : NSCopying {
+		[Export ("identifier")]
+		UIViewReservedRegionIdentifier Identifier { get; }
+
+		[Export ("kind")]
+		UIViewReservedRegionKind Kind { get; }
+
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Export ("margins")]
+		UIEdgeInsets Margins { get; }
+
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	[Sealed]
+	interface UIViewReservedRegionIdentifier : NSCopying { }
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	[Sealed]
+	interface UIViewReservedRegionKind : NSCopying {
+		[Static]
+		[Export ("occlusionRegionKind")]
+		UIViewReservedRegionKind CreateOcclusion ();
+
+		[Static]
+		[Export ("divisionRegionKind")]
+		UIViewReservedRegionKind CreateDivision ();
 	}
 
 }
