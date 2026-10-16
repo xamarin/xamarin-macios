@@ -1644,6 +1644,10 @@
 	</Target>
 
 	<Target Name="_VerifyValidProperties">
+		<Warning
+			Text="The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler."
+			Condition="'$(_PlatformName)' == 'macOS' And '$(UseNativeHttpHandler)' == 'true'"
+			/>
 		<Error
 			Text="The property 'MtouchArch' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture."
 			Condition="'$(MtouchArch)' != '' And '$(AllowMtouchArchProperty)' != 'true'"

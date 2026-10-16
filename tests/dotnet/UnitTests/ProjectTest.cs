@@ -4406,6 +4406,27 @@ namespace Xamarin.Tests {
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
 		}
 
+		[TestCase (ApplePlatform.MacOSX, "true")]
+		[TestCase (ApplePlatform.MacOSX, "True")]
+		[TestCase (ApplePlatform.MacOSX, "false")]
+		[TestCase (ApplePlatform.MacOSX, "")]
+		[TestCase (ApplePlatform.iOS, "true")]
+		[TestCase (ApplePlatform.TVOS, "true")]
+		[TestCase (ApplePlatform.MacCatalyst, "true")]
+		public void UseNativeHttpHandlerWarning (ApplePlatform platform, string useNativeHttpHandler)
+		{
+			var projectPath = Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.targets");
+			var properties = new Dictionary<string, string> ();
+			properties ["_PlatformName"] = platform.AsString ();
+			properties ["UseNativeHttpHandler"] = useNativeHttpHandler;
+			var rv = DotNet.AssertBuild (projectPath, properties, target: "_VerifyValidProperties");
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			string [] expectedWarnings = platform == ApplePlatform.MacOSX && string.Equals (useNativeHttpHandler, "true", StringComparison.OrdinalIgnoreCase)
+				? ["The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler."]
+				: [];
+			AssertWarningMessages (warnings, expectedWarnings);
+		}
+
 		// macOS doesn't support UseNativeHttpHandler / any of our native http handlers being the default http handler.
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "NSUrlSessionHandler", "true")]
