@@ -65,10 +65,18 @@ class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 					? Path.Combine (Path.GetTempPath (), "iOSTest1", "TestResults")
 					: Path.Combine (documentsPath, "TestResults");
 
-				var builder = await TestApplication.CreateBuilderAsync ([
-					"--results-directory", resultsPath,
-					"--report-trx"
-				]);
+				// Forward args from 'dotnet test', which sends the MTP protocol config
+				// (--server / --dotnet-test-pipe) via the command line.
+				// Environment.GetCommandLineArgs()[0] is the executable path, not an argument.
+				string [] cliArgs = Environment.GetCommandLineArgs ();
+				string [] mtpArgs = cliArgs.Length > 1 ? cliArgs [1..] : [];
+				// MTP relaunches the app with these options, so only add defaults once.
+				List<string> testArgs = [.. mtpArgs];
+				if (!testArgs.Contains ("--results-directory"))
+					testArgs.AddRange (["--results-directory", resultsPath]);
+				if (!testArgs.Contains ("--report-trx"))
+					testArgs.Add ("--report-trx");
+				var builder = await TestApplication.CreateBuilderAsync ([.. testArgs]);
 				builder.AddMSTest (() => [typeof (Test1).Assembly]);
 				builder.AddTrxReportProvider ();
 				builder.TestHost.AddDataConsumer (_ => consumer);
