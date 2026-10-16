@@ -804,6 +804,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static void Gather (Application app, IEnumerable<AssemblyDefinition> assemblies, HashSet<string> frameworks, HashSet<string> weak_frameworks, Func<Framework, bool> include_framework)
 	{
 		var namespaces = new HashSet<string> ();
+		var hasLARight = false;
 
 		// Process our product assembly + any assembly with the [ObjectiveCFramework] attribute, and collect all the namespaces that are used in those assemblies.
 		// For non-product assemblies, we only look at types with the [ObjectiveCFramework] attribute.
@@ -827,6 +828,12 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					if (TryGetFramework (app, td, out string? framework)) {
 						namespaces.Add (framework);
+						if (td.Namespace == "LocalAuthentication" && td.Name == "LARight") {
+#if !LEGACY_TOOLS
+							if (app.Profile.IsProductAssembly (assembly))
+#endif
+							hasLARight = true;
+						}
 						continue;
 					}
 				}
@@ -855,6 +862,10 @@ public class Frameworks : Dictionary<string, Framework> {
 			var weak_link = framework.AlwaysWeakLinked || app.DeploymentTarget < framework.Version;
 			var add_to = weak_link ? weak_frameworks : frameworks;
 			add_to.Add (framework.Name);
+
+			// LARight's presentation-context authorization is implemented by this framework's category.
+			if (app.Platform == ApplePlatform.iOS && hasLARight && nspace == "LocalAuthentication" && app.SdkVersion is { Major: >= 16 })
+				weak_frameworks.Add ("LocalAuthenticationEmbeddedUI");
 		}
 
 		// Make sure there are no duplicates between frameworks and weak frameworks.
