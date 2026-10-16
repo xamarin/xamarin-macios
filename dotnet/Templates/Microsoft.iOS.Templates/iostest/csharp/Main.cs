@@ -61,7 +61,9 @@ class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 		Task.Run (async () => {
 			try {
 				var documentsPath = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
-				var resultsPath = Path.Combine (documentsPath, "TestResults");
+				var resultsPath = string.IsNullOrEmpty (documentsPath)
+					? Path.Combine (Path.GetTempPath (), "iOSTest1", "TestResults")
+					: Path.Combine (documentsPath, "TestResults");
 
 				var builder = await TestApplication.CreateBuilderAsync ([
 					"--results-directory", resultsPath,
@@ -72,9 +74,9 @@ class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 				builder.TestHost.AddDataConsumer (_ => consumer);
 
 				using ITestApplication app = await builder.BuildAsync ();
-				await app.RunAsync ();
+				var exitCode = await app.RunAsync ();
 				// UIApplication.Main() keeps the process alive, so exit explicitly
-				Environment.Exit (consumer.Failed > 0 ? 1 : 0);
+				Environment.Exit (exitCode != 0 ? exitCode : consumer.Failed > 0 ? 1 : 0);
 			} catch (Exception ex) {
 				Console.WriteLine ($"Error running tests: {ex}");
 				Environment.Exit (1);
