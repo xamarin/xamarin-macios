@@ -28,10 +28,6 @@ parameters:
     type: stepList
     default: []
 
-  - name: postAnalysisSteps
-    type: stepList
-    default: []
-
   - name: makeParallelism
     type: string
     default: '8'
@@ -194,11 +190,7 @@ steps:
 
   - task: CodeQL3000Finalize@0
     displayName: CodeQL 3000 Finalize
-    condition: and(always(), ne('${{ parameters.disableCodeQL }}', 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-
-  - ${{ each step in parameters.postAnalysisSteps }}:
-      - ${{ each pair in step }}:
-          ${{ pair.key }}: ${{ pair.value }}
+    condition: and(succeededOrFailed(), ne('${{ parameters.disableCodeQL }}', 'true'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
   # clean the bot after we use it
   - template: ../common/teardown.yml
