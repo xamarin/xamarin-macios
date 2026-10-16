@@ -3897,8 +3897,8 @@ System.Private.CoreLib.dll:System.Buffers.SpanAction`2<System.Char,System.TimeOn
 System.Private.CoreLib.dll:System.Buffers.SpanFunc`5
 System.Private.CoreLib.dll:System.Buffers.SpanFunc`5..ctor(System.Object, System.IntPtr)
 System.Private.CoreLib.dll:System.Buffers.SpanFunc`5.Invoke(System.Span`1<TSpan>, T1, T2, T3)
-System.Private.CoreLib.dll:System.Buffers.SpanFunc`5<System.Char,System.String,System.String,Interop/Globalization/TimeZoneDisplayNameType,Interop/Globalization/ResultCode> System.TimeZoneInfo/<>c::<>9__216_0
-System.Private.CoreLib.dll:System.Buffers.SpanFunc`5<System.Char,System.String,System.String,Interop/Globalization/TimeZoneDisplayNameType,Interop/Globalization/ResultCode> System.TimeZoneInfo/<>c::<>9__216_1
+System.Private.CoreLib.dll:System.Buffers.SpanFunc`5<System.Char,System.String,System.String,Interop/Globalization/TimeZoneDisplayNameType,Interop/Globalization/ResultCode> System.TimeZoneInfo/<>c::<>9__218_0
+System.Private.CoreLib.dll:System.Buffers.SpanFunc`5<System.Char,System.String,System.String,Interop/Globalization/TimeZoneDisplayNameType,Interop/Globalization/ResultCode> System.TimeZoneInfo/<>c::<>9__218_1
 System.Private.CoreLib.dll:System.Buffers.Text.FormattingHelpers
 System.Private.CoreLib.dll:System.Buffers.Text.FormattingHelpers.CountDecimalTrailingZeros(System.UInt32, out System.UInt32&)
 System.Private.CoreLib.dll:System.Buffers.Text.FormattingHelpers.CountDigits(System.UInt128)
@@ -5059,6 +5059,7 @@ System.Private.CoreLib.dll:System.DateOnly/<>c..ctor()
 System.Private.CoreLib.dll:System.DateOnly/<>c.<ToString>b__77_0(System.Span`1<System.Char>, System.DateOnly)
 System.Private.CoreLib.dll:System.DateOnly/<>c.<ToString>b__77_1(System.Span`1<System.Char>, System.DateOnly)
 System.Private.CoreLib.dll:System.DateTime
+System.Private.CoreLib.dll:System.DateTime System.DateTime::Date()
 System.Private.CoreLib.dll:System.DateTime System.DateTime::MaxValue
 System.Private.CoreLib.dll:System.DateTime System.DateTime::MinValue
 System.Private.CoreLib.dll:System.DateTime System.DateTime::Now()
@@ -5144,6 +5145,7 @@ System.Private.CoreLib.dll:System.DateTime.DaysToYear(System.UInt32)
 System.Private.CoreLib.dll:System.DateTime.DoubleDateToTicks(System.Double)
 System.Private.CoreLib.dll:System.DateTime.Equals(System.DateTime)
 System.Private.CoreLib.dll:System.DateTime.Equals(System.Object)
+System.Private.CoreLib.dll:System.DateTime.get_Date()
 System.Private.CoreLib.dll:System.DateTime.get_Day()
 System.Private.CoreLib.dll:System.DateTime.get_DayOfWeek()
 System.Private.CoreLib.dll:System.DateTime.get_DaysInMonth365()
@@ -6508,11 +6510,11 @@ System.Private.CoreLib.dll:System.Func`1<System.Boolean> System.Gen2GcCallback::
 System.Private.CoreLib.dll:System.Func`2
 System.Private.CoreLib.dll:System.Func`2..ctor(System.Object, System.IntPtr)
 System.Private.CoreLib.dll:System.Func`2.Invoke(T)
-System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__169_0
-System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__169_1
-System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__170_0
+System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__171_0
+System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__171_1
 System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__172_0
-System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__173_0
+System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__174_0
+System.Private.CoreLib.dll:System.Func`2<System.Char,System.Boolean> System.TimeZoneInfo/<>c::<>9__175_0
 System.Private.CoreLib.dll:System.Func`2<System.Exception,System.Boolean> System.Runtime.ExceptionServices.ExceptionHandling::s_handler
 System.Private.CoreLib.dll:System.Func`2<System.Object,System.Boolean> System.Buffers.SharedArrayPool`1/<>c::<>9__11_0
 System.Private.CoreLib.dll:System.Func`2<System.Object,System.Boolean> System.Gen2GcCallback::_callback1
@@ -7531,6 +7533,7 @@ System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.get_PercentDeci
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.get_PercentNegativePattern()
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.get_PercentPositivePattern()
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.get_PositiveInfinitySymbol()
+System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.get_PositiveSign()
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.GetFormat(System.Type)
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.GetInstance(System.IFormatProvider)
 System.Private.CoreLib.dll:System.Globalization.NumberFormatInfo.GetUtf8Span(System.Byte[]&, System.String)
@@ -11051,6 +11054,7 @@ System.Private.CoreLib.dll:System.Number.GetPercentFormat(System.Boolean, System
 System.Private.CoreLib.dll:System.Number.GetTwoDigitsBytesRef(System.Boolean)
 System.Private.CoreLib.dll:System.Number.GreaterThanDecimalIeee754`2(TValue, TValue)
 System.Private.CoreLib.dll:System.Number.GreaterThanOrEqualDecimalIeee754`2(TValue, TValue)
+System.Private.CoreLib.dll:System.Number.HasInvariantNumberSigns(System.Globalization.NumberFormatInfo)
 System.Private.CoreLib.dll:System.Number.HasNegativeSection(System.ReadOnlySpan`1<System.Char>)
 System.Private.CoreLib.dll:System.Number.Int128DivMod1E19(System.UInt128&)
 System.Private.CoreLib.dll:System.Number.Int128ToDecStr(System.Int128)
@@ -11074,6 +11078,8 @@ System.Private.CoreLib.dll:System.Number.LessThanDecimalIeee754`2(TValue, TValue
 System.Private.CoreLib.dll:System.Number.LessThanOrEqualDecimalIeee754`2(TValue, TValue)
 System.Private.CoreLib.dll:System.Number.MatchChars`1(TChar*, TChar*, System.ReadOnlySpan`1<TChar>)
 System.Private.CoreLib.dll:System.Number.MatchNegativeSignChars`1(TChar*, TChar*, System.Globalization.NumberFormatInfo)
+System.Private.CoreLib.dll:System.Number.MatchSignChars`1(System.ReadOnlySpan`1<TChar>, System.Int32, System.Globalization.NumberFormatInfo, out System.Boolean&)
+System.Private.CoreLib.dll:System.Number.MatchSignChars`1(TChar*, TChar*, System.Globalization.NumberFormatInfo, out System.Boolean&)
 System.Private.CoreLib.dll:System.Number.MultiplyDecimalIeee754`2(TValue, TValue)
 System.Private.CoreLib.dll:System.Number.NegativeInt128ToDecStr(System.Int128, System.Int32, System.String)
 System.Private.CoreLib.dll:System.Number.NegativeInt32ToDecStr(System.Int32, System.Int32, System.String)
@@ -19080,6 +19086,7 @@ System.Private.CoreLib.dll:System.String System.Globalization.NumberFormatInfo::
 System.Private.CoreLib.dll:System.String System.Globalization.NumberFormatInfo::NumberDecimalSeparator()
 System.Private.CoreLib.dll:System.String System.Globalization.NumberFormatInfo::NumberGroupSeparator()
 System.Private.CoreLib.dll:System.String System.Globalization.NumberFormatInfo::PositiveInfinitySymbol()
+System.Private.CoreLib.dll:System.String System.Globalization.NumberFormatInfo::PositiveSign()
 System.Private.CoreLib.dll:System.String System.Globalization.TextInfo::_cultureName
 System.Private.CoreLib.dll:System.String System.Globalization.TextInfo::_textInfoName
 System.Private.CoreLib.dll:System.String System.Globalization.TextInfo::CultureName()
@@ -19536,12 +19543,13 @@ System.Private.CoreLib.dll:System.StubHelpers.AnsiBSTRMarshaler
 System.Private.CoreLib.dll:System.StubHelpers.AnsiBSTRMarshaler.ClearNative(System.IntPtr)
 System.Private.CoreLib.dll:System.StubHelpers.AnsiBSTRMarshaler.ConvertToManaged(System.IntPtr)
 System.Private.CoreLib.dll:System.StubHelpers.AnsiBSTRMarshaler.ConvertToNative(System.Int32, System.String)
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2.AllocateSpaceForManaged(System.Byte*, System.Int32)
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2.AllocateSpaceForUnmanaged(System.Array)
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2.ConvertContentsToManaged(System.Array, System.Byte*, System.Int32)
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2.ConvertContentsToUnmanaged(System.Array, System.Byte*, System.Int32)
-System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`2.FreeContents(System.Byte*, System.Int32)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.AllocateSpaceForManaged(System.Byte*, System.Int32)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.AllocateSpaceForUnmanaged(System.Array)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.ConvertContentsToManaged(System.Array, System.Byte*, System.Int32)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.ConvertContentsToUnmanaged(System.Array, System.Byte*, System.Int32)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.FreeContents(System.Byte*, System.Int32)
+System.Private.CoreLib.dll:System.StubHelpers.AnsiCharArrayMarshaler`3.GetNativeBufferSize(System.Int32)
 System.Private.CoreLib.dll:System.StubHelpers.AnsiCharMarshaler
 System.Private.CoreLib.dll:System.StubHelpers.AnsiCharMarshaler.ConvertToManaged(System.Byte)
 System.Private.CoreLib.dll:System.StubHelpers.AnsiCharMarshaler.ConvertToNative(System.Char, System.Boolean, System.Boolean)
@@ -22231,16 +22239,20 @@ System.Private.CoreLib.dll:System.TimeZoneInfo.AddTransition(System.TimeZoneInfo
 System.Private.CoreLib.dll:System.TimeZoneInfo.ArrayPoolGrow`1(T[]&, System.Int32)
 System.Private.CoreLib.dll:System.TimeZoneInfo.CacheTransitions(System.TimeZoneInfo/TimeTransition[], System.Int32, System.Int32)
 System.Private.CoreLib.dll:System.TimeZoneInfo.CacheTransitionsForYear(System.Int32)
+System.Private.CoreLib.dll:System.TimeZoneInfo.CompareAdjustmentRuleToDateTime(System.TimeZoneInfo/AdjustmentRule, System.TimeZoneInfo/AdjustmentRule, System.DateTime, System.DateTime, System.Boolean)
 System.Private.CoreLib.dll:System.TimeZoneInfo.CompareTimeZoneFile(System.String, System.Byte[], System.Byte[])
 System.Private.CoreLib.dll:System.TimeZoneInfo.ConvertTime(System.DateTime, System.TimeZoneInfo, System.TimeZoneInfo, System.TimeZoneInfoOptions, System.TimeZoneInfo/CachedData)
 System.Private.CoreLib.dll:System.TimeZoneInfo.ConvertTime(System.DateTime, System.TimeZoneInfo, System.TimeZoneInfo, System.TimeZoneInfoOptions)
 System.Private.CoreLib.dll:System.TimeZoneInfo.ConvertTimeToUtc(System.DateTime, System.TimeZoneInfoOptions)
+System.Private.CoreLib.dll:System.TimeZoneInfo.ConvertToFromUtc(System.DateTime, System.TimeSpan, System.TimeSpan, System.Boolean)
+System.Private.CoreLib.dll:System.TimeZoneInfo.ConvertToUtc(System.DateTime, System.TimeSpan, System.TimeSpan)
 System.Private.CoreLib.dll:System.TimeZoneInfo.CreateCustomTimeZone(System.String, System.TimeSpan, System.String, System.String)
 System.Private.CoreLib.dll:System.TimeZoneInfo.CreateUtcTimeZone()
 System.Private.CoreLib.dll:System.TimeZoneInfo.EndTransitionTimeToDateTime(System.Int32, System.TimeZoneInfo/AdjustmentRule)
 System.Private.CoreLib.dll:System.TimeZoneInfo.Equals(System.Object)
 System.Private.CoreLib.dll:System.TimeZoneInfo.Equals(System.TimeZoneInfo)
 System.Private.CoreLib.dll:System.TimeZoneInfo.FindRuleForYear(System.Int32)
+System.Private.CoreLib.dll:System.TimeZoneInfo.FindRuleIndexForLocalTime(System.DateTime)
 System.Private.CoreLib.dll:System.TimeZoneInfo.FindTimeZoneId(System.Byte[])
 System.Private.CoreLib.dll:System.TimeZoneInfo.FindTimeZoneIdUsingReadLink(System.String)
 System.Private.CoreLib.dll:System.TimeZoneInfo.get_BaseUtcOffset()
@@ -22271,6 +22283,7 @@ System.Private.CoreLib.dll:System.TimeZoneInfo.GetOffsetForUtcDate(System.DateTi
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetOffsetForUtcDate(System.DateTime, out System.Boolean&)
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetRuleFullUtcOffset(System.TimeZoneInfo/AdjustmentRule)
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetStandardDisplayName(System.String, System.String&)
+System.Private.CoreLib.dll:System.TimeZoneInfo.GetStandardUtcOffsetTicks(System.DateTime)
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetTimeZoneDirectory()
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetTimeZoneFromTzData(System.Byte[], System.String)
 System.Private.CoreLib.dll:System.TimeZoneInfo.GetTransitionUtcOffsetTicks(System.TimeZoneInfo/AdjustmentRule, System.Boolean)
@@ -22334,13 +22347,13 @@ System.Private.CoreLib.dll:System.TimeZoneInfo/<>c
 System.Private.CoreLib.dll:System.TimeZoneInfo/<>c System.TimeZoneInfo/<>c::<>9
 System.Private.CoreLib.dll:System.TimeZoneInfo/<>c..cctor()
 System.Private.CoreLib.dll:System.TimeZoneInfo/<>c..ctor()
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<GetDisplayName>b__216_0(System.Span`1<System.Char>, System.String, System.String, Interop/Globalization/TimeZoneDisplayNameType)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<GetDisplayName>b__216_1(System.Span`1<System.Char>, System.String, System.String, Interop/Globalization/TimeZoneDisplayNameType)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixDate>b__172_0(System.Char)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixName>b__169_0(System.Char)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixName>b__169_1(System.Char)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixOffset>b__170_0(System.Char)
-System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixTime>b__173_0(System.Char)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<GetDisplayName>b__218_0(System.Span`1<System.Char>, System.String, System.String, Interop/Globalization/TimeZoneDisplayNameType)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<GetDisplayName>b__218_1(System.Span`1<System.Char>, System.String, System.String, Interop/Globalization/TimeZoneDisplayNameType)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixDate>b__174_0(System.Char)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixName>b__171_0(System.Char)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixName>b__171_1(System.Char)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixOffset>b__172_0(System.Char)
+System.Private.CoreLib.dll:System.TimeZoneInfo/<>c.<TZif_ParsePosixTime>b__175_0(System.Char)
 System.Private.CoreLib.dll:System.TimeZoneInfo/AdjustmentRule
 System.Private.CoreLib.dll:System.TimeZoneInfo/AdjustmentRule..cctor()
 System.Private.CoreLib.dll:System.TimeZoneInfo/AdjustmentRule..ctor(System.DateTime, System.DateTime, System.TimeSpan, System.TimeZoneInfo/TransitionTime, System.TimeZoneInfo/TransitionTime, System.TimeSpan, System.Boolean)
