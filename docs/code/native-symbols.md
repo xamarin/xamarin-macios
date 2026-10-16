@@ -67,3 +67,12 @@ So we do the following:
 3. The `_PostTrimmingProcessing` MSBuild target takes the surviving symbols
    from either path, generates the corresponding native C code, and adds it to
    the list of files to compile and link into the final executable.
+
+## Runtime library P/Invokes
+
+`ListExportedSymbols` also preserves P/Invoke symbols from the runtime libraries
+we link with. For MonoVM, this includes `System.Globalization.Native`, whose
+symbols are provided by `libmonosgen-2.0` instead of a separate library. This
+exception must not apply to NativeAOT: its compiler creates direct native
+references, and its build targets omit the globalization library when
+`InvariantGlobalization` is `true`.
