@@ -1801,4 +1801,8 @@
 {0} - The number of files hashed.
 {1} - The total number of input files.</comment>
     </data>
+    <data name="UseNativeHttpHandlerHasNoEffectOnMacOS" xml:space="preserve">
+        <value>The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler.</value>
+        <comment>Do not translate 'UseNativeHttpHandler', 'macOS', 'NSUrlSessionHandler' or 'HttpClient'.</comment>
+    </data>
 </root>

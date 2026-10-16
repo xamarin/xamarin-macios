@@ -4415,8 +4415,10 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst, "true")]
 		public void UseNativeHttpHandlerWarning (ApplePlatform platform, string useNativeHttpHandler)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var projectPath = Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.targets");
 			var properties = new Dictionary<string, string> ();
+			properties ["_TaskAssemblyName"] = Path.Combine (Configuration.GetSdkRoot (platform), "msbuild", Configuration.DotNetTfm, "Xamarin.MacDev.Tasks.dll");
 			properties ["_PlatformName"] = platform.AsString ();
 			properties ["UseNativeHttpHandler"] = useNativeHttpHandler;
 			var rv = DotNet.AssertBuild (projectPath, properties, target: "_VerifyValidProperties");

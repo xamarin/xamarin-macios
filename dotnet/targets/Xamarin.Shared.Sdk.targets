@@ -1644,8 +1644,9 @@
 	</Target>
 
 	<Target Name="_VerifyValidProperties">
-		<Warning
-			Text="The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler."
+		<MacDevMessage
+			Warning="true"
+			ResourceName="UseNativeHttpHandlerHasNoEffectOnMacOS"
 			Condition="'$(_PlatformName)' == 'macOS' And '$(UseNativeHttpHandler)' == 'true'"
 			/>
 		<Error
