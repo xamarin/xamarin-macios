@@ -1386,12 +1386,13 @@ namespace MonoTests.System.Net.Http {
 			SslPolicyErrors sslPolicyErrors = SslPolicyErrors.None;
 			Exception ex = null;
 
-			var handler = new NSUrlSessionHandler {
+			using var handler = new NSUrlSessionHandler {
 				ServerCertificateCustomValidationCallback = (request, certificate, chain, errors) => {
 					callbackWasExecuted = true;
 					serverCertificate = certificate;
 					sslPolicyErrors = errors;
-					return true;
+					// Only test the chain policy, not the remote server's ability to complete an HTTP request.
+					return false;
 				},
 			};
 			if (verificationFlags.HasValue)
@@ -1406,7 +1407,7 @@ namespace MonoTests.System.Net.Http {
 				sslPolicyErrors = SslPolicyErrors.None;
 
 				var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
-					using var client = new HttpClient (handler);
+					using var client = new HttpClient (handler, disposeHandler: false);
 					// Disable keep-alive and cache to force reconnection for each request
 					client.DefaultRequestHeaders.ConnectionClose = true;
 					client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, NoStore = true };
@@ -1434,9 +1435,9 @@ namespace MonoTests.System.Net.Http {
 
 			Assert.That (sslPolicyErrors, Is.EqualTo (expectedError), "Callback was called with unexpected SslPolicyErrors");
 			Assert.That (serverCertificate, Is.Not.Null, "Server certificate is null");
-			Assert.That (ex, Is.Null, "Exception wasn't expected.");
-			Assert.That (result, Is.Not.Null, "Result was null");
-			Assert.That (result.IsSuccessStatusCode, Is.True, $"Status code was not success: {result.StatusCode}");
+			Assert.That (ex, Is.InstanceOf (typeof (HttpRequestException)), "Rejected certificate exception");
+			Assert.That (ex?.InnerException, Is.InstanceOf (typeof (WebException)), "Rejected certificate inner exception");
+			Assert.That (result, Is.Null, "Request with a rejected certificate succeeded");
 		}
 	}
 }
