@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <OutputType>Exe</OutputType>
-    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>
   <ItemGroup>

@@ -31,10 +31,8 @@ mac_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mmacosx-version-min=$(DOTNET_MIN_MACOS_SDK
 maccatalyst-x64_DYLIB_FLAGS=$(maccatalyst-x64_CFLAGS)
 maccatalyst-arm64_DYLIB_FLAGS=$(maccatalyst-arm64_CFLAGS)
 
-iossimulator-x64_ARCHITECTURES=x86_64
 iossimulator-arm64_ARCHITECTURES=arm64
 ios-arm64_ARCHITECTURES=arm64
-tvossimulator-x64_ARCHITECTURES=x86_64
 tvossimulator-arm64_ARCHITECTURES=arm64
 tvos-arm64_ARCHITECTURES=arm64
 osx-x64_ARCHITECTURES=x86_64
@@ -63,9 +61,9 @@ maccatalyst_RESOURCES_INFIX=/Versions/A/Resources
 maccatalyst_BINARY_INFIX=/Versions/A
 
 # For XCFrameworks, we have to lipo some of the RID-specific frameworks together (the ones with multiple RIDs below)
-iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x64 iossimulator-arm64
+iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-arm64
 iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm64
-tvsimulator_XC_RUNTIMEIDENTIFIERS=tvossimulator-x64 tvossimulator-arm64
+tvsimulator_XC_RUNTIMEIDENTIFIERS=tvossimulator-arm64
 tvos_XC_RUNTIMEIDENTIFIERS=tvos-arm64
 mac_XC_RUNTIMEIDENTIFIERS=osx-x64 osx-arm64
 maccatalyst_XC_RUNTIMEIDENTIFIERS=maccatalyst-x64 maccatalyst-arm64
