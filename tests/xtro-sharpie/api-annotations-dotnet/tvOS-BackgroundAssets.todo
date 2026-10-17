@@ -1,0 +1,3 @@
+!missing-enum! BASizeCalculationMethod not bound
+!missing-selector! BAAssetPackManager::getLocalSizeOfAssetPackWithIdentifier:calculationMethod:completionHandler: not bound
+!missing-selector! BAAssetPackManager::localVersionOfAssetPackWithIdentifier:error: not bound
