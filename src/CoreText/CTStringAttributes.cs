@@ -133,7 +133,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CTFont? Font {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.Font.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.Font);
 				return h == IntPtr.Zero ? null : new CTFont (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.Font!, value); }
@@ -144,13 +144,13 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public bool ForegroundColorFromContext {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTStringAttributeKey.ForegroundColorFromContext.GetHandle ());
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTStringAttributeKey.ForegroundColorFromContext);
 			}
 			set {
 				Adapter.AssertWritable (Dictionary);
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTStringAttributeKey.ForegroundColorFromContext.GetHandle (), value);
+				CFMutableDictionary.SetValue (Dictionary,
+						CTStringAttributeKey.ForegroundColorFromContext, value);
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CGColor? ForegroundColor {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ForegroundColor.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.ForegroundColor);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor!, value); }
@@ -200,10 +200,8 @@ namespace CoreText {
 			get {
 				var x = CTStringAttributeKey.BackgroundColor;
 				if (x is not null) {
-					var h = CFDictionary.GetValue (Dictionary.Handle, x.Handle);
-					CGColor result = new CGColor (h, false);
-					GC.KeepAlive (x);
-					return result;
+					var h = Dictionary.LowlevelObjectForKey (x);
+					return new CGColor (h, false);
 				} else {
 					return null;
 				}
@@ -220,7 +218,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CTParagraphStyle? ParagraphStyle {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ParagraphStyle.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.ParagraphStyle);
 				return h == IntPtr.Zero ? null : new CTParagraphStyle (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ParagraphStyle!, value); }
@@ -240,7 +238,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CGColor? StrokeColor {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.StrokeColor.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.StrokeColor);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor!, value); }
@@ -318,7 +316,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CGColor? UnderlineColor {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.UnderlineColor.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.UnderlineColor);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.UnderlineColor!, value); }
@@ -329,13 +327,13 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public bool VerticalForms {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTStringAttributeKey.VerticalForms.GetHandle ());
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTStringAttributeKey.VerticalForms);
 			}
 			set {
 				Adapter.AssertWritable (Dictionary);
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTStringAttributeKey.VerticalForms.GetHandle (), value);
+				CFMutableDictionary.SetValue (Dictionary,
+						CTStringAttributeKey.VerticalForms, value);
 			}
 		}
 
@@ -375,7 +373,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CTGlyphInfo? GlyphInfo {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.GlyphInfo.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.GlyphInfo);
 				return h == IntPtr.Zero ? null : new CTGlyphInfo (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.GlyphInfo!, value); }
@@ -394,7 +392,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CTRunDelegate? RunDelegate {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.RunDelegate.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.RunDelegate);
 				return h == IntPtr.Zero ? null : new CTRunDelegate (h, false);
 			}
 			set { Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.RunDelegate!, value); }
@@ -405,7 +403,7 @@ namespace CoreText {
 		///         <remarks>To be added.</remarks>
 		public CTBaselineClass? BaselineClass {
 			get {
-				var value = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.BaselineClass.GetHandle ());
+				var value = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.BaselineClass);
 				return value == IntPtr.Zero ? (CTBaselineClass?) null : CTBaselineClassID.FromHandle (value);
 			}
 			set {
@@ -435,7 +433,7 @@ namespace CoreText {
 
 		void SetBaseline (CTBaselineClass baselineClass, double offset, NSString? infoKey)
 		{
-			var ptr = CFDictionary.GetValue (Dictionary.Handle, infoKey.GetHandle ());
+			var ptr = Dictionary.LowlevelObjectForKey (infoKey);
 			var dict = ptr == IntPtr.Zero ? new NSMutableDictionary () : new NSMutableDictionary (ptr);
 
 			var key = CTBaselineClassID.ToNSString (baselineClass);
@@ -459,7 +457,7 @@ namespace CoreText {
 			}
 
 			var array = CFArray.Create (ptrs);
-			CFMutableDictionary.SetValue (Dictionary.Handle, CTStringAttributeKey.WritingDirection.GetHandle (), array);
+			CFMutableDictionary.SetValue (Dictionary, CTStringAttributeKey.WritingDirection, array);
 			GC.KeepAlive (numbers); // make sure the numbers aren't freed until we're done with them
 		}
 
@@ -470,7 +468,7 @@ namespace CoreText {
 		// The attribute value must be an object conforming to the CTAdaptiveImageProviding protocol.
 		public ICTAdaptiveImageProviding? AdaptiveImageProvider {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.AdaptiveImageProvider.GetHandle ());
+				var h = Dictionary.LowlevelObjectForKey (CTStringAttributeKey.AdaptiveImageProvider);
 				return Runtime.GetINativeObject<ICTAdaptiveImageProviding> (h, owns: false);
 			}
 			set {

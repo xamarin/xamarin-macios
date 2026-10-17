@@ -11,17 +11,17 @@ namespace Xamarin.Tests {
 		const string project = "AppWithXCAssets";
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", true)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", true)]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", true)]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", true)]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", true)] // https://github.com/dotnet/macios/issues/12410
 																	 // Build, add the XCAssets, then build again
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", false)]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", false)]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", false)]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false)]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]

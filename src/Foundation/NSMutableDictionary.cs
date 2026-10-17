@@ -418,6 +418,49 @@ namespace Foundation {
 			GC.KeepAlive (obj);
 		}
 
+		/// <summary>Sets an object for a key using a low-level key pointer.</summary>
+		/// <param name="obj">The object to set.</param>
+		/// <param name="key">The key pointer.</param>
+		/// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is <see langword="null"/>.</exception>
+		internal void LowlevelSetObject (NSString obj, IntPtr key)
+		{
+			if (obj is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (obj));
+
+			LowlevelSetObject (obj.Handle, key);
+			GC.KeepAlive (obj);
+		}
+
+		/// <summary>Sets an object for a key using a low-level key pointer.</summary>
+		/// <param name="obj">The object to set.</param>
+		/// <param name="key">The key whose value to set.</param>
+		/// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> or <paramref name="key" /> is <see langword="null"/>.</exception>
+		internal void LowlevelSetObject (INativeObject obj, INativeObject key)
+		{
+			if (obj is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (obj));
+
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			LowlevelSetObject (obj.Handle, key.Handle);
+			GC.KeepAlive (obj);
+			GC.KeepAlive (key);
+		}
+
+		/// <summary>Sets an object for a key using a low-level key pointer.</summary>
+		/// <param name="obj">The object to set.</param>
+		/// <param name="key">The key whose value to set.</param>
+		/// <exception cref="ArgumentNullException">Thrown when  <paramref name="key" /> is <see langword="null"/>.</exception>
+		internal void LowlevelSetObject (IntPtr obj, INativeObject key)
+		{
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			LowlevelSetObject (obj, key.Handle);
+			GC.KeepAlive (key);
+		}
+
 		/// <summary>Sets a string value for a key using a low-level key pointer.</summary>
 		/// <param name="str">The string to set.</param>
 		/// <param name="key">The key pointer.</param>

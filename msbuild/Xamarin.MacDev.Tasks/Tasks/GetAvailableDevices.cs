@@ -98,18 +98,7 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 		foreach (var d in devices) {
 			if (!d.RuntimeIdentifiers.Any ())
 				continue;
-			if (d.RuntimeIdentifiers.Count () == 1) {
-				d.Item.SetMetadata ("RuntimeIdentifier", d.RuntimeIdentifiers.First ());
-				continue;
-			}
-			// if we have multiple runtime identifiers, we're running in the simulator, and one is x64 and the other is arm64.
-			// if 'RuntimeIdentifier' is set on the task, set that value, otherwise
-			// if we can run on arm64, then pick the arm64 simulator, otherwise pick the x64 simulator
-			if (!string.IsNullOrEmpty (RuntimeIdentifier)) {
-				d.Item.SetMetadata ("RuntimeIdentifier", RuntimeIdentifier);
-			} else {
-				d.Item.SetMetadata ("RuntimeIdentifier", d.RuntimeIdentifiers.Single (v => v.Contains ("arm64") == CanRunArm64));
-			}
+			d.Item.SetMetadata ("RuntimeIdentifier", d.RuntimeIdentifiers.Single ());
 		}
 
 		DiscardedDevices = devices.Where (d => d.Discarded).Select (v => {
@@ -337,7 +326,6 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 						switch (arch.ToLowerInvariant ()) {
 						case "x64":
 						case "x86_64":
-							runtimeIdentifiers.Add (runtimeIdentifier + "x64");
 							break;
 						case "arm64":
 							runtimeIdentifiers.Add (runtimeIdentifier + "arm64");
@@ -349,6 +337,8 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 							break;
 						}
 					}
+					if (runtimeIdentifiers.Count == 0 && string.IsNullOrEmpty (discardedReason))
+						discardedReason = MSBStrings.M0170;
 				}
 			} else {
 				discardedReason = $"Device is not available: {device.AvailabilityError}";

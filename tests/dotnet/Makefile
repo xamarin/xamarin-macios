@@ -30,4 +30,4 @@ run-dotnet: $(TARGETS)
 	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 run-dotnet-sim: $(TARGETS)
-	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-x64 /p:Platform=iPhoneSimulator /bl:$@.binlog
+	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-arm64 /p:Platform=iPhoneSimulator /bl:$@.binlog

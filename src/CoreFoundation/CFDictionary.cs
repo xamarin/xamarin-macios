@@ -86,9 +86,36 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFDictionaryGetValue (IntPtr theDict, IntPtr key);
+
+		/// <summary>Gets the pointer for a key.</summary>
+		/// <param name="theDict">The dictionary where to find the <paramref name="key" />.</param>
+		/// <param name="key">The key.</param>
+		/// <returns>The pointer for the specified <paramref name="key" />, or <see cref="IntPtr.Zero" /> if not found.</returns>
 		public static IntPtr GetValue (IntPtr theDict, IntPtr key)
 		{
 			return CFDictionaryGetValue (theDict, key);
+		}
+
+		/// <summary>Gets the pointer for a key.</summary>
+		/// <param name="dictionary">The dictionary where to find the <paramref name="key" />.</param>
+		/// <param name="key">The key.</param>
+		/// <returns>The pointer for the specified <paramref name="key" />, or <see cref="IntPtr.Zero" /> if not found.</returns>
+		internal static IntPtr GetValue (IntPtr dictionary, INativeObject? key)
+		{
+			var rv = CFDictionaryGetValue (dictionary, key.GetHandle ());
+			GC.KeepAlive (key);
+			return rv;
+		}
+
+		/// <summary>Gets the pointer for a key.</summary>
+		/// <param name="key">The key.</param>
+		/// <returns>The pointer for the specified <paramref name="key" />, or <see cref="IntPtr.Zero" /> if not found.</returns>
+		internal IntPtr GetValue (INativeObject? key)
+		{
+			var rv = CFDictionaryGetValue (Handle, key.GetHandle ());
+			GC.KeepAlive (this);
+			GC.KeepAlive (key);
+			return rv;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -130,6 +157,24 @@ namespace CoreFoundation {
 			if (value == IntPtr.Zero)
 				return false;
 			return CFBoolean.GetValue (value);
+		}
+
+		static bool GetBooleanValue (INativeObject dictionary, INativeObject? key)
+		{
+			var value = GetBooleanValue (dictionary.Handle, key.GetHandle ());
+			GC.KeepAlive (dictionary);
+			GC.KeepAlive (key);
+			return value;
+		}
+
+		internal static bool GetBooleanValue (CFDictionary dictionary, INativeObject? key)
+		{
+			return GetBooleanValue ((INativeObject) dictionary, key);
+		}
+
+		internal static bool GetBooleanValue (NSDictionary dictionary, INativeObject? key)
+		{
+			return GetBooleanValue ((INativeObject) dictionary, key);
 		}
 
 		public string? GetStringValue (string key)
@@ -231,6 +276,19 @@ namespace CoreFoundation {
 			SetValue (theDict, key, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);
 		}
 
+		internal static void SetValue (NSDictionary dictionary, IntPtr key, bool value)
+		{
+			SetValue (dictionary.GetHandle (), key, value);
+			GC.KeepAlive (dictionary);
+		}
+
+		internal static void SetValue (NSDictionary dictionary, INativeObject? key, bool value)
+		{
+			SetValue (dictionary.GetHandle (), key.GetHandle (), value);
+			GC.KeepAlive (dictionary);
+			GC.KeepAlive (key);
+		}
+
 		internal static void SetValue (IntPtr theDict, INativeObject? key, INativeObject? value)
 		{
 			SetValue (theDict, key.GetHandle (), value.GetHandle ());
@@ -242,6 +300,21 @@ namespace CoreFoundation {
 		{
 			SetValue (theDict, key.GetHandle (), value);
 			GC.KeepAlive (key);
+		}
+
+		internal static void SetValue (NSDictionary dictionary, INativeObject? key, IntPtr value)
+		{
+			SetValue (dictionary.GetHandle (), key.GetHandle (), value);
+			GC.KeepAlive (dictionary);
+			GC.KeepAlive (key);
+		}
+
+		internal static void SetValue (NSDictionary dictionary, INativeObject? key, INativeObject? value)
+		{
+			SetValue (dictionary.GetHandle (), key.GetHandle (), value.GetHandle ());
+			GC.KeepAlive (dictionary);
+			GC.KeepAlive (key);
+			GC.KeepAlive (value);
 		}
 	}
 }
