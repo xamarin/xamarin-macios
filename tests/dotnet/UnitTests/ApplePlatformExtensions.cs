@@ -61,7 +61,7 @@ namespace Xamarin.Utils {
 				// point we should be supporting "ios19.0" (for .NET 10).
 				Assert.Ignore ("This test only applies to stable releases.");
 			}
-			Assert.That (platform.GetDefaultTargetPlatformVersionLibrary (), platform == ApplePlatform.iOS ? Is.EqualTo ("27.1") : Does.EndWith (".0"), "Default TPV for a library");
+			Assert.That (platform.GetDefaultTargetPlatformVersionLibrary (), Is.EqualTo ("27.2"), "Default TPV for a library");
 		}
 
 		[TestCase (ApplePlatform.iOS)]
