@@ -4329,8 +4329,6 @@ namespace Xamarin.Tests {
 				actualFrameworks.OrderBy (v => v).ToArray (),
 				Is.EquivalentTo (expectedFrameworks.OrderBy (v => v).ToArray ()),
 				"Frameworks");
-			if (platform == ApplePlatform.iOS)
-				AssertLocalAuthenticationUILinked (appExecutable, linkMode == "None");
 		}
 
 		[TestCase ("KEEP_LARIGHT", true)]
@@ -4342,7 +4340,7 @@ namespace Xamarin.Tests {
 			var runtimeIdentifier = "ios-arm64";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
-			var projectPath = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			var projectPath = GetProjectPath ("ApiTestApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Clean (projectPath);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			properties ["AdditionalDefineConstants"] = defineConstant;
