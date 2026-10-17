@@ -10,11 +10,11 @@ using Xamarin.Utils;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "27.1";
-		public const string OSX = "27.0";
-		public const string iOS = "27.1";
-		public const string TVOS = "27.0";
-		public const string MacCatalyst = "27.0";
+		public const string Xcode = "27.2";
+		public const string OSX = "27.2";
+		public const string iOS = "27.2";
+		public const string TVOS = "27.2";
+		public const string MacCatalyst = "27.2";
 
 		public const string MinOSX = "14.0";
 		public const string MiniOS = "15.0";
@@ -28,16 +28,16 @@ namespace Xamarin {
 		public const string MiniOSSimulator = "17.0";
 		public const string MinTVOSSimulator = "17.0";
 
-		public const string MaxiOSSimulator = "27.1";
-		public const string MaxTVOSSimulator = "27.0";
+		public const string MaxiOSSimulator = "27.2";
+		public const string MaxTVOSSimulator = "27.2";
 
-		public const string MaxiOSDeploymentTarget = "27.1";
-		public const string MaxTVOSDeploymentTarget = "27.0";
+		public const string MaxiOSDeploymentTarget = "27.2";
+		public const string MaxTVOSDeploymentTarget = "27.2";
 
-		public const string TargetPlatformVersionExecutableiOS = "27.1";
-		public const string TargetPlatformVersionExecutabletvOS = "27.0";
-		public const string TargetPlatformVersionExecutablemacOS = "27.0";
-		public const string TargetPlatformVersionExecutableMacCatalyst = "27.0";
+		public const string TargetPlatformVersionExecutableiOS = "27.2";
+		public const string TargetPlatformVersionExecutabletvOS = "27.2";
+		public const string TargetPlatformVersionExecutablemacOS = "27.2";
+		public const string TargetPlatformVersionExecutableMacCatalyst = "27.2";
 
 		public const string TargetPlatformVersionLibraryiOS = "27.1";
 		public const string TargetPlatformVersionLibrarytvOS = "27.0";
