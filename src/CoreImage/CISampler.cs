@@ -98,7 +98,7 @@ namespace CoreImage {
 				ret.SetObject (k, CISampler.FilterMode);
 			}
 			if (ColorSpace is not null)
-				ret.LowlevelSetObject (ColorSpace.Handle, CISampler.ColorSpace.Handle);
+				ret.LowlevelSetObject (ColorSpace, CISampler.ColorSpace);
 			return ret;
 		}
 	}

@@ -18,6 +18,8 @@ There are a number of properties that are contingent upon the configuration sett
 
 When `SupportedOSPlatformVersion` is not available during SDK props evaluation, its effective value is the SDK's default `TargetPlatformVersion`. Set `SupportedOSPlatformVersion` in `Directory.Build.props` or on the command line when it must affect the default runtime identifier.
 
+For iOS and tvOS projects, only arm64 device and simulator runtime identifiers are supported; `iossimulator-x64` and `tvossimulator-x64` are no longer supported. Setting `RuntimeIdentifiers` produces a build warning when targeting .NET 12 or earlier, and a build error when targeting .NET 13 or later. Use `RuntimeIdentifier` to build for a single architecture instead. Builds with multiple runtime identifiers are still supported on macOS and Mac Catalyst.
+
 ### Debug Configuration
 
 | **Property**             	| **Default value** 	| **Condition?**                        	|

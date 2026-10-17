@@ -24,8 +24,7 @@ namespace NaturalLanguage {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
-				var a = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-				GC.KeepAlive (key);
+				var a = Dictionary.LowlevelObjectForKey (key);
 				return NSArray.ArrayFromHandleDropNullElements<float> (a, input => {
 					return new NSNumber (input).FloatValue;
 				});

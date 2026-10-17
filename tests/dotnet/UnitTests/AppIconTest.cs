@@ -7,11 +7,11 @@ using System.Text.Json;
 
 namespace Xamarin.Tests {
 	public class AppIconTest : TestBaseClass {
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -54,12 +54,12 @@ namespace Xamarin.Tests {
 			TestXCAssetsImpl (platform, runtimeIdentifiers, extraAssets: expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -133,12 +133,12 @@ namespace Xamarin.Tests {
 				extraAssets: expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -209,10 +209,10 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 #endif
 		// launch images don't exist on Mac Catalyst or macOS.
 		public void XSLaunchImageAssets (ApplePlatform platform, string runtimeIdentifiers)
@@ -249,12 +249,12 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -325,12 +325,12 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -404,12 +404,12 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -433,12 +433,12 @@ namespace Xamarin.Tests {
 				});
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -515,13 +515,13 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 #endif
 		// Choosing a different primary app icon on tvOS at build time doesn't seem to be possible
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -598,12 +598,12 @@ namespace Xamarin.Tests {
 				expectedAssets.ToArray ());
 		}
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 #endif
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 #if EXHAUSTIVE_TESTS
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
