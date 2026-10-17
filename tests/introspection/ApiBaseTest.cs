@@ -205,14 +205,20 @@ namespace Introspection {
 
 		protected static bool SkipMissingSimulatorField (PropertyInfo property)
 		{
-			if (!TestRuntime.IsSimulator || PlatformInfo.Host.Version is not { Major: 17, Minor: 0 })
-				return false;
-
-			if (property.DeclaringType?.FullName != "CoreMedia.CMFormatDescriptionExtensionKeys")
-				return false;
-
-			// Declared for 17.0, but these symbols are missing from the iOS/tvOS 17.0 simulators.
-			return property.Name is "HasAdditionalViews" or "HasLeftStereoEyeView" or "HasRightStereoEyeView";
+			switch (property.DeclaringType?.FullName) {
+			case "CoreMedia.CMFormatDescriptionExtensionKeys":
+				switch (property.Name) {
+				case "HasAdditionalViews":
+				case "HasLeftStereoEyeView":
+				case "HasRightStereoEyeView":
+					// Declared for 17.0, but these symbols are missing from the iOS/tvOS 17.0 simulators.
+					if (TestRuntime.IsSimulator && PlatformInfo.Host.Version is { Major: 17, Minor: 0 })
+						return true;
+					break;
+				}
+				break;
+			}
+			return false;
 		}
 
 		public bool MemberHasObsolete (MemberInfo member)
