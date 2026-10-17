@@ -54,14 +54,14 @@
       <!-- iOS -->
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/ios-arm64/FrameworksInRuntimesNativeDirectory1.framework/*"           IsNative="true" PackagePath="runtimes/ios-arm64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/ios-arm/FrameworksInRuntimesNativeDirectory1.framework/*"             IsNative="true" PackagePath="runtimes/ios-arm/native/FrameworksInRuntimesNativeDirectory1.framework/" />
-      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-x64/FrameworksInRuntimesNativeDirectory1.framework/*"    IsNative="true" PackagePath="runtimes/iossimulator-x64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
+      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-arm64/FrameworksInRuntimesNativeDirectory1.framework/*"  IsNative="true" PackagePath="runtimes/iossimulator-arm64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-x86/FrameworksInRuntimesNativeDirectory1.framework/*"    IsNative="true" PackagePath="runtimes/iossimulator-x86/native/FrameworksInRuntimesNativeDirectory1.framework/" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(tvOS_Included)' == 'true'">
       <!-- tvOS -->
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvos-arm64/FrameworksInRuntimesNativeDirectory1.framework/*"          IsNative="true" PackagePath="runtimes/tvos-arm64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
-      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvossimulator-x64/FrameworksInRuntimesNativeDirectory1.framework/*"   IsNative="true" PackagePath="runtimes/tvossimulator-x64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
+      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvossimulator-arm64/FrameworksInRuntimesNativeDirectory1.framework/*" IsNative="true" PackagePath="runtimes/tvossimulator-arm64/native/FrameworksInRuntimesNativeDirectory1.framework/" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(macOS_Included)' == 'true'">
@@ -82,14 +82,14 @@
       <!-- iOS -->
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/ios-arm64/FrameworksInRuntimesNativeDirectory2.framework/*"           IsNative="true" PackagePath="runtimes/ios-arm64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/ios-arm/FrameworksInRuntimesNativeDirectory2.framework/*"             IsNative="true" PackagePath="runtimes/ios-arm/native/FrameworksInRuntimesNativeDirectory2.framework/" />
-      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-x64/FrameworksInRuntimesNativeDirectory2.framework/*"    IsNative="true" PackagePath="runtimes/iossimulator-x64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
+      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-arm64/FrameworksInRuntimesNativeDirectory2.framework/*"  IsNative="true" PackagePath="runtimes/iossimulator-arm64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/iossimulator-x86/FrameworksInRuntimesNativeDirectory2.framework/*"    IsNative="true" PackagePath="runtimes/iossimulator-x86/native/FrameworksInRuntimesNativeDirectory2.framework/" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(tvOS_Included)' == 'true'">
       <!-- tvOS -->
       <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvos-arm64/FrameworksInRuntimesNativeDirectory2.framework/*"          IsNative="true" PackagePath="runtimes/tvos-arm64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
-      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvossimulator-x64/FrameworksInRuntimesNativeDirectory2.framework/*"   IsNative="true" PackagePath="runtimes/tvossimulator-x64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
+      <_PackageFiles Include="$(TestFrameworksDirectory)/.libs/tvossimulator-arm64/FrameworksInRuntimesNativeDirectory2.framework/*" IsNative="true" PackagePath="runtimes/tvossimulator-arm64/native/FrameworksInRuntimesNativeDirectory2.framework/" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(macOS_Included)' == 'true'">

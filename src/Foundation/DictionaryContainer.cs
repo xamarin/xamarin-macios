@@ -666,7 +666,7 @@ namespace Foundation {
 				for (var i = 0; i < handles.Length; i++)
 					handles [i] = convert (values [i]);
 				var array = CFArray.FromIntPtrs (handles!);
-				CFMutableDictionary.SetValue (Dictionary.Handle, key, array);
+				CFMutableDictionary.SetValue (Dictionary, key, array);
 			}
 		}
 
@@ -687,7 +687,7 @@ namespace Foundation {
 		{
 			if (NullCheckValueTypeAndRemoveKey (key, value)) {
 				var v = value.Value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle;
-				CFMutableDictionary.SetValue (Dictionary.Handle, key, v);
+				CFMutableDictionary.SetValue (Dictionary, key, v);
 			}
 		}
 
@@ -847,7 +847,7 @@ namespace Foundation {
 		protected void SetNativeValue (NSString key, INativeObject? value, bool removeNullValue = true)
 		{
 			if (NullCheckObjectAndRemoveKey (key, removeNullValue ? value : key /* key is just an object that's not null */))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key, value);
+				CFMutableDictionary.SetValue (Dictionary, key, value);
 		}
 
 		#endregion

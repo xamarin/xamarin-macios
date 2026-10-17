@@ -109,6 +109,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void DeviceCtlDuplicateSimulator ()
 		{
+			if (!GetAvailableDevices.CanRunArm64)
+				Assert.Ignore ("arm64 simulators require an Apple Silicon Mac.");
 			var platform = ApplePlatform.iOS;
 			var task = CreateTask (platform, SIMCTL_JSON_1, DEVICECTL_JSON_1.Replace ("00008003-012301230123ABCD", "3F1C114D-FC3D-481A-9CA1-499EE1339390"));
 			Assert.That (task.Execute (), Is.True, "Task should have succeeded.");
@@ -711,11 +713,12 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
-		[TestCase ("iossimulator-x64", "iossimulator-x64")]
 		[TestCase ("iossimulator-arm64", "iossimulator-arm64")]
-		[TestCase ("", null)] // null means it depends on CanRunArm64
-		public void SimCtl_MultiArch_RuntimeIdentifier (string runtimeIdentifier, string? expectedRid)
+		[TestCase ("", "iossimulator-arm64")]
+		public void SimCtl_MultiArch_RuntimeIdentifier (string runtimeIdentifier, string expectedRid)
 		{
+			if (!GetAvailableDevices.CanRunArm64)
+				Assert.Ignore ("arm64 simulators require an Apple Silicon Mac.");
 			var platform = ApplePlatform.iOS;
 			var task = CreateTask (platform, SIMCTL_JSON_MULTIARCH, "");
 			task.RuntimeIdentifier = runtimeIdentifier;
@@ -727,11 +730,29 @@ namespace Xamarin.MacDev.Tasks {
 				Assert.That (task.Devices [0].GetMetadata ("Description"), Is.EqualTo ("iPhone 11 - iOS 26.1 (Shutdown)"), "Device 1 Name mismatch.");
 				Assert.That (task.Devices [0].GetMetadata ("OSVersion"), Is.EqualTo ("26.1"), "Device 1 OSVersion mismatch.");
 				Assert.That (task.Devices [0].GetMetadata ("UDID"), Is.EqualTo ("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"), "Device 1 UDID mismatch.");
-				if (expectedRid is null)
-					expectedRid = GetAvailableDevices.CanRunArm64 ? "iossimulator-arm64" : "iossimulator-x64";
 				Assert.That (task.Devices [0].GetMetadata ("RuntimeIdentifier"), Is.EqualTo (expectedRid), "Device 1 RuntimeIdentifier mismatch.");
 				Assert.That (task.Devices [0].GetMetadata ("DiscardedReason"), Is.Empty, "Device 1 discarded reason mismatch.");
 			});
+		}
+
+		[Test]
+		public void SimCtl_MultiArch_UnsupportedRuntimeIdentifier ()
+		{
+			var task = CreateTask (ApplePlatform.iOS, SIMCTL_JSON_MULTIARCH, "");
+			task.RuntimeIdentifier = "iossimulator-x64";
+			Assert.That (task.Execute (), Is.True, "Task should have succeeded.");
+			Assert.That (task.Devices, Is.Empty, "Devices");
+			Assert.That (task.DiscardedDevices [0].GetMetadata ("RuntimeIdentifier"), Is.EqualTo ("iossimulator-arm64"), "Discarded simulator RuntimeIdentifier");
+			Assert.That (task.DiscardedDevices [0].GetMetadata ("DiscardedReason"), Is.AnyOf ("Device runtime identifier(s) 'iossimulator-arm64' incompatible with the requested runtime identifier 'iossimulator-x64'", "Can't run an arm64 simulator on an x86_64 macOS desktop."), "Discarded reason");
+		}
+
+		[Test]
+		public void SimCtl_X64OnlySimulator ()
+		{
+			var task = CreateTask (ApplePlatform.iOS, SIMCTL_JSON_MULTIARCH.Replace ("\"arm64\",", ""), "");
+			Assert.That (task.Execute (), Is.True, "Task should have succeeded.");
+			Assert.That (task.Devices, Is.Empty, "Devices");
+			Assert.That (task.DiscardedDevices [0].GetMetadata ("DiscardedReason"), Is.EqualTo ("Simulator does not support arm64."), "Discarded reason");
 		}
 
 		[Test]

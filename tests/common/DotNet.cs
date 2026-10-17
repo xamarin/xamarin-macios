@@ -102,7 +102,7 @@ namespace Xamarin.Tests {
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null, string? language = null)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null, string? language = null, params string [] extraArguments)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
@@ -118,6 +118,8 @@ namespace Xamarin.Tests {
 				args.Add ("--language");
 				args.Add (language);
 			}
+
+			args.AddRange (extraArguments);
 
 			var env = new Dictionary<string, string?> ();
 			env ["MSBuildSDKsPath"] = null;
