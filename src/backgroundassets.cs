@@ -77,6 +77,16 @@ namespace BackgroundAssets {
 		LocalAvailabilityFailure = 2,
 	}
 
+	/// <summary>Specifies how to calculate the size of locally installed asset files.</summary>
+	[TV (27, 2), Mac (27, 2), iOS (27, 2), MacCatalyst (27, 2)]
+	[Native]
+	public enum BASizeCalculationMethod : long {
+		/// <summary>Counts the bytes in the file contents.</summary>
+		Logical = 0,
+		/// <summary>Counts the bytes allocated by the file system.</summary>
+		Allocated = 1,
+	}
+
 	[TV (18, 4), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -331,6 +341,11 @@ namespace BackgroundAssets {
 	/// <summary>Completion handler invoked with the local status of an asset pack.</summary>
 	/// <param name="status">The <see cref="BAAssetPackStatus" /> of the asset pack on the local device.</param>
 	delegate void BAAssetPackManagerGetLocalStatusCompletionHandler (BAAssetPackStatus status);
+	/// <summary>Completion handler invoked with an asset pack's local installation size or an error.</summary>
+	/// <param name="size">The installation size in bytes when the operation succeeds.</param>
+	/// <param name="error">The error, or <see langword="null" /> if the operation succeeded.</param>
+	[TV (27, 2), Mac (27, 2), iOS (27, 2), MacCatalyst (27, 2)]
+	delegate void BAAssetPackManagerGetLocalSizeCompletionHandler (long size, [NullAllowed] NSError error);
 	/// <summary>Completion handler invoked with the languages used by locally available asset packs.</summary>
 	/// <param name="languageIdentifiers">The BCP-47 language identifiers.</param>
 	delegate void BAAssetPackManagerGetLocallyAvailableLanguagesCompletionHandler (string [] languageIdentifiers);
@@ -468,6 +483,28 @@ namespace BackgroundAssets {
 		[TV (26, 4), Mac (26, 4), iOS (26, 4), MacCatalyst (26, 4)]
 		[Export ("assetPackIsAvailableLocallyWithIdentifier:")]
 		bool IsAssetPackAvailableLocally (string assetPackIdentifier);
+
+		/// <summary>Gets the version number of a locally available asset pack.</summary>
+		/// <param name="assetPackIdentifier">The identifier of the asset pack to query.</param>
+		/// <param name="error">The error, or <see langword="null" /> if the operation succeeded.</param>
+		/// <returns>The asset pack's version number, or <c>-1</c> if an error occurred.</returns>
+		[TV (27, 2), Mac (27, 2), iOS (27, 2), MacCatalyst (27, 2)]
+		[Export ("localVersionOfAssetPackWithIdentifier:error:")]
+		nint GetLocalVersion (string assetPackIdentifier, [NullAllowed] out NSError error);
+
+		/// <summary>Calculates the installation size of a locally available asset pack.</summary>
+		/// <param name="assetPackIdentifier">The identifier of the asset pack to query.</param>
+		/// <param name="calculationMethod">How to calculate the installation size.</param>
+		/// <param name="completionHandler">A completion handler called with the size in bytes or an error.</param>
+		[TV (27, 2), Mac (27, 2), iOS (27, 2), MacCatalyst (27, 2)]
+		[Export ("getLocalSizeOfAssetPackWithIdentifier:calculationMethod:completionHandler:")]
+		[Async (XmlDocs = """
+			<summary>Asynchronously calculates the installation size of a locally available asset pack.</summary>
+			<param name="assetPackIdentifier">The identifier of the asset pack to query.</param>
+			<param name="calculationMethod">How to calculate the installation size.</param>
+			<returns>A task that returns the installation size in bytes.</returns>
+			""")]
+		void GetLocalSize (string assetPackIdentifier, BASizeCalculationMethod calculationMethod, BAAssetPackManagerGetLocalSizeCompletionHandler completionHandler);
 
 		/// <summary>Gets the languages used by localized asset packs that are available locally.</summary>
 		/// <param name="completionHandler">A completion handler called with the BCP-47 language identifiers.</param>
