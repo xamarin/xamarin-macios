@@ -2015,6 +2015,11 @@ namespace AuthenticationServices {
 		[Export ("customNonceRequestValues", ArgumentSemantic.Copy)]
 		NSUrlQueryItem [] CustomNonceRequestValues { get; set; }
 
+		/// <summary>Gets or sets the expiration time for a server nonce.</summary>
+		[Mac (27, 2)]
+		[Export ("serverNonceExpirationTime", ArgumentSemantic.Copy)]
+		NSNumber ServerNonceExpirationTime { get; set; }
+
 		[Export ("setCustomAssertionRequestHeaderClaims:returningError:")]
 		bool SetCustomAssertionRequestHeaderClaims (NSDictionary<NSString, NSObject> claims, [NullAllowed] out NSError error);
 
