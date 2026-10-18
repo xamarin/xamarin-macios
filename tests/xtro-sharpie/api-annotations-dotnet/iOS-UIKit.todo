@@ -1,7 +1,0 @@
-!missing-enum! UINavigationItemTitleAlignment not bound
-!missing-selector! +UIViewLayoutRegion::layoutRegionForBarOnDirectionalEdge: not bound
-!missing-selector! +UIViewLayoutRegion::layoutRegionForBarOnEdge: not bound
-!missing-selector! UINavigationItem::setTitleAlignment: not bound
-!missing-selector! UINavigationItem::titleAlignment not bound
-!missing-selector! UITraitCollection::navigationTitleAlignment not bound
-!missing-type! UITraitNavigationTitleAlignment not bound
