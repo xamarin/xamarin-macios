@@ -1425,6 +1425,26 @@ namespace CoreImage {
 		[Export ("downloadResourcesWithTimeout:completionHandler:")]
 		NSProgress DownloadResources (double timeout, CIRawFilterDownloadResourcesCompletionHandler completionHandler);
 
+		/// <summary>Downloads all on-demand RAW demosaicing and denoising models that aren't already installed.</summary>
+		/// <param name="timeout">The maximum time, in seconds, to wait for the download.</param>
+		/// <param name="completionHandler">The handler called on a queue chosen by Core Image when the download finishes or fails.</param>
+		/// <returns>An object that tracks and can cancel the download.</returns>
+		[TV (27, 2), Mac (27, 2), iOS (27, 2), MacCatalyst (27, 2)]
+		[Static]
+		[Async (XmlDocs = """
+			<summary>Asynchronously downloads all on-demand RAW demosaicing and denoising models that aren't already installed.</summary>
+			<param name="timeout">The maximum time, in seconds, to wait for the download.</param>
+			<returns>A task that represents the asynchronous download operation.</returns>
+			""",
+			XmlDocsWithOutParameter = """
+			<summary>Asynchronously downloads all on-demand RAW demosaicing and denoising models that aren't already installed and provides download progress.</summary>
+			<param name="timeout">The maximum time, in seconds, to wait for the download.</param>
+			<param name="result">An object that tracks and can cancel the download.</param>
+			<returns>A task that represents the asynchronous download operation.</returns>
+			""")]
+		[Export ("downloadAllResourcesWithTimeout:completionHandler:")]
+		NSProgress DownloadAllResources (double timeout, CIRawFilterDownloadResourcesCompletionHandler completionHandler);
+
 		[Export ("supportedDecoderVersions")]
 		string [] SupportedDecoderVersions { get; }
 
