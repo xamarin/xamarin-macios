@@ -4,7 +4,7 @@
     <remarks>
       <para>Core Motion was introduced in iOS 7 and is not available on all devices (the iPhone 5S was the first phone to have the necessary coprocessor and the iPad Air 2 was the first tablet). Developers can check if Core Motion is available with <see cref="CoreMotion.CMMotionManager.DeviceMotionAvailable" />.</para>
       <para>Applications that wish to access Core Motion must have an <c>entitlements.plist</c> file.</para>
-      <para>Users must explicitly grant access to Core Motion via a standard privacy dialog. Unlike most functions that require user permissions, there is not a corresponding API to check status. However, applications can perform a query and, if authorization is not available, will receive an error of type <see cref="CoreMotion.CMError.MotionActivityNotAuthorized" />. This technique is shown in the following example:</para>
+      <para>Users must explicitly grant access to Core Motion via a standard privacy dialog. Starting with iOS 27.2 and Mac Catalyst 27.2, applications can check the current authorization status with <see cref="P:CoreMotion.CMMotionManager.AuthorizationStatus" />. On older systems, applications can perform a query and, if authorization is not available, will receive an error of type <see cref="CoreMotion.CMError.MotionActivityNotAuthorized" />. This technique is shown in the following example:</para>
       <example>
         <code lang="csharp lang-csharp"><![CDATA[
 var stepCounter = new CMStepCounter ();
