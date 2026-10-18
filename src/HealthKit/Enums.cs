@@ -917,6 +917,9 @@ namespace HealthKit {
 		MaxExercise = 1,
 		PredictionSubMaxExercise,
 		PredictionNonExercise,
+		/// <summary>Identifies a step-test protocol used to predict heart rate recovery.</summary>
+		[iOS (27, 2), Mac (27, 2), MacCatalyst (27, 2)]
+		StepTest = 4,
 	}
 
 	[MacCatalyst (16, 0), iOS (16, 0), NoTV]
