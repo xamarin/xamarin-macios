@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! AVRouteDetector::detectsCustomRoutes missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVRouteDetector::setDetectsCustomRoutes: missing a [Deprecated] attribute
-!missing-field! AVMediaCharacteristicSignLanguageInterpretationForAccessibility not bound
