@@ -22545,7 +22545,6 @@ M:Network.NWEthernetChannel.Cancel
 M:Network.NWEthernetChannel.Send(System.ReadOnlySpan{System.Byte},System.UInt16,System.String,System.Action{Network.NWError})
 M:Network.NWEthernetChannel.SetQueue(CoreFoundation.DispatchQueue)
 M:Network.NWEthernetChannel.SetReceiveHandler(Network.NWEthernetChannelReceiveDelegate)
-M:Network.NWEthernetChannel.SetStateChangesHandler(System.Action{Network.NWBrowserState,Network.NWError})
 M:Network.NWEthernetChannel.Start
 M:Network.NWFramer.CreateMessage
 M:Network.NWFramer.CreateOptions``1(Network.NWProtocolDefinition)
