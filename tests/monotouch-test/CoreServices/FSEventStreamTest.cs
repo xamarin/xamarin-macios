@@ -22,6 +22,38 @@ namespace MonoTouchFixtures.CoreServices {
 		[DllImport ("/usr/lib/libSystem.dylib")]
 		static extern IntPtr realpath (string file_name, IntPtr resolved_name);
 
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern IntPtr FSEventsCopyUUIDForDevice (ulong device);
+
+		[DllImport (Constants.CoreFoundationLibrary)]
+		static extern IntPtr CFUUIDCreateString (IntPtr allocator, IntPtr uuid);
+
+		[TestCase (0ul)]
+		[TestCase (ulong.MaxValue)]
+		public void GetUuidForInvalidDevice (ulong device)
+		{
+			Assert.That (FSEvent.GetUuidForDevice (device), Is.EqualTo (Guid.Empty));
+		}
+
+		[Test]
+		public void GetUuidForDevice ()
+		{
+			var device = NSFileManager.DefaultManager.GetAttributes (NSFileManager.TemporaryDirectory)?.SystemNumber
+				?? throw new InvalidOperationException ("Could not get the temporary directory's device number.");
+			var uuidRef = FSEventsCopyUUIDForDevice ((ulong) device);
+			Assert.That (uuidRef, Is.Not.EqualTo (IntPtr.Zero), "Native UUID");
+			try {
+				var expected = CFString.FromHandle (CFUUIDCreateString (IntPtr.Zero, uuidRef), releaseHandle: true);
+				Assert.That (expected, Is.Not.Null, "Native UUID string");
+				var actual = FSEvent.GetUuidForDevice ((ulong) device);
+				Assert.That (actual, Is.Not.EqualTo (Guid.Empty), "Device UUID");
+				Assert.That (actual.ToString ("D"), Is.EqualTo (expected).IgnoreCase, "UUID byte order");
+				Assert.That (FSEvent.GetUuidForDevice ((ulong) device), Is.EqualTo (actual), "Repeated lookup");
+			} finally {
+				TestRuntime.CFRelease (uuidRef);
+			}
+		}
+
 		static string CreateTemporaryDirectory ()
 		{
 			var tmpDir = Path.Combine (NSFileManager.TemporaryDirectory, Path.GetRandomFileName ());

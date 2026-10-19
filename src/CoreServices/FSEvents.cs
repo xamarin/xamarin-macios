@@ -130,6 +130,9 @@ namespace CoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventsCopyUUIDForDevice (ulong device);
 
+		[DllImport (Constants.CoreFoundationLibrary)]
+		static extern IntPtr CFUUIDCreateString (IntPtr allocator, IntPtr uuid);
+
 		/// <param name="device">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
@@ -145,7 +148,12 @@ namespace CoreServices {
 				return Guid.Empty;
 			}
 
-			return Marshal.PtrToStructure<Guid> (uuidRef)!;
+			try {
+				using var uuidString = new CFString (CFUUIDCreateString (IntPtr.Zero, uuidRef), owns: true);
+				return Guid.Parse (uuidString.ToString ());
+			} finally {
+				CFObject.CFRelease (uuidRef);
+			}
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
