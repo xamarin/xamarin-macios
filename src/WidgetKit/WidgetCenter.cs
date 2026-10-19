@@ -8,9 +8,9 @@
 namespace WidgetKit {
 
 	/// <summary>Requests updates to the timelines of the app's widgets.</summary>
-	[SupportedOSPlatform ("ios14.0")]
-	[SupportedOSPlatform ("maccatalyst14.0")]
-	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	public static class WidgetCenter {
 
