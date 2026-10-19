@@ -51,9 +51,9 @@
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>f03b49786fd84c2fc76a74200043b2218b8e2689</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk.net10.0_27.0" Version="27.0.10728">
+    <Dependency Name="Microsoft.iOS.Sdk.net10.0_27.1" Version="27.1.10018">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>153ba15b6078b690274e549755e6471d3b2319b3</Sha>
+      <Sha>f03b49786fd84c2fc76a74200043b2218b8e2689</Sha>
     </Dependency>
     <Dependency Name="Microsoft.tvOS.Sdk.net10.0_27.0" Version="27.0.10742">
       <Uri>https://github.com/dotnet/macios</Uri>
