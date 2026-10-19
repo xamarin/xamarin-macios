@@ -20,11 +20,11 @@ This file should be imported by eng/Versions.props
     <MicrosoftiOSSdknet100_260PackageVersion>26.0.11017</MicrosoftiOSSdknet100_260PackageVersion>
     <MicrosoftiOSSdknet100_270PackageVersion>27.0.10728</MicrosoftiOSSdknet100_270PackageVersion>
     <MicrosoftMacCatalystSdknet100_260PackageVersion>26.0.11017</MicrosoftMacCatalystSdknet100_260PackageVersion>
-    <MicrosoftMacCatalystSdknet100_270PackageVersion>27.0.10741</MicrosoftMacCatalystSdknet100_270PackageVersion>
+    <MicrosoftMacCatalystSdknet100_270PackageVersion>27.0.10742</MicrosoftMacCatalystSdknet100_270PackageVersion>
     <MicrosoftmacOSSdknet100_260PackageVersion>26.0.11017</MicrosoftmacOSSdknet100_260PackageVersion>
-    <MicrosoftmacOSSdknet100_270PackageVersion>27.0.10741</MicrosoftmacOSSdknet100_270PackageVersion>
+    <MicrosoftmacOSSdknet100_270PackageVersion>27.0.10742</MicrosoftmacOSSdknet100_270PackageVersion>
     <MicrosofttvOSSdknet100_260PackageVersion>26.0.11017</MicrosofttvOSSdknet100_260PackageVersion>
-    <MicrosofttvOSSdknet100_270PackageVersion>27.0.10741</MicrosofttvOSSdknet100_270PackageVersion>
+    <MicrosofttvOSSdknet100_270PackageVersion>27.0.10742</MicrosofttvOSSdknet100_270PackageVersion>
     <!-- dotnet-xharness dependencies -->
     <MicrosoftDotNetXHarnessiOSSharedPackageVersion>11.0.0-prerelease.26451.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
   </PropertyGroup>
