@@ -213,13 +213,6 @@ namespace ObjCRuntime {
 		[Obsolete ("Class-handle redirection is no longer supported.", true)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static class ClassHandles {
-			internal static unsafe void InitializeClassHandles (IntPtr* map)
-			{
-			}
-
-			internal static unsafe void SetHandle (int index, NativeHandle* handle, IntPtr* map)
-			{
-			}
 		}
 #endif
 
