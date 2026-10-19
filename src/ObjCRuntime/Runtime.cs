@@ -209,6 +209,20 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+#if !XAMCORE_5_0
+		[Obsolete ("Class-handle redirection is no longer supported.", true)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static class ClassHandles {
+			internal static unsafe void InitializeClassHandles (IntPtr* map)
+			{
+			}
+
+			internal static unsafe void SetHandle (int index, NativeHandle* handle, IntPtr* map)
+			{
+			}
+		}
+#endif
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static bool IsCoreCLR {
 			get {
