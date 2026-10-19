@@ -115,11 +115,11 @@ namespace Xamarin.Linker.Steps {
 				if (type.IsNested) {
 					var parent = type.DeclaringType;
 					while (parent is not null) {
-						marker.PreserveType (type, parent);
+						modified |= marker.PreserveType (type, parent);
 						parent = parent.DeclaringType;
 					}
 				}
-				marker.PreserveType (type, allMembers: true);
+				modified |= marker.PreserveType (type, allMembers: true);
 			} else if (type.HasMethods) {
 				modified |= PreserveIntPtrConstructor (marker, type);
 				if (nsobject) {
