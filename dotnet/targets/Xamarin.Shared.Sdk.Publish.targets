@@ -24,7 +24,7 @@
 			Condition="$(RuntimeIdentifiers.Contains('iossimulator-')) Or $(RuntimeIdentifiers.Contains('tvossimulator-'))"
 		/>
 	</Target>
-	<Target Name="Publish" DependsOnTargets="_PrePublish;GetApplicationArtifacts;_CopyDSymToPublishDirectory" Returns="@(ApplicationArtifact)">
+	<Target Name="Publish" DependsOnTargets="_PrePublish;GetApplicationArtifacts" Returns="@(ApplicationArtifact)">
 		<Message Importance="high" Text="Created the package: $(IpaPackagePath)" Condition="'$(BuildIpa)' == 'true' And '$(SdkIsMobile)' == 'true'" />
 		<Message Importance="high" Text="Created the package: $(PkgPackagePath)" Condition="'$(CreatePackage)' == 'true' And '$(SdkIsDesktop)' == 'true'" />
 	</Target>
