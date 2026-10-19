@@ -38,6 +38,11 @@ namespace Introspection {
 		protected override bool Skip (Type type, string protocolName)
 		{
 			switch (protocolName) {
+			case "NSStandardKeyBindingResponding":
+				// NSResponder declares conformance in a category, but only NSTextView reports it at runtime.
+				if (typeof (NSResponder).IsAssignableFrom (type) && !typeof (NSTextView).IsAssignableFrom (type))
+					return true;
+				break;
 			case "NSSecureCoding":
 				switch (type.Name) {
 				case "CNContactFormatter": // iOS declares but macOS header does not. Failure was missed :(

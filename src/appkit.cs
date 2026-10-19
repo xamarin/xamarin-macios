@@ -15179,7 +15179,6 @@ namespace AppKit {
 	}
 
 	// Technically on NSResponder but responder subclasses can implement any that make sense
-	// So bound for user classes but not added to NSResponder binding
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSStandardKeyBindingResponding {
@@ -15761,7 +15760,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding, NSTouchBarProvider, NSUserActivityRestoring {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider, NSUserActivityRestoring, NSStandardKeyBindingResponding {
 		[Export ("tryToPerform:with:")]
 #if XAMCORE_5_0
 		bool TryToPerformWith (Selector anAction, [NullAllowed] NSObject anObject);
