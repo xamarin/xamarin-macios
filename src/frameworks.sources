@@ -1998,6 +1998,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/UserDelegateTypeAttribute.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
+	WidgetKit/WidgetCenter.cs \
 
 #
 # Here we list the frameworks each platform contains.

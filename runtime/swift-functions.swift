@@ -6,6 +6,9 @@ import StoreKit
 #if canImport(UIKit)
 import UIKit
 #endif
+#if !os(tvOS)
+import WidgetKit
+#endif
 
 #if os(macOS)
 public typealias PlatformScene = NSViewController
@@ -24,6 +27,20 @@ public class XamarinSwiftFunctions : NSObject {
     public static func StoreKit_RequestReview(scene: PlatformScene)
     {
         AppStore.requestReview(in: scene)
+    }
+
+    @objc(reloadTimelinesOfKind:)
+    @available(iOS 14, macCatalyst 14, macOS 11, *)
+    public static func WidgetKit_ReloadTimelines(ofKind kind: String)
+    {
+        WidgetCenter.shared.reloadTimelines(ofKind: kind)
+    }
+
+    @objc(reloadAllTimelines)
+    @available(iOS 14, macCatalyst 14, macOS 11, *)
+    public static func WidgetKit_ReloadAllTimelines()
+    {
+        WidgetCenter.shared.reloadAllTimelines()
     }
 #endif
 }

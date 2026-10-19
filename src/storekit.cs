@@ -41,6 +41,16 @@ namespace StoreKit {
 #else
 		void RequestReview (UIWindowScene windowScene);
 #endif
+
+		[Export ("reloadTimelinesOfKind:")]
+		[Static]
+		[iOS (14, 0), MacCatalyst (14, 0), Mac (11, 0), NoTV]
+		void ReloadTimelines (string kind);
+
+		[Export ("reloadAllTimelines")]
+		[Static]
+		[iOS (14, 0), MacCatalyst (14, 0), Mac (11, 0), NoTV]
+		void ReloadAllTimelines ();
 	}
 
 	[ErrorDomain ("SKANErrorDomain")]
