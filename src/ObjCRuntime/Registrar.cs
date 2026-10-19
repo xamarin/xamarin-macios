@@ -1636,7 +1636,10 @@ namespace Registrar {
 				return;
 
 			Version sdk = GetSDKVersion ();
-			if (sdkVersion <= sdk)
+			// Version treats unspecified build/revision components as -1, but SDK versions use zero.
+			var introducedVersion = new Version (sdkVersion.Major, sdkVersion.Minor, Math.Max (sdkVersion.Build, 0), Math.Max (sdkVersion.Revision, 0));
+			var currentVersion = new Version (sdk.Major, sdk.Minor, Math.Max (sdk.Build, 0), Math.Max (sdk.Revision, 0));
+			if (introducedVersion <= currentVersion)
 				return;
 
 			string msg;
