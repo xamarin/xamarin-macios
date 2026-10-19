@@ -184,7 +184,7 @@ namespace CoreGraphics {
 		SourceIn,
 		/// <summary>Keeps the source only where the destination is transparent.</summary>
 		SourceOut,
-		/// <summary>Places the source over the destination, restricted to the destination's opaque area.</summary>
+		/// <summary>Composites the source over the destination, preserving the destination alpha.</summary>
 		SourceAtop,
 		/// <summary>Places the destination over the source.</summary>
 		DestinationOver,
@@ -192,7 +192,7 @@ namespace CoreGraphics {
 		DestinationIn,
 		/// <summary>Keeps the destination only where the source is transparent.</summary>
 		DestinationOut,
-		/// <summary>Places the destination over the source, restricted to the source's opaque area.</summary>
+		/// <summary>Composites the destination over the source, preserving the source alpha.</summary>
 		DestinationAtop,
 		/// <summary>Keeps the portions of the source and destination that are not covered by the other.</summary>
 		XOR,
