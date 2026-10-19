@@ -37519,6 +37519,10 @@ P:CoreImage.CIContextOptions.AllowLowPower
 P:CoreImage.CIContextOptions.CVMetalTextureCache
 P:CoreImage.CIContextOptions.MemoryLimit
 P:CoreImage.CIContextOptions.Name
+P:CoreImage.CIConvertLabToRGB.Normalize
+P:CoreImage.CIConvertLabToRGB.OutputImage
+P:CoreImage.CIConvertRGBtoLab.Normalize
+P:CoreImage.CIConvertRGBtoLab.OutputImage
 P:CoreImage.CIConvolutionRGB3X3.Bias
 P:CoreImage.CIConvolutionRGB3X3.OutputImage
 P:CoreImage.CIConvolutionRGB3X3.Weights
@@ -55513,6 +55517,8 @@ T:CoreImage.CIColorThreshold
 T:CoreImage.CIColorThresholdOtsu
 T:CoreImage.CIContext_CIDepthBlurEffect
 T:CoreImage.CIContext_CIRenderDestination
+T:CoreImage.CIConvertLabToRGB
+T:CoreImage.CIConvertRGBtoLab
 T:CoreImage.CIConvolutionRGB3X3
 T:CoreImage.CIConvolutionRGB5X5
 T:CoreImage.CIConvolutionRGB7X7

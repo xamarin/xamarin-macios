@@ -736,6 +736,10 @@ namespace CoreImage {
 				return new CIBlendWithBlueMask (handle);
 			case "CIBlendWithRedMask":
 				return new CIBlendWithRedMask (handle);
+			case "CIConvertLabToRGB":
+				return new CIConvertLabToRGB (handle);
+			case "CIConvertRGBtoLab":
+				return new CIConvertRGBtoLab (handle);
 			case "CIMaximumScaleTransform":
 				if (!SystemVersion.IsAtLeastXcode16)
 					throw new PlatformNotSupportedException (string.Format ("The filter '{0}' is not supported on the current version of this platform.", filterName));

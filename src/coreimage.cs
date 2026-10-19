@@ -13318,26 +13318,17 @@ namespace CoreImage {
 		CIImage InputImage { get; set; }
 	}
 
-	// LabToRGBFilter and RGBtoLabFilter are names for filter API but return the same type CIConvertLab
-	// Enabling these cause a large number of introspection errors
-	// https://github.com/dotnet/macios/issues/15662
-#if false
 	[CoreImageFilter]
-	[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CIFilter), Name = "CIConvertLab")]
-	interface LabToRGBFilter : CIConvertLabProtocol
-	{
-
+	[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvertLabToRGB : CIConvertLabProtocol {
 	}
 
 	[CoreImageFilter]
-	[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CIFilter), Name = "CIConvertLab")]
-	interface RGBtoLabFilter : CIConvertLabProtocol
-	{
-
+	[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvertRGBtoLab : CIConvertLabProtocol {
 	}
-#endif
 
 	[CoreImageFilter]
 	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
