@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -20,7 +21,7 @@ namespace Cecil.Tests {
 	public class SignListTest {
 		const int MaxZipDepth = 8;
 
-		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign" };
+		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign", "MacDeveloperSignHarden" };
 
 		[Test]
 		public void WorkloadPackagesHaveSigningEntries ()
@@ -36,9 +37,10 @@ namespace Cecil.Tests {
 			var patterns = ReadPatterns (signList);
 			var matched = new bool [patterns.Count];
 			var missing = new List<string> ();
+			var notMachO = new List<string> ();
 			foreach (var package in packages) {
 				using var archive = ZipFile.OpenRead (package);
-				CheckArchive (archive, Path.GetFileName (package), "", "", patterns, matched, missing, 0);
+				CheckArchive (archive, Path.GetFileName (package), "", "", patterns, matched, missing, notMachO, 0);
 			}
 			if (!Configuration.AnyIgnoredPlatforms ()) {
 				for (var i = 0; i < patterns.Count; i++) {
@@ -47,6 +49,7 @@ namespace Cecil.Tests {
 				}
 			}
 			Assert.That (missing, Is.Empty, $"Files missing from {signList}:\n{string.Join ("\n", missing)}");
+			Assert.That (notMachO, Is.Empty, $"Files matched by a Mach-O signing entry in {signList} that aren't Mach-O files:\n{string.Join ("\n", notMachO)}");
 		}
 
 		static List<(string Group, string Include, Regex Pattern)> ReadPatterns (string signList)
@@ -69,7 +72,19 @@ namespace Cecil.Tests {
 			return patterns;
 		}
 
-		static void CheckArchive (ZipArchive archive, string archiveName, string zipPath, string matchPrefix, IReadOnlyList<(string Group, string Include, Regex Pattern)> patterns, bool [] matched, List<string> missing, int depth)
+		static bool IsMachO (ZipArchiveEntry entry)
+		{
+			if (entry.Length < 4)
+				return false;
+
+			var magic = new byte [4];
+			using var stream = entry.Open ();
+			stream.ReadExactly (magic);
+			// Thin Mach-O files (32/64-bit, both byte orders) and universal (fat) binaries.
+			return BinaryPrimitives.ReadUInt32BigEndian (magic) is 0xFEEDFACE or 0xFEEDFACF or 0xCEFAEDFE or 0xCFFAEDFE or 0xCAFEBABE or 0xCAFEBABF;
+		}
+
+		static void CheckArchive (ZipArchive archive, string archiveName, string zipPath, string matchPrefix, IReadOnlyList<(string Group, string Include, Regex Pattern)> patterns, bool [] matched, List<string> missing, List<string> notMachO, int depth)
 		{
 			foreach (var entry in archive.Entries) {
 				if (entry.Name.Length == 0)
@@ -80,7 +95,7 @@ namespace Cecil.Tests {
 					Assert.That (depth, Is.LessThan (MaxZipDepth), $"Nested ZIP depth exceeds {MaxZipDepth}: {archiveName}!{zipPath}{entry.FullName}");
 					using var stream = entry.Open ();
 					using var nested = new ZipArchive (stream, ZipArchiveMode.Read);
-					CheckArchive (nested, archiveName, zipPath + entry.FullName + "!", matchPrefix + Path.GetFileNameWithoutExtension (entry.Name) + "\\", patterns, matched, missing, depth + 1);
+					CheckArchive (nested, archiveName, zipPath + entry.FullName + "!", matchPrefix + Path.GetFileNameWithoutExtension (entry.Name) + "\\", patterns, matched, missing, notMachO, depth + 1);
 				} else if (name.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)
 					|| name.EndsWith (".exe", StringComparison.OrdinalIgnoreCase)
 					|| name.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
@@ -93,6 +108,15 @@ namespace Cecil.Tests {
 					}
 					if (!found)
 						missing.Add ($"{archiveName}!{zipPath}{entry.FullName}");
+				} else {
+					// Executables don't have a well-known file extension, so only the ones with a Mach-O signing entry are checked.
+					for (var i = 0; i < patterns.Count; i++) {
+						if (!patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+							continue;
+						matched [i] = true;
+						if (!IsMachO (entry))
+							notMachO.Add ($"{archiveName}!{zipPath}{entry.FullName} (<{patterns [i].Group} Include=\"{patterns [i].Include}\" />)");
+					}
 				}
 			}
 		}

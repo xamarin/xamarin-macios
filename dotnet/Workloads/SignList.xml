@@ -170,6 +170,11 @@
     <MacDeveloperSign Include="native\*.dylib" />
     <MacDeveloperSign Include="libclang.dylib" />
     <MacDeveloperSign Include="libClangSharp.dylib" />
+    <!-- Sign Mach-O executables. They don't have a file extension, so use (part of) the path to not match other files with the same name: tools\bin\mlaunch is a shell script, and Sharpie.Bind.Tool.dSYM contains a debug symbols file (not an executable). -->
+    <!-- mlaunch hosts CoreCLR, which needs the com.apple.security.cs.allow-jit entitlement when using the hardened runtime. MacDeveloperSignHarden doesn't add any entitlements, so mlaunch can't use it. -->
+    <MacDeveloperSign Include="mlaunch.app\Contents\MacOS\mlaunch" />
+    <!-- Sharpie.Bind.Tool is a NativeAOT executable, which doesn't need any entitlements with the hardened runtime. -->
+    <MacDeveloperSignHarden Include="osx-arm64\Sharpie.Bind.Tool" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)SignList.targets" />
