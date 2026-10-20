@@ -20,12 +20,12 @@
 #include "delegates.h"
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
+#include "host_runtime_contract.h"
 
 #if !defined (CORECLR_RUNTIME)
 #include "xamarin/monovm-bridge.h"
 #else
 #include "xamarin/coreclr-bridge.h"
-#include "host_runtime_contract.h"
 #endif
 
 #if defined (DEBUG)
@@ -2319,8 +2319,7 @@ xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_
 // List all the assemblies that we can find in the app bundle in:
 // - The bundle directory
 // - The runtimeidentifier-specific subdirectory
-// Caller must free the return value using xamarin_free.
-char *
+NSArray<NSString *> *
 xamarin_compute_trusted_platform_assemblies_at_runtime ()
 {
 	const char *bundle_path = xamarin_get_bundle_path ();
@@ -2362,14 +2361,10 @@ xamarin_compute_trusted_platform_assemblies_at_runtime ()
 	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
 	[files addObjectsFromArray: exes];
 
-	// Join them all together with a colon separating them
-	NSString *joined = [files componentsJoinedByString: @":"];
-	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
-	return rv;
+	return files;
 }
 
-// Caller must free the return value using xamarin_free.
-char *
+NSArray<NSString *> *
 xamarin_compute_trusted_platform_assemblies ()
 {
 	if (xamarin_trusted_platform_assembly_names == NULL || xamarin_trusted_platform_assembly_names [0] == NULL)
@@ -2390,8 +2385,61 @@ xamarin_compute_trusted_platform_assemblies ()
 		[files addObject: path];
 	}
 
-	NSString *joined = [files componentsJoinedByString: @":"];
-	return xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return files;
+}
+
+struct xamarin_host_assembly_path {
+	const char *directory;
+	const char *file_name;
+};
+
+static const char **xamarin_host_assembly_names;
+static struct xamarin_host_assembly_path *xamarin_host_assembly_paths;
+static size_t xamarin_host_assembly_count;
+
+static void
+xamarin_initialize_trusted_platform_assemblies ()
+{
+	NSArray<NSString *> *files = xamarin_compute_trusted_platform_assemblies ();
+	xamarin_host_assembly_names = (const char **) xamarin_calloc (sizeof (char *) * ([files count] + 1));
+	xamarin_host_assembly_paths = (struct xamarin_host_assembly_path *) xamarin_calloc (sizeof (*xamarin_host_assembly_paths) * ([files count] + 1));
+	NSMutableSet<NSString *> *names = [NSMutableSet set];
+	for (NSString *path in files) {
+		NSString *file_name = [path lastPathComponent];
+		NSString *name = [file_name stringByDeletingPathExtension];
+		NSString *key = [name lowercaseString];
+		if ([names containsObject: key])
+			continue;
+		[names addObject: key];
+
+		// The runtime may request these strings after startup, so keep them for the process lifetime.
+		size_t i = xamarin_host_assembly_count++;
+		xamarin_host_assembly_names [i] = strdup ([name UTF8String]);
+		xamarin_host_assembly_paths [i].directory = strdup ([[path stringByDeletingLastPathComponent] UTF8String]);
+		xamarin_host_assembly_paths [i].file_name = strdup ([file_name UTF8String]);
+	}
+}
+
+static bool
+xamarin_get_assembly_names (const char * const **names, size_t *count, void *contract_context)
+{
+	*names = xamarin_host_assembly_names;
+	*count = xamarin_host_assembly_count;
+	return true;
+}
+
+static bool
+xamarin_resolve_assembly_to_path (const char *simple_name, const char **directory, const char **file_name, void *contract_context)
+{
+	for (size_t i = 0; i < xamarin_host_assembly_count; i++) {
+		if (strcasecmp (simple_name, xamarin_host_assembly_names [i]) != 0)
+			continue;
+
+		*directory = xamarin_host_assembly_paths [i].directory;
+		*file_name = xamarin_host_assembly_paths [i].file_name;
+		return true;
+	}
+	return false;
 }
 
 // Find the directory that contains System.Private.CoreLib.dll, looking in:
@@ -2646,37 +2694,39 @@ xamarin_vm_initialize ()
 {
 	xamarin_initialize_crash_report_directory ();
 
-#if defined (CORECLR_RUNTIME)
-	struct host_runtime_contract host_contract = {
+	xamarin_initialize_trusted_platform_assemblies ();
+	static const struct host_runtime_contract host_contract = {
 		.size = sizeof (struct host_runtime_contract),
+#if defined (CORECLR_RUNTIME)
 		.get_runtime_property = &xamarin_coreclr_get_runtime_property,
 		.bundle_probe = &xamarin_coreclr_bundle_probe,
+#endif
 		.pinvoke_override = &xamarin_pinvoke_override,
-		.get_native_code_data = &xamarin_get_native_code_data
+#if defined (CORECLR_RUNTIME)
+		.get_native_code_data = &xamarin_get_native_code_data,
+#endif
+		.get_assembly_names = &xamarin_get_assembly_names,
+		.resolve_assembly_to_path = &xamarin_resolve_assembly_to_path,
 	};
 
 	char contract_str [19]; // 0x + 16 hex digits + '\0'
 	snprintf (contract_str, sizeof (contract_str), "0x%zx", (size_t) (&host_contract));
-#else
-	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
-#endif
-
-	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
 	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
 	char *system_corelib_directory = xamarin_compute_system_corelib_directory ();
 	const char *startupHooks = getenv ("DOTNET_STARTUP_HOOKS");
+	const char *app_paths = xamarin_get_bundle_path ();
+#if defined (CORECLR_RUNTIME)
+	// APP_PATHS is separator-delimited; use only the callbacks when it cannot represent the bundle path.
+	if (strchr (app_paths, ':') != NULL)
+		app_paths = "";
+#endif
 
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
 		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
 		"APP_PATHS",
-#if defined (CORECLR_RUNTIME)
 		"HOST_RUNTIME_CONTRACT",
-#else
-		"PINVOKE_OVERRIDE",
-#endif
-		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
 		"RUNTIME_IDENTIFIER",
 		"SYSTEM_CORELIB_DIRECTORY", // the directory that contains System.Private.CoreLib.dll (must come before STARTUP_HOOKS, because we might not pass STARTUP_HOOKS)
@@ -2684,13 +2734,8 @@ xamarin_vm_initialize ()
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
-		xamarin_get_bundle_path (),
-#if defined (CORECLR_RUNTIME)
+		app_paths,
 		contract_str,
-#else
-		pinvokeOverride,
-#endif
-		trusted_platform_assemblies,
 		native_dll_search_directories,
 		RUNTIMEIDENTIFIER,
 		system_corelib_directory,
@@ -2704,10 +2749,6 @@ xamarin_vm_initialize ()
 
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 
-#if !defined (CORECLR_RUNTIME)
-	xamarin_free (pinvokeOverride);
-#endif
-	xamarin_free (trusted_platform_assemblies);
 	xamarin_free (native_dll_search_directories);
 	xamarin_free (system_corelib_directory);
 

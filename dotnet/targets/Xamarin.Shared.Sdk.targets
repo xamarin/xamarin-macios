@@ -1826,6 +1826,7 @@
 		<ItemGroup>
 			<!-- List all the properties passed to xamarin_bridge_vm_initialize in xamarin_vm_initialize (in runtime.m) -->
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
+			<_RuntimeConfigReservedProperties Include="HOST_RUNTIME_CONTRACT" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />

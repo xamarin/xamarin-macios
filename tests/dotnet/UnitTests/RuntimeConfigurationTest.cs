@@ -9,6 +9,40 @@ using System.Linq;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class RuntimeConfigurationTest : TestBaseClass {
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", false, false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", false, true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", false, false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", true, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", true, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true, true)]
+		public void TrustedPlatformAssembliesWithPathSeparators (ApplePlatform platform, string runtimeIdentifiers, bool useMonoRuntime, bool generateTrustedPlatformAssemblies)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["UseMonoRuntime"] = useMonoRuntime.ToString ();
+			properties ["GenerateTrustedPlatformAssemblies"] = generateTrustedPlatformAssemblies.ToString ();
+			DotNet.AssertBuild (project_path, properties);
+
+			if (!CanExecute (platform, runtimeIdentifiers))
+				return;
+
+			var relocatedAppPath = Path.Combine (Cache.CreateTemporaryDirectory (), "path:with:colons", project + ".app");
+			FileHelpers.CopyDirectory (appPath, relocatedAppPath);
+			var appExecutable = GetNativeExecutable (platform, relocatedAppPath);
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		public void BakedIntoGeneratedMain (ApplePlatform platform, string runtimeIdentifiers)
