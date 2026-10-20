@@ -3341,6 +3341,26 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		public void SymbolStripDefaults (
+			[Values (ApplePlatform.iOS, ApplePlatform.TVOS)] ApplePlatform platform,
+			[Values (true, false)] bool simulator,
+			[Values ("Debug", "Release", "Custom")] string configuration,
+			[Values (null, "true", "false")] string? noSymbolStrip)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var runtimeIdentifier = $"{(platform == ApplePlatform.iOS ? "ios" : "tvos")}{(simulator ? "simulator" : "")}-arm64";
+			var projectPath = GetProjectPath ("MySimpleApp", platform: platform);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["Configuration"] = configuration;
+			if (noSymbolStrip is not null)
+				properties ["NoSymbolStrip"] = noSymbolStrip;
+
+			var actual = DotNet.GetProperty (projectPath, "NoSymbolStrip", properties);
+			var expected = noSymbolStrip ?? (simulator && configuration != "Release" ? "true" : "false");
+			Assert.That (actual, Is.EqualTo (expected), "NoSymbolStrip");
+		}
+
+		[Test]
 		// The trailing semi-colon for single-arch platforms is significant:
 		// it means we'll use "RuntimeIdentifiers" (plural) instead of "RuntimeIdentifier" (singular)
 		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
