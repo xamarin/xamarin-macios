@@ -197,6 +197,13 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (16, 2) && TestRuntime.IsSimulator)
 					return true;
 				break;
+			case "NERelayManager":
+				// -init asserts on the CI iOS/tvOS 17.0 simulator seeds (21A5248u/21J5273p).
+				if (TestRuntime.IsSimulator &&
+					TestRuntime.CheckSystemVersion (TestRuntime.CurrentPlatform, 17, 0) &&
+					!TestRuntime.CheckSystemVersion (TestRuntime.CurrentPlatform, 17, 1))
+					return true;
+				break;
 			}
 			return base.Skip (type);
 		}
