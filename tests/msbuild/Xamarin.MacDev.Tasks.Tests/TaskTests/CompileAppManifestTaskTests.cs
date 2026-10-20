@@ -112,7 +112,8 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (expectError) {
 				Assert.That (Engine.Logger.ErrorEvents [0].Code, Is.EqualTo ("MT7198"), "Code");
-				Assert.That (File.Exists (task.CompiledAppManifest!.ItemSpec), Is.False, "Failed validation must not produce an up-to-date manifest");
+				var compiledManifest = task.CompiledAppManifest ?? throw new InvalidOperationException ("Missing compiled app manifest.");
+				Assert.That (File.Exists (compiledManifest.ItemSpec), Is.False, "Failed validation must not produce an up-to-date manifest");
 			}
 		}
 
@@ -133,7 +134,8 @@ namespace Xamarin.MacDev.Tasks {
 
 			ExecuteTask (task);
 
-			var plist = PDictionary.OpenFile (task.CompiledAppManifest!.ItemSpec);
+			var compiledManifest = task.CompiledAppManifest ?? throw new InvalidOperationException ("Missing compiled app manifest.");
+			var plist = PDictionary.OpenFile (compiledManifest.ItemSpec);
 			Assert.That (plist.Get<PDictionary> ("UIApplicationSceneManifest"), Is.Not.Null, "Merged scene manifest");
 		}
 
