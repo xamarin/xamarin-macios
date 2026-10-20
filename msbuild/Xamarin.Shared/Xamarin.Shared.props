@@ -70,6 +70,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- It might be desirable to turn off the automatic detection if the current logic detects Info.plist that aren't the app manifest -->
 		<!-- One example would be when including native frameworks in the app bundle - frameworks have an Info.plist that might be picked up -->
 		<AppManifestDetectionEnabled Condition="'$(AppManifestDetectionEnabled)' == ''">true</AppManifestDetectionEnabled>
+		<ValidateSceneManifest Condition="'$(ValidateSceneManifest)' == ''">true</ValidateSceneManifest>
 	</PropertyGroup>
 
 	<!-- Code signing defaults -->

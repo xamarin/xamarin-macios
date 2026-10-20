@@ -620,7 +620,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	-->
 
 	<PropertyGroup>
-		<ValidateSceneManifest Condition="'$(ValidateSceneManifest)' == ''">true</ValidateSceneManifest>
 		<_CompileAppManifestDependsOn>
 			CollectAppManifests;
 			_CompileAppManifestInputs;
