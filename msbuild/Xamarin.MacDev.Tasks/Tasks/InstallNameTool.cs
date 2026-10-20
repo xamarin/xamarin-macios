@@ -13,6 +13,8 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public class InstallNameTool : XamarinTask, ITaskCallback {
+		public string InstallNameToolPath { get; set; } = "";
+
 		[Required]
 		public ITaskItem [] DynamicLibrary { get; set; } = [];
 
@@ -68,22 +70,22 @@ namespace Xamarin.MacDev.Tasks {
 				var temporaryTarget = target + ".tmp";
 
 				var arguments = new List<string> ();
-				arguments.Add ("install_name_tool");
 				arguments.Add ("-id");
 				arguments.Add (input.GetMetadata ("UpdatedId"));
 				arguments.AddRange (changes);
 
 				arguments.Add (temporaryTarget);
+				var executable = GetExecutable (arguments, "install_name_tool", InstallNameToolPath);
 
 				var stampFile = input.GetMetadata ("StampFile").Replace ('\\', Path.DirectorySeparatorChar);
 				var stampContents = "";
-				if (!string.IsNullOrEmpty (stampFile) && IsUpToDate (src, target, arguments, stampFile, out stampContents))
+				if (!string.IsNullOrEmpty (stampFile) && IsUpToDate (src, target, executable, arguments, stampFile, out stampContents))
 					continue;
 
 				// install_name_tool modifies the file in-place, so copy it to a temporary file first.
 				Directory.CreateDirectory (Path.GetDirectoryName (temporaryTarget)!);
 				File.Copy (src, temporaryTarget, true);
-				processes.Add (ExecuteAsync ("xcrun", arguments).ContinueWith ((v) => {
+				processes.Add (ExecuteAsync (executable, arguments).ContinueWith ((v) => {
 					if (v.IsFaulted) {
 						// install_name_tool faulted; don't leave the temporary copy behind.
 						File.Delete (temporaryTarget);
@@ -114,9 +116,9 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		bool IsUpToDate (string sourceLibrary, string destinationLibrary, List<string> arguments, string stampFile, out string stampFileContents)
+		bool IsUpToDate (string sourceLibrary, string destinationLibrary, string executable, List<string> arguments, string stampFile, out string stampFileContents)
 		{
-			stampFileContents = string.Join ("\n", arguments);
+			stampFileContents = executable + "\n" + string.Join ("\n", arguments);
 
 			if (!File.Exists (destinationLibrary)) {
 				Log.LogMessage (MessageImportance.Low, "The destination library '{0}' is not up-to-date, because it doesn't exist.", destinationLibrary);

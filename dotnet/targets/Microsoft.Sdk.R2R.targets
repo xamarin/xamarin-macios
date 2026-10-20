@@ -289,6 +289,8 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			ClangPlusPlusPath="$(ClangPlusPlusPath)"
+			DerqPath="$(DerqPath)"
 			ObjectFiles="%(_R2RModule.ObjectFile)"
 			OutputFile="%(_R2RModule.FrameworkOutput)"
 			LinkerFlags="@(_CurrentR2RModuleLinkerFlags)"
@@ -329,6 +331,8 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			ClangPlusPlusPath="$(ClangPlusPlusPath)"
+			DerqPath="$(DerqPath)"
 			ObjectFiles="%(_R2RModule.ObjectFile)"
 			OutputFile="%(_R2RModule.DylibOutput)"
 			LinkerFlags="@(_CurrentR2RDylibLinkerFlags)"
@@ -522,6 +526,7 @@
 			SessionId="$(BuildSessionId)"
 			DynamicLibrary="@(_CreatedFrameworkExecutableFromDylibs)"
 			FixupLibraryReferences="true"
+			InstallNameToolPath="$(InstallNameToolPath)"
 			IntermediateNativeLibraryDir="$(_ComputeFrameworksForDylibsIntermediatePath)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>

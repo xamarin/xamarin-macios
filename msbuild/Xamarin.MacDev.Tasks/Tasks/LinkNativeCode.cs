@@ -14,6 +14,10 @@ namespace Xamarin.MacDev.Tasks {
 		string outputPath = string.Empty;
 
 		#region Inputs
+		public string ClangPlusPlusPath { get; set; } = "";
+
+		public string DerqPath { get; set; } = "";
+
 		public ITaskItem [] LinkerFlags { get; set; } = Array.Empty<ITaskItem> ();
 
 		public ITaskItem [] LinkWithLibraries { get; set; } = Array.Empty<ITaskItem> ();
@@ -81,7 +85,6 @@ namespace Xamarin.MacDev.Tasks {
 			var abi = abis [0].ToNativeArchitecture ();
 			var linkerExecutable = "clang++";
 			var arguments = new List<string> ();
-			arguments.Add (linkerExecutable);
 
 			var hasEmbeddedFrameworks = false;
 
@@ -210,7 +213,8 @@ namespace Xamarin.MacDev.Tasks {
 					arguments.Add (flag.ItemSpec);
 			}
 
-			var rv = ExecuteAsync ("xcrun", arguments, showErrorIfFailure: false).Result;
+			var executable = GetExecutable (arguments, linkerExecutable, ClangPlusPlusPath);
+			var rv = ExecuteAsync (executable, arguments, showErrorIfFailure: false).Result;
 			if (rv.ExitCode != 0) {
 				var stderr = rv.Output.MergedOutput;
 #if NET
@@ -274,14 +278,14 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var derEntitlements = entitlements + ".der";
 			var arguments = new List<string> () {
-				"derq",
 				"query",
 				"-f", "xml",
 				"-i", entitlements,
 				"-o", derEntitlements,
 				"--raw",
 			};
-			ExecuteAsync ("xcrun", arguments).Wait ();
+			var executable = GetExecutable (arguments, "derq", DerqPath);
+			ExecuteAsync (executable, arguments).Wait ();
 			return derEntitlements;
 		}
 
