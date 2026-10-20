@@ -3424,7 +3424,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macOS")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "MacCatalyst")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "tvOS")]
-		[Ignore ("https://github.com/dotnet/runtime/issues/115145")]
 		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers, string platformName)
 		{
 			// Sourcelink uses the latest commit and tests to see if
