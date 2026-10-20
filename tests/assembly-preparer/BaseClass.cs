@@ -103,7 +103,7 @@ public abstract class BaseClass {
 
 		var assemblies = Configuration.GetImplementationAssemblies (platform, isCoreCLR);
 		assemblies.Add (Path.Combine (assemblyDir, "Test.dll"));
-		var infos = assemblies.Select (v => new AssemblyPreparerInfo (v, Path.Combine (outDir, Path.GetFileName (v)), true, "link")).ToArray ();
+		var infos = assemblies.Select (v => new AssemblyPreparerInfo (v, Path.Combine (outDir, Path.GetFileName (v)), true, Path.GetFileNameWithoutExtension (v) == "Test" ? "copy" : "link")).ToArray ();
 		var logger = new TestLogger () { Platform = platform };
 		var preparer = new AssemblyPreparer (logger, infos, configpath);
 		preparer.Registrar = RegistrarMode.TrimmableStatic;
