@@ -673,6 +673,41 @@ namespace Xamarin.Tests {
 			Assert.That (warnings [0].Message, Is.EqualTo ("RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file."), "Warning message");
 		}
 
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "iossimulator-arm64;ios-arm64", true, false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "ios-arm64", true, true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "iossimulator-arm64", false, true)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "ios-arm64", false, false)]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "tvossimulator-arm64;tvos-arm64", true, false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", "tvos-arm64", true, true)]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "tvossimulator-arm64", false, true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", "tvos-arm64", false, false)]
+		public void RuntimeIdentifierConflictPlatformProperties (ApplePlatform platform, string runtimeIdentifier, string runtimeIdentifiers, bool commandLineOverride, bool expectedSimulator)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var projectPath = GetProjectPath ("MySimpleApp", platform: platform);
+			var properties = GetDefaultProperties ();
+			var generatedProjectFile = Path.Combine (Cache.CreateTemporaryDirectory (), "RuntimeIdentifierConflict.props");
+			File.WriteAllText (generatedProjectFile, $"""
+				<Project>
+					<PropertyGroup>
+						<RuntimeIdentifier>{runtimeIdentifier}</RuntimeIdentifier>
+						<RuntimeIdentifiers>{runtimeIdentifiers}</RuntimeIdentifiers>
+					</PropertyGroup>
+				</Project>
+
+				""");
+			properties ["GeneratedProjectFile"] = generatedProjectFile;
+			if (commandLineOverride)
+				properties ["RuntimeIdentifier"] = runtimeIdentifier;
+
+			Assert.That (DotNet.GetProperty (projectPath, "RuntimeIdentifier", properties), Is.EqualTo (commandLineOverride ? runtimeIdentifier : ""), "RuntimeIdentifier");
+			Assert.That (DotNet.GetProperty (projectPath, "RuntimeIdentifiers", properties), Is.EqualTo (commandLineOverride ? "" : runtimeIdentifiers), "RuntimeIdentifiers");
+			Assert.That (DotNet.GetProperty (projectPath, "_SdkIsSimulator", properties), Is.EqualTo (expectedSimulator ? "true" : "false"), "_SdkIsSimulator");
+			Assert.That (DotNet.GetProperty (projectPath, "SdkIsSimulator", properties), Is.EqualTo (expectedSimulator ? "true" : "false"), "SdkIsSimulator");
+			Assert.That (DotNet.GetProperty (projectPath, "SdkIsDevice", properties), Is.EqualTo (expectedSimulator ? "" : "true"), "SdkIsDevice");
+			Assert.That (DotNet.GetProperty (projectPath, "ComputedPlatform", properties), Is.EqualTo (expectedSimulator ? "iPhoneSimulator" : "iPhone"), "ComputedPlatform");
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		public void IsNotOverrideRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifiers)
