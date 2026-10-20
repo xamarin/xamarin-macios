@@ -49,8 +49,10 @@ namespace Network {
 		Failed = 2,
 		/// <summary>The browser has been cancelled and cannot be restarted.</summary>
 		Cancelled = 3,
-		/// <summary>The browser is waiting for connectivity and will not deliver results until it becomes ready.</summary>
-		/// <remarks>A browser can enter this state after being ready. The associated error indicates why browsing is unavailable.</remarks>
+		/// <summary>
+		/// The browser is waiting for connectivity and will not deliver results until it becomes ready.
+		/// A browser can enter this state after being ready. The associated error indicates why browsing is unavailable.
+		/// </summary>
 		Waiting = 4,
 	}
 
