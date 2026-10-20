@@ -5,13 +5,15 @@
     <OutputType>Exe</OutputType>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
-    <!-- sharpie only supports arm64, do enforce that. -->
-    <!-- It's also necessary to actually specify it due to https://github.com/dotnet/ClangSharp/issues/118 -->
-    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    <!-- Match Sharpie.Bind's default so restore and build agree across project references.
+         Native execution still requires a runtime supported by ClangSharp.
+         An explicit RID is necessary due to https://github.com/dotnet/ClangSharp/issues/118 -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="UnitTests" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <ProjectReference Include="../../../tools/sharpie/Sharpie.Bind/Sharpie.Bind.csproj" />
   </ItemGroup>

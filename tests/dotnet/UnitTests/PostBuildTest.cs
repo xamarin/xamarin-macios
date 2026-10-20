@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using System.Text.Json;
+using System.Xml.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
@@ -55,17 +56,9 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
-		public void BuildIpaTest_Mono (ApplePlatform platform, string runtimeIdentifiers)
+		public void BuildIpaTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			BuildIpaTestImpl (platform, runtimeIdentifiers, useMonoRuntime: true);
-		}
-
-		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
-		public void BuildIpaTest_CoreCLR (ApplePlatform platform, string runtimeIdentifiers)
-		{
-			BuildIpaTestImpl (platform, runtimeIdentifiers, useMonoRuntime: false);
+			BuildIpaTestImpl (platform, runtimeIdentifiers);
 		}
 
 		[Test]
@@ -138,7 +131,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		void BuildIpaTestImpl (ApplePlatform platform, string runtimeIdentifiers, bool useMonoRuntime)
+		void BuildIpaTestImpl (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
 			var configuration = "Release";
@@ -150,7 +143,7 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["BuildIpa"] = "true";
 			properties ["Configuration"] = configuration;
-			properties ["UseMonoRuntime"] = useMonoRuntime ? "true" : "false";
+			properties ["UseMonoRuntime"] = "false";
 
 			var result = DotNet.AssertBuild (project_path, properties);
 
@@ -159,9 +152,8 @@ namespace Xamarin.Tests {
 			AssertApplicationArtifact (result.BinLogPath, appPath, platform, "app", isDirectory: true);
 			AssertApplicationArtifact (result.BinLogPath, pkgPath, platform, "ipa", isDirectory: false);
 
-			// With MonoVM, AOT compiles method bodies to native code and IL gets stripped.
 			// With CoreCLR (R2R), assemblies retain their IL bodies.
-			AssertBundleAssembliesStripStatus (appPath, useMonoRuntime);
+			AssertBundleAssembliesStripStatus (appPath, false);
 			AssertDSymDirectory (appPath);
 
 			// IpaIncludeSymbols defaults to true, so the .ipa must contain a populated 'Symbols' directory.
@@ -366,52 +358,6 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase ("MySimpleApp", ApplePlatform.iOS, "ios-arm64", true)]
-		[TestCase ("MySimpleApp", ApplePlatform.iOS, "ios-arm64", false)]
-		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.iOS, "ios-arm64", true)]
-		[TestCase ("MySimpleAppWithSatelliteReference", ApplePlatform.iOS, "ios-arm64", false)]
-		public void AssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
-		{
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
-
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
-			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifiers);
-
-			// Force EnableAssemblyILStripping since we are building debug which never will by default
-			properties ["EnableAssemblyILStripping"] = shouldStrip ? "true" : "false";
-			properties ["UseMonoRuntime"] = "true"; // *we* only strip assemblies when using MonoVM (R2R also does it, but that's not *us*, technically, and the result is also slightly different so a different test would be needed if we wanted to assert anything).
-
-			DotNet.AssertBuild (project_path, properties);
-
-			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
-			Assert.That (Path.Combine (appPath, $"{project}.dll"), Does.Exist, "Application Assembly");
-			Assert.That (Path.Combine (appPath, "Microsoft.iOS.dll"), Does.Exist, "Platform Assembly");
-		}
-
-		[Test]
-		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void DefaultAssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers)
-		{
-			var configuration = "Release";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
-
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
-			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifiers);
-
-			// Verify value defaults to false when not set
-			properties ["Configuration"] = configuration;
-			properties ["UseMonoRuntime"] = "true"; // *we* only strip assemblies when using MonoVM (R2R also does it, but that's not *us*, technically, and the result is also slightly different so a different test would be needed if we wanted to assert anything).
-
-			DotNet.AssertBuild (project_path, properties);
-
-			AssertBundleAssembliesStripStatus (appPath, false);
-		}
-
-		[Test]
 		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase ("MySimpleApp", ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase ("MySimpleApp", ApplePlatform.MacOSX, "osx-x64")]
@@ -466,23 +412,14 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void PublishTest_Mono (ApplePlatform platform, string runtimeIdentifiers)
-		{
-			PublishTestImpl (platform, runtimeIdentifiers, useMonoRuntime: true);
-		}
-
-		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
-		public void PublishTest_CoreCLR (ApplePlatform platform, string runtimeIdentifiers)
+		public void PublishTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			PublishTestImpl (platform, runtimeIdentifiers, useMonoRuntime: false);
+			PublishTestImpl (platform, runtimeIdentifiers);
 		}
 
-		void PublishTestImpl (ApplePlatform platform, string runtimeIdentifiers, bool useMonoRuntime)
+		void PublishTestImpl (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -511,7 +448,7 @@ namespace Xamarin.Tests {
 			var pkgPath = Path.Combine (tmpdir, $"MyPackage.{packageExtension}");
 
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["UseMonoRuntime"] = useMonoRuntime ? "true" : "false";
+			properties ["UseMonoRuntime"] = "false";
 			properties [pathVariable] = pkgPath;
 
 			var result = DotNet.AssertPublish (project_path, properties);
@@ -550,9 +487,9 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void PublishFailureTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -703,7 +640,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		public void FrameworkPostProcessingItems (ApplePlatform platform, string runtimeIdentifiers)
 		{
@@ -863,6 +800,82 @@ namespace Xamarin.Tests {
 			} else {
 				Assert.That (publishedDSym, Does.Not.Exist, "Published dSYM (disabled)");
 			}
+		}
+
+		[Test]
+		[Combinatorial]
+		public void PublishDSymTargetOrdering ([Values ("Build", "Publish")] string target, [Values] bool remote, [Values] bool copyDSym)
+		{
+			var directory = Cache.CreateTemporaryDirectory ();
+			var publishTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.Publish.targets"));
+			var publishRoot = publishTargets.Root ?? throw new InvalidOperationException ("Missing publish targets root.");
+			var ns = publishRoot.Name.Namespace;
+			var sharedTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.Shared", "Xamarin.Shared.targets"));
+			var sharedRoot = sharedTargets.Root ?? throw new InvalidOperationException ("Missing shared targets root.");
+			var postProcessDependencies = sharedRoot.Elements (ns + "PropertyGroup").Single (v => v.Element (ns + "_PostProcessAppBundleDependsOn") is not null);
+			publishRoot.AddFirst (new XElement (postProcessDependencies));
+			publishRoot.Add (new XElement (sharedRoot.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_PostProcessAppBundle")));
+			var dependencies = postProcessDependencies.Elements (ns + "_PostProcessAppBundleDependsOn").Single ().Value.Split (';')
+				.Select (v => v.Trim ())
+				.Where (v => v.Length > 0 && !v.StartsWith ("$(", StringComparison.Ordinal) && v != "_GenerateDSym");
+			foreach (var dependency in dependencies)
+				publishRoot.Add (new XElement (ns + "Target", new XAttribute ("Name", dependency)));
+			var copyTarget = publishRoot.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_CopyDSymToPublishDirectory");
+			// Keep the real target graph and conditions, replacing only the session-aware task bodies.
+			copyTarget.ReplaceNodes (
+				new XElement (ns + "Error", new XAttribute ("Condition", "'$(_DSymGenerated)' != 'true'"), new XAttribute ("Text", "dSYM copy ran before symbol generation.")),
+				new XElement (ns + "Error", new XAttribute ("Condition", "'$(IsRemoteBuild)' == 'true' And '$(_Connected)' != 'true'"), new XAttribute ("Text", "dSYM copy ran after disconnect.")),
+				new XElement (ns + "PropertyGroup", new XElement (ns + "_CopyCount", "$(_CopyCount)x")));
+			var publishTargetsPath = Path.Combine (directory, "Publish.targets");
+			publishTargets.Save (publishTargetsPath);
+
+			var projectPath = Path.Combine (directory, "Ordering.proj");
+			var messagingTargetsPath = Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.iOS.Tasks.Windows", "Xamarin.Messaging.targets");
+			File.WriteAllText (projectPath, $"""
+				<Project>
+					<PropertyGroup>
+						<_TaskAssemblyName>$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll</_TaskAssemblyName>
+						<BuildDependsOn>_PostProcessAppBundle</BuildDependsOn>
+						<_CanOutputAppBundle>true</_CanOutputAppBundle>
+						<IsMacEnabled>true</IsMacEnabled>
+					</PropertyGroup>
+					<Import Project="{messagingTargetsPath}" Condition="'$(IsRemoteBuild)' == 'true'" />
+					<Import Project="{publishTargetsPath}" />
+					<Target Name="Restore" />
+					<Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+					<Target Name="GetApplicationArtifacts" DependsOnTargets="Build" />
+					<Target Name="_GenerateBundleName" />
+					<Target Name="_GenerateBuildSessionId" />
+					<Target Name="_VerifyBuildSignature" />
+					<Target Name="_GenerateDSym">
+						<PropertyGroup>
+							<_DSymGenerated>true</_DSymGenerated>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_SayHello">
+						<PropertyGroup>
+							<_Connected>true</_Connected>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_SayGoodbye">
+						<PropertyGroup>
+							<_Connected>false</_Connected>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_AssertOrdering">
+						<Error Condition="'$(_CopyCount)' != '$(ExpectedCopyCount)'"
+							Text="Unexpected dSYM copy count: '$(_CopyCount)', expected '$(ExpectedCopyCount)'." />
+						<Error Condition="'$(IsRemoteBuild)' == 'true' And '$(_Connected)' != 'false'" Text="Build did not disconnect." />
+					</Target>
+				</Project>
+				""");
+
+			var properties = new Dictionary<string, string> {
+				["IsRemoteBuild"] = remote.ToString (),
+				["CopyDSYMToPublishDirectory"] = copyDSym.ToString (),
+				["ExpectedCopyCount"] = target == "Publish" && copyDSym ? "x" : "",
+			};
+			DotNet.AssertBuild (projectPath, properties, target: $"{target};_AssertOrdering");
 		}
 
 		static ITaskItem AssertApplicationArtifact (string binLogPath, string path, ApplePlatform platform, string packageFormat, bool isDirectory)

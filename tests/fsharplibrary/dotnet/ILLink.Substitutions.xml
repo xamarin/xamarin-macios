@@ -1,0 +1,10 @@
+<!-- Copyright (c) Microsoft Corporation. -->
+<!-- Licensed under the MIT License. -->
+<linker>
+  <assembly fullname="fsharplibrary">
+    <resource name="FSharpSignatureCompressedData.fsharplibrary" action="remove" />
+    <resource name="FSharpSignatureCompressedDataB.fsharplibrary" action="remove" />
+    <resource name="FSharpOptimizationCompressedData.fsharplibrary" action="remove" />
+    <resource name="FSharpOptimizationCompressedDataB.fsharplibrary" action="remove" />
+  </assembly>
+</linker>

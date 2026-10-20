@@ -1,0 +1,2 @@
+!missing-null-allowed! 'System.Void Foundation.NSItemProvider::RegisterDataRepresentation(UniformTypeIdentifiers.UTType,Foundation.NSItemProviderRepresentationVisibility,Foundation.NSItemProviderUTTypeLoadDelegate)' is missing a '?' on parameter 'loadHandler' block return type
+!missing-null-allowed! 'System.Void Foundation.NSItemProvider::RegisterFileRepresentation(UniformTypeIdentifiers.UTType,Foundation.NSItemProviderRepresentationVisibility,System.Boolean,Foundation.NSItemProviderUTTypeLoadDelegate)' is missing a '?' on parameter 'loadHandler' block return type

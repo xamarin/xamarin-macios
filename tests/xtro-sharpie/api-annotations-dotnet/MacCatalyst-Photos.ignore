@@ -1,1 +1,6 @@
 !missing-null-allowed! 'System.Int32 Photos.PHLivePhoto::RequestLivePhoto(Foundation.NSUrl[],UIKit.UIImage,CoreGraphics.CGSize,Photos.PHImageContentMode,System.Action`2<Photos.PHLivePhoto,Foundation.NSDictionary>)' is missing a '?' on parameter 'resultHandler' block parameter #0
+!missing-null-allowed! 'System.Int32 Photos.PHImageManager::RequestImageData(Photos.PHAsset,Photos.PHImageRequestOptions,Photos.PHImageDataHandler)' is missing a '?' on parameter 'handler' block parameter #0
+!missing-null-allowed! 'System.Int32 Photos.PHImageManager::RequestImageData(Photos.PHAsset,Photos.PHImageRequestOptions,Photos.PHImageDataHandler)' is missing a '?' on parameter 'handler' block parameter #1
+!missing-null-allowed! 'System.Int32 Photos.PHImageManager::RequestImageData(Photos.PHAsset,Photos.PHImageRequestOptions,Photos.PHImageDataHandler)' is missing a '?' on parameter 'handler' block parameter #3
+!missing-null-allowed! 'System.Void Photos.PHLivePhotoEditingContext::set_FrameProcessor(Photos.PHLivePhotoFrameProcessingBlock)' is missing a '?' on parameter 'value' block parameter #1
+!missing-null-allowed! 'System.Void Photos.PHLivePhotoEditingContext::set_FrameProcessor(Photos.PHLivePhotoFrameProcessingBlock)' is missing a '?' on parameter 'value' block return type

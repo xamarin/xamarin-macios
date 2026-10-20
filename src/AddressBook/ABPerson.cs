@@ -866,7 +866,7 @@ namespace AddressBook {
 
 			return new ABMultiValue<T> (handle,
 				l => factory ((NSDictionary) (object) Runtime.GetNSObject (l)!),
-				l => l.Dictionary.Handle,
+				l => Runtime.RetainAndAutoreleaseNSObject (l.Dictionary),
 				false);
 		}
 

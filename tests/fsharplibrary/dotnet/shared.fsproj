@@ -17,6 +17,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Override the F# SDK's rules for absent resources, which fail linking with IL2040 (dotnet/fsharp#20527). -->
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)ILLink.Substitutions.xml">
+			<LogicalName>ILLink.Substitutions.xml</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Include="$(FSharpLibraryDirectory)\AssemblyInfo.fs" />
 		<Compile Include="$(FSharpLibraryDirectory)\ObjCRuntime\RegistrarTest.fs" />
 	</ItemGroup>

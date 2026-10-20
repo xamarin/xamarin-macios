@@ -12,8 +12,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>MinimumOSVersion</key>
-	<string>13.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>MyComparableApp</string>
 	<key>CFBundleIdentifier</key>

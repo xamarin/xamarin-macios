@@ -28,3 +28,5 @@
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutRouteBuilder::FinishRoute(HealthKit.HKWorkout,Foundation.NSDictionary,System.Action`2<HealthKit.HKWorkoutRoute,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutRouteBuilder::InsertRouteData(CoreLocation.CLLocation[],System.Action`2<System.Boolean,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutSession::SendDataToRemoteWorkoutSession(Foundation.NSData,System.Action`2<System.Boolean,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
+!missing-null-allowed! 'System.Void HealthKit.HKHealthStore::RecoverActiveWorkoutSession(HealthKit.HKHealthStoreRecoverActiveWorkoutSessionHandler)' is missing a '?' on parameter 'completion' block parameter #0
+!missing-null-allowed! 'System.Void HealthKit.HKHealthStore::RecoverActiveWorkoutSession(HealthKit.HKHealthStoreRecoverActiveWorkoutSessionHandler)' is missing a '?' on parameter 'completion' block parameter #1

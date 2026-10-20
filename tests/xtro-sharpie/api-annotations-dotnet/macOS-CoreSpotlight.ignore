@@ -17,3 +17,4 @@
 !unknown-selector! CSSearchableItemAttributeSet::moveFrom: not found
 !unknown-selector! CSSuggestion::score not found
 !unknown-selector! CSSuggestion::suggestionDataSources not found
+!missing-null-allowed! 'System.Void CoreSpotlight.CSSearchableIndex_CSOptionalBatchingExtension::FetchLastClientState(CoreSpotlight.CSSearchableIndex,CoreSpotlight.CSSearchableIndexFetchHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0

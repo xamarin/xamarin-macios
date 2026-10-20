@@ -23,6 +23,7 @@ __attribute__ ((used)) unsigned long long x_native_field = 0xAABBCCDDEEFF8899;
 typedef void (^x_block_callback)();
 void x_call_block (x_block_callback block);
 void* x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3);
+int x_get_nsobject_data_with_association_lock (id object, void **data);
 
 // Helper for the issue #25861 design work: a C callback invoked from
 // InitSurfacesSelfToManaged's 'init' with the 'self' pointer, used to verify that
@@ -439,6 +440,11 @@ typedef void (^outerBlock) (innerBlock callback);
 @interface InitReturnsNilClass : NSObject {
 }
 -(instancetype) init;
+@end
+
+@interface ThreadExitObject : NSObject
++ (BOOL) releaseOnThreadExit: (NSObject *) object;
++ (int) releasedObjectCount;
 @end
 
 #pragma clang diagnostic pop

@@ -13,27 +13,20 @@ namespace Extrospection {
 	public class NullabilityCheck : BaseVisitor {
 
 		// 0 for oblivious, 1 for not annotated, and 2 for annotated
-		enum Null : byte {
+		internal enum Null : byte {
 			Oblivious = 0,
 			NotAnnotated = 1,
 			Annotated = 2,
 		}
 
-		static Dictionary<string, TypeDefinition> types = new Dictionary<string, TypeDefinition> ();
-		static Dictionary<string, MethodDefinition> methods = new Dictionary<string, MethodDefinition> ();
+		readonly Dictionary<string, MethodDefinition> methods = new Dictionary<string, MethodDefinition> ();
 
 		public NullabilityCheck (BindingResult bindingResult)
 			: base (bindingResult)
 		{
 		}
 
-		static TypeDefinition? GetType (ObjCInterfaceDecl decl)
-		{
-			types.TryGetValue (decl.Name, out var td);
-			return td;
-		}
-
-		static MethodDefinition? GetMethod (ObjCMethodDecl decl)
+		MethodDefinition? GetMethod (ObjCMethodDecl decl)
 		{
 			methods.TryGetValue (decl.GetName (), out var md);
 			return md;
@@ -52,7 +45,7 @@ namespace Extrospection {
 
 		// NullableContextAttribute is valid in metadata on type and method declarations.
 		// https://github.com/dotnet/roslyn/blob/master/docs/features/nullable-metadata.md
-		static Null GetNullableContext (ICustomAttributeProvider cap)
+		static Null? GetDeclaredNullableContext (ICustomAttributeProvider cap)
 		{
 			if (cap.HasCustomAttributes) {
 				foreach (var ca in cap.CustomAttributes) {
@@ -61,22 +54,28 @@ namespace Extrospection {
 					return (Null) (byte) ca.ConstructorArguments [0].Value;
 				}
 			}
-			return Null.Oblivious;
+			return null;
 		}
 
-		static Dictionary<TypeDefinition, Null> null_type_cache = new Dictionary<TypeDefinition, Null> ();
+		readonly Dictionary<TypeDefinition, Null> null_type_cache = new Dictionary<TypeDefinition, Null> ();
 
 		// most method checks the type so it adds up fast
-		static Null GetNullableContext (TypeDefinition type)
+		Null GetNullableContext (TypeDefinition type)
 		{
 			if (!null_type_cache.TryGetValue (type, out var result)) {
-				result = GetNullableContext ((ICustomAttributeProvider) type);
+				result = GetDeclaredNullableContext (type) ??
+					(type.DeclaringType is null ? Null.Oblivious : GetNullableContext (type.DeclaringType));
 				null_type_cache.Add (type, result);
 			}
 			return result;
 		}
 
-		static Null [] GetNullable (ICustomAttributeProvider cap)
+		internal Null GetNullableContext (MethodDefinition method)
+		{
+			return GetDeclaredNullableContext (method) ?? GetNullableContext (method.DeclaringType);
+		}
+
+		internal static Null [] GetNullable (ICustomAttributeProvider cap)
 		{
 			if (cap.HasCustomAttributes) {
 				foreach (var ca in cap.CustomAttributes) {
@@ -125,8 +124,6 @@ namespace Extrospection {
 			var t = method.DeclaringType;
 			// look for [NullableContext] for defaults
 			var managed_default_nullability = GetNullableContext (method);
-			if (managed_default_nullability == Null.Oblivious)
-				managed_default_nullability = GetNullableContext (t);
 
 			// check parameters
 			// categories have an offset of 1 for the extension method type (spotted as static types)
@@ -185,7 +182,7 @@ namespace Extrospection {
 				}
 
 				// Check nullability of block/delegate parameter's inner parameters
-				CheckBlockParameterNullability (p.Type, mp, method, framework, managed_default_nullability);
+				CheckBlockNullability (p.Type, pt, mp, method, framework, managed_default_nullability, $"parameter '{mp.Name}'");
 			}
 
 			// with .net a constructor will always return something (or throw)
@@ -215,6 +212,7 @@ namespace Extrospection {
 				} else {
 					cap = method.MethodReturnType;
 				}
+				CheckBlockNullability (decl.ReturnType, mrt, cap, method, framework, managed_default_nullability, "return type");
 				Null [] mrt_nullable = GetNullable (cap);
 
 				if (mrt_nullable.Length > 1) {
@@ -243,70 +241,148 @@ namespace Extrospection {
 			}
 		}
 
-		/// <summary>
-		/// If the native type is a block pointer, checks nullability of the block's
-		/// inner parameters against the managed NullableAttribute byte array.
-		/// </summary>
-		void CheckBlockParameterNullability (ClangSharp.Type nativeType, ParameterDefinition managedParam,
-			MethodDefinition method, string framework, Null managedDefaultNullability)
+		void CheckBlockNullability (ClangSharp.Type nativeType, TypeReference managedType, ICustomAttributeProvider provider,
+			MethodDefinition method, string framework, Null managedDefaultNullability, string location)
 		{
 			var funcType = GetBlockFunctionProtoType (nativeType);
 			if (funcType is null)
 				return;
 
-			var managedType = managedParam.ParameterType;
-			if (managedType is not GenericInstanceType git)
+			var definition = managedType.Resolve () ?? throw new InvalidOperationException ($"Unable to resolve callback type '{managedType}' in '{method.FullName}'.");
+			if (definition.BaseType?.FullName != "System.MulticastDelegate")
 				return;
 
-			// Get the full NullableAttribute for this parameter
-			var nullable = GetNullable (managedParam);
+			var invoke = definition.Methods.Single (v => v.Name == "Invoke");
+			var parameterOffset = GetManagedParameterOffset (managedType, invoke, method, funcType.ParamTypes.Count);
+			if (invoke.Parameters.Count - parameterOffset != funcType.ParamTypes.Count && !HasOmittedCompletionHandler (funcType, invoke))
+				return;
 
-			// Build the expected nullability for each generic type argument
-			// Position 0 = outer type (Action/Func), positions 1+ = type arguments
-			int nativeParamIndex = 0;
-			int managedPosition = 1; // start after the outer type
-
-			foreach (var blockParamType in funcType.ParamTypes) {
-				if (nativeParamIndex >= git.GenericArguments.Count)
-					break;
-
-				var managedTypeArg = git.GenericArguments [nativeParamIndex];
-
-				// Skip value types — they can't be nullable reference types
-				if (managedTypeArg.IsValueType) {
-					nativeParamIndex++;
-					managedPosition += CountNullablePositions (managedTypeArg);
-					continue;
-				}
-
-				// Determine the managed nullability for this position
-				Null managedNullability;
-				if (nullable.Length > managedPosition) {
-					managedNullability = nullable [managedPosition];
-				} else if (nullable.Length == 1) {
-					managedNullability = nullable [0];
-				} else {
-					managedNullability = managedDefaultNullability;
-				}
-
-				// Get the native nullability for this block parameter
-				var nativeNullability = blockParamType.Handle.Nullability;
-				switch (nativeNullability) {
-				case CXTypeNullabilityKind.CXTypeNullability_NonNull:
-					if (managedNullability == Null.Annotated)
-						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has an extraneous '?' on parameter '{managedParam.Name}' block parameter #{nativeParamIndex}");
-					break;
-				case CXTypeNullabilityKind.CXTypeNullability_Nullable:
-					if (managedNullability != Null.Annotated)
-						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing a '?' on parameter '{managedParam.Name}' block parameter #{nativeParamIndex}");
-					break;
-				case CXTypeNullabilityKind.CXTypeNullability_Unspecified:
-					break;
-				}
-
-				nativeParamIndex++;
-				managedPosition += CountNullablePositions (managedTypeArg);
+			var nullable = GetNullable (provider);
+			var context = GetNullableContext (invoke);
+			for (var i = parameterOffset; i < invoke.Parameters.Count; i++) {
+				var parameter = invoke.Parameters [i];
+				var nativeIndex = i - parameterOffset;
+				CheckBlockTypeNullability (funcType.ParamTypes [nativeIndex], parameter.ParameterType, parameter, context,
+					managedType as GenericInstanceType, nullable, managedDefaultNullability, method, framework, $"{location} block parameter #{nativeIndex}");
 			}
+
+			CheckBlockTypeNullability (funcType.ReturnType, invoke.ReturnType, invoke.MethodReturnType, context,
+				managedType as GenericInstanceType, nullable, managedDefaultNullability, method, framework, $"{location} block return type");
+		}
+
+		static bool HasOmittedCompletionHandler (FunctionProtoType nativeType, MethodDefinition managedInvoke)
+		{
+			if (nativeType.ParamTypes.Count != managedInvoke.Parameters.Count + 1)
+				return false;
+
+			return GetBlockFunctionProtoType (nativeType.ParamTypes [^1]) is not null;
+		}
+
+		static int GetManagedParameterOffset (TypeReference managedType, MethodDefinition managedInvoke, MethodDefinition method, int nativeParameterCount)
+		{
+			if (managedInvoke.Parameters.Count != nativeParameterCount + 1)
+				return 0;
+
+			var firstParameterType = managedInvoke.Parameters [0].ParameterType;
+			if (firstParameterType is GenericParameter parameter && managedType is GenericInstanceType generic)
+				firstParameterType = generic.GenericArguments [parameter.Position];
+
+			return firstParameterType.FullName == method.DeclaringType.FullName ? 1 : 0;
+		}
+
+		void CheckBlockTypeNullability (ClangSharp.Type nativeType, TypeReference managedType, ICustomAttributeProvider provider,
+			Null context, GenericInstanceType? delegateType, Null [] typeNullability, Null typeContext,
+			MethodDefinition method, string framework, string location)
+		{
+			managedType = StripModifiers (managedType);
+			if (managedType is ByReferenceType byReference) {
+				managedType = StripModifiers (byReference.ElementType);
+				// The annotation describes the referent, not the address passed to the callback.
+				if (nativeType.UnqualifiedDesugaredType is not ClangSharp.PointerType pointer)
+					throw new InvalidOperationException ($"Expected a native pointer for by-reference {location} in '{method.FullName}'.");
+				nativeType = pointer.PointeeType;
+			}
+
+			var resolved = GetCallbackTypeNullability (managedType, GetNullable (provider), context, delegateType, typeNullability, typeContext);
+			managedType = resolved.Type;
+			var managedNullability = resolved.Nullability;
+
+			if (!IsNullableValueType (managedType) && (managedType.IsValueType || managedType.IsPointer || managedType.IsFunctionPointer ||
+				managedType is GenericParameter { HasNotNullableValueTypeConstraint: true }))
+				return;
+
+			switch (nativeType.Handle.Nullability) {
+			case CXTypeNullabilityKind.CXTypeNullability_NonNull:
+				if (managedNullability == Null.Annotated)
+					Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has an extraneous '?' on {location}");
+				break;
+			case CXTypeNullabilityKind.CXTypeNullability_Nullable:
+			case CXTypeNullabilityKind.CXTypeNullability_NullableResult:
+				if (managedNullability != Null.Annotated)
+					Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing a '?' on {location}");
+				break;
+			}
+		}
+
+		internal static (TypeReference Type, Null Nullability) GetCallbackTypeNullability (TypeReference managedType,
+			Null [] nullable, Null context, GenericInstanceType? delegateType, Null [] typeNullability, Null typeContext)
+		{
+			managedType = StripModifiers (managedType);
+			if (managedType is ByReferenceType byReference)
+				managedType = StripModifiers (byReference.ElementType);
+			var managedNullability = GetNullability (nullable, 0, context);
+			if (managedType is GenericParameter parameter && delegateType is not null) {
+				var position = 1;
+				for (var i = 0; i < parameter.Position; i++)
+					position += CountNullablePositions (delegateType.GenericArguments [i]);
+				managedType = delegateType.GenericArguments [parameter.Position];
+				// T uses the instantiated argument's annotation; T? remains nullable.
+				if (managedNullability != Null.Annotated && CountNullablePositions (managedType) > 0)
+					managedNullability = GetNullability (typeNullability, position, typeContext);
+			}
+
+			if (IsNullableValueType (managedType))
+				managedNullability = Null.Annotated;
+			return (managedType, managedNullability);
+		}
+
+		static Null GetNullability (Null [] nullable, int position, Null context)
+		{
+			if (nullable.Length == 0)
+				return context;
+			if (nullable.Length == 1)
+				return nullable [0];
+			if (position >= nullable.Length)
+				throw new InvalidOperationException ("The NullableAttribute does not contain enough flags for the callback signature.");
+			return nullable [position];
+		}
+
+		static TypeReference StripModifiers (TypeReference type)
+		{
+			while (type is IModifierType modifier)
+				type = modifier.ElementType;
+			return type;
+		}
+
+		static bool IsNullableValueType (TypeReference type)
+		{
+			return type is GenericInstanceType generic && generic.ElementType.FullName == "System.Nullable`1";
+		}
+
+		static int CountNullablePositions (TypeReference type)
+		{
+			type = StripModifiers (type);
+			if (type is ByReferenceType byReference)
+				return CountNullablePositions (byReference.ElementType);
+			if (type is Mono.Cecil.ArrayType array)
+				return 1 + CountNullablePositions (array.ElementType);
+			if (type is GenericInstanceType generic) {
+				var count = IsNullableValueType (type) ? 0 : 1;
+				foreach (var argument in generic.GenericArguments)
+					count += CountNullablePositions (argument);
+				return count;
+			}
+			return type.IsValueType && type is not GenericParameter ? 0 : 1;
 		}
 
 		/// <summary>
@@ -315,46 +391,11 @@ namespace Extrospection {
 		/// </summary>
 		static FunctionProtoType? GetBlockFunctionProtoType (ClangSharp.Type type)
 		{
-			// Unwrap AttributedType wrappers (nullability annotations on the block pointer itself)
-			while (type is AttributedType attributed)
-				type = attributed.ModifiedType;
-
-			if (type is not BlockPointerType blockPointer)
+			if (type.UnqualifiedDesugaredType is not BlockPointerType blockPointer)
 				return null;
 
-			var pointee = blockPointer.PointeeType;
-
-			// Unwrap ParenType if present
-			while (pointee is ParenType paren)
-				pointee = paren.InnerType;
-
-			// Unwrap AttributedType on the function type
-			while (pointee is AttributedType attrPointee)
-				pointee = attrPointee.ModifiedType;
-
-			return pointee as FunctionProtoType;
-		}
-
-		/// <summary>
-		/// Counts how many positions a type occupies in the NullableAttribute byte array.
-		/// Simple types occupy 1 position. Generic instances occupy 1 + sum of their type args' positions.
-		/// </summary>
-		static int CountNullablePositions (TypeReference type)
-		{
-			if (type is Mono.Cecil.ArrayType array)
-				return 1 + CountNullablePositions (array.ElementType);
-
-			if (type.IsValueType)
-				return 0;
-
-			if (type is GenericInstanceType git) {
-				int count = 1; // the type itself
-				foreach (var arg in git.GenericArguments)
-					count += CountNullablePositions (arg);
-				return count;
-			}
-
-			return 1;
+			// CanonicalType would also discard the signature's inner nullability annotations.
+			return blockPointer.PointeeType.UnqualifiedDesugaredType as FunctionProtoType;
 		}
 	}
 }

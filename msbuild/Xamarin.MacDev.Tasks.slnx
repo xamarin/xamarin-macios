@@ -28,10 +28,6 @@
     <BuildType Solution="Debug-net461|*" Project="Debug" />
     <BuildType Solution="Debug-netstandard2.0|*" Project="Debug" />
   </Project>
-  <Project Path="Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj">
-    <BuildType Solution="Debug-net461|*" Project="Debug" />
-    <BuildType Solution="Debug-netstandard2.0|*" Project="Debug" />
-  </Project>
   <Project Path="Xamarin.MacDev.Tasks/Xamarin.MacDev.Tasks.csproj">
     <BuildType Solution="Debug-net461|*" Project="Debug" />
     <BuildType Solution="Debug-netstandard2.0|*" Project="Debug" />

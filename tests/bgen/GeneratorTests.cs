@@ -15,6 +15,7 @@ namespace GeneratorTests {
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding ("");
 			bgen.ResponseFile = Path.Combine (Cache.CreateTemporaryDirectory (), "rspfile");
 

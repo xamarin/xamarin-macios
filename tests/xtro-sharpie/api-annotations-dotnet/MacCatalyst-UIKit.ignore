@@ -384,7 +384,6 @@
 !missing-protocol-conformance! UITextView should conform to UITextSearching (defined in '' category)
 
 # results from initial block parameter nullability analysis
-!missing-null-allowed! 'System.Void UIKit.NSTextContentManager::SynchronizeTextLayoutManagers(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIApplication::SetAlternateIconName(System.String,System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUIApplicationDelegate::HandleWatchKitExtensionRequest(UIKit.UIApplication,Foundation.NSDictionary,System.Action`1<Foundation.NSDictionary>)' is missing a '?' on parameter 'reply' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIDocumentBrowserViewController::ImportDocument(Foundation.NSUrl,Foundation.NSUrl,UIKit.UIDocumentBrowserImportMode,System.Action`2<Foundation.NSUrl,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #0
@@ -430,7 +429,6 @@
 !missing-null-allowed! 'System.String UIKit.IUIGuidedAccessRestrictionDelegate::GetTextForGuidedAccessRestriction(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.IUITextInput::TextInRange(UIKit.UITextRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String[] UIKit.IUIGuidedAccessRestrictionDelegate::get_GetGuidedAccessRestrictionIdentifiers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void UIKit.INSTextElementProvider::Synchronize(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUIMenuLeaf::set_SelectedImage(UIKit.UIImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUITextInput::SetMarkedText(System.String,Foundation.NSRange)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.IUIPopoverPresentationControllerSourceItem UIKit.IUIMenuLeaf::get_PresentationSourceItem()' is missing an [NullAllowed] on return type
@@ -447,3 +445,15 @@
 !missing-null-allowed! 'UIKit.UIView UIKit.IUIInteraction::get_View()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.IUIViewControllerTransitionCoordinatorContext::GetTransitionViewControllerForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController UIKit.IUIViewControllerTransitionCoordinatorContext::GetViewControllerForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
+!extra-null-allowed! 'System.Boolean UIKit.UIPrinterPickerController::Present(System.Boolean,UIKit.UIPrinterPickerCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrinterPickerController::PresentFromBarButtonItem(UIKit.UIBarButtonItem,System.Boolean,UIKit.UIPrinterPickerCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrinterPickerController::PresentFromRect(CoreGraphics.CGRect,UIKit.UIView,System.Boolean,UIKit.UIPrinterPickerCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrintInteractionController::Present(System.Boolean,UIKit.UIPrintInteractionCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrintInteractionController::PresentFromBarButtonItem(UIKit.UIBarButtonItem,System.Boolean,UIKit.UIPrintInteractionCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrintInteractionController::PresentFromRectInView(CoreGraphics.CGRect,UIKit.UIView,System.Boolean,UIKit.UIPrintInteractionCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!extra-null-allowed! 'System.Boolean UIKit.UIPrintInteractionController::PrintToPrinter(UIKit.UIPrinter,UIKit.UIPrintInteractionCompletionHandler)' has an extraneous '?' on parameter 'completion' block parameter #0
+!missing-null-allowed! 'System.Void UIKit.UICollectionViewDropPlaceholder::set_PreviewParametersProvider(System.Func`2<UIKit.UICollectionViewCell,UIKit.UIDragPreviewParameters>)' is missing a '?' on parameter 'value' block return type
+!missing-null-allowed! 'System.Void UIKit.UIDragItem::set_PreviewProvider(System.Func`1<UIKit.UIDragPreview>)' is missing a '?' on parameter 'value' block return type
+!missing-null-allowed! 'System.Void UIKit.UINavigationItem::set_TitleMenuProvider(System.Func`2<Foundation.NSArray`1<UIKit.UIMenuElement>,UIKit.UIMenu>)' is missing a '?' on parameter 'value' block return type
+!missing-null-allowed! 'System.Void UIKit.UITableViewDropPlaceholder::set_PreviewParametersProvider(System.Func`2<UIKit.UITableViewCell,UIKit.UIDragPreviewParameters>)' is missing a '?' on parameter 'value' block return type
+!missing-null-allowed! 'UIKit.UIViewControllerTransition UIKit.UIViewControllerTransition::Zoom(UIKit.UIZoomTransitionOptions,System.Func`2<UIKit.UIZoomTransitionSourceViewProviderContext,UIKit.UIView>)' is missing a '?' on parameter 'sourceViewProvider' block return type

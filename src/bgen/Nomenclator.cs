@@ -27,7 +27,7 @@ public class Nomenclator {
 		if (a is null)
 			throw new BindingException (1006, true, mi.DeclaringType!.FullName, mi.Name);
 
-		ErrorHelper.Warning (1102, mi.DeclaringType!.FullName, mi.Name);
+		ErrorHelper.Warning (attributeManager.Log, 1102, mi.DeclaringType!.FullName, mi.Name);
 		return ((EventArgsAttribute) a).ArgName;
 	}
 

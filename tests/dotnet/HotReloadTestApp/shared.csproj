@@ -5,7 +5,6 @@
 
 		<ApplicationTitle>HotReloadTestApp</ApplicationTitle>
 		<ApplicationId>com.xamarin.hotreloadtestapp</ApplicationId>
-		<UseInterpreter>true</UseInterpreter> <!-- 'dotnet watch' only works when there's an interpreter -->
 		<MtouchLink>None</MtouchLink> <!-- and the trimmer can't be enabled, otherwise the assemblies 'dotnet watch' tries to load might reference APIs that have been trimmed away -->
 		<Registrar>partial-static</Registrar> <!-- and the registrar can't modify user assemblies (the default 'managed-static' registrar injects code into user assemblies, changing their MVID and breaking hot reload) -->
 

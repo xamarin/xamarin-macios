@@ -90,6 +90,9 @@
     <Compile Include="..\common\MachO.cs">
       <Link>external/tools/common/MachO.cs</Link>
     </Compile>
+    <Compile Include="..\common\RegistrarAssembliesObjectWriter.cs">
+      <Link>external/tools/common/RegistrarAssembliesObjectWriter.cs</Link>
+    </Compile>
     <Compile Include="..\common\Application.cs">
       <Link>external/tools/common/Application.cs</Link>
     </Compile>

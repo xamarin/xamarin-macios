@@ -63,6 +63,12 @@ Build tasks ship to customers. Getting them wrong causes broken builds.
 | **`FileWrites` for intermediate files** | Intermediate files must be added to `@(FileWrites)` so `IncrementalClean` doesn't delete them. Don't use `<Output TaskParameter="..." ItemName="FileWrites" />` — it won't evaluate when the target is skipped. |
 | **Condition evaluation timing** | `Condition` on a `<Target>` is evaluated *before* `DependsOnTargets` runs. Comments should document this when it matters. |
 
+**Localizable build messages:** In `msbuild/Xamarin.MacDev.Tasks` and
+`tools/assembly-preparer`, flag any user-visible error, warning, informational
+message, or exception text that is hard-coded instead of sourced from an English
+`.resx` resource (such as `MSBStrings.resx` or `Errors.resx`). See §15 for the rule on
+generated translations.
+
 ---
 
 ## 4. MSBuild Targets & XML

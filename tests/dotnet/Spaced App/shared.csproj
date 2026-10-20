@@ -7,7 +7,6 @@
 		<ApplicationId>com.xamarin.spacedapp</ApplicationId>
 		<ApplicationVersion>1.0</ApplicationVersion>
 
-		<UseInterpreter>true</UseInterpreter> <!-- speeds up testing -->
 		<ExcludeTouchUnitReference>true</ExcludeTouchUnitReference>
 		<ExcludeNUnitLiteReference>true</ExcludeNUnitLiteReference>
 	</PropertyGroup>

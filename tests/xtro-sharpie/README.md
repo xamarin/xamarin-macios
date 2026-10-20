@@ -112,6 +112,39 @@ Those should be _good enough_ to be execute on the bots on each build. They must
 
 E.g. rules might be too noisy and require refinement, either in code or in external files. Until they have zero defect they must be commented;
 
+### Callback nullability
+
+`NullabilityCheck` compares block parameters and return values with the managed
+delegate's `Invoke` signature, including named delegates and constructed generic
+delegates such as `Action` and `Func`. It checks callbacks passed to methods,
+returned by methods, and exposed by properties. Read/write properties are checked
+through their setter; readonly properties are checked through their getter.
+
+The callback object's nullability is independent of its signature. Inner
+diagnostics identify the bound method and the callback's parameter index or
+return type. Native `_Null_unspecified` and unannotated types do not imply
+nullable. A shared delegate is compared at every native use, since those uses
+may have different contracts. The check compares each signature slot's outer
+nullability, not collection elements or recursively nested callback signatures.
+
+The focused tests use synthetic Objective-C declarations and managed fixtures,
+without Apple frameworks or platform assemblies:
+
+```sh
+make -C tests/xtro-sharpie/UnitTests run-tests TEST_FILTER="--filter FullyQualifiedName~NullabilityTests"
+```
+
+Native cases require the pinned Clang runtime (ARM64 on macOS). The
+`ManagedCallbackNullabilityTests` filter runs the metadata-only cases without
+loading native Clang.
+
+When updating baselines, run classification with the configured Xcode SDK on all
+enabled platforms and review the new inner diagnostics separately from existing
+outer-callback entries. Keep existing generic callback diagnostic text stable.
+Classify reviewed, already-shipped discrepancies in the appropriate `.ignore`
+files; use `.todo` for short-term fixes. Do not infer new baselines from an older
+SDK or hide all uses of a delegate after checking only one of them.
+
 ### Ideas
 
 Anything we do not check but for which data is available, e.g.

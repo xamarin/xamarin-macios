@@ -37,15 +37,15 @@ namespace CoreGraphics {
 
 	// convenience enum mapped to kCGImagePropertyColorModelXXX fields (see imageio.cs)
 	/// <summary>An enumeration of valid color models.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <remarks>These values represent the image color-model metadata exposed by <see cref="CGImageProperties.ColorModel"/>.</remarks>
 	public enum CGImageColorModel {
-		/// <summary>To be added.</summary>
+		/// <summary>The red, green, and blue color model.</summary>
 		RGB,
-		/// <summary>To be added.</summary>
+		/// <summary>The grayscale color model.</summary>
 		Gray,
-		/// <summary>To be added.</summary>
+		/// <summary>The cyan, magenta, yellow, and black color model.</summary>
 		CMYK,
-		/// <summary>To be added.</summary>
+		/// <summary>The CIE L*a*b* color model.</summary>
 		Lab,
 	}
 

@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BundleStructureNonRemotablePlatforms (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -36,7 +36,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BuildAppWithXCFrameworkWithSymlinks (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -116,19 +116,12 @@ namespace Xamarin.Tests {
 
 		[Category ("RemoteWindows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", BundleStructureTest.CodeSignature.All, "Debug")]
-		public void BundleStructureWithRemoteMac_Mono (ApplePlatform platform, string runtimeIdentifiers, BundleStructureTest.CodeSignature signature, string configuration)
+		public void BundleStructureWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers, BundleStructureTest.CodeSignature signature, string configuration)
 		{
-			BundleStructureWithRemoteMac (platform, runtimeIdentifiers, signature, configuration, useMonoRuntime: true);
+			BundleStructureWithRemoteMacImpl (platform, runtimeIdentifiers, signature, configuration);
 		}
 
-		[Category ("RemoteWindows")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", BundleStructureTest.CodeSignature.All, "Debug")]
-		public void BundleStructureWithRemoteMac_CoreCLR (ApplePlatform platform, string runtimeIdentifiers, BundleStructureTest.CodeSignature signature, string configuration)
-		{
-			BundleStructureWithRemoteMac (platform, runtimeIdentifiers, signature, configuration, useMonoRuntime: false);
-		}
-
-		void BundleStructureWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers, BundleStructureTest.CodeSignature signature, string configuration, bool useMonoRuntime)
+		void BundleStructureWithRemoteMacImpl (ApplePlatform platform, string runtimeIdentifiers, BundleStructureTest.CodeSignature signature, string configuration)
 		{
 			var project = "BundleStructure";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -143,7 +136,7 @@ namespace Xamarin.Tests {
 			properties ["_IsAppSigned"] = signature != BundleStructureTest.CodeSignature.None ? "true" : "false";
 			if (!string.IsNullOrWhiteSpace (configuration))
 				properties ["Configuration"] = configuration;
-			properties ["UseMonoRuntime"] = useMonoRuntime ? "true" : "false";
+			properties ["UseMonoRuntime"] = "false";
 
 			// Copy the app bundle to Windows so that we can inspect the results.
 			properties ["CopyAppBundleToWindows"] = "true";
@@ -153,8 +146,7 @@ namespace Xamarin.Tests {
 			var warningMessages = BundleStructureTest.FilterWarnings (warnings, platform, canonicalizePaths: true);
 
 			var isReleaseBuild = string.Equals (configuration, "Release", StringComparison.OrdinalIgnoreCase);
-			var isCoreCLR = !useMonoRuntime;
-			var maxPathLength = isCoreCLR ? 180 : 130;
+			var maxPathLength = 180;
 			var platformString = platform.AsString ();
 			var tfm = platform.ToFramework ();
 			var testsDirectory = Path.GetDirectoryName (Path.GetDirectoryName (project_dir))!;
@@ -196,7 +188,7 @@ namespace Xamarin.Tests {
 			var compileAppManifestInputsPath = Path.Combine (objDir, "_CompileAppManifest.inputs");
 			var sharedDotNetPlistPath = Path.Combine (objDir, "unpack", "bindings-framework-test", "PartialAppManifest", "shared-dotnet.plist");
 
-			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: isCoreCLR);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: true);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -227,7 +219,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings, platform, canonicalizePaths: true);
 
-			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: isCoreCLR);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: true);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 1");
 			AssertFileStateUnchanged (sharedDotNetPlistState, sharedDotNetPlistPath, "Rebuild 1: shared-dotnet.plist");
 			AssertFileStateUnchanged (compileAppManifestInputsState, compileAppManifestInputsPath, "Rebuild 1: _CompileAppManifest.inputs");
@@ -247,7 +239,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings, platform, canonicalizePaths: true);
 
-			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: isCoreCLR);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: true);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 2");
 			AssertFileStateUnchanged (sharedDotNetPlistState, sharedDotNetPlistPath, "Rebuild 2: shared-dotnet.plist");
 			AssertFileStateUnchanged (compileAppManifestInputsState, compileAppManifestInputsPath, "Rebuild 2: _CompileAppManifest.inputs");
@@ -264,7 +256,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings, platform, canonicalizePaths: true);
 
-			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: isCoreCLR);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild, isCoreCLR: true);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");
 			AssertFileStateUnchanged (sharedDotNetPlistState, sharedDotNetPlistPath, "Rebuild 3: shared-dotnet.plist");
 			AssertFileStateUnchanged (compileAppManifestInputsState, compileAppManifestInputsPath, "Rebuild 3: _CompileAppManifest.inputs");
@@ -279,21 +271,11 @@ namespace Xamarin.Tests {
 		[Category ("RemoteWindows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-x64", "Debug")]
-		public void PluralRuntimeIdentifiersWithRemoteMac_Mono (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "Debug")]
+		public void PluralRuntimeIdentifiersWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var properties = AddRemoteProperties ();
-			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, useMonoRuntime: true, extraProperties: properties, configuration: configuration);
-		}
-
-		[Category ("RemoteWindows")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-x64", "Debug")]
-		public void PluralRuntimeIdentifiersWithRemoteMac_CoreCLR (ApplePlatform platform, string runtimeIdentifiers, string configuration)
-		{
-			var properties = AddRemoteProperties ();
-			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, useMonoRuntime: false, extraProperties: properties, configuration: configuration);
+			DotNetProjectTest.PluralRuntimeIdentifiersImpl (platform, runtimeIdentifiers, extraProperties: properties, configuration: configuration);
 		}
 
 		[Category ("RemoteWindows")]
@@ -313,6 +295,41 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (15));
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void TrimmerKeepsParameterNamesWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var projectPath = GetProjectPath ("TrimmerMetadata", platform: platform);
+			Clean (projectPath);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = "Debug";
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_CopyLinkerOutputToWindows"] = "true";
+
+			var result = DotNet.AssertBuild (projectPath, properties, timeout: TimeSpan.FromMinutes (15));
+			AssertThatLinkerExecuted (result);
+
+			var assemblyPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers), "linked", "TrimmerMetadataLibrary.dll");
+			Assert.That (assemblyPath, Does.Exist, "Linked library should be copied back to Windows");
+
+			using var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly (assemblyPath);
+			var model = assembly.MainModule.GetType ("TrimmerMetadataLibrary.MetadataModel");
+			if (model is null) {
+				Assert.Fail ("Trimmable model should survive linking");
+				return;
+			}
+
+			var constructor = model.Methods.Single (method => method.IsConstructor && method.Parameters.Count == 2);
+			var withValue = model.Methods.Single (method => method.Name == "WithValue");
+			Assert.That (constructor.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "identifier", "description" }), "Constructor parameter names");
+			Assert.That (withValue.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "value" }), "Method parameter name");
 		}
 
 		static void AssertWarningsEqual (IList<string> expected, IList<string> actual, string message)
@@ -463,10 +480,9 @@ namespace Xamarin.Tests {
 #endif // NET11_0_OR_GREATER
 
 		[Category ("RemoteWindows")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug", true)]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug", false)]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release", false)]
-		public void RemoteTest (ApplePlatform platform, string runtimeIdentifiers, string configuration, bool useMonoRuntime)
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
+		public void RemoteTest (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var project = "MySimpleApp";
 
@@ -480,7 +496,7 @@ namespace Xamarin.Tests {
 
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
-			properties ["UseMonoRuntime"] = useMonoRuntime.ToString ();
+			properties ["UseMonoRuntime"] = "False";
 			properties ["Configuration"] = configuration;
 
 			// Copy the app bundle to Windows so that we can inspect the results.

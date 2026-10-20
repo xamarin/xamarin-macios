@@ -5,3 +5,5 @@
 
 ## The MKOverlay protocol implements the MKAnnotation protocol, which has a required 'coordinate' property, so the API is there.
 !missing-protocol-member! MKOverlay::coordinate not found
+!missing-null-allowed! 'System.Void MapKit.MKMapItemRequest::GetMapItem(System.Action`2<MapKit.MKMapItem,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void MapKit.MKMapItemRequest::GetMapItem(System.Action`2<MapKit.MKMapItem,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1

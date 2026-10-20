@@ -25,7 +25,6 @@ namespace Xamarin.Tests {
 		public List<string> Sources = new List<string> ();
 		public List<string> ExtraSources = new List<string> ();
 		public List<string> References = new List<string> ();
-		public List<string>? CompileCommand = null;
 
 		// If BaseLibrary and AttributeLibrary are null, we calculate a default value
 		public string? BaseLibrary;
@@ -93,18 +92,6 @@ namespace Xamarin.Tests {
 			if (Profile != Profile.None)
 				targetFramework = GetTargetFramework (Profile);
 
-			if (CompileCommand is null) {
-				if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var args, out var ex))
-					throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
-
-				CompileCommand = new List<string> (args);
-			}
-
-			if (CompileCommand.Count > 0) {
-				sb.Add ($"--compile-command");
-				sb.Add (string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.ToArray ())));
-			}
-
 			if (CompiledApiDefinitionAssembly is not null) {
 				sb.Add ($"--compiled-api-definition-assembly");
 				sb.Add (CompiledApiDefinitionAssembly);
@@ -131,24 +118,7 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (targetFramework))
 				sb.Add ($"--target-framework={targetFramework}");
 
-			foreach (var ad in ApiDefinitions)
-				sb.Add ($"--api={ad}");
-
-			foreach (var s in Sources)
-				sb.Add ($"-s={s}");
-
-			foreach (var x in ExtraSources)
-				sb.Add ($"-x={x}");
-
-			if (ReferenceBclByDefault) {
-				if (tf is null) {
-					// do nothing
-				} else {
-					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
-				}
-			}
-
-			foreach (var r in References)
+			foreach (var r in GetReferences (tf))
 				sb.Add ($"-r={r}");
 
 			if (!string.IsNullOrEmpty (TmpDirectory))
@@ -160,13 +130,10 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (Out))
 				sb.Add ($"--out={Out}");
 
+			sb.Add ($"--sourceonly={GetGeneratedSourcesFileList ()}");
+
 			if (ProcessEnums)
 				sb.Add ("--process-enums");
-
-			if (Defines is not null) {
-				foreach (var d in Defines)
-					sb.Add ($"-d={d}");
-			}
 
 			if (WarnAsError is not null) {
 				var arg = "--warnaserror";
@@ -225,7 +192,37 @@ namespace Xamarin.Tests {
 
 		int Execute ()
 		{
+			var compileApiDefinitions = false;
+			if (CompiledApiDefinitionAssembly is null) {
+				var apiDefinitionName = ApiDefinitions.Count > 0 ? Path.GetFileNameWithoutExtension (ApiDefinitions [0]) : "compiled-api-definitions";
+				var compiledApiDefinitionDirectory = Path.Combine (EnsureTempDir (), "compiled-api-definitions");
+				Directory.CreateDirectory (compiledApiDefinitionDirectory);
+				CompiledApiDefinitionAssembly = Path.Combine (compiledApiDefinitionDirectory, apiDefinitionName + ".dll");
+				compileApiDefinitions = true;
+			}
+
 			var arguments = BuildArgumentArray ();
+			if (Profile == Profile.None)
+				return ExecuteBgen (arguments);
+
+			if (compileApiDefinitions) {
+				var compileApiDefinitionsResult = Compile (CompiledApiDefinitionAssembly, ApiDefinitions.Concat (Sources), true);
+				if (compileApiDefinitionsResult != 0)
+					return compileApiDefinitionsResult;
+			}
+
+			var rv = ExecuteBgen (arguments);
+			if (rv != 0)
+				return rv;
+
+			var compileResult = Compile (AssemblyPath, File.ReadAllLines (GetGeneratedSourcesFileList ()).Concat (Sources).Concat (ExtraSources), false);
+			if (InProcess)
+				ParseMessages ();
+			return compileResult;
+		}
+
+		int ExecuteBgen (string [] arguments)
+		{
 			var in_process = InProcess;
 			if (in_process) {
 				int rv;
@@ -246,10 +243,100 @@ namespace Xamarin.Tests {
 					}
 				}
 				Console.WriteLine (Output);
-				ParseMessages ();
-				return rv;
+				if (rv != 0) {
+					ParseMessages ();
+					return rv;
+				}
+			} else {
+				var rv = Execute (arguments, always_show_output: true);
+				if (rv != 0)
+					return rv;
 			}
-			return Execute (arguments, always_show_output: true);
+
+			return 0;
+		}
+
+		IEnumerable<string> GetReferences (TargetFramework? targetFramework)
+		{
+			foreach (var reference in References)
+				yield return reference;
+
+			if (ReferenceBclByDefault && targetFramework.HasValue && !string.IsNullOrEmpty (Configuration.DotNetBclDir)) {
+				foreach (var reference in Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"))
+					yield return reference;
+			}
+		}
+
+		string GetGeneratedSourcesFileList ()
+		{
+			return Path.Combine (EnsureTempDir (), "generated-sources.txt");
+		}
+
+		int Compile (string outputAssembly, IEnumerable<string> sources, bool apiDefinitions)
+		{
+			if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var command, out var ex))
+				throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+			if (command.Length == 0)
+				throw new InvalidOperationException ("No .NET C# compiler command is configured for the bgen tests.");
+
+			var arguments = new List<string> ();
+			var targetFramework = Profile == Profile.None ? (TargetFramework?) null : TargetFramework.Parse (GetTargetFramework (Profile));
+			var baseLibrary = BaseLibrary ?? (targetFramework.HasValue ? Configuration.GetBaseLibrary (targetFramework.Value) : null);
+			var attributeLibrary = AttributeLibrary ?? (targetFramework.HasValue ? Configuration.GetBindingAttributePath (targetFramework.Value) : null);
+
+			arguments.Add ("/debug");
+			arguments.Add ("/unsafe");
+			arguments.Add ("/target:library");
+			arguments.Add ($"/out:{outputAssembly}");
+			arguments.Add ("/define:NET");
+			if (Defines is not null) {
+				foreach (var define in Defines)
+					arguments.Add ($"/define:{define}");
+			}
+
+			if (apiDefinitions) {
+				arguments.Add ("/nowarn:436");
+				arguments.Add ("/nowarn:CS0419");
+				arguments.Add ("/nowarn:CS1574");
+				arguments.Add ("/nowarn:CS1580");
+			}
+
+			if (baseLibrary != None && !string.IsNullOrEmpty (baseLibrary)) {
+				arguments.Add ($"/r:{baseLibrary}");
+				var baseLibraryDirectory = Path.GetDirectoryName (baseLibrary);
+				if (!string.IsNullOrEmpty (baseLibraryDirectory))
+					arguments.Add ($"/lib:{baseLibraryDirectory}");
+			}
+			if (attributeLibrary != None && !string.IsNullOrEmpty (attributeLibrary) && apiDefinitions)
+				arguments.Add ($"/r:{attributeLibrary}");
+			foreach (var reference in GetReferences (targetFramework))
+				arguments.Add ($"/r:{reference}");
+
+			if (targetFramework.HasValue) {
+				arguments.Add ("/nostdlib");
+			}
+			arguments.Add ($"/doc:{Path.ChangeExtension (outputAssembly, ".xml")}");
+			arguments.Add ("/nowarn:1591");
+			if (!string.IsNullOrEmpty (NoWarn))
+				arguments.Add ($"/nowarn:{NoWarn}");
+
+			var globalUsings = Path.Combine (EnsureTempDir (), apiDefinitions ? "api-global-usings.cs" : "generated-global-usings.cs");
+			File.WriteAllText (globalUsings, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+			arguments.Add (globalUsings);
+			arguments.AddRange (sources);
+
+			var responseFile = Path.Combine (EnsureTempDir (), apiDefinitions ? "api-csc.rsp" : "generated-csc.rsp");
+			File.WriteAllLines (responseFile, arguments.Select (StringUtils.QuoteForProcess));
+
+			var compilerArguments = command.Skip (1).ToList ();
+			if (targetFramework.HasValue)
+				compilerArguments.Add ("/noconfig");
+			compilerArguments.Add ($"@{responseFile}");
+			StringBuilder compilerOutput;
+			var rv = ExecutionHelper.Execute (command [0], compilerArguments, out compilerOutput, WorkingDirectory);
+			Output.Append (compilerOutput);
+			Console.WriteLine (compilerOutput);
+			return rv;
 		}
 
 		public void AssertApiCallsMethod (string caller_namespace, string caller_type, string caller_method, string @called_method, string message)
@@ -405,7 +492,7 @@ namespace Xamarin.Tests {
 		public string AssemblyPath {
 			get {
 				var tmpDirectory = EnsureTempDir ();
-				return Out ?? (Path.Combine (tmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll"));
+				return Out ?? Path.Combine (tmpDirectory, "binding.dll");
 			}
 		}
 

@@ -140,6 +140,14 @@ interface SomeClass {
 Located in `msbuild/` directory:
 - `Xamarin.MacDev.Tasks` - Shared Apple development tasks
 
+### Localizable Build Messages
+
+All user-visible messages in `msbuild/Xamarin.MacDev.Tasks` and `tools/assembly-preparer`
+must come from an English `.resx` resource, such as
+`msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx` or `tools/mtouch/Errors.resx`.
+This includes logged errors, warnings, informational messages, and exception messages
+shown to users. Do not hard-code these messages in C# or edit generated translations.
+
 ### MSBuild Targets Pitfalls
 
 * **Never use `$([System.IO.Path]::GetFullPath('...'))` in MSBuild targets.** When building

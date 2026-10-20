@@ -9,3 +9,12 @@
 !missing-null-allowed! 'System.Void GameKit.GKLocalPlayer::set_AuthenticateHandler(System.Action`2<UIKit.UIViewController,Foundation.NSError>)' is missing a '?' on parameter 'value' block parameter #1
 !missing-null-allowed! 'System.Void GameKit.GKSavedGame::LoadData(System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKSavedGame::LoadData(System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1
+!missing-null-allowed! 'System.Void GameKit.GKAchievementDescription::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'imageLoadedHandler' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKAchievementDescription::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'imageLoadedHandler' block parameter #1
+!missing-null-allowed! 'System.Void GameKit.GKChallengeDefinition::LoadDefinitions(GameKit.GKChallengeDefinitionLoadDefinitionsHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKLeaderboard::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKLeaderboard::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'completionHandler' block parameter #1
+!missing-null-allowed! 'System.Void GameKit.GKLeaderboardSet::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKLeaderboardSet::LoadImage(GameKit.GKImageLoadedHandler)' is missing a '?' on parameter 'completionHandler' block parameter #1
+!missing-null-allowed! 'System.Void GameKit.GKPlayer::LoadPhoto(GameKit.GKPhotoSize,GameKit.GKPlayerPhotoLoaded)' is missing a '?' on parameter 'onCompleted' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKPlayer::LoadPhoto(GameKit.GKPhotoSize,GameKit.GKPlayerPhotoLoaded)' is missing a '?' on parameter 'onCompleted' block parameter #1

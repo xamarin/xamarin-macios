@@ -1,3 +1,6 @@
 # results from initial block parameter nullability analysis
 !deprecated-attribute-missing! NFCISO15693Tag::getSystemInfoWithRequestFlag:completionHandler: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NFCISO15693Tag::lockDFSIDWithRequestFlag:completionHandler: missing a [Deprecated] attribute
+!missing-null-allowed! 'System.Void CoreNFC.INFCIso15693Tag::GetSystemInfoAndUid(CoreNFC.NFCIso15693RequestFlag,CoreNFC.NFCIso15693TagGetSystemInfoAndUidCallback)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void CoreNFC.INFCIso15693Tag::SendRequest(System.IntPtr,System.IntPtr,Foundation.NSData,CoreNFC.NFCIso15693TagResponseCallback)' is missing a '?' on parameter 'completionHandler' block parameter #1
+!missing-null-allowed! 'System.Void CoreNFC.INFCNdefTag::QueryNdefStatus(CoreNFC.NFCQueryNdefStatusCompletionHandler)' is missing a '?' on parameter 'completionHandler' block parameter #2

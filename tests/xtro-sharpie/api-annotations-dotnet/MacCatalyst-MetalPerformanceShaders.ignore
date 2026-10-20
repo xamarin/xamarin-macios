@@ -4,3 +4,5 @@
 ## (baseline for https://github.com/dotnet/macios/issues/26053)
 !unknown-selector! MPSCNNKernel::sourceRegionForDestinationSize: not found
 !missing-null-allowed! 'System.String MetalPerformanceShaders.IMPSCnnInstanceNormalizationDataSource::get_Label()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'MetalPerformanceShaders.MPSImage MetalPerformanceShaders.MPSNNGraph::Execute(MetalPerformanceShaders.MPSImage[],System.Action`2<MetalPerformanceShaders.MPSImage,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #0
+!missing-null-allowed! 'MetalPerformanceShaders.MPSImage MetalPerformanceShaders.MPSNNGraph::Execute(MetalPerformanceShaders.MPSImage[],System.Action`2<MetalPerformanceShaders.MPSImage,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1

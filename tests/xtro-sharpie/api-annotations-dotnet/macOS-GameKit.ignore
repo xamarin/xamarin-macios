@@ -14,3 +14,6 @@
 !missing-null-allowed! 'System.Void GameKit.GKLocalPlayer::SaveGameData(Foundation.NSData,System.String,System.Action`2<GameKit.GKSavedGame,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1
 !missing-null-allowed! 'System.Void GameKit.GKSavedGame::LoadData(System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKSavedGame::LoadData(System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1
+!missing-null-allowed! 'System.Void GameKit.GKChallengeDefinition::LoadDefinitions(GameKit.GKChallengeDefinitionLoadDefinitionsHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKLocalPlayer::set_AuthenticateHandler(System.Action`2<AppKit.NSViewController,Foundation.NSError>)' is missing a '?' on parameter 'value' block parameter #0
+!missing-null-allowed! 'System.Void GameKit.GKLocalPlayer::set_AuthenticateHandler(System.Action`2<AppKit.NSViewController,Foundation.NSError>)' is missing a '?' on parameter 'value' block parameter #1

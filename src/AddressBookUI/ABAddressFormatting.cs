@@ -31,8 +31,7 @@ namespace AddressBookUI {
 	///     </remarks>
 	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("ios", "Use the 'Contacts' API instead.")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[ObsoletedOSPlatform ("maccatalyst", "Use the 'Contacts' API instead.")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	static public class ABAddressFormatting {

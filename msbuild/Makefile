@@ -39,8 +39,7 @@ NETTARGETFRAMEWORK = $(DOTNET_TFM)
 WINDOWSRUNTIMEIDENTIFIER = win
 
 LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
-TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
-LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
+TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.MacDev.Tasks)
 
 ##
 ## iOS definitions
@@ -52,7 +51,7 @@ IOS_WINDOWS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(NETTARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.props)       \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(NETTARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.targets)       \
 
-TASK_ASSEMBLIES = Xamarin.MacDev.Tasks $(LOCALIZATION_ASSEMBLIES)
+TASK_ASSEMBLIES = Xamarin.MacDev.Tasks
 IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
 IOS_WINDOWS_DEPENDENCIES = System.Diagnostics.Tracer System.Formats.Asn1 System.Buffers System.Memory System.Numerics.Vectors System.Runtime.CompilerServices.Unsafe System.Security.Cryptography.ProtectedData System.Security.Cryptography.Pkcs Microsoft.Win32.Registry
 
@@ -88,9 +87,6 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/%: Xamarin.Shared/% | $(D
 	$$(Q) install -m 644 $$< $$@
 
 $(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/$(TARGETFRAMEWORK)/%: Xamarin.MacDev.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $$(DOTNET_DIRECTORIES_$(1))
-	$$(Q) install -m 644 $$< $$@
-
-$(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild/$(TARGETFRAMEWORK)/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $$(DOTNET_DIRECTORIES_$(1))
 	$$(Q) install -m 644 $$< $$@
 
 .copy-stamp-$(1): $$(wildcard Xamarin.MacDev.Tasks/bin/$(CONFIG)/$(NETTARGETFRAMEWORK)/*) $$(wildcard Xamarin.MacDev.Tasks/bin/$(CONFIG)/$(NETTARGETFRAMEWORK)/*/*) .build-stamp | $(DOTNET_DESTDIR)/$($(2)_NUGET_SDK_NAME)/tools/msbuild
@@ -142,7 +138,7 @@ endif
 
 # make all the target assemblies build when any of the sources have changed
 $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll $(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).pdb): .build-stamp
-$(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
+$(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.MacDev.Tasks/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
 
 # this is a directory-creating target.
 # we sort to remove duplicates
@@ -164,7 +160,7 @@ clean-local::
 	cd $(XAMARIN_MACDEV_PATH) && git clean -xfdq
 
 Versions.g.cs: Makefile $(TOP)/Make.config.inc
-	$(Q) printf "public static class VersionConstants {\\n" > $@.tmp
+	$(Q) printf "internal static class VersionConstants {\\n" > $@.tmp
 	$(Q) printf "\\tpublic const string NuGetVersion = \"$($(call uppercase,$(firstword $(DOTNET_PLATFORMS)))_NUGET_VERSION)\";\\n" >> $@.tmp
 	$(Q) echo $(foreach platform,$(ALL_DOTNET_PLATFORMS),"\\tpublic const string Microsoft_$(platform)_Version = \"$($(call uppercase,$(platform))_NUGET_VERSION_FULL)\";\\n") >> $@.tmp
 	$(Q) echo $(foreach platform,$(ALL_DOTNET_PLATFORMS),"\\tpublic const string Microsoft_$(platform)_Standard_Version = \"$($(call uppercase,$(platform))_NUGET_VERSION_MAJOR).$($(call uppercase,$(platform))_NUGET_VERSION_MINOR).0.$($(call uppercase,$(platform))_NUGET_VERSION_PATCH)\";\\n") >> $@.tmp

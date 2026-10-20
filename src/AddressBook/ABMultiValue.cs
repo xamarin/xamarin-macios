@@ -272,7 +272,7 @@ namespace AddressBook {
 		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle,
 					v => (T) (object) Runtime.GetNSObject (v)!,
-					v => ((INativeObject?) v).GetHandle (), owns)
+					v => Runtime.RetainAndAutoreleaseNativeObject ((INativeObject?) v), owns)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (typeof (T)))
 				throw new InvalidOperationException ("T must be an NSObject!");

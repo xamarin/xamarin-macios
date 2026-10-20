@@ -5,3 +5,4 @@
 
 # the enum is available on tvOS, but none of its values are, so just don't bind the enum itself
 !missing-enum! AUAudioMixRenderingStyle not bound
+!missing-null-allowed! 'AudioUnit.AUInternalRenderBlock AudioUnit.AUAudioUnit::get_InternalRenderBlock()' is missing a '?' on return type block parameter #5

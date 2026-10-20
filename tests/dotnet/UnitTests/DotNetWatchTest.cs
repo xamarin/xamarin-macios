@@ -13,16 +13,14 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetWatchTest : TestBaseClass {
 		[Test]
-		[TestCase (ApplePlatform.MacOSX, false, false)]
-		[TestCase (ApplePlatform.MacCatalyst, false, false)]
-		[TestCase (ApplePlatform.iOS, false, false)]
-		[TestCase (ApplePlatform.MacCatalyst, true, false)]
-		[TestCase (ApplePlatform.iOS, true, false)]
-		[TestCase (ApplePlatform.MacCatalyst, false, true)]
-		[TestCase (ApplePlatform.MacOSX, false, true)]
-		public void DotNetWatch (ApplePlatform platform, bool useMonoRuntime, bool enableSandbox)
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		public void DotNetWatch (ApplePlatform platform, bool enableSandbox)
 		{
-			DotNetWatchImpl (platform, useMonoRuntime, enableSandbox, usePhysicalDevice: false);
+			DotNetWatchImpl (platform, enableSandbox, usePhysicalDevice: false);
 		}
 
 		// This test is opt-in: set the DEVICE environment variable to the name of a connected device.
@@ -34,7 +32,7 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (deviceName))
 				Assert.Inconclusive ("Set the DEVICE environment variable to a connected device name to run this test.");
 
-			DotNetWatchImpl (platform, useMonoRuntime: false, enableSandbox: false, usePhysicalDevice: true, connectionMode: "usb");
+			DotNetWatchImpl (platform, enableSandbox: false, usePhysicalDevice: true, connectionMode: "usb");
 		}
 
 		// This test is opt-in: set the DEVICE environment variable to the name of a connected device.
@@ -48,10 +46,10 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (deviceName))
 				Assert.Inconclusive ("Set the DEVICE environment variable to a connected device name to run this test.");
 
-			DotNetWatchImpl (platform, useMonoRuntime: false, enableSandbox: false, usePhysicalDevice: true, connectionMode: "wifi");
+			DotNetWatchImpl (platform, enableSandbox: false, usePhysicalDevice: true, connectionMode: "wifi");
 		}
 
-		void DotNetWatchImpl (ApplePlatform platform, bool useMonoRuntime, bool enableSandbox, bool usePhysicalDevice, string connectionMode = "usb")
+		void DotNetWatchImpl (ApplePlatform platform, bool enableSandbox, bool usePhysicalDevice, string connectionMode = "usb")
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -95,9 +93,9 @@ namespace Xamarin.Tests {
 			}
 
 			if (verboseLogging)
-				Log ($"=== DotNetWatch ({platform}, useMonoRuntime: {useMonoRuntime}, enableSandbox: {enableSandbox}): logging to {verboseLogPath} and {debugLogPath} ===");
+				Log ($"=== DotNetWatch ({platform}, enableSandbox: {enableSandbox}): logging to {verboseLogPath} and {debugLogPath} ===");
 
-			Log ($"Starting DotNetWatch test for {platform} (useMonoRuntime: {useMonoRuntime}, enableSandbox: {enableSandbox}).");
+			Log ($"Starting DotNetWatch test for {platform} (enableSandbox: {enableSandbox}).");
 			Log ($"Project path: {projectPath}");
 			Log ($"Project directory: {projectDirectory}");
 			Log ($"Temporary directory: {tmpdir}");
@@ -241,15 +239,10 @@ namespace Xamarin.Tests {
 
 			var env = new Dictionary<string, string?> {
 				{ "AdditionalFile", additionalFile },
-				{ "UseMonoRuntime", useMonoRuntime ? "true" : "false" },
+				{ "UseMonoRuntime", "false" },
 				{ "RunWithOpen", "false" }, // this makes it so that the watched process is a subprocess, which means that ctrl-c in the terminal will kill everything. It also means that it'll get killed if something times out in the test.
 				{ "EnableSandbox", enableSandbox ? "true" : "false" },
 			};
-
-			if (useMonoRuntime)
-				env ["_DisableCheckForUnsupportedMonoMobileRuntime"] = "true";
-
-			DotNet.IgnoreIfUnsupportedMonoRuntime (useMonoRuntime);
 
 			if (usePhysicalDevice) {
 				// On a physical device, the app can't write to the Mac filesystem, so don't set the log file path.

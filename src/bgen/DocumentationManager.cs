@@ -66,7 +66,7 @@ public class DocumentationManager {
 		for (var i = 0; i < lines.Length; i++) {
 			var line = lines [i].TrimStart (' ');
 
-			// We compile code twice:
+			// The build compiles code twice:
 			// 1. The API bindings
 			// 2. The final (generated) binding code
 			// Any xml documentation from the API definitions are copied to the generated binding code,

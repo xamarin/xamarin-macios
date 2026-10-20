@@ -41,6 +41,21 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
+		public void ExplicitDeviceDoesNotRequireDeviceDiscovery ()
+		{
+			var task = CreateTask<GetMlaunchArguments> ();
+			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (ApplePlatform.iOS).ToString ();
+			task.AppManifestPath = CreateAppManifest (1, 2);
+			task.DeviceName = "explicit-device";
+			task.InstallApp = "MySimpleApp.app";
+			task.MlaunchPath = "/usr/bin/false";
+
+			ExecuteTask (task);
+
+			Assert.That (task.MlaunchArguments, Does.Contain ("--devname explicit-device"));
+		}
+
+		[Test]
 		public void ErrorsIfDevicesItemGroupIsEmpty ()
 		{
 			var task = CreateTask<GetMlaunchArguments> ();

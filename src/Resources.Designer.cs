@@ -85,17 +85,6 @@ namespace bgen {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not compile the API bindings.
-        ///		{0}
-        ///		.
-        /// </summary>
-        internal static string BI0002 {
-            get {
-                return ResourceManager.GetString("BI0002", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Frameworks were not loaded for platform {0}..
         /// </summary>
         internal static string BI0003 {
@@ -128,15 +117,6 @@ namespace bgen {
         internal static string BI0027 {
             get {
                 return ResourceManager.GetString("BI0027", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No C# compiler has been specified (using --compiler or --compile-command)..
-        /// </summary>
-        internal static string BI0028 {
-            get {
-                return ResourceManager.GetString("BI0028", resourceCulture);
             }
         }
         
@@ -191,17 +171,6 @@ namespace bgen {
         internal static string BI0099 {
             get {
                 return ResourceManager.GetString("BI0099", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not compile the generated API bindings.	
-        ///		{0}
-        ///		.
-        /// </summary>
-        internal static string BI1000 {
-            get {
-                return ResourceManager.GetString("BI1000", resourceCulture);
             }
         }
         
@@ -1228,6 +1197,15 @@ namespace bgen {
         internal static string BI1128 {
             get {
                 return ResourceManager.GetString("BI1128", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selector &apos;{0}&apos; on &apos;{1}&apos; contains invalid characters..
+        /// </summary>
+        internal static string BI1129 {
+            get {
+                return ResourceManager.GetString("BI1129", resourceCulture);
             }
         }
     }

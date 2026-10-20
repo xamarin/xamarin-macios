@@ -59,7 +59,6 @@ function af ()
 af_whitespace "$SRC_DIR/tests/cecil-tests/cecil-tests.csproj"
 af_whitespace "$SRC_DIR/tests/dotnet/UnitTests/DotNetUnitTests.csproj"
 af_whitespace "$SRC_DIR/msbuild/Messaging/Xamarin.Messaging.Build/Xamarin.Messaging.Build.csproj"
-af_whitespace "$SRC_DIR/msbuild/Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj"
 af_whitespace "$SRC_DIR/msbuild/Xamarin.MacDev.Tasks/Xamarin.MacDev.Tasks.csproj"
 af_whitespace "$SRC_DIR/msbuild/Xamarin.iOS.Tasks.Windows/Xamarin.iOS.Tasks.Windows.csproj"
 af_whitespace "$SRC_DIR/src/bgen/bgen.csproj"

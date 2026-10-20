@@ -6,10 +6,9 @@ using System.Collections.Generic;
 namespace AppKit {
 
 	public partial class NSDocument {
-		/// <param name="document">To be added.</param>
-		///     <param name="didDuplicate">To be added.</param>
-		///     <summary>To be added.</summary>
-		///     <remarks>To be added.</remarks>
+		/// <summary>Handles completion of a document duplication request.</summary>
+		/// <param name="document">The document for which duplication was requested.</param>
+		/// <param name="didDuplicate">Whether the document was duplicated.</param>
 		public delegate void DuplicateCallback (NSDocument document, bool didDuplicate);
 
 		[Register ("__NSDocumentDuplicateCallback")]

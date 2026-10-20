@@ -11,3 +11,7 @@
 !missing-type! CMRotationRateData not bound
 
 # added in 13 and deprecated in 14 so we will just ignore them
+!missing-null-allowed! 'System.Void CoreMotion.CMPedometer::QueryPedometerData(Foundation.NSDate,Foundation.NSDate,System.Action`2<CoreMotion.CMPedometerData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #0
+!missing-null-allowed! 'System.Void CoreMotion.CMPedometer::QueryPedometerData(Foundation.NSDate,Foundation.NSDate,System.Action`2<CoreMotion.CMPedometerData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1
+!missing-null-allowed! 'System.Void CoreMotion.CMPedometer::StartPedometerUpdates(Foundation.NSDate,System.Action`2<CoreMotion.CMPedometerData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #0
+!missing-null-allowed! 'System.Void CoreMotion.CMPedometer::StartPedometerUpdates(Foundation.NSDate,System.Action`2<CoreMotion.CMPedometerData,Foundation.NSError>)' is missing a '?' on parameter 'handler' block parameter #1

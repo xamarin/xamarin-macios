@@ -11,9 +11,9 @@ namespace CarPlay {
 
 		/// <summary>This enum is used to select how to initialize a new <see cref="CPNowPlayingSportsClock" /> instance.</summary>
 		[SupportedOSPlatform ("ios18.4")]
-		[SupportedOSPlatform ("maccatalyst18.4")]
-		[SupportedOSPlatform ("macos15.4")]
-		[SupportedOSPlatform ("tvos18.4")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 		public enum CPNowPlayingSportsClockTimeOption {
 			/// <summary>The <c>time</c> parameter passed to the constructor is elapsed time.</summary>
 			ElapsedTime,

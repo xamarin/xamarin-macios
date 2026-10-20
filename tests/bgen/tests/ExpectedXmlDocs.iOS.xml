@@ -4,6 +4,22 @@
         <name>api0</name>
     </assembly>
     <members>
+        <member name="T:XmlDocumentation.TEventArgs">
+            <summary>Provides data for an event based on a posted <see cref="T:Foundation.NSNotification" /> object.</summary>
+        </member>
+        <member name="M:XmlDocumentation.TEventArgs.#ctor(Foundation.NSNotification)">
+            <summary>Initializes a new instance of the <see cref="T:XmlDocumentation.TEventArgs" /> class.</summary>
+            <param name="notification">The underlying <see cref="T:Foundation.NSNotification" /> object from the posted notification.</param>
+        </member>
+        <member name="P:XmlDocumentation.TEventArgs.SomeValue">
+            <summary>TEventArgs.SomeValue</summary>
+        </member>
+        <member name="P:XmlDocumentation.TEventArgs.SomeOtherValue">
+            <summary>The value of the <c>TEventArgsSomeOtherValueKey</c> key from the underlying <see cref="T:Foundation.NSNotification" />'s user info dictionary.</summary>
+        </member>
+        <member name="T:XmlDocumentation.TShouldMutterEventArgs">
+            <summary>A delegate that represents the callback for the corresponding Objective-C delegate/protocol method.</summary>
+        </member>
         <member name="T:XmlDocumentation.CategoryA">
             <summary>CategoryA</summary>
         </member>
@@ -233,6 +249,29 @@
         </member>
         <member name="P:XmlDocumentation.OptionKeys.Option1">
             <summary>Summary for Option1Key.</summary>
+        </member>
+        <member name="T:XmlDocumentation.OptionsA">
+            <summary>Summary for OptionsA.</summary>
+        </member>
+        <member name="M:XmlDocumentation.OptionsA.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsA" /> with default (empty) values.</summary>
+        </member>
+        <member name="M:XmlDocumentation.OptionsA.#ctor(Foundation.NSDictionary)">
+            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsA" /> from the values that are specified in <paramref name="dictionary" />.</summary>
+            <param name="dictionary">The dictionary to use to populate the properties of this type.</param>
+        </member>
+        <member name="P:XmlDocumentation.OptionsA.Option1">
+            <summary>Summary for Option1.</summary>
+        </member>
+        <member name="M:XmlDocumentation.OptionsB.#ctor">
+            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsB" /> with default (empty) values.</summary>
+        </member>
+        <member name="M:XmlDocumentation.OptionsB.#ctor(Foundation.NSDictionary)">
+            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsB" /> from the values that are specified in <paramref name="dictionary" />.</summary>
+            <param name="dictionary">The dictionary to use to populate the properties of this type.</param>
+        </member>
+        <member name="P:XmlDocumentation.OptionsB.Option1">
+            <summary>Summary for Option1.</summary>
         </member>
         <member name="T:XmlDocumentation.IP1">
             <summary>
@@ -1114,45 +1153,6 @@
                </example>
                <para>For more information, see the documentation for the <see cref="T:UIKit.UIAppearance" /> class.</para>
              </remarks>
-        </member>
-        <member name="T:XmlDocumentation.OptionsA">
-            <summary>Summary for OptionsA.</summary>
-        </member>
-        <member name="M:XmlDocumentation.OptionsA.#ctor">
-            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsA" /> with default (empty) values.</summary>
-        </member>
-        <member name="M:XmlDocumentation.OptionsA.#ctor(Foundation.NSDictionary)">
-            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsA" /> from the values that are specified in <paramref name="dictionary" />.</summary>
-            <param name="dictionary">The dictionary to use to populate the properties of this type.</param>
-        </member>
-        <member name="P:XmlDocumentation.OptionsA.Option1">
-            <summary>Summary for Option1.</summary>
-        </member>
-        <member name="M:XmlDocumentation.OptionsB.#ctor">
-            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsB" /> with default (empty) values.</summary>
-        </member>
-        <member name="M:XmlDocumentation.OptionsB.#ctor(Foundation.NSDictionary)">
-            <summary>Creates a new <see cref="T:XmlDocumentation.OptionsB" /> from the values that are specified in <paramref name="dictionary" />.</summary>
-            <param name="dictionary">The dictionary to use to populate the properties of this type.</param>
-        </member>
-        <member name="P:XmlDocumentation.OptionsB.Option1">
-            <summary>Summary for Option1.</summary>
-        </member>
-        <member name="T:XmlDocumentation.TEventArgs">
-            <summary>Provides data for an event based on a posted <see cref="T:Foundation.NSNotification" /> object.</summary>
-        </member>
-        <member name="M:XmlDocumentation.TEventArgs.#ctor(Foundation.NSNotification)">
-            <summary>Initializes a new instance of the <see cref="T:XmlDocumentation.TEventArgs" /> class.</summary>
-            <param name="notification">The underlying <see cref="T:Foundation.NSNotification" /> object from the posted notification.</param>
-        </member>
-        <member name="P:XmlDocumentation.TEventArgs.SomeValue">
-            <summary>TEventArgs.SomeValue</summary>
-        </member>
-        <member name="P:XmlDocumentation.TEventArgs.SomeOtherValue">
-            <summary>The value of the <c>TEventArgsSomeOtherValueKey</c> key from the underlying <see cref="T:Foundation.NSNotification" />'s user info dictionary.</summary>
-        </member>
-        <member name="T:XmlDocumentation.TShouldMutterEventArgs">
-            <summary>A delegate that represents the callback for the corresponding Objective-C delegate/protocol method.</summary>
         </member>
     </members>
 </doc>

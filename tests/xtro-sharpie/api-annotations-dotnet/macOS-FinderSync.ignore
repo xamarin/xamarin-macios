@@ -1,2 +1,3 @@
 # This depends on https://github.com/dotnet/macios/pull/2315 being merged
 !missing-protocol-member! FIFinderSync::makeListenerEndpointForServiceName:itemURL:andReturnError: not found
+!missing-null-allowed! 'System.Void FinderSync.FIFinderSync::GetValues(System.String[],Foundation.NSUrl,FinderSync.GetValuesCompletionHandler)' is missing a '?' on parameter 'completion' block parameter #1

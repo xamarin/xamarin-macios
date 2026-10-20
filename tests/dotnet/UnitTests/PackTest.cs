@@ -307,13 +307,13 @@ namespace Xamarin.Tests {
 						expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/Info.plist");
 						if (!platformSpecificXcframework || platform == ApplePlatform.iOS) {
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/ios-arm64/XStaticArTest.framework/XStaticArTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/ios-arm64_x86_64-simulator/XStaticArTest.framework/XStaticArTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/ios-arm64-simulator/XStaticArTest.framework/XStaticArTest");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/ios-arm64/XStaticObjectTest.framework/XStaticObjectTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/ios-arm64_x86_64-simulator/XStaticObjectTest.framework/XStaticObjectTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/ios-arm64-simulator/XStaticObjectTest.framework/XStaticObjectTest");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64/XTest.framework/Info.plist");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64/XTest.framework/XTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/Info.plist");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64_x86_64-simulator/XTest.framework/XTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64-simulator/XTest.framework/Info.plist");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/ios-arm64-simulator/XTest.framework/XTest");
 						}
 						if (!platformSpecificXcframework || platform == ApplePlatform.MacCatalyst) {
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/ios-arm64_x86_64-maccatalyst/XStaticArTest.framework/XStaticArTest");
@@ -335,13 +335,13 @@ namespace Xamarin.Tests {
 						}
 						if (!platformSpecificXcframework || platform == ApplePlatform.TVOS) {
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/tvos-arm64/XStaticArTest.framework/XStaticArTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/tvos-arm64_x86_64-simulator/XStaticArTest.framework/XStaticArTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticArTest.xcframework/tvos-arm64-simulator/XStaticArTest.framework/XStaticArTest");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/tvos-arm64/XStaticObjectTest.framework/XStaticObjectTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/tvos-arm64_x86_64-simulator/XStaticObjectTest.framework/XStaticObjectTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XStaticObjectTest.xcframework/tvos-arm64-simulator/XStaticObjectTest.framework/XStaticObjectTest");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64/XTest.framework/Info.plist");
 							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64/XTest.framework/XTest");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/Info.plist");
-							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64_x86_64-simulator/XTest.framework/XTest");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64-simulator/XTest.framework/Info.plist");
+							expectedZipFiles.Add ($"lib/{tfm}/{assemblyName}.resources/XTest.xcframework/tvos-arm64-simulator/XTest.framework/XTest");
 						}
 					}
 				}

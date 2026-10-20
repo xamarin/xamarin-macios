@@ -94,15 +94,17 @@
 
 		<PropertyGroup>
 			<_R2RInputHashFile>$(IntermediateOutputPath)r2r-input.hash</_R2RInputHashFile>
+			<_R2RInputHashesCacheFile>$(IntermediateOutputPath)r2r-input-hashes.json</_R2RInputHashesCacheFile>
 		</PropertyGroup>
 		<ReadLinesFromFile File="$(_R2RInputHashFile)" Condition="Exists('$(_R2RInputHashFile)')">
 			<Output TaskParameter="Lines" ItemName="_PreviousR2RInputHash" />
 		</ReadLinesFromFile>
 
-		<!-- Hash the R2R input assemblies so we can detect when the set actually changes -->
-		<GetFileHash Files="@(_NonUserAssemblies)" Algorithm="SHA256">
+		<!-- Assume changed contents have a changed timestamp; keep the combined content hash so touched inputs don't trigger R2R compilation. -->
+		<GetCachedFileHash Files="@(_NonUserAssemblies)" CacheFile="$(_R2RInputHashesCacheFile)">
 			<Output TaskParameter="Items" ItemName="_NonUserAssembliesWithHash" />
-		</GetFileHash>
+			<Output TaskParameter="FilesHashed" PropertyName="_R2RInputFilesHashed" />
+		</GetCachedFileHash>
 		<Hash ItemsToHash="@(_NonUserAssembliesWithHash->'%(FileHash)')" IgnoreCase="false">
 			<Output TaskParameter="HashResult" PropertyName="_R2RInputHash" />
 		</Hash>
@@ -117,6 +119,7 @@
 
 		<ItemGroup>
 			<FileWrites Include="$(_R2RInputHashFile)" />
+			<FileWrites Include="$(_R2RInputHashesCacheFile)" />
 		</ItemGroup>
 	</Target>
 

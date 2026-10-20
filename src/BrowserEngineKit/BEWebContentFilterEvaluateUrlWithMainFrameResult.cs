@@ -4,7 +4,7 @@ namespace BrowserEngineKit {
 #if IOS || MACCATALYST
 	/// <summary>Contains the result of evaluating a URL for web content filtering.</summary>
 	[SupportedOSPlatform ("ios27.0")]
-	[SupportedOSPlatform ("maccatalyst27.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	public class BEWebContentFilterEvaluateUrlWithMainFrameResult {

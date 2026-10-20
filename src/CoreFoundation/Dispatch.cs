@@ -34,6 +34,7 @@
 #nullable enable
 
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace CoreFoundation {
@@ -267,7 +268,7 @@ namespace CoreFoundation {
 		extern static void dispatch_set_context (IntPtr o, IntPtr ctx);
 
 		[DllImport (Constants.libcLibrary)]
-		extern unsafe static void dispatch_apply_f (IntPtr iterations, IntPtr queue, IntPtr ctx, delegate* unmanaged<IntPtr, IntPtr, void> dispatch);
+		extern unsafe static void dispatch_apply_f (nint iterations, IntPtr queue, IntPtr ctx, delegate* unmanaged<IntPtr, nint, void> dispatch);
 
 		/// <summary>User defined context information attachech to a DispatchQueue.</summary>
 		///         <value>
@@ -394,11 +395,10 @@ namespace CoreFoundation {
 		}
 
 		[UnmanagedCallersOnly]
-		static void static_dispatcher_iterations_to_managed (IntPtr context, IntPtr count)
+		static void static_dispatcher_iterations_to_managed (IntPtr context, nint count)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
-			var obj = gch.Target as Tuple<Action<long>, DispatchQueue>;
-			gch.Free ();
+			var obj = gch.Target as Tuple<Action<nint>, DispatchQueue>;
 			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
@@ -412,7 +412,7 @@ namespace CoreFoundation {
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
-					obj.Item1 ((long) count);
+					obj.Item1 (count);
 				} finally {
 					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
@@ -569,16 +569,43 @@ namespace CoreFoundation {
 			GC.KeepAlive (block);
 		}
 
-		/// <param name="action">To be added.</param>
-		///         <param name="times">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <remarks>To be added.</remarks>
+#if !XAMCORE_5_0
+		/// <summary>Synchronously executes an action the specified number of times on this queue.</summary>
+		/// <param name="action">The action to execute, receiving the zero-based iteration index as a 32-bit integer.</param>
+		/// <param name="times">The nonnegative number of iterations to execute.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="action" /> is <see langword="null" />.</exception>
+		/// <remarks>
+		///   This method returns after all iterations complete. Iterations may execute concurrently when this is a concurrent queue.
+		///   Use <see cref="Submit(Action{nint}, nint)" /> for native-sized iteration indices.
+		/// </remarks>
+		[OverloadResolutionPriority (-1)]
 		public void Submit (Action<int> action, long times)
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-			unsafe {
-				dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_iterations_to_managed);
+			Submit (index => action (checked((int) index)), (nint) times);
+		}
+#endif // !XAMCORE_5_0
+
+		/// <summary>Synchronously executes an action the specified number of times on this queue.</summary>
+		/// <param name="action">The action to execute, receiving the zero-based native-sized iteration index.</param>
+		/// <param name="times">The nonnegative number of iterations to execute.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="action" /> is <see langword="null" />.</exception>
+		/// <remarks>
+		///   This method returns after all iterations complete. Iterations may execute concurrently when this is a concurrent queue.
+		///   If <paramref name="times" /> is zero, the action is not invoked.
+		/// </remarks>
+		public void Submit (Action<nint> action, nint times)
+		{
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
+			var gch = GCHandle.Alloc (Tuple.Create (action, this));
+			try {
+				unsafe {
+					dispatch_apply_f (times, Handle, (IntPtr) gch, &static_dispatcher_iterations_to_managed);
+				}
+			} finally {
+				gch.Free ();
 			}
 		}
 

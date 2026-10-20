@@ -63,6 +63,7 @@ pr:
     - src/README.md
     - tools/mtouch/README.md
     - msbuild/Xamarin.Localization.MSBuild/README.md
+    - '**/TranslatedAssemblies/*.*.resx'
 
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
@@ -89,6 +90,7 @@ extends:
         debugMode: true
         verboseOutput: true
       policheck:
+        enabled: true
         exclusionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true # run both maccore and macios in the same job

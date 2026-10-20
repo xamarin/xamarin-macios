@@ -1,3 +1,5 @@
 # waiting for changes in foundation which are not trivial
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found
+!missing-null-allowed! 'System.Void CoreData.NSCustomMigrationStage::set_DidMigrateHandler(System.Func`4<CoreData.NSStagedMigrationManager,CoreData.NSCustomMigrationStage,Foundation.NSError,System.Boolean>)' is missing a '?' on parameter 'value' block parameter #2
+!missing-null-allowed! 'System.Void CoreData.NSCustomMigrationStage::set_WillMigrateHandler(System.Func`4<CoreData.NSStagedMigrationManager,CoreData.NSCustomMigrationStage,Foundation.NSError,System.Boolean>)' is missing a '?' on parameter 'value' block parameter #2

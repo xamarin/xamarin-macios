@@ -2737,12 +2737,18 @@
       <Item ItemId=";E7165" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid DotNetRuntime value: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無效的 DotNetRuntime 值: '{0}']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";E7166" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unexpected RuntimeLibLinkMode value for 'NativeAOT': '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[非預期 'NativeAOT' 的 RuntimeLibLinkMode 值: '{0}']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2758,6 +2764,9 @@
       <Item ItemId=";E7170" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid RuntimeLibLinkMode value: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無效的 RuntimeLibLinkMode 值: '{0}']]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2791,6 +2800,9 @@
       <Item ItemId=";E7180" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The native reference '{0}' in the binding resource package '{1}' is invalid: the name must be a relative path without '..' segments.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[繫結資源套件 '{1}' 中的原生參考 '{0}' 無效: 名稱必須是沒有 '..' 區段的相對路徑。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2806,18 +2818,27 @@
       <Item ItemId=";E7183" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The resource '{0}' in assembly '{1}' would extract to '{2}' which is outside of the target directory '{3}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[組件 '{1}' 中的資源 '{0}' 會解壓縮到 '{2}'，但該路徑位於目標目錄 '{3}' 之外。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";E7184" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Codesign failed with 'errSecInternalComponent'. This usually means the keychain is locked, which is common when building over SSH. Unlock the keychain first, for example by running 'security unlock-keychain ~/Library/Keychains/login.keychain-db'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Codesign 失敗，錯誤為 'errSecInternalComponent'。這通常表示金鑰鏈已鎖定，透過 SSH 建置時很常見。請先解除鎖定金鑰鏈，例如執行 'security unlock-keychain ~/Library/Keychains/login.keychain-db'。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";E7185" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not determine the on-device destination path after copying '{0}' to the device. The 'xcrun devicectl' JSON output was: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[將 '{0}' 複製到裝置後，無法判斷裝置上的目的地路徑。'xcrun devicectl' JSON 輸出如下: {1}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -2851,18 +2872,54 @@
       <Item ItemId=";E7189" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unknown type '{0}' for the app manifest entry '{1}' specified in the AppManifestEntry item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AppManifestEntry 項目群組中指定的應用程式資訊清單輸入 '{1}' 的類型 '{0}' 未知。必須是 'Remove'、'Boolean'、'String' 或 'StringArray'。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";E7190" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid value '{0}' for the app manifest entry '{1}' of type '{2}' specified in the AppManifestEntry item group. Expected no value at all.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AppManifestEntry 項目群組中指定的類型為 '{2}' 的應用程式資訊清單輸入 '{1}' 值 '{0}' 無效。預期沒有任何值。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";E7191" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid value '{0}' for the app manifest entry '{1}' of type '{2}' specified in the AppManifestEntry item group. Expected 'true' or 'false'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AppManifestEntry 項目群組中指定的類型為 '{2}' 的應用程式資訊清單輸入 '{1}' 值 '{0}' 無效。預期為 'true' 或 'false'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7192" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to parse the '{0}' value: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法剖析 '{0}' 值: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7193" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The cache does not contain any entries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[快取中沒有任何項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7195" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[R2R input file '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[R2R 輸入檔 '{0}' 不存在。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3213,6 +3270,15 @@
           <Val><![CDATA[Skipping {0} - {1} is empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[略過 {0} - {1} 空白。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M7197" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Hashed {0} of {1} R2R input files.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已雜湊 {0}/{1} R2R 輸入檔。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3760,8 +3826,8 @@
       <Item ItemId=";W7171" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The environment variable '{0}' is deprecated, and will be ignored in .NET 11+. Use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to use an Xcode other than the system's current default Xcode.]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[環境變數 '{0}' 已棄用，.NET 11+ 將忽略它。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性來選擇要使用的 Xcode。]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境變數 '{0}' 已棄用，.NET 11+ 將忽略它。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性，改用非系統目前預設的 Xcode 以外的 Xcode。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[The environment variable '{0}' is deprecated, and will be ignored in .NET 11+. Please use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to choose which Xcode to use.]]></Val>
@@ -3772,8 +3838,8 @@
       <Item ItemId=";W7172" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The environment variable '{0}' is deprecated, and will be ignored. Use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to use an Xcode other than the system's current default Xcode.]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[環境變數 '{0}' 已棄用，將被忽略。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性來選擇要使用的 Xcode。]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境變數 '{0}' 已棄用，將被忽略。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性，改用非系統目前預設的 Xcode 以外的 Xcode。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[The environment variable '{0}' is deprecated, and will be ignored. Please use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to choose which Xcode to use.]]></Val>
@@ -3784,8 +3850,8 @@
       <Item ItemId=";W7173" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings file '{0}' is deprecated, and will be ignored in .NET 11+. Use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to use an Xcode other than the system's current default Xcode.]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[設定檔案 '{0}' 已棄用，.NET 11+ 將忽略它。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性來選擇要使用的 Xcode。]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定檔案 '{0}' 已棄用，.NET 11+ 將忽略它。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性，改用非系統目前預設的 Xcode 以外的 Xcode。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[The settings file '{0}' is deprecated, and will be ignored in .NET 11+. Please use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to choose which Xcode to use.]]></Val>
@@ -3796,8 +3862,8 @@
       <Item ItemId=";W7174" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings file '{0}' is deprecated, and will be ignored. Use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to use an Xcode other than the system's current default Xcode.]]></Val>
-          <Tgt Cat="Text" Stat="Update" Orig="New">
-            <Val><![CDATA[設定檔案 '{0}' 已棄用，將被忽略。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性來選擇要使用的 Xcode。]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定檔案 '{0}' 已棄用，將被忽略。請使用 'DEVELOPER_DIR' 環境變數或 'XcodeLocation' MSBuild 屬性，改用非系統目前預設的 Xcode 以外的 Xcode。]]></Val>
           </Tgt>
           <Prev Cat="Text">
             <Val><![CDATA[The settings file '{0}' is deprecated, and will be ignored. Please use the 'DEVELOPER_DIR' environment variable or the 'XcodeLocation' MSBuild property to choose which Xcode to use.]]></Val>
@@ -3817,12 +3883,36 @@
       <Item ItemId=";W7179" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Ignoring the metadata '{0}' for the native reference '{1}' in the binding resource package '{2}': this metadata is computed by the build and can't be set in a binding resource package manifest.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在忽略繫結資源套件 '{2}' 中原生參考 '{1}' 的中繼資料 '{0}': 此中繼資料由組建計算，無法在繫結資源套件資訊清單中設定。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";W7182" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Ignoring a native reference with no name in the binding resource package '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[忽略繫結資源套件 '{0}' 中沒有名稱的原生參考。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7194" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid R2R input hash cache '{0}': {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[忽略無效 R2R 輸入雜湊快取 '{0}': {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7196" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid R2R input hash for '{0}' in cache '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[忽略快取 '{1}' 中 '{0}' 的無效 R2R 輸入雜湊值。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

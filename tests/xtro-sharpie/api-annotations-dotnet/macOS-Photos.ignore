@@ -2,3 +2,5 @@
 
 # The header only declares iOS availability and deprecation for this legacy method, so do not expose it on macOS.
 !missing-selector! +PHAssetResourceUploadJobChangeRequest::createJobWithDestination:resource: not bound
+!missing-null-allowed! 'System.Void Photos.PHLivePhotoEditingContext::set_FrameProcessor(Photos.PHLivePhotoFrameProcessingBlock)' is missing a '?' on parameter 'value' block parameter #1
+!missing-null-allowed! 'System.Void Photos.PHLivePhotoEditingContext::set_FrameProcessor(Photos.PHLivePhotoFrameProcessingBlock)' is missing a '?' on parameter 'value' block return type

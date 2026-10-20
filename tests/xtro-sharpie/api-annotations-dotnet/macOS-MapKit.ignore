@@ -1,0 +1,4 @@
+!missing-null-allowed! 'System.Void MapKit.MKLookAroundSceneRequest::GetScene(System.Action`2<MapKit.MKLookAroundScene,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void MapKit.MKLookAroundSceneRequest::GetScene(System.Action`2<MapKit.MKLookAroundScene,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1
+!missing-null-allowed! 'System.Void MapKit.MKLookAroundSnapshotter::GetSnapshot(System.Action`2<MapKit.MKLookAroundSnapshot,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void MapKit.MKLookAroundSnapshotter::GetSnapshot(System.Action`2<MapKit.MKLookAroundSnapshot,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1

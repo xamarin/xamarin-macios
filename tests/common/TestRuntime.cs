@@ -44,6 +44,34 @@ partial class TestRuntime {
 	[DllImport (Constants.CoreFoundationLibrary)]
 	public extern static void CFRelease (IntPtr handle);
 
+	[DllImport (Constants.SecurityLibrary)]
+	static extern IntPtr SecTaskCreateFromSelf (IntPtr allocator);
+
+	[DllImport (Constants.SecurityLibrary)]
+	static extern IntPtr SecTaskCopyValueForEntitlement (IntPtr task, IntPtr entitlement, out IntPtr error);
+
+	public static void AssertBooleanEntitlement (string entitlement, bool value)
+	{
+		ArgumentNullException.ThrowIfNull (entitlement);
+
+		var task = SecTaskCreateFromSelf (IntPtr.Zero);
+		Assert.That (task, Is.Not.EqualTo (IntPtr.Zero), "SecTaskCreateFromSelf");
+		try {
+			using var name = new NSString (entitlement);
+			var valueHandle = SecTaskCopyValueForEntitlement (task, name.Handle, out var errorHandle);
+			using var entitlementValue = Runtime.GetNSObject<NSObject> (valueHandle, owns: true);
+			using var error = Runtime.GetNSObject<NSError> (errorHandle, owns: true);
+			Assert.That (error, Is.Null, $"Reading entitlement '{entitlement}'");
+			if (entitlementValue is not null)
+				Assert.That (entitlementValue, Is.InstanceOf<NSNumber> (), $"Boolean entitlement '{entitlement}'");
+			var actualValue = entitlementValue is NSNumber number && number.BoolValue;
+			if (actualValue != value)
+				Assert.Ignore ($"This test requires the '{entitlement}' entitlement to be {value} (actual value: {actualValue}).");
+		} finally {
+			CFRelease (task);
+		}
+	}
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
@@ -1738,7 +1766,8 @@ partial class TestRuntime {
 
 	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
 	{
-		if (!(ex is NSErrorException nex))
+		var nex = FindInner<NSErrorException> (ex);
+		if (nex is null)
 			return;
 
 		IgnoreInCIIfNetworkConnectionLost (nex.Error);

@@ -63,6 +63,9 @@
 		<Compile Include="..\..\..\tools\common\MachO.cs">
 			<Link>external\MachO.cs</Link>
 		</Compile>
+		<Compile Include="..\..\..\tools\common\RegistrarAssembliesObjectWriter.cs">
+			<Link>external\RegistrarAssembliesObjectWriter.cs</Link>
+		</Compile>
 		<Compile Include="..\..\..\tools\mtouch\Errors.designer.cs">
 			<Link>external\Errors.designer.cs</Link>
 		</Compile>

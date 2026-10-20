@@ -23,10 +23,6 @@ An unexpected error condition occurred. Please [file a bug report](https://githu
 
 ### <a name='BI0001'/>BI0001: The .NET runtime could not load the \* type. Message: \*
 
-### <a name='BI0002'/>BI0002: Could not compile the API bindings.
-
-This error is shown when the generator failed to compile the API bindings.
-
 ### <a name='BI0026'/>BI0026: Could not parse the command line argument '\*': \*
 
 ### <a name='BI0068'/>BI0068: Invalid value for target framework: \*.
@@ -69,10 +65,6 @@ This usually indicates a bug in the binding generator; please file a new issue o
 
 <!-- 1xxx: code generation -->
 <!-- 10xx: errors -->
-
-### <a name='BI1000'/>BI1000: Could not compile the generated API bindings.
-
-This indicates a bug in product itself; please file a new issue on [GitHub](https://github.com/dotnet/macios/issues/new) with a test case.
 
 ### <a name='BI1001'/>BI1001: Do not know how to make a trampoline for \*
 
@@ -358,6 +350,8 @@ To fix this error, remove the method name from the `[FactoryMethod]` attribute,
 and rename the binding method if a different factory method name is desired.
 
 ### <a name='BI1128'/>BI1128: The [Field] member '\*.\*' sets SymbolAddress, but its type is '\*'; only System.IntPtr is supported.
+
+### <a name='BI1129'/>BI1129: The selector '\*' on '\*' contains invalid characters.
 
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->

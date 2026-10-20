@@ -78,7 +78,7 @@ variables:
 - name: CIBuildPoolACESUrl
   value: 'https://dev.azure.com/devdiv/DevDiv/_settings/agentqueues?queueId=8259&view=jobs'
 - name: CIBuildPoolACESImage
-  value: 'ACES_VM_SharedPool_Tahoe'
+  value: 'ACES_VM_SharedPool_GoldenGate'
 
 # override the default build revision
 - name: BUILD_REVISION

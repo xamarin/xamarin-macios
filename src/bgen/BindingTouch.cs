@@ -34,15 +34,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mono.Options;
 
-using Xamarin.Bundler;
 using Xamarin.Utils;
 
 #if XAMMACIOS_DEBUGGER
 using System.Diagnostics;
-using System.Threading;
 #endif
 
 public class BindingTouch : IDisposable, IToolLog {
+	readonly IToolLog log;
+
+	public BindingTouch (IToolLog log)
+	{
+		this.log = log;
+		Verbosity = log.Verbosity;
+	}
+
 	public static ApplePlatform [] AllPlatforms = new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst };
 	public static PlatformName [] AllPlatformNames = new PlatformName [] { PlatformName.iOS, PlatformName.MacOSX, PlatformName.TvOS, PlatformName.MacCatalyst };
 	public PlatformName CurrentPlatform;
@@ -50,10 +56,7 @@ public class BindingTouch : IDisposable, IToolLog {
 	public bool BindThirdPartyLibrary = true;
 	public string? outfile;
 
-	string compiler = string.Empty;
-	string []? compile_command = null;
 	string compiled_api_definition_assembly = string.Empty;
-	bool noNFloatUsing;
 	bool supportsXmlDocumentation = true;
 	List<string> references = new List<string> ();
 
@@ -77,7 +80,6 @@ public class BindingTouch : IDisposable, IToolLog {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 	public LibraryManager LibraryManager = new ();
-	public List<string> NoWarn = new ();
 
 	bool disposedValue;
 
@@ -92,15 +94,22 @@ public class BindingTouch : IDisposable, IToolLog {
 		get { return "bgen"; }
 	}
 
-	static void ShowHelp (OptionSet os)
+	static void ShowHelp (IToolLog log, OptionSet os)
 	{
-		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
-		Console.WriteLine ("Usage is:\n {0} [options] apifile1.cs [--api=apifile2.cs [--api=apifile3.cs]] [-s=core1.cs [-s=core2.cs]] [core1.cs [core2.cs]] [-x=extra1.cs [-x=extra2.cs]]", ToolName);
+		log.Log ("{0} - Mono Objective-C API binder", ToolName);
+		log.Log ("Usage is:\n {0} [options] --compiled-api-definition-assembly=api.dll --sourceonly=generated-sources.txt --tmpdir=generated-sources", ToolName);
 
-		os.WriteOptionDescriptions (Console.Out);
+		using var writer = new StringWriter ();
+		os.WriteOptionDescriptions (writer);
+		log.Log (writer.ToString ().TrimEnd ());
 	}
 
 	public static int Main (string [] args)
+	{
+		return Run (args, ConsoleLog.Instance);
+	}
+
+	public static int Run (string [] args, IToolLog log)
 	{
 		try {
 #if XAMMACIOS_DEBUGGER
@@ -109,23 +118,23 @@ public class BindingTouch : IDisposable, IToolLog {
 			// block the generator until a debugger has attached to it
 			// our customers won't find any use for this.
 			var process = Process.GetCurrentProcess();
-			Console.WriteLine ($"Waiting for debugger to attach: ({ process.Id}) {process.ProcessName} { string.Join (" ", args)}");
+			log.Log ($"Waiting for debugger to attach: ({ process.Id}) {process.ProcessName} { string.Join (" ", args)}");
 			while (!Debugger.IsAttached) {
 				Thread.Sleep (100);
 			}
 
-			Console.WriteLine ("Debugger attached");
+			log.Log ("Debugger attached");
 #endif
-			return Main2 (args);
+			return Main2 (args, log);
 		} catch (Exception ex) {
-			ErrorHelper.Show (ex, false);
+			ErrorHelper.Show (log, ex, false);
 			return 1;
 		}
 	}
 
-	static int Main2 (string [] args)
+	static int Main2 (string [] args, IToolLog log)
 	{
-		using var touch = new BindingTouch ();
+		using var touch = new BindingTouch (log);
 		return touch.Main3 (args);
 	}
 
@@ -135,42 +144,27 @@ public class BindingTouch : IDisposable, IToolLog {
 			config.OptionSet = new OptionSet () {
 				{ "h|?|help", "Displays the help", v => config.ShowHelp = true },
 				{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
-				{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.BindingFilesOutputDirectory = v; }},
-				{ "o|out=", "Sets the name of the output library", v => outfile = v },
+				{ "outdir=", "Sets the output directory for the generated binding source files", v => { config.BindingFilesOutputDirectory = v; }},
+				{ "o|out=", "Sets the name of the generated binding assembly", v => outfile = v },
 				{ "tmpdir=", "Sets the working directory for temp files", v => { config.TemporaryFileDirectory = v; config.DeleteTemporaryFiles = false; }},
 				{ "debug", "Generates a debugging build of the binding", v => config.IsDebug = true },
-				{ "sourceonly=", "Only generates the source", v => config.GeneratedFileList = v },
+				{ "sourceonly=", "Writes the generated source file list", v => config.GeneratedFileList = v },
 				{ "ns=", "Sets the namespace for storing helper classes", v => config.HelperClassNamespace = v },
-				{ "unsafe", "Sets the unsafe flag for the build", v=> config.IsUnsafe = true },
 				{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 				{ "r|reference=", "Adds a reference", v => references.Add (v) },
-				{ "lib=", "Adds the directory to the search path for the compiler", v => LibraryManager.Libraries.Add (v) },
-				{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
-				{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
-					{
-						if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
-							throw ErrorHelper.CreateError (27, "--compile-command", ex);
-					}
-				},
+				{ "lib=", "Adds a directory to the assembly search path", v => LibraryManager.Libraries.Add (v) },
 				{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
-				{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
-				{ "d=", "Defines a symbol", v => config.Defines.Add (v) },
-				{ "api=", "Adds a API definition source file", v => config.ApiSources.Add (v) },
-				{ "s=", "Adds a source file required to build the API", v => config.CoreSources.Add (v) },
+				{ "new-style", "Build for Unified (Obsolete).", v => { Log ("The --new-style option is obsolete and ignored."); }, true},
 				{ "q", "Quiet", v => Verbosity-- },
 				{ "v", "Sets verbose mode", v => Verbosity++ },
-				{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => config.ExtraSources.Add (v) },
 				{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => config.IsExternal = true },
 				{ "p", "Sets private mode", v => config.IsPublicMode = false },
 				{ "baselib=", "Sets the base library", v => config.Baselibdll = v },
 				{ "attributelib=", "Sets the attribute library", v => config.Attributedll = v },
 #if !XAMCORE_5_0
-				{ "use-zero-copy", v=> ErrorHelper.Warning (1027) },
+				{ "use-zero-copy", v => ErrorHelper.Warning (this, 1027) },
 #endif
 				{ "nostdlib", "Does not reference mscorlib.dll library", l => config.OmitStandardLibrary = true },
-#if !XAMCORE_5_0
-				{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
-#endif
 				{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
 				{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
 					v => config.InlineSelectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
@@ -187,12 +181,9 @@ public class BindingTouch : IDisposable, IToolLog {
 						if (config.LinkWith.Contains (id))
 							throw new Exception ("-link-with=FILE,ID cannot assign the same resource id to multiple libraries.");
 
-						config.Resources.Add (string.Format ("-res:{0},{1}", path, id));
 						config.LinkWith.Add (id);
 					}
 				},
-				{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
-				{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
 				{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => config.TargetFramework = v },
 				{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 						try {
@@ -213,7 +204,6 @@ public class BindingTouch : IDisposable, IToolLog {
 								foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
 									if (int.TryParse (code, out var nowarnCode))
 										ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, nowarnCode);
-									NoWarn.Add (code);
 								}
 							} else {
 								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
@@ -223,10 +213,6 @@ public class BindingTouch : IDisposable, IToolLog {
 						}
 					}
 				},
-				{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
-						noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
-					}
-				},
 				{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
 				{ "xmldoc:", "If the generator supports xml documentation in the API definition (default: true)", (v) => {
 						supportsXmlDocumentation = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
@@ -234,10 +220,16 @@ public class BindingTouch : IDisposable, IToolLog {
 				},
 				new Mono.Options.ResponseFileSource (),
 			};
-			config.Sources = config.OptionSet.Parse (args);
+			var extra = config.OptionSet.Parse (args);
+			if (extra.Count > 0) {
+				var message = extra [0].StartsWith ("-", StringComparison.Ordinal) ?
+					$"Unknown option: '{extra [0]}'." :
+					"API definition source files are no longer supported; use --compiled-api-definition-assembly.";
+				throw new OptionException (message, extra [0]);
+			}
 		} catch (Exception e) {
-			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
-			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
+			LogError ($"{ToolName}: {e.Message}");
+			LogError ($"see {ToolName} --help for more information");
 			return false;
 		}
 
@@ -247,36 +239,21 @@ public class BindingTouch : IDisposable, IToolLog {
 	public bool TryInitializeApi (BindingTouchConfig config, [NotNullWhen (true)] out Api? api)
 	{
 		api = null;
-		if (config.Sources.Count > 0) {
-			config.ApiSources.Insert (0, config.Sources [0]);
-			for (int i = 1; i < config.Sources.Count; i++)
-				config.CoreSources.Insert (i - 1, config.Sources [i]);
-		}
-
-		if (config.ApiSources.Count == 0 && string.IsNullOrEmpty (compiled_api_definition_assembly)) {
-			Console.WriteLine ("Error: no api file provided, nor a compiled api definition assembly");
-			ShowHelp (config.OptionSet);
+		if (string.IsNullOrEmpty (compiled_api_definition_assembly)) {
+			Log ("Error: no compiled api definition assembly provided");
+			ShowHelp (this, config.OptionSet);
 			return false;
 		}
-
 		if (config.TemporaryFileDirectory is null)
 			config.TemporaryFileDirectory = GetWorkDir ();
 
-		var firstApiDefinitionName = string.Empty;
-		if (config.ApiSources.Count > 0) {
-			firstApiDefinitionName = Path.GetFileNameWithoutExtension (config.ApiSources [0]);
-			firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
-		}
+		var firstApiDefinitionName = Path.GetFileNameWithoutExtension (compiled_api_definition_assembly);
+		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
 		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
 
-		config.References = references.Select ((v) => "-r:" + v);
-		config.Paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
-
 		try {
-			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config, config.TemporaryFileDirectory,
-				config.References, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines,
-				config.Paths);
+			var tmpass = compiled_api_definition_assembly;
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
@@ -297,7 +274,7 @@ public class BindingTouch : IDisposable, IToolLog {
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib,
 				BindThirdPartyLibrary);
-			attributeManager ??= new (typeCache);
+			attributeManager ??= new (this, typeCache);
 			typeManager ??= new (this);
 
 			if (!TestLinkWith (apiAssembly, config))
@@ -320,7 +297,7 @@ public class BindingTouch : IDisposable, IToolLog {
 					try {
 						universe.LoadFromAssemblyPath (r);
 					} catch (Exception ex) {
-						ErrorHelper.Warning (1104, r, ex.Message);
+						ErrorHelper.Warning (this, 1104, r, ex.Message);
 					}
 				}
 			}
@@ -333,7 +310,23 @@ public class BindingTouch : IDisposable, IToolLog {
 
 
 		} catch (Exception ex) {
-			ErrorHelper.Show (ex);
+			ErrorHelper.Show (this, ex);
+			return false;
+		}
+
+		return true;
+	}
+
+	bool ValidateGeneratedSourceOutput (BindingTouchConfig config)
+	{
+		if (string.IsNullOrEmpty (config.GeneratedFileList)) {
+			Log ("Error: no generated source file list provided");
+			ShowHelp (this, config.OptionSet);
+			return false;
+		}
+		if (config.BindingFilesOutputDirectory is null && config.DeleteTemporaryFiles) {
+			Log ("Error: no persistent generated source output directory provided");
+			ShowHelp (this, config.OptionSet);
 			return false;
 		}
 
@@ -349,9 +342,12 @@ public class BindingTouch : IDisposable, IToolLog {
 			return 1;
 
 		if (config.ShowHelp) {
-			ShowHelp (config.OptionSet);
+			ShowHelp (this, config.OptionSet);
 			return 0;
 		}
+
+		if (!ValidateGeneratedSourceOutput (config))
+			return 1;
 
 		libraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
 		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
@@ -371,47 +367,12 @@ public class BindingTouch : IDisposable, IToolLog {
 			};
 
 			g.Go ();
-
 			if (config.GeneratedFileList is not null) {
 				using (var f = File.CreateText (config.GeneratedFileList)) {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
-				return true;
 			}
-
-			var cargs = new List<string> ();
-			if (config.IsUnsafe)
-				cargs.Add ("-unsafe");
-			cargs.Add ("-target:library");
-			cargs.Add ("-out:" + outfile);
-			foreach (var def in config.Defines)
-				cargs.Add ("-define:" + def);
-			cargs.Add ("-define:NET");
-			cargs.AddRange (g.GeneratedFiles);
-			cargs.AddRange (config.CoreSources);
-			cargs.AddRange (config.ExtraSources);
-			cargs.AddRange (config.References);
-			cargs.Add ("-r:" + LibraryInfo.BaseLibDll);
-			cargs.AddRange (config.Resources);
-			if (LibraryInfo.OmitStandardLibrary) {
-				cargs.Add ("-nostdlib");
-				cargs.Add ("-noconfig");
-			}
-			if (!string.IsNullOrEmpty (Path.GetDirectoryName (LibraryInfo.BaseLibDll)))
-				cargs.Add ("-lib:" + Path.GetDirectoryName (LibraryInfo.BaseLibDll));
-			if (supportsXmlDocumentation) {
-				cargs.Add ("-doc:" + Path.ChangeExtension (outfile, ".xml"));
-				// warning CS1591: Missing XML comment for publicly visible type or member
-				// Ignore it, because we don't expect code to have everything documented.
-				cargs.Add ("-nowarn:1591");
-			}
-			foreach (var nw in NoWarn)
-				cargs.Add ($"-nowarn:{nw}");
-
-			AddNFloatUsing (cargs, config.TemporaryFileDirectory);
-
-			Compile (cargs, 1000, config.TemporaryFileDirectory);
 		} finally {
 			if (config.DeleteTemporaryFiles && config.TemporaryFileDirectory is not null)
 				Directory.Delete (config.TemporaryFileDirectory, true);
@@ -427,107 +388,12 @@ public class BindingTouch : IDisposable, IToolLog {
 				continue;
 
 			if (!config.LinkWith.Contains (linkWith.LibraryName)) {
-				Console.Error.WriteLine (
-					"Missing native library {0}, please use `--link-with' to specify the path to this library.",
-					linkWith.LibraryName);
+				LogError ($"Missing native library {linkWith.LibraryName}, please use `--link-with' to specify the path to this library.");
 				return false; // return 1;
 			}
 		}
 
 		return true;
-	}
-
-	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
-	string GetCompiledApiBindingsAssembly (LibraryInfo libraryInfo, BindingTouchConfig config, string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
-	{
-		if (!string.IsNullOrEmpty (compiled_api_definition_assembly))
-			return compiled_api_definition_assembly;
-
-		var tmpass = Path.Combine (tmpdir, "temp.dll");
-
-		// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
-		// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
-		var cargs = new List<string> ();
-
-		cargs.Add ("-debug");
-		cargs.Add ("-unsafe");
-		cargs.Add ("-target:library");
-		cargs.Add ("-nowarn:436");
-		cargs.Add ("-nowarn:CS0419"); // "Ambiguous reference in cref attribute: '...'. Assuming '...', but could have also matched other overloads including '...'." => we want to be able to write xml comments in api definition code for APIs that don't exist until all the code has been generated, so we ignore these warnings.
-		cargs.Add ("-nowarn:CS1574"); // "XML comment has cref attribute '...' that could not be resolved" => we want to be able to write xml comments in api definition code for APIs that don't exist until all the code has been generated, so we ignore these warnings.
-		cargs.Add ("-nowarn:CS1580"); // "Invalid type for parameter '#' in XML comment cref attribute" => we want to be able to write xml comments in api definition code for APIs that don't exist until all the code has been generated, so we ignore these warnings.
-		cargs.Add ("-out:" + tmpass);
-		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (libraryInfo, CurrentPlatform));
-		cargs.AddRange (config.References);
-		cargs.Add ("-r:" + libraryInfo.BaseLibDll);
-		foreach (var def in defines)
-			cargs.Add ("-define:" + def);
-		cargs.Add ("-define:NET");
-		cargs.AddRange (paths);
-		if (nostdlib) {
-			cargs.Add ("-nostdlib");
-			cargs.Add ("-noconfig");
-		}
-		cargs.AddRange (api_sources);
-		cargs.AddRange (core_sources);
-		if (!string.IsNullOrEmpty (Path.GetDirectoryName (libraryInfo.BaseLibDll)))
-			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.BaseLibDll));
-		if (supportsXmlDocumentation) {
-			cargs.Add ("-doc:" + Path.ChangeExtension (tmpass, ".xml"));
-			// warning CS1591: Missing XML comment for publicly visible type or member
-			// Ignore it, because we don't expect code to have everything documented.
-			cargs.Add ("-nowarn:1591");
-		}
-		foreach (var nw in NoWarn)
-			cargs.Add ($"-nowarn:{nw}");
-		AddNFloatUsing (cargs, tmpdir);
-
-		Compile (cargs, 2, tmpdir);
-
-		return tmpass;
-	}
-
-	void AddNFloatUsing (List<string> cargs, string? tmpdir)
-	{
-		if (tmpdir is null)
-			return;
-		if (noNFloatUsing)
-			return;
-		var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
-		File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
-		cargs.Add (tmpusing);
-	}
-
-	void Compile (List<string> arguments, int errorCode, string? tmpdir)
-	{
-		if (tmpdir is null)
-			return;
-
-		var responseFile = Path.Combine (tmpdir, $"compile-{errorCode}.rsp");
-		// The /noconfig argument is not allowed in a response file, so don't put it there.
-		var responseFileArguments = arguments
-			.Where (arg => !string.Equals (arg, "/noconfig", StringComparison.OrdinalIgnoreCase) && !string.Equals (arg, "-noconfig", StringComparison.OrdinalIgnoreCase))
-			.ToArray (); // StringUtils.QuoteForProcess only accepts IList, not IEnumerable
-		File.WriteAllLines (responseFile, StringUtils.QuoteForProcess (responseFileArguments));
-		// We create a new list here on purpose to not modify the input argument.
-		arguments = arguments.Where (arg => !responseFileArguments.Contains (arg)).ToList ();
-		arguments.Add ($"@{responseFile}");
-
-		if (compile_command is null || compile_command.Length == 0) {
-			if (string.IsNullOrEmpty (compiler))
-				throw ErrorHelper.CreateError (28);
-			compile_command = new string [] { compiler };
-		}
-
-		for (var i = 1; i < compile_command.Length; i++) {
-			arguments.Insert (i - 1, compile_command [i]);
-		}
-
-		if (Driver.RunCommand (this, compile_command [0], arguments, null, out var compile_output, true, Verbosity) != 0)
-			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
-		var output = string.Join (Environment.NewLine, compile_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-		if (!string.IsNullOrEmpty (output))
-			Console.WriteLine (output);
 	}
 
 	bool TryLoadApi (string? name, [NotNullWhen (true)] out Assembly? assembly)
@@ -579,27 +445,27 @@ public class BindingTouch : IDisposable, IToolLog {
 
 	public void Log (string message)
 	{
-		Console.WriteLine (message);
+		log.Log (message);
 	}
 
 	public void LogError (string message)
 	{
-		Console.Error.WriteLine (message);
+		log.LogError (message);
 	}
 
 	public void LogError (BindingException exception)
 	{
-		ErrorHelper.Show (exception);
+		log.LogError (exception);
 	}
 
 	public void LogWarning (BindingException exception)
 	{
-		ErrorHelper.Show (exception);
+		log.LogWarning (exception);
 	}
 
 	public void LogException (Exception exception)
 	{
-		ErrorHelper.Show (exception);
+		log.LogException (exception);
 	}
 
 	int verbosity = 0;

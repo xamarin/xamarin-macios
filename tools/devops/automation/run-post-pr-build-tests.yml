@@ -21,6 +21,7 @@ pr:
       - src/README.md
       - tools/mtouch/README.md
       - msbuild/Xamarin.Localization.MSBuild/README.md
+      - '**/TranslatedAssemblies/*.*.resx'
 
 extends:
   template: templates/pipelines/run-tests-pipeline.yml

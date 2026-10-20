@@ -3,9 +3,11 @@
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<DefineConstants>$(DefineConstants);NET;TESTS</DefineConstants>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="../xtro-sharpie/xtro-sharpie.csproj" />
 		<PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
 		<PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
@@ -23,12 +25,6 @@
 		</Compile>
 		<Compile Include="..\..\mtouch\Cache.cs">
 			<Link>external\Cache.cs</Link>
-		</Compile>
-		<Compile Include="..\..\..\tools\common\ApplePlatform.cs">
-			<Link>external\ApplePlatform.cs</Link>
-		</Compile>
-		<Compile Include="..\..\..\tools\common\Execution.cs">
-			<Link>external\Execution.cs</Link>
 		</Compile>
 		<Compile Include="..\..\common\ExecutionHelper.cs">
 			<Link>external\ExecutionHelper.cs</Link>

@@ -2,3 +2,4 @@
 # results from initial block parameter nullability analysis
 !missing-null-allowed! 'System.Void NaturalLanguage.NLContextualEmbedding::RequestAssets(System.Action`2<NaturalLanguage.NLContextualEmbeddingAssetsResult,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1
 !missing-null-allowed! 'System.Void NaturalLanguage.NLTagger::RequestAssets(Foundation.NSString,Foundation.NSString,System.Action`2<NaturalLanguage.NLTaggerAssetsResult,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #1
+!missing-null-allowed! 'System.Void NaturalLanguage.NLTagger::EnumerateTags(Foundation.NSRange,NaturalLanguage.NLTokenUnit,Foundation.NSString,NaturalLanguage.NLTaggerOptions,NaturalLanguage.NLTaggerEnumerateTagsContinuationHandler)' is missing a '?' on parameter 'handler' block parameter #0

@@ -11,3 +11,17 @@
 !unknown-selector! CKSubscription::recordType not found
 !unknown-selector! CKSubscription::setZoneID: not found
 !unknown-selector! CKSubscription::zoneID not found
+!extra-null-allowed! 'System.Void CloudKit.CKFetchRecordZoneChangesOperation::set_FetchCompleted(CloudKit.CKFetchRecordZoneChangesFetchCompletedHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKFetchRecordZoneChangesOperation::set_RecordWasChangedHandler(CloudKit.CKFetchRecordZoneChangesRecordWasChangedHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKFetchRecordZoneChangesOperation::set_RecordZoneChangeTokensUpdated(CloudKit.CKFetchRecordZoneChangesTokensUpdatedHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKFetchRecordZonesOperation::set_PerRecordZoneCompletionHandler(CloudKit.CKRecordZonePerRecordZoneCompletionHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKFetchShareParticipantsOperation::set_PerShareParticipantCompletionBlock(CloudKit.CKFetchShareParticipantsOperationPerShareParticipantCompletionHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKFetchSubscriptionsOperation::set_PerSubscriptionCompletionHandler(CloudKit.CKFetchSubscriptionsPerSubscriptionCompletionHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifyRecordsOperation::set_PerRecordDeleteHandler(CloudKit.CKModifyRecordsOperationPerRecordDeleteHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifyRecordsOperation::set_PerRecordSaveHandler(CloudKit.CKModifyRecordsOperationPerRecordSaveHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifyRecordZonesOperation::set_PerRecordZoneDeleteHandler(CloudKit.CKModifyRecordZonesPerRecordZoneDeleteHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifyRecordZonesOperation::set_PerRecordZoneSaveHandler(CloudKit.CKModifyRecordZonesPerRecordZoneSaveHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifySubscriptionsOperation::set_PerSubscriptionDeleteHandler(CloudKit.CKModifySubscriptionsPerSubscriptionDeleteHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKModifySubscriptionsOperation::set_PerSubscriptionSaveHandler(CloudKit.CKModifySubscriptionsPerSubscriptionSaveHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!extra-null-allowed! 'System.Void CloudKit.CKQueryOperation::set_RecordMatchedHandler(CloudKit.CKQueryOperationRecordMatchedHandler)' has an extraneous '?' on parameter 'value' block parameter #0
+!missing-null-allowed! 'System.Void CloudKit.CKSyncEngineRecordZoneChangeBatch::.ctor(CloudKit.CKSyncEnginePendingRecordZoneChange[],System.Func`2<CloudKit.CKRecordID,CloudKit.CKRecord>)' is missing a '?' on parameter 'recordProvider' block return type

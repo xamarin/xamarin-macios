@@ -8,20 +8,13 @@ namespace Xamarin.Tests {
 	public class PerformanceTests : TestBaseClass {
 		[Test]
 		[TestCase (ApplePlatform.iOS)]
-		public void PrepareAssemblies_MonoVM (ApplePlatform platform)
-		{
-			PrepareAssemblies (platform, true);
-		}
-
-		[Test]
-		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		public void PrepareAssemblies_CoreCLR (ApplePlatform platform)
+		public void PrepareAssemblies (ApplePlatform platform)
 		{
-			PrepareAssemblies (platform, false);
+			PrepareAssembliesImpl (platform);
 		}
 
-		void PrepareAssemblies (ApplePlatform platform, bool useMonoRuntime)
+		void PrepareAssembliesImpl (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -69,7 +62,7 @@ namespace Xamarin.Tests {
 							var properties = GetDefaultProperties (rid);
 							properties ["PrepareAssemblies"] = propertyValue.ToString ();
 							properties ["MtouchLink"] = linkMode;
-							properties ["UseMonoRuntime"] = useMonoRuntime ? "true" : "false";
+							properties ["UseMonoRuntime"] = "false";
 
 							for (var i = 1; i <= attempts; i++) {
 								Clean (project_path);
@@ -77,15 +70,14 @@ namespace Xamarin.Tests {
 								result.GetBuildTimes (propertyValue).Times.Add (rv);
 							}
 						}
+
 						results.Add (result);
 					}
 				}
 			}
 			var orderedResults = results.OrderBy (v => v.Project).ThenBy (v => v.RuntimeIdentifier).ThenBy (v => v.LinkMode).ToList ();
 
-			var runtime = useMonoRuntime ? "MonoVM" : "CoreCLR";
-
-			report.AppendLine ($"# PrepareAssemblies performance report ({platform.AsString ()}/{runtime})");
+			report.AppendLine ($"# PrepareAssemblies performance report ({platform.AsString ()}/CoreCLR)");
 			report.AppendLine ();
 			report.AppendLine ("## Summary");
 			report.AppendLine ();
@@ -141,7 +133,7 @@ namespace Xamarin.Tests {
 
 			if (enablePerformanceTests.Contains ("%SPEC%")) {
 				for (var i = 1; i < 256; i++) {
-					var path = enablePerformanceTests.Replace ("%SPEC%", $"{platform.AsString ()}-{runtime}-{i}");
+					var path = enablePerformanceTests.Replace ("%SPEC%", $"{platform.AsString ()}-CoreCLR-{i}");
 					if (File.Exists (path))
 						continue;
 					File.WriteAllText (path, report.ToString ());

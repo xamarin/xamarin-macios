@@ -6,8 +6,6 @@
 		<ApplicationTitle>StaticFrameworkFilterApp</ApplicationTitle>
 		<ApplicationId>com.xamarin.staticframeworkfilter</ApplicationId>
 		<ApplicationVersion>1.0</ApplicationVersion>
-		<!-- Use the interpreter to speed up the test (avoids AOT compilation) -->
-		<UseInterpreter>true</UseInterpreter>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />

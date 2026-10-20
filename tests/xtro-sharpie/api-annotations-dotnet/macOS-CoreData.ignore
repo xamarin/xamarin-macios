@@ -19,3 +19,5 @@
 !missing-type! NSFetchedResultsController not bound
 
 !missing-null-allowed! 'System.Void CoreData.NSCoreDataCoreSpotlightDelegate::DeleteSpotlightIndex(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void CoreData.NSCustomMigrationStage::set_DidMigrateHandler(System.Func`4<CoreData.NSStagedMigrationManager,CoreData.NSCustomMigrationStage,Foundation.NSError,System.Boolean>)' is missing a '?' on parameter 'value' block parameter #2
+!missing-null-allowed! 'System.Void CoreData.NSCustomMigrationStage::set_WillMigrateHandler(System.Func`4<CoreData.NSStagedMigrationManager,CoreData.NSCustomMigrationStage,Foundation.NSError,System.Boolean>)' is missing a '?' on parameter 'value' block parameter #2

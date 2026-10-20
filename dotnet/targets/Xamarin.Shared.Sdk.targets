@@ -374,6 +374,12 @@
 		<Warning Text="$(_RuntimeIdentifiersClashMessage)" />
 	</Target>
 
+	<Target Name="_ValidateRuntimeIdentifiers"
+		Condition="'$(RuntimeIdentifiers)' != '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+		<Warning Condition="$([MSBuild]::VersionLessThan('$(TargetFrameworkVersion)', '13.0'))" Text="RuntimeIdentifiers is not recommended for $(_PlatformName) projects. Use RuntimeIdentifier instead to build for a single architecture." />
+		<Error Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(TargetFrameworkVersion)', '13.0'))" Text="RuntimeIdentifiers is not supported for $(_PlatformName) projects. Use RuntimeIdentifier instead to build for a single architecture." />
+	</Target>
+
 	<Target Name="_ErrorRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashErrorMessage)' != ''">
 		<Error Text="$(_RuntimeIdentifiersClashErrorMessage)" />
 	</Target>
@@ -449,6 +455,7 @@
 				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
 				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
 				_CompiledEntitlements=$(_CompiledEntitlements);
+				_CompiledEntitlementsHash=$(_CompiledEntitlementsHash);
 				_CompiledEntitlementsPath=$(_CompiledEntitlementsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
@@ -1519,6 +1526,8 @@
 			</ResolvedFileToPublish>
 			<FileWrites Include="@(_TypeMapAssemblies)" />
 			<FileWrites Include="@(_ManagedAssemblyToLinkFromLinker)" />
+			<FileWrites Include="@(_RegistrarFile)" />
+			<FileWrites Include="@(_RegistrarFile -> '%(AdditionalDependencies)')" />
 		</ItemGroup>
 		<PropertyGroup Condition="'$(RunILLink)' == 'true' And '$(_UseNativeAot)' == 'true' And @(_TrimmerRootDescriptorFromCustomLinkerSteps->Count()) &gt; 0">
 			<!-- When the custom linker steps produce xml root descriptors, those xml root descriptors may refer to types and members that are removed
@@ -2217,12 +2226,14 @@
 			<_CompileNativeExecutableFile Include="@(_MainFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
-			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
+			<_CompileNativeExecutableFile Include="@(_RegistrarFile)" Condition="'%(_RegistrarFile.Extension)' != '.o'">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
 			<_CompileNativeExecutableFile Include="@(_ReferencesFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
+			<_NativeExecutableObjectFiles Include="@(_CompileNativeExecutableFile -> '%(OutputFile)')" />
+			<_NativeExecutableObjectFiles Include="@(_RegistrarFile)" Condition="'%(_RegistrarFile.Extension)' == '.o'" />
 			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
 	</Target>
@@ -2369,7 +2380,7 @@
 		</CompileNativeCode>
 
 		<ItemGroup>
-			<_NativeExecutableObjectFiles Include="@(_CompileNativeExecutableFile -> '%(OutputFile)')" />
+			<FileWrites Include="@(_CompileNativeExecutableFile -> '%(OutputFile)')" />
 		</ItemGroup>
 	</Target>
 
@@ -2544,6 +2555,7 @@
 			<_LinkNativeExecutableCache Include="@(_AllLinkerFlags)" />
 			<_LinkNativeExecutableCache Include="$(_DylibRPath)" />
 			<_LinkNativeExecutableCache Include="$(_CompiledEntitlements)" />
+			<_LinkNativeExecutableCache Include="$(_CompiledEntitlementsHash)" />
 			<_LinkNativeExecutableCache Include="$(_EmbeddedFrameworksRPath)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryFrameworks)" />
 			<_LinkNativeExecutableCache Include="@(_BindingLibraryLinkWith)" />
@@ -3130,6 +3142,7 @@
 
 	<PropertyGroup>
 		<BuildDependsOn>
+			_ValidateRuntimeIdentifiers;
 			_VerifyValidOutputType;
 			$(BuildDependsOn);
 		</BuildDependsOn>

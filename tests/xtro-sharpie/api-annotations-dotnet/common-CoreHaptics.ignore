@@ -1,0 +1,4 @@
+!missing-null-allowed! 'System.Void CoreHaptics.CHHapticEngine::NotifyWhenPlayersFinished(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'finishedHandler' block parameter #0
+!missing-null-allowed! 'System.Void CoreHaptics.CHHapticEngine::Start(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void CoreHaptics.CHHapticEngine::Stop(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+!missing-null-allowed! 'System.Void CoreHaptics.ICHHapticAdvancedPatternPlayer::set_CompletionHandler(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'value' block parameter #0

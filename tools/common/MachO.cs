@@ -126,6 +126,7 @@ namespace Xamarin {
 			//
 			//#define	LC_SEGMENT_64	0x19	/* 64-bit segment of this file to be
 			//			mapped */
+			Segment64 = 0x19,
 			//#define	LC_ROUTINES_64	0x1a	/* 64-bit image routines */
 			//#define LC_UUID		0x1b	/* the uuid */
 			Uuid = 0x1b,
@@ -167,6 +168,7 @@ namespace Xamarin {
 			TvOS = 3,
 			WatchOS = 4,
 			BridgeOS = 5,
+			MacCatalyst = 6,
 			IOSSimulator = 7,
 			TvOSSimulator = 8,
 			WatchOSSimulator = 9,

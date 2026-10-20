@@ -4,9 +4,9 @@ Messages for new MSBuild error codes live in `MSBStrings.resx`.
 
 * You can now make changes to `MSBStrings.resx` in the Visual Studio for Mac IDE or from any text editor.
 
-* If you make changes in the IDE, you should see changes automatically copy into MSBStrings.Designer.cs. Be sure to rebuild the project after making your changes.
+* If you make changes in the IDE, rebuild `Xamarin.MacDev.Tasks.csproj` to regenerate `MSBStrings.Designer.cs`.
 
-* If you make changes from a text editor, be sure to run `make` inside the xamarin-macios/msbuild/Xamarin.Localization.MSBuild directory.
+* If you make changes from a text editor, build `msbuild/Xamarin.MacDev.Tasks/Xamarin.MacDev.Tasks.csproj`. Its satellite assemblies contain both the `MSBStrings` and `Errors` translations.
 
 See [Localization Wiki][Localization-wiki] for more details on our localization process
 

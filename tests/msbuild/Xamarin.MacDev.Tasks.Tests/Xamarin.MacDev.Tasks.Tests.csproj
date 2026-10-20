@@ -30,12 +30,10 @@
 
     <!-- Reference the ILMerged assemblies for testing / runtime -->
     <Reference Include="Xamarin.MacDev.Tasks" Condition="'$(DesignTimeBuild)' != 'true'" HintPath="..\..\..\msbuild\Xamarin.MacDev.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.MacDev.Tasks.dll" />
-    <Reference Include="Xamarin.Localization.MSBuild" Condition="'$(DesignTimeBuild)' != 'true'" HintPath="..\..\..\msbuild\Xamarin.MacDev.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.Localization.MSBuild.dll" />
 
     <!-- Reference the projects for intellisense in VSCode. -->
     <ProjectReference Include="../../../msbuild/Xamarin.MacDev.Tasks/Xamarin.MacDev.Tasks.csproj" Condition="'$(DesignTimeBuild)' == 'true'" />
     <ProjectReference Include="../../../external/Xamarin.MacDev/Xamarin.MacDev/Xamarin.MacDev.csproj" Condition="'$(DesignTimeBuild)' == 'true'"/>
-    <ProjectReference Include="../../../msbuild/Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj" Condition="'$(DesignTimeBuild)' == 'true'" />
 
     <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
     <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />

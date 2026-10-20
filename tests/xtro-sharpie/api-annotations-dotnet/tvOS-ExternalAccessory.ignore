@@ -6,3 +6,4 @@
 !missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
 !missing-selector! EAWiFiUnconfiguredAccessoryBrowser::delegate not bound
 !missing-selector! EAWiFiUnconfiguredAccessoryBrowser::setDelegate: not bound
+!missing-null-allowed! 'System.Void ExternalAccessory.EAAccessoryManager::ShowBluetoothAccessoryPicker(Foundation.NSPredicate,System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #0

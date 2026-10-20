@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
-    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>tvossimulator-arm64</RuntimeIdentifier>
     <IsAppExtension>true</IsAppExtension>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>

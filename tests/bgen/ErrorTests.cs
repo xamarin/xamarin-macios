@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 
 using Xamarin.Tests;
 
@@ -7,15 +8,63 @@ namespace GeneratorTests {
 	[Parallelizable (ParallelScope.All)]
 	public class ErrorTests {
 		[Test]
-		[TestCase (Profile.iOS)]
-		public void BI0002 (Profile profile)
+		[NonParallelizable]
+		public void ApiDefinitionSourceIsNotSupported ()
 		{
-			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
-			var bgen = new BGenTool ();
-			bgen.Profile = profile;
-			bgen.CreateTemporaryBinding ("InvalidCodeHere");
-			bgen.AssertExecuteError ("build");
-			bgen.AssertError (2, "Could not compile the API bindings.");
+			var output = new StringBuilder ();
+			ThreadStaticTextWriter.ReplaceConsole (output);
+			try {
+				Assert.That (BindingTouch.Main (new [] { "api.cs" }), Is.EqualTo (1));
+			} finally {
+				ThreadStaticTextWriter.RestoreConsole ();
+			}
+
+			Assert.That (output.ToString (), Does.Contain ("API definition source files are no longer supported"));
+		}
+
+		[Test]
+		[NonParallelizable]
+		public void CompileCommandIsNotSupported ()
+		{
+			var output = new StringBuilder ();
+			ThreadStaticTextWriter.ReplaceConsole (output);
+			try {
+				Assert.That (BindingTouch.Main (new [] { "--compile-command=csc" }), Is.EqualTo (1));
+			} finally {
+				ThreadStaticTextWriter.RestoreConsole ();
+			}
+
+			Assert.That (output.ToString (), Does.Contain ("Unknown option"));
+		}
+
+		[Test]
+		[NonParallelizable]
+		public void GeneratedSourceFileListIsRequired ()
+		{
+			var output = new StringBuilder ();
+			ThreadStaticTextWriter.ReplaceConsole (output);
+			try {
+				Assert.That (BindingTouch.Main (new [] { "--compiled-api-definition-assembly=api.dll", "--tmpdir=generated" }), Is.EqualTo (1));
+			} finally {
+				ThreadStaticTextWriter.RestoreConsole ();
+			}
+
+			Assert.That (output.ToString (), Does.Contain ("no generated source file list provided"));
+		}
+
+		[Test]
+		[NonParallelizable]
+		public void PersistentGeneratedSourceDirectoryIsRequired ()
+		{
+			var output = new StringBuilder ();
+			ThreadStaticTextWriter.ReplaceConsole (output);
+			try {
+				Assert.That (BindingTouch.Main (new [] { "--compiled-api-definition-assembly=api.dll", "--sourceonly=generated-sources.txt" }), Is.EqualTo (1));
+			} finally {
+				ThreadStaticTextWriter.RestoreConsole ();
+			}
+
+			Assert.That (output.ToString (), Does.Contain ("no persistent generated source output directory provided"));
 		}
 
 		[Test]
@@ -25,6 +74,20 @@ namespace GeneratorTests {
 			bgen.CreateTemporaryBinding ("");
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (86, "A target framework (--target-framework) must be specified.");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void InvalidSelectorDoesNotExitProcess (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool {
+				Profile = profile,
+			};
+			bgen.AddTestApiDefinition ("invalid-selector.cs");
+
+			bgen.AssertExecuteError ("invalid selector");
+			bgen.AssertError (1129, "The selector 'invalid(selector' on 'InvalidSelector.InvalidSelectorType.InvalidSelector' contains invalid characters.");
 		}
 
 		[Test]

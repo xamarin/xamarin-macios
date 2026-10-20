@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<OutputType>Exe</OutputType>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+	</PropertyGroup>
+</Project>

@@ -128,11 +128,6 @@
   <data name="BI0001" xml:space="preserve">
 		<value>The .NET runtime could not load the {0} type. Message: {1}</value>
 	</data>
-  <data name="BI0002" xml:space="preserve">
-		<value>Could not compile the API bindings.
-		{0}
-		</value>
-	</data>
   <data name="BI0003" xml:space="preserve">
 		<value>Frameworks were not loaded for platform {0}.</value>
 	</data>
@@ -144,9 +139,6 @@
 	</data>
   <data name="BI0027" xml:space="preserve">
 		<value>Could not parse the command line argument '{0}': {1}</value>
-	</data>
-  <data name="BI0028" xml:space="preserve">
-		<value>No C# compiler has been specified (using --compiler or --compile-command).</value>
 	</data>
   <data name="BI0068" xml:space="preserve">
 		<value>Invalid value for target framework: {0}.</value>
@@ -165,11 +157,6 @@
 	</data>
   <data name="BI0099" xml:space="preserve">
 		<value>Internal error {0}. Please file a bug report with a test case (https://github.com/dotnet/macios/issues/new).</value>
-	</data>
-  <data name="BI1000" xml:space="preserve">
-		<value>Could not compile the generated API bindings.	
-		{0}
-		</value>
 	</data>
   <data name="BI1001" xml:space="preserve">
 		<value>Do not know how to make a trampoline for {0}</value>
@@ -522,5 +509,8 @@
 	</data>
   <data name="BI1128" xml:space="preserve">
 		<value>The [Field] member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.</value>
+	</data>
+  <data name="BI1129" xml:space="preserve">
+		<value>The selector '{0}' on '{1}' contains invalid characters.</value>
 	</data>
 </root>
