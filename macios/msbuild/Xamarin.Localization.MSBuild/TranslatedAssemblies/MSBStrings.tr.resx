@@ -504,6 +504,10 @@
   <data name="E0170" xml:space="preserve">
         <value>Could not find {0} in {1}.</value>
     </data>
+  <data name="M0170" xml:space="preserve">
+        <value>Simulator does not support arm64.</value>
+        <comment>Shown when a simulator only supports architectures that are no longer supported by the iOS or tvOS workloads.</comment>
+    </data>
   <data name="E0171" xml:space="preserve">
         <value>The {0} SDK is not installed.</value>
     </data>

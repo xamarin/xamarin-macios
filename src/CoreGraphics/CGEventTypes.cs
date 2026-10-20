@@ -19,136 +19,136 @@ using CoreFoundation;
 namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapLocation;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the point in the event system where an event tap observes events.</summary>
+	/// <remarks>Event taps can observe or filter events at different stages, depending on the selected location and tap options.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapLocation : int {
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap at the HID system level.</summary>
 		HID,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap in the current login session.</summary>
 		Session,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the event tap at the annotated session point.</summary>
 		AnnotatedSession,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies where a new event tap is inserted in the active event tap list.</summary>
+	/// <remarks>The placement determines the tap's position relative to other active event taps.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapPlacement : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Inserts the event tap at the head of the active tap list.</summary>
 		HeadInsert,
-		/// <summary>To be added.</summary>
+		/// <summary>Appends the event tap at the tail of the active tap list.</summary>
 		TailAppend,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies whether an event tap filters events or only observes them.</summary>
+	/// <remarks>The default option creates an active filter; listen-only taps cannot modify events.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventTapOptions : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Creates an active event filter.</summary>
 		Default,
-		/// <summary>To be added.</summary>
+		/// <summary>Creates a passive listener that observes events without modifying them.</summary>
 		ListenOnly,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies a standard button on a mouse.</summary>
+	/// <remarks>The enumeration provides button identifiers for mice with up to three buttons.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGMouseButton : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>The left mouse button.</summary>
 		Left,
-		/// <summary>To be added.</summary>
+		/// <summary>The right mouse button.</summary>
 		Right,
-		/// <summary>To be added.</summary>
+		/// <summary>The center mouse button.</summary>
 		Center,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the unit used to express a scrolling event's delta.</summary>
+	/// <remarks>Use this value to indicate whether scroll deltas are measured in pixels or lines.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGScrollEventUnit : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Measures scroll deltas in pixels.</summary>
 		Pixel,
-		/// <summary>To be added.</summary>
+		/// <summary>Measures scroll deltas in lines.</summary>
 		Line,
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>A mask that identifies Quartz event types for an event tap to observe.</summary>
+	/// <remarks>Combine values to select the events delivered to the tap's callback.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGEventMask : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a null event.</summary>
 		Null = 0x00000001,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a left mouse button press.</summary>
 		LeftMouseDown = 0x00000002,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a left mouse button release.</summary>
 		LeftMouseUp = 0x00000004,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a right mouse button press.</summary>
 		RightMouseDown = 0x00000008,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a right mouse button release.</summary>
 		RightMouseUp = 0x00000010,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement without a button drag.</summary>
 		MouseMoved = 0x00000020,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement while the left button is held down.</summary>
 		LeftMouseDragged = 0x00000040,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for mouse movement while the right button is held down.</summary>
 		RightMouseDragged = 0x00000080,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a keyboard key press.</summary>
 		KeyDown = 0x00000400,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a keyboard key release.</summary>
 		KeyUp = 0x00000800,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a change in modifier-key state.</summary>
 		FlagsChanged = 0x00001000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a scroll-wheel event.</summary>
 		ScrollWheel = 0x00400000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a tablet pointer event.</summary>
 		TabletPointer = 0x00800000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a tablet proximity event.</summary>
 		TabletProximity = 0x01000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a non-left or non-right mouse button press.</summary>
 		OtherMouseDown = 0x02000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for a non-left or non-right mouse button release.</summary>
 		OtherMouseUp = 0x04000000,
-		/// <summary>To be added.</summary>
+		/// <summary>The mask bit for movement while a non-left or non-right mouse button is held down.</summary>
 		OtherMouseDragged = 0x08000000,
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventFlags;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Flags that describe the modifier-key state and other event-related states.</summary>
+	/// <remarks>Combine values to represent the flags associated with a Quartz event.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGEventFlags : ulong {
-		/// <summary>To be added.</summary>
+		/// <summary>Indicates that mouse or pen movement events are not being coalesced.</summary>
 		NonCoalesced = 0x00000100,
-		/// <summary>To be added.</summary>
+		/// <summary>The Alpha Shift (Caps Lock) modifier is active.</summary>
 		AlphaShift = 0x00010000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Shift modifier is active.</summary>
 		Shift = 0x00020000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Control modifier is active.</summary>
 		Control = 0x00040000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Alternate (Option) modifier is active.</summary>
 		Alternate = 0x00080000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Command modifier is active.</summary>
 		Command = 0x00100000,
-		/// <summary>To be added.</summary>
+		/// <summary>The event originated from the numeric keypad area of an extended keyboard.</summary>
 		NumericPad = 0x00200000,
-		/// <summary>To be added.</summary>
+		/// <summary>The Help key is active.</summary>
 		Help = 0x00400000,
-		/// <summary>To be added.</summary>
+		/// <summary>The secondary Function key is active.</summary>
 		SecondaryFn = 0x00800000,
 	}
 
@@ -367,74 +367,76 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies a Quartz input event or an event-tap status notification.</summary>
+	/// <remarks>The tap-disabled values are out-of-band notifications delivered to an event-tap callback.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventType : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>A null event.</summary>
 		Null = 0x0,
-		/// <summary>To be added.</summary>
+		/// <summary>A left mouse button press.</summary>
 		LeftMouseDown = 0x1,
-		/// <summary>To be added.</summary>
+		/// <summary>A left mouse button release.</summary>
 		LeftMouseUp = 0x2,
-		/// <summary>To be added.</summary>
+		/// <summary>A right mouse button press.</summary>
 		RightMouseDown = 0x3,
-		/// <summary>To be added.</summary>
+		/// <summary>A right mouse button release.</summary>
 		RightMouseUp = 0x4,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement without a button drag.</summary>
 		MouseMoved = 0x5,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while the left button is held down.</summary>
 		LeftMouseDragged = 0x6,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while the right button is held down.</summary>
 		RightMouseDragged = 0x7,
-		/// <summary>To be added.</summary>
+		/// <summary>A keyboard key press.</summary>
 		KeyDown = 0xa,
-		/// <summary>To be added.</summary>
+		/// <summary>A keyboard key release.</summary>
 		KeyUp = 0xb,
-		/// <summary>To be added.</summary>
+		/// <summary>A change in modifier-key state.</summary>
 		FlagsChanged = 0xc,
-		/// <summary>To be added.</summary>
+		/// <summary>A scroll-wheel event.</summary>
 		ScrollWheel = 0x16,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet pointer event.</summary>
 		TabletPointer = 0x17,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet proximity event.</summary>
 		TabletProximity = 0x18,
-		/// <summary>To be added.</summary>
+		/// <summary>A non-left or non-right mouse button press.</summary>
 		OtherMouseDown = 0x19,
-		/// <summary>To be added.</summary>
+		/// <summary>A non-left or non-right mouse button release.</summary>
 		OtherMouseUp = 0x1a,
-		/// <summary>To be added.</summary>
+		/// <summary>Mouse movement while a non-left or non-right mouse button is held down.</summary>
 		OtherMouseDragged = 0x1b,
+		/// <summary>Notification that an event tap was disabled because it exceeded the allowed event-handling time.</summary>
 		TapDisabledByTimeout = 4294967294,
+		/// <summary>Notification that an event tap was disabled by user input.</summary>
 		TapDisabledByUserInput = 4294967295,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies the subtype of a mouse event.</summary>
+	/// <remarks>The subtype distinguishes standard mouse events from tablet pointer and proximity events.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventMouseSubtype : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>A standard mouse event.</summary>
 		Default,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet pointer event.</summary>
 		TabletPoint,
-		/// <summary>To be added.</summary>
+		/// <summary>A tablet proximity event.</summary>
 		TabletProximity,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Identifies the global event-state table used by an event source.</summary>
+	/// <remarks>Use this value when creating an event source to select which event state it reads and updates.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	public enum CGEventSourceStateID : int {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses an independent event-state table owned by the event source.</summary>
 		Private = -1,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the combined state of event sources posting to the current login session.</summary>
 		CombinedSession = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the combined state of hardware event sources posting from the HID system.</summary>
 		HidSystem = 1,
 	}
 
