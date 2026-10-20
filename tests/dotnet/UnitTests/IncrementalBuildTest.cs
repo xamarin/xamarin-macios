@@ -120,6 +120,8 @@ namespace Xamarin.Tests {
 			File.WriteAllText (Path.Combine (projectDirectory, "Main.cs"), "class MainClass { static int Main () => 0; }");
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["CreatePackage"] = "true";
+			// ReadyToRun refreshes the Mac Catalyst app bundle on incremental builds, which correctly requires repackaging.
+			properties ["PublishReadyToRun"] = "false";
 			properties ["ApplicationDisplayVersion"] = "1.0";
 			properties ["ProductDefinition"] = Path.Combine (projectDirectory, "Product.plist");
 			var packagePath = customPackagePath ?
