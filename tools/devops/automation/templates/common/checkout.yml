@@ -35,6 +35,12 @@ steps:
     POWERSHELL_VERSION: 7.4.0
     POWERSHELL_ZIP_SHA256: 62151db1d98a8b56aeb249cc8a3ce17948f1c83b4062dac8d0c4302de71cbd75
 
+- powershell: ./test-powershell-core-native.ps1
+  displayName: 'Test native PowerShell bootstrap failures'
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
+  timeoutInMinutes: 5
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "$Env:IS_PR"
   name: fix_commit
   displayName: "Undo Github merge"

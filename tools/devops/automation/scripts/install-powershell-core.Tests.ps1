@@ -1,7 +1,12 @@
-Describe 'PowerShell bootstrap wiring' -Tag 'Wiring' {
+Describe 'PowerShell bootstrap wiring (<LineEnding>)' -Tag 'Wiring' -ForEach @(
+    @{ LineEnding = 'LF'; NewLine = "`n" }
+    @{ LineEnding = 'CRLF'; NewLine = "`r`n" }
+) {
     BeforeAll {
         $yaml = Get-Content -Raw (Join-Path $PSScriptRoot '../templates/common/checkout.yml')
-        $installStep = [regex]::Match($yaml, '(?ms)^- powershell:.*?(?=^- pwsh:)').Value
+        $yaml = $yaml -replace '\r?\n', $NewLine
+        $yaml = $yaml.Replace("`r`n", "`n")
+        $installStep = [regex]::Match($yaml, '(?ms)^- powershell: \./install-powershell-core\.ps1.*?(?=^-|\z)').Value
     }
 
     It 'uses Windows PowerShell to run the bootstrap from the checked-out scripts directory' {
@@ -23,6 +28,17 @@ Describe 'PowerShell bootstrap wiring' -Tag 'Wiring' {
         $installStep | Should -Match '(?m)^    POWERSHELL_VERSION: 7\.4\.0$'
         $installStep | Should -Match '(?m)^    POWERSHELL_ZIP_SHA256: 62151db1d98a8b56aeb249cc8a3ce17948f1c83b4062dac8d0c4302de71cbd75$'
         $installStep | Should -Match '(?m)^  timeoutInMinutes: \d+$'
+    }
+
+    It 'runs the Windows native checks before Undo can switch to an older PR head' {
+        $nativeStep = [regex]::Match($yaml, '(?ms)^- powershell: \./test-powershell-core-native\.ps1.*?(?=^-|\z)').Value
+        $nativeStep | Should -Match '(?m)^- powershell: \./test-powershell-core-native\.ps1$'
+        $nativeStep | Should -Match '(?m)^  workingDirectory: \$\(System\.DefaultWorkingDirectory\)/\$\(BUILD_REPOSITORY_TITLE\)/tools/devops/automation/scripts$'
+        $nativeStep | Should -Match '(?m)^  timeoutInMinutes: \d+$'
+        $nativeStep | Should -Match "condition: and\(succeeded\(\), eq\(variables\['Agent.OS'\], 'Windows_NT'\)\)"
+        $nativeStep | Should -Not -Match 'continueOnError'
+        $yaml.IndexOf('- powershell: ./test-powershell-core-native.ps1') | Should -BeGreaterThan $yaml.IndexOf('- powershell: ./install-powershell-core.ps1')
+        $yaml.IndexOf('- powershell: ./test-powershell-core-native.ps1') | Should -BeLessThan $yaml.IndexOf('- pwsh: ./undo_github_merge.ps1')
     }
 }
 
@@ -235,10 +251,54 @@ Describe 'Get-PowerShellVersion with real native processes' {
         Get-PowerShellVersion -Path $executable | Should -BeExactly $PSVersionTable.PSVersion.ToString()
     }
 
-    It 'is ASCII so Windows PowerShell 5.1 can read the script without a BOM' {
-        $bytes = [System.IO.File]::ReadAllBytes((Join-Path $PSScriptRoot 'install-powershell-core.ps1'))
+    It 'keeps <ScriptName> parseable and ASCII without a BOM' -TestCases @(
+        @{ ScriptName = 'install-powershell-core.ps1' }
+        @{ ScriptName = 'test-powershell-core-native.ps1' }
+    ) {
+        param ($ScriptName)
+        $path = Join-Path $PSScriptRoot $ScriptName
+        $bytes = [System.IO.File]::ReadAllBytes($path)
 
         @($bytes | Where-Object { $_ -gt 127 }) | Should -BeNullOrEmpty
+        $tokens = $null
+        $parseErrors = $null
+        $null = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref] $tokens, [ref] $parseErrors)
+        $parseErrors | Should -BeNullOrEmpty
+    }
+}
+
+Describe 'Native failures under Windows PowerShell 5.1' -Skip:($env:OS -ne 'Windows_NT') {
+    BeforeAll {
+        $powershell = Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+        $harness = Join-Path $PSScriptRoot 'test-powershell-core-native.ps1'
+        Test-Path -LiteralPath $powershell -PathType Leaf | Should -BeTrue
+        $ErrorActionPreference = 'Continue'
+        $global:LASTEXITCODE = $null
+        $output = & $powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $harness -FixtureRoot $TestDrive 2>&1
+        $exitCode = $LASTEXITCODE
+        $exitCode | Should -Be 0 -Because ($output -join [Environment]::NewLine)
+        $nativeResults = ($output -join [Environment]::NewLine) | ConvertFrom-Json
+        @($nativeResults) | Should -HaveCount 2
+    }
+
+    It 'rejects a real nonzero native exit rather than a stale successful exit' {
+        $result = @($nativeResults | Where-Object ExpectedExitCode -eq 1)
+        $result | Should -HaveCount 1
+        $result[0].PowerShellEdition | Should -BeExactly 'Desktop'
+        ([version] $result[0].PowerShellVersion).Major | Should -Be 5
+        ([version] $result[0].PowerShellVersion).Minor | Should -Be 1
+        $result[0].NativeExitCode | Should -Be 1
+        $result[0].Message | Should -BeExactly "PowerShell executable '$($result[0].Fixture)' exited with code 1."
+    }
+
+    It 'rejects a real successful native process with no version output' {
+        $result = @($nativeResults | Where-Object ExpectedExitCode -eq 0)
+        $result | Should -HaveCount 1
+        $result[0].PowerShellEdition | Should -BeExactly 'Desktop'
+        ([version] $result[0].PowerShellVersion).Major | Should -Be 5
+        ([version] $result[0].PowerShellVersion).Minor | Should -Be 1
+        $result[0].NativeExitCode | Should -Be 0
+        $result[0].Message | Should -BeExactly "PowerShell executable '$($result[0].Fixture)' did not report a version."
     }
 }
 
