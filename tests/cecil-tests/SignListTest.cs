@@ -21,7 +21,10 @@ namespace Cecil.Tests {
 	public class SignListTest {
 		const int MaxZipDepth = 8;
 
-		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign", "MacDeveloperSignHarden" };
+		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign", "MacDeveloperSignHarden", "MacDeveloperSignBundle", "MacDeveloperSignHardenBundle" };
+
+		// The bundle groups contain the name of an app bundle, and not the name of a file.
+		static bool IsBundleGroup (string group) => group.EndsWith ("Bundle", StringComparison.Ordinal);
 
 		[Test]
 		public void WorkloadPackagesHaveSigningEntries ()
@@ -64,7 +67,14 @@ namespace Cecil.Tests {
 						continue;
 					}
 					Assert.That (include, Does.Not.Contain ("/"), $"Use Windows-style separators in {signList}: {include}");
-					var expression = Regex.Escape (include).Replace (@"\*", @"[^\\]*").Replace (@"\?", @"[^\\]");
+					string expression;
+					if (IsBundleGroup (group)) {
+						Assert.That (include, Does.EndWith (".app"), $"{group} entries must be the name of an app bundle in {signList}: {include}");
+						Assert.That (include.IndexOfAny (new char [] { '\\', '*', '?' }), Is.EqualTo (-1), $"{group} entries must not contain a path or wildcards in {signList}: {include}");
+						expression = Regex.Escape (include) + @"\\Contents\\Info\.plist";
+					} else {
+						expression = Regex.Escape (include).Replace (@"\*", @"[^\\]*").Replace (@"\?", @"[^\\]");
+					}
 					patterns.Add ((group, include, new Regex ($"(^|\\\\){expression}$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)));
 				}
 			}
@@ -109,9 +119,22 @@ namespace Cecil.Tests {
 					if (!found)
 						missing.Add ($"{archiveName}!{zipPath}{entry.FullName}");
 				} else {
+					// macOS app bundles (with a Contents/Info.plist) are signed as a unit, and have to be listed too.
+					if (name.EndsWith (".app\\Contents\\Info.plist", StringComparison.OrdinalIgnoreCase)) {
+						var found = false;
+						for (var i = 0; i < patterns.Count; i++) {
+							if (!IsBundleGroup (patterns [i].Group) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+								continue;
+							matched [i] = true;
+							found = true;
+						}
+						if (!found)
+							missing.Add ($"{archiveName}!{zipPath}{entry.FullName} (app bundle)");
+						continue;
+					}
 					// Executables don't have a well-known file extension, so only the ones with a Mach-O signing entry are checked.
 					for (var i = 0; i < patterns.Count; i++) {
-						if (!patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+						if (IsBundleGroup (patterns [i].Group) || !patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
 							continue;
 						matched [i] = true;
 						// The debug symbols in a .dSYM are Mach-O files too, but they're not executables.

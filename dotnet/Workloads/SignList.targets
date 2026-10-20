@@ -35,9 +35,74 @@
     <Delete Files="@(_NestediOSAppZip)" Condition="'@(_NestediOSAppZip->Count())' != '0'" />
   </Target>
 
-  <!-- The signed Mac binaries must be restored (by the template's @(SignFilesAfterTargets) targets) before the nested zips are re-zipped, otherwise a Mac binary in a nested zip would be replaced by the temporary zip the template signs. -->
+  <!--
+    Sign the app bundles listed in the sign list (@(MacDeveloperSignBundle) and @(MacDeveloperSignHardenBundle)) as a unit.
+
+    The template signs the files in a bundle one by one (and replaces them), which invalidates the seal of the bundle
+    (_CodeSignature/CodeResources has the hash of every file in the bundle), so verifying the bundle with codesign
+    fails. The signature of the bundle must be the last change to the bundle, so do it after the template has signed
+    and restored the files in the bundle: zip each bundle (with the .app directory in the zip, similar to how the
+    template zips single Mac binaries), sign the zips by running the SignFiles task once more (the same task the
+    SignFiles target of the MicroBuild plugin runs), and replace the bundles with the signed ones.
+
+    The bundles are found in a separate target, so that _SignMacBundles is skipped when there aren't any (not all
+    packages are always signed together, for instance when only Sharpie is released).
+  -->
+  <Target Name="_FindMacBundles"
+      DependsOnTargets="@(SignFilesAfterTargets)"
+      AfterTargets="SignFiles"
+      Condition="'$(MicroBuild_SigningEnabled)' == 'true'">
+    <CreateItem Include="@(MacDeveloperSignBundle -> '$(_WorkingDir)**\%(Identity)\Contents\Info.plist')">
+      <Output TaskParameter="Include" ItemName="_MacBundleInfoPlist" />
+    </CreateItem>
+    <CreateItem Include="@(MacDeveloperSignHardenBundle -> '$(_WorkingDir)**\%(Identity)\Contents\Info.plist')">
+      <Output TaskParameter="Include" ItemName="_MacHardenBundleInfoPlist" />
+    </CreateItem>
+    <ItemGroup>
+      <_MacBundle Include="@(_MacBundleInfoPlist->DirectoryName()->DirectoryName())" Authenticode="MacDeveloperVNext" />
+      <_MacBundle Include="@(_MacHardenBundleInfoPlist->DirectoryName()->DirectoryName())" Authenticode="MacDeveloperVNextHarden" />
+      <_MacBundle ZipDir="%(Identity).dir" ZipName="%(Identity).zip" BundleName="%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_SignMacBundles"
+      AfterTargets="_FindMacBundles"
+      Condition="'@(_MacBundle)' != ''">
+    <ItemGroup>
+      <_MacBundleFile Include="%(_MacBundle.Identity)\**">
+        <Bundle>%(_MacBundle.Identity)</Bundle>
+        <ZipDir>%(_MacBundle.ZipDir)</ZipDir>
+        <BundleName>%(_MacBundle.BundleName)</BundleName>
+      </_MacBundleFile>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_MacBundleFile)" DestinationFiles="@(_MacBundleFile->'%(ZipDir)\%(BundleName)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <ZipDirectory SourceDirectory="%(_MacBundle.ZipDir)" DestinationFile="%(_MacBundle.ZipName)" />
+    <RemoveDir Directories="%(_MacBundle.ZipDir)" />
+    <RemoveDir Directories="%(_MacBundle.Identity)" />
+
+    <ItemGroup>
+      <_MacBundleZip Include="@(_MacBundle->'%(ZipName)')" Zip="true" />
+    </ItemGroup>
+    <SignFiles Files="@(_MacBundleZip)" Type="$(SignType)" BinariesDirectory="$(OutDir)" IntermediatesDirectory="$(IntermediateOutputPath)" ESRPSigning="$(ESRPSigning)" UseBearerToken="$(UseBearerToken)" />
+
+    <Unzip SourceFiles="%(_MacBundle.ZipName)" DestinationFolder="%(_MacBundle.ZipDir)" />
+    <ItemGroup>
+      <_SignedMacBundleFile Include="%(_MacBundle.ZipDir)\%(_MacBundle.BundleName)\**">
+        <Bundle>%(_MacBundle.Identity)</Bundle>
+      </_SignedMacBundleFile>
+    </ItemGroup>
+    <Copy SourceFiles="@(_SignedMacBundleFile)" DestinationFiles="@(_SignedMacBundleFile->'%(Bundle)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Delete Files="%(_MacBundle.ZipName)" />
+    <RemoveDir Directories="%(_MacBundle.ZipDir)" />
+    <!-- Make sure the signed bundle is complete: all the files that were in the bundle must still be there, and the bundle must have a seal. -->
+    <Error Condition="!Exists('%(_MacBundleFile.Bundle)\%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)')" Text="The signed bundle '%(_MacBundleFile.Bundle)' doesn't have the file '%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)'." />
+    <Error Condition="!Exists('%(_MacBundle.Identity)\Contents\_CodeSignature\CodeResources')" Text="The signed bundle '%(_MacBundle.Identity)' doesn't have a _CodeSignature\CodeResources file." />
+  </Target>
+
+  <!-- The signed Mac binaries must be restored (by the template's @(SignFilesAfterTargets) targets) before the nested zips are re-zipped, otherwise a Mac binary in a nested zip would be replaced by the temporary zip the template signs. The same goes for the bundles. -->
   <Target Name="_ZipNestedZips"
-      DependsOnTargets="_UnzipNestedZips;@(SignFilesAfterTargets)"
+      DependsOnTargets="_UnzipNestedZips;@(SignFilesAfterTargets);_FindMacBundles;_SignMacBundles"
       AfterTargets="SignFiles" >
     <ZipDirectory
         SourceDirectory="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
