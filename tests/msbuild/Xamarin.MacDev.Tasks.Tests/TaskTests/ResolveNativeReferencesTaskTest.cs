@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 
+using Microsoft.Build.Construction;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 #nullable enable
 
@@ -19,6 +23,17 @@ namespace Xamarin.MacDev.Tasks.Tests {
 
 		TaskLoggingHelper log = new TaskLoggingHelper (new TestEngine (), "ResolveNativeReferences");
 
+		class NativeReferenceLogger : Microsoft.Build.Utilities.Logger {
+			public List<BuildWarningEventArgs> Warnings { get; } = [];
+			public List<BuildErrorEventArgs> Errors { get; } = [];
+
+			public override void Initialize (IEventSource eventSource)
+			{
+				eventSource.WarningRaised += (sender, e) => Warnings.Add (e);
+				eventSource.ErrorRaised += (sender, e) => Errors.Add (e);
+			}
+		}
+
 		[TestCase ("XTest.framework", false)]
 		[TestCase ("XTest.Framework", true)]
 		[TestCase ("XTest.FRAMEWORK", true)]
@@ -27,6 +42,8 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		[TestCase ("XTest.Framework/XTest", true)]
 		[TestCase ("XTest.FRAMEWORK/XTest", true)]
 		[TestCase ("XTest.Framework/.", true)]
+		[TestCase ("Foo.zip.Framework/Foo.zip", true)]
+		[TestCase ("Foo.zip.framework/Foo.zip", false)]
 		[TestCase ("Uppercase.Framework.Name.framework", false)]
 		[TestCase ("libtest.a", false)]
 		[TestCase ("libtest.dylib", false)]
@@ -46,6 +63,59 @@ namespace Xamarin.MacDev.Tasks.Tests {
 				Assert.That (warnings [0].Code, Does.EndWith ("7198"), "Warning code");
 			}
 			Assert.That (task.NativeFrameworks, Has.Length.EqualTo (1), "Reference is still processed");
+		}
+
+		[TestCase ("XTest.framework/XTest", false, false)]
+		[TestCase ("XTest.Framework/XTest", true, false)]
+		[TestCase ("Foo.zip.Framework/Foo.zip", true, false)]
+		[TestCase ("Foo.zip.framework/Foo.zip", false, false)]
+		[TestCase ("XTest.Framework", true, true)]
+		[TestCase ("Foo.zip.Framework", true, true)]
+		[TestCase ("Foo.zip.framework", false, true)]
+		[TestCase ("libtest.a", false, false)]
+		[TestCase ("libtest.dylib", false, false)]
+		public void ExpandNativeReferencesFrameworkExtension (string reference, bool expectWarning, bool isDirectory)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var referencePath = Path.Combine (tmpdir, reference);
+			var root = ProjectRootElement.Create (Engine.ProjectCollection);
+			var properties = root.AddPropertyGroup ();
+			properties.AddProperty ("_TaskAssemblyName", typeof (ResolveNativeReferences).Assembly.Location);
+			properties.AddProperty ("IsMacEnabled", "true");
+			properties.AddProperty ("TargetArchitectures", "arm64");
+			properties.AddProperty ("_AppFrameworksRelativePath", "Frameworks");
+			properties.AddProperty ("DeviceSpecificIntermediateOutputPath", Path.Combine (tmpdir, "obj"));
+			properties.AddProperty ("_ComputedTargetFrameworkMoniker", TargetFramework.DotNet_macOS_String);
+			properties.AddProperty ("_SdkIsSimulator", "false");
+			root.AddItem ("NativeReference", referencePath).AddMetadata ("Kind", "Framework");
+			root.AddImport (Path.Combine (Configuration.RootPath, "msbuild", "Xamarin.Shared", "Xamarin.Shared.targets"));
+			root.AddTarget ("_DetectSdkLocations");
+			root.AddTarget ("_ComputeTargetArchitectures");
+			root.AddTarget ("_GenerateBundleName");
+			var capture = root.AddTarget ("CaptureNativeReferences");
+			capture.DependsOnTargets = "_ExpandNativeReferences";
+			var write = capture.AddTask ("WriteLinesToFile");
+			var output = Path.Combine (tmpdir, "references.txt");
+			write.SetParameter ("File", output);
+			write.SetParameter ("Lines", "@(_FileNativeReference);@(_FrameworkNativeReference)");
+			var project = new Project (root, null, null, Engine.ProjectCollection);
+			var logger = new NativeReferenceLogger ();
+
+			Assert.That (project.Build ("CaptureNativeReferences", new [] { logger }), Is.True, string.Join ("\n", logger.Errors.Select (v => v.Message)));
+
+			var warnings = logger.Warnings.Where (v => v.Code == "MT7198").ToArray ();
+			Assert.That (warnings.Length, Is.EqualTo (expectWarning ? 1 : 0), "Framework extension warning count");
+			if (expectWarning)
+				Assert.That (warnings [0].Message, Does.Contain (isDirectory ? referencePath : Path.GetDirectoryName (referencePath)), "Warning identifies the framework");
+			var resolved = File.ReadAllLines (output);
+			if (isDirectory) {
+				var binary = Path.Combine (referencePath, Path.GetFileNameWithoutExtension (referencePath));
+				Assert.That (resolved, Is.EqualTo (new [] { binary, binary }), "Directory reference expansion is unchanged");
+			} else if (Path.GetExtension (referencePath) == ".zip") {
+				Assert.That (resolved, Is.Empty, "Zip-suffixed file classification is unchanged");
+			} else {
+				Assert.That (resolved, Is.EqualTo (new [] { referencePath }), "File reference is unchanged");
+			}
 		}
 
 		[TestCase (".framework", false)]

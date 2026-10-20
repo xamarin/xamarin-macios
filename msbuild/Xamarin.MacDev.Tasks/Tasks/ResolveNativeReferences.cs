@@ -56,6 +56,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem [] NativeReferences { get; set; } = Array.Empty<ITaskItem> ();
 
+		public ITaskItem []? NativeReferencesToValidate { get; set; }
+
 		public ITaskItem [] References { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -104,14 +106,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		static void WarnIfIncorrectFrameworkExtension (TaskLoggingHelper log, string path)
 		{
-			if (path.EndsWith (".zip", StringComparison.OrdinalIgnoreCase))
-				path = Path.ChangeExtension (path, null);
-
-			if (!path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
-				var parent = Path.GetDirectoryName (path);
-				if (parent is null || Path.GetFileName (path) != Path.GetFileNameWithoutExtension (parent))
-					return;
+			var parent = Path.GetDirectoryName (path);
+			if (parent is not null && parent.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && Path.GetFileName (path) == Path.GetFileNameWithoutExtension (parent)) {
 				path = parent;
+			} else if (path.EndsWith (".framework.zip", StringComparison.OrdinalIgnoreCase)) {
+				path = Path.ChangeExtension (path, null);
 			}
 
 			if (path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && !path.EndsWith (".framework", StringComparison.Ordinal))
@@ -120,7 +119,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (NativeReferences.Length == 0 && References.Length == 0)
+			if (NativeReferences.Length == 0 && References.Length == 0 && (NativeReferencesToValidate is null || NativeReferencesToValidate.Length == 0))
 				return true;
 
 			if (ShouldExecuteRemotely ())
@@ -135,6 +134,11 @@ namespace Xamarin.MacDev.Tasks {
 			var createdFiles = new List<string> ();
 
 			cancellationTokenSource = new CancellationTokenSource ();
+
+			if (NativeReferencesToValidate is not null) {
+				foreach (var nr in NativeReferencesToValidate)
+					WarnIfIncorrectFrameworkExtension (Log, nr.ItemSpec);
+			}
 
 			// there can be direct native references inside a project
 			foreach (var nr in NativeReferences) {
