@@ -3508,6 +3508,23 @@ Where * can be:
 
 *MSBuild task: IntentDefinitionCompilerTaskBase*
 
+<a name="MT7198"></a>
+
+### MT7198: The app's Info.plist does not contain a UIApplicationSceneManifest dictionary.
+
+Apps built against the iOS or Mac Catalyst 27.0 SDK or later must adopt the UIKit
+scene lifecycle to launch on iOS or macOS 27.0 or later. Add the scene manifest
+and delegate, and migrate custom lifecycle handlers by following the instructions
+at https://aka.ms/uiscene.
+
+The check examines the merged app manifest, including partial manifests. It
+does not verify the scene delegate implementation. If the check incorrectly
+rejects an app that configures scenes in code, set the MSBuild property
+`ValidateSceneManifest` to `false`. This only disables build-time validation;
+it does not bypass the operating system's requirement.
+
+*MSBuild task: CompileAppManifest*
+
 ## MT8xxx: Runtime error messages
 
 <!--
