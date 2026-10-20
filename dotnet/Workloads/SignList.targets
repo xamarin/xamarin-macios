@@ -35,8 +35,9 @@
     <Delete Files="@(_NestediOSAppZip)" Condition="'@(_NestediOSAppZip->Count())' != '0'" />
   </Target>
 
+  <!-- The signed Mac binaries must be restored (by the template's @(SignFilesAfterTargets) targets) before the nested zips are re-zipped, otherwise a Mac binary in a nested zip would be replaced by the temporary zip the template signs. -->
   <Target Name="_ZipNestedZips"
-      DependsOnTargets="_UnzipNestedZips"
+      DependsOnTargets="_UnzipNestedZips;@(SignFilesAfterTargets)"
       AfterTargets="SignFiles" >
     <ZipDirectory
         SourceDirectory="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
