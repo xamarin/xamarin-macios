@@ -20,6 +20,7 @@ namespace Network {
 	/// <summary>Handles a WebSocket client's handshake request.</summary>
 	/// <param name="request">The client's WebSocket handshake request.</param>
 	/// <returns>The server's response to the handshake.</returns>
+	/// <remarks>The <paramref name="request" /> wrapper is disposed when the callback returns and must not be retained for later use.</remarks>
 	public delegate NWWebSocketResponse NWWebSocketClientRequestHandler (NWWebSocketRequest request);
 
 	[SupportedOSPlatform ("tvos")]

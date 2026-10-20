@@ -1,5 +1,10 @@
 
 using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using CoreFoundation;
@@ -94,13 +99,11 @@ namespace MonoTouchFixtures.Network {
 
 		[TestCase (false)]
 		[TestCase (true)]
-		public void ClientRequestHandler (bool returnNull)
+		public async Task ClientRequestHandler (bool returnNull)
 		{
 			var listenerState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var listenerCancelled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
-			var clientState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var requestHandled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
-			var responseStatus = new TaskCompletionSource<NWWebSocketResponseStatus> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var acceptedConnection = new TaskCompletionSource<NWConnection> (TaskCreationOptions.RunContinuationsAsynchronously);
 
 			using var serverOptions = new NWWebSocketOptions (NWWebSocketVersion.Version13);
@@ -143,47 +146,25 @@ namespace MonoTouchFixtures.Network {
 				});
 				listener.Start ();
 
-				Assert.That (listenerState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Listener did not become ready.");
-				Assert.That (listenerState.Task.Result, Is.Null, "Listener state");
-
-				using var clientOptions = new NWWebSocketOptions (NWWebSocketVersion.Version13);
-				clientOptions.AddSubprotocol ("accepted");
-				using var clientParameters = NWParameters.CreateTcp ();
-				using (var stack = clientParameters.ProtocolStack)
-					stack.PrependApplicationProtocol (clientOptions);
-				using var endpoint = NWEndpoint.Create ($"ws://127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}/")
-					?? throw new InvalidOperationException ("Could not create the WebSocket endpoint.");
-				using var client = new NWConnection (endpoint, clientParameters);
-				using var webSocketDefinition = NWProtocolDefinition.CreateWebSocketDefinition ();
-				client.SetQueue (DispatchQueue.DefaultGlobalQueue);
-				client.SetStateChangeHandler ((state, error) => {
-					using var metadata = client.GetProtocolMetadata<NWWebSocketMetadata> (webSocketDefinition);
-					using var response = metadata?.ServerResponse;
-					if (response is not null)
-						responseStatus.TrySetResult (response.Status);
-
-					switch (state) {
-					case NWConnectionState.Ready:
-						clientState.TrySetResult (null);
-						break;
-					case NWConnectionState.Invalid:
-					case NWConnectionState.Failed:
-						clientState.TrySetResult (error?.ToString () ?? $"Client entered the {state} state.");
-						break;
-					}
-				});
-				client.Start ();
-
 				try {
+					Assert.That (listenerState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Listener did not become ready.");
+					Assert.That (listenerState.Task.Result, Is.Null, "Listener state");
+
+					using var timeout = new CancellationTokenSource (TimeSpan.FromSeconds (10));
+					using var client = new TcpClient ();
+					await client.ConnectAsync (IPAddress.Loopback, listener.Port, timeout.Token);
+					using var stream = client.GetStream ();
+					var request = Encoding.ASCII.GetBytes (
+						$"GET / HTTP/1.1\r\nHost: 127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}\r\n" +
+						"Upgrade: websocket\r\nConnection: Upgrade\r\n" +
+						"Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n" +
+						"Sec-WebSocket-Protocol: accepted\r\n\r\n");
+					await stream.WriteAsync (request, timeout.Token);
+					using var reader = new StreamReader (stream, Encoding.ASCII);
+					var statusLine = await reader.ReadLineAsync (timeout.Token);
 					Assert.That (requestHandled.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler was not called.");
-					Assert.That (responseStatus.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not receive the server response.");
-					Assert.That (responseStatus.Task.Result, Is.EqualTo (returnNull ? NWWebSocketResponseStatus.Reject : NWWebSocketResponseStatus.Accept), "Response status");
-					if (!returnNull) {
-						Assert.That (clientState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not reach a terminal handshake state.");
-						Assert.That (clientState.Task.Result, Is.Null, "Accepted client state");
-					}
+					Assert.That (statusLine, Does.StartWith (returnNull ? "HTTP/1.1 400 " : "HTTP/1.1 101 "), "Handshake response");
 				} finally {
-					client.Cancel ();
 					listener.Cancel ();
 					listenerCancelled.Task.Wait (TimeSpan.FromSeconds (5));
 					if (acceptedConnection.Task.Wait (TimeSpan.FromSeconds (5))) {
