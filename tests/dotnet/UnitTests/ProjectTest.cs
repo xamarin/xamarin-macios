@@ -4374,6 +4374,44 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", true)]
+		public void SwiftBridgeTrimming (ApplePlatform platform, string runtimeIdentifiers, bool useWidgetKit)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["MtouchLink"] = "Full";
+			properties ["LinkMode"] = "Full";
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_LibXamarinLinkMode"] = "static";
+			properties ["NoSymbolStrip"] = "true";
+			properties ["AdditionalDefineConstants"] = useWidgetKit ? "USE_SWIFT_WIDGETKIT" : "USE_SWIFT_REVIEW";
+			DotNet.AssertBuild (projectPath, properties);
+
+			if (Configuration.IsBuildingRemotely)
+				return;
+
+			var executable = GetNativeExecutable (platform, appPath);
+			var symbols = Configuration.GetNativeSymbols (executable);
+			Assert.That (symbols, Does.Contain ("_OBJC_CLASS_$_XamarinSwiftFunctions"), "The StoreKit bridge must remain linked.");
+			if (useWidgetKit) {
+				Assert.That (symbols, Does.Contain ("_OBJC_CLASS_$_XamarinWidgetKitSwiftFunctions"), "The used WidgetKit bridge must remain linked.");
+				if (CanExecute (platform, runtimeIdentifiers))
+					ExecuteProjectWithMagicWordAndAssert (projectPath, platform, runtimeIdentifiers);
+			} else {
+				Assert.That (symbols, Does.Not.Contain ("_OBJC_CLASS_$_XamarinWidgetKitSwiftFunctions"), "The unused WidgetKit bridge must be stripped independently of StoreKit.");
+				Assert.That (GetLinkedWithFrameworks (executable).Any (v => v.Contains ("/WidgetKit.framework/")), Is.False, "Unused WidgetKit must not add a native framework dependency.");
+			}
+		}
+
 		static HashSet<string> GetLinkedWithFrameworks (string path)
 		{
 			var rv = new HashSet<string> ();

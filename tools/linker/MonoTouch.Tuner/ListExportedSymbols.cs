@@ -164,10 +164,11 @@ namespace Xamarin.Linker.Steps {
 		{
 			exportedName = null;
 
-			// The product assembly only has one type we may need to keep: XamarinSwiftFunctions
+			// Keep the native Swift bridge classes when their managed bindings are used.
 			if (derivedLinkContext.LinkerConfiguration.Profile.IsProductAssembly (type.Module.Assembly)) {
 				switch (type.Name) {
 				case "XamarinSwiftFunctions":
+				case "XamarinWidgetKitSwiftFunctions":
 					break;
 				default:
 					return false;
