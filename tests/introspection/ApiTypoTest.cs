@@ -151,6 +151,7 @@ namespace Introspection {
 			{ "Bsln", All }, // OpenType baseline tag
 			{ "Bssid", All & ~ApplePlatform.TVOS }, // wireless network identifier
 			{ "Btle", ApplePlatform.MacOSX }, // Bluetooth Low Energy
+			{ "Bto", All }, // CIConvertRGBtoLab follows the native filter name
 			{ "Cabac", All }, // video coding acronym
 			{ "Caf", All }, // acronym: Core Audio Format
 			{ "Callables", All }, // valid English plural

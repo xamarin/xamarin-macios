@@ -176,14 +176,14 @@ Microsoft.iOS.dll:Foundation.NSAsyncDispatcher..cctor()
 Microsoft.iOS.dll:Foundation.NSAsyncDispatcher..ctor()
 Microsoft.iOS.dll:Foundation.NSAsyncDispatcher.Apply()
 Microsoft.iOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__
-Microsoft.iOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3075_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.iOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3076_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3089_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3090_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher
 Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher..cctor()
 Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher.Apply()
 Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3078_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3092_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.iOS.dll:Foundation.NSAutoreleasePool
 Microsoft.iOS.dll:Foundation.NSAutoreleasePool._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.iOS.dll:Foundation.NSAutoreleasePool..cctor()
@@ -226,8 +226,8 @@ Microsoft.iOS.dll:Foundation.NSDispatcher..cctor()
 Microsoft.iOS.dll:Foundation.NSDispatcher..ctor()
 Microsoft.iOS.dll:Foundation.NSDispatcher.Apply()
 Microsoft.iOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__
-Microsoft.iOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3070_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.iOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3071_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3084_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3085_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.iOS.dll:Foundation.NSException
 Microsoft.iOS.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::<Exception>k__BackingField
 Microsoft.iOS.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::Exception()
@@ -332,8 +332,8 @@ Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer.Add(Foundation.NSObject)
 Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer.Drain(Foundation.NSObject)
 Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer.ScheduleDrain()
 Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__
-Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3103_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3104_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3117_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3118_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.iOS.dll:Foundation.NSObject/XamarinGCHandleFlags
 Microsoft.iOS.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::HasManagedRef
 Microsoft.iOS.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::InitialSet
@@ -369,7 +369,7 @@ Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher..cctor()
 Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher.Apply()
 Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3073_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.iOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3087_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.iOS.dll:Foundation.NSValue
 Microsoft.iOS.dll:Foundation.NSValue._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.iOS.dll:Foundation.NSValue..cctor()

@@ -131,10 +131,10 @@ Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.get_WorksWhenModal()
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.OnActivated(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher.OnActivated2(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3144_AppKit_ActionDispatcher_OnActivated(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
-Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3145_AppKit_ActionDispatcher_OnActivated2(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
-Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3146_AppKit_ActionDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3147_AppKit_ActionDispatcher_get_WorksWhenModal(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3158_AppKit_ActionDispatcher_OnActivated(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3159_AppKit_ActionDispatcher_OnActivated2(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3160_AppKit_ActionDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.MacCatalyst.dll:AppKit.ActionDispatcher/__Registrar_Callbacks__.callback_3161_AppKit_ActionDispatcher_get_WorksWhenModal(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:CoreFoundation.CFArray
 Microsoft.MacCatalyst.dll:CoreFoundation.CFArray._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.MacCatalyst.dll:CoreFoundation.CFArray..cctor()
@@ -193,14 +193,14 @@ Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher..cctor()
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher..ctor()
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher.Apply()
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3035_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3036_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3049_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_3050_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher..cctor()
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher.Apply()
 Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3038_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3052_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:Foundation.NSAutoreleasePool
 Microsoft.MacCatalyst.dll:Foundation.NSAutoreleasePool._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.MacCatalyst.dll:Foundation.NSAutoreleasePool..cctor()
@@ -243,8 +243,8 @@ Microsoft.MacCatalyst.dll:Foundation.NSDispatcher..cctor()
 Microsoft.MacCatalyst.dll:Foundation.NSDispatcher..ctor()
 Microsoft.MacCatalyst.dll:Foundation.NSDispatcher.Apply()
 Microsoft.MacCatalyst.dll:Foundation.NSDispatcher/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3030_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.MacCatalyst.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3031_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3044_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_3045_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:Foundation.NSException
 Microsoft.MacCatalyst.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::<Exception>k__BackingField
 Microsoft.MacCatalyst.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::Exception()
@@ -349,8 +349,8 @@ Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.Add(Foundation.N
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.Drain(Foundation.NSObject)
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer.ScheduleDrain()
 Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3063_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3064_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3077_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_3078_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:Foundation.NSObject/XamarinGCHandleFlags
 Microsoft.MacCatalyst.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::HasManagedRef
 Microsoft.MacCatalyst.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::InitialSet
@@ -386,7 +386,7 @@ Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher..cctor()
 Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher.Apply()
 Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3033_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.MacCatalyst.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_3047_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.MacCatalyst.dll:Foundation.NSValue
 Microsoft.MacCatalyst.dll:Foundation.NSValue._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.MacCatalyst.dll:Foundation.NSValue..cctor()
