@@ -1813,8 +1813,6 @@ F:CoreGraphics.CGDynamicRange.Constrained
 F:CoreGraphics.CGDynamicRange.High
 F:CoreGraphics.CGDynamicRange.Standard
 F:CoreGraphics.CGEventSuppressionState.NumberOfEventSuppressionStates
-F:CoreGraphics.CGEventType.TapDisabledByTimeout
-F:CoreGraphics.CGEventType.TapDisabledByUserInput
 F:CoreGraphics.CGImageComponentInfo.Float
 F:CoreGraphics.CGImageComponentInfo.Integer
 F:CoreGraphics.CGPdfTagType.Annotation
@@ -55441,7 +55439,6 @@ T:CoreGraphics.CGBitmapContext.OnResolveCallback
 T:CoreGraphics.CGBitmapInfo
 T:CoreGraphics.CGBitmapInfoExtensions
 T:CoreGraphics.CGBitmapLayout
-T:CoreGraphics.CGColorConversionInfoTransformType
 T:CoreGraphics.CGColorConversionOptions
 T:CoreGraphics.CGColorModel
 T:CoreGraphics.CGComponent
@@ -55450,7 +55447,6 @@ T:CoreGraphics.CGDisplayStreamKeys
 T:CoreGraphics.CGDisplayStreamYCbCrMatrixOptionKeys
 T:CoreGraphics.CGDynamicRange
 T:CoreGraphics.CGImageComponentInfo
-T:CoreGraphics.CGPDFAccessPermissions
 T:CoreGraphics.CGPDFOutlineOptions
 T:CoreGraphics.CGPdfTagProperties
 T:CoreGraphics.CGPdfTagType
@@ -55463,7 +55459,6 @@ T:CoreGraphics.CGSessionKeys
 T:CoreGraphics.CGSessionProperties
 T:CoreGraphics.CGToneMapping
 T:CoreGraphics.CGToneMappingOptionKeys
-T:CoreGraphics.MatrixOrder
 T:CoreGraphics.NMatrix2
 T:CoreGraphics.NMatrix3
 T:CoreGraphics.NMatrix4
