@@ -733,7 +733,7 @@ namespace GeneratorTests {
 		[TestCase (Profile.macOSMobile)]
 		public void WrappedProtocol (Profile profile)
 		{
-			var bgen = BuildFile (profile, "wrapped-protocol.cs");
+			var bgen = BuildFile (profile, bgen => bgen.NoWarn = "1110", "wrapped-protocol.cs");
 			var generatedFile = Path.Combine (bgen.TmpDirectory!, "WrappedProtocol", "DelegateOwner.g.cs");
 			var contents = File.ReadAllText (generatedFile);
 			Assert.That (contents, Does.Contain ("var wrapped = WeakDelegate;"), "Read through the weak property");
@@ -743,6 +743,10 @@ namespace GeneratorTests {
 			Assert.That (contents, Does.Contain ("WeakDelegate = rvalue;"), "Write through the weak property");
 			Assert.That (contents, Does.Contain ("WeakSharedDelegate = rvalue;"), "Static wrapper");
 			Assert.That (contents, Does.Contain ("return (WeakDelegate as NSObject)!;"), "Non-protocol wrappers are unchanged");
+			Assert.That (contents, Does.Contain ("return (WeakDelegate as LocalDelegate)!;"), "Local model wrappers preserve cast-only getters");
+			Assert.That (contents, Does.Contain ("return (WeakDelegate as NSUserActivityDelegate)!;"), "Imported model wrappers preserve cast-only getters");
+			Assert.That (contents, Does.Not.Contain ("Runtime.GetINativeObject<LocalDelegate>"), "No local model fallback");
+			Assert.That (contents, Does.Not.Contain ("Runtime.GetINativeObject<NSUserActivityDelegate>"), "No imported model fallback");
 			Assert.That (contents, Does.Not.Contain ("does not derive from NSObject"), "Protocol wrappers are accepted");
 		}
 

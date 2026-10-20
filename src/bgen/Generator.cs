@@ -4122,7 +4122,7 @@ public partial class Generator : IMemberGatherer {
 						print ("return NSArray.FromArray<{0}>({1} as NSArray){2};", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType.GetElementType ()), wrap, nullable ? "" : "!");
 					else if (pi.PropertyType.IsValueType)
 						print ("return ({0}) ({1});", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType, wrapNullabilityBytes), wrap);
-					else if (IsProtocolInterface (pi.PropertyType, false)) {
+					else if (!IsModel (pi.PropertyType) && IsProtocolInterface (pi.PropertyType, false)) {
 						print ("var wrapped = {0};", wrap);
 						print ("var ret = wrapped as {0} ?? Runtime.GetINativeObject<{0}> (wrapped.GetHandle (), false);", TypeManager.FormatType (pi.DeclaringType, pi.PropertyType, wrapNullabilityBytes));
 						print ("GC.KeepAlive (wrapped);");

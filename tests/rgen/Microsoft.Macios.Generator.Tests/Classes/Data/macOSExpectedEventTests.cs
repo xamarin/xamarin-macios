@@ -166,19 +166,15 @@ public partial class EventTests
 	{
 		get
 		{
-			var wrapped = WeakDelegate;
-			var ret = wrapped as global::TestNamespace.IRgenNSKeyedArchiverDelegate ?? global::ObjCRuntime.Runtime.GetINativeObject<global::TestNamespace.IRgenNSKeyedArchiverDelegate> (wrapped.GetHandle (), false);
-			global::System.GC.KeepAlive (wrapped);
-			return ret;
+			return WeakDelegate as global::TestNamespace.IRgenNSKeyedArchiverDelegate;
 		}
 		set
 		{
 			var rvalue = value as NSObject;
 			if (!(value is null) && rvalue is null) {
-				rvalue = global::ObjCRuntime.Runtime.GetNSObject (value.GetHandle ());
+				throw new ArgumentException ($"The object passed of type {value.GetType ()} does not derive from NSObject");
 			}
 			WeakDelegate = rvalue;
-			global::System.GC.KeepAlive (value);
 		}
 	}
 

@@ -31,6 +31,12 @@ namespace WrappedProtocol {
 		[NullAllowed, Wrap ("WeakDelegate")]
 		NSObject ObjectDelegate { get; set; }
 
+		[NullAllowed, Wrap ("WeakDelegate")]
+		LocalDelegate ModelDelegate { get; set; }
+
+		[NullAllowed, Wrap ("WeakDelegate")]
+		NSUserActivityDelegate ImportedModelDelegate { get; set; }
+
 		[Static, NullAllowed, Export ("sharedDelegate", ArgumentSemantic.Weak)]
 		NSObject WeakSharedDelegate { get; set; }
 
