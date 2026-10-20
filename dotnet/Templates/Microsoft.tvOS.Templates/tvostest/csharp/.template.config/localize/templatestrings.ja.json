@@ -2,6 +2,9 @@
   "author": "Microsoft",
   "name": "tvOS Test Project",
   "description": "A project for creating a .NET tvOS test project using MSTest",
+  "symbols/Framework/description": "The target framework for the project.",
+  "symbols/Framework/choices/net11.0-tvos/description": "Target net11.0-tvos",
+  "symbols/Framework/choices/net10.0-tvos/description": "Target net10.0-tvos",
   "symbols/bundleId/description": "Overrides the ApplicationId in the project file",
   "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
 }

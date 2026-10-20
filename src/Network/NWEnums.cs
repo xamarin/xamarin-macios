@@ -295,105 +295,171 @@ namespace Network {
 		NonEmptyValue = 4,
 	}
 
+	/// <summary>Identifies the type of a WebSocket frame.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NWWebSocketOpCode : int {
+		/// <summary>A continuation frame. The WebSocket protocol handles these frames internally.</summary>
 		Cont = 0x0,
+		/// <summary>A text frame.</summary>
 		Text = 0x1,
+		/// <summary>A binary frame.</summary>
 		Binary = 0x2,
+		/// <summary>A close frame.</summary>
 		Close = 0x8,
+		/// <summary>A ping frame.</summary>
 		Ping = 0x9,
+		/// <summary>A pong frame.</summary>
 		Pong = 0xA,
+		/// <summary>An invalid frame.</summary>
 		Invalid = -1,
 	}
 
+	/// <summary>Indicates why a WebSocket connection was closed.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NWWebSocketCloseCode : int {
+		/// <summary>The connection completed its intended purpose.</summary>
 		NormalClosure = 1000,
+		/// <summary>An endpoint is going away, such as a server shutting down.</summary>
 		GoingAway = 1001,
+		/// <summary>An endpoint closed the connection because of a protocol error.</summary>
 		ProtocolError = 1002,
+		/// <summary>An endpoint received a type of data it cannot accept.</summary>
 		UnsupportedData = 1003,
+		/// <summary>No status code was present in the close frame. This reserved code must not be sent in a close frame.</summary>
 		NoStatusReceived = 1005,
+		/// <summary>The connection closed abnormally, without a close frame. This reserved code must not be sent in a close frame.</summary>
 		AbnormalClosure = 1006,
+		/// <summary>The payload was inconsistent with the message type, such as non-UTF-8 text.</summary>
 		InvalidFramePayloadData = 1007,
+		/// <summary>An endpoint closed the connection because a message violated its policy.</summary>
 		PolicyViolation = 1008,
+		/// <summary>An endpoint received a message too large to process.</summary>
 		MessageTooBig = 1009,
+		/// <summary>The client expected an extension that the server did not negotiate.</summary>
 		MandatoryExtension = 1010,
+		/// <summary>The server encountered an unexpected condition while processing the request.</summary>
 		InternalServerError = 1011,
+		/// <summary>The TLS handshake failed. This reserved code must not be sent in a close frame.</summary>
 		TlsHandshake = 1015,
 	}
 
 	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
+	/// <summary>Identifies the WebSocket protocol version used by Network framework options.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NWWebSocketVersion {
+		/// <summary>An invalid WebSocket protocol version.</summary>
 		Invalid = 0,
+		/// <summary>WebSocket protocol version 13, defined by RFC 6455.</summary>
 		Version13 = 1,
 	}
 
+	/// <summary>Indicates whether a WebSocket server accepts a connection request.</summary>
 	[MacCatalyst (13, 1)]
 	public enum NWWebSocketResponseStatus {
+		/// <summary>An invalid response status.</summary>
 		Invalid = 0,
+		/// <summary>Accept the request and begin framing WebSocket data.</summary>
 		Accept = 1,
+		/// <summary>Reject the request and close the connection.</summary>
 		Reject = 2,
 	}
 
+	/// <summary>Identifies the protocol used to resolve an endpoint in a resolution report.</summary>
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	public enum NWReportResolutionProtocol {
+		/// <summary>The resolution protocol is unknown or not applicable.</summary>
 		Unknown = 0,
+		/// <summary>DNS over UDP.</summary>
 		Udp = 1,
+		/// <summary>DNS over TCP.</summary>
 		Tcp = 2,
+		/// <summary>DNS over TLS.</summary>
 		Tls = 3,
+		/// <summary>DNS over HTTPS.</summary>
 		Https = 4,
 	}
 
+	/// <summary>Selects the encrypted DNS protocol for a resolver configuration.</summary>
 	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum NWResolverConfigEndpointType {
+		/// <summary>Use a URL endpoint for DNS over HTTPS.</summary>
 		Https,
+		/// <summary>Use a server endpoint for DNS over TLS.</summary>
 		Tls,
 	}
 
+	/// <summary>Identifies the Multipath TCP (MPTCP) protocol version.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWMultipathVersion {
+		/// <summary>No specific MPTCP version is selected.</summary>
 		Unspecified = -1,
+		/// <summary>MPTCP version 0.</summary>
 		Version0 = 0,
+		/// <summary>MPTCP version 1.</summary>
 		Version1 = 1,
 	}
 
+	/// <summary>Identifies the radio technology used by a network interface.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWInterfaceRadioType {
+		/// <summary>The radio technology is unknown.</summary>
 		Unknown = 0,
+		/// <summary>Wi-Fi using IEEE 802.11b.</summary>
 		WifiB = 1,
+		/// <summary>Wi-Fi using IEEE 802.11a.</summary>
 		WifiA = 2,
+		/// <summary>Wi-Fi using IEEE 802.11g.</summary>
 		WifiG = 3,
+		/// <summary>Wi-Fi using IEEE 802.11n.</summary>
 		WifiN = 4,
+		/// <summary>Wi-Fi using IEEE 802.11ac.</summary>
 		WifiAC = 5,
+		/// <summary>Wi-Fi using IEEE 802.11ax.</summary>
 		WifiAX = 6,
 
+		/// <summary>Cellular using 4G LTE.</summary>
 		CellLte = 0x80,
+		/// <summary>Cellular using LTE and 5G New Radio in the sub-6 GHz band.</summary>
 		CellEndcSub6 = 0x81,
+		/// <summary>Cellular using LTE and 5G New Radio in the millimeter-wave band.</summary>
 		CellEndcMmw = 0x82,
+		/// <summary>Cellular using standalone 5G New Radio in the sub-6 GHz band.</summary>
 		CellNrSaSub6 = 0x83,
+		/// <summary>Cellular using standalone 5G New Radio in the millimeter-wave band.</summary>
 		CellNrSaMmw = 0x84,
+		/// <summary>Cellular using 3G WCDMA.</summary>
 		CellWcdma = 0x85,
+		/// <summary>Cellular using 2G GSM.</summary>
 		CellGsm = 0x86,
+		/// <summary>Cellular using CDMA 1x data.</summary>
 		CellCdma = 0x87,
+		/// <summary>Cellular using EV-DO high-data-rate service.</summary>
 		CellEvdo = 0x88,
 	}
 
+	/// <summary>Identifies who selected the network content accessed using these parameters.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	public enum NWParametersAttribution {
+		/// <summary>The developer selected the content.</summary>
 		Developer = 1,
+		/// <summary>The user selected the content.</summary>
 		User = 2,
 	}
 
+	/// <summary>Identifies the direction or datagram nature of a QUIC stream.</summary>
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	public enum NWQuicStreamType {
+		/// <summary>The stream direction cannot be determined.</summary>
 		Unknown = 0,
+		/// <summary>Data can flow in both directions.</summary>
 		Bidirectional = 1,
+		/// <summary>Data flows in one direction.</summary>
 		Unidirectional = 2,
+		/// <summary>A QUIC datagram stream.</summary>
 		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
 		Datagram = 3,
 	}

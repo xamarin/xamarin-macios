@@ -3820,6 +3820,10 @@ namespace UIKit {
 		[TV (26, 0), iOS (26, 0), MacCatalyst (26, 0)]
 		[Field ("UIWindowSceneSessionRoleAssistiveAccessApplication")]
 		AssistiveAccessApplication,
+
+		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[Field ("UIWindowSceneSessionRoleCameraCaptureAccessory")]
+		CameraCaptureAccessory,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -4930,6 +4934,68 @@ namespace UIKit {
 	public enum UITextAttachmentViewProviderReusePolicy : ulong {
 		ScrollingOutOfViewport = 1uL << 0,
 		EditingInlineParagraphs = 1uL << 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIArrangementViewControllerViewPlacement : long {
+		None = 0,
+		Primary = 1,
+		Secondary = 2,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIBarButtonItemAxisBehavior : long {
+		Automatic = 0,
+		[NoTV]
+		HorizontalOnly = 1,
+		[NoTV]
+		VerticalPreferred = 2,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIHingeStatus : long {
+		Unknown = 0,
+		Closed = 1,
+		PartiallyOpen = 2,
+		FullyOpen = 3,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIVerticalBarBehavior : long {
+		Automatic = 0,
+		Disabled = 1,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIVerticalBarCompressionBehavior : long {
+		Automatic = 0,
+		[NoTV]
+		PrefersBarItems = 1,
+		[NoTV]
+		PrefersTabBar = 2,
+	}
+
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIVerticalBarEdge : long {
+		Unspecified = 0,
+		[NoTV]
+		Leading = 1,
+		[NoTV]
+		Trailing = 2,
+	}
+
+	[Flags]
+	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[Native]
+	public enum UIViewReservedRegionQueryOptions : ulong {
+		None = 0,
+		IncludeInactive = 1uL << 0,
 	}
 
 	// NSInteger -> NSTextTable.h

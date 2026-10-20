@@ -108,6 +108,124 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void AppManifest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, nameof (AppManifest), runtimeIdentifiers, out var appPath);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var appManifestPath = Path.Combine (projectDirectory, "Info.plist");
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			WriteAppManifest (appManifestPath, "Initial");
+
+			DotNet.AssertBuild (projectPath, properties);
+			var bundledAppManifestPath = GetInfoPListPath (platform, appPath!);
+			var appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Initial"), "Initial value");
+
+			WriteAppManifest (appManifestPath, "Updated");
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_CompileAppManifest", "Updated manifest");
+
+			appManifest = PDictionary.OpenFile (bundledAppManifestPath);
+			Assert.That (appManifest.GetString ("IncrementalBuildValue").Value, Is.EqualTo ("Updated"), "Updated value");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_CompileAppManifest", "Unchanged manifest");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsTriggerNativeLink (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		[Test]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		public void CompiledEntitlementsTriggerNativeLinkOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+			CompiledEntitlementsTriggerNativeLinkImpl (platform, runtimeIdentifiers);
+		}
+
+		void CompiledEntitlementsTriggerNativeLinkImpl (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var projectPath = GenerateProject (platform, TestName, runtimeIdentifiers, out _);
+			var projectDirectory = Path.GetDirectoryName (projectPath)!;
+			var mainFile = Path.Combine (projectDirectory, "Main.cs");
+			var entitlementsPath = Path.Combine (projectDirectory, "Entitlements.plist");
+			var projectContents = File.ReadAllText (projectPath);
+
+			projectContents = projectContents.Replace (
+				"	</PropertyGroup>",
+				"		<CodesignEntitlements>Entitlements.plist</CodesignEntitlements>\n" +
+				"		<CodesignRequireProvisioningProfile>false</CodesignRequireProvisioningProfile>\n" +
+				"	</PropertyGroup>");
+			File.WriteAllText (projectPath, projectContents);
+			File.WriteAllText (mainFile, "class MainClass { static int Main () => 0; }");
+			WriteEntitlements (entitlementsPath, "example.com");
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (projectPath, properties);
+
+			var rv = DotNet.AssertBuild (projectPath, properties);
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements");
+
+			WriteEntitlements (entitlementsPath, "example.org");
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetExecuted (allTargets, "_ForceLinkNativeExecutable", "Updated entitlements");
+			AssertTargetExecuted (allTargets, "_LinkNativeExecutable", "Updated entitlements");
+
+			rv = DotNet.AssertBuild (projectPath, properties);
+			allTargets = BinLog.GetAllTargets (rv.BinLogPath);
+			AssertTargetNotExecuted (allTargets, "_ForceLinkNativeExecutable", "Unchanged entitlements after update");
+		}
+
+		static void WriteEntitlements (string path, string domain)
+		{
+			File.WriteAllText (path, $"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>com.apple.developer.associated-domains</key>
+					<array>
+						<string>applinks:{domain}</string>
+					</array>
+				</dict>
+				</plist>
+				""");
+		}
+
+		static void WriteAppManifest (string path, string value)
+		{
+			File.WriteAllText (path, $"""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<dict>
+					<key>IncrementalBuildValue</key>
+					<string>{value}</string>
+				</dict>
+				</plist>
+				""");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		public void CodeChangeSkipsTargets (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			CodeChangeSkipsTargetsImpl (platform, runtimeIdentifiers);

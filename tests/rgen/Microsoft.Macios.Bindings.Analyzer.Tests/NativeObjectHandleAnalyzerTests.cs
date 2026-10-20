@@ -166,6 +166,25 @@ public class NativeObjectHandleAnalyzerTests : BaseGeneratorWithAnalyzerTestClas
 				}
 				"""];
 
+			// Pattern variable accessed later in the same if statement
+			yield return [
+				"""
+				using ObjCRuntime;
+				using Foundation;
+
+				class Test
+				{
+					void UseObject(INativeObject value) { }
+
+					void Method(object value)
+					{
+						if (value is INativeObject nativeObject && nativeObject.Handle != NativeHandle.Zero) {
+							UseObject(nativeObject);
+						}
+					}
+				}
+				"""];
+
 			// Calling this.Handle is okay
 			yield return [
 				"""
