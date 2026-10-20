@@ -640,4 +640,8 @@
 	<data name="BI1128" xml:space="preserve">
 		<value>The [Field] member '{0}.{1}' sets SymbolAddress, but its type is '{2}'; only System.IntPtr is supported.</value>
 	</data>
+
+	<data name="BI1129" xml:space="preserve">
+		<value>The selector '{0}' on '{1}' contains invalid characters.</value>
+	</data>
 </root>

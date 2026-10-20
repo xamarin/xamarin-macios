@@ -2,6 +2,7 @@ using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata;
 using Moq;
+using Xamarin.Bundler;
 
 namespace GeneratorTests {
 	[TestFixture]
@@ -42,7 +43,7 @@ namespace GeneratorTests {
 			var runtimeAssemblies = Directory.GetFiles (RuntimeEnvironment.GetRuntimeDirectory (), "*.dll");
 			var resolver = new PathAssemblyResolver (runtimeAssemblies);
 			typeCache = new ();
-			attributeManager = new (typeCache.Object);
+			attributeManager = new (new Mock<IToolLog> ().Object, typeCache.Object);
 			nomenclator = new (attributeManager.Object);
 		}
 

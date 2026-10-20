@@ -115,9 +115,9 @@ namespace Xamarin.Tests {
 			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return $"iossimulator-{arch}";
+				return "iossimulator-arm64";
 			case ApplePlatform.TVOS:
-				return $"tvossimulator-{arch}";
+				return "tvossimulator-arm64";
 			case ApplePlatform.MacOSX:
 				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
 					return "osx-x64;osx-arm64";

@@ -79,13 +79,13 @@ namespace CoreText {
 		[ObsoletedOSPlatform ("maccatalyst")]
 		public bool DisableBidiProcessing {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle,
-						CTTypesetterOptionKey.DisableBidiProcessing.Handle);
+				return CFDictionary.GetBooleanValue (Dictionary,
+						CTTypesetterOptionKey.DisableBidiProcessing);
 			}
 			set {
 				Adapter.AssertWritable (Dictionary);
-				CFMutableDictionary.SetValue (Dictionary.Handle,
-						CTTypesetterOptionKey.DisableBidiProcessing.Handle, value);
+				CFMutableDictionary.SetValue (Dictionary,
+						CTTypesetterOptionKey.DisableBidiProcessing, value);
 			}
 		}
 
@@ -106,10 +106,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		public bool AllowUnboundedLayout {
-			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);
+			get => CFDictionary.GetBooleanValue (Dictionary, CTTypesetterOptionKey.AllowUnboundedLayout);
 			set {
 				Adapter.AssertWritable (Dictionary);
-				CFMutableDictionary.SetValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle, value);
+				CFMutableDictionary.SetValue (Dictionary, CTTypesetterOptionKey.AllowUnboundedLayout, value);
 			}
 		}
 	}

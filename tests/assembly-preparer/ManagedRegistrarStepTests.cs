@@ -3,6 +3,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Mono.Cecil.Cil;
 using MonoTouch.Tuner;
 
 using Xamarin.Linker;
@@ -174,6 +175,42 @@ public class ManagedRegistrarStepTests : BaseClass {
 		Assert.That (callbacks.Count (v => v.Target.Name == "Second"), Is.EqualTo (1), "Second callback (removed from the post-trim protocol)");
 		Assert.That (resolver.TestResolveCount, Is.GreaterThan (0), "Pre-trim protocol lookup");
 		Assert.That (logger.Errors, Is.Empty, "Postprocessing errors");
+	}
+
+	[Test]
+	public void GenericNSObjectTypeMapProxy ()
+	{
+		var code = @"
+		using Foundation;
+		using ObjCRuntime;
+
+		[Register]
+		public class GenericClass<T> : NSObject {
+			protected GenericClass (NativeHandle handle)
+				: base (handle)
+			{
+			}
+		}
+		";
+		var tempDir = Xamarin.Cache.CreateTemporaryDirectory ();
+		var typeMapDir = Path.Combine (tempDir, "typemaps");
+		var config = $@"
+		AssemblyName=Microsoft.iOS.dll
+		PrepareAssemblies=true
+		TypeMapAssemblyName=_TypeMap
+		TypeMapOutputDirectory={typeMapDir}
+		UnmanagedCallersOnlyMapPath={Path.Combine (tempDir, "uco.txt")}
+		";
+
+		using var preparer = CreatePreparer (ApplePlatform.iOS, false, p => p.Registrar = RegistrarMode.TrimmableStatic,
+			code, out _, extraConfig: config, hotReloadCompatibleBuild: true, testAssemblyTrimMode: "copy");
+		AssertPrepare (preparer);
+
+		var typeMap = preparer.AddedAssemblies.Single (v => v.Path == Path.Combine (typeMapDir, "_Test.TypeMap.dll")).Assembly;
+		var proxy = typeMap.MainModule.Types.Single (v => v.Name == "GenericClass`1_Proxy");
+		var createObject = proxy.Methods.Single (v => v.Name == "CreateObject");
+		Assert.That (createObject.Body.Instructions.Any (v => v.OpCode == OpCodes.Newobj), Is.False, "CreateObject newobj");
+		Assert.That (createObject.Body.Instructions.Last ().OpCode, Is.EqualTo (OpCodes.Throw), "CreateObject final instruction");
 	}
 
 	[Test]

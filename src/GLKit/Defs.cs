@@ -213,7 +213,7 @@ namespace GLKit {
 	///     <remarks>To be added.</remarks>
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]

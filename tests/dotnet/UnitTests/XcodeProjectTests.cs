@@ -38,7 +38,7 @@ namespace Xamarin.Tests {
 
 
 		[Test]
-		[TestCase ("Debug", "iossimulator-x64")]
+		[TestCase ("Debug", "iossimulator-arm64")]
 		[TestCase ("Release", "ios-arm64")]
 		public void BuildAppiOS (string projConfig, string rid)
 		{

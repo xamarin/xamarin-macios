@@ -7,6 +7,7 @@ using System.Reflection;
 #nullable enable
 
 public class AttributeManager {
+	readonly IToolLog log;
 
 	readonly Dictionary<System.Type, Type> typeLookup = new ();
 
@@ -32,9 +33,11 @@ public class AttributeManager {
 	internal readonly Dictionary<(Type, Type []), ConstructorInfo> constructorCache = new ();
 
 	TypeCache TypeCache { get; }
+	internal IToolLog Log => log;
 
-	public AttributeManager (TypeCache typeCache)
+	public AttributeManager (IToolLog log, TypeCache typeCache)
 	{
+		this.log = log;
 		TypeCache = typeCache;
 	}
 
@@ -277,7 +280,7 @@ public class AttributeManager {
 				}
 				// we will just throw if we do find a type multiple times but if it was not injected by the compiler.
 				if (rv is not null && !ignoredAttributes.Contains (rv.FullName)) {
-					ErrorHelper.Warning (1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/dotnet/macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
+					ErrorHelper.Warning (log, 1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/dotnet/macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
 				rv = lookup;

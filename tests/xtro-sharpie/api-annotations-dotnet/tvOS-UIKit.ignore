@@ -354,7 +354,6 @@
 !unknown-native-enum! UIPasteControlDisplayMode bound
 
 # results from initial block parameter nullability analysis
-!missing-null-allowed! 'System.Void UIKit.NSTextContentManager::SynchronizeTextLayoutManagers(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIApplication::SetAlternateIconName(System.String,System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUIApplicationDelegate::HandleWatchKitExtensionRequest(UIKit.UIApplication,Foundation.NSDictionary,System.Action`1<Foundation.NSDictionary>)' is missing a '?' on parameter 'reply' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIImage::PrepareForDisplay(System.Action`1<UIKit.UIImage>)' is missing a '?' on parameter 'completionHandler' block parameter #0
@@ -386,7 +385,6 @@
 !missing-null-allowed! 'System.String UIKit.IUIGuidedAccessRestrictionDelegate::GetTextForGuidedAccessRestriction(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.IUITextInput::TextInRange(UIKit.UITextRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String[] UIKit.IUIGuidedAccessRestrictionDelegate::get_GetGuidedAccessRestrictionIdentifiers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void UIKit.INSTextElementProvider::Synchronize(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUIMenuLeaf::set_SelectedImage(UIKit.UIImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.IUITextInput::SetMarkedText(System.String,Foundation.NSRange)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.UITextPosition UIKit.IUITextInput::GetClosestPositionToPoint(CoreGraphics.CGPoint,UIKit.UITextRange)' is missing an [NullAllowed] on return type

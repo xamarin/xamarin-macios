@@ -4,6 +4,8 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <dispatch/dispatch.h>
+#include <pthread.h>
 #include <unistd.h>
 #include <zlib.h>
 #include "libtest.h"
@@ -1500,6 +1502,72 @@ static void block_called ()
 }
 @end
 
+@interface AssociatedObjectLockHolder : NSObject {
+@public
+	dispatch_semaphore_t entered;
+	dispatch_semaphore_t unlock;
+}
+@end
+
+@implementation AssociatedObjectLockHolder
+-(id) retain
+{
+	id result = [super retain];
+	if (entered != NULL) {
+		dispatch_semaphore_signal (entered);
+		dispatch_semaphore_wait (unlock, DISPATCH_TIME_FOREVER);
+	}
+	return result;
+}
+@end
+
+int
+x_get_nsobject_data_with_association_lock (id object, void **data)
+{
+	static char key;
+	*data = NULL;
+	NSObject *lock_object = [[NSObject alloc] init];
+	AssociatedObjectLockHolder *holder = [[AssociatedObjectLockHolder alloc] init];
+	dispatch_semaphore_t entered = dispatch_semaphore_create (0);
+	dispatch_semaphore_t unlock = dispatch_semaphore_create (0);
+	dispatch_semaphore_t completed = dispatch_semaphore_create (0);
+	dispatch_group_t group = dispatch_group_create ();
+	dispatch_queue_t queue = dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+
+	// The atomic getter retains its value while holding AssociationsManagerLock.
+	objc_setAssociatedObject (lock_object, &key, holder, OBJC_ASSOCIATION_RETAIN);
+	holder->entered = entered;
+	holder->unlock = unlock;
+	dispatch_group_async (group, queue, ^{
+		@autoreleasepool {
+			objc_getAssociatedObject (lock_object, &key);
+		}
+	});
+
+	int result = 1;
+	if (dispatch_semaphore_wait (entered, dispatch_time (DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC)) == 0) {
+		// Do not capture the managed object's native peer as an Objective-C object:
+		// copying the block would retain it while the association lock is held.
+		void *native_object = object;
+		dispatch_group_async (group, queue, ^{
+			*data = ((void *(*)(id, SEL)) objc_msgSend) ((id) native_object, @selector(xamarinGetNSObjectData));
+			dispatch_semaphore_signal (completed);
+		});
+		result = dispatch_semaphore_wait (completed, dispatch_time (DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC)) == 0 ? 0 : 2;
+	}
+
+	dispatch_semaphore_signal (unlock);
+	dispatch_group_wait (group, DISPATCH_TIME_FOREVER);
+	holder->entered = NULL;
+	[lock_object release];
+	[holder release];
+	dispatch_release (group);
+	dispatch_release (completed);
+	dispatch_release (unlock);
+	dispatch_release (entered);
+	return result;
+}
+
 @implementation WeakReferenceHolder : NSObject
 -(id) init
 {
@@ -1681,6 +1749,42 @@ void x_set_reuse_alloc_callback (reuse_alloc_callback callback)
 	// a managed ObjCException; the alloc'd instance must be cleaned up so a later GC
 	// doesn't crash releasing a managed reference for it.
 	@throw [NSException exceptionWithName: @"InitReturnsNilClassException" reason: @"init failed" userInfo: nil];
+}
+@end
+
+static pthread_key_t thread_exit_object_key;
+static pthread_once_t thread_exit_object_key_once = PTHREAD_ONCE_INIT;
+static int thread_exit_object_key_status;
+static int thread_exit_released_object_count;
+
+static void release_thread_exit_object (void *value)
+{
+	[(NSObject *) value release];
+	__sync_add_and_fetch (&thread_exit_released_object_count, 1);
+}
+
+static void create_thread_exit_object_key (void)
+{
+	thread_exit_object_key_status = pthread_key_create (&thread_exit_object_key, release_thread_exit_object);
+}
+
+@implementation ThreadExitObject
++ (BOOL) releaseOnThreadExit: (NSObject *) object
+{
+	if (pthread_once (&thread_exit_object_key_once, create_thread_exit_object_key) != 0 || thread_exit_object_key_status != 0)
+		return NO;
+	if (pthread_getspecific (thread_exit_object_key) != NULL)
+		return NO;
+	if (pthread_setspecific (thread_exit_object_key, [object retain]) != 0) {
+		[object release];
+		return NO;
+	}
+	return YES;
+}
+
++ (int) releasedObjectCount
+{
+	return __sync_add_and_fetch (&thread_exit_released_object_count, 0);
 }
 @end
 

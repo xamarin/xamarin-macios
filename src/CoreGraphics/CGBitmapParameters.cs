@@ -78,10 +78,12 @@ namespace CoreGraphics {
 		public CGColorSpace? ColorSpace {
 			get => Runtime.GetINativeObject<CGColorSpace> (colorSpace, false);
 			set {
-				// this is unsafe: the calling code must keep the managed CGColorSpace insatnce around somehow.
-#pragma warning disable RBI0014
-				colorSpace = value!.GetNonNullHandle (nameof (value));
-#pragma warning restore RBI0014
+				ArgumentNullException.ThrowIfNull (value);
+				// this is unsafe: the calling code must keep the managed CGColorSpace instance around somehow.
+				// we call Runtime.RetainAndAutoreleaseNativeObject for two reasons:
+				// * it's somewhat safer when the object can be autoreleased (although this typically isn't the case for CGColorSpace objects).
+				// * it silences a warning about getting the handle without keeping the object itself alive.
+				colorSpace = Runtime.RetainAndAutoreleaseNativeObject (value);
 			}
 		}
 
