@@ -23,6 +23,7 @@ public class Framework {
 	public required Version Version { get; set; }
 	public Version? VersionAvailableInSimulator { get; set; }
 	public bool AlwaysWeakLinked { get; set; }
+	public string? DependsOn { get; set; }
 	public bool Unavailable { private get; set; } // Call IsFrameworkUnavailable () to determine if a framework is available or not
 	public Version? VersionUnavailable { get; set; } // if null, always unavailable (if Unavailable=true)
 
@@ -489,6 +490,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "AVRouting", "AVRouting", 16, 0 },
 					{ "BackgroundAssets", "BackgroundAssets", 16, 0 },
 					{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 16, 0 },
+					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 16, true },
 					{ "MetalFX", "MetalFX", new Version (16, 0), NotAvailableInSimulator },
 					{ "PushToTalk", "PushToTalk", new Version (16, 0), new Version (16, 2) /* available to build with, although it's unusable */},
 					{ "SafetyKit", "SafetyKit", 16, 0 },
@@ -522,6 +524,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					// 
 					// * RegistrarTest.MT4134
 				};
+				ios_frameworks ["LocalAuthenticationEmbeddedUI"].DependsOn = "LocalAuthentication";
 			}
 			return ios_frameworks;
 		}
@@ -804,7 +807,6 @@ public class Frameworks : Dictionary<string, Framework> {
 	static void Gather (Application app, IEnumerable<AssemblyDefinition> assemblies, HashSet<string> frameworks, HashSet<string> weak_frameworks, Func<Framework, bool> include_framework)
 	{
 		var namespaces = new HashSet<string> ();
-		var hasLARight = false;
 
 		// Process our product assembly + any assembly with the [ObjectiveCFramework] attribute, and collect all the namespaces that are used in those assemblies.
 		// For non-product assemblies, we only look at types with the [ObjectiveCFramework] attribute.
@@ -828,12 +830,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					if (TryGetFramework (app, td, out string? framework)) {
 						namespaces.Add (framework);
-						if (td.Namespace == "LocalAuthentication" && td.Name == "LARight") {
-#if !LEGACY_TOOLS
-							if (app.Profile.IsProductAssembly (assembly))
-#endif
-							hasLARight = true;
-						}
 						continue;
 					}
 				}
@@ -844,7 +840,9 @@ public class Frameworks : Dictionary<string, Framework> {
 		if (!TryGetFrameworks (app.Platform, out var all_frameworks))
 			return;
 
-		foreach (var nspace in namespaces) {
+		var pendingFrameworks = new Queue<string> (namespaces);
+		while (pendingFrameworks.Count > 0) {
+			var nspace = pendingFrameworks.Dequeue ();
 			if (!all_frameworks.TryGetValue (nspace, out var framework))
 				continue;
 
@@ -863,9 +861,8 @@ public class Frameworks : Dictionary<string, Framework> {
 			var add_to = weak_link ? weak_frameworks : frameworks;
 			add_to.Add (framework.Name);
 
-			// LARight's presentation-context authorization is implemented by this framework's category.
-			if (app.Platform == ApplePlatform.iOS && hasLARight && nspace == "LocalAuthentication" && app.SdkVersion is { Major: >= 16 })
-				weak_frameworks.Add ("LocalAuthenticationEmbeddedUI");
+			if (framework.DependsOn is string dependency && namespaces.Add (dependency))
+				pendingFrameworks.Enqueue (dependency);
 		}
 
 		// Make sure there are no duplicates between frameworks and weak frameworks.
