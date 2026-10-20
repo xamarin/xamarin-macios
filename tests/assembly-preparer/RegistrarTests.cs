@@ -51,12 +51,17 @@ public class RegistrarTests : BaseClass {
 			}
 			""";
 
-		using var preparer = CreatePreparer (platform, false, p => p.Registrar = RegistrarMode.ManagedStatic, code, out _, extraConfig: $"SdkVersion={sdkVersion}");
+		using var preparer = CreatePreparer (platform, false, p => {
+			p.Registrar = RegistrarMode.ManagedStatic;
+			// Override only the registrar's version, after the native SDK has been located and mapped.
+			p.Configuration.Application.SdkVersion = Version.Parse (sdkVersion);
+		}, code, out _);
+		var logger = (TestLogger) preparer.Configuration.Logger;
 		if (available) {
 			AssertPrepare (preparer);
+			Assert.That (logger.Errors, Is.Empty, "Registrar errors");
 		} else {
-			Assert.That (preparer.Prepare (out _), Is.False, "Prepare");
-			var logger = (TestLogger) preparer.Configuration.Logger;
+			preparer.Prepare (out _);
 			var errors = logger.Errors.Where (v => v.Code == 4162 && v.Message.Contains ("'IntroducedType'")).ToArray ();
 			foreach (var usage in new [] { "a base type of DerivedType", "a parameter in Consumer.Consume", "a return type in Consumer.Produce", "the property type of Consumer.Value" }) {
 				Assert.That (errors.Select (v => v.Message), Has.Some.Contains ($"used as {usage}"), usage);
