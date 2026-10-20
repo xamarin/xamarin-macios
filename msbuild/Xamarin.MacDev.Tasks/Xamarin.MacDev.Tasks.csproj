@@ -54,6 +54,16 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" Condition="'$(TargetFramework)' != 'net$(BundledNETCoreAppTargetFrameworkVersion)'" />
 
+  <!-- bgen looks up these compatibility types by name; merge duplicate polyfills instead of renaming them. -->
+  <ItemGroup>
+    <ILRepackAllowedDuplicateTypes Include="System.Diagnostics.CodeAnalysis.ExperimentalAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.OSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.SupportedOSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.UnsupportedOSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.ObsoletedOSPlatformAttribute" />
+  </ItemGroup>
+
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
       <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />

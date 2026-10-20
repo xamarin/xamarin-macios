@@ -7,6 +7,9 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class BGenTaskTests : TestBase {
@@ -86,6 +89,82 @@ namespace Xamarin.MacDev.Tasks {
 			task.ResponseFilePath = Path.Combine (temporaryDirectory, "response-file.txt");
 
 			ExecuteTask (task);
+		}
+
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		public void GeneratesBindingSourcesInProcess (ApplePlatform platform, bool includeAttributes)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var temporaryDirectory = Cache.CreateTemporaryDirectory ();
+			var apiDefinition = Path.Combine (temporaryDirectory, "api.cs");
+			var compiledApiDefinition = Path.Combine (temporaryDirectory, "api.dll");
+			File.WriteAllText (apiDefinition, $$"""
+				// Copyright (c) Microsoft Corporation.
+				// Licensed under the MIT License.
+
+				using System.Diagnostics.CodeAnalysis;
+				using System.Runtime.CompilerServices;
+				using Foundation;
+
+				namespace InProcessTest {
+					[BaseType (typeof (NSObject))]
+					{{(includeAttributes ? "[Experimental (\"BGEN0001\")]" : "")}}
+					interface Binding {
+						[Export ("oldMethod")]
+						{{(includeAttributes ? "[OverloadResolutionPriority (-1)]" : "")}}
+						void OldMethod ();
+					}
+				}
+				""" + "\n");
+
+			var targetFramework = TargetFramework.GetTargetFramework (platform);
+			var references = Directory.GetFiles (Configuration.DotNetBclDir, "*.dll");
+			var task = CreateTask<BGen> ();
+			InitializeExecutionTask (task);
+			task.BGenToolPath = "/does/not/exist";
+			task.BGenToolExe = "bgen.dll";
+			task.BaseLibDll = Configuration.GetBaseLibrary (platform);
+			task.AttributeAssembly = Configuration.GetBindingAttributePath (targetFramework);
+			task.CompiledApiDefinitionAssembly = new TaskItem (compiledApiDefinition);
+			task.References = references.Select (v => new TaskItem (v)).ToArray ();
+			task.TargetFrameworkMoniker = targetFramework.ToString ();
+
+			var compilerCommand = StringUtils.ParseArguments (Configuration.DotNetCscCommand);
+			var compilerArguments = compilerCommand.Skip (1).ToList ();
+			compilerArguments.AddRange (new [] {
+				"/noconfig",
+				"/nostdlib",
+				"/target:library",
+				$"/out:{compiledApiDefinition}",
+				$"/r:{task.BaseLibDll}",
+				$"/r:{task.AttributeAssembly}",
+				apiDefinition,
+			});
+			compilerArguments.AddRange (references.Select (v => $"/r:{v}"));
+			var exitCode = ExecutionHelper.Execute (compilerCommand [0], compilerArguments, out var compilerOutput);
+			Assert.That (exitCode, Is.EqualTo (0), $"Compile API definition: {compilerOutput}");
+
+			ExecuteTask (task);
+
+			Assert.That (File.Exists (task.GeneratedSourcesFileList), Is.True, "Generated source list");
+			var generatedSources = File.ReadAllLines (task.GeneratedSourcesFileList);
+			Assert.That (generatedSources, Is.Not.Empty, "Generated sources");
+			foreach (var source in generatedSources)
+				Assert.That (File.Exists (source), Is.True, $"Generated source: {source}");
+			var bindingSource = generatedSources.Single (v => Path.GetFileName (v) == "Binding.g.cs");
+			var binding = File.ReadAllText (bindingSource);
+			Assert.That (binding, Does.Contain ("partial class Binding"), "Generated binding type");
+			if (includeAttributes) {
+				Assert.That (binding, Does.Contain ("[Experimental (\"BGEN0001\")]"), "Experimental attribute");
+				Assert.That (binding, Does.Contain ("[OverloadResolutionPriority (-1)]"), "Overload priority");
+			}
 		}
 
 		[Test]
