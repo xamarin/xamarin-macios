@@ -2201,10 +2201,10 @@ namespace GameKit {
 			<remarks>To be added.</remarks>
 			""")]
 		[NoTV]
-		[Deprecated (PlatformName.iOS, 7, 0, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError> completionHandler)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError> completionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError?> completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError?> completionHandler)' instead.")]
 		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError> completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use ReportAchievements '(GKAchievement[] achievements, Action<NSError?> completionHandler)' instead.")]
 		void ReportAchievement ([NullAllowed] Action<NSError?> completionHandler);
 
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
@@ -2877,10 +2877,10 @@ namespace GameKit {
 		void EndTurnWithNextParticipant (GKTurnBasedParticipant nextParticipant, NSData matchData, [NullAllowed] Action<NSError?> noCompletion);
 
 		[NoTV]
-		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError>)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError?>)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError?>)' instead.")]
 		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ParticipantQuitInTurn (GKTurnBasedMatchOutcome, GKTurnBasedParticipant[], double, NSData, Action<NSError?>)' instead.")]
 		[Export ("participantQuitInTurnWithOutcome:nextParticipant:matchData:completionHandler:")]
 		[Async (XmlDocs = """
 			<param name="matchOutcome">To be added.</param>
@@ -3043,11 +3043,11 @@ namespace GameKit {
 		[Export ("setLocalizableMessageWithKey:arguments:")]
 		void SetMessage (string localizableMessage, [NullAllowed] params NSObject [] arguments);
 
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError?>)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError?>)' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError?>)' instead.")]
 		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError?>)' instead.")]
 		[Export ("endMatchInTurnWithMatchData:scores:achievements:completionHandler:")]
 		[Async (XmlDocs = """
 			<param name="matchData">To be added.</param>
