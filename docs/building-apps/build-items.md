@@ -317,6 +317,56 @@ See also the [GetApplicationArtifacts](build-targets.md#getapplicationartifacts)
 An item group that contains any native references that should be linked into
 or linked with when building the native executable.
 
+The `Include` attribute specifies the path to a native library (`.a` or
+`.dylib`), framework (`.framework`), or XCFramework (`.xcframework`). Frameworks
+and XCFrameworks may also be supplied as `.zip` files.
+
+### Linking metadata
+
+* `Kind`: The type of native reference: `Static`, `Dynamic`, or `Framework`.
+  Specify this metadata in binding projects. Use `Framework` for XCFrameworks;
+  when an app consumes an XCFramework, the build selects the library for the
+  target platform and architectures and determines its kind.
+* `ForceLoad`: Set to `true` to pass `-force_load` to the native linker for a
+  static library, loading all of its object files instead of only those needed
+  to resolve referenced symbols. The default is `false`. In binding projects,
+  `SmartLink` may allow the build to omit this flag.
+* `SmartLink`: In binding projects, sets the corresponding
+  `ObjCRuntime.LinkWithAttribute` property. Set to `true` to allow the build to
+  omit `ForceLoad` when it determines that doing so is safe, for example when
+  using a static registrar. The default for `NativeReference` items is `true`.
+  This is not a managed-code trimming setting.
+* `Frameworks`: A space-separated list of additional Apple frameworks required
+  by the native reference, for example `CoreGraphics QuartzCore`. These
+  frameworks are linked with the app. The default is an empty list.
+* `WeakFrameworks`: A space-separated list of additional Apple frameworks to
+  weakly link, allowing the app to run on OS versions where those frameworks
+  are unavailable. The default is an empty list. Code must check availability
+  before using APIs from these frameworks.
+* `LinkerFlags`: Additional arguments to pass to the native linker, for example
+  `-lz -lsqlite3`. Separate arguments with spaces and quote arguments that
+  contain spaces. The default is no additional arguments.
+* `IsCxx`: Set to `true` if the native reference requires C++ support, so that
+  the app is linked using the C++ compiler. The default is `false`.
+* `LinkWithSwiftSystemLibraries`: Set to `true` if the native reference requires
+  Swift system libraries. This enables automatic linking with those libraries
+  when the app's
+  [LinkWithSwiftSystemLibraries](build-properties.md#linkwithswiftsystemlibraries)
+  property has not been set explicitly. The default is `false`.
+* `NeedsGccExceptionHandling`: Set to `true` to link with the GCC exception
+  handling library (`-lgcc_eh`). This is a legacy option and should only be used
+  for libraries that require it. The default is `false`.
+* `LinkTarget`: A legacy binding-project option that sets the corresponding
+  `ObjCRuntime.LinkWithAttribute` property. It accepts names from
+  `ObjCRuntime.LinkTarget`, including comma-separated combinations. This
+  property is deprecated and ignored: the build inspects the native library
+  to determine its architectures. Omit it in new projects.
+* `LinkToExecutable`: Set to `false` to avoid linking a native library file
+  with the app's executable, for example for a plug-in loaded at runtime.
+  By default, the file is linked. This option applies to library files,
+  including library files selected from XCFrameworks, not framework references.
+  It does not control whether the library is copied into the app bundle.
+
 In binding projects, the `Dlsym` metadata sets the `Dlsym` property of the
 generated `ObjCRuntime.LinkWithAttribute`. Supported values (case-insensitive)
 are `Default`, `Required`, and `Disabled`. Omitting this metadata preserves
@@ -330,6 +380,46 @@ the default behavior.
     </NativeReference>
 </ItemGroup>
 ```
+
+### Bundling and debug-symbol metadata
+
+* `CopyToAppBundle`: Set to `false` to prevent a dynamic library or dynamic
+  framework from being copied into the app bundle. By default, these references
+  are copied; static libraries and static frameworks are not copied. This
+  option does not prevent linking with the reference.
+* `NoDSymUtil`: Set to `true` to skip running `dsymutil` for this dynamic library
+  or framework, or `false` to generate its dSYM. If omitted, the app's
+  [NoDSymUtil](build-properties.md#nodsymutil) property determines the behavior.
+* `NoSymbolStrip`: Set to `true` to skip stripping native symbols from this
+  dynamic library or framework, or `false` to strip them. If omitted, the app's
+  [NoSymbolStrip](build-properties.md#nosymbolstrip) property determines the
+  behavior.
+* `SymbolFile`: The path to a file containing exported symbol names to preserve
+  when stripping this dynamic library or framework (one name per line). The
+  file is passed to `strip` with `-s`. There is no symbol file by default, and
+  this metadata has no effect when `NoSymbolStrip` is `true`.
+* `SymbolFileLocalPath`: For remote builds from Windows, the local path to the
+  symbol file to transfer to the Mac. `SymbolFile` specifies its path on the
+  Mac. Omit this metadata for local builds or when no transfer is needed.
+
+For example, to include a dynamic framework without regenerating its debug
+symbols or stripping it:
+
+```xml
+<ItemGroup>
+    <NativeReference Include="MyFramework.framework">
+        <Kind>Framework</Kind>
+        <NoDSymUtil>true</NoDSymUtil>
+        <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+</ItemGroup>
+```
+
+Binding resource packages preserve custom metadata so that settings such as
+`NoDSymUtil` and `NoSymbolStrip` can be applied by the consuming app. Metadata
+computed by the build, such as `RelativePath`, `PublishFolderType`,
+`SourceDirectory`, and `TargetDirectory`, is not a portable configuration
+interface and must not be set in a binding resource package manifest.
 
 ## ObjcBindingApiDefinition
 
