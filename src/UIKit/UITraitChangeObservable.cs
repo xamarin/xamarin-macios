@@ -313,26 +313,38 @@ namespace UIKit {
 		}
 
 		private sealed class UITraitChangeRegistrationToken : IUITraitChangeRegistration, IDisposable {
-			GCHandle observable;
-			IUITraitChangeRegistration? registration;
-			NSObject? target;
+			sealed class RegistrationState {
+				public readonly IUITraitChangeObservable Observable;
+				public readonly IUITraitChangeRegistration Registration;
+				public readonly NSObject? Target;
+
+				public RegistrationState (IUITraitChangeObservable observable, IUITraitChangeRegistration registration, NSObject? target)
+				{
+					Observable = observable;
+					Registration = registration;
+					Target = target;
+				}
+			}
+
+			GCHandle lifetime;
+			RegistrationState? state;
 
 			public NativeHandle Handle {
 				get {
-					return Runtime.RetainAndAutoreleaseNativeObject (this.registration);
+					return Runtime.RetainAndAutoreleaseNativeObject (state?.Registration);
 				}
 			}
 
 			public UITraitChangeRegistrationToken (IUITraitChangeObservable observable, IUITraitChangeRegistration registration, NSObject? target)
 			{
-				this.observable = GCHandle.Alloc (observable);
-				this.registration = registration;
-				this.target = target;
+				state = new RegistrationState (observable, registration, target);
+				// All native wrappers must survive collection until main-thread unregistration completes.
+				lifetime = GCHandle.Alloc (state);
 			}
 
 			public NSObject Copy (NSZone? zone)
 			{
-				if (registration is null)
+				if (state is null)
 					throw new ObjectDisposedException (nameof (UITraitChangeRegistrationToken));
 				throw new NotSupportedException ("Trait change registration tokens cannot be copied.");
 			}
@@ -352,30 +364,26 @@ namespace UIKit {
 
 			internal void Unregister (IUITraitChangeObservable observable)
 			{
-				if (registration is null)
+				if (state is null)
 					return;
 
 				// The public override has already run; continue its base/native path.
-				UnregisterForTraitChangesInternal (observable, registration);
+				UnregisterForTraitChangesInternal (observable, state.Registration);
 				Dispose (false);
 				GC.SuppressFinalize (this);
 			}
 
 			void Dispose (bool disposing)
 			{
-				if (registration is null)
+				var state = this.state;
+				if (state is null)
 					return;
 
-				if (disposing) {
-					var observable = this.observable.Target as IUITraitChangeObservable;
-					if (observable is null)
-						throw new InvalidOperationException ("The trait change observable has been collected.");
-					observable.UnregisterForTraitChanges (registration);
-				}
-				registration = null;
-				GC.KeepAlive (target);
-				target = null;
-				this.observable.Free ();
+				if (disposing)
+					state.Observable.UnregisterForTraitChanges (state.Registration);
+				this.state = null;
+				lifetime.Free ();
+				GC.KeepAlive (state.Target);
 			}
 		}
 

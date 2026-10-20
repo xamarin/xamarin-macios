@@ -547,7 +547,9 @@ namespace MonoTouchFixtures.UIKit {
 				registration = view.RegisterForTraitChanges (traits, (environment, previousCollection) => callback ());
 			}
 			view.TraitOverrides.VerticalSizeClass = UIUserInterfaceSizeClass.Compact;
+			view.UpdateTraitsIfNeeded ();
 			view.TraitOverrides.VerticalSizeClass = UIUserInterfaceSizeClass.Regular;
+			view.UpdateTraitsIfNeeded ();
 			return new WeakReference (registration, trackResurrection: true);
 		}
 
@@ -578,7 +580,9 @@ namespace MonoTouchFixtures.UIKit {
 			var previousCallbacks = callbacks;
 			using var view = parent.Subviews [0];
 			view.TraitOverrides.VerticalSizeClass = UIUserInterfaceSizeClass.Compact;
+			view.UpdateTraitsIfNeeded ();
 			view.TraitOverrides.VerticalSizeClass = UIUserInterfaceSizeClass.Regular;
+			view.UpdateTraitsIfNeeded ();
 			Assert.That (callbacks, Is.EqualTo (previousCallbacks), "No callback after deferred unregister");
 			view.RemoveFromSuperview ();
 		}
