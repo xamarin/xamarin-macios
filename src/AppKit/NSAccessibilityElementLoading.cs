@@ -14,9 +14,10 @@ namespace AppKit {
 		/// <summary>Use <see cref="GetAccessibilityElement2" /> instead.</summary>
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'GetAccessibilityElement2' instead.")]
+		[Export ("accessibilityElementWithToken:")]
 		public virtual NSAccessibilityElement? GetAccessibilityElement (INSSecureCoding token)
 		{
-			throw new You_Should_Not_Call_base_In_This_Method ();
+			return (NSAccessibilityElement?) _GetAccessibilityElement2 (this, token);
 		}
 	}
 #endif // COREBUILD

@@ -44,6 +44,7 @@ namespace Xamarin.Mac.Tests {
 			Assert.That (parent.AccessibilityChildrenInNavigationOrder, Is.EqualTo (new [] { child }), "FromChildren2");
 
 			parent.AccessibilityChildrenInNavigationOrder2 = [childView];
+			Assert.That (parent.AccessibilityChildrenInNavigationOrder2, Is.EqualTo (new [] { childView }), "ViewChildren2");
 			Assert.Throws<InvalidCastException> (() => _ = parent.AccessibilityChildrenInNavigationOrder, "InvalidElementType");
 			Assert.Throws<InvalidCastException> (() => parent.AccessibilityChildrenInNavigationOrder = [incompatibleChild], "InvalidSetterElementType");
 #pragma warning restore CS0618
