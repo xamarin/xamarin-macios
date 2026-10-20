@@ -34,21 +34,23 @@ namespace CoreGraphics {
 
 #if MONOMAC || __MACCATALYST__
 	// uint32_t -> CGWindow.h (OSX SDK only)
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Options that control how Core Graphics creates an image from a list of windows.</summary>
+	/// <remarks>Combine these flags to control image bounds, opacity, shadows, and resolution.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGWindowImageOption : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default behavior when creating a window image.</summary>
 		Default = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>When <c>CGRectNull</c> is used for the bounds, excludes window frame ornamentation, such as shadows, from the bounds calculation.</summary>
 		BoundsIgnoreFraming = (1 << 0),
-		/// <summary>To be added.</summary>
+		/// <summary>Forces the resulting image to be opaque, filling empty areas with white.</summary>
 		ShouldBeOpaque = (1 << 1),
-		/// <summary>To be added.</summary>
+		/// <summary>Draws only the windows' shadows, not the windows themselves.</summary>
 		OnlyShadows = (1 << 2),
+		/// <summary>Returns the image at the best resolution; its dimensions may differ from the screen-space bounds.</summary>
 		BestResolution = (1 << 3),
+		/// <summary>Returns the image at nominal resolution, with dimensions matching the screen-space bounds.</summary>
 		NominalResolution = (1 << 4),
 	}
 
