@@ -2932,15 +2932,34 @@ namespace GameKit {
 			""")]
 		void AcceptInvite ([NullAllowed] Action<GKTurnBasedMatch?, NSError?> completionHandler);
 
-		[Export ("declineInviteWithCompletionHandler:")]
+#if XAMCORE_5_0
+		/// <summary>Declines an invitation to a match.</summary>
+		/// <param name="completionHandler">Called with an error if the operation fails, or <see langword="null" /> on success.</param>
 		[Async (XmlDocs = """
 			<summary>Asynchronously declines an invitation to a match.</summary>
-			<returns>
-			          <para class="improve-task-t-return-type-description">A task that represents the asynchronous DeclineInvite operation.  The value of the TResult parameter is of type System.Action&lt;GameKit.GKTurnBasedMatch,Foundation.NSError&gt;.</para>
-			        </returns>
-			<remarks>To be added.</remarks>
+			<returns>A task that represents the decline operation.</returns>
 			""")]
+		[Export ("declineInviteWithCompletionHandler:")]
+		void DeclineInvite ([NullAllowed] Action<NSError?> completionHandler);
+#else
+		[Obsolete ("Use 'DeclineInviteWithError' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Async (XmlDocs = """
+			<summary>Asynchronously declines an invitation to a match.</summary>
+			<returns>A task whose match result is <see langword="null" /> when the operation succeeds.</returns>
+			""")]
+		[Wrap ("DeclineInviteWithError (completionHandler is null ? null : error => completionHandler (null!, error!))", IsVirtual = true)]
 		void DeclineInvite ([NullAllowed] Action<GKTurnBasedMatch, NSError> completionHandler);
+
+		/// <summary>Declines an invitation to a match.</summary>
+		/// <param name="completionHandler">Called with an error if the operation fails, or <see langword="null" /> on success.</param>
+		[Async (XmlDocs = """
+			<summary>Asynchronously declines an invitation to a match.</summary>
+			<returns>A task that represents the decline operation.</returns>
+			""")]
+		[Export ("declineInviteWithCompletionHandler:")]
+		void DeclineInviteWithError ([NullAllowed] Action<NSError?> completionHandler);
+#endif
 
 		[Export ("matchDataMaximumSize")]
 		nint MatchDataMaximumSize { get; }

@@ -18127,7 +18127,6 @@ M:GameKit.GKSession.SendDataToAllPeers(Foundation.NSData,GameKit.GKSendDataMode,
 M:GameKit.GKTurnBasedExchange.Cancel(System.String,Foundation.NSObject[],System.Action{Foundation.NSError})
 M:GameKit.GKTurnBasedExchange.Reply(System.String,Foundation.NSObject[],Foundation.NSData,System.Action{Foundation.NSError})
 M:GameKit.GKTurnBasedMatch.AcceptInvite(System.Action{GameKit.GKTurnBasedMatch,Foundation.NSError})
-M:GameKit.GKTurnBasedMatch.DeclineInvite(System.Action{GameKit.GKTurnBasedMatch,Foundation.NSError})
 M:GameKit.GKTurnBasedMatch.EndMatchInTurn(Foundation.NSData,GameKit.GKLeaderboardScore[],Foundation.NSObject[],System.Action{Foundation.NSError})
 M:GameKit.GKTurnBasedMatch.EndMatchInTurn(Foundation.NSData,GameKit.GKScore[],GameKit.GKAchievement[],System.Action{Foundation.NSError})
 M:GameKit.GKTurnBasedMatch.EndMatchInTurn(Foundation.NSData,System.Action{Foundation.NSError})

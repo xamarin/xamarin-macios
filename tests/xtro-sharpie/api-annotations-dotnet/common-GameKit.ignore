@@ -1,3 +1,2 @@
 ## enum size declared after the enum, e.g. `typedef NSInteger GKInviteeResponse;`, so we miss the metadata
 !unknown-native-enum! GKInviteeResponse bound
-!missing-null-allowed! 'System.Void GameKit.GKTurnBasedMatch::DeclineInvite(System.Action`2<GameKit.GKTurnBasedMatch,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
