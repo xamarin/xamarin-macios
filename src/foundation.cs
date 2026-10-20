@@ -1737,7 +1737,7 @@ namespace Foundation {
 		Taiwan = 7,
 #endif
 
-		/// <summary>Calendar for the Republic of China.</summary>
+		/// <summary>The Taiwan calendar.</summary>
 		[Field ("NSCalendarIdentifierRepublicOfChina")]
 		RepublicOfChina = 7,
 
