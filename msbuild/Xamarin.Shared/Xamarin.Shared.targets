@@ -601,6 +601,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	-->
 
 	<PropertyGroup>
+		<ValidateSceneManifest Condition="'$(ValidateSceneManifest)' == ''">true</ValidateSceneManifest>
 		<_CompileAppManifestDependsOn>
 			CollectAppManifests;
 			_CompileAppManifestInputs;
@@ -654,6 +655,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CompileAppManifestInputLine Include="TargetArchitectures=$(TargetArchitectures)" />
 			<_CompileAppManifestInputLine Include="TargetFrameworkMoniker=$(_ComputedTargetFrameworkMoniker)" />
 			<_CompileAppManifestInputLine Include="Validate=$(_CreateAppManifest)" />
+			<_CompileAppManifestInputLine Include="ValidateSceneManifest=$(ValidateSceneManifest)" />
 			<!-- @(_CompileAppManifestInputFile) contains additional files to use as Inputs -->
 			<_CompileAppManifestInputFile Include="$(_CompileAppManifestInputFile)" />
 			<_CompileAppManifestInputFile Include="@(_FontFilesToRegister)" />
@@ -706,6 +708,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Validate="$(_CreateAppManifest)"
+			ValidateSceneManifest="$(ValidateSceneManifest)"
 			>
 		</CompileAppManifest>
 	</Target>

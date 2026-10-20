@@ -30,6 +30,114 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.iOS, "26.9", true, false, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", true, false, false, true)]
+		[TestCase (ApplePlatform.iOS, "27.1", true, false, false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "26.9", true, false, false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, false, false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "28.0", true, false, false, true)]
+		[TestCase (ApplePlatform.TVOS, "27.0", true, false, false, false)]
+		[TestCase (ApplePlatform.MacOSX, "27.0", true, false, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", false, false, false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", false, false, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", true, true, false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, true, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", true, false, true, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, false, true, false)]
+		public void SceneLifecycleValidation (ApplePlatform platform, string sdkVersion, bool validateSceneManifest, bool isAppExtension, bool isFramework, bool expectError)
+		{
+			var task = CreateTask<SceneLifecycleValidationTask> ();
+			Assert.That (task.ValidateSceneManifest, Is.True, "Default");
+			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform).ToString ();
+			task.ValidateSceneManifest = validateSceneManifest;
+			task.IsAppExtension = isAppExtension;
+			task.IsFramework = isFramework;
+			task.AppManifest = new TaskItem ("Info.plist");
+
+			task.ValidateManifest (new PDictionary (), sdkVersion);
+
+			Assert.That (Engine.Logger.ErrorEvents.Count, Is.EqualTo (expectError ? 1 : 0), "Errors");
+			if (expectError) {
+				var error = Engine.Logger.ErrorEvents [0];
+				Assert.That (error.Code, Is.EqualTo ("MT7198"), "Code");
+				Assert.That (error.File, Is.EqualTo ("Info.plist"), "File");
+				Assert.That (error.Message, Does.Contain ("https://aka.ms/uiscene"), "Migration instructions");
+				Assert.That (error.Message, Does.Contain ("ValidateSceneManifest to false"), "Opt-out");
+				Assert.That (error.Message, Does.Contain ("does not disable the operating system's requirement"), "OS requirement");
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		public void SceneManifestDictionary (ApplePlatform platform, bool invalidManifest)
+		{
+			var task = CreateTask<SceneLifecycleValidationTask> ();
+			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform).ToString ();
+			var plist = new PDictionary ();
+			if (invalidManifest)
+				plist.Add ("UIApplicationSceneManifest", new PString ("invalid"));
+			else
+				plist.Add ("UIApplicationSceneManifest", new PDictionary ());
+
+			task.ValidateManifest (plist, "27.0");
+
+			Assert.That (Engine.Logger.ErrorEvents.Count, Is.EqualTo (invalidManifest ? 1 : 0), "Errors");
+		}
+
+		public class SceneLifecycleValidationTask : CompileAppManifest {
+			public void ValidateManifest (PDictionary plist, string sdkVersion)
+			{
+				ValidateSceneLifecycle (plist, AppleSdkVersion.Parse (sdkVersion));
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, true, true)]
+		[TestCase (ApplePlatform.iOS, true, false)]
+		[TestCase (ApplePlatform.iOS, false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, true, true)]
+		[TestCase (ApplePlatform.MacCatalyst, true, false)]
+		[TestCase (ApplePlatform.MacCatalyst, false, true)]
+		public void MissingSceneManifest (ApplePlatform platform, bool validate, bool validateSceneManifest)
+		{
+			var task = CreateTask (platform: platform);
+			task.Validate = validate;
+			task.ValidateSceneManifest = validateSceneManifest;
+			var expectError = validate && validateSceneManifest && AppleSdkVersion.Parse (task.DefaultSdkVersion) >= new AppleSdkVersion (27, 0);
+
+			ExecuteTask (task, expectedErrorCount: expectError ? 1 : 0);
+
+			if (expectError) {
+				Assert.That (Engine.Logger.ErrorEvents [0].Code, Is.EqualTo ("MT7198"), "Code");
+				Assert.That (File.Exists (task.CompiledAppManifest!.ItemSpec), Is.False, "Failed validation must not produce an up-to-date manifest");
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void SceneManifestFromPartialManifest (ApplePlatform platform)
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir, platform);
+			task.Validate = true;
+			var partialPath = Path.Combine (dir, "SceneManifest.plist");
+			var partial = new PDictionary {
+				{ "UIApplicationSceneManifest", new PDictionary () },
+			};
+			partial.Save (partialPath);
+			task.PartialAppManifests = [new TaskItem (partialPath)];
+
+			ExecuteTask (task);
+
+			var plist = PDictionary.OpenFile (task.CompiledAppManifest!.ItemSpec);
+			Assert.That (plist.Get<PDictionary> ("UIApplicationSceneManifest"), Is.Not.Null, "Merged scene manifest");
+		}
+
+		[Test]
 		public void MainMinimumOSVersions ()
 		{
 			var dir = Cache.CreateTemporaryDirectory ();

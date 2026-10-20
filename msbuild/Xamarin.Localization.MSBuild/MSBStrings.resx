@@ -1716,4 +1716,9 @@
 {0} - The path to the runtime configuration file.
 {1} - The error message.</comment>
     </data>
+    <data name="E7198" xml:space="preserve">
+        <value>The app's Info.plist does not contain a UIApplicationSceneManifest dictionary. Apps built with the iOS or Mac Catalyst 27.0 SDK or later must use the UIKit scene lifecycle or they will crash at launch on iOS or macOS 27.0 or later. Add a scene manifest and scene delegate, and migrate custom lifecycle handlers as described at https://aka.ms/uiscene. To skip this build-time validation, set the MSBuild property ValidateSceneManifest to false; this does not disable the operating system's requirement.</value>
+        <comment>Shown when an iOS or Mac Catalyst app built against SDK 27.0 or later does not declare a scene manifest.
+Do not translate Info.plist, UIApplicationSceneManifest, UIKit, https://aka.ms/uiscene, ValidateSceneManifest, or false.</comment>
+    </data>
 </root>
