@@ -74,6 +74,8 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
+- template: ../common/detect-vm.yml
+
 - template: ../common/setup.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}

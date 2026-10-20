@@ -50,13 +50,6 @@ parameters:
   type: string
   default: ''
 
-# When set (e.g. 'ACES' for VM-based pools), exposes VM_VENDOR so tests gated by
-# TestRuntime.AssertNotVirtualMachine are ignored, matching the simulator ACES path.
-- name: vmVendor
-  type: string
-  default: ''
-
-
 stages:
 
 - stage: ${{ parameters.stageName }}
@@ -84,8 +77,6 @@ stages:
 
     variables:
       PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
-      ${{ if parameters.vmVendor }}:
-        VM_VENDOR: ${{ parameters.vmVendor }}
 
     steps:
     - template: build.yml

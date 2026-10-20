@@ -93,10 +93,6 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
       XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
       DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-      # The ACES pool is a virtual-machine pool; expose VM_VENDOR so tests
-      # gated by TestRuntime.AssertNotVirtualMachine get ignored there.
-      ${{ if parameters.useACES }}:
-        VM_VENDOR: ACES
     ${{ if parameters.useACES }}:
       pool:
         name: $(CIBuildPoolACES)

@@ -230,7 +230,7 @@ namespace Xharness {
 				// pool such as ACES) so TestRuntime.AssertNotVirtualMachine works
 				// inside the iOS/tvOS simulator process.
 				var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
-				if (!string.IsNullOrEmpty (vmVendor))
+				if (isSimulator && !string.IsNullOrEmpty (vmVendor))
 					args.Add (new SetEnvVariableArgument ("VM_VENDOR", vmVendor));
 			}
 
