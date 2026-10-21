@@ -15,7 +15,7 @@ public class RunIPadAppOnMacTest {
 		Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 	}
 
-	string CreateProject (out string directory, string deviceFamilies = "<integer>2</integer>")
+	string CreateProject (out string directory, string deviceFamilies = "<integer>2</integer>", string runtimeIdentifier = "ios-arm64")
 	{
 		directory = Cache.CreateTemporaryDirectory ();
 		var project = Path.Combine (directory, "Test.csproj");
@@ -36,26 +36,45 @@ public class RunIPadAppOnMacTest {
 				<PropertyGroup>
 					<TargetFramework>{{Configuration.DotNetTfm}}-ios</TargetFramework>
 					<UseFloatingTargetPlatformVersion>true</UseFloatingTargetPlatformVersion>
+					<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
 					<OutputType>Exe</OutputType>
-					<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+					<RuntimeIdentifier>{{runtimeIdentifier}}</RuntimeIdentifier>
+					<StandardOutputPath>$(MSBuildProjectDirectory)/stdout.txt</StandardOutputPath>
+					<StandardErrorPath>$(MSBuildProjectDirectory)/stderr.txt</StandardErrorPath>
 				</PropertyGroup>
+				<ItemGroup>
+					<RuntimeEnvironmentVariable Include="IPAD_TEST_VARIABLE" Value="value with spaces" />
+				</ItemGroup>
 				<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-				<!-- Create an unsigned fixture bundle instead of compiling an app or requiring signing credentials. -->
-				<Target Name="Build" DependsOnTargets="_ComputeTargetFrameworkMoniker">
-					<Error Condition="'$(FailBuild)' == 'true'" Text="Intentional build failure." />
+				<Target Name="SetFixtureBundlePaths" AfterTargets="_GenerateBundleName">
 					<PropertyGroup>
 						<_AppBundleName>Test App</_AppBundleName>
 						<_AppBundlePath>$(MSBuildProjectDirectory)/input/Test App.app/</_AppBundlePath>
 						<_AppBundleManifestPath>$(_AppBundlePath)Info.plist</_AppBundleManifestPath>
 					</PropertyGroup>
+				</Target>
+				<!-- Create an unsigned fixture bundle instead of compiling an app or requiring signing credentials. -->
+				<Target Name="Build" DependsOnTargets="_ComputeTargetFrameworkMoniker;_GenerateBundleName">
+					<Error Condition="'$(FailBuild)' == 'true'" Text="Intentional build failure." />
 					<MakeDir Directories="$(_AppBundlePath)" />
 					<Copy SourceFiles="Info.plist" DestinationFiles="$(_AppBundleManifestPath)" />
 					<WriteLinesToFile File="$(_AppBundlePath)Test App" Lines="fixture executable" Overwrite="true" />
-					<WriteLinesToFile File="build-ran.txt" Lines="Build" Overwrite="true" />
+					<WriteLinesToFile File="build-ran.txt" Lines="Build" />
 				</Target>
-				<Target Name="RecordWrapper" AfterTargets="_PrepareIPadAppOnMac">
+				<Target Name="RecordWrapper" AfterTargets="_PrepareIPadAppOnMac;_PrepareRunIPadAppOnMac">
 					<WriteLinesToFile File="wrapper-path.txt" Lines="$(_IPadAppOnMacBundle)" Overwrite="true" />
 					<WriteLinesToFile File="wrapper-files.txt" Lines="@(FileWrites->'%(FullPath)')" Overwrite="true" />
+					<WriteLinesToFile File="run-command.txt" Lines="$(RunCommand)" Overwrite="true" />
+					<WriteLinesToFile File="run-arguments.txt" Lines="$(RunArguments)" Overwrite="true" />
+					<WriteLinesToFile File="run-directory.txt" Lines="$(RunWorkingDirectory)" Overwrite="true" />
+				</Target>
+				<Target Name="KeepOnlyMacDestination">
+					<ItemGroup>
+						<Devices Remove="@(Devices)" Condition="'%(Identity)' != '$(_IPadAppOnMacDeviceName)'" />
+					</ItemGroup>
+				</Target>
+				<Target Name="RecordDevices" AfterTargets="ComputeAvailableDevices;KeepOnlyMacDestination">
+					<WriteLinesToFile File="devices.txt" Lines="@(Devices->'%(Identity)|%(Description)|%(Type)|%(UDID)|%(RuntimeIdentifier)')" Overwrite="true" />
 				</Target>
 			</Project>
 			""");
@@ -89,6 +108,77 @@ public class RunIPadAppOnMacTest {
 		DotNet.AssertBuild (project, target: "Clean");
 		Assert.That (Directory.Exists (wrapper), Is.False, "first wrapper cleaned");
 		Assert.That (Directory.Exists (secondWrapper), Is.False, "second wrapper cleaned");
+	}
+
+	[TestCase ("ios-arm64")]
+	[TestCase ("")]
+	public void ComputesRunArgumentsWithoutBuildingOrDeploying (string runtimeIdentifier)
+	{
+		var project = CreateProject (out var directory, runtimeIdentifier: runtimeIdentifier);
+		DotNet.AssertBuild (project);
+		var properties = new Dictionary<string, string> {
+			{ "Device", "My Mac (Designed for iPad)" },
+			{ "FailBuild", "true" },
+			{ "MlaunchPath", "/must-not-launch-a-device" },
+			{ "StandardInputPath", Path.Combine (directory, "input.txt") },
+		};
+		DotNet.AssertBuild (project, properties, target: "DeployToDevice;ComputeRunArguments");
+
+		Assert.That (File.ReadAllLines (Path.Combine (directory, "build-ran.txt")), Has.Length.EqualTo (1), "must reuse the existing build");
+		Assert.That (File.ReadAllText (Path.Combine (directory, "run-command.txt")).Trim (), Is.EqualTo ("/bin/sh"), "launcher");
+		Assert.That (File.ReadAllText (Path.Combine (directory, "run-directory.txt")).Trim (), Is.EqualTo (directory), "working directory");
+		var arguments = File.ReadAllText (Path.Combine (directory, "run-arguments.txt")).Trim ();
+		Assert.That (arguments, Does.EndWith ("launch.sh\""), "launcher arguments");
+		var launcher = Path.Combine (directory, arguments.Trim ('"'));
+		Assert.That (File.ReadAllLines (Path.Combine (directory, "wrapper-files.txt")), Does.Contain (launcher), "launcher FileWrites");
+		var script = File.ReadAllText (launcher);
+		Assert.That (script, Does.Contain ("\"--app-arg=$arg\""), "forward managed application arguments");
+		Assert.That (script, Does.Contain ("exec /usr/bin/open -n -W"), "wait for exit by default");
+		Assert.That (script, Does.Contain ($"--stdout \"{directory}/stdout.txt\""), "stdout override");
+		Assert.That (script, Does.Contain ($"--stderr \"{directory}/stderr.txt\""), "stderr override");
+		Assert.That (script, Does.Contain ($"--stdin \"{directory}/input.txt\""), "stdin override");
+		Assert.That (script, Does.Contain ("--env \"IPAD_TEST_VARIABLE=value with spaces\""), "runtime environment");
+	}
+
+	[Test]
+	public void MlaunchDoesNotSelectMacAsPhysicalDevice ()
+	{
+		var project = CreateProject (out var directory);
+		var properties = new Dictionary<string, string> {
+			{ "MlaunchPath", "/must-not-launch-a-device" },
+		};
+		var result = DotNet.Execute ("build", project, properties, assert_success: false, target: "Build;ComputeAvailableDevices;KeepOnlyMacDestination;_ComputeMlaunchRunArguments");
+		Assert.That (File.ReadAllLines (Path.Combine (directory, "devices.txt")), Has.Length.EqualTo (1), "only the Mac destination remains");
+		Assert.That (result.ExitCode, Is.Not.EqualTo (0), "must not compute physical-device arguments for the Mac");
+		Assert.That (result.StandardOutput + result.StandardError, Does.Contain ("No applicable and available devices found."), "no physical device");
+	}
+
+	[TestCase ("OutputType", "Library")]
+	[TestCase ("IsAppExtension", "true")]
+	[TestCase ("IsWatchApp", "true")]
+	public void DoesNotDiscoverMacForUnsupportedProjects (string property, string value)
+	{
+		var project = CreateProject (out var directory);
+		var properties = new Dictionary<string, string> {
+			{ property, value },
+		};
+		DotNet.AssertBuild (project, properties, target: "ComputeAvailableDevices");
+		Assert.That (File.ReadAllText (Path.Combine (directory, "devices.txt")), Does.Not.Contain ("My Mac (Designed for iPad)"), "unsupported project");
+	}
+
+	[TestCase ("<integer>2</integer>", "ios-arm64", true)]
+	[TestCase ("<integer>1</integer><integer>2</integer>", "ios-arm64", true)]
+	[TestCase ("<integer>1</integer>", "ios-arm64", false)]
+	[TestCase ("<integer>2</integer>", "iossimulator-arm64", false)]
+	[TestCase ("<integer>2</integer>", "", true)]
+	public void DiscoversMacDestination (string deviceFamilies, string runtimeIdentifier, bool expected)
+	{
+		var project = CreateProject (out var directory, deviceFamilies, runtimeIdentifier);
+		DotNet.AssertBuild (project, target: "ComputeAvailableDevices");
+		var devices = File.ReadAllLines (Path.Combine (directory, "devices.txt"));
+		const string mac = "My Mac (Designed for iPad)|My Mac (Designed for iPad)|Mac|My Mac (Designed for iPad)|ios-arm64";
+		Assert.That (devices.Contains (mac), Is.EqualTo (expected), "Mac destination");
+		Assert.That (File.Exists (Path.Combine (directory, "build-ran.txt")), Is.False, "discovery must not build the app");
 	}
 
 	[TestCase ("RuntimeIdentifier", "iossimulator-arm64", false)]

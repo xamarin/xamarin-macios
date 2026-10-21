@@ -47,7 +47,7 @@
 	<Target Name="_ShowRunHelpConditioned" Condition="'$(Help)' == 'true'" DependsOnTargets="ShowRunHelp" />
 
 	<Target Name="ComputeMlaunchInstallArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;_ShowRunHelpConditioned;_ComputeMlaunchInstallArguments" />
-	<Target Name="_ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true' And '$(Help)' != 'true'">
+	<Target Name="_ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true' And '$(Help)' != 'true' And '$(Device)' != '$(_IPadAppOnMacDeviceName)'">
 		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/dotnet/macios/issues/16609 -->
 		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<Error Condition="!Exists('$(_AppBundleManifestPath)')" Text="The app must be built before the arguments to launch the app using mlaunch can be computed." />
@@ -77,7 +77,7 @@
 			 />
 	</Target>
 
-	<Target Name="_DeployToDevice" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true'">
+	<Target Name="_DeployToDevice" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true' And '$(Device)' != '$(_IPadAppOnMacDeviceName)'">
 		<Exec SessionId="$(BuildSessionId)" Command="'$(MlaunchPath)' $(MlaunchInstallArguments)" />
 	</Target>
 
@@ -95,7 +95,7 @@
 	<Target Name="DeployToDevice" DependsOnTargets="_ValidateHotReloadConfiguration;_DeployToDevice;_CopyStartupHooksToDevice" Condition="'$(SdkIsMobile)' == 'true'">
 	</Target>
 
-	<Target Name="ComputeMlaunchRunArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;_ShowRunHelpConditioned;_ComputeMlaunchRunArguments" Condition="'$(SdkIsDesktop)' != 'true'" />
+	<Target Name="ComputeMlaunchRunArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;_ShowRunHelpConditioned;_ComputeMlaunchRunArguments" Condition="'$(SdkIsDesktop)' != 'true' And '$(Device)' != '$(_IPadAppOnMacDeviceName)'" />
 
 	<Target Name="_ComputeMlaunchRunArguments" Condition="'$(Help)' != 'true'">
 		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/dotnet/macios/issues/16609 -->
@@ -170,7 +170,9 @@
 		<Error Condition="'$(OutputType)' != 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'" Text="RunIPadAppOnMac requires an iOS application project." />
 	</Target>
 
-	<Target Name="_PrepareIPadAppOnMac" DependsOnTargets="_ValidateRunIPadAppOnMac;Build">
+	<Target Name="_PrepareIPadAppOnMac" DependsOnTargets="_ValidateRunIPadAppOnMac;Build;_ComputeIPadAppOnMacRunArguments" />
+
+	<Target Name="_CreateIPadAppOnMacWrapper" DependsOnTargets="_ValidateRunIPadAppOnMac;_GenerateBundleName">
 		<ReadAppManifest
 			AppManifest="$(_AppBundleManifestPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -181,7 +183,8 @@
 
 		<PropertyGroup>
 			<!-- macOS protects launched iOS app bundles against in-place updates, so use a fresh wrapper for each launch. -->
-			<_IPadAppOnMacBundle>$(IntermediateOutputPath)ipad-on-mac/$([System.Guid]::NewGuid())/$(_AppBundleName).app</_IPadAppOnMacBundle>
+			<_IPadAppOnMacLaunchDirectory>$(IntermediateOutputPath)ipad-on-mac/$([System.Guid]::NewGuid())/</_IPadAppOnMacLaunchDirectory>
+			<_IPadAppOnMacBundle>$(_IPadAppOnMacLaunchDirectory)$(_AppBundleName).app</_IPadAppOnMacBundle>
 		</PropertyGroup>
 		<MakeDir Directories="$(_IPadAppOnMacBundle)/Wrapper" />
 		<Ditto Source="$(_AppBundlePath)" Destination="$(_IPadAppOnMacBundle)/Wrapper/$(_AppBundleName).app">
@@ -193,14 +196,51 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="RunIPadAppOnMac" DependsOnTargets="_PrepareIPadAppOnMac">
+	<Target Name="_ComputeIPadAppOnMacRunArguments" DependsOnTargets="_CreateIPadAppOnMacWrapper">
+		<Exec
+			Command="tty"
+			Condition="'$(StandardOutputPath)' == '' Or '$(StandardErrorPath)' == ''"
+			ConsoleToMSBuild="true"
+			IgnoreStandardErrorWarningFormat="true"
+			IgnoreExitCode="true"
+			>
+			<Output TaskParameter="ConsoleOutput" ItemName="_IPadAppOnMacTtyOutput" />
+		</Exec>
+		<PropertyGroup>
+			<_IPadAppOnMacTtyPath>@(_IPadAppOnMacTtyOutput)</_IPadAppOnMacTtyPath>
+			<StandardOutputPath Condition="'$(StandardOutputPath)' == '' And Exists('$(_IPadAppOnMacTtyPath)')">$(_IPadAppOnMacTtyPath)</StandardOutputPath>
+			<StandardErrorPath Condition="'$(StandardErrorPath)' == '' And Exists('$(_IPadAppOnMacTtyPath)')">$(_IPadAppOnMacTtyPath)</StandardErrorPath>
+		</PropertyGroup>
 		<PropertyGroup>
 			<_IPadAppOnMacOpenArguments>-n</_IPadAppOnMacOpenArguments>
 			<_IPadAppOnMacOpenArguments Condition="'$(WaitForExit)' != 'false'">$(_IPadAppOnMacOpenArguments) -W</_IPadAppOnMacOpenArguments>
 			<_IPadAppOnMacOpenArguments Condition="'$(StandardOutputPath)' != ''">$(_IPadAppOnMacOpenArguments) --stdout &quot;$(StandardOutputPath)&quot;</_IPadAppOnMacOpenArguments>
 			<_IPadAppOnMacOpenArguments Condition="'$(StandardErrorPath)' != ''">$(_IPadAppOnMacOpenArguments) --stderr &quot;$(StandardErrorPath)&quot;</_IPadAppOnMacOpenArguments>
+			<_IPadAppOnMacOpenArguments Condition="'$(StandardInputPath)' != ''">$(_IPadAppOnMacOpenArguments) --stdin &quot;$(StandardInputPath)&quot;</_IPadAppOnMacOpenArguments>
+			<_IPadAppOnMacOpenArguments>$(_IPadAppOnMacOpenArguments) @(RuntimeEnvironmentVariable->'--env "%(Identity)=%(Value)"', ' ')</_IPadAppOnMacOpenArguments>
+			<RunCommand>/bin/sh</RunCommand>
+			<RunArguments>"$(_IPadAppOnMacLaunchDirectory)launch.sh"</RunArguments>
+			<RunWorkingDirectory>$(MSBuildProjectDirectory)</RunWorkingDirectory>
 		</PropertyGroup>
-		<Exec Command="/usr/bin/open $(_IPadAppOnMacOpenArguments) &quot;$(_IPadAppOnMacBundle)&quot;" />
+		<!-- iOS runtimes only pass app-arg options through to managed Main. -->
+		<WriteLinesToFile
+			File="$(_IPadAppOnMacLaunchDirectory)launch.sh"
+			Lines="for arg do&#xA;shift&#xA;set -- &quot;$@&quot; &quot;--app-arg=$arg&quot;&#xA;done&#xA;exec /usr/bin/open $(_IPadAppOnMacOpenArguments) &quot;$(_IPadAppOnMacBundle)&quot; --args &quot;$@&quot;"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_IPadAppOnMacLaunchDirectory)launch.sh" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="RunIPadAppOnMac" DependsOnTargets="_PrepareIPadAppOnMac">
+		<Exec Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)" />
+	</Target>
+
+	<Target Name="_PrepareRunIPadAppOnMac"
+		BeforeTargets="ComputeRunArguments"
+		DependsOnTargets="_ComputeIPadAppOnMacRunArguments"
+		Condition="'$(Device)' == '$(_IPadAppOnMacDeviceName)'">
 	</Target>
 
 	<!-- Include wrappers from earlier invocations so incremental builds preserve them and Clean can remove them. -->
@@ -232,7 +272,7 @@
 	<Target
 		Name="_CopyStartupHooksToDevice"
 		DependsOnTargets="_ValidateHotReloadConfiguration;_ReadAppManifest"
-		Condition="'$(SdkIsDevice)' == 'true'">
+		Condition="'$(SdkIsDevice)' == 'true' And '$(Device)' != '$(_IPadAppOnMacDeviceName)'">
 
 		<ItemGroup>
 			<_DotNetWatchVariable Include="@(RuntimeEnvironmentVariable)" Condition="'%(Identity)' == 'DOTNET_WATCH' And '%(Value)' == '1'" />
@@ -301,7 +341,7 @@
 	***********************************************************************************************
 	-->
 	<Target Name="ComputeAvailableDevices"
-		DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;"
+		DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_ComputeIPadAppOnMacDevice"
 		Condition="'$(SdkIsMobile)' == 'true'"
 		Returns="@(Devices)">
 		<PropertyGroup>
@@ -319,6 +359,25 @@
 			<Output TaskParameter="Devices" ItemName="Devices" />
 			<Output TaskParameter="DiscardedDevices" ItemName="DiscardedDevices" />
 		</GetAvailableDevices>
+		<ItemGroup Condition="'$(_CanRunIPadAppOnMac)' == 'true'">
+			<Devices Include="$(_IPadAppOnMacDeviceName)">
+				<Description>$(_IPadAppOnMacDeviceName)</Description>
+				<Name>$(_IPadAppOnMacDeviceName)</Name>
+				<!-- Keep this destination out of mlaunch's physical-device selection. -->
+				<Type>Mac</Type>
+				<OSVersion>$([System.Environment]::OSVersion.Version)</OSVersion>
+				<UDID>$(_IPadAppOnMacDeviceName)</UDID>
+				<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+			</Devices>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ComputeIPadAppOnMacDevice"
+		DependsOnTargets="_ReadAppManifest"
+		Condition="'$(_PlatformName)' == 'iOS' And '$(OutputType)' == 'Exe' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And $([MSBuild]::IsOSPlatform('OSX')) And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64' And ('$(RuntimeIdentifier)' == 'ios-arm64' Or '$(_XamarinUsingDefaultRuntimeIdentifier)' == 'true')">
+		<PropertyGroup>
+			<_CanRunIPadAppOnMac Condition="'$(_UIDeviceFamily)' == 'IPad' Or '$(_UIDeviceFamily)' == 'IPhoneAndIPad'">true</_CanRunIPadAppOnMac>
+		</PropertyGroup>
 	</Target>
 
 </Project>

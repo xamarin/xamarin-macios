@@ -105,11 +105,26 @@ using a simulator or rebuilding for Mac Catalyst. The app must support iPad
 (`UIDeviceFamily` must contain `2`) and target the `ios-arm64` runtime identifier.
 Both iPad-only and universal iPhone/iPad apps are supported.
 
+Eligible projects also list **My Mac (Designed for iPad)** among the destinations
+shown by `dotnet run --list-devices`. Select it using `--device`:
+
+```dotnetcli
+dotnet run --project project.csproj --device "My Mac (Designed for iPad)"
+```
+
+This builds the project for `ios-arm64` before launching it. Use `--no-build` to
+launch an existing device build without rebuilding. An explicitly selected
+simulator runtime identifier excludes the Mac destination.
+
+The equivalent build-first MSBuild target is:
+
 ```dotnetcli
 dotnet build project.csproj -t:RunIPadAppOnMac -p:RuntimeIdentifier=ios-arm64
 ```
 
 For a multi-targeted project, also specify the iOS target framework with `-f`.
+The ordinary `Run` target also accepts `-p:Device="My Mac (Designed for iPad)"`
+when the project has already been built for `ios-arm64`.
 Use a valid development signing identity and provisioning profile that includes
 the Mac's provisioning UDID. You can find this identifier using
 `system_profiler SPHardwareDataType`.
@@ -121,8 +136,21 @@ for each invocation because macOS protects previously launched iOS app bundles
 against in-place updates. `Clean` removes these wrappers.
 
 By default, the target waits for the app to exit. Set `WaitForExit=false` to return
-after launching. `StandardOutputPath` and `StandardErrorPath` can be used to
-capture the app's output. This target does not attach a managed debugger.
+after launching. Standard output and standard error are forwarded to the current
+terminal, when one is available. Set `StandardOutputPath` and `StandardErrorPath`
+to capture the app's output in specific files, or `StandardInputPath` to redirect
+its input. Application arguments after `dotnet run --` and
+`RuntimeEnvironmentVariable` items are forwarded to the app.
+This target does not attach a managed debugger.
+
+`dotnet test` is not currently supported for this destination: Microsoft Testing
+Platform's named-pipe connection requires Unix-domain sockets, which the pinned
+iOS runtime reports as unsupported. The runtime change in
+[dotnet/runtime#135167](https://github.com/dotnet/runtime/pull/135167) removes this
+restriction, but is not yet included in the runtime dependency used here.
+Launching a test app with `dotnet run` does not establish the `dotnet test`
+protocol. Also, macOS `open` does not propagate the app's exit code, so its success
+must not be interpreted as a passing test run.
 
 The wrapper layout used for local launching is not a documented Apple deployment
 interface. This target does not support Intel Macs, iOS simulator builds,
