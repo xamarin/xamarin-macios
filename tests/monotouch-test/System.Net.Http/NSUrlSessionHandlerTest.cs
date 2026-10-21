@@ -106,7 +106,7 @@ namespace MonoTests.System.Net.Http {
 				listener.Start ();
 				try {
 					var port = ((IPEndPoint) listener.LocalEndpoint).Port;
-					var acceptTask = listener.AcceptTcpClientAsync (token);
+					var acceptTask = listener.AcceptTcpClientAsync (token).AsTask ();
 					using var client = new HttpClient (handler, disposeHandler: false) {
 						Timeout = TimeSpan.FromSeconds (5),
 					};
@@ -119,6 +119,9 @@ namespace MonoTests.System.Net.Http {
 					}, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
 
 					serverStream.Dispose ();
+					await Task.WhenAny (recovery, acceptTask).ConfigureAwait (false);
+					if (recovery.IsCompleted)
+						await recovery.ConfigureAwait (false);
 					using var serverClient = await acceptTask.ConfigureAwait (false);
 					using var recoveryStream = serverClient.GetStream ();
 					await ReadRequestHeadersAsync (recoveryStream, token).ConfigureAwait (false);
@@ -128,7 +131,7 @@ namespace MonoTests.System.Net.Http {
 				} finally {
 					listener.Stop ();
 				}
-			}, consumeInitialChunk: false);
+			}, consumeInitialChunk: false, resetConnection: true);
 		}
 
 		[TestCase ("complete", null)]
@@ -169,7 +172,7 @@ namespace MonoTests.System.Net.Http {
 					Assert.That (caught, Is.Null, "Read exception");
 				else
 					Assert.That (caught, Is.InstanceOf (expectedException), "Read exception");
-			});
+			}, resetConnection: terminalState == "disconnect");
 		}
 
 		static async Task ReadRemainingChunkAsync (Stream stream, byte [] buffer, int count, CancellationToken token)
@@ -194,7 +197,7 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
-		static void WithStreamingResponse (Func<NSUrlSessionHandler, HttpResponseMessage, Stream, NetworkStream, CancellationToken, Task> test, bool consumeInitialChunk = true)
+		static void WithStreamingResponse (Func<NSUrlSessionHandler, HttpResponseMessage, Stream, NetworkStream, CancellationToken, Task> test, bool consumeInitialChunk = true, bool resetConnection = false)
 		{
 			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				using var cts = new CancellationTokenSource (TimeSpan.FromSeconds (20));
@@ -210,6 +213,8 @@ namespace MonoTests.System.Net.Http {
 					var responseTask = client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, token);
 					using var serverClient = await acceptTask.ConfigureAwait (false);
 					serverClient.NoDelay = true;
+					if (resetConnection)
+						serverClient.LingerState = new LingerOption (true, 0);
 					using var serverStream = serverClient.GetStream ();
 					await ReadRequestHeadersAsync (serverStream, token).ConfigureAwait (false);
 
