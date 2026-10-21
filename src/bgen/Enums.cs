@@ -264,27 +264,27 @@ public partial class Generator {
 				string? libPath = null;
 				if (library_name is not null)
 					libraries.TryGetValue (library_name, out libPath);
-				var libname = fa.LibraryName?.Replace ("+", string.Empty);
+				var libname = library_name;
+				if (fa.LibraryName is not null)
+					TryComputeLibraryName (fa.LibraryName, type, out libname, out libPath);
 				// We need to check for special cases inside FieldAttributes
 				// fa.LibraryName could contain a different framework i.e UITrackingRunLoopMode (UIKit) inside NSRunLoopMode enum (Foundation).
 				// libPath could have a custom path i.e. CoreImage which in macOS is inside Quartz
 				// library_name contains the Framework constant name the Field is inside of, used as fallback.
-				bool useFieldAttrLibName = libname is not null && !string.Equals (libname, library_name, StringComparison.OrdinalIgnoreCase);
-				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, useFieldAttrLibName ? libname : libPath ?? library_name);
+				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, libPath ?? libname);
 				print ("internal unsafe static {1} {0} {{", fa.SymbolName, isBackingFieldValueType ? backingFieldTypeName : "IntPtr");
 				indent++;
 				print ("get {");
 				indent++;
-				var actualLibName = useFieldAttrLibName ? libname : library_name;
 				if (isBackingFieldValueType) {
 					print ($"if (!values [{n}].HasValue)");
-					print ($"\tvalues [{n}] = Dlfcn.GetStruct<{backingFieldType.Name}> (Libraries.{actualLibName}.Handle, \"{fa.SymbolName}\");");
+					print ($"\tvalues [{n}] = Dlfcn.GetStruct<{backingFieldType.Name}> (Libraries.{libname}.Handle, \"{fa.SymbolName}\");");
 					print ($"return values [{n}]!.Value;"); // The ! is required due to https://github.com/dotnet/roslyn/issues/79004.
 					n++;
 				} else {
 					print ("fixed (IntPtr *storage = &values [{0}])", n++);
 					indent++;
-					print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", actualLibName, fa.SymbolName);
+					print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", libname, fa.SymbolName);
 					indent--;
 				}
 				indent--;
