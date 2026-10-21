@@ -90,32 +90,6 @@ namespace CoreVideo {
 			GC.KeepAlive (key);
 		}
 
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-		[ObsoletedOSPlatform ("macos12.0")]
-		[ObsoletedOSPlatform ("tvos15.0")]
-		[ObsoletedOSPlatform ("maccatalyst15.0")]
-		[ObsoletedOSPlatform ("ios15.0")]
-		[DllImport (Constants.CoreVideoLibrary)]
-		unsafe extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, CVAttachmentMode* attachmentMode);
-
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-		[ObsoletedOSPlatform ("macos12.0")]
-		[ObsoletedOSPlatform ("tvos15.0")]
-		[ObsoletedOSPlatform ("maccatalyst15.0")]
-		[ObsoletedOSPlatform ("ios15.0")]
-		unsafe static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode)
-		{
-			attachmentMode = default;
-			fixed (CVAttachmentMode* attachmentModePtr = &attachmentMode)
-				return CVBufferGetAttachment (buffer, key, attachmentModePtr);
-		}
-
 		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
 		// older method has been deprecatd.
 		[SupportedOSPlatform ("tvos")]
@@ -147,13 +121,6 @@ namespace CoreVideo {
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			if (!SystemVersion.IsAtLeastXcode13) {
-#pragma warning disable CA1422 // The analyzer doesn't recognize SupportedOSPlatformGuard attributes when guarding obsoleted APIs (https://github.com/dotnet/roslyn-analyzers/issues/7665).
-				T? result = Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
-#pragma warning restore CA1422
-				GC.KeepAlive (key);
-				return result;
-			}
 			T? result2 = Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			GC.KeepAlive (key);
 			return result2;
@@ -181,17 +148,6 @@ namespace CoreVideo {
 		}
 #endif
 
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
-		[ObsoletedOSPlatform ("macos12.0")]
-		[ObsoletedOSPlatform ("tvos15.0")]
-		[ObsoletedOSPlatform ("maccatalyst15.0")]
-		[ObsoletedOSPlatform ("ios15.0")]
-		[DllImport (Constants.CoreVideoLibrary)]
-		extern static /* CFDictionaryRef */ IntPtr CVBufferGetAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
-
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -205,11 +161,6 @@ namespace CoreVideo {
 		///         <remarks>To be added.</remarks>
 		public NSDictionary? GetAttachments (CVAttachmentMode attachmentMode)
 		{
-			if (!SystemVersion.IsAtLeastXcode13) {
-#pragma warning disable CA1422 // The analyzer doesn't recognize SupportedOSPlatformGuard attributes when guarding obsoleted APIs (https://github.com/dotnet/roslyn-analyzers/issues/7665).
-				return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
-#pragma warning restore CA1422
-			}
 			return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
 		}
 
@@ -225,11 +176,7 @@ namespace CoreVideo {
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{
-			if (SystemVersion.IsAtLeastXcode13)
-				return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferCopyAttachments (Handle, attachmentMode), true);
-#pragma warning disable CA1422 // The analyzer doesn't recognize SupportedOSPlatformGuard attributes when guarding obsoleted APIs (https://github.com/dotnet/roslyn-analyzers/issues/7665).
-			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferGetAttachments (Handle, attachmentMode), false);
-#pragma warning restore CA1422
+			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferCopyAttachments (Handle, attachmentMode), true);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]

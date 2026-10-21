@@ -4,7 +4,6 @@ namespace Cecil.Tests {
 		static HashSet<string> knownFailuresHandleSafety = new HashSet<string> {
 			"AudioUnit.AUScheduledAudioFileRegion.GetAudioFileRegion ()",
 			"AudioUnit.SamplerInstrumentData.ToStruct ()",
-			"CoreImage.CIImage.FromCGImage (CoreGraphics.CGImage, CoreGraphics.CGColorSpace)",
 			"CoreMidi.MidiCIDeviceInfo..ctor (CoreMidi.MidiEndpoint, Foundation.NSData, Foundation.NSData, Foundation.NSData, Foundation.NSData)",
 			"CoreText.Adapter.GetHandles`1 (System.Collections.Generic.IEnumerable`1<T>)",
 			"CoreText.CTBaselineClassID.FromHandle (System.IntPtr)",

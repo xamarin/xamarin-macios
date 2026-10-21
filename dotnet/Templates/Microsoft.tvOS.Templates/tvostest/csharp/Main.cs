@@ -43,20 +43,30 @@ class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 		Task.Run (async () => {
 			try {
 				var documentsPath = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
-				var resultsPath = Path.Combine (documentsPath, "TestResults");
+				var resultsPath = string.IsNullOrEmpty (documentsPath)
+					? Path.Combine (Path.GetTempPath (), "tvOSTest1", "TestResults")
+					: Path.Combine (documentsPath, "TestResults");
 
-				var builder = await TestApplication.CreateBuilderAsync ([
-					"--results-directory", resultsPath,
-					"--report-trx"
-				]);
+				// Forward args from 'dotnet test', which sends the MTP protocol config
+				// (--server / --dotnet-test-pipe) via the command line.
+				// Environment.GetCommandLineArgs()[0] is the executable path, not an argument.
+				string [] cliArgs = Environment.GetCommandLineArgs ();
+				string [] mtpArgs = cliArgs.Length > 1 ? cliArgs [1..] : [];
+				// MTP relaunches the app with these options, so only add defaults once.
+				List<string> testArgs = [.. mtpArgs];
+				if (!testArgs.Contains ("--results-directory"))
+					testArgs.AddRange (["--results-directory", resultsPath]);
+				if (!testArgs.Contains ("--report-trx"))
+					testArgs.Add ("--report-trx");
+				var builder = await TestApplication.CreateBuilderAsync ([.. testArgs]);
 				builder.AddMSTest (() => [typeof (Test1).Assembly]);
 				builder.AddTrxReportProvider ();
 				builder.TestHost.AddDataConsumer (_ => consumer);
 
 				using ITestApplication app = await builder.BuildAsync ();
-				await app.RunAsync ();
+				var exitCode = await app.RunAsync ();
 				// UIApplication.Main() keeps the process alive, so exit explicitly
-				Environment.Exit (consumer.Failed > 0 ? 1 : 0);
+				Environment.Exit (exitCode != 0 ? exitCode : consumer.Failed > 0 ? 1 : 0);
 			} catch (Exception ex) {
 				Console.WriteLine ($"Error running tests: {ex}");
 				Environment.Exit (1);

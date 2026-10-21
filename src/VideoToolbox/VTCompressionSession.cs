@@ -325,7 +325,7 @@ namespace VideoToolbox {
 			/* const CMTimeRange** */ IntPtr* target);
 
 		/// <summary>Get the time ranges for the next pass.</summary>
-		/// <param name="timeRanges">Upon return, the time ranges for the next πass.</param>
+		/// <param name="timeRanges">Upon return, the time ranges for the next pass.</param>
 		/// <returns><see cref="VTStatus.Ok" /> if successful, or an error code otherwise.</returns>
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]

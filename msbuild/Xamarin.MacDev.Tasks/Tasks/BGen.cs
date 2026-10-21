@@ -237,7 +237,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var exitCode = ExecuteBGen (args);
 			if (exitCode != 0 && !Log.HasLoggedErrors)
-				Log.LogError (MSBStrings.E7198 /* The binding generator failed for unknown reasons. Please file an issue at https://github.com/dotnet/macios/issues/new/choose. */);
+				Log.LogError (MSBStrings.E7199 /* The binding generator failed for unknown reasons. Please file an issue at https://github.com/dotnet/macios/issues/new/choose. */);
 			return exitCode == 0 && !Log.HasLoggedErrors;
 		}
 

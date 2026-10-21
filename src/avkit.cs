@@ -2,6 +2,8 @@
 // avkit.cs: Definitions for AVKit.cs
 //
 // Copyright 2014-2015 Xamarin Inc
+using System.Collections.Generic;
+
 using CoreGraphics;
 using CoreImage;
 using CoreMedia;
@@ -1701,5 +1703,59 @@ namespace AVKit {
 		AVPlaybackUserInterfaceMediaSelectionControllable,
 		AVPlaybackUserInterfaceVolumeControllable,
 		AVPlaybackUserInterfaceMetadataProviding {
+	}
+
+	[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureDeviceDescriptor {
+		[BindAs (typeof (AVCaptureDeviceType))]
+		[Export ("deviceType")]
+		NSString DeviceType { get; }
+
+		[Export ("mediaTypes", ArgumentSemantic.Copy)]
+		NSSet<NSString> WeakMediaTypes { get; }
+
+		[Wrap ("WeakMediaTypes.ToHashSet (v => AVMediaTypesExtensions.GetValue (v))")]
+		HashSet<AVMediaTypes> MediaTypes { get; }
+
+		[Export ("position")]
+		AVCaptureDevicePosition Position { get; }
+
+		[Export ("uniqueID")]
+		string UniqueId { get; }
+
+		[Export ("localizedName")]
+		string LocalizedName { get; }
+	}
+
+	[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureDeviceDirectionMap {
+		[Export ("forwardFacingDeviceDescriptors", ArgumentSemantic.Copy)]
+		AVCaptureDeviceDescriptor [] ForwardFacingDeviceDescriptors { get; }
+
+		[Export ("backwardFacingDeviceDescriptors", ArgumentSemantic.Copy)]
+		AVCaptureDeviceDescriptor [] BackwardFacingDeviceDescriptors { get; }
+	}
+
+	[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+	delegate void AVCaptureDeviceDirectionCoordinatorChangeHandler (AVCaptureDeviceDirectionMap deviceDirections);
+
+	[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureDeviceDirectionCoordinator {
+		/// <summary>Creates a coordinator that tracks device directions relative to a view.</summary>
+		/// <param name="view">The view used to determine camera direction.</param>
+		/// <param name="deviceTypes">The device types to observe.</param>
+		/// <param name="changeHandler">An optional callback for direction changes, delivered on the main queue.</param>
+		/// <remarks>Create this coordinator on the main thread.</remarks>
+		[Export ("initWithView:deviceTypes:changeHandler:")]
+		NativeHandle Constructor (UIView view, [BindAs (typeof (AVCaptureDeviceType []))] NSString [] deviceTypes, [NullAllowed] AVCaptureDeviceDirectionCoordinatorChangeHandler changeHandler);
+
+		[Export ("deviceDirections")]
+		AVCaptureDeviceDirectionMap DeviceDirections { get; }
 	}
 }

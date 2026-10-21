@@ -1965,177 +1965,280 @@ namespace HomeKit {
 		Configured,
 	}
 
+	/// <summary>Indicates the requested state of a door.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetDoorState : long {
+		/// <summary>The door should be open.</summary>
 		Open = 0,
+		/// <summary>The door should be closed.</summary>
 		Closed = 1,
 	}
 
+	/// <summary>Indicates the current heating or cooling state.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeatingCooling : long {
+		/// <summary>Neither heating nor cooling is active.</summary>
 		Off = 0,
+		/// <summary>Heating is active.</summary>
 		Heat = 1,
+		/// <summary>Cooling is active.</summary>
 		Cool = 2,
 	}
 
+	/// <summary>Indicates the requested state of a lock mechanism.</summary>
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetLockMechanismState : long {
+		/// <summary>The lock mechanism should be unsecured.</summary>
 		Unsecured = 0,
+		/// <summary>The lock mechanism should be secured.</summary>
 		Secured = 1,
 	}
 
+	/// <summary>Identifies the category of a television input source.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputSourceType : long {
+		/// <summary>An input source of another type.</summary>
 		Other = 0,
+		/// <summary>The television's home screen.</summary>
 		HomeScreen = 1,
+		/// <summary>A television tuner input.</summary>
 		Tuner = 2,
+		/// <summary>An HDMI input.</summary>
 		Hdmi = 3,
+		/// <summary>A composite-video input.</summary>
 		CompositeVideo = 4,
+		/// <summary>An S-Video input.</summary>
 		SVideo = 5,
+		/// <summary>A component-video input.</summary>
 		ComponentVideo = 6,
+		/// <summary>A DVI input.</summary>
 		Dvi = 7,
+		/// <summary>An AirPlay input.</summary>
 		AirPlay = 8,
+		/// <summary>A USB input.</summary>
 		Usb = 9,
+		/// <summary>An application input.</summary>
 		Application = 10,
 	}
 
+	/// <summary>Identifies the category of a television input device.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputDeviceType : long {
+		/// <summary>An input device of another type.</summary>
 		Other = 0,
+		/// <summary>A television.</summary>
 		TV = 1,
+		/// <summary>A recording device.</summary>
 		Recording = 2,
+		/// <summary>A tuner.</summary>
 		Tuner = 3,
+		/// <summary>A playback device.</summary>
 		Playback = 4,
+		/// <summary>An audio system.</summary>
 		AudioSystem = 5,
+		/// <summary>No input device.</summary>
 		None = 6,
 	}
 
+	/// <summary>Indicates whether closed captions are enabled.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueClosedCaptions : long {
+		/// <summary>Closed captions are disabled.</summary>
 		Disabled = 0,
+		/// <summary>Closed captions are enabled.</summary>
 		Enabled = 1,
 	}
 
+	/// <summary>Indicates whether the power mode selection is shown.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValuePowerModeSelection : long {
+		/// <summary>Show the power mode selection.</summary>
 		Show = 0,
+		/// <summary>Hide the power mode selection.</summary>
 		Hide = 1,
 	}
 
+	/// <summary>Describes the current playback state of a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentMediaState : long {
+		/// <summary>Media is playing.</summary>
 		Playing = 0,
+		/// <summary>Media playback is paused.</summary>
 		Paused = 1,
+		/// <summary>Media playback is stopped.</summary>
 		Stopped = 2,
+		/// <summary>The media state is unknown.</summary>
 		Unknown = 3,
+		/// <summary>Media is loading.</summary>
 		Loading = 4,
+		/// <summary>Media playback is interrupted.</summary>
 		Interrupted = 5,
 	}
 
+	/// <summary>Identifies a remote-control command for a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueRemoteKey : long {
+		/// <summary>Rewind playback.</summary>
 		Rewind = 0,
+		/// <summary>Fast-forward playback.</summary>
 		FastForward = 1,
+		/// <summary>Skip to the next track.</summary>
 		NextTrack = 2,
+		/// <summary>Skip to the previous track.</summary>
 		PreviousTrack = 3,
+		/// <summary>Move the selection up.</summary>
 		ArrowUp = 4,
+		/// <summary>Move the selection down.</summary>
 		ArrowDown = 5,
+		/// <summary>Move the selection left.</summary>
 		ArrowLeft = 6,
+		/// <summary>Move the selection right.</summary>
 		ArrowRight = 7,
+		/// <summary>Select the current item.</summary>
 		Select = 8,
+		/// <summary>Navigate back.</summary>
 		Back = 9,
+		/// <summary>Exit the current view.</summary>
 		Exit = 10,
+		/// <summary>Toggle between playing and pausing.</summary>
 		PlayPause = 11,
+		/// <summary>Start or resume playback.</summary>
 		Play = 12,
+		/// <summary>Pause playback.</summary>
 		Pause = 13,
+		/// <summary>Open the menu.</summary>
 		Menu = 14,
+		/// <summary>Show information about the current item.</summary>
 		Info = 15,
+		/// <summary>Navigate to the home screen.</summary>
 		Home = 16,
 	}
 
+	/// <summary>Identifies a picture mode preset for a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValuePictureMode : long {
+		/// <summary>The standard picture mode.</summary>
 		Standard = 0,
+		/// <summary>The movie picture mode.</summary>
 		Movie = 1,
+		/// <summary>The sports picture mode.</summary>
 		Sport = 2,
+		/// <summary>The game picture mode.</summary>
 		Game = 3,
+		/// <summary>The photo picture mode.</summary>
 		Photo = 4,
+		/// <summary>The vivid picture mode.</summary>
 		Vivid = 5,
+		/// <summary>The dark picture mode.</summary>
 		Dark = 6,
+		/// <summary>The bright picture mode.</summary>
 		Bright = 7,
+		/// <summary>The computer picture mode.</summary>
 		Computer = 8,
+		/// <summary>The night picture mode.</summary>
 		Night = 9,
+		/// <summary>The calibrated picture mode.</summary>
 		Calibrated = 10,
+		/// <summary>The first custom picture mode.</summary>
 		Custom1 = 11,
+		/// <summary>The second custom picture mode.</summary>
 		Custom2 = 12,
+		/// <summary>The third custom picture mode.</summary>
 		Custom3 = 13,
 	}
 
+	/// <summary>Indicates whether a television input source should be shown.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetVisibilityState : long {
+		/// <summary>Show the input source.</summary>
 		Show = 0,
+		/// <summary>Hide the input source.</summary>
 		Hide = 1,
 	}
 
+	/// <summary>Describes the current visibility state of a television input source.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentVisibilityState : long {
+		/// <summary>The input source is shown.</summary>
 		Shown = 0,
+		/// <summary>The input source is hidden.</summary>
 		Hidden = 1,
+		/// <summary>The input source is shown when its device is connected.</summary>
 		Connected = 2,
+		/// <summary>The input source is always shown and cannot be hidden by changing its target visibility state.</summary>
 		AlwaysShown = 3,
 	}
 
+	/// <summary>Indicates whether the router has deployed its HomeKit configuration.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueRouterStatus : long {
+		/// <summary>The router has deployed its HomeKit configuration.</summary>
 		Ready = 0,
+		/// <summary>The router has not deployed its HomeKit configuration.</summary>
 		NotReady = 1,
 	}
 
+	/// <summary>Describes the connection state of a Wi-Fi satellite.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueWiFiSatelliteStatus : long {
+		/// <summary>The satellite connection state is unknown.</summary>
 		Unknown = 0,
+		/// <summary>The satellite is connected.</summary>
 		Connected = 1,
+		/// <summary>The satellite is not connected.</summary>
 		NotConnected = 2,
 	}
 
+	/// <summary>Specifies how a television's volume control operates.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueVolumeControlType : long {
+		/// <summary>No volume control is available.</summary>
 		None = 0,
+		/// <summary>Volume changes are relative, without a current volume value.</summary>
 		Relative,
+		/// <summary>Volume changes are relative and a current volume value is available.</summary>
 		RelativeWithCurrent,
+		/// <summary>The volume is set to an absolute value.</summary>
 		Absolute,
 	}
 
+	/// <summary>Identifies the direction of a relative volume change.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueVolumeSelector : long {
+		/// <summary>Increase the volume.</summary>
 		VolumeIncrement = 0,
+		/// <summary>Decrease the volume.</summary>
 		VolumeDecrement,
 	}
 
+	/// <summary>Identifies the requested media playback state of a television.</summary>
 	[TV (18, 0), NoMac, iOS (18, 0), MacCatalyst (18, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetMediaState : long {
+		/// <summary>Start or resume media playback.</summary>
 		Play = 0,
+		/// <summary>Pause media playback.</summary>
 		Pause = 1,
+		/// <summary>Stop media playback.</summary>
 		Stop = 2,
 	}
 }
