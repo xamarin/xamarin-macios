@@ -13,6 +13,12 @@ parameters:
   type: string
   default: HEAD
 
+# Compiler fixtures are opt-in because publishing jobs can exceed
+# .NET Framework's 65,535-byte subprocess environment limit.
+- name: runPowerShellBootstrapTests
+  type: boolean
+  default: false
+
 steps:
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -39,7 +45,7 @@ steps:
   displayName: 'Test native PowerShell bootstrap failures'
   workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
   timeoutInMinutes: 5
-  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'), ${{ parameters.runPowerShellBootstrapTests }})
 
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "$Env:IS_PR"
   name: fix_commit
