@@ -34,14 +34,14 @@ using CoreFoundation;
 namespace CoreGraphics {
 
 	// untyped enum -> CGPDFStream.h
-	/// <summary>Enumerates values that indicate the data format of a PDF.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Describes the format of data returned from a PDF stream.</summary>
+	/// <remarks>The format identifies whether the stream data is raw or encoded as JPEG or JPEG 2000.</remarks>
 	public enum CGPDFDataFormat {
-		/// <summary>To be added.</summary>
+		/// <summary>The stream data is in raw format.</summary>
 		Raw,
-		/// <summary>To be added.</summary>
+		/// <summary>The stream data is JPEG encoded.</summary>
 		JPEGEncoded,
-		/// <summary>To be added.</summary>
+		/// <summary>The stream data is JPEG 2000 encoded.</summary>
 		JPEG2000,
 	};
 

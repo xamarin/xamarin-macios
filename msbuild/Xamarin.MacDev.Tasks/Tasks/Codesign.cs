@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 using Parallel = System.Threading.Tasks.Parallel;
 using ParallelOptions = System.Threading.Tasks.ParallelOptions;
@@ -172,11 +173,8 @@ namespace Xamarin.MacDev.Tasks {
 					if (sortedItem is null)
 						continue; // this item does not need to be signed
 					if (sortedItem.ItemSpec.StartsWith (itemPath, StringComparison.OrdinalIgnoreCase)) {
-						if (StampFileNeedsUpdate (sortedItem)) {
-							Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too.", item.ItemSpec, sortedItem.ItemSpec);
-							return true; // there's an item inside this directory that needs to be signed, so this directory must be signed too
-						}
-						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too; however this other item has an up-to-date signature.", item.ItemSpec, sortedItem.ItemSpec);
+						Log.LogMessage (MessageImportance.Low, "The item '{0}' contains '{1}', which must be signed, which means that the item must be signed too.", item.ItemSpec, sortedItem.ItemSpec);
+						return true; // there's an item inside this directory that needs to be signed, so this directory must be signed too
 					}
 				}
 
@@ -380,6 +378,8 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E0005, item.ItemSpec);
 				if (errors.IndexOf ("errSecInternalComponent", StringComparison.Ordinal) >= 0 && System.Threading.Interlocked.CompareExchange (ref loggedInternalComponentHint, 1, 0) == 0)
 					Log.LogError (MSBStrings.E7184 /* Codesign failed with 'errSecInternalComponent'. This usually means the keychain is locked, which is common when building over SSH. Unlock the keychain first, for example by running 'security unlock-keychain ~/Library/Keychains/login.keychain-db'. */);
+				if (errors.IndexOf ("resource fork, Finder information, or similar detritus not allowed", StringComparison.Ordinal) >= 0)
+					Log.LogError (MSBStrings.E7198, item.ItemSpec);
 			} else {
 				var stampFile = GetCodesignStampFile (item);
 				if (string.IsNullOrEmpty (stampFile)) {
@@ -437,6 +437,13 @@ namespace Xamarin.MacDev.Tasks {
 				return dir;
 
 			return dir + Path.DirectorySeparatorChar;
+		}
+
+		static string ComputeFileHash (string path)
+		{
+			using var stream = File.OpenRead (path);
+			using var sha = SHA256.Create ();
+			return Convert.ToBase64String (sha.ComputeHash (stream));
 		}
 
 		public override bool Execute ()
@@ -674,7 +681,11 @@ namespace Xamarin.MacDev.Tasks {
 			{
 				if (arguments is null)
 					TryGetCommandLineArguments (task, out arguments);
-				return string.Join (" ", arguments);
+				var contents = string.Join (" ", arguments);
+				var entitlementsIndex = arguments.IndexOf ("--entitlements");
+				if (entitlementsIndex >= 0 && entitlementsIndex + 1 < arguments.Count)
+					contents += Environment.NewLine + ComputeFileHash (arguments [entitlementsIndex + 1]);
+				return contents;
 			}
 		}
 

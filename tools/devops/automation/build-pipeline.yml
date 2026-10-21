@@ -109,6 +109,7 @@ extends:
       credscan:
         suppressionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/CredScanSuppressions.json'
       policheck:
+        enabled: true
         exclusionsFile: '$(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/governance/PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true  # run both maccore and macios in the same job

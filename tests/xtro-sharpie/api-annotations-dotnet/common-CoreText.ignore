@@ -1,6 +1,4 @@
 !missing-enum! CTFontCollectionCopyOptions not bound
-!missing-enum! CTFontManagerAutoActivationSetting not bound
-!missing-enum! CTLineTruncationType not bound
 !missing-enum! CTRubyAlignment not bound
 !missing-enum! CTRubyOverhang not bound
 !missing-enum! CTRubyPosition not bound

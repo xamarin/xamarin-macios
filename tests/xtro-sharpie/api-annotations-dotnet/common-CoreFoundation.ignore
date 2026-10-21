@@ -102,7 +102,6 @@
 !missing-enum! CFNumberFormatterStyle not bound
 !missing-enum! CFNumberType not bound
 !missing-enum! CFRunLoopActivity not bound
-!missing-enum! CFRunLoopRunResult not bound
 !missing-enum! CFStreamErrorDomain not bound
 !missing-enum! CFStringBuiltInEncodings not bound
 !missing-enum! CFStringCompareFlags not bound

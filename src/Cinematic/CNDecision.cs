@@ -8,7 +8,7 @@ namespace Cinematic {
 	[SupportedOSPlatform ("tvos17.0")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios17.0")]
-	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 	public enum CNDecisionIdentifierType {
 		Single,
 		Group,

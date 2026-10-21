@@ -14,7 +14,7 @@ using CoreFoundation;
 namespace CoreMidi {
 	[SupportedOSPlatform ("ios16.0")]
 	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos16.0")]
+	[UnsupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	public partial class MidiBluetoothDriver {
 		[DllImport (Constants.CoreMidiLibrary)]

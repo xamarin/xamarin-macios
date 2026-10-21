@@ -154,6 +154,21 @@ namespace Xamarin.Tests {
 			return Templates.Where (v => v.TemplateType == TemplateType.Project).ToArray ();
 		}
 
+		public static IEnumerable<TestCaseData> GetProjectTemplateFrameworks ()
+		{
+			foreach (var info in GetProjectTemplates ()) {
+				var configPath = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{info.Platform.AsString ()}.Templates", info.Template, info.Language?.AsString () ?? "", ".template.config", "template.json");
+				using var config = JsonDocument.Parse (File.ReadAllText (configPath));
+				var framework = config.RootElement.GetProperty ("symbols").GetProperty ("Framework");
+				yield return new TestCaseData (info, null, framework.GetProperty ("defaultValue").GetString ());
+				foreach (var choice in framework.GetProperty ("choices").EnumerateArray ()) {
+					var targetFramework = choice.GetProperty ("choice").GetString ();
+					yield return new TestCaseData (info, "--framework", targetFramework);
+					yield return new TestCaseData (info, "-f", targetFramework);
+				}
+			}
+		}
+
 		public class TemplateConfig {
 			public string? Name;
 			public string? ShortName;
@@ -248,6 +263,18 @@ namespace Xamarin.Tests {
 				var appExecutable = GetNativeExecutable (platform, appPath);
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
+		}
+
+		[TestCaseSource (nameof (GetProjectTemplateFrameworks))]
+		public void CreateProjectTemplateWithFramework (TemplateInfo info, string? option, string targetFramework)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
+
+			var language = info.Language ?? TemplateLanguage.CSharp;
+			var outputDir = Path.Combine (Cache.CreateTemporaryDirectory (), info.Template);
+			DotNet.AssertNew (outputDir, info.Template, language: language.AsLanguageIdentifier (), extraArguments: option is null ? [] : [option, targetFramework]);
+			var projectPath = Path.Combine (outputDir, $"{info.Template}.{language.AsFileExtension ()}");
+			Assert.That (File.ReadAllText (projectPath), Does.Contain ($"<TargetFramework>{targetFramework}</TargetFramework>"), "The generated project must target the selected framework.");
 		}
 
 		[Test]

@@ -237,6 +237,7 @@ namespace Accelerate {
 	// vImage_InterpolationMethod (untyped) - Transform.h
 	/// <summary>Enumerates algorithms for image interpolation.</summary>
 	///     <remarks>To be added.</remarks>
+	[NativeName ("vImage_InterpolationMethod")]
 	public enum vImageInterpolationMethod : int {
 		/// <summary>To be added.</summary>
 		None = 0,

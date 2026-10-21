@@ -31,6 +31,7 @@
 #nullable enable
 
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using CoreFoundation;
 
@@ -631,7 +632,7 @@ namespace Security {
 			 * SecPSK12Import does not allow any empty passwords, so let's generate
 			 * a semi-random one here.
 			 */
-			var password = Guid.NewGuid ().ToString ();
+			var password = RandomNumberGenerator.GetHexString (36);
 			var pkcs12 = certificate.Export (X509ContentType.Pfx, password);
 			return Import (pkcs12, password);
 		}
@@ -739,8 +740,8 @@ namespace Security {
 				dic = new NSMutableDictionary (publicAndPrivateKeyAttrs.GetDictionary ()!);
 			else
 				dic = new NSMutableDictionary ();
-			dic.LowlevelSetObject ((NSObject) type.GetConstant ()!, SecAttributeKey.Type);
-			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
+			dic.LowlevelSetObject (type.GetConstant ()!, SecAttributeKey.Type);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
 #endif
 		}
@@ -770,11 +771,11 @@ namespace Security {
 			using (var dic = new NSMutableDictionary ()) {
 				dic.LowlevelSetObject ((NSObject) type.GetConstant ()!, SecAttributeKey.Type);
 				using (var ksib = new NSNumber (keySizeInBits)) {
-					dic.LowlevelSetObject (ksib, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
+					dic.LowlevelSetObject (ksib, SecKeyGenerationAttributeKeys.KeySizeInBitsKey);
 					if (publicKeyAttrs is not null)
-						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PublicKeyAttrsKey.Handle);
+						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PublicKeyAttrsKey);
 					if (privateKeyAttrs is not null)
-						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PrivateKeyAttrsKey.Handle);
+						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PrivateKeyAttrsKey);
 					return GenerateKeyPair (dic, out publicKey, out privateKey);
 				}
 			}
@@ -1175,8 +1176,8 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters is null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject ((NSObject) keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
-				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
+				md.LowlevelSetObject (keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey);
 				return CreateRandomKey (md, out error);
 			}
 		}
@@ -1254,9 +1255,9 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters is null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject ((NSObject) keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
-				md.LowlevelSetObject ((NSObject) keyClass.GetConstant ()!, SecAttributeKey.KeyClass);
-				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
+				md.LowlevelSetObject (keyType.GetConstant ()!, SecKeyGenerationAttributeKeys.KeyTypeKey);
+				md.LowlevelSetObject (keyClass.GetConstant ()!, SecAttributeKey.KeyClass);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey);
 				return Create (keyData, md, out error);
 			}
 		}

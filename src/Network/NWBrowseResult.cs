@@ -62,15 +62,21 @@ namespace Network {
 		unsafe static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, BlockLiteral* enumerator);
 
 		[UnmanagedCallersOnly]
-		static void TrampolineEnumerateInterfacesHandler (IntPtr block, IntPtr inter)
+		static byte TrampolineEnumerateInterfacesHandler (IntPtr block, IntPtr inter)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
 			if (del is not null) {
 				var nwInterface = new NWInterface (inter, owns: false);
 				del (nwInterface);
+				return 1;
 			}
+			return 0;
 		}
 
+		/// <summary>Invokes a handler for each network interface associated with this browse result.</summary>
+		/// <param name="handler">The handler to invoke for each interface.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="handler" /> is <see langword="null" />.</exception>
+		/// <remarks>The handler is invoked synchronously. Enumeration continues through all interfaces before this method returns.</remarks>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
@@ -78,7 +84,7 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
-				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateInterfacesHandler;
+				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineEnumerateInterfacesHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowseResult), nameof (TrampolineEnumerateInterfacesHandler));
 				nw_browse_result_enumerate_interfaces (GetCheckedHandle (), &block);
 			}

@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BundleStructureNonRemotablePlatforms (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -36,7 +36,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BuildAppWithXCFrameworkWithSymlinks (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -271,7 +271,7 @@ namespace Xamarin.Tests {
 		[Category ("RemoteWindows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-x64", "Debug")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "Debug")]
 		public void PluralRuntimeIdentifiersWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var properties = AddRemoteProperties ();
@@ -295,6 +295,41 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
 			DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (15));
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void TrimmerKeepsParameterNamesWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var projectPath = GetProjectPath ("TrimmerMetadata", platform: platform);
+			Clean (projectPath);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = "Debug";
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_CopyLinkerOutputToWindows"] = "true";
+
+			var result = DotNet.AssertBuild (projectPath, properties, timeout: TimeSpan.FromMinutes (15));
+			AssertThatLinkerExecuted (result);
+
+			var assemblyPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers), "linked", "TrimmerMetadataLibrary.dll");
+			Assert.That (assemblyPath, Does.Exist, "Linked library should be copied back to Windows");
+
+			using var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly (assemblyPath);
+			var model = assembly.MainModule.GetType ("TrimmerMetadataLibrary.MetadataModel");
+			if (model is null) {
+				Assert.Fail ("Trimmable model should survive linking");
+				return;
+			}
+
+			var constructor = model.Methods.Single (method => method.IsConstructor && method.Parameters.Count == 2);
+			var withValue = model.Methods.Single (method => method.Name == "WithValue");
+			Assert.That (constructor.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "identifier", "description" }), "Constructor parameter names");
+			Assert.That (withValue.Parameters.Select (parameter => parameter.Name), Is.EqualTo (new [] { "value" }), "Method parameter name");
 		}
 
 		static void AssertWarningsEqual (IList<string> expected, IList<string> actual, string message)
