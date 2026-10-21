@@ -97,8 +97,8 @@ namespace MonoTouchFixtures {
 			differentValues.CopyTo (values, 1);
 			var comparer = EqualityComparer<T>.Default;
 			if (equal is not null) {
-				Assert.That (equal (null, null), Is.True, "null == null");
-				Assert.That (notEqual (null, null), Is.False, "null != null");
+				Assert.That (equal (null, null), Is.True, "null is null");
+				Assert.That (notEqual (null, null), Is.False, "null is not null");
 			}
 			for (var i = 0; i < values.Length; i++) {
 				var value = values [i];
@@ -109,9 +109,9 @@ namespace MonoTouchFixtures {
 				Assert.That (boxed.Equals (copy), Is.True, $"Boxed copy, value {i}");
 				Assert.That (boxed.GetHashCode (), Is.EqualTo (copy.GetHashCode ()), $"Hash code, value {i}");
 				if (equal is not null) {
-					Assert.That (equal (value, null), Is.False, $"value {i} == null");
+					Assert.That (equal (value, null), Is.False, $"value {i} is null");
 					Assert.That (equal (null, value), Is.False, $"null == value {i}");
-					Assert.That (notEqual (value, null), Is.True, $"value {i} != null");
+					Assert.That (notEqual (value, null), Is.True, $"value {i} is not null");
 					Assert.That (notEqual (null, value), Is.True, $"null != value {i}");
 				}
 
