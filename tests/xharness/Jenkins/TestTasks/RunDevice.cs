@@ -126,7 +126,8 @@ namespace Xharness.Jenkins.TestTasks {
 							if (!install_result.Succeeded) {
 								testTask.FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								testTask.ExecutionResult = TestExecutingResult.Failed;
-								if (generateXmlFailures)
+								if (generateXmlFailures) {
+									using var installLogReader = InstallLogReader.Open (InstallLog, mainLog);
 									resultParser.GenerateFailure (
 										testTask.Logs,
 										"install",
@@ -134,8 +135,9 @@ namespace Xharness.Jenkins.TestTasks {
 										testTask.Variation,
 										$"AppInstallation on {testTask.Device.Name}",
 										$"Install failed on {testTask.Device.Name}, exit code: {install_result.ExitCode}",
-										InstallLog.FullPath,
+										installLogReader,
 										xmlResultJargon);
+								}
 							}
 						} finally {
 							InstallLog.Dispose ();

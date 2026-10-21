@@ -9,12 +9,16 @@
 		<PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
 		<PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
+		<PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="$(MicrosoftDotNetXHarnessiOSSharedPackageVersion)" />
 		<PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
 		<PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
 		<PackageReference Include="NUnitXml.TestLogger" Version="$(NUnitXmlTestLoggerPackageVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="..\..\xharness\Jenkins\TestTasks\InstallLogReader.cs">
+			<Link>external\InstallLogReader.cs</Link>
+		</Compile>
 		<Compile Include="..\..\common\Touch.Unit\Touch.Client\Runner\ConsoleTextWriter.cs">
 			<Link>external\ConsoleTextWriter.cs</Link>
 		</Compile>
