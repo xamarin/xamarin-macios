@@ -76,3 +76,7 @@ symbols are provided by `libmonosgen-2.0` instead of a separate library. This
 exception must not apply to NativeAOT: its compiler creates direct native
 references, and its build targets omit the globalization library when
 `InvariantGlobalization` is `true`.
+
+When no native symbols need exporting, the native linker uses `/dev/null` as
+the export list. Remote builds skip transferring empty files, so referencing
+an empty `mtouch-symbols.list` on the Mac would fail.

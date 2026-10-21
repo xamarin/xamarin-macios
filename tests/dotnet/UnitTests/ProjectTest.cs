@@ -3340,6 +3340,33 @@ namespace Xamarin.Tests {
 			AssertWarningMessages (warnings, $"The property '{property}' has no effect when not using the Mono runtime (for instance when using CoreCLR).");
 		}
 
+		[TestCase (false)]
+		[TestCase (true)]
+		public void ExportedSymbolsFile (bool hasExportedSymbols)
+		{
+			var platform = ApplePlatform.iOS;
+			var runtimeIdentifiers = "ios-arm64";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath ("TrimmerMetadata", platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_ExportSymbolsExplicitly"] = "true";
+			if (hasExportedSymbols)
+				properties ["TestReferenceNativeSymbol"] = "xamarin_release_managed_ref";
+
+			var result = DotNet.AssertBuild (project_path, properties);
+			Assert.That (BinLog.TryFindPropertyValue (result.BinLogPath, "_ExportedSymbolsFile", out var exportedSymbolsFile), Is.True, "Exported symbols file property");
+			if (hasExportedSymbols) {
+				Assert.That (exportedSymbolsFile, Does.EndWith ("mtouch-symbols.list"), "Nonempty export list");
+				Assert.That (File.ReadAllLines (Path.Combine (GetObjDir (project_path, platform, runtimeIdentifiers), "mtouch-symbols.list")), Does.Contain ("_xamarin_release_managed_ref"), "Exported symbol");
+			} else {
+				Assert.That (exportedSymbolsFile, Is.EqualTo ("/dev/null"), "Empty export list must not require transferring an empty file to the remote Mac");
+			}
+		}
+
 		[Test]
 		// The trailing semi-colon for single-arch platforms is significant:
 		// it means we'll use "RuntimeIdentifiers" (plural) instead of "RuntimeIdentifier" (singular)
