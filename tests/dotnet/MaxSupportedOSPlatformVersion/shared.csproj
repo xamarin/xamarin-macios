@@ -10,6 +10,8 @@
 <Project>
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
+		<!-- This is a console executable that does not start UIKit. -->
+		<ValidateSceneManifest>false</ValidateSceneManifest>
 
 		<ApplicationTitle>MaxSupportedOSPlatformVersion</ApplicationTitle>
 		<ApplicationId>com.xamarin.maxsupportedosplatformversion</ApplicationId>
