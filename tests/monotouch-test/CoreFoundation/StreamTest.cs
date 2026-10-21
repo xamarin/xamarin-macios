@@ -42,9 +42,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.That (write.Write (source), Is.EqualTo (3), "Array write");
 				Assert.That (read.Read (destination), Is.EqualTo ((nint) 3), "Array read");
 				Assert.That (destination, Is.EqualTo (source), "Array data");
+				Array.Fill (destination, (byte) 99);
 				Assert.That (write.Write (source, 1, 2), Is.EqualTo (2), "Range write");
 				Assert.That (read.Read (destination, 1, 2), Is.EqualTo ((nint) 2), "Range read");
-				Assert.That (destination, Is.EqualTo (new byte [] { 1, 2, 3 }), "Range data");
+				Assert.That (destination, Is.EqualTo (new byte [] { 99, 2, 3 }), "Range data");
 			}
 		}
 

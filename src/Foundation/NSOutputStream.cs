@@ -7,6 +7,7 @@ namespace Foundation {
 		/// <param name="buffer">The source buffer.</param>
 		/// <returns>The number of bytes written, which may be less than the buffer length, or -1 if an error occurs.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <remarks>An empty buffer is passed to the native write method with a length of zero, which may change the stream's state.</remarks>
 		public nint Write (byte [] buffer)
 		{
 			if (buffer is null)
@@ -22,6 +23,7 @@ namespace Foundation {
 		/// <returns>The number of bytes written, which may be less than <paramref name="len" />, or -1 if an error occurs.</returns>
 		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
 		/// <exception cref="ArgumentException"><paramref name="len" /> exceeds the buffer length.</exception>
+		/// <remarks>A length of zero is passed to the native write method and may change the stream's state.</remarks>
 		public nint Write (byte [] buffer, nuint len)
 		{
 			if (buffer is null)
@@ -41,6 +43,7 @@ namespace Foundation {
 		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
 		/// <exception cref="ArgumentException">The requested range extends beyond <paramref name="buffer" />.</exception>
 		/// <exception cref="IndexOutOfRangeException"><paramref name="offset" /> is negative, or equals the buffer length and <paramref name="len" /> is zero.</exception>
+		/// <remarks>A length of zero is passed to the native write method and may change the stream's state.</remarks>
 		public unsafe nint Write (byte [] buffer, int offset, nuint len)
 		{
 			if (buffer is null)
@@ -60,7 +63,7 @@ namespace Foundation {
 		/// <summary>Writes bytes from the provided span to the stream.</summary>
 		/// <param name="buffer">The source bytes.</param>
 		/// <returns>The number of bytes written, which may be less than the span length, or -1 if an error occurs.</returns>
-		/// <remarks>The buffer is pinned only during the call. An empty span is passed to the native write method with a length of zero.</remarks>
+		/// <remarks>The buffer is pinned only during the call. An empty span is passed to the native write method with a length of zero, which may change the stream's state.</remarks>
 		public unsafe nint Write (ReadOnlySpan<byte> buffer)
 		{
 			byte empty = 0;

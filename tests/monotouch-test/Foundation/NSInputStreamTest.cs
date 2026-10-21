@@ -85,75 +85,75 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.That (arr [3], Is.EqualTo (1), "#c[3]");
 				}
 			}
+		}
 
-			[Test]
-			public void ReadSpan ()
+		[Test]
+		public void ReadSpan ()
+		{
+			using var data = NSData.FromArray (new byte [] { 1, 2, 3 });
+			using var stream = new NSInputStream (data);
+			stream.Open ();
+			Span<byte> buffer = stackalloc byte [] { 99, 99, 99, 99, 99, 99 };
+			Assert.That (stream.Read (Span<byte>.Empty), Is.EqualTo ((nint) 0), "Empty");
+			Assert.That (stream.Read (buffer.Slice (1, 4)), Is.EqualTo ((nint) 3), "Partial read");
+			Assert.That (buffer.ToArray (), Is.EqualTo (new byte [] { 99, 1, 2, 3, 99, 99 }), "Destination bounds");
+			Assert.That (stream.Read (buffer), Is.EqualTo ((nint) 0), "EOF");
+			Assert.That (buffer.ToArray (), Is.EqualTo (new byte [] { 99, 1, 2, 3, 99, 99 }), "EOF destination");
+		}
+
+		class ReadOverrideStream : NSInputStream {
+			public nuint LastLength { get; private set; }
+
+			public override nint Read (IntPtr buffer, nuint len)
 			{
-				using var data = NSData.FromArray (new byte [] { 1, 2, 3 });
-				using var stream = new NSInputStream (data);
-				stream.Open ();
-				Span<byte> buffer = stackalloc byte [] { 99, 99, 99, 99, 99, 99 };
-				Assert.That (stream.Read (Span<byte>.Empty), Is.EqualTo ((nint) 0), "Empty");
-				Assert.That (stream.Read (buffer.Slice (1, 4)), Is.EqualTo ((nint) 3), "Partial read");
-				Assert.That (buffer.ToArray (), Is.EqualTo (new byte [] { 99, 1, 2, 3, 99, 99 }), "Destination bounds");
-				Assert.That (stream.Read (buffer), Is.EqualTo ((nint) 0), "EOF");
-				Assert.That (buffer.ToArray (), Is.EqualTo (new byte [] { 99, 1, 2, 3, 99, 99 }), "EOF destination");
+				Assert.That (buffer, Is.Not.EqualTo (IntPtr.Zero), "Nonzero buffer");
+				LastLength = len;
+				if (len == 0)
+					return 0;
+				Marshal.WriteByte (buffer, 42);
+				return 1;
 			}
+		}
 
-			class ReadOverrideStream : NSInputStream {
-				public nuint LastLength { get; private set; }
+		[Test]
+		public void ReadSpanSubclass ()
+		{
+			using var stream = new ReadOverrideStream ();
+			Span<byte> buffer = stackalloc byte [2];
+			Assert.That (stream.Read (buffer), Is.EqualTo ((nint) 1), "Override result");
+			Assert.That (stream.LastLength, Is.EqualTo ((nuint) 2), "Override length");
+			Assert.That (buffer [0], Is.EqualTo (42), "Override data");
+			Assert.That (stream.Read (Span<byte>.Empty), Is.EqualTo ((nint) 0), "Empty override");
+			Assert.That (stream.LastLength, Is.EqualTo ((nuint) 0), "Empty override length");
+		}
 
-				public override nint Read (IntPtr buffer, nuint len)
-				{
-					Assert.That (buffer, Is.Not.EqualTo (IntPtr.Zero), "Nonzero buffer");
-					LastLength = len;
-					if (len == 0)
-						return 0;
-					Marshal.WriteByte (buffer, 42);
-					return 1;
-				}
-			}
+		[Test]
+		public void ReadValidation ()
+		{
+			using var data = NSData.FromArray (new byte [] { 1, 2, 3 });
+			using var stream = new NSInputStream (data);
+			var buffer = new byte [3];
+			Assert.Throws<ArgumentNullException> (() => stream.Read (null, 1), "Null");
+			Assert.Throws<ArgumentNullException> (() => stream.Read (null, 0, 1), "Null range");
+			Assert.Throws<ArgumentNullException> (() => stream.Read (IntPtr.Zero, 0), "Null pointer");
+			Assert.Throws<ArgumentException> (() => stream.Read (buffer, 4), "Length");
+			Assert.Throws<ArgumentException> (() => stream.Read (buffer, nuint.MaxValue), "Length overflow");
+			Assert.Throws<ArgumentException> (() => stream.Read (buffer, 1, 3), "Range");
+			Assert.Throws<ArgumentException> (() => stream.Read (buffer, 1, nuint.MaxValue), "Range overflow");
+			Assert.Throws<ArgumentException> (() => stream.Read (buffer, buffer.Length + 1, 0), "Offset past end");
+			Assert.Throws<IndexOutOfRangeException> (() => stream.Read (buffer, -1, 1), "Negative offset");
+			Assert.Throws<IndexOutOfRangeException> (() => stream.Read (buffer, buffer.Length, 0), "Legacy end offset");
+		}
 
-			[Test]
-			public void ReadSpanSubclass ()
-			{
-				using var stream = new ReadOverrideStream ();
-				Span<byte> buffer = stackalloc byte [2];
-				Assert.That (stream.Read (buffer), Is.EqualTo ((nint) 1), "Override result");
-				Assert.That (stream.LastLength, Is.EqualTo ((nuint) 2), "Override length");
-				Assert.That (buffer [0], Is.EqualTo (42), "Override data");
-				Assert.That (stream.Read (Span<byte>.Empty), Is.EqualTo ((nint) 0), "Empty override");
-				Assert.That (stream.LastLength, Is.EqualTo ((nuint) 0), "Empty override length");
-			}
-
-			[Test]
-			public void ReadValidation ()
-			{
-				using var data = NSData.FromArray (new byte [] { 1, 2, 3 });
-				using var stream = new NSInputStream (data);
-				var buffer = new byte [3];
-				Assert.Throws<ArgumentNullException> (() => stream.Read (null, 1), "Null");
-				Assert.Throws<ArgumentNullException> (() => stream.Read (null, 0, 1), "Null range");
-				Assert.Throws<ArgumentNullException> (() => stream.Read (IntPtr.Zero, 0), "Null pointer");
-				Assert.Throws<ArgumentException> (() => stream.Read (buffer, 4), "Length");
-				Assert.Throws<ArgumentException> (() => stream.Read (buffer, nuint.MaxValue), "Length overflow");
-				Assert.Throws<ArgumentException> (() => stream.Read (buffer, 1, 3), "Range");
-				Assert.Throws<ArgumentException> (() => stream.Read (buffer, 1, nuint.MaxValue), "Range overflow");
-				Assert.Throws<ArgumentException> (() => stream.Read (buffer, buffer.Length + 1, 0), "Offset past end");
-				Assert.Throws<IndexOutOfRangeException> (() => stream.Read (buffer, -1, 1), "Negative offset");
-				Assert.Throws<IndexOutOfRangeException> (() => stream.Read (buffer, buffer.Length, 0), "Legacy end offset");
-			}
-
-			[Test]
-			public void ReadSpanError ()
-			{
-				using var data = NSData.FromArray (new byte [] { 1 });
-				using var stream = new NSInputStream (data);
-				stream.Open ();
-				stream.Close ();
-				Span<byte> buffer = stackalloc byte [1];
-				Assert.That (stream.Read (buffer), Is.EqualTo ((nint) (-1)), "Closed stream");
-			}
+		[Test]
+		public void ReadSpanError ()
+		{
+			using var data = NSData.FromArray (new byte [] { 1 });
+			using var stream = new NSInputStream (data);
+			stream.Open ();
+			stream.Close ();
+			Span<byte> buffer = stackalloc byte [1];
+			Assert.That (stream.Read (buffer), Is.EqualTo ((nint) (-1)), "Closed stream");
 		}
 	}
 }
