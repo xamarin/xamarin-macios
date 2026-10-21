@@ -265,6 +265,38 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "static")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "dylib")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", "static")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", "dylib")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "static")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64", "dylib")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "static")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "dylib")]
+		public void CoreCLRNativeLinkerWarnings (ApplePlatform platform, string runtimeIdentifier, string linkMode)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
+
+			var outputDir = Path.Combine (Cache.CreateTemporaryDirectory (), "NativeLinkerWarnings");
+			var template = platform.AsString ().ToLowerInvariant ();
+			DotNet.AssertNew (outputDir, template);
+			var project = Path.Combine (outputDir, "NativeLinkerWarnings.csproj");
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["UseMonoRuntime"] = "false";
+			properties ["_UseClassicLinker"] = "false";
+			properties ["_LibXamarinLinkMode"] = linkMode;
+			properties ["_LibMonoLinkMode"] = linkMode;
+			properties ["SelfContained"] = "true";
+			var result = DotNet.AssertBuild (project, properties);
+
+			Assert.That (BinLog.GetAllTargets (result.BinLogPath), Has.Some.Matches<TargetExecutionResult> (v => v.TargetName == "_LinkNativeExecutable" && !v.Skipped), "Native linker ran");
+			var warnings = BinLog.PrintToLines (result.BinLogPath)
+				.Where (v => v.Contains ("ignoring duplicate libraries", StringComparison.Ordinal) || v.Contains ("mixed ObjC ABI", StringComparison.Ordinal))
+				.ToArray ();
+			Assert.That (warnings, Is.Empty, "Native linker warnings");
+		}
+
 		[TestCaseSource (nameof (GetProjectTemplateFrameworks))]
 		public void CreateProjectTemplateWithFramework (TemplateInfo info, string? option, string targetFramework)
 		{

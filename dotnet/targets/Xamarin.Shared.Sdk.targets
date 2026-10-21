@@ -2511,7 +2511,7 @@
 			<!-- Mono requires zlib, iconv, icucore, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
-			<_MainLinkerFlags Include="-lcompression" />
+			<_MainLinkerFlags Include="-lcompression" Exclude="@(_AssemblyLinkerFlags)" />
 			<_MainLinkerFlags Include="-licucore" />
 
 			<!-- In some cases ld may crash if -lobjc isn't passed -->
