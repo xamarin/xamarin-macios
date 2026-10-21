@@ -43,6 +43,18 @@ namespace Xharness.Jenkins.Reports {
 		string GetLinkFullPath (string path)
 			=> linksPrefix is not null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
 
+		string GetLogLink (string path, string? description, string mimeType, string? target = null, string? style = null)
+		{
+			var styleAttribute = style is null ? "" : $" style='{style}'";
+			if (File.Exists (path) && new FileInfo (path).Length == 0) {
+				var text = $"{description} (empty file)";
+				return style is null ? text : $"<span{styleAttribute}>{text}</span>";
+			}
+
+			var targetAttribute = target is null ? "" : $" target='{target}'";
+			return $"<a href='{GetLinkFullPath (path.Substring (jenkins.LogDirectory.Length + 1))}' type='{mimeType}'{targetAttribute}{styleAttribute}>{description}</a>";
+		}
+
 		string GetResourcePath (string resource)
 		{
 			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location)!;
@@ -120,8 +132,10 @@ namespace Xharness.Jenkins.Reports {
 			writer.WriteLine ("<h1>Test results</h1>");
 
 			writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
-			foreach (var log in jenkins.Logs)
-				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description);
+			foreach (var log in jenkins.Logs) {
+				log.Flush ();
+				writer.WriteLine ("{0}<br />", GetLogLink (log.FullPath, log.Description, "text/plain;charset=UTF-8"));
+			}
 			writer.WriteLine ("</span>");
 
 			var headerColor = "currentcolor";
@@ -455,14 +469,14 @@ namespace Xharness.Jenkins.Reports {
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									var binlog = fileLog.FullPath.Replace (".txt", ".binlog");
 									if (File.Exists (binlog)) {
-										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
-										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", GetLinkFullPath (binlog.Substring (jenkins.LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
-										writer.Write ("{0} {1}", textLink, binLink);
+										var textLink = GetLogLink (fileLog.FullPath, log.Description, log_type, log_target);
+										var binLink = GetLogLink (binlog, "Binlog download", log_type, log_target, test.Building ? "display:none" : "display:inline");
+										writer.WriteLine ("{0} {1}<br />", textLink, binLink);
 									} else {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										writer.WriteLine ("{0}<br />", GetLogLink (fileLog.FullPath, log.Description, log_type, log_target));
 									}
 								} else {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("{0}<br />", GetLogLink (fileLog.FullPath, log.Description, log_type, log_target));
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
