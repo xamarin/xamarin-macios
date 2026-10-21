@@ -169,13 +169,29 @@
     <MacDeveloperSign Include="native\*.dylib" />
     <MacDeveloperSign Include="libclang.dylib" />
     <MacDeveloperSign Include="libClangSharp.dylib" />
-    <!-- Sign Mach-O executables. They don't have a file extension, so use (part of) the path to not match other files with the same name: tools\bin\mlaunch is a shell script, and Sharpie.Bind.Tool.dSYM contains a debug symbols file (not an executable). -->
-    <!-- Sharpie.Bind.Tool is a NativeAOT executable, which doesn't need any entitlements with the hardened runtime. The hardened runtime enables library validation: the dylibs it loads must be signed by the same team, which they are (see the dylib entries above). -->
+    <!--
+      Sign Mach-O executables. They don't have a file extension, so use (part of) the path to not match other files
+      with the same name: the debug symbols in Sharpie.Bind.Tool.dSYM have the same name as the executable, but can't
+      be signed.
+    -->
+    <!--
+      Sharpie.Bind.Tool is a NativeAOT executable, which doesn't need any entitlements with the hardened runtime. The
+      hardened runtime enables library validation: the dylibs it loads must be signed by the same team, which they are
+      (see the dylib entries above).
+    -->
     <MacDeveloperSignHarden Include="osx-arm64\Sharpie.Bind.Tool" />
-    <!-- The same goes for mlaunch (12.x), but it's an app bundle: sign the bundle as a unit (see SignList.targets). That signs the main executable and the dylibs in the bundle too, so those don't have to be signed separately. The template requires all dylibs to be mapped though, so skip the ones in the bundle. -->
+    <!--
+      The same goes for mlaunch (12.x), but it's an app bundle: sign the bundle as a unit (see SignList.targets). That
+      signs the main executable and the dylibs in the bundle too, so those don't have to be signed separately. The
+      template requires all dylibs to be mapped though, so skip the ones in the bundle.
+    -->
     <MacDeveloperSignHardenBundle Include="mlaunch.app" />
     <Skip Include="mlaunch.app\Contents\MonoBundle\*.dylib" />
-    <!-- The apphost in Build.zip (Microsoft.iOS.Windows.Sdk), which SignList.targets extracts into a 'Build' directory. It hosts CoreCLR, which needs the com.apple.security.cs.allow-jit entitlement when using the hardened runtime. MacDeveloperSignHarden doesn't add any entitlements, so it can't use it. -->
+    <!--
+      The apphost in Build.zip (Microsoft.iOS.Windows.Sdk), which SignList.targets extracts into a 'Build' directory.
+      It hosts CoreCLR, which needs the com.apple.security.cs.allow-jit entitlement when using the hardened runtime.
+      MacDeveloperSignHarden doesn't add any entitlements, so it can't use it.
+    -->
     <MacDeveloperSign Include="Build\Build" />
   </ItemGroup>
 
