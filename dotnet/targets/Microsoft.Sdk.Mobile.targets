@@ -185,12 +185,14 @@
 			<!-- macOS protects launched iOS app bundles against in-place updates, so use a fresh wrapper for each launch. -->
 			<_IPadAppOnMacLaunchDirectory>$(IntermediateOutputPath)ipad-on-mac/$([System.Guid]::NewGuid())/</_IPadAppOnMacLaunchDirectory>
 			<_IPadAppOnMacBundle>$(_IPadAppOnMacLaunchDirectory)$(_AppBundleName).app</_IPadAppOnMacBundle>
+			<_IPadAppOnMacSymlinkSource>Wrapper/$(_AppBundleName).app</_IPadAppOnMacSymlinkSource>
+			<_IPadAppOnMacSymlinkDestination>$(_IPadAppOnMacBundle)/WrappedBundle</_IPadAppOnMacSymlinkDestination>
 		</PropertyGroup>
 		<MakeDir Directories="$(_IPadAppOnMacBundle)/Wrapper" />
 		<Ditto Source="$(_AppBundlePath)" Destination="$(_IPadAppOnMacBundle)/Wrapper/$(_AppBundleName).app">
 			<Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
 		</Ditto>
-		<Exec Command="/bin/ln -s &quot;Wrapper/$(_AppBundleName).app&quot; &quot;$(_IPadAppOnMacBundle)/WrappedBundle&quot;" />
+		<Exec Command="/bin/ln -s '$(_IPadAppOnMacSymlinkSource.Replace(`'`, `'\''`))' '$(_IPadAppOnMacSymlinkDestination.Replace(`'`, `'\''`))'" />
 		<ItemGroup>
 			<FileWrites Include="$(_IPadAppOnMacBundle)/WrappedBundle" />
 		</ItemGroup>
@@ -211,22 +213,26 @@
 			<StandardOutputPath Condition="'$(StandardOutputPath)' == '' And Exists('$(_IPadAppOnMacTtyPath)')">$(_IPadAppOnMacTtyPath)</StandardOutputPath>
 			<StandardErrorPath Condition="'$(StandardErrorPath)' == '' And Exists('$(_IPadAppOnMacTtyPath)')">$(_IPadAppOnMacTtyPath)</StandardErrorPath>
 		</PropertyGroup>
+		<ItemGroup>
+			<_IPadAppOnMacOpenArgument Include="-n" Argument="-n" />
+			<_IPadAppOnMacOpenArgument Include="-W" Argument="-W" Condition="'$(WaitForExit)' != 'false'" />
+			<_IPadAppOnMacOpenArgument Include="--stdout" Argument="--stdout" Condition="'$(StandardOutputPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="stdout" Argument="$(StandardOutputPath)" Condition="'$(StandardOutputPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="--stderr" Argument="--stderr" Condition="'$(StandardErrorPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="stderr" Argument="$(StandardErrorPath)" Condition="'$(StandardErrorPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="--stdin" Argument="--stdin" Condition="'$(StandardInputPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="stdin" Argument="$(StandardInputPath)" Condition="'$(StandardInputPath)' != ''" />
+			<_IPadAppOnMacOpenArgument Include="@(RuntimeEnvironmentVariable)" Argument="--env=%(RuntimeEnvironmentVariable.Identity)=%(RuntimeEnvironmentVariable.Value)" />
+			<_IPadAppOnMacOpenArgument Include="bundle" Argument="$(_IPadAppOnMacBundle)" />
+		</ItemGroup>
 		<PropertyGroup>
-			<_IPadAppOnMacOpenArguments>-n</_IPadAppOnMacOpenArguments>
-			<_IPadAppOnMacOpenArguments Condition="'$(WaitForExit)' != 'false'">$(_IPadAppOnMacOpenArguments) -W</_IPadAppOnMacOpenArguments>
-			<_IPadAppOnMacOpenArguments Condition="'$(StandardOutputPath)' != ''">$(_IPadAppOnMacOpenArguments) --stdout &quot;$(StandardOutputPath)&quot;</_IPadAppOnMacOpenArguments>
-			<_IPadAppOnMacOpenArguments Condition="'$(StandardErrorPath)' != ''">$(_IPadAppOnMacOpenArguments) --stderr &quot;$(StandardErrorPath)&quot;</_IPadAppOnMacOpenArguments>
-			<_IPadAppOnMacOpenArguments Condition="'$(StandardInputPath)' != ''">$(_IPadAppOnMacOpenArguments) --stdin &quot;$(StandardInputPath)&quot;</_IPadAppOnMacOpenArguments>
-			<_IPadAppOnMacOpenArguments>$(_IPadAppOnMacOpenArguments) @(RuntimeEnvironmentVariable->'--env "%(Identity)=%(Value)"', ' ')</_IPadAppOnMacOpenArguments>
 			<RunCommand>/bin/sh</RunCommand>
 			<RunArguments>"$(_IPadAppOnMacLaunchDirectory)launch.sh"</RunArguments>
 			<RunWorkingDirectory>$(MSBuildProjectDirectory)</RunWorkingDirectory>
 		</PropertyGroup>
-		<!-- iOS runtimes only pass app-arg options through to managed Main. -->
-		<WriteLinesToFile
-			File="$(_IPadAppOnMacLaunchDirectory)launch.sh"
-			Lines="for arg do&#xA;shift&#xA;set -- &quot;$@&quot; &quot;--app-arg=$arg&quot;&#xA;done&#xA;exec /usr/bin/open $(_IPadAppOnMacOpenArguments) &quot;$(_IPadAppOnMacBundle)&quot; --args &quot;$@&quot;"
-			Overwrite="true"
+		<WriteIPadAppOnMacLauncher
+			OutputFile="$(_IPadAppOnMacLaunchDirectory)launch.sh"
+			Arguments="@(_IPadAppOnMacOpenArgument)"
 		/>
 		<ItemGroup>
 			<FileWrites Include="$(_IPadAppOnMacLaunchDirectory)launch.sh" />

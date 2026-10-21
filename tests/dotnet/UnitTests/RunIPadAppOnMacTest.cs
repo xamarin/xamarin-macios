@@ -3,10 +3,14 @@
 
 using System.Runtime.InteropServices;
 
+using Xamarin.Utils;
+
 namespace Xamarin.Tests;
 
 [TestFixture]
 public class RunIPadAppOnMacTest {
+	const string specialEnvironmentValue = """literal $HOME $(echo expanded) `echo expanded` "quotes" 'apostrophes' \backslash;second""";
+	const string standardOutputFileName = """stdout $HOME `echo expanded` "quotes" 'apostrophes'.txt""";
 	[SetUp]
 	public void SetUp ()
 	{
@@ -39,11 +43,12 @@ public class RunIPadAppOnMacTest {
 					<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
 					<OutputType>Exe</OutputType>
 					<RuntimeIdentifier>{{runtimeIdentifier}}</RuntimeIdentifier>
-					<StandardOutputPath>$(MSBuildProjectDirectory)/stdout.txt</StandardOutputPath>
+					<StandardOutputPath>$(MSBuildProjectDirectory)/{{System.Security.SecurityElement.Escape (standardOutputFileName.Replace ("$", "%24"))}}</StandardOutputPath>
 					<StandardErrorPath>$(MSBuildProjectDirectory)/stderr.txt</StandardErrorPath>
 				</PropertyGroup>
 				<ItemGroup>
 					<RuntimeEnvironmentVariable Include="IPAD_TEST_VARIABLE" Value="value with spaces" />
+					<RuntimeEnvironmentVariable Include="IPAD_SPECIAL_VARIABLE" Value="{{System.Security.SecurityElement.Escape (specialEnvironmentValue.Replace (";", "%3B").Replace ("$", "%24"))}}" />
 				</ItemGroup>
 				<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 				<Target Name="SetFixtureBundlePaths" AfterTargets="_GenerateBundleName">
@@ -133,11 +138,20 @@ public class RunIPadAppOnMacTest {
 		Assert.That (File.ReadAllLines (Path.Combine (directory, "wrapper-files.txt")), Does.Contain (launcher), "launcher FileWrites");
 		var script = File.ReadAllText (launcher);
 		Assert.That (script, Does.Contain ("\"--app-arg=$arg\""), "forward managed application arguments");
-		Assert.That (script, Does.Contain ("exec /usr/bin/open -n -W"), "wait for exit by default");
-		Assert.That (script, Does.Contain ($"--stdout \"{directory}/stdout.txt\""), "stdout override");
-		Assert.That (script, Does.Contain ($"--stderr \"{directory}/stderr.txt\""), "stderr override");
-		Assert.That (script, Does.Contain ($"--stdin \"{directory}/input.txt\""), "stdin override");
-		Assert.That (script, Does.Contain ("--env \"IPAD_TEST_VARIABLE=value with spaces\""), "runtime environment");
+		Assert.That (script, Does.Contain ("exec /usr/bin/open '-n' '-W'"), "wait for exit by default");
+		Assert.That (script, Does.Contain ($"'--stderr' '{directory}/stderr.txt'"), "stderr override");
+		Assert.That (script, Does.Contain ($"'--stdin' '{directory}/input.txt'"), "stdin override");
+		Assert.That (script, Does.Contain ("'--env=IPAD_TEST_VARIABLE=value with spaces'"), "runtime environment");
+
+		var argumentProbe = Path.Combine (directory, "arguments.sh");
+		File.WriteAllText (argumentProbe, script.Replace ("exec /usr/bin/open", "exec /usr/bin/printf '%s\\n'"));
+		var result = Execution.RunAsync ("/bin/sh", [argumentProbe, "argument with spaces", "$literal;argument"], null, Console.Out, workingDirectory: directory).Result;
+		Assert.That (result.ExitCode, Is.EqualTo (0), "generated script");
+		var argumentsPassed = result.Output.StandardOutput.Split ('\n');
+		Assert.That (argumentsPassed, Does.Contain (Path.Combine (directory, standardOutputFileName)), "shell metacharacters in stream paths");
+		Assert.That (argumentsPassed, Does.Contain ($"--env=IPAD_SPECIAL_VARIABLE={specialEnvironmentValue}"), "shell metacharacters must be preserved literally");
+		Assert.That (argumentsPassed, Does.Contain ("--app-arg=argument with spaces"), "spaces in application arguments");
+		Assert.That (argumentsPassed, Does.Contain ("--app-arg=$literal;argument"), "literal application arguments");
 	}
 
 	[Test]
