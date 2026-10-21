@@ -1,4 +1,5 @@
 #nullable enable
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
@@ -500,13 +501,38 @@ namespace Xamarin.Tests {
 
 			DeleteSavedState (executable, false);
 			try {
-				var rv = Execution.RunAsync (executable, Array.Empty<string> (), environment: env, timeout: TimeSpan.FromSeconds (30)).Result;
+				var rv = new Execution {
+					FileName = executable,
+					Arguments = [],
+					Environment = env,
+					Timeout = TimeSpan.FromSeconds (30),
+					Log = TestContext.Out,
+					TimeoutCallback = process => CollectTimeoutDiagnostics (process, TestContext.Out),
+				}.RunAsync ().Result;
 				output = rv.Output.MergedOutput;
 				return rv;
 			} finally {
 				// Remove the override so it doesn't affect a later test using the same bundle identifier.
 				DeleteSavedState (executable, true);
 			}
+		}
+
+		internal static void CollectTimeoutDiagnostics (Process process, TextWriter log)
+		{
+			if (!RuntimeInformation.IsOSPlatform (OSPlatform.OSX))
+				return;
+
+			var pid = process.Id.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			log.WriteLine ($"Collecting timeout diagnostics for '{process.StartInfo.FileName}' (PID: {pid}) on {RuntimeInformation.OSDescription} (OS architecture: {RuntimeInformation.OSArchitecture}, test process architecture: {RuntimeInformation.ProcessArchitecture}).");
+
+			var ps = Execution.RunAsync ("/bin/ps", ["-p", pid, "-o", "pid,ppid,state,%cpu,%mem,etime,time,command"], log: log, timeout: TimeSpan.FromSeconds (5)).Result;
+			log.WriteLine (ps.Output.MergedOutput);
+			log.WriteLine ($"ps exited with code {ps.ExitCode} (timed out: {ps.TimedOut}).");
+
+			// Capture stacks before the timeout kill destroys the evidence. Keep sampling bounded too.
+			var sample = Execution.RunAsync ("/usr/bin/sample", [pid, "5", "1", "-mayDie", "-file", "/dev/stdout"], log: log, timeout: TimeSpan.FromSeconds (15)).Result;
+			log.WriteLine (sample.Output.MergedOutput);
+			log.WriteLine ($"sample exited with code {sample.ExitCode} (timed out: {sample.TimedOut}).");
 		}
 
 		// Delete the saved application state for the app being launched, to prevent

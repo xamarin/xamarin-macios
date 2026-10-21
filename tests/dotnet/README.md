@@ -1,5 +1,14 @@
 # .net tests
 
+## Timed-out test applications
+
+Applications launched by the unit tests' shared execution helper have a 30-second
+timeout. On macOS, before killing a timed-out application, the helper records the
+OS and architecture, process status, and a five-second `/usr/bin/sample` thread
+sample in the test output. These diagnostics are included in CI's NUnit results
+and HTML report. Diagnostic commands have separate timeouts; collecting them does
+not retry the application or turn the timeout into a passing test.
+
 ## size-comparison
 
 To install the latest `appcompare` tool do:
