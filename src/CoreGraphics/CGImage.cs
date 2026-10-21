@@ -53,23 +53,23 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Options that control which windows are returned by a window-list operation.</summary>
+	/// <remarks>Combine <see cref="CGWindowListOption.IncludingWindow"/> with an above- or below-window option to include the relative window in the list.</remarks>
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[Flags]
 	public enum CGWindowListOption : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Lists all windows in the current user session, including on-screen and off-screen windows.</summary>
 		All = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows in front-to-back order.</summary>
 		OnScreenOnly = (1 << 0),
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows above the relative window in front-to-back order.</summary>
 		OnScreenAboveWindow = (1 << 1),
-		/// <summary>To be added.</summary>
+		/// <summary>Lists on-screen windows below the relative window in front-to-back order.</summary>
 		OnScreenBelowWindow = (1 << 2),
-		/// <summary>To be added.</summary>
+		/// <summary>Includes the relative window in an above- or below-window list.</summary>
 		IncludingWindow = (1 << 3),
-		/// <summary>To be added.</summary>
+		/// <summary>Excludes windows that are elements of the desktop.</summary>
 		ExcludeDesktopElements = (1 << 4),
 	}
 #endif
@@ -106,20 +106,20 @@ namespace CoreGraphics {
 		Only,
 	}
 
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Pixel-format bits that describe an image's packed RGB representation.</summary>
+	/// <remarks>Combine these values with alpha, component, and byte-order information to describe image pixels.</remarks>
 	public enum CGImagePixelFormatInfo : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default packed pixel format.</summary>
 		Packed = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit RGB pixels with 5 bits per color component and an alpha component.</summary>
 		Rgb555 = 1 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit RGB pixels with 5 bits for red, 6 bits for green, and 5 bits for blue, without alpha.</summary>
 		Rgb565 = 2 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit RGB pixels with 10 bits per color component and an alpha component.</summary>
 		Rgb101010 = 3 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit little-endian RGB pixels with 10 bits per component; the two most significant bits must be set.</summary>
 		RgbCif10 = 4 << 16,
-		/// <summary>To be added.</summary>
+		/// <summary>Mask for the pixel-format information bits.</summary>
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -132,76 +132,66 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t -> CGImage.h
-	/// <summary>Bitmap encoding.</summary>
-	///     <remarks>
-	///       <para>
-	/// This enumeration specifies the layout information for the component data in a bitmap.
-	/// </para>
-	///       <para>
-	/// Quartz supports a number of color models: red, green and blue (RGB), cyan, magenta, yellow and key black (CMYK) and grayscale.    Additionally, it is possible to specify an alpha channel that determines the transparency of the color when compositing an image with another one.
-	/// </para>
-	///       <para>
-	/// This enumeration determines the in-memory organization of the data and includes the color model, whether there is an alpha channel present and whether the component values have been premultiplied.
-	/// </para>
-	///       <para>
-	/// Pre-multiplication means that the values for red, green and blue have already been multiplied by the alpha value.   This helps speed up rendering as it avoids three multiplications per pixel at render time.
-	/// </para>
-	///     </remarks>
+	/// <summary>Specifies bitmap alpha, component, and byte-order information.</summary>
+	/// <remarks>
+	///   <para>Combine these values with a color space and pixel format to describe the bitmap's pixel layout.</para>
+	///   <para>When alpha is present, a premultiplied value stores each color component multiplied by alpha.</para>
+	/// </remarks>
 	[Flags]
 	public enum CGBitmapFlags : uint {
-		/// <summary>Used for CMYK processing, 32-bits per pixel, 8-bits per channel (CMYK). </summary>
+		/// <summary>The bitmap has no alpha channel.</summary>
 		None,
-		/// <summary>Premultipled values for RGB, alpha comes last, 32-bit per pixel, 8-bits per channel (RGBA).  </summary>
+		/// <summary>Stores premultiplied color components with the alpha component last.</summary>
 		PremultipliedLast,
-		/// <summary>Premultipled values for RGB, alpha channel comes first using 32-bits per pixel and 8 bits per channel (ARGB) </summary>
+		/// <summary>Stores premultiplied color components with the alpha component first.</summary>
 		PremultipliedFirst,
-		/// <summary>Last	Alpha comes last, 32-bit per pixel, 8-bits per channel (RGBA).</summary>
+		/// <summary>Stores an alpha component last without premultiplying the color components.</summary>
 		Last,
-		/// <summary>Alpha channel comes first using 32-bits per pixel and 8 bits per channel (ARGB).</summary>
+		/// <summary>Stores an alpha component first without premultiplying the color components.</summary>
 		First,
-		/// <summary>There is no alpha channel, 32-bits per pixel, 8 bits per channel, with the lower channel ignored (RGBx). </summary>
+		/// <summary>Has no alpha channel and ignores the last component.</summary>
 		NoneSkipLast,
-		/// <summary>There is no alpha channel, 32-bits per pixel, 8 bits per channel, with the topmost channel ignored (xRGB). </summary>
+		/// <summary>Has no alpha channel and ignores the first component.</summary>
 		NoneSkipFirst,
-		/// <summary>No color data, only alpha channel data. </summary>
+		/// <summary>Contains alpha data only, with no color data.</summary>
 		Only,
 
-		/// <summary>The image has an alpha channel.</summary>
+		/// <summary>Mask for the alpha-information bits.</summary>
 		AlphaInfoMask = 0x1F,
-		/// <summary>To be added.</summary>
+		/// <summary>Mask for the component-information bits.</summary>
 		FloatInfoMask = 0xf00,
-		/// <summary>The components of the bitmap are floating point values.</summary>
+		/// <summary>The bitmap components are floating-point values.</summary>
 		FloatComponents = (1 << 8),
 
-		/// <summary>Mask for extracting the byte ordering from the result.</summary>
+		/// <summary>Mask for the byte-order bits.</summary>
 		ByteOrderMask = 0x7000,
-		/// <summary>The default byte order.</summary>
+		/// <summary>Uses the default byte order.</summary>
 		ByteOrderDefault = (0 << 12),
-		/// <summary>16-bit little endian format.</summary>
+		/// <summary>Uses 16-bit little-endian byte order.</summary>
 		ByteOrder16Little = (1 << 12),
-		/// <summary>32-bit little endian format.</summary>
+		/// <summary>Uses 32-bit little-endian byte order.</summary>
 		ByteOrder32Little = (2 << 12),
-		/// <summary>16-bit big endian format.</summary>
+		/// <summary>Uses 16-bit big-endian byte order.</summary>
 		ByteOrder16Big = (3 << 12),
-		/// <summary>32-big big endian format.</summary>
+		/// <summary>Uses 32-bit big-endian byte order.</summary>
 		ByteOrder32Big = (4 << 12),
 	}
 
-	/// <summary>To be added.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <summary>Specifies the byte order of image pixel data.</summary>
+	/// <remarks>Use these flags with bitmap information to describe the byte order of pixel values.</remarks>
 	[Flags]
 	public enum CGImageByteOrderInfo : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Mask for the byte-order bits.</summary>
 		ByteOrderMask = 0x7000,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the default byte order.</summary>
 		ByteOrderDefault = (0 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit little-endian byte order.</summary>
 		ByteOrder16Little = (1 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit little-endian byte order.</summary>
 		ByteOrder32Little = (2 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 16-bit big-endian byte order.</summary>
 		ByteOrder16Big = (3 << 12),
-		/// <summary>To be added.</summary>
+		/// <summary>Uses 32-bit big-endian byte order.</summary>
 		ByteOrder32Big = (4 << 12),
 	}
 

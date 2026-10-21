@@ -804,7 +804,7 @@ Controls whether the build system replaces runtime calls to `Class.GetHandle` /
 `Class.GetHandleIntrinsic` with direct native references to Objective-C classes
 at build time.
 
-See [docs/code/class-handles.md](../code/class-handles.md) for an overview.
+See [Objective-C classes](https://github.com/dotnet/macios/blob/d556da5e28cfbb4e7488c3f57d989be56d01a92b/docs/code/class-handles.md) for an overview.
 
 The valid options are:
 

@@ -112,6 +112,42 @@
         "default"
       ],
       "createdDate": "2024-02-28 14:32:01Z"
+    },
+    "340822205db23462d86dec366c775ec86f20736de7dc4a465ec223a230b5a22e": {
+      "signature": "340822205db23462d86dec366c775ec86f20736de7dc4a465ec223a230b5a22e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80242 false positive: the native CoreMotion CMOdometerData slope selector in src/coremotion.cs describes an incline/grade, not a person. Preserve the selector to keep the native binding correct.",
+      "createdDate": "2026-10-20 16:38:12Z"
+    },
+    "b0048d7c7cbed1e5154c6bfb9f0b1defb9322fbb0d9582f408c551b3a6275b7c": {
+      "signature": "b0048d7c7cbed1e5154c6bfb9f0b1defb9322fbb0d9582f408c551b3a6275b7c",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80242 false positive: the managed CoreMotion CMOdometerData.Slope property in src/coremotion.cs exposes an incline/grade, not a person. Preserve the existing public API and its native binding.",
+      "createdDate": "2026-10-20 16:38:12Z"
+    },
+    "af656dc54b9431fe8ecd74d3c8f30095d457e4fadbb2c163caa04710e4d58330": {
+      "signature": "af656dc54b9431fe8ecd74d3c8f30095d457e4fadbb2c163caa04710e4d58330",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80103 false positive: 'A poof animation effect.' in src/AppKit/Enums.cs describes the NSAnimationEffect.EffectPoof visual animation, not a person. Preserve the API and its non-offensive description.",
+      "createdDate": "2026-10-20 16:38:12Z"
+    },
+    "f19edb2701c4507a74d5ecee79e60f7a352831163407c5c4ea627cf7ca8a35b9": {
+      "signature": "f19edb2701c4507a74d5ecee79e60f7a352831163407c5c4ea627cf7ca8a35b9",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80301 false positive: in the French RBI0014MessageFormat translation, 'plus tard dans la méthode' means 'later in the method'. This is valid French, not the English term; preserve the translation.",
+      "createdDate": "2026-10-20 16:38:12Z"
     }
   }
 }
