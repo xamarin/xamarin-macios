@@ -3265,6 +3265,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Simulátor nepodporuje arm64.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";M7159" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Skipping {0} - {1} is empty.]]></Val>
