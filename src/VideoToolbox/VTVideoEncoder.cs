@@ -119,60 +119,50 @@ namespace VideoToolbox {
 			EncoderId = dict [VTVideoEncoderList.EncoderID] as NSString;
 			EncoderName = dict [VTVideoEncoderList.EncoderName] as NSString;
 
-			// added in Xcode 11 so the constants won't exists in earlier SDK, making all values optional
-
-			if (SystemVersion.IsAtLeastXcode11) {
-				var constant = VTVideoEncoderList.GpuRegistryId;
-				if (constant is not null) {
-					var gri = dict [constant] as NSNumber;
-					GpuRegistryId = gri?.UInt64Value; // optional
-				}
-
-				constant = VTVideoEncoderList.SupportedSelectionProperties;
-				if (constant is not null) {
-					if (dict.TryGetValue<NSDictionary> (constant, out var d)) // optional
-						SupportedSelectionProperties = d;
-				}
-
-				constant = VTVideoEncoderList.PerformanceRating;
-				if (constant is not null) {
-					PerformanceRating = dict [constant] as NSNumber; // optional
-				}
-
-				constant = VTVideoEncoderList.QualityRating;
-				if (constant is not null) {
-					QualityRating = dict [constant] as NSNumber; // optional
-				}
-
-				constant = VTVideoEncoderList.InstanceLimit;
-				if (constant is not null) {
-					var il = dict [constant] as NSNumber;
-					InstanceLimit = il?.BoolValue; // optional
-				}
-
-				constant = VTVideoEncoderList.IsHardwareAccelerated;
-				if (constant is not null) {
-					var ha = dict [constant] as NSNumber;
-					IsHardwareAccelerated = ha?.BoolValue; // optional
-				}
+			var constant = VTVideoEncoderList.GpuRegistryId;
+			if (constant is not null) {
+				var gri = dict [constant] as NSNumber;
+				GpuRegistryId = gri?.UInt64Value; // optional
 			}
 
-			// added in xcode 12.2 so the constant won't exists in earlier SDK
-			if (SystemVersion.IsAtLeastXcode12_2) {
-				var constant = VTVideoEncoderList.SupportsFrameReordering;
-				if (constant is not null) {
-					var sfr = dict [constant] as NSNumber;
-					SupportsFrameReordering = sfr?.BoolValue ?? true; // optional, default true
-				}
+			constant = VTVideoEncoderList.SupportedSelectionProperties;
+			if (constant is not null) {
+				if (dict.TryGetValue<NSDictionary> (constant, out var d)) // optional
+					SupportedSelectionProperties = d;
 			}
 
-			// added in xcode 13
-			if (SystemVersion.IsAtLeastXcode13) {
-				var constant = VTVideoEncoderList.IncludeStandardDefinitionDVEncoders;
-				if (constant is not null) {
-					var includeDef = dict [constant] as NSNumber;
-					IncludeStandardDefinitionDVEncoders = includeDef?.BoolValue ?? false; // optional, default false 
-				}
+			constant = VTVideoEncoderList.PerformanceRating;
+			if (constant is not null) {
+				PerformanceRating = dict [constant] as NSNumber; // optional
+			}
+
+			constant = VTVideoEncoderList.QualityRating;
+			if (constant is not null) {
+				QualityRating = dict [constant] as NSNumber; // optional
+			}
+
+			constant = VTVideoEncoderList.InstanceLimit;
+			if (constant is not null) {
+				var il = dict [constant] as NSNumber;
+				InstanceLimit = il?.BoolValue; // optional
+			}
+
+			constant = VTVideoEncoderList.IsHardwareAccelerated;
+			if (constant is not null) {
+				var ha = dict [constant] as NSNumber;
+				IsHardwareAccelerated = ha?.BoolValue; // optional
+			}
+
+			constant = VTVideoEncoderList.SupportsFrameReordering;
+			if (constant is not null) {
+				var sfr = dict [constant] as NSNumber;
+				SupportsFrameReordering = sfr?.BoolValue ?? true; // optional, default true
+			}
+
+			constant = VTVideoEncoderList.IncludeStandardDefinitionDVEncoders;
+			if (constant is not null) {
+				var includeDef = dict [constant] as NSNumber;
+				IncludeStandardDefinitionDVEncoders = includeDef?.BoolValue ?? false; // optional, default false 
 			}
 		}
 

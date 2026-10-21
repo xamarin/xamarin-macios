@@ -60,7 +60,7 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.That (Engine.Logger.ErrorEvents.Count, Is.EqualTo (expectError ? 1 : 0), "Errors");
 			if (expectError) {
 				var error = Engine.Logger.ErrorEvents [0];
-				Assert.That (error.Code, Is.EqualTo ("MT7198"), "Code");
+				Assert.That (error.Code, Is.EqualTo ("MT7199"), "Code");
 				Assert.That (error.File, Is.EqualTo ("Info.plist"), "File");
 				Assert.That (error.Message, Does.Contain ("https://aka.ms/uiscene"), "Migration instructions");
 				Assert.That (error.Message, Does.Contain ("ValidateSceneManifest to false"), "Opt-out");
@@ -112,7 +112,7 @@ namespace Xamarin.MacDev.Tasks {
 			ExecuteTask (task, expectedErrorCount: expectError ? 1 : 0);
 
 			if (expectError) {
-				Assert.That (Engine.Logger.ErrorEvents [0].Code, Is.EqualTo ("MT7198"), "Code");
+				Assert.That (Engine.Logger.ErrorEvents [0].Code, Is.EqualTo ("MT7199"), "Code");
 				var compiledManifest = task.CompiledAppManifest ?? throw new InvalidOperationException ("Missing compiled app manifest.");
 				Assert.That (File.Exists (compiledManifest.ItemSpec), Is.False, "Failed validation must not produce an up-to-date manifest");
 			}

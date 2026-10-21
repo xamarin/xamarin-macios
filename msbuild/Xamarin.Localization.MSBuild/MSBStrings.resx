@@ -1802,6 +1802,11 @@
 {1} - The total number of input files.</comment>
     </data>
     <data name="E7198" xml:space="preserve">
+        <value>Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.</value>
+        <comment>Shown when codesign fails with 'resource fork, Finder information, or similar detritus not allowed'.
+{0} - The path of the file or bundle being signed. Do not translate the attribute names, shell commands, or URL.</comment>
+    </data>
+    <data name="E7199" xml:space="preserve">
         <value>The app's Info.plist does not contain a UIApplicationSceneManifest dictionary. Apps built with the iOS or Mac Catalyst 27.0 SDK or later must use the UIKit scene lifecycle or they will crash at launch on iOS or macOS 27.0 or later. Add a scene manifest and scene delegate, and migrate custom lifecycle handlers as described at https://aka.ms/uiscene. To skip this build-time validation, set the MSBuild property ValidateSceneManifest to false; this does not disable the operating system's requirement.</value>
         <comment>Shown when an iOS or Mac Catalyst app built against SDK 27.0 or later does not declare a scene manifest.
 Do not translate Info.plist, UIApplicationSceneManifest, UIKit, https://aka.ms/uiscene, ValidateSceneManifest, or false.</comment>

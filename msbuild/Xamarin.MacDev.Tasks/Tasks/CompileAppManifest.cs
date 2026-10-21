@@ -517,7 +517,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (plist.Get<PDictionary> ("UIApplicationSceneManifest") is not null)
 				return;
 
-			Log.LogError (7198, AppManifest?.ItemSpec, MSBStrings.E7198);
+			Log.LogError (7199, AppManifest?.ItemSpec, MSBStrings.E7199);
 		}
 
 		bool CompileMac (PDictionary plist)
