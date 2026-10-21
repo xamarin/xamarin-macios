@@ -49,6 +49,30 @@ namespace MonoTouchFixtures {
 			test ();
 		}
 
+		[Test]
+		public void AllStructsHaveEqualityTests ()
+		{
+			// CMTag has a separate test because its native equality requires Xcode 15.
+			var coveredTypes = new HashSet<Type> { typeof (CMTag) };
+			foreach (var testCase in Cases ()) {
+				var type = (Type) testCase.Properties.Get ("StructType");
+				coveredTypes.Add (type.IsGenericType ? type.GetGenericTypeDefinition () : type);
+			}
+
+			var missingTypes = new List<string> ();
+#pragma warning disable IL2026 // Only types that survive trimming can be checked in trimmed test runs.
+			var exportedTypes = typeof (NSObject).Assembly.GetExportedTypes ();
+#pragma warning restore IL2026
+			foreach (var type in exportedTypes) {
+				if (!type.IsValueType || type.IsEnum || type.IsByRefLike)
+					continue;
+				if (!coveredTypes.Contains (type))
+					missingTypes.Add (type.FullName);
+			}
+			missingTypes.Sort (StringComparer.Ordinal);
+			Assert.That (missingTypes, Is.Empty, "Add equality cases in StructEqualityTest for these public structs");
+		}
+
 		static TestCaseData Case<T> (params T [] differentValues) where T : struct
 		{
 			return Case<T> (null, null, null, differentValues);
@@ -61,8 +85,10 @@ namespace MonoTouchFixtures {
 
 		static TestCaseData Case<T> (Func<T, T, bool> typedEqual, Func<T?, T?, bool> equal, Func<T?, T?, bool> notEqual, params T [] differentValues) where T : struct
 		{
-			return new TestCaseData ((Action) (() => Check (typedEqual, equal, notEqual, differentValues)))
+			var testCase = new TestCaseData ((Action) (() => Check (typedEqual, equal, notEqual, differentValues)))
 				.SetName ($"Equality({typeof (T).FullName})");
+			testCase.Properties.Set ("StructType", typeof (T));
+			return testCase;
 		}
 
 		static void Check<T> (Func<T, T, bool> typedEqual, Func<T?, T?, bool> equal, Func<T?, T?, bool> notEqual, params T [] differentValues) where T : struct
