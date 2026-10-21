@@ -113,6 +113,12 @@ namespace CoreMotion {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMMotionManager {
+		/// <summary>Gets the current authorization status for access to motion sensor data.</summary>
+		[NoTV, NoMac, iOS (27, 2), MacCatalyst (27, 2)]
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+
 		/// <summary>Whether the device has an accelerometer.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>

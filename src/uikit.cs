@@ -5493,7 +5493,7 @@ namespace UIKit {
 		[Export ("paddingRemoved")]
 		bool PaddingRemoved { [Bind ("isPaddingRemoved")] get; [Bind ("setPaddingRemoved:")] set; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("axisBehavior", ArgumentSemantic.Assign)]
 		UIBarButtonItemAxisBehavior AxisBehavior { get; set; }
 	}
@@ -10602,15 +10602,31 @@ namespace UIKit {
 		[Export ("readableContentLayoutRegionWithCornerAdaptation:")]
 		UIViewLayoutRegion CreateReadableContentLayoutRegion (UIViewLayoutRegionAdaptivityAxis cornerAdaptivityAxis);
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Static]
 		[Export ("layoutRegionForBarOnEdge:extent:")]
 		UIViewLayoutRegion CreateBarLayoutRegion (UIRectEdge edge, nfloat extent);
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Static]
 		[Export ("layoutRegionForBarOnDirectionalEdge:extent:")]
 		UIViewLayoutRegion CreateBarLayoutRegion (NSDirectionalRectEdge edge, nfloat extent);
+
+		/// <summary>Creates a bar layout region on a single edge using the system's default bar extent.</summary>
+		/// <param name="edge">The single edge on which to place the region.</param>
+		/// <returns>The bar layout region.</returns>
+		[NoTV, NoMacCatalyst, iOS (27, 2)]
+		[Static]
+		[Export ("layoutRegionForBarOnEdge:")]
+		UIViewLayoutRegion CreateBarLayoutRegion (UIRectEdge edge);
+
+		/// <summary>Creates a bar layout region on a single directional edge using the system's default bar extent.</summary>
+		/// <param name="edge">The single directional edge on which to place the region.</param>
+		/// <returns>The bar layout region.</returns>
+		[NoTV, NoMacCatalyst, iOS (27, 2)]
+		[Static]
+		[Export ("layoutRegionForBarOnDirectionalEdge:")]
+		UIViewLayoutRegion CreateBarLayoutRegion (NSDirectionalRectEdge edge);
 	}
 
 	[iOS (26, 0), TV (26, 0), MacCatalyst (26, 0)]
@@ -13788,7 +13804,13 @@ namespace UIKit {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		/// <summary>Gets or sets the preferred alignment of the navigation bar's title.</summary>
+		/// <value>The preferred alignment. The default is <see cref="UINavigationItemTitleAlignment.Automatic" />.</value>
+		[NoTV, iOS (27, 2), MacCatalyst (27, 2)]
+		[Export ("titleAlignment", ArgumentSemantic.Assign)]
+		UINavigationItemTitleAlignment TitleAlignment { get; set; }
+
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("verticalBarCompressionBehavior", ArgumentSemantic.Assign)]
 		UIVerticalBarCompressionBehavior VerticalBarCompressionBehavior { get; set; }
 
@@ -22566,11 +22588,11 @@ namespace UIKit {
 		[Export ("layoutGuideForLayoutRegion:")]
 		UILayoutGuide GetLayoutGuide (UIViewLayoutRegion layoutRegion);
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("reservedRegionsOfKind:")]
 		UIViewReservedRegion [] GetReservedRegions (UIViewReservedRegionKind kind);
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("reservedRegionsOfKind:options:")]
 		UIViewReservedRegion [] GetReservedRegions (UIViewReservedRegionKind kind, UIViewReservedRegionQueryOptions options);
 
@@ -23539,19 +23561,19 @@ namespace UIKit {
 		[Export ("unregisterSceneAccessory:")]
 		void UnregisterSceneAccessory (UISceneAccessoryRegistration registration);
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[NullAllowed, Export ("arrangementViewController")]
 		UIArrangementViewController ArrangementViewController { get; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("preferredVerticalBarBehavior")]
 		UIVerticalBarBehavior PreferredVerticalBarBehavior { get; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[NullAllowed, Export ("childViewControllerForPreferredVerticalBarBehavior")]
 		UIViewController ChildViewControllerForPreferredVerticalBarBehavior { get; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("setNeedsUpdateOfVerticalBarConfiguration")]
 		void SetNeedsUpdateOfVerticalBarConfiguration ();
 	}
@@ -23983,14 +24005,19 @@ namespace UIKit {
 		Class [] SystemTraitsAffectingImageLookup2 { get; }
 #endif
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Static]
 		[Export ("systemTraitsAffectingVerticalBarEdge")]
 		Class [] SystemTraitsAffectingVerticalBarEdge { get; }
 
-		[NoTV, NoMacCatalyst, iOS (27, 1)]
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 		[Export ("verticalBarEdge")]
 		UIVerticalBarEdge VerticalBarEdge { get; }
+
+		/// <summary>Gets the title alignment resolved by the navigation bar, or Automatic if it has not yet been resolved.</summary>
+		[TV (27, 2), MacCatalyst (27, 2), iOS (27, 2)]
+		[Export ("navigationTitleAlignment", ArgumentSemantic.Assign)]
+		UINavigationItemTitleAlignment NavigationTitleAlignment { get; }
 
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("typesettingLanguage")]
@@ -38578,6 +38605,12 @@ namespace UIKit {
 
 	}
 
+	/// <summary>A trait that reports the navigation bar's resolved title alignment.</summary>
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 2)]
+	[BaseType (typeof (NSObject))]
+	interface UITraitNavigationTitleAlignment : UINSIntegerTraitDefinition {
+	}
+
 	[TV (26, 0), iOS (26, 0), MacCatalyst (26, 0)]
 	delegate void UIMenuElementProviderCreateHandler ([BlockCallback] UIMenuElementProviderCompletion handler);
 
@@ -38702,7 +38735,7 @@ namespace UIKit {
 		UIColorEffect Create ([NullAllowed] UIColor color);
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIArrangementViewState : NSCopying {
@@ -38716,12 +38749,12 @@ namespace UIKit {
 		bool Hidden { [Bind ("isHidden")] get; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIArrangement : NSCopying { }
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface UIArrangementViewController {
@@ -38753,7 +38786,7 @@ namespace UIKit {
 		void SetViewController ([NullAllowed] UIViewController viewController, UIArrangementViewControllerViewPlacement placement, bool animated);
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIOverlayArrangementViewProperties : NSCopying {
@@ -38765,7 +38798,7 @@ namespace UIKit {
 		NSDirectionalRectEdge Edge { get; set; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (UIArrangement))]
 	[DisableDefaultCtor]
 	interface UIOverlayArrangement {
@@ -38783,7 +38816,7 @@ namespace UIKit {
 		void SetViewProperties (UIOverlayArrangementViewProperties viewProperties, UIArrangementViewControllerViewPlacement placement);
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UISplitArrangementDimension : NSCopying {
@@ -38804,7 +38837,7 @@ namespace UIKit {
 		UISplitArrangementDimension CreateAbsolute (nfloat absoluteValue);
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UISplitArrangementDimensionRange : NSCopying {
@@ -38822,7 +38855,7 @@ namespace UIKit {
 		UISplitArrangementDimension Maximum { get; set; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UISplitArrangementViewProperties : NSCopying {
@@ -38840,7 +38873,7 @@ namespace UIKit {
 		nfloat LayoutPriority { get; set; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (UIArrangement))]
 	[DisableDefaultCtor]
 	interface UISplitArrangement {
@@ -38858,7 +38891,7 @@ namespace UIKit {
 		void SetViewProperties (UISplitArrangementViewProperties viewProperties, UIArrangementViewControllerViewPlacement placement);
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIHinge : NSCopying {
@@ -38869,7 +38902,7 @@ namespace UIKit {
 		nfloat Angle { get; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIHingeInteractionUpdate : NSCopying {
@@ -38877,10 +38910,10 @@ namespace UIKit {
 		UIHinge Hinge { get; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	delegate void UIHingeInteractionUpdateHandler (UIHingeInteraction interaction, UIHingeInteractionUpdate update);
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIHingeInteraction : UIInteraction {
@@ -38892,7 +38925,7 @@ namespace UIKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[Sealed]
@@ -38913,13 +38946,13 @@ namespace UIKit {
 		bool Active { [Bind ("isActive")] get; }
 	}
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[Sealed]
 	interface UIViewReservedRegionIdentifier : NSCopying { }
 
-	[NoTV, NoMacCatalyst, iOS (27, 1)]
+	[TV (27, 2), MacCatalyst (27, 2), iOS (27, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[Sealed]

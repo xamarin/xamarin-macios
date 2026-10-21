@@ -52138,6 +52138,10 @@ P:UIKit.UITraitListEnvironment.AffectsColorAppearance
 P:UIKit.UITraitListEnvironment.DefaultValue
 P:UIKit.UITraitListEnvironment.Identifier
 P:UIKit.UITraitListEnvironment.Name
+P:UIKit.UITraitNavigationTitleAlignment.AffectsColorAppearance
+P:UIKit.UITraitNavigationTitleAlignment.DefaultValue
+P:UIKit.UITraitNavigationTitleAlignment.Identifier
+P:UIKit.UITraitNavigationTitleAlignment.Name
 P:UIKit.UITraitPreferredContentSizeCategory.AffectsColorAppearance
 P:UIKit.UITraitPreferredContentSizeCategory.DefaultValue
 P:UIKit.UITraitPreferredContentSizeCategory.Identifier

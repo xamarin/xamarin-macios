@@ -273,6 +273,12 @@ namespace SharedWithYou {
 		[Export ("activeParticipantCount")]
 		nuint ActiveParticipantCount { get; set; }
 
+		/// <summary>Gets or sets whether the collaboration button displays the participant count.</summary>
+		/// <value><see langword="true" /> to display the count; otherwise, <see langword="false" />. The default is <see langword="true" />.</value>
+		[iOS (27, 2), Mac (27, 2), MacCatalyst (27, 2)]
+		[Export ("showsParticipantCount")]
+		bool ShowsParticipantCount { get; set; }
+
 		/// <summary>Gets or sets the number of pending access requests.</summary>
 		[iOS (27, 0), Mac (27, 0), MacCatalyst (27, 0)]
 		[Export ("pendingAccessRequestsCount")]
