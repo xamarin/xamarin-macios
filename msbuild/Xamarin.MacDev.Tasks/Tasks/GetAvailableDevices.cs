@@ -160,15 +160,19 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 		}
 	}
 
+	protected virtual PhysicalDeviceService CreatePhysicalDeviceService () => new PhysicalDeviceService (this, SdkDevPath);
+
 	async System.Threading.Tasks.Task<IEnumerable<DeviceInfo>> RunDeviceCtlAsync ()
 	{
-		var json = await ExecuteCtlAsync ("devicectl", "list", "devices");
+		var result = await CreatePhysicalDeviceService ().ListAsync (cancellationTokenSource!.Token);
 		var rv = new List<DeviceInfo> ();
 
-		// Use shared parser from Xamarin.MacDev for devicectl JSON extraction
-		var parsedDevices = DeviceCtlOutputParser.ParseDevices (json);
+		// The service only logs a failed discovery at info level, so report the failures that left us without a device list.
+		// Unusable output (InvalidOutput) isn't reported as an error.
+		if (result.Status is PhysicalDeviceDiscoveryStatus.ExecutionFailed or PhysicalDeviceDiscoveryStatus.ToolUnavailable or PhysicalDeviceDiscoveryStatus.TimedOut)
+			Log.LogError (MSBStrings.E7199, result.ErrorMessage);
 
-		foreach (var device in parsedDevices) {
+		foreach (var device in result.Devices) {
 			var udid = device.Udid;
 
 			if (string.IsNullOrEmpty (udid))

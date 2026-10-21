@@ -1806,4 +1806,9 @@
         <comment>Shown when codesign fails with 'resource fork, Finder information, or similar detritus not allowed'.
 {0} - The path of the file or bundle being signed. Do not translate the attribute names, shell commands, or URL.</comment>
     </data>
+    <data name="E7199" xml:space="preserve">
+        <value>Failed to list physical devices with devicectl: {0}</value>
+        <comment>Shown when listing the physical devices with 'devicectl' fails, times out, or devicectl can't be run.
+{0} - The reason for the failure, as reported by devicectl or by the device discovery. Do not translate 'devicectl'.</comment>
+    </data>
 </root>
