@@ -4385,7 +4385,7 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
-			var projectPath = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var projectPath = GetProjectPath ("ApiTestApp", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (projectPath);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["MtouchLink"] = "Full";
@@ -4401,7 +4401,7 @@ namespace Xamarin.Tests {
 
 			var executable = GetNativeExecutable (platform, appPath);
 			var symbols = Configuration.GetNativeSymbols (executable);
-			Assert.That (symbols, Does.Contain ("_OBJC_CLASS_$_XamarinSwiftFunctions"), "The StoreKit bridge must remain linked.");
+			Assert.That (symbols, Does.Contain ("_OBJC_CLASS_$_XamarinStoreKitSwiftFunctions"), "The StoreKit bridge must remain linked.");
 			if (useWidgetKit) {
 				Assert.That (symbols, Does.Contain ("_OBJC_CLASS_$_XamarinWidgetKitSwiftFunctions"), "The used WidgetKit bridge must remain linked.");
 				if (CanExecute (platform, runtimeIdentifiers))

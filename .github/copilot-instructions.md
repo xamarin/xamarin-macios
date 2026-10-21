@@ -110,6 +110,13 @@ It's typically `make run-tests` in the directory with the test project.
 
 When adding new test cases that require a runtime identifier, prefer `-arm64` over `-x64` unless there's a specific reason to use `-x64`.
 
+Keep `tests/dotnet/MySimpleApp` as simple as possible. Do not add feature-specific
+code, conditional test scenarios, or supporting project configuration there.
+Prefer an applicable existing test project (such as `ApiTestApp` for API usage
+and trimming tests), or create a dedicated project if none fits. Changes to
+MySimpleApp should be exceedingly rare and necessary for its minimal baseline
+purpose, not merely convenient for a new test.
+
 ## Apple Platform Integration
 
 ### Xcode Requirements

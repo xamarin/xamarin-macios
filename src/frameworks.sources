@@ -2155,6 +2155,7 @@ MACOS_FRAMEWORKS =          \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
+	WidgetKit               \
 
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
@@ -2278,6 +2279,7 @@ IOS_FRAMEWORKS =         \
 	VisionKit \
 	WatchConnectivity \
 	WebKit \
+	WidgetKit \
 
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
@@ -2450,6 +2452,7 @@ MACCATALYST_FRAMEWORKS = \
 	Vision \
 	VisionKit \
 	WebKit \
+	WidgetKit \
 
 #
 # Compute the SOURCES variables.

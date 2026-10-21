@@ -155,6 +155,7 @@ partial class Frameworks {
 		"VisionKit",
 		"WatchConnectivity",
 		"WebKit",
+		"WidgetKit",
 		"XKit",
 	};
 	// GENERATED FILE - DO NOT EDIT
@@ -303,6 +304,7 @@ partial class Frameworks {
 		"VideoToolbox",
 		"Vision",
 		"WebKit",
+		"WidgetKit",
 		"XKit",
 	};
 	// GENERATED FILE - DO NOT EDIT
@@ -541,6 +543,7 @@ partial class Frameworks {
 		"Vision",
 		"VisionKit",
 		"WebKit",
+		"WidgetKit",
 		"XKit",
 	};
 	bool? _Accelerate;
@@ -721,6 +724,7 @@ partial class Frameworks {
 	bool? _VisionKit;
 	bool? _WatchConnectivity;
 	bool? _WebKit;
+	bool? _WidgetKit;
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
 	public bool HaveAccessibility { get { if (!_Accessibility.HasValue) _Accessibility = GetValue ("Accessibility"); return _Accessibility.Value; } }
@@ -900,5 +904,6 @@ partial class Frameworks {
 	public bool HaveVisionKit { get { if (!_VisionKit.HasValue) _VisionKit = GetValue ("VisionKit"); return _VisionKit.Value; } }
 	public bool HaveWatchConnectivity { get { if (!_WatchConnectivity.HasValue) _WatchConnectivity = GetValue ("WatchConnectivity"); return _WatchConnectivity.Value; } }
 	public bool HaveWebKit { get { if (!_WebKit.HasValue) _WebKit = GetValue ("WebKit"); return _WebKit.Value; } }
+	public bool HaveWidgetKit { get { if (!_WidgetKit.HasValue) _WidgetKit = GetValue ("WidgetKit"); return _WidgetKit.Value; } }
 	public bool HaveXKit { get { if (!_XKit.HasValue) _XKit = GetValue ("XKit"); return _XKit.Value; } }
 }

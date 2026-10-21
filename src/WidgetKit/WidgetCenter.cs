@@ -20,13 +20,13 @@ namespace WidgetKit {
 		public static void ReloadTimelines (string kind)
 		{
 			ArgumentNullException.ThrowIfNull (kind);
-			StoreKit.XamarinWidgetKitSwiftFunctions.ReloadTimelines (kind);
+			XamarinWidgetKitSwiftFunctions.ReloadTimelines (kind);
 		}
 
 		/// <summary>Requests new timelines for all of the app's widgets.</summary>
 		public static void ReloadAllTimelines ()
 		{
-			StoreKit.XamarinWidgetKitSwiftFunctions.ReloadAllTimelines ();
+			XamarinWidgetKitSwiftFunctions.ReloadAllTimelines ();
 		}
 	}
 }

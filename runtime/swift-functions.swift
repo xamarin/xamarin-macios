@@ -15,8 +15,8 @@ public typealias PlatformScene = UIWindowScene
 #endif
 
 
-@objc(XamarinSwiftFunctions)
-public class XamarinSwiftFunctions : NSObject {
+@objc(XamarinStoreKitSwiftFunctions)
+public class XamarinStoreKitSwiftFunctions : NSObject {
 #if !os(tvOS)
     @MainActor
     @objc(requestReview:)

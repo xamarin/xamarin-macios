@@ -32,7 +32,7 @@ namespace StoreKit {
 	[Internal]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface XamarinSwiftFunctions {
+	interface XamarinStoreKitSwiftFunctions {
 		[Export ("requestReview:")]
 		[Static]
 		[iOS (16, 0), MacCatalyst (16, 0), NoTV]
@@ -41,21 +41,6 @@ namespace StoreKit {
 #else
 		void RequestReview (UIWindowScene windowScene);
 #endif
-	}
-
-	[EditorBrowsable (EditorBrowsableState.Never)]
-	[Internal]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	[iOS (14, 0), MacCatalyst (14, 0), Mac (11, 0), NoTV]
-	interface XamarinWidgetKitSwiftFunctions {
-		[Export ("reloadTimelinesOfKind:")]
-		[Static]
-		void ReloadTimelines (string kind);
-
-		[Export ("reloadAllTimelines")]
-		[Static]
-		void ReloadAllTimelines ();
 	}
 
 	[ErrorDomain ("SKANErrorDomain")]
