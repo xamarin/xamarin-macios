@@ -52,8 +52,7 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void AllStructsHaveEqualityTests ()
 		{
-			// CMTag has a separate test because its native equality requires Xcode 15.
-			var coveredTypes = new HashSet<Type> { typeof (CMTag) };
+			var coveredTypes = new HashSet<Type> ();
 			foreach (var testCase in Cases ()) {
 				var type = (Type) testCase.Properties.Get ("StructType");
 				coveredTypes.Add (type.IsGenericType ? type.GetGenericTypeDefinition () : type);
@@ -280,6 +279,7 @@ namespace MonoTouchFixtures {
 				new CGVector (1, 0), new CGVector (0, 1));
 			yield return Case<CLLocationCoordinate2D> (new CLLocationCoordinate2D (1, 0), new CLLocationCoordinate2D (0, 1));
 			yield return Case<TextMarkupColor> (new TextMarkupColor (1, 0, 0, 0));
+			yield return Case<CMTag> (CMTag.Equals, CMTag.MediaTypeVideo, CMTag.MediaTypeAudio);
 			yield return Case<CMTime> ((a, b) => a.Equals (b), (a, b) => a == b, (a, b) => a != b,
 				new CMTime (1, 1), new CMTime (2, 1), new CMTime (1, 1, 1));
 			yield return Case<CMSampleTimingInfo> (new CMSampleTimingInfo { Duration = new CMTime (1, 1) });
@@ -542,13 +542,6 @@ namespace MonoTouchFixtures {
 			for (var i = 0; i < values.Length; i++)
 				values [i] [i] = 1;
 			return values;
-		}
-
-		[Test]
-		public void Tag ()
-		{
-			TestRuntime.AssertXcodeVersion (15, 0);
-			Check<CMTag> (CMTag.Equals, null, null, CMTag.MediaTypeVideo, CMTag.MediaTypeAudio);
 		}
 
 #if !(XAMCORE_5_0 && MONOMAC)
