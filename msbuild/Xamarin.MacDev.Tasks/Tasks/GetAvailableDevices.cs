@@ -39,7 +39,7 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 		cancellationTokenSource = new CancellationTokenSource ();
 
 		// run devicectl and simctl in parallel
-		var devicectlTask = RunDeviceCtlAsync ();
+		var devicectlTask = RunDeviceCtlAsync (cancellationTokenSource.Token);
 		var simctlTask = RunSimCtlAsync ();
 
 		System.Threading.Tasks.Task.WhenAll (new [] { devicectlTask, simctlTask }).Wait (cancellationTokenSource.Token);
@@ -162,9 +162,9 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 
 	protected virtual PhysicalDeviceService CreatePhysicalDeviceService () => new PhysicalDeviceService (this, SdkDevPath);
 
-	async System.Threading.Tasks.Task<IEnumerable<DeviceInfo>> RunDeviceCtlAsync ()
+	async System.Threading.Tasks.Task<IEnumerable<DeviceInfo>> RunDeviceCtlAsync (CancellationToken cancellationToken)
 	{
-		var result = await CreatePhysicalDeviceService ().ListAsync (cancellationTokenSource!.Token);
+		var result = await CreatePhysicalDeviceService ().ListAsync (cancellationToken);
 		var rv = new List<DeviceInfo> ();
 
 		// The service only logs a failed discovery at info level, so report the failures that left us without a device list.

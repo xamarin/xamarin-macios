@@ -88,8 +88,8 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var task = CreateTask (ApplePlatform.iOS, "", "");
 			task.DeviceCtlResult = DeviceCtlRunResult.Completed (1, "", "devicectl is broken", "");
-			task.Execute ();
-			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Does.Contain ("devicectl is broken"), "Error message");
+			Assert.That (task.Execute (), Is.True, "Task should still succeed, so devices found by simctl are kept.");
+			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Is.EqualTo ("Failed to list physical devices with devicectl: devicectl is broken"), "Error message");
 			Assert.That (task.Devices, Is.Empty, "Devices should be empty.");
 		}
 
@@ -98,8 +98,8 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var task = CreateTask (ApplePlatform.iOS, "", "");
 			task.DeviceCtlResult = DeviceCtlRunResult.NotFound ("xcrun could not be started.");
-			task.Execute ();
-			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Does.Contain ("xcrun could not be started."), "Error message");
+			Assert.That (task.Execute (), Is.True, "Task should still succeed, so devices found by simctl are kept.");
+			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Is.EqualTo ("Failed to list physical devices with devicectl: xcrun could not be started."), "Error message");
 			Assert.That (task.Devices, Is.Empty, "Devices should be empty.");
 		}
 
