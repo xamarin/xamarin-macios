@@ -7,6 +7,8 @@
 // Copyright 2024 Microsoft Corp. All rights reserved.
 //
 
+using System.Linq;
+
 using CoreMedia;
 
 using Xamarin.Utils;
@@ -298,7 +300,9 @@ namespace MonoTouchFixtures.CoreMedia {
 
 			using var tagCollection = CMTagCollection.Create (CMTag.MediaTypeVideo, CMTag.MediaTypeAudio, CMTag.PackingTypeNone);
 			var tags = tagCollection.GetTags ((v) => v.Category == CMTagCategory.MediaType);
-			Assert.That (tags, Is.EquivalentTo (new [] { CMTag.MediaTypeVideo, CMTag.MediaTypeAudio }), "Tags");
+			Assert.That (tags.Length, Is.EqualTo (2), "Length");
+			Assert.That (tags.Count (tag => CMTag.Equals (tag, CMTag.MediaTypeVideo)), Is.EqualTo (1), "Video tag count");
+			Assert.That (tags.Count (tag => CMTag.Equals (tag, CMTag.MediaTypeAudio)), Is.EqualTo (1), "Audio tag count");
 		}
 
 		[Test]
