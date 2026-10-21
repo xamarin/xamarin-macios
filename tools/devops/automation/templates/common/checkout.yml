@@ -13,6 +13,12 @@ parameters:
   type: string
   default: HEAD
 
+# Compiler fixtures are opt-in because publishing jobs can exceed
+# .NET Framework's 65,535-byte subprocess environment limit.
+- name: runPowerShellBootstrapTests
+  type: boolean
+  default: false
+
 steps:
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -26,28 +32,20 @@ steps:
     retryCount: 3
 
 # some bots don't seem to have pwsh installed, so make sure it is
-- powershell: |
-    if (-not $(where.exe pwsh)) {
-      Write-Host "pwsh not found: $LASTEXITCODE"
-      Write-Host "PATH: $env:PATH"
-      $url = "https://github.com/PowerShell/PowerShell/releases/download/v$env:POWERSHELL_VERSION/PowerShell-$env:POWERSHELL_VERSION-win-x64.msi"
-      $output = "$env:TEMP\PowerShell.msi"
-      Write-Host "deleting any temporary msi files: $LASTEXITCODE"
-      Remove-Item -Force $output -ErrorAction Ignore
-      Write-Host "downloading $url to $output result: $LASTEXITCODE"
-      Invoke-WebRequest -Uri $url -OutFile $output
-      Write-Host "installing $output result: $LASTEXITCODE"
-      msiexec.exe /package $output /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
-      Write-Host "install completed: $LASTEXITCODE, updating PATH"
-      Write-Host "##vso[task.prependpath]$($Env:ProgramFiles)\PowerShell\7\"
-    } else {
-      Write-Host "pwsh is already installed: $LASTEXITCODE"
-    }
-    exit 0
+- powershell: ./install-powershell-core.ps1
   displayName: 'Install PowerShell Core'
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
+  timeoutInMinutes: 10
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   env:
     POWERSHELL_VERSION: 7.4.0
+    POWERSHELL_ZIP_SHA256: 62151db1d98a8b56aeb249cc8a3ce17948f1c83b4062dac8d0c4302de71cbd75
+
+- powershell: ./test-powershell-core-native.ps1
+  displayName: 'Test native PowerShell bootstrap failures'
+  workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts
+  timeoutInMinutes: 5
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'), ${{ parameters.runPowerShellBootstrapTests }})
 
 - pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "$Env:IS_PR"
   name: fix_commit
