@@ -99,7 +99,7 @@ namespace NaturalLanguage {
 		/// <summary>Indicates the Armenian language.</summary>
 		[Field ("NLLanguageArmenian")]
 		Armenian,
-		/// <summary>Indicates the Bengali language.</summary>
+		/// <summary>Indicates the Bangla language.</summary>
 		[Field ("NLLanguageBengali")]
 		Bengali,
 		/// <summary>Indicates the Bulgarian language.</summary>
@@ -195,7 +195,7 @@ namespace NaturalLanguage {
 		/// <summary>Indicates the Norwegian language.</summary>
 		[Field ("NLLanguageNorwegian")]
 		Norwegian,
-		/// <summary>Indicates the Oriya language.</summary>
+		/// <summary>Indicates the Odia language.</summary>
 		[Field ("NLLanguageOriya")]
 		Oriya,
 		/// <summary>Indicates the Persian language.</summary>

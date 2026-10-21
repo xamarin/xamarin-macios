@@ -148,6 +148,276 @@
       ],
       "justification": "PoliCheck 80301 false positive: in the French RBI0014MessageFormat translation, 'plus tard dans la méthode' means 'later in the method'. This is valid French, not the English term; preserve the translation.",
       "createdDate": "2026-10-20 16:38:12Z"
+    },
+    "ff23c687dd2063cd2729be35b4e383711b3138037589ce7096ddfc70ff357eb9": {
+      "signature": "ff23c687dd2063cd2729be35b4e383711b3138037589ce7096ddfc70ff357eb9",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: country is the native property selector for CNPostalAddress and CNMutablePostalAddress in src/contacts.cs. Preserve the exact selector so the existing postal-address bindings continue to call the Apple properties.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "dc4e3d725231fce77bfed933a44a94abc39c8427a366c3dbb8042f3e182a997f": {
+      "signature": "dc4e3d725231fce77bfed933a44a94abc39c8427a366c3dbb8042f3e182a997f",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: Contacts.CNPostalAddressKeyOption.Country is an existing public enum member mapped by Field to CNPostalAddressCountryKey. Retain the member name, order and native constant mapping for API compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "75e01f96a318bb21510bd167af447b42d767452558c2c8e658cfaab1ba1903de": {
+      "signature": "75e01f96a318bb21510bd167af447b42d767452558c2c8e658cfaab1ba1903de",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: country is the native CLPlacemark property selector in src/corelocation.cs. Its spelling must remain unchanged for the Country binding to retrieve the placemark's address component; editable summary prose is handled separately.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "3423ec1963050cf655aec9c37653d2bb00a34deab56f701bbe38dfc452f7bf47": {
+      "signature": "3423ec1963050cf655aec9c37653d2bb00a34deab56f701bbe38dfc452f7bf47",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: the altmember cref CoreLocation.CLPlacemark.Country in the IsoCountryCode documentation resolves to the existing public Country property. Preserve this symbol reference rather than changing it as prose and breaking the documentation link.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "c5bdfbe40883949c322fc416d9d902c0e5c03f5b33de459aa91d497c0839694a": {
+      "signature": "c5bdfbe40883949c322fc416d9d902c0e5c03f5b33de459aa91d497c0839694a",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: country is the native CSSearchableItemAttributeSet property selector in src/corespotlight.cs. Retain the exact selector for the existing searchable-item metadata binding; the adjacent editable description uses country/region.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "c1f860e4172fe10da0b17346871ef716ca22eb9bc2986937d7070084c5511c90": {
+      "signature": "c1f860e4172fe10da0b17346871ef716ca22eb9bc2986937d7070084c5511c90",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: DDMatchPostalAddress in src/datadetection.cs exports the native country property. This is an Apple selector required to read the detected postal-address component, not an editable geographic label.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "026f9031edddd37ea126a1c199bc13222e3401744dbf1143f44830ee972ed589": {
+      "signature": "026f9031edddd37ea126a1c199bc13222e3401744dbf1143f44830ee972ed589",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: Export(\"Country\") on MKPlacemarkAddress is a StrongDictionary mapping to AddressBook.ABPersonAddressKey.Country, not an Objective-C selector. Preserve the dictionary key mapping and its case so existing placemark address dictionaries remain compatible.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "f3e5e986f09920c00f88d55d96bfe3f8dbb76a2a03216c4b67d4b7a87e6d2822": {
+      "signature": "f3e5e986f09920c00f88d55d96bfe3f8dbb76a2a03216c4b67d4b7a87e6d2822",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: MapKit.MKAddressFilterOption.Country is an existing native-backed address-filter flag with value 1 << 0. Preserve both the public member name and numeric value for API and native compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "3bd39ffe2561beaf2b87d2885ce7923da262068b90715b65161898acac2c924d": {
+      "signature": "3bd39ffe2561beaf2b87d2885ce7923da262068b90715b65161898acac2c924d",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79459 false positive: blacklisted is the existing native property name exported by PKTransitPassProperties and PKSuicaPassProperties in src/passkit.cs. Keep the deprecated binding metadata intact for compatibility; editable pass-status prose uses block list.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "007fc0fbbc8b941cb50a644f0fbebeead5218d027dcc8bd6bdd9fcb2e3f73160": {
+      "signature": "007fc0fbbc8b941cb50a644f0fbebeead5218d027dcc8bd6bdd9fcb2e3f73160",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79459 false positive: Blacklisted and its isBlacklisted getter binding are existing deprecated API/native names on PKTransitPassProperties and PKSuicaPassProperties. Preserve both identifiers, the Bind attributes and deprecation guidance instead of breaking existing callers or native dispatch.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "11c0c5014ff3eb074e7c915bee57f45874a22f1767e1465e6ed21a9cf9d25696": {
+      "signature": "11c0c5014ff3eb074e7c915bee57f45874a22f1767e1465e6ed21a9cf9d25696",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80411 false positive: kSecTrustCertificateTransparencyWhiteList is the native constant named by the Field attribute on Security.SecTrustResultKey. Its exact spelling is required to resolve the existing deprecated trust-result key.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "c013451b25bca0bb3ab5a43763fa0adbc397571eab6b65691769d0222a4c808e": {
+      "signature": "c013451b25bca0bb3ab5a43763fa0adbc397571eab6b65691769d0222a4c808e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80411 false positive: Security.SecTrustResultKey.CertificateTransparencyWhiteList is the existing deprecated managed property for kSecTrustCertificateTransparencyWhiteList. Retain this public API name and its native mapping for compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "e3890a9808910d0bd3affa4c63573edee37948f660b8449e8b1dfbb0a2750b52": {
+      "signature": "e3890a9808910d0bd3affa4c63573edee37948f660b8449e8b1dfbb0a2750b52",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: orient is the legacy public parameter of SpriteKit.SKAction.FollowPath with a duration. It controls orientation along a CGPath via followPath:asOffset:orientToPath:duration:, not a geographic region; retain the parameter name for source compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "69836aa6b8b65f2cf31a65ca8fe37c6ea52c3b3894dc8651bb9f59d696f7a2a3": {
+      "signature": "69836aa6b8b65f2cf31a65ca8fe37c6ea52c3b3894dc8651bb9f59d696f7a2a3",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: the XML param name orient documents the existing orientation parameter of SpriteKit.SKAction.FollowPath. This is a parameter-name reference with a non-geographical positioning meaning, not editable geographic prose.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "1bd8c017fde41817ff652e3566dd3ef242a5630c933fb576904049621cc90034": {
+      "signature": "1bd8c017fde41817ff652e3566dd3ef242a5630c933fb576904049621cc90034",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: orient is the legacy public parameter of SpriteKit.SKAction.FollowPath with an nfloat speed. It controls path orientation via followPath:asOffset:orientToPath:speed:, not a geographic region; preserve the existing named-argument API.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "7d5e92217c8e5123ecf277c73ddee827c89ad58bc37bfba17ade4dc647d8dfd3": {
+      "signature": "7d5e92217c8e5123ecf277c73ddee827c89ad58bc37bfba17ade4dc647d8dfd3",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: orient is the existing WebKit.DomOverflowEvent constructor parameter passed with horizontal and vertical overflow flags to initOverflowEvent:horizontalOverflow:verticalOverflow:. It denotes overflow orientation, not geography; preserve the public parameter name.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "08ff7a1d099dfc4de4da02b7c7350cd397e94d6793f439f7ac704fcdc8d43c38": {
+      "signature": "08ff7a1d099dfc4de4da02b7c7350cd397e94d6793f439f7ac704fcdc8d43c38",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: orient is the native DOMOverflowEvent property selector exported by WebKit.DomOverflowEvent. It describes overflow orientation, not a region; its exact spelling is necessary for the native binding.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "ab2782261555bebe6b88cd7d4561bce3caa980354d1cea14e0624a92a796bf71": {
+      "signature": "ab2782261555bebe6b88cd7d4561bce3caa980354d1cea14e0624a92a796bf71",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 203588 false positive: WebKit.DomOverflowEvent.Orient is the existing ushort property exposing overflow orientation through the native orient selector. This non-geographical technical API name must remain source-compatible.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "be6497b7eaa5eac94b61c16618adb7733b9932f51307ded1c5ca53e6d8f425bd": {
+      "signature": "be6497b7eaa5eac94b61c16618adb7733b9932f51307ded1c5ca53e6d8f425bd",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: AddressBook.PersonAddress.Country is an existing public dictionary-container property backed by kABPersonAddressCountryKey. Preserve the API name and dictionary access while updating only its editable summary.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "3c29f30ab45b15bff3992e6822710bae7260379579a7dde8aa2bc754ee41746c": {
+      "signature": "3c29f30ab45b15bff3992e6822710bae7260379579a7dde8aa2bc754ee41746c",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: the PersonAddress.Country getter reads ABPersonAddressKey.Country through GetStringValue. This symbol resolves the existing native address dictionary key; changing the reference as prose would break dictionary access.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "5c72ff94ea9bc176890b8e7f2a21019f9855d30598561ddc5ebc1116a6ddabf3": {
+      "signature": "5c72ff94ea9bc176890b8e7f2a21019f9855d30598561ddc5ebc1116a6ddabf3",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: the PersonAddress.Country setter passes ABPersonAddressKey.Country to SetStringValue. Retain this code reference to write the same native address dictionary entry and preserve existing behavior.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "220b6e135882408e83af69ccf69f78f059e78fe86a08184cced651d8016f99d5": {
+      "signature": "220b6e135882408e83af69ccf69f78f059e78fe86a08184cced651d8016f99d5",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79516 false positive: illuminated capitals in the CTFontFeatureStyleOptions summary means decorated uppercase glyphs, alongside engraved text. This is typographic terminology, not a reference to capital cities; retain the meaningful font-feature description.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "55dd76d7d0e785a1d364202dbda5acbfc44e93c1a73a7168742f5fb28bad1138": {
+      "signature": "55dd76d7d0e785a1d364202dbda5acbfc44e93c1a73a7168742f5fb28bad1138",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79515 false positive: capital numbers in the CTFontFeatureNumberCase summary describes numeral glyph case in a font. This is a non-geopolitical typographic use, not a city designation; preserve the existing technical description.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "44d05c4288e77db819d9fab48b4e85a6bacae6e7ae326b12f1b126aef994453a": {
+      "signature": "44d05c4288e77db819d9fab48b4e85a6bacae6e7ae326b12f1b126aef994453a",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: Foundation.NSMetadataItem.Country is an existing public metadata accessor reading NSMetadataQuery.CountryKey. Preserve the property name and the native NSMetadataItemCountryKey mapping for API and metadata compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "fb818d49ac69459df87394037e4da0dd88b11343e3a98f84d2bfe8a9af392cdb": {
+      "signature": "fb818d49ac69459df87394037e4da0dd88b11343e3a98f84d2bfe8a9af392cdb",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79459 false positive: Metal.MTLCommandBufferError.Blacklisted is the existing native-backed error enum member with value 4. Preserve the public identifier and numeric error value rather than renaming an established Apple binding.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "7c72ddf064a335ebfb2b9a17c7ec7d9d26e98d2c53aaacb954e836fa3f4f3518": {
+      "signature": "7c72ddf064a335ebfb2b9a17c7ec7d9d26e98d2c53aaacb954e836fa3f4f3518",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 80411 false positive: MetalPerformanceShaders.MPSNNPaddingMethod.CustomWhitelistForNodeFusion is an existing native-backed public flag with value 1 << 13. Keep its established member name and bit value for API and native compatibility.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "0f41fbabb031be3e6925970148f874496e74f3a7fc9c7f61c3bacba78f2fd8cd": {
+      "signature": "0f41fbabb031be3e6925970148f874496e74f3a7fc9c7f61c3bacba78f2fd8cd",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 185843 false positive: Bengali is the existing public member name in NLLanguage and NLScript, mapped to Apple's NLLanguageBengali and NLScriptBengali constants. Preserve these language/script binding identifiers for API and native compatibility; editable language prose is handled separately.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "6899247c592067d2957c8fe494948a2625754c95b11b61d92f023bed16a2915c": {
+      "signature": "6899247c592067d2957c8fe494948a2625754c95b11b61d92f023bed16a2915c",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 185837 false positive: Oriya is the existing public member name in NLLanguage and NLScript, mapped to Apple's NLLanguageOriya and NLScriptOriya constants. Retain the established language/script identifiers for API and native compatibility while using Odia in editable language documentation.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "6adc87b5cf7c79723a5f520b4784e2aca3ad2758463d26d17713307ac9a6505e": {
+      "signature": "6adc87b5cf7c79723a5f520b4784e2aca3ad2758463d26d17713307ac9a6505e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79570 false positive: ABPersonAddressKey.Country in the AddressBook documentation is a C# sample-code reference to the existing address dictionary key. Preserve the real member name so the sample continues to show compatible dictionary construction.",
+      "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "f0760d7f0837229d0a130a7fb8fbaff2bfcff1f932e6631604582aab2363d20e": {
+      "signature": "f0760d7f0837229d0a130a7fb8fbaff2bfcff1f932e6631604582aab2363d20e",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79515 false positive: capital X in clean-for-remote-tests.sh distinguishes the uppercase chmod u+wX mode flag, which grants directory traversal without making every regular file executable. This is shell-mode syntax, not a geopolitical reference; preserve the accurate explanation.",
+      "createdDate": "2026-10-21 14:32:17Z"
     }
   }
 }
