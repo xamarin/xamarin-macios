@@ -112,6 +112,7 @@ stages:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
+      timeoutInMinutes: 120
       dependsOn: [signing, nuget_convert]
       condition: and(
           or(
