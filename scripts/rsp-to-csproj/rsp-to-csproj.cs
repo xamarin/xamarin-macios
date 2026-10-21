@@ -178,7 +178,9 @@ foreach (var a in arguments) {
 		items.Add (new ("NoStdLib", "true"));
 		break;
 	case "analyzer":
-		items.Add (new ("Analyzer", GetFullPath (value)));
+		// The SDK adds the .NET analyzers by itself.
+		if (Path.GetFileName (value) is not ("Microsoft.CodeAnalysis.NetAnalyzers.dll" or "Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll"))
+			items.Add (new ("Analyzer", GetFullPath (value)));
 		break;
 	case "generatedfilesout":
 		properties.Add (new ("GeneratedFilesOutputPath", GetFullPath (value)));
@@ -190,7 +192,9 @@ foreach (var a in arguments) {
 			properties.Add (new ("ReportAnalyzer", "true"));
 		break;
 	case "analyzerconfig":
-		items.Add (new ("EditorConfigFiles", GetFullPath (value)));
+		// MSBuild discovers .editorconfig files by itself, and csc fails (CS8700) if the same .editorconfig is passed twice.
+		if (Path.GetFileName (value) != ".editorconfig")
+			items.Add (new ("EditorConfigFiles", GetFullPath (value)));
 		break;
 	case "fullpaths":
 		properties.Add (new ("GenerateFullPaths", value));

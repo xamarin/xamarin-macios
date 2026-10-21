@@ -451,13 +451,21 @@ $$(PLATFORM_$(1)_CSPROJ): $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp Makefile $
 
 rsp:: $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp
 
-$($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp: Makefile frameworks.sources $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
+# The .NET analyzers and the .editorconfig are only used for the platform assembly (the one we ship), not for the
+# intermediate core and apidefinition assemblies. scripts/rsp-to-csproj ignores them, because MSBuild adds them to the
+# generated project files by itself.
+# The path to .editorconfig must be relative: csc matches the .editorconfig sections against the full path of each source
+# file, and that silently doesn't match if the paths are spelled differently (for instance if one goes through a symlink).
+$($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp: Makefile frameworks.sources $(TOP)/.editorconfig $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) echo \
 		$(DOTNET_FLAGS) \
 		/analyzer:$(ROSLYN_GENERATOR_COMMON) \
 		/analyzer:$(ROSLYN_GENERATOR) \
 		/analyzer:$(ROSLYN_ANALYZER) \
+		/analyzer:$(DOTNET_ANALYZERS_DIR)/Microsoft.CodeAnalysis.NetAnalyzers.dll \
+		/analyzer:$(DOTNET_ANALYZERS_DIR)/Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll \
+		/analyzerconfig:$(TOP)/.editorconfig \
 		/generatedfilesout:$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 		$$(if $(V),/reportanalyzer:$(ROSLYN_GENERATOR),) \
 		$$(if $(V),/reportanalyzer:$(ROSLYN_ANALYZER),) \

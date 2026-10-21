@@ -74,6 +74,27 @@ The binding process is a multi-step process:
 7. We inject a reference to Apple's documentation into the xml documentation
    produced by the C# compiler, using the `adr` command-line tool.
 
+#### Analyzers ####
+
+The platform assemblies (step 6) are compiled with the .NET analyzers
+(`Microsoft.CodeAnalysis.NetAnalyzers.dll` and
+`Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll`, both from the .NET SDK) and
+the repository's [.editorconfig](../.editorconfig). This means that analyzer
+rules configured in `.editorconfig` (for instance
+`dotnet_diagnostic.CA1309.severity = error`) also apply to the platform
+assemblies.
+
+The platform assemblies are compiled with `-warnaserror+`, so any diagnostic
+reported by an analyzer that's enabled by default is a build error too. If
+that's not wanted for a particular diagnostic, add it to
+`CSC_WARNINGS_TO_FIX` in `src/Makefile` (the availability warnings CA1416 and
+CA1422 are already ignored this way).
+
+Changing `.editorconfig` rebuilds the platform assemblies.
+
+`make analyze` builds project files generated from the same response files
+using MSBuild, with the availability warnings (CA1416 and CA1422) enabled.
+
 #### Enums ####
 
 Enums are handled specially. Most native enums are backed by `NSInteger` or
