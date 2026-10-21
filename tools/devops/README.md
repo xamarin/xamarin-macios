@@ -149,14 +149,16 @@ git submodule update --init --recursive
 dotnet tool install Microsoft.CST.DevSkim.CLI --version 1.0.100 --tool-path /tmp/macios-devskim
 # Run from the repository root; keep reports outside the scanned trees:
 mkdir -p /tmp/macios-devskim-reports
+reports=()
 for source in runtime src tools msbuild external dotnet scripts builds eng; do
+  reports+=("/tmp/macios-devskim-reports/$source.sarif")
   /tmp/macios-devskim/devskim analyze --source-code "$PWD/$source" --base-path "$PWD" \
     --output-file "/tmp/macios-devskim-reports/$source.sarif" --file-format sarif \
     --severity Critical,Important,Moderate,BestPractice,ManualReview \
     --confidence High,Medium,Low --disable-supression --disable-parallel \
     --ignore-globs '**/.git,**/.git/**' || exit
 done
-python3 tools/devops/automation/scripts/check_devskim.py /tmp/macios-devskim-reports/*.sarif
+python3 tools/devops/automation/scripts/check_devskim.py "${reports[@]}"
 python3 -m unittest discover -s tools/devops/automation/scripts -p test_devskim.py
 ```
 

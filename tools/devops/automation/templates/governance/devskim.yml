@@ -46,7 +46,9 @@ stages:
     - bash: |
         set -euo pipefail
         mkdir -p "$REPORTS"
+        reports=()
         for source in runtime src tools msbuild external dotnet scripts builds eng; do
+          reports+=("$REPORTS/$source.sarif")
           "$(Agent.TempDirectory)/devskim-tool/devskim" analyze \
             --source-code "$PWD/$source" \
             --base-path "$PWD" \
@@ -59,7 +61,7 @@ stages:
             --ignore-globs '**/.git,**/.git/**' \
             2>&1 | tee "$REPORTS/$source.log"
         done
-        python3 tools/devops/automation/scripts/check_devskim.py "$REPORTS"/*.sarif
+        python3 tools/devops/automation/scripts/check_devskim.py "${reports[@]}"
       displayName: Run DevSkim and fail on banned APIs
       workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
       env:

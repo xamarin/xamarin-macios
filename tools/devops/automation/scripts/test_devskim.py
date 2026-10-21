@@ -106,6 +106,15 @@ class DevSkimTests(unittest.TestCase):
                 self.assertEqual(1, main([str(path) for path in paths]))
             self.assertIn("runtime/example.c:42: DS154189", output.getvalue())
 
+    def test_missing_report_among_valid_reports_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            valid = Path(directory) / "runtime.sarif"
+            missing = Path(directory) / "src.sarif"
+            valid.write_text(json.dumps(report([])), encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as errors:
+                self.assertEqual(2, main([str(valid), str(missing)]))
+            self.assertIn(str(missing), errors.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
