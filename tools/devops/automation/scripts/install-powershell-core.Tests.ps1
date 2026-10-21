@@ -16,6 +16,7 @@ Describe 'PowerShell bootstrap wiring (<LineEnding>)' -Tag 'Wiring' -ForEach @(
 
     It 'preserves the Windows-only guard and runs before Undo Github merge' {
         $installStep | Should -Match "condition: and\(succeeded\(\), eq\(variables\['Agent.OS'\], 'Windows_NT'\)\)"
+        $installStep | Should -Not -Match 'runPowerShellBootstrapTests'
         $yaml.IndexOf('- powershell:') | Should -BeLessThan $yaml.IndexOf('- pwsh: ./undo_github_merge.ps1')
         $installStep | Should -Not -Match 'continueOnError'
     }
@@ -35,10 +36,39 @@ Describe 'PowerShell bootstrap wiring (<LineEnding>)' -Tag 'Wiring' -ForEach @(
         $nativeStep | Should -Match '(?m)^- powershell: \./test-powershell-core-native\.ps1$'
         $nativeStep | Should -Match '(?m)^  workingDirectory: \$\(System\.DefaultWorkingDirectory\)/\$\(BUILD_REPOSITORY_TITLE\)/tools/devops/automation/scripts$'
         $nativeStep | Should -Match '(?m)^  timeoutInMinutes: \d+$'
-        $nativeStep | Should -Match "condition: and\(succeeded\(\), eq\(variables\['Agent.OS'\], 'Windows_NT'\)\)"
+        $nativeStep.Split("`n") | Should -Contain '  condition: and(succeeded(), eq(variables[''Agent.OS''], ''Windows_NT''), ${{ parameters.runPowerShellBootstrapTests }})'
         $nativeStep | Should -Not -Match 'continueOnError'
         $yaml.IndexOf('- powershell: ./test-powershell-core-native.ps1') | Should -BeGreaterThan $yaml.IndexOf('- powershell: ./install-powershell-core.ps1')
         $yaml.IndexOf('- powershell: ./test-powershell-core-native.ps1') | Should -BeLessThan $yaml.IndexOf('- pwsh: ./undo_github_merge.ps1')
+    }
+
+    It 'defaults fixture compilation off for shared checkout consumers' {
+        $parameter = [regex]::Match($yaml, '(?ms)^- name: runPowerShellBootstrapTests.*?(?=^-|^steps:|\z)').Value
+        $parameter | Should -Match '(?m)^  type: boolean$'
+        $parameter | Should -Match '(?m)^  default: false$'
+    }
+
+    It 'opts in from Windows integration but not publishing, signing or API scan' {
+        $windows = Get-Content -Raw (Join-Path $PSScriptRoot '../templates/windows/build.yml')
+        $windows = ($windows -replace '\r?\n', $NewLine).Replace("`r`n", "`n")
+        $checkout = [regex]::Match($windows, '(?ms)^- template: \.\./common/checkout\.yml.*?(?=^-|\z)').Value
+        $checkout | Should -Match '(?m)^    runPowerShellBootstrapTests: true$'
+
+        $windowsPath = (Get-Item (Join-Path $PSScriptRoot '../templates/windows/build.yml')).FullName
+        foreach ($template in Get-ChildItem (Join-Path $PSScriptRoot '../templates') -Filter '*.yml' -Recurse) {
+            if ($template.FullName -ne $windowsPath) {
+                $consumer = Get-Content -Raw $template.FullName
+                $consumer | Should -Not -Match '(?m)^\s+runPowerShellBootstrapTests:'
+            }
+        }
+
+        $reporting = Get-Content -Raw (Join-Path $PSScriptRoot '../templates/tests/publish-results.yml')
+        $reporting = ($reporting -replace '\r?\n', $NewLine).Replace("`r`n", "`n")
+        $reporting | Should -Match '(?m)^      STAGE_DEPENDENCIES: \$\[ convertToJson\(stageDependencies\) \]$'
+        $publisher = Get-Content -Raw (Join-Path $PSScriptRoot '../templates/tests/publish-html.yml')
+        $publisher = ($publisher -replace '\r?\n', $NewLine).Replace("`r`n", "`n")
+        $publisher | Should -Match '(?m)^    STAGE_DEPENDENCIES: \$\(STAGE_DEPENDENCIES\)$'
+        $publisher | Should -Match ([regex]::Escape('-StageDependencies "$Env:STAGE_DEPENDENCIES"'))
     }
 }
 
