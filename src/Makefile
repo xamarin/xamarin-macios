@@ -454,8 +454,9 @@ rsp:: $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp
 # The .NET analyzers and the .editorconfig are only used for the platform assembly (the one we ship), not for the
 # intermediate core and apidefinition assemblies. scripts/rsp-to-csproj ignores them, because MSBuild adds them to the
 # generated project files by itself.
-# The path to .editorconfig must be relative: csc matches the .editorconfig sections against the full path of each source
-# file, and that silently doesn't match if the paths are spelled differently (for instance if one goes through a symlink).
+# The path to .editorconfig must be relative, just like the paths to the source files: csc matches the .editorconfig
+# sections against the full path of each source file, and that silently doesn't match if the two are spelled differently
+# (for instance if only one of them goes through a symlink, such as /tmp on macOS).
 $($(2)_DOTNET_BUILD_DIR)/Microsoft.$(1).rsp: Makefile frameworks.sources $(TOP)/.editorconfig $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) echo \
