@@ -552,7 +552,7 @@ namespace Security {
 				 * StackOverflow also suggests using [`SecItemImport`](https://developer.apple.com/documentation/security/1395728-secitemimport)
 				 * instead, which works, with a few caveats:
 				 *
-				 * 1. Importing a PKCS#12 blob only returns the certificate, not the private key. This is a bug, as [confirmed](https://forums.developer.apple.com/forums/thread/31711) by Quinn:
+				 * 1. Importing a PKCS#12 blob only returns the certificate, not the private key. This is a bug, as [confirmed](https://forums.developer.apple.com/forums/thread/31711) by Quinn "The Eskimo!":
 				 *
 				 *    > `SecItemImport` really does support importing private keys without putting them in the keychain,
 				 *    > and that code all runs and works in the PKCS#12 case; internally I see both the certificate and
@@ -595,7 +595,7 @@ namespace Security {
 				 * > On the macOS front, there’s nothing stopping a command-line tool running on a CI machine using the keychain.
 				 *   There are some pain points but no showstoppers.
 				 *
-				 * FWIW Quinn wrote a document explaining how to find and fix problems with regards to the keychain on CI machines
+				 * FWIW Quinn “The Eskimo!” wrote a document explaining how to find and fix problems with regards to the keychain on CI machines
 				 * (https://developer.apple.com/forums/thread/712005). The last sentence is a gem: "Resetting trust settings is more of a challenge.
 				 * It’s probably possible to do this with the security tool but, honestly, if you think that your CI system has messed up trust settings
 				 * it’s easiest to throw it away and start again from scratch." - in other words if something goes wrong, the easiest is to wipe the

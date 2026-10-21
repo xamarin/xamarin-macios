@@ -418,6 +418,24 @@
       ],
       "justification": "PoliCheck 79515 false positive: capital X in clean-for-remote-tests.sh distinguishes the uppercase chmod u+wX mode flag, which grants directory traversal without making every regular file executable. This is shell-mode syntax, not a geopolitical reference; preserve the accurate explanation.",
       "createdDate": "2026-10-21 14:32:17Z"
+    },
+    "c82a1be751b418a0b99817aa2ec3bd3f8d963491050ae91e7728f305a050b47c": {
+      "signature": "c82a1be751b418a0b99817aa2ec3bd3f8d963491050ae91e7728f305a050b47c",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79647 contextual false positive: the PKCS#12 bug-confirmation attribution in src/Security/Certificate.cs preserves Quinn's self-chosen Apple Developer Forums signature, as used in the linked reply (https://forums.developer.apple.com/forums/thread/31711). This is a proper-name attribution, not a reference to an ethnic group; retain the original name and technical quotation.",
+      "createdDate": "2026-10-21 18:27:05Z"
+    },
+    "fc8403712f5cfb701050c996823f8aea81c48b4786ff60a17c2afdb23d87df03": {
+      "signature": "fc8403712f5cfb701050c996823f8aea81c48b4786ff60a17c2afdb23d87df03",
+      "alternativeSignatures": [],
+      "memberOf": [
+        "default"
+      ],
+      "justification": "PoliCheck 79647 contextual false positive: the keychain troubleshooting attribution in src/Security/Certificate.cs preserves Quinn's self-chosen Apple Developer Forums signature while crediting his post (https://developer.apple.com/forums/thread/712005). This is a proper-name attribution, not a reference to an ethnic group; retain the original name and source link.",
+      "createdDate": "2026-10-21 18:27:05Z"
     }
   }
 }
