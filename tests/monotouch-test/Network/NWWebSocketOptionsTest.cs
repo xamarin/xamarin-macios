@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using CoreFoundation;
@@ -99,7 +98,7 @@ namespace MonoTouchFixtures.Network {
 
 		[TestCase (false)]
 		[TestCase (true)]
-		public async Task ClientRequestHandler (bool returnNull)
+		public void ClientRequestHandler (bool returnNull)
 		{
 			var listenerState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var listenerCancelled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
@@ -150,18 +149,19 @@ namespace MonoTouchFixtures.Network {
 					Assert.That (listenerState.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Listener did not become ready.");
 					Assert.That (listenerState.Task.Result, Is.Null, "Listener state");
 
-					using var timeout = new CancellationTokenSource (TimeSpan.FromSeconds (10));
 					using var client = new TcpClient ();
-					await client.ConnectAsync (IPAddress.Loopback, listener.Port, timeout.Token);
+					Assert.That (client.ConnectAsync (IPAddress.Loopback, listener.Port).Wait (TimeSpan.FromSeconds (10)), Is.True, "Client did not connect.");
 					using var stream = client.GetStream ();
+					stream.ReadTimeout = 10000;
+					stream.WriteTimeout = 10000;
 					var request = Encoding.ASCII.GetBytes (
 						$"GET / HTTP/1.1\r\nHost: 127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}\r\n" +
 						"Upgrade: websocket\r\nConnection: Upgrade\r\n" +
 						"Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n" +
 						"Sec-WebSocket-Protocol: accepted\r\n\r\n");
-					await stream.WriteAsync (request, timeout.Token);
+					stream.Write (request, 0, request.Length);
 					using var reader = new StreamReader (stream, Encoding.ASCII);
-					var statusLine = await reader.ReadLineAsync (timeout.Token);
+					var statusLine = reader.ReadLine ();
 					Assert.That (requestHandled.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler was not called.");
 					Assert.That (statusLine, Does.StartWith (returnNull ? "HTTP/1.1 400 " : "HTTP/1.1 101 "), "Handshake response");
 				} finally {
