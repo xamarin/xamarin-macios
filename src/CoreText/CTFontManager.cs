@@ -64,6 +64,7 @@ namespace CoreText {
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	/// <summary>An enumeration whose values specify values for auto-activation of fonts.</summary>
 	///     <remarks>To be added.</remarks>
+	[NativeName ("CTFontManagerAutoActivationSetting")]
 	public enum CTFontManagerAutoActivation : uint {
 		/// <summary>To be added.</summary>
 		Default = 0,

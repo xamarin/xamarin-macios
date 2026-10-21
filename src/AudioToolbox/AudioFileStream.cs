@@ -43,6 +43,7 @@ namespace AudioToolbox {
 	/// <summary>An enumeration whose values flag whether a <see cref="AudioToolbox.AudioFileStreamProperty" /> is cached.</summary>
 	///     <remarks>To be added.</remarks>
 	[Flags]
+	[NativeName ("AudioFileStreamPropertyFlags")]
 	public enum AudioFileStreamPropertyFlag { // UInt32 in AudioFileStream_PropertyListenerProc
 		/// <summary>To be added.</summary>
 		PropertyIsCached = 1,
