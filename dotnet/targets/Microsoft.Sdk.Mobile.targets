@@ -163,6 +163,57 @@
 		<Exec Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)" />
 	</Target>
 
+	<Target Name="_ValidateRunIPadAppOnMac">
+		<Error Condition="!$([MSBuild]::IsOSPlatform('OSX'))" Text="RunIPadAppOnMac requires macOS on an Apple silicon Mac." />
+		<Error Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' != 'Arm64'" Text="RunIPadAppOnMac requires an Apple silicon Mac." />
+		<Error Condition="'$(_PlatformName)' != 'iOS' Or '$(RuntimeIdentifier)' != 'ios-arm64'" Text="RunIPadAppOnMac requires an iOS device build. Set RuntimeIdentifier to ios-arm64." />
+		<Error Condition="'$(OutputType)' != 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'" Text="RunIPadAppOnMac requires an iOS application project." />
+	</Target>
+
+	<Target Name="_PrepareIPadAppOnMac" DependsOnTargets="_ValidateRunIPadAppOnMac;Build">
+		<ReadAppManifest
+			AppManifest="$(_AppBundleManifestPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="UIDeviceFamily" PropertyName="_IPadAppOnMacDeviceFamily" />
+		</ReadAppManifest>
+		<Error Condition="'$(_IPadAppOnMacDeviceFamily)' != 'IPad' And '$(_IPadAppOnMacDeviceFamily)' != 'IPhoneAndIPad'" Text="RunIPadAppOnMac requires an app that supports iPad. Include 2 in the UIDeviceFamily array in Info.plist." />
+
+		<PropertyGroup>
+			<!-- macOS protects launched iOS app bundles against in-place updates, so use a fresh wrapper for each launch. -->
+			<_IPadAppOnMacBundle>$(IntermediateOutputPath)ipad-on-mac/$([System.Guid]::NewGuid())/$(_AppBundleName).app</_IPadAppOnMacBundle>
+		</PropertyGroup>
+		<MakeDir Directories="$(_IPadAppOnMacBundle)/Wrapper" />
+		<Ditto Source="$(_AppBundlePath)" Destination="$(_IPadAppOnMacBundle)/Wrapper/$(_AppBundleName).app">
+			<Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
+		</Ditto>
+		<Exec Command="/bin/ln -s &quot;Wrapper/$(_AppBundleName).app&quot; &quot;$(_IPadAppOnMacBundle)/WrappedBundle&quot;" />
+		<ItemGroup>
+			<FileWrites Include="$(_IPadAppOnMacBundle)/WrappedBundle" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="RunIPadAppOnMac" DependsOnTargets="_PrepareIPadAppOnMac">
+		<PropertyGroup>
+			<_IPadAppOnMacOpenArguments>-n</_IPadAppOnMacOpenArguments>
+			<_IPadAppOnMacOpenArguments Condition="'$(WaitForExit)' != 'false'">$(_IPadAppOnMacOpenArguments) -W</_IPadAppOnMacOpenArguments>
+			<_IPadAppOnMacOpenArguments Condition="'$(StandardOutputPath)' != ''">$(_IPadAppOnMacOpenArguments) --stdout &quot;$(StandardOutputPath)&quot;</_IPadAppOnMacOpenArguments>
+			<_IPadAppOnMacOpenArguments Condition="'$(StandardErrorPath)' != ''">$(_IPadAppOnMacOpenArguments) --stderr &quot;$(StandardErrorPath)&quot;</_IPadAppOnMacOpenArguments>
+		</PropertyGroup>
+		<Exec Command="/usr/bin/open $(_IPadAppOnMacOpenArguments) &quot;$(_IPadAppOnMacBundle)&quot;" />
+	</Target>
+
+	<!-- Include wrappers from earlier invocations so incremental builds preserve them and Clean can remove them. -->
+	<Target Name="_CollectIPadAppOnMacFileWrites" BeforeTargets="_CleanGetCurrentAndPriorFileWrites">
+		<ItemGroup>
+			<FileWrites Include="$(IntermediateOutputPath)ipad-on-mac/**/*;$(IntermediateOutputPath)ipad-on-mac/*/*.app/WrappedBundle" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CleanIPadAppOnMac" AfterTargets="CoreClean">
+		<RemoveDir Directories="$(IntermediateOutputPath)ipad-on-mac" />
+	</Target>
+
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
 	<Target
 		Name="_PrepareRunMobile"

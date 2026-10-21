@@ -97,3 +97,33 @@ on a default simulator/device. A specific deployment target can be set by using 
 ```dotnetcli
 dotnet build -t:Run project.csproj -p:Device=<udid>
 ```
+
+## RunIPadAppOnMac
+
+Builds an iOS application and runs it directly on an Apple silicon Mac, without
+using a simulator or rebuilding for Mac Catalyst. The app must support iPad
+(`UIDeviceFamily` must contain `2`) and target the `ios-arm64` runtime identifier.
+Both iPad-only and universal iPhone/iPad apps are supported.
+
+```dotnetcli
+dotnet build project.csproj -t:RunIPadAppOnMac -p:RuntimeIdentifier=ios-arm64
+```
+
+For a multi-targeted project, also specify the iOS target framework with `-f`.
+Use a valid development signing identity and provisioning profile that includes
+the Mac's provisioning UDID. You can find this identifier using
+`system_profiler SPHardwareDataType`.
+
+The target creates a fresh wrapper around a copy of the signed app in the
+intermediate output directory, then launches the wrapper with macOS Launch
+Services. The original app bundle is not modified. A new wrapper is required
+for each invocation because macOS protects previously launched iOS app bundles
+against in-place updates. `Clean` removes these wrappers.
+
+By default, the target waits for the app to exit. Set `WaitForExit=false` to return
+after launching. `StandardOutputPath` and `StandardErrorPath` can be used to
+capture the app's output. This target does not attach a managed debugger.
+
+The wrapper layout used for local launching is not a documented Apple deployment
+interface. This target does not support Intel Macs, iOS simulator builds,
+iPhone-only apps, or other platforms than iOS.
