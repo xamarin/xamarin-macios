@@ -438,6 +438,8 @@ namespace Xamarin.Tests {
 			sb.AppendLine ($"	<PropertyGroup>");
 			sb.AppendLine ($"		<TargetFramework>{platform.ToFramework ()}</TargetFramework>");
 			sb.AppendLine ($"		<OutputType>Exe</OutputType>");
+			// These generated projects use console entry points and do not start UIKit.
+			sb.AppendLine ($"		<ValidateSceneManifest>false</ValidateSceneManifest>");
 			sb.AppendLine ($"		<ApplicationTitle>{name}</ApplicationTitle>");
 			sb.AppendLine ($"		<ApplicationId>com.xamarin.testproject.{name}</ApplicationId>");
 			sb.AppendLine ($"	</PropertyGroup>");
