@@ -108,10 +108,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern nint CFWriteStreamWrite (IntPtr handle, IntPtr buffer, nint count);
 
-		/// <param name="buffer">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <returns>To be added.</returns>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Writes bytes from the provided buffer to the stream.</summary>
+		/// <param name="buffer">The nonempty source buffer.</param>
+		/// <returns>The number of bytes written, which may be less than the buffer length, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="buffer" /> is empty.</exception>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
 		public int Write (byte [] buffer)
 		{
 			if (buffer is null)
@@ -119,6 +121,14 @@ namespace CoreFoundation {
 			return Write (buffer, 0, buffer.Length);
 		}
 
+		/// <summary>Writes bytes from a range of the provided buffer to the stream.</summary>
+		/// <param name="buffer">The source buffer.</param>
+		/// <param name="offset">The nonnegative byte offset of the first byte to write.</param>
+		/// <param name="count">The positive maximum number of bytes to write.</param>
+		/// <returns>The number of bytes written, which may be less than <paramref name="count" />, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="offset" /> is negative, <paramref name="count" /> is not positive, or the range exceeds the buffer length.</exception>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
 		public unsafe int Write (byte [] buffer, nint offset, nint count)
 		{
 			if (buffer is null)
@@ -128,10 +138,26 @@ namespace CoreFoundation {
 				throw new ArgumentException ();
 			if (count < 1)
 				throw new ArgumentException ();
-			if (offset + count > buffer.Length)
+			if (offset > buffer.Length || count > buffer.Length - offset)
 				throw new ArgumentException ();
-			fixed (byte* ptr = buffer)
-				return (int) CFWriteStreamWrite (Handle, ((IntPtr) ptr) + (int) offset, count);
+			return Write (buffer.AsSpan ((int) offset, (int) count));
+		}
+
+		/// <summary>Writes bytes from the provided span to the stream.</summary>
+		/// <param name="buffer">The source bytes.</param>
+		/// <returns>The number of bytes written, which may be less than the span length, zero for an empty span, or -1 if an error occurs.</returns>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
+		/// <remarks>An empty span does not access the native stream. Otherwise, the buffer is pinned only during the native call.</remarks>
+		public unsafe int Write (ReadOnlySpan<byte> buffer)
+		{
+			var handle = GetCheckedHandle ();
+			if (buffer.IsEmpty)
+				return 0;
+			fixed (byte* ptr = buffer) {
+				var result = (int) CFWriteStreamWrite (handle, (IntPtr) ptr, buffer.Length);
+				GC.KeepAlive (this);
+				return result;
+			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

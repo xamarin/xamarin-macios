@@ -14827,7 +14827,6 @@ M:CoreFoundation.CFStream.DoSetClient(,System.IntPtr,System.IntPtr)
 M:CoreFoundation.CFString.op_Implicit(CoreFoundation.CFString)~System.String
 M:CoreFoundation.CFString.op_Implicit(System.String)~CoreFoundation.CFString
 M:CoreFoundation.CFWriteStream.DoSetClient(,System.IntPtr,System.IntPtr)
-M:CoreFoundation.CFWriteStream.Write(System.Byte[],System.IntPtr,System.IntPtr)
 M:CoreFoundation.DispatchBlock.op_Explicit(CoreFoundation.DispatchBlock)~System.Action
 M:CoreFoundation.DispatchData.CreateMap(System.IntPtr@,System.UIntPtr@)
 M:CoreFoundation.DispatchData.CreateSubrange(System.UIntPtr,System.UIntPtr)
@@ -16787,7 +16786,6 @@ M:Foundation.NSInputStream.FromUrl(Foundation.NSUrl)
 M:Foundation.NSInputStream.GetBuffer(System.IntPtr@,System.UIntPtr@)
 M:Foundation.NSInputStream.GetProperty(Foundation.NSString)
 M:Foundation.NSInputStream.HasBytesAvailable
-M:Foundation.NSInputStream.Read(System.IntPtr,System.UIntPtr)
 M:Foundation.NSInputStream.SetProperty(Foundation.NSObject,Foundation.NSString)
 M:Foundation.NSInvocation.Invoke
 M:Foundation.NSInvocation.Invoke(Foundation.NSObject)

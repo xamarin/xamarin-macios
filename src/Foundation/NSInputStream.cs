@@ -31,25 +31,52 @@ namespace Foundation {
 
 		// This is done manually because the generator can't handle byte[] as a native pointer (it will try to use NSArray instead).
 		/// <summary>Reads data from the stream into the provided buffer.</summary>
-		/// <param name="buffer">The buffer where data should be put.</param>
-		/// <param name="len">The size of the buffer (in bytes).</param>
-		/// <returns>The number of bytes actually written.</returns>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="len">The maximum number of bytes to read, which must not exceed the length of <paramref name="buffer" />.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="len" /> exceeds the buffer length.</exception>
 		public nint Read (byte [] buffer, nuint len)
 		{
-			return objc_msgSend (Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
+			if (len > (nuint) buffer.Length)
+				throw new ArgumentException ();
+			var result = objc_msgSend (Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
+			GC.KeepAlive (this);
+			return result;
 		}
 
 		/// <summary>Reads data from the stream into the provided buffer starting at the given offset.</summary>
 		/// <param name="buffer">The buffer where data should be stored.</param>
 		/// <param name="offset">The byte offset in <paramref name="buffer" /> at which to begin storing data.</param>
 		/// <param name="len">The maximum number of bytes to read.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException">The requested range extends beyond <paramref name="buffer" />.</exception>
+		/// <exception cref="IndexOutOfRangeException"><paramref name="offset" /> is negative, or equals the buffer length and <paramref name="len" /> is zero.</exception>
 		public unsafe nint Read (byte [] buffer, int offset, nuint len)
 		{
-			if (offset + (long) len > buffer.Length)
+			if (buffer is null)
+				throw new ArgumentNullException (nameof (buffer));
+			if (offset < 0)
+				throw new IndexOutOfRangeException ();
+			if (offset > buffer.Length || len > (nuint) (buffer.Length - offset))
 				throw new ArgumentException ();
 
 			fixed (byte* ptr = &buffer [offset])
 				return Read ((IntPtr) ptr, len);
+		}
+
+		/// <summary>Reads data from the stream into the provided span.</summary>
+		/// <param name="buffer">The destination buffer, whose length is the maximum number of bytes to read.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <remarks>The buffer is pinned only during the call. An empty span is passed to the native read method with a length of zero. Overrides of <see cref="Read(IntPtr, nuint)" /> are honored.</remarks>
+		public unsafe nint Read (Span<byte> buffer)
+		{
+			byte empty = 0;
+			fixed (byte* ptr = buffer)
+				return Read ((IntPtr) (buffer.IsEmpty ? &empty : ptr), (nuint) buffer.Length);
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
@@ -61,6 +88,11 @@ namespace Foundation {
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern unsafe nint objc_msgSendSuper (global::ObjCRuntime.ObjCSuper* handle, IntPtr sel, IntPtr buffer, nuint len);
 
+		/// <summary>Reads data from the stream into an unmanaged buffer.</summary>
+		/// <param name="buffer">A nonzero pointer to writable storage for at least <paramref name="len" /> bytes, valid for the duration of the call.</param>
+		/// <param name="len">The maximum number of bytes to read.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is zero, even if <paramref name="len" /> is zero.</exception>
 		[Export ("read:maxLength:")]
 		public virtual unsafe nint Read (IntPtr buffer, nuint len)
 		{
@@ -68,7 +100,9 @@ namespace Foundation {
 				throw new ArgumentNullException ("buffer");
 
 			if (IsDirectBinding) {
-				return objc_msgSend (this.Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
+				var result = objc_msgSend (this.Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
+				GC.KeepAlive (this);
+				return result;
 			} else {
 				var __objc_super__ = new global::ObjCRuntime.ObjCSuper (this);
 				var __result__ = objc_msgSendSuper (&__objc_super__, Selector.GetHandle (selReadMaxLength), buffer, len);
