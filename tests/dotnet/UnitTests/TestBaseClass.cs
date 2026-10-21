@@ -529,12 +529,12 @@ namespace Xamarin.Tests {
 			log.WriteLine (ps.Output.MergedOutput);
 			log.WriteLine ($"ps exited with code {ps.ExitCode} (timed out: {ps.TimedOut}).");
 
-			CollectDebuggerSnapshot (pid, log);
-
 			// Capture stacks before the timeout kill destroys the evidence. Keep sampling bounded too.
 			var sample = Execution.RunAsync ("/usr/bin/sample", [pid, "5", "1", "-mayDie", "-file", "/dev/stdout"], log: log, timeout: TimeSpan.FromSeconds (15)).Result;
 			log.WriteLine (sample.Output.MergedOutput);
 			log.WriteLine ($"sample exited with code {sample.ExitCode} (timed out: {sample.TimedOut}).");
+
+			CollectDebuggerSnapshot (pid, log);
 		}
 
 		static void CollectDebuggerSnapshot (string pid, TextWriter log)

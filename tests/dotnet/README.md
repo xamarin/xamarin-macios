@@ -7,7 +7,8 @@ timeout. On macOS, before killing a timed-out application, the helper records th
 OS and architecture, process status, and a five-second `/usr/bin/sample` thread
 sample in the test output. This diagnostic branch also captures a bounded LLDB
 snapshot with thread stacks, registers, instructions, memory mappings, and a
-modified-memory native core before sampling. The debugger log and core are NUnit
+modified-memory native core, with a stack-only core fallback. Sampling runs first
+because a failed debugger attachment can kill the target. The debugger log and cores are NUnit
 attachments; ACES uses non-interactive sudo for debugger access. The diagnostic
 BundleStructure app allows debugger attachment in Debug and Release.
 These diagnostics are included in CI's NUnit results
