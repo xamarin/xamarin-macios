@@ -2923,6 +2923,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7198" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Error de firma de código porque '{0}' contiene archivos con atributos extendidos como "com.apple.FinderInfo" o "com.apple.ResourceFork" que no se permiten al firmar. Ejecute "xattr -lr "{0}"" para localizar los archivos afectados. Quite los atributos no deseados de los archivos de código fuente originales (por ejemplo, con 'xattr -cr "path/to/source/files"') y, a continuación, limpie y vuelva a compilar. Consulte https://developer.apple.com/library/archive/qa/qa1940/_index.html para obtener más información.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3261,6 +3270,15 @@
           <Val><![CDATA[Adjusted path from '{0}' to '{1}']D;]A;        ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ruta de acceso ajustada de '{0}' a '{1}']D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El simulador no admite arm64.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

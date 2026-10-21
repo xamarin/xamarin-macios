@@ -2923,6 +2923,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7198" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}', imzalama sırasında izin verilmeyen 'com.apple.FinderInfo' veya 'com.apple.ResourceFork' gibi genişletilmiş özniteliklere sahip dosyalar içerdiğinden kod imzalama başarısız oldu. Etkilenen dosyaları bulmak için 'xattr -lr "{0}"' komutunu çalıştırın. Özgün kaynak dosyalardan istenmeyen öznitelikleri kaldırın (örneğin, 'xattr -cr "path/to/source/files"' ile), ardından temizleyip yeniden oluşturun. Daha fazla bilgi için https://developer.apple.com/library/archive/qa/qa1940/_index.html bakın.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3261,6 +3270,15 @@
           <Val><![CDATA[Adjusted path from '{0}' to '{1}']D;]A;        ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Yol, '{0}'dan '{1}'e ayarlandı]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Simülatör arm64 mimarisini desteklemiyor.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
