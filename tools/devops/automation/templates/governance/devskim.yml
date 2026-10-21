@@ -1,0 +1,74 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+stages:
+- stage: devskim
+  displayName: DevSkim
+  dependsOn: []
+  jobs:
+  - job: devskim
+    displayName: Scan for banned APIs
+    timeoutInMinutes: 30
+    pool:
+      name: AzurePipelines-EO
+      image: 1ESPT-Ubuntu22.04
+      os: linux
+    workspace:
+      clean: all
+    steps:
+    - checkout: self
+      path: s/$(BUILD_REPOSITORY_TITLE)
+      clean: true
+      submodules: recursive
+      fetchTags: false
+
+    - task: UseDotNet@2
+      displayName: Install .NET for DevSkim
+      inputs:
+        packageType: sdk
+        version: 10.0.x
+
+    - bash: |
+        set -euo pipefail
+        dotnet tool install Microsoft.CST.DevSkim.CLI \
+          --version 1.0.100 \
+          --tool-path "$(Agent.TempDirectory)/devskim-tool" \
+          --source https://api.nuget.org/v3/index.json
+      displayName: Install pinned DevSkim
+      workingDirectory: $(Agent.TempDirectory)
+
+    - bash: |
+        set -euo pipefail
+        python3 -m unittest discover -s tools/devops/automation/scripts -p test_devskim.py
+      displayName: Test DevSkim report gate
+      workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+
+    - bash: |
+        set -euo pipefail
+        mkdir -p "$REPORTS"
+        for source in runtime src tools msbuild external dotnet scripts builds eng; do
+          "$(Agent.TempDirectory)/devskim-tool/devskim" analyze \
+            --source-code "$PWD/$source" \
+            --base-path "$PWD" \
+            --output-file "$REPORTS/$source.sarif" \
+            --file-format sarif \
+            --severity Critical,Important,Moderate,BestPractice,ManualReview \
+            --confidence High,Medium,Low \
+            --disable-supression \
+            --disable-parallel \
+            --ignore-globs '**/.git,**/.git/**' \
+            2>&1 | tee "$REPORTS/$source.log"
+        done
+        python3 tools/devops/automation/scripts/check_devskim.py "$REPORTS"/*.sarif
+      displayName: Run DevSkim and fail on banned APIs
+      workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+      env:
+        REPORTS: $(Build.ArtifactStagingDirectory)/devskim
+
+    - template: ../common/publish-pipeline-artifact.yml
+      parameters:
+        use1ES: true
+        displayName: Publish DevSkim reports
+        path: $(Build.ArtifactStagingDirectory)/devskim
+        artifact: devskim
+        condition: always()

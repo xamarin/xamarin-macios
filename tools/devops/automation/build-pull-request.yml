@@ -99,6 +99,8 @@ extends:
         exclude:
         - repository: yaml-templates
     stages:
+    - template: templates/governance/devskim.yml
+
     - template: templates/main-stage.yml
       parameters:
         xcodeChannel: $(xcodeChannel)
