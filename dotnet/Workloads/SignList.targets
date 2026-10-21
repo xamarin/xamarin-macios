@@ -50,7 +50,9 @@
     though, so map them to Skip in the sign list.
 
     The bundles are found in a separate target, so that _SignMacBundles is skipped when there aren't any (not all
-    packages are always signed together, for instance when only Sharpie is released).
+    packages are always signed together, for instance when only Sharpie is released). The condition of a target is
+    evaluated before the targets in its DependsOnTargets have run, so _SignMacBundles uses AfterTargets to run after
+    _FindMacBundles, otherwise its condition wouldn't see the bundles.
   -->
   <Target Name="_FindMacBundles"
       DependsOnTargets="@(SignFilesAfterTargets)"
@@ -71,7 +73,7 @@
 
   <Target Name="_SignMacBundles"
       AfterTargets="_FindMacBundles"
-      Condition="'@(_MacBundle)' != ''">
+      Condition="'@(_MacBundle->Count())' != '0'">
     <ItemGroup>
       <_MacBundleFile Include="%(_MacBundle.Identity)\**">
         <Bundle>%(_MacBundle.Identity)</Bundle>
@@ -80,7 +82,10 @@
       </_MacBundleFile>
     </ItemGroup>
 
-    <Copy SourceFiles="@(_MacBundleFile)" DestinationFiles="@(_MacBundleFile->'%(ZipDir)\%(BundleName)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy
+        SourceFiles="@(_MacBundleFile)"
+        DestinationFiles="@(_MacBundleFile->'%(ZipDir)\%(BundleName)\%(RecursiveDir)%(Filename)%(Extension)')"
+    />
     <ZipDirectory SourceDirectory="%(_MacBundle.ZipDir)" DestinationFile="%(_MacBundle.ZipName)" />
     <RemoveDir Directories="%(_MacBundle.ZipDir)" />
     <RemoveDir Directories="%(_MacBundle.Identity)" />
@@ -88,7 +93,14 @@
     <ItemGroup>
       <_MacBundleZip Include="@(_MacBundle->'%(ZipName)')" Zip="true" />
     </ItemGroup>
-    <SignFiles Files="@(_MacBundleZip)" Type="$(SignType)" BinariesDirectory="$(OutDir)" IntermediatesDirectory="$(IntermediateOutputPath)" ESRPSigning="$(ESRPSigning)" UseBearerToken="$(UseBearerToken)" />
+    <SignFiles
+        Files="@(_MacBundleZip)"
+        Type="$(SignType)"
+        BinariesDirectory="$(OutDir)"
+        IntermediatesDirectory="$(IntermediateOutputPath)"
+        ESRPSigning="$(ESRPSigning)"
+        UseBearerToken="$(UseBearerToken)"
+    />
 
     <Unzip SourceFiles="%(_MacBundle.ZipName)" DestinationFolder="%(_MacBundle.ZipDir)" />
     <ItemGroup>
@@ -96,15 +108,31 @@
         <Bundle>%(_MacBundle.Identity)</Bundle>
       </_SignedMacBundleFile>
     </ItemGroup>
-    <Copy SourceFiles="@(_SignedMacBundleFile)" DestinationFiles="@(_SignedMacBundleFile->'%(Bundle)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy
+        SourceFiles="@(_SignedMacBundleFile)"
+        DestinationFiles="@(_SignedMacBundleFile->'%(Bundle)\%(RecursiveDir)%(Filename)%(Extension)')"
+    />
     <Delete Files="%(_MacBundle.ZipName)" />
     <RemoveDir Directories="%(_MacBundle.ZipDir)" />
-    <!-- Make sure the signed bundle is complete: all the files that were in the bundle must still be there, and the bundle must have a seal. -->
-    <Error Condition="!Exists('%(_MacBundleFile.Bundle)\%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)')" Text="The signed bundle '%(_MacBundleFile.Bundle)' doesn't have the file '%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)'." />
-    <Error Condition="!Exists('%(_MacBundle.Identity)\Contents\_CodeSignature\CodeResources')" Text="The signed bundle '%(_MacBundle.Identity)' doesn't have a _CodeSignature\CodeResources file." />
+    <!--
+      Make sure the signed bundle is complete: all the files that were in the bundle must still be there, and the
+      bundle must have a seal.
+    -->
+    <Error
+        Condition="!Exists('%(_MacBundleFile.Bundle)\%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)')"
+        Text="The signed bundle '%(_MacBundleFile.Bundle)' doesn't have the file '%(_MacBundleFile.RecursiveDir)%(_MacBundleFile.Filename)%(_MacBundleFile.Extension)'."
+    />
+    <Error
+        Condition="!Exists('%(_MacBundle.Identity)\Contents\_CodeSignature\CodeResources')"
+        Text="The signed bundle '%(_MacBundle.Identity)' doesn't have a _CodeSignature\CodeResources file."
+    />
   </Target>
 
-  <!-- The signed Mac binaries must be restored (by the template's @(SignFilesAfterTargets) targets) before the nested zips are re-zipped, otherwise a Mac binary in a nested zip would be replaced by the temporary zip the template signs. The same goes for the bundles. -->
+  <!--
+    The signed Mac binaries must be restored (by the template's @(SignFilesAfterTargets) targets) before the nested
+    zips are re-zipped, otherwise a Mac binary in a nested zip would be replaced by the temporary zip the template
+    signs. The same goes for the bundles.
+  -->
   <Target Name="_ZipNestedZips"
       DependsOnTargets="_UnzipNestedZips;@(SignFilesAfterTargets);_FindMacBundles;_SignMacBundles"
       AfterTargets="SignFiles" >
