@@ -2,7 +2,6 @@
 !unknown-native-enum! vImageError bound
 
 # updated sharpie results
-!missing-enum! vImage_InterpolationMethod not bound
 !missing-enum! vImageARGBType not bound
 !missing-enum! vImageYpCbCrType not bound
 

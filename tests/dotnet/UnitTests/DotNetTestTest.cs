@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Xml.Linq;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Models;
@@ -11,11 +12,15 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public class DotNetTestTest : TestBaseClass {
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iostest")]
-		[TestCase (ApplePlatform.TVOS, "tvostest")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalysttest")]
-		[TestCase (ApplePlatform.MacOSX, "macostest")]
-		public void DotNetTest (ApplePlatform platform, string template)
+		[TestCase (ApplePlatform.iOS, "iostest", false)]
+		[TestCase (ApplePlatform.iOS, "iostest", true)]
+		[TestCase (ApplePlatform.TVOS, "tvostest", false)]
+		[TestCase (ApplePlatform.TVOS, "tvostest", true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalysttest", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalysttest", true)]
+		[TestCase (ApplePlatform.MacOSX, "macostest", false)]
+		[TestCase (ApplePlatform.MacOSX, "macostest", true)]
+		public void DotNetTest (ApplePlatform platform, string template, bool fail)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -39,7 +44,7 @@ namespace Xamarin.Tests {
 			}
 
 			try {
-				// Replace generated tests with a single passing test
+				// Replace generated tests with a single test
 				var testFile = Path.Combine (outputDir, "Test1.cs");
 				File.WriteAllText (testFile, $@"namespace {template};
 
@@ -48,6 +53,7 @@ public sealed class Test1 {{
 	[TestMethod]
 	public void TestMethod1 ()
 	{{
+		{(fail ? "Assert.Fail (\"Expected test failure\");" : "")}
 	}}
 }}
 ");
@@ -70,7 +76,47 @@ public sealed class Test1 {{
 				if (device is not null)
 					testArgs.Add ($"--device:{device.Udid}");
 				var testResult = Execution.RunAsync (DotNet.Executable, testArgs, env, Console.Out, workingDirectory: outputDir, timeout: TimeSpan.FromMinutes (10)).Result;
-				Assert.That (testResult.ExitCode, Is.EqualTo (0), $"'dotnet test' failed with exit code {testResult.ExitCode}.\nBinlog: {binlog}\nOutput:\n{testResult.Output.MergedOutput}");
+				Assert.That (testResult.ExitCode, Is.EqualTo (fail ? 2 : 0), $"'dotnet test' returned an unexpected exit code.\nBinlog: {binlog}\nOutput:\n{testResult.Output.MergedOutput}");
+				Assert.That (testResult.Output.MergedOutput, Does.Contain ("total: 1"), "Exactly one test should run.");
+
+				if (isDesktop && !fail) {
+					var resultsPath = Path.Combine (outputDir, "Custom TestResults");
+					testArgs.AddRange (["--results-directory", resultsPath, "--report-trx"]);
+					for (var run = 0; run < 2; run++) {
+						var result = Execution.RunAsync (DotNet.Executable, testArgs, env, Console.Out, workingDirectory: outputDir, timeout: TimeSpan.FromMinutes (10)).Result;
+						Assert.That (result.ExitCode, Is.EqualTo (0), $"Run {run} with explicit reporting options failed:\n{result.Output.MergedOutput}");
+						Assert.That (result.Output.MergedOutput, Does.Contain ("total: 1"), "Exactly one test should run.");
+					}
+					var reports = Directory.GetFiles (resultsPath, "*.trx");
+					Assert.That (reports, Is.Not.Empty, "TRX reports should be written to the explicit results directory.");
+					foreach (var report in reports) {
+						var document = XDocument.Load (report);
+						var counters = document.Descendants ().Single (v => v.Name.LocalName == "Counters");
+						Assert.That ((string?) counters.Attribute ("total"), Is.EqualTo ("1"), report);
+						Assert.That ((string?) counters.Attribute ("passed"), Is.EqualTo ("1"), report);
+					}
+
+					var appBundle = Directory.GetDirectories (Path.Combine (outputDir, "bin"), $"{template}.app", SearchOption.AllDirectories).Single ();
+					Assert.That (Directory.GetDirectories (appBundle, "TestResults", SearchOption.AllDirectories), Is.Empty, "Results must not be written inside the app bundle.");
+					var executable = Directory.GetFiles (appBundle, template, SearchOption.AllDirectories).Single ();
+					var invalidResult = Execution.RunAsync (executable, ["--invalid-test-option"], env, Console.Out, workingDirectory: outputDir, timeout: TimeSpan.FromMinutes (1)).Result;
+					Assert.That (invalidResult.ExitCode, Is.EqualTo (5), $"MTP command-line errors must retain their exit code:\n{invalidResult.Output.MergedOutput}");
+
+					var mainFile = Path.Combine (outputDir, "Main.cs");
+					var main = File.ReadAllText (mainFile);
+					var emptyDocumentsMain = main.Replace ("Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)", "\"\"");
+					Assert.That (emptyDocumentsMain, Is.Not.EqualTo (main), "Force an empty documents path in the generated app.");
+					File.WriteAllText (mainFile, emptyDocumentsMain);
+					var fallbackPath = Path.Combine (Path.GetTempPath (), template, "TestResults");
+					var previousReports = Directory.Exists (fallbackPath) ? Directory.GetFiles (fallbackPath, "*.trx") : [];
+					var fallbackResult = Execution.RunAsync (DotNet.Executable, ["test", proj, $"/bl:{binlog}"], env, Console.Out, workingDirectory: outputDir, timeout: TimeSpan.FromMinutes (10)).Result;
+					Assert.That (fallbackResult.ExitCode, Is.EqualTo (0), $"Run with an empty documents path failed:\n{fallbackResult.Output.MergedOutput}");
+					Assert.That (fallbackResult.Output.MergedOutput, Does.Contain ("total: 1"), "Exactly one test should run.");
+					var fallbackReports = Directory.GetFiles (fallbackPath, "*.trx").Except (previousReports).ToArray ();
+					Assert.That (fallbackReports, Has.Length.EqualTo (1), "The temporary results directory should contain a new TRX report.");
+					Assert.That (Directory.GetDirectories (appBundle, "TestResults", SearchOption.AllDirectories), Is.Empty, "Results must not be written inside the app bundle.");
+					File.Delete (fallbackReports [0]);
+				}
 			} finally {
 				if (device is not null)
 					simService.Shutdown (device.Udid);

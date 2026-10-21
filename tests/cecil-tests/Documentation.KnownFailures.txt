@@ -1813,8 +1813,6 @@ F:CoreGraphics.CGDynamicRange.Constrained
 F:CoreGraphics.CGDynamicRange.High
 F:CoreGraphics.CGDynamicRange.Standard
 F:CoreGraphics.CGEventSuppressionState.NumberOfEventSuppressionStates
-F:CoreGraphics.CGEventType.TapDisabledByTimeout
-F:CoreGraphics.CGEventType.TapDisabledByUserInput
 F:CoreGraphics.CGImageComponentInfo.Float
 F:CoreGraphics.CGImageComponentInfo.Integer
 F:CoreGraphics.CGPdfTagType.Annotation
@@ -16456,7 +16454,6 @@ M:Foundation.NSData.Compress(Foundation.NSDataCompressionAlgorithm,Foundation.NS
 M:Foundation.NSData.Decompress(Foundation.NSDataCompressionAlgorithm,Foundation.NSError@)
 M:Foundation.NSData.EnumerateByteRange(Foundation.NSDataByteRangeEnumerator)
 M:Foundation.NSData.Find(Foundation.NSData,Foundation.NSDataSearchOptions,Foundation.NSRange)
-M:Foundation.NSData.FromBytes(System.IntPtr,System.UIntPtr)
 M:Foundation.NSData.FromBytesNoCopy(System.IntPtr,System.UIntPtr,System.Boolean)
 M:Foundation.NSData.FromBytesNoCopy(System.IntPtr,System.UIntPtr)
 M:Foundation.NSData.FromData(Foundation.NSData)
@@ -16466,8 +16463,6 @@ M:Foundation.NSData.FromUrl(Foundation.NSUrl,Foundation.NSDataReadingOptions,Fou
 M:Foundation.NSData.FromUrl(Foundation.NSUrl)
 M:Foundation.NSData.GetBase64EncodedData(Foundation.NSDataBase64EncodingOptions)
 M:Foundation.NSData.GetBase64EncodedString(Foundation.NSDataBase64EncodingOptions)
-M:Foundation.NSData.GetBytes(System.IntPtr,Foundation.NSRange)
-M:Foundation.NSData.GetBytes(System.IntPtr,System.UIntPtr)
 M:Foundation.NSData.Save(Foundation.NSUrl,System.Boolean)
 M:Foundation.NSData.Save(System.String,System.Boolean)
 M:Foundation.NSData.Subdata(Foundation.NSRange)
@@ -16956,13 +16951,10 @@ M:Foundation.NSMutableCharacterSet.Invert
 M:Foundation.NSMutableCharacterSet.RemoveCharacters(Foundation.NSRange)
 M:Foundation.NSMutableCharacterSet.RemoveCharacters(Foundation.NSString)
 M:Foundation.NSMutableCharacterSet.UnionWith(Foundation.NSCharacterSet)
-M:Foundation.NSMutableData.AppendBytes(System.IntPtr,System.UIntPtr)
 M:Foundation.NSMutableData.AppendData(Foundation.NSData)
 M:Foundation.NSMutableData.Compress(Foundation.NSDataCompressionAlgorithm,Foundation.NSError@)
 M:Foundation.NSMutableData.Create
 M:Foundation.NSMutableData.Decompress(Foundation.NSDataCompressionAlgorithm,Foundation.NSError@)
-M:Foundation.NSMutableData.ReplaceBytes(Foundation.NSRange,System.IntPtr,System.UIntPtr)
-M:Foundation.NSMutableData.ReplaceBytes(Foundation.NSRange,System.IntPtr)
 M:Foundation.NSMutableData.ResetBytes(Foundation.NSRange)
 M:Foundation.NSMutableData.SetData(Foundation.NSData)
 M:Foundation.NSMutableDictionary.#ctor(Foundation.NSDictionary,System.Boolean)
@@ -17649,7 +17641,6 @@ M:Foundation.NSUserNotificationCenter.RemoveAllDeliveredNotifications
 M:Foundation.NSUserNotificationCenter.RemoveDeliveredNotification(Foundation.NSUserNotification)
 M:Foundation.NSUserNotificationCenter.RemoveScheduledNotification(Foundation.NSUserNotification)
 M:Foundation.NSUserNotificationCenter.ScheduleNotification(Foundation.NSUserNotification)
-M:Foundation.NSUuid.#ctor(System.String)
 M:Foundation.NSUuid.AsString
 M:Foundation.NSUuid.Compare(Foundation.NSUuid)
 M:Foundation.NSValue.FromCGPoint(CoreGraphics.CGPoint)
@@ -22657,7 +22648,6 @@ M:Network.NWWebSocketMetadata.#ctor(Network.NWWebSocketOpCode)
 M:Network.NWWebSocketMetadata.SetPongHandler(CoreFoundation.DispatchQueue,System.Action{Network.NWError})
 M:Network.NWWebSocketOptions.#ctor(Network.NWWebSocketVersion)
 M:Network.NWWebSocketOptions.AddSubprotocol(System.String)
-M:Network.NWWebSocketOptions.SetClientRequestHandler(CoreFoundation.DispatchQueue,System.Action{Network.NWWebSocketRequest})
 M:Network.NWWebSocketOptions.SetHeader(System.String,System.String)
 M:Network.NWWebSocketRequest.EnumerateAdditionalHeaders(System.Action{System.String,System.String})
 M:Network.NWWebSocketRequest.EnumerateSubprotocols(System.Action{System.String})
@@ -55441,7 +55431,6 @@ T:CoreGraphics.CGBitmapContext.OnResolveCallback
 T:CoreGraphics.CGBitmapInfo
 T:CoreGraphics.CGBitmapInfoExtensions
 T:CoreGraphics.CGBitmapLayout
-T:CoreGraphics.CGColorConversionInfoTransformType
 T:CoreGraphics.CGColorConversionOptions
 T:CoreGraphics.CGColorModel
 T:CoreGraphics.CGComponent
@@ -55450,7 +55439,6 @@ T:CoreGraphics.CGDisplayStreamKeys
 T:CoreGraphics.CGDisplayStreamYCbCrMatrixOptionKeys
 T:CoreGraphics.CGDynamicRange
 T:CoreGraphics.CGImageComponentInfo
-T:CoreGraphics.CGPDFAccessPermissions
 T:CoreGraphics.CGPDFOutlineOptions
 T:CoreGraphics.CGPdfTagProperties
 T:CoreGraphics.CGPdfTagType
@@ -55463,7 +55451,6 @@ T:CoreGraphics.CGSessionKeys
 T:CoreGraphics.CGSessionProperties
 T:CoreGraphics.CGToneMapping
 T:CoreGraphics.CGToneMappingOptionKeys
-T:CoreGraphics.MatrixOrder
 T:CoreGraphics.NMatrix2
 T:CoreGraphics.NMatrix3
 T:CoreGraphics.NMatrix4

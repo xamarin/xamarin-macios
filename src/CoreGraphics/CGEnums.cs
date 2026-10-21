@@ -13,10 +13,11 @@ using System.ComponentModel;
 
 namespace CoreGraphics {
 
+	/// <summary>Specifies the order in which an affine transformation is combined with the current transformation.</summary>
 	public enum MatrixOrder {
-		/// <summary>To be added.</summary>
+		/// <summary>Applies the new transformation before the current transformation.</summary>
 		Prepend = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Applies the new transformation after the current transformation.</summary>
 		Append = 1,
 	}
 
@@ -72,7 +73,7 @@ namespace CoreGraphics {
 		Invisible,
 		/// <summary>Perform a Fill operation on the text glyphs followed by a clip operation using the current clip path.</summary>
 		FillClip,
-		/// <summary>To be added.</summary>
+		/// <summary>Strokes the text glyphs and uses the resulting text as the clipping path.</summary>
 		StrokeClip,
 		/// <summary>Perform a Stroke operation on the text glyphs followed by a clip operation using the current clip path.</summary>
 		FillStrokeClip,
@@ -104,69 +105,100 @@ namespace CoreGraphics {
 		Low,
 		/// <summary>High quality, at the cost of speed.</summary>
 		High,
-		/// <summary>To be added.</summary>
+		/// <summary>Use medium-quality interpolation as a balance between speed and image quality.</summary>
 		Medium,            /* Yes, in this order, since Medium was added in 4 */
 	}
 
 	// untyped enum -> CGContext.h
-	/// <include file="../../docs/api/CoreGraphics/CGBlendMode.xml" path="/Documentation/Docs[@DocId='T:CoreGraphics.CGBlendMode']/*" />
+	/// <summary>Specifies how Quartz blends source content with existing destination content.</summary>
+	/// <remarks>
+	///   <para>Blend modes combine source and destination colors and alpha values when compositing images. The Porter-Duff modes define how source and destination coverage contribute to the result.</para>
+	///   <para>The PDF reference manual provides a detailed explanation of these blend modes.</para>
+	///   <para>The blend equations use the following terms:</para>
+	///   <list type="table">
+	///     <listheader>
+	///       <term>Term</term>
+	///       <description>Description</description>
+	///     </listheader>
+	///     <item>
+	///       <term>R</term>
+	///       <description>Premultiplied result color.</description>
+	///     </item>
+	///     <item>
+	///       <term>S</term>
+	///       <description>Source color.</description>
+	///     </item>
+	///     <item>
+	///       <term>D</term>
+	///       <description>Destination color.</description>
+	///     </item>
+	///     <item>
+	///       <term>Sa</term>
+	///       <description>Source alpha value.</description>
+	///     </item>
+	///     <item>
+	///       <term>Da</term>
+	///       <description>Destination alpha value.</description>
+	///     </item>
+	///   </list>
+	/// </remarks>
 	public enum CGBlendMode {
-		/// <summary>To be added.</summary>
+		/// <summary>Draws the source over the destination using normal source-over blending.</summary>
 		Normal,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies source and destination color components, producing a darker result.</summary>
 		Multiply,
-		/// <summary>To be added.</summary>
+		/// <summary>Inverts, multiplies, and inverts source and destination color components, producing a lighter result.</summary>
 		Screen,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies or screens the colors depending on the destination color.</summary>
 		Overlay,
-		/// <summary>To be added.</summary>
+		/// <summary>Selects the darker source or destination color component by component.</summary>
 		Darken,
-		/// <summary>To be added.</summary>
+		/// <summary>Selects the lighter source or destination color component by component.</summary>
 		Lighten,
-		/// <summary>To be added.</summary>
+		/// <summary>Brightens the destination color to reflect the source color.</summary>
 		ColorDodge,
-		/// <summary>To be added.</summary>
+		/// <summary>Darkens the destination color to reflect the source color.</summary>
 		ColorBurn,
-		/// <summary>To be added.</summary>
+		/// <summary>Softly darkens or lightens the destination color according to the source color.</summary>
 		SoftLight,
-		/// <summary>To be added.</summary>
+		/// <summary>Multiplies or screens the colors depending on the source color.</summary>
 		HardLight,
-		/// <summary>To be added.</summary>
+		/// <summary>Subtracts the darker color from the lighter color component by component.</summary>
 		Difference,
-		/// <summary>To be added.</summary>
+		/// <summary>Creates an effect similar to Difference with lower contrast.</summary>
 		Exclusion,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source hue with the destination saturation and luminosity.</summary>
 		Hue,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source saturation with the destination hue and luminosity.</summary>
 		Saturation,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source hue and saturation with the destination luminosity.</summary>
 		Color,
-		/// <summary>To be added.</summary>
+		/// <summary>Uses the source luminosity with the destination hue and saturation.</summary>
 		Luminosity,
 
 		/// <summary>Clears the destination and makes it transparent (R=0).</summary>
 		Clear,
-		/// <summary>Copies the source color with alpha to the target (R=S)</summary>
+		/// <summary>Copies the source color and alpha to the destination (R=S).</summary>
 		Copy,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the source only where the destination has alpha.</summary>
 		SourceIn,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the source only where the destination is transparent.</summary>
 		SourceOut,
-		/// <summary>To be added.</summary>
+		/// <summary>Composites the source over the destination, preserving the destination alpha.</summary>
 		SourceAtop,
-		/// <summary>To be added.</summary>
+		/// <summary>Places the destination over the source.</summary>
 		DestinationOver,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the destination only where the source has alpha.</summary>
 		DestinationIn,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the destination only where the source is transparent.</summary>
 		DestinationOut,
-		/// <summary>To be added.</summary>
+		/// <summary>Composites the destination over the source, preserving the source alpha.</summary>
 		DestinationAtop,
-		/// <summary>To be added.</summary>
+		/// <summary>Keeps the portions of the source and destination that are not covered by the other.</summary>
 		XOR,
-		/// <summary>To be added.</summary>
+		/// <summary>Adds source and destination color components and subtracts full intensity, clamping the result at zero.</summary>
 		PlusDarker,
-		/// <summary>To be added.</summary>
+		/// <summary>Adds source and destination color components, clamping the result at full intensity.</summary>
 		PlusLighter,
 	}
 
@@ -236,54 +268,62 @@ namespace CoreGraphics {
 	// untyped enum -> CGPDFObject.h
 	/// <summary>Enumerates the various types of values that are found in a PDF document.</summary>
 	public enum CGPDFObjectType {
-		/// <summary>To be added.</summary>
+		/// <summary>A null object.</summary>
 		Null = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>A Boolean value.</summary>
 		Boolean,
-		/// <summary>To be added.</summary>
+		/// <summary>An integer number.</summary>
 		Integer,
-		/// <summary>To be added.</summary>
+		/// <summary>A real number.</summary>
 		Real,
-		/// <summary>To be added.</summary>
+		/// <summary>A name object.</summary>
 		Name,
-		/// <summary>To be added.</summary>
+		/// <summary>A string object.</summary>
 		String,
-		/// <summary>To be added.</summary>
+		/// <summary>An ordered array of objects.</summary>
 		Array,
-		/// <summary>To be added.</summary>
+		/// <summary>A dictionary of key-value pairs.</summary>
 		Dictionary,
-		/// <summary>To be added.</summary>
+		/// <summary>A stream object containing data and an associated dictionary.</summary>
 		Stream,
 	};
 
+	/// <summary>Permission flags that describe operations allowed for a PDF document.</summary>
+	/// <remarks>
+	///   <para>When setting permissions for a PDF document, Quartz treats some permissions as supersets of others. For example, allowing document changes also grants commenting and form-field entry.</para>
+	///   <para>Allowing high-quality printing also grants low-quality printing, content copying grants accessibility extraction, and commenting grants form-field entry.</para>
+	///   <para>Existing documents may not follow these relationships, so check the narrowest permission that applies when reading permissions.</para>
+	/// </remarks>
 	[MacCatalyst (13, 1)]
 	public enum CGPDFAccessPermissions : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Allows printing at up to 150 DPI.</summary>
 		AllowsLowQualityPrinting = (1 << 0),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows printing at any resolution.</summary>
 		AllowsHighQualityPrinting = (1 << 1),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows changes to document contents other than page management.</summary>
 		AllowsDocumentChanges = (1 << 2),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows inserting, deleting, and rotating pages.</summary>
 		AllowsDocumentAssembly = (1 << 3),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows extracting document content, such as text and images.</summary>
 		AllowsContentCopying = (1 << 4),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows extracting document content for accessibility purposes.</summary>
 		AllowsContentAccessibility = (1 << 5),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows creating or modifying annotations, including form-field entries.</summary>
 		AllowsCommenting = (1 << 6),
-		/// <summary>To be added.</summary>
+		/// <summary>Allows modifying form-field entries.</summary>
 		AllowsFormFieldEntry = (1 << 7),
 	}
 
 	// uint32_t enum -> CGColorConversionInfo.h
+	/// <summary>Specifies how a color space participates in a multi-step color conversion.</summary>
+	/// <remarks>Use this value as the <see cref="CGColorConversionInfoTriple.Transform"/> in a color conversion sequence.</remarks>
 	[MacCatalyst (13, 1)]
 	public enum CGColorConversionInfoTransformType : uint {
-		/// <summary>To be added.</summary>
+		/// <summary>Marks the source color space in a conversion sequence.</summary>
 		FromSpace = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>Marks the destination color space in a conversion sequence.</summary>
 		ToSpace,
-		/// <summary>To be added.</summary>
+		/// <summary>Applies a conversion in this color space within the sequence.</summary>
 		ApplySpace,
 	}
 }
