@@ -287,9 +287,8 @@ steps:
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
   name: configuration
-  continueOnError: true
   displayName: 'Parse build configuration'
-  timeoutInMinutes: 1
+  timeoutInMinutes: 10
 
 - pwsh: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
   displayName: 'Run generator tests'
