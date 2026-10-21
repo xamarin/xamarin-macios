@@ -45,6 +45,10 @@
     template zips single Mac binaries), sign the zips by running the SignFiles task once more (the same task the
     SignFiles target of the MicroBuild plugin runs), and replace the bundles with the signed ones.
 
+    Signing a bundle also signs the Mach-O files in it (the main executable and the dylibs), so the dylibs in a
+    bundle don't have to be signed separately. The template requires every dylib to be mapped to a signing group
+    though, so map them to Skip in the sign list.
+
     The bundles are found in a separate target, so that _SignMacBundles is skipped when there aren't any (not all
     packages are always signed together, for instance when only Sharpie is released).
   -->
