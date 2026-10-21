@@ -7,6 +7,10 @@
   <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
   <Import Project="../shared.csproj" />
 
+  <ItemGroup Condition="'$(AddCustomProtocol)' == 'true'">
+    <CustomEntitlements Include="com.apple.developer.networking.custom-protocol" Type="boolean" Value="true" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\..\..\common\Configuration.cs">
       <Link>Configuration.cs</Link>

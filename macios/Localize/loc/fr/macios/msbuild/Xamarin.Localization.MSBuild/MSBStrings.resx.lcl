@@ -2905,6 +2905,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7193" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The cache does not contain any entries.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le cache ne contient aucune entrée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7195" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[R2R input file '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le fichier d’entrée R2R « {0} » n’existe pas.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3252,6 +3270,15 @@
           <Val><![CDATA[Skipping {0} - {1} is empty.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[{0} es ignoré – {1} est vide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M7197" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Hashed {0} of {1} R2R input files.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Hachage de {0} fichiers d’entrée R2R sur {1}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3867,6 +3894,24 @@
           <Val><![CDATA[Ignoring a native reference with no name in the binding resource package '{0}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Référence native sans nom ignorée dans le package de ressources de liaison '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7194" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid R2R input hash cache '{0}': {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le cache de hachage d’entrée R2R non valide « {0} » : {1} est ignoré]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7196" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ignoring invalid R2R input hash for '{0}' in cache '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le hachage d’entrée R2R non valide pour « {0} » dans le cache « {1} » est ignoré.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
