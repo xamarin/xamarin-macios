@@ -258,7 +258,7 @@ stages:
   - configure_build
   - ${{ if eq(parameters.buildPackages, true) }}:
     - build_packages
-  condition: and(succeeded(), ne(dependencies.configure_build.outputs['configure.configure_platforms.DOTNET_PLATFORMS'], ''))
+  condition: false # Diagnostic-only PR: dotnettests build their own applications.
   jobs:
   - template: ./build/build-mac-tests-stage.yml
     parameters:

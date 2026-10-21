@@ -692,9 +692,11 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
 		// Release
 		[TestCase (ApplePlatform.iOS, "ios-arm64", CodeSignature.All, "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.All, "Release")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Release")]
+		[Repeat (10)]
 		public void Build (ApplePlatform platform, string runtimeIdentifiers, CodeSignature signature, string configuration)
 		{
 			BuildImpl (platform, runtimeIdentifiers, signature, configuration);

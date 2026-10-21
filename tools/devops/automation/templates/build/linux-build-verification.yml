@@ -26,6 +26,7 @@ stages:
 
 - stage: linux_build_verification
   displayName: '${{ parameters.stageDisplayNamePrefix }}Linux Build Verification'
+  condition: false # Diagnostic-only PR: unrelated to translated application launches.
   dependsOn: []
   jobs:
   - job: linux_build

@@ -49,6 +49,11 @@ XCODE_IS_STABLE=$(cat "$FILE")
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
 
+# Diagnostic-only PR: build just the platforms with translated application launches.
+DOTNET_PLATFORMS="macOS MacCatalyst"
+INCLUDE_IOS=
+INCLUDE_TVOS=
+
 echo "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$DOTNET_PLATFORMS"
 DISABLED_DOTNET_PLATFORMS=" $ALL_DOTNET_PLATFORMS "
 for platform in $DOTNET_PLATFORMS; do

@@ -117,7 +117,24 @@ stages:
         workspace:
           clean: all
     strategy:
-      matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.SIMULATOR_TEST_MATRIX'] ]
+      # Diagnostic-only PR: exercise repeated x64 launches on Apple Silicon.
+      matrix:
+        dotnettests_macos:
+          LABEL: dotnettests
+          LABEL_WITH_PLATFORM: dotnettests_macos
+          TESTS_LABELS: '--label=skip-all-tests,run-mac-tests,run-dotnettests-tests'
+          STATUS_CONTEXT: 'VSTS: simulator tests - dotnettests - macOS'
+          TEST_PREFIX: simulator_testsdotnettests_macos
+          TEST_PLATFORM: macOS
+          TEST_FILTER: 'FullyQualifiedName~Xamarin.Tests.BundleStructureTest.Build&Name~x64&Name!~arm64'
+        dotnettests_maccatalyst:
+          LABEL: dotnettests
+          LABEL_WITH_PLATFORM: dotnettests_maccatalyst
+          TESTS_LABELS: '--label=skip-all-tests,run-maccatalyst-tests,run-dotnettests-tests'
+          STATUS_CONTEXT: 'VSTS: simulator tests - dotnettests - MacCatalyst'
+          TEST_PREFIX: simulator_testsdotnettests_maccatalyst
+          TEST_PLATFORM: MacCatalyst
+          TEST_FILTER: 'FullyQualifiedName~Xamarin.Tests.BundleStructureTest.Build&Name~x64&Name!~arm64'
     condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     steps:
 

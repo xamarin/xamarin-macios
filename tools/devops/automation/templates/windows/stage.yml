@@ -49,7 +49,7 @@ stages:
   - configure_build
   - ${{ if not(parameters.postPipeline) }}:
     - build_packages
-  condition: and(succeeded(), eq(dependencies.configure_build.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
+  condition: false # Diagnostic-only PR: unrelated to translated application launches.
 
   jobs:
   - job: mac_reservation
