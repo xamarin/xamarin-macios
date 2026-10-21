@@ -543,6 +543,7 @@ namespace Xamarin.Tests {
 			Directory.CreateDirectory (directory);
 			var commandsPath = Path.Combine (directory, "snapshot.lldb");
 			var corePath = Path.Combine (directory, "process.core");
+			var stackCorePath = Path.Combine (directory, "stack.core");
 			File.WriteAllLines (commandsPath, [
 				"thread list",
 				"thread backtrace -c 64 all",
@@ -554,6 +555,7 @@ namespace Xamarin.Tests {
 				"memory region --all",
 				"image list -o -f",
 				$"process save-core --style modified-memory {StringUtils.Quote (corePath)}",
+				$"process save-core --style stack {StringUtils.Quote (stackCorePath)}",
 				"process detach",
 			]);
 
@@ -576,6 +578,8 @@ namespace Xamarin.Tests {
 			TestContext.AddTestAttachment (logPath, "Pre-kill debugger snapshot");
 			if (File.Exists (corePath))
 				TestContext.AddTestAttachment (corePath, "Pre-kill native core (may be incomplete if LLDB timed out)");
+			if (File.Exists (stackCorePath))
+				TestContext.AddTestAttachment (stackCorePath, "Pre-kill native stack core");
 		}
 
 		// Delete the saved application state for the app being launched, to prevent
