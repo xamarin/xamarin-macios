@@ -317,6 +317,7 @@ namespace AudioUnit {
 	/// <summary>A flagging enumeration whose value specifies whether an audio component is searchable. Used with <see cref="AudioComponentDescription.ComponentFlags" /></summary>
 	///     <remarks>To be added.</remarks>
 	[Flags]
+	[NativeName ("AudioComponentFlags")]
 	public enum AudioComponentFlag // UInt32 in AudioComponentDescription
 	{
 		/// <summary>To be added.</summary>
