@@ -132,15 +132,23 @@ namespace Cecil.Tests {
 							missing.Add ($"{archiveName}!{zipPath}{entry.FullName} (app bundle)");
 						continue;
 					}
-					// Executables don't have a well-known file extension, so only the ones with a Mach-O signing entry are checked.
+					// Executables don't have a well-known file extension, so identify them by their Mach-O header.
+					var isMachO = IsMachO (entry);
+					// The debug symbols in a .dSYM are Mach-O files too, but they're not executables (and can't be signed).
+					var isDebugSymbols = name.Contains (".dSYM\\", StringComparison.OrdinalIgnoreCase);
+					var listed = false;
 					for (var i = 0; i < patterns.Count; i++) {
-						if (IsBundleGroup (patterns [i].Group) || !patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+						if (IsBundleGroup (patterns [i].Group) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
 							continue;
 						matched [i] = true;
-						// The debug symbols in a .dSYM are Mach-O files too, but they're not executables.
-						if (!IsMachO (entry) || name.Contains (".dSYM\\", StringComparison.OrdinalIgnoreCase))
+						listed = true;
+						if (patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) && (!isMachO || isDebugSymbols))
 							notExecutables.Add ($"{archiveName}!{zipPath}{entry.FullName} (<{patterns [i].Group} Include=\"{patterns [i].Include}\" />)");
 					}
+					// The Mach-O files in an app bundle are signed with the bundle, and static libraries (which are universal
+					// binaries here, so they look like Mach-O files) aren't signed.
+					if (!listed && isMachO && !isDebugSymbols && !name.EndsWith (".a", StringComparison.OrdinalIgnoreCase) && !name.Contains (".app\\Contents\\", StringComparison.OrdinalIgnoreCase))
+						missing.Add ($"{archiveName}!{zipPath}{entry.FullName} (Mach-O file)");
 				}
 			}
 		}
