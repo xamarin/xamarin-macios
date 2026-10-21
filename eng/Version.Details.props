@@ -18,13 +18,13 @@ This file should be imported by eng/Versions.props
     <MicrosoftTemplateEngineAuthoringTasksPackageVersion>11.0.100</MicrosoftTemplateEngineAuthoringTasksPackageVersion>
     <!-- dotnet-macios dependencies -->
     <MicrosoftiOSSdknet100_260PackageVersion>26.0.11017</MicrosoftiOSSdknet100_260PackageVersion>
-    <MicrosoftiOSSdknet100_271PackageVersion>27.1.10021</MicrosoftiOSSdknet100_271PackageVersion>
+    <MicrosoftiOSSdknet100_271PackageVersion>27.1.10022</MicrosoftiOSSdknet100_271PackageVersion>
     <MicrosoftMacCatalystSdknet100_260PackageVersion>26.0.11017</MicrosoftMacCatalystSdknet100_260PackageVersion>
-    <MicrosoftMacCatalystSdknet100_270PackageVersion>27.0.10745</MicrosoftMacCatalystSdknet100_270PackageVersion>
+    <MicrosoftMacCatalystSdknet100_270PackageVersion>27.0.10746</MicrosoftMacCatalystSdknet100_270PackageVersion>
     <MicrosoftmacOSSdknet100_260PackageVersion>26.0.11017</MicrosoftmacOSSdknet100_260PackageVersion>
-    <MicrosoftmacOSSdknet100_270PackageVersion>27.0.10745</MicrosoftmacOSSdknet100_270PackageVersion>
+    <MicrosoftmacOSSdknet100_270PackageVersion>27.0.10746</MicrosoftmacOSSdknet100_270PackageVersion>
     <MicrosofttvOSSdknet100_260PackageVersion>26.0.11017</MicrosofttvOSSdknet100_260PackageVersion>
-    <MicrosofttvOSSdknet100_270PackageVersion>27.0.10745</MicrosofttvOSSdknet100_270PackageVersion>
+    <MicrosofttvOSSdknet100_270PackageVersion>27.0.10746</MicrosofttvOSSdknet100_270PackageVersion>
     <!-- dotnet-xharness dependencies -->
     <MicrosoftDotNetXHarnessiOSSharedPackageVersion>11.0.0-prerelease.26451.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
   </PropertyGroup>
