@@ -17,6 +17,7 @@
 	<Import Project="../../common/shared-dotnet.csproj" />
 
 	<ItemGroup>
+		<CustomEntitlements Include="com.apple.security.get-task-allow" Type="Boolean" Value="true" />
 		<Compile Include="../*.cs" />
 
 		<!-- None items -->

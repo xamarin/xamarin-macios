@@ -5,7 +5,12 @@
 Applications launched by the unit tests' shared execution helper have a 30-second
 timeout. On macOS, before killing a timed-out application, the helper records the
 OS and architecture, process status, and a five-second `/usr/bin/sample` thread
-sample in the test output. These diagnostics are included in CI's NUnit results
+sample in the test output. This diagnostic branch also captures a bounded LLDB
+snapshot with thread stacks, registers, instructions, memory mappings, and a
+modified-memory native core before sampling. The debugger log and core are NUnit
+attachments; ACES uses non-interactive sudo for debugger access. The diagnostic
+BundleStructure app allows debugger attachment in Debug and Release.
+These diagnostics are included in CI's NUnit results
 and HTML report. Diagnostic commands have separate timeouts; collecting them does
 not retry the application or turn the timeout into a passing test.
 

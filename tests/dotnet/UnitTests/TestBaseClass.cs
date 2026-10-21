@@ -529,10 +529,53 @@ namespace Xamarin.Tests {
 			log.WriteLine (ps.Output.MergedOutput);
 			log.WriteLine ($"ps exited with code {ps.ExitCode} (timed out: {ps.TimedOut}).");
 
+			CollectDebuggerSnapshot (pid, log);
+
 			// Capture stacks before the timeout kill destroys the evidence. Keep sampling bounded too.
 			var sample = Execution.RunAsync ("/usr/bin/sample", [pid, "5", "1", "-mayDie", "-file", "/dev/stdout"], log: log, timeout: TimeSpan.FromSeconds (15)).Result;
 			log.WriteLine (sample.Output.MergedOutput);
 			log.WriteLine ($"sample exited with code {sample.ExitCode} (timed out: {sample.TimedOut}).");
+		}
+
+		static void CollectDebuggerSnapshot (string pid, TextWriter log)
+		{
+			var directory = Path.Combine (TestContext.CurrentContext.WorkDirectory, $"timeout-{pid}-{Guid.NewGuid ():N}");
+			Directory.CreateDirectory (directory);
+			var commandsPath = Path.Combine (directory, "snapshot.lldb");
+			var corePath = Path.Combine (directory, "process.core");
+			File.WriteAllLines (commandsPath, [
+				"thread list",
+				"thread backtrace -c 64 all",
+				"thread select 1",
+				"frame select 0",
+				"register read --all",
+				"disassemble --pc --count 40",
+				"memory read --format x --size 8 --count 64 $sp",
+				"memory region --all",
+				"image list -o -f",
+				$"process save-core --style modified-memory {StringUtils.Quote (corePath)}",
+				"process detach",
+			]);
+
+			var arguments = new List<string> {
+				"--batch", "--no-lldbinit", "--attach-pid", pid,
+				"--one-line", $"command source --stop-on-error false {StringUtils.Quote (commandsPath)}",
+			};
+			var debugger = "/usr/bin/lldb";
+			if (Environment.GetEnvironmentVariable ("VM_VENDOR") == "ACES") {
+				arguments.InsertRange (0, ["-n", debugger]);
+				debugger = "/usr/bin/sudo";
+			}
+
+			var snapshot = Execution.RunAsync (debugger, arguments, log: log, timeout: TimeSpan.FromSeconds (60)).Result;
+			var output = snapshot.Output.MergedOutput;
+			log.WriteLine (output);
+			log.WriteLine ($"lldb exited with code {snapshot.ExitCode} (timed out: {snapshot.TimedOut}).");
+			var logPath = Path.Combine (directory, "lldb.log");
+			File.WriteAllText (logPath, output);
+			TestContext.AddTestAttachment (logPath, "Pre-kill debugger snapshot");
+			if (File.Exists (corePath))
+				TestContext.AddTestAttachment (corePath, "Pre-kill native core (may be incomplete if LLDB timed out)");
 		}
 
 		// Delete the saved application state for the app being launched, to prevent
