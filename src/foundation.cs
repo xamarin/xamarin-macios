@@ -12939,18 +12939,29 @@ namespace Foundation {
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
+		[PostSnippet ("ReleaseBindingRegistration (binding);", Optimizable = true)]
 		[Export ("bind:toObject:withKeyPath:options:")]
+#if XAMCORE_5_0
+		[Internal]
+		void _Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
+#else
+		[Obsolete ("Use 'BindWithLifetime' and dispose the returned registration to unbind safely.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
+		[Obsolete ("Use 'BindWithLifetime' and dispose the returned registration to unbind safely.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Wrap ("Bind (binding, observable, keyPath, options.GetDictionary ())")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSBindingOptions options);
+#endif
 
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
+		[PostSnippet ("ReleaseBindingRegistration (binding);", Optimizable = true)]
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
