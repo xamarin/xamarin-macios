@@ -3739,11 +3739,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_AddAppleApplicationArtifactMetadata"
-		Condition="'@(ApplicationArtifact->Count())' != '0' And '$(_AppBundleManifestPath)' != '' And (Exists('$(_AppBundleManifestPath)') Or '$(IsRemoteBuild)' == 'true')">
+		Condition="'@(ApplicationArtifact->Count())' != '0' And '$(_AppBundleManifestPath)' != '' And Exists('$(_AppBundleManifestPath)')">
 		<ReadAppManifest
-			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppManifest="$(_AppBundleManifestPath)"
+			DisableMinimumOSVersion="true"
 			SdkDevPath="$(_SdkDevPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>

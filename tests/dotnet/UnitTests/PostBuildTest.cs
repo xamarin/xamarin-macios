@@ -244,6 +244,46 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "GetApplicationArtifacts", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "GetApplicationArtifacts", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Publish", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Publish", true)]
+		public void ApplicationArtifactMetadataOnRemoteWindowsTest (ApplePlatform platform, string runtimeIdentifiers, string target, bool archive)
+		{
+			var project = "MySimpleAppWithArtifactMetadata";
+			var configuration = "Release";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			properties ["BuildIpa"] = "true";
+			properties ["ArchiveOnBuild"] = archive ? "true" : "false";
+			properties ["CustomApplicationManifest"] = "InfoWithoutDisplayName.plist";
+			properties ["GenerateApplicationManifest"] = "false";
+			// Isolate artifact metadata from the separate publish-time dSYM copy.
+			properties ["CopyDSYMToPublishDirectory"] = "false";
+
+			var outputPath = Path.Combine (Cache.CreateTemporaryDirectory (), "artifacts.json");
+			DotNet.Execute ("build", project_path, properties, target: target, timeout: TimeSpan.FromMinutes (25),
+				extraArguments: ["-getItem:ApplicationArtifact", $"-getResultOutputFile:{outputPath}"]);
+			using var document = JsonDocument.Parse (File.ReadAllText (outputPath));
+			var outputs = document.RootElement.GetProperty ("Items").GetProperty ("ApplicationArtifact").EnumerateArray ().ToArray ();
+			Assert.That (Path.Combine (appPath, "Info.plist"), Does.Exist, "Final manifest copied to Windows");
+			Assert.That (outputs.Select (v => GetMetadata (v, "PackageFormat")), Does.Not.Contain ("app"), "No incomplete Windows app artifact");
+			var ipaOutput = AssertApplicationArtifact (outputs, platform, "ipa", isDirectory: false);
+			AssertApplicationMetadata (ipaOutput, "com.xamarin.customartifactmetadata", "", "Fallback Bundle Name", "9.8.7", "123");
+			if (archive) {
+				var archiveOutput = AssertApplicationArtifact (outputs, platform, "xcarchive", isDirectory: true);
+				AssertApplicationMetadata (archiveOutput, "com.xamarin.customartifactmetadata", "", "Fallback Bundle Name", "9.8.7", "123");
+			}
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void GetApplicationArtifactsIpaTest (ApplePlatform platform, string runtimeIdentifiers)
