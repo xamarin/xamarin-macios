@@ -30,6 +30,7 @@ namespace Xharness {
 
 	public class HarnessConfiguration {
 		public string BuildConfiguration { get; set; } = "Debug";
+		internal TestShard? TestVariationShard { get; set; }
 		public bool DryRun { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public bool? IncludeSystemPermissionTests { get; set; }
@@ -130,6 +131,7 @@ namespace Xharness {
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
+		internal TestShard? TestVariationShard { get; }
 		public IFileBackedLog? HarnessLog { get; set; }
 		public HashSet<string> Labels { get; } = new ();
 		public XmlResultJargon XmlJargon { get; }
@@ -262,6 +264,7 @@ namespace Xharness {
 				throw new ArgumentNullException (nameof (configuration));
 
 			buildConfiguration = configuration.BuildConfiguration ?? throw new ArgumentNullException (nameof (configuration));
+			TestVariationShard = configuration.TestVariationShard;
 			DryRun = configuration.DryRun;
 			IncludeSystemPermissionTests = configuration.IncludeSystemPermissionTests;
 			TestProjects = configuration.TestProjects;

@@ -1445,7 +1445,7 @@ Test results reported success, but the tests job failed.
 
             Write-Host $content
 
-            $content | Should -Not -BeLike "*[Html Report (VSDrops)]*"
+            $content | Should -Not -Match ([regex]::Escape("[Html Report (VSDrops)]"))
             $content | Should -BeLike "*(:warning: Html Report Publish failed :warning:)*"
             $content | Should -BeLike "*[Download]*"
         }

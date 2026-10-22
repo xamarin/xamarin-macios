@@ -15,6 +15,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="..\..\xharness\TestShard.cs">
+			<Link>external\TestShard.cs</Link>
+		</Compile>
 		<Compile Include="..\..\common\Touch.Unit\Touch.Client\Runner\ConsoleTextWriter.cs">
 			<Link>external\ConsoleTextWriter.cs</Link>
 		</Compile>

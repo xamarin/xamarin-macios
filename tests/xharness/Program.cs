@@ -42,6 +42,7 @@ namespace Xharness {
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },
 				{ "target=", "Where to run the project ([ios|tvos]-[device|simulator).", (v) => configuration.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => configuration.BuildConfiguration = v },
+				{ "test-variation-shard=", "Run one shard of the selected test variations (INDEX/COUNT, starting at 1).", (v) => configuration.TestVariationShard = TestShard.Parse (v) },
 				{ "logdirectory=", "Where to store logs.", (v) => configuration.LogDirectory = v },
 				{ "logfile=", "Where to store the log.", (v) => Console.WriteLine("The logfile option is deprecated. Please use logdirectory."), true },
 				{ "timeout=", $"Timeout for a test run (in minutes). Default is {configuration.TimeoutInMinutes} minutes.", (v) => configuration.TimeoutInMinutes = double.Parse (v) },

@@ -153,8 +153,107 @@ function Get-TestConfiguration {
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
     $arrEnabledPlatforms = -split $EnabledPlatforms | Where { $_ }
     $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $StageFilter)
-    return $config.Create()
+    return Split-SimulatorTestMatrix -TestMatrix $config.Create()
+}
+
+function Split-SimulatorTestMatrix {
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $TestMatrix,
+
+        [string]
+        $StageFilter = ""
+    )
+
+    $matrix = ConvertFrom-Json -InputObject $TestMatrix -AsHashtable -ErrorAction Stop
+    if ($matrix -isnot [System.Collections.IDictionary]) {
+        throw "The test matrix must be a JSON object."
+    }
+
+    $projectFilter = "FullyQualifiedName~Xamarin.Tests.DotNetProjectTest."
+    $packagingClasses = @("AppIconTest", "BundleStructureTest", "PostBuildTest", "PrepareAssembliesTest")
+    $packagingFilter = ($packagingClasses | ForEach-Object { "FullyQualifiedName~Xamarin.Tests.$($_)." }) -join " | "
+    $otherFilters = @($projectFilter.Replace("~", "!~")) +
+        @($packagingClasses | ForEach-Object { "FullyQualifiedName!~Xamarin.Tests.$($_)." })
+    $dotnetShards = @(
+        @{ Name = "projects"; DisplayName = "projects"; Filter = $projectFilter },
+        @{ Name = "packaging"; DisplayName = "packaging"; Filter = "($packagingFilter) & ($($otherFilters[0]))" },
+        @{ Name = "other"; DisplayName = "other"; Filter = $otherFilters -join " & " }
+    )
+    $variationShards = @(1..3 | ForEach-Object {
+        @{ Name = "config_$_"; DisplayName = "configurations $_/3"; Arguments = "--test-variation-shard=$_/3" }
+    })
+
+    $result = [ordered]@{}
+    $groups = @{}
+    foreach ($title in $matrix.Keys) {
+        $entry = $matrix[$title]
+        if ($entry -isnot [System.Collections.IDictionary]) {
+            throw "Test matrix entry '$title' must be a JSON object."
+        }
+        if ($StageFilter -and $entry.TEST_STAGE -ne $StageFilter) {
+            continue
+        }
+        if ($entry.TEST_STAGE -ne "simulator_tests" -or
+            $entry.LABEL -notin @("monotouch", "dotnettests") -or
+            $entry.TEST_PLATFORM -notin @("iOS", "tvOS", "macOS", "MacCatalyst")) {
+            $result.Add($title, $entry)
+            continue
+        }
+
+        $shards = if ($entry.LABEL -eq "monotouch") { $variationShards } else { $dotnetShards }
+        $group = "$($entry.LABEL)/$($entry.TEST_PLATFORM)"
+        if (-not $groups.ContainsKey($group)) {
+            $groups[$group] = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+        }
+        if ($entry.LABEL_WITH_PLATFORM -cne $title -or $entry.TEST_PREFIX -cne "$($entry.TEST_STAGE)$title") {
+            throw "Inconsistent reporting identity for test matrix entry '$title'."
+        }
+        if ($entry.Contains("TEST_SHARD")) {
+            if ($entry.TEST_SHARD -notin $shards.Name -or -not $groups[$group].Add($entry.TEST_SHARD)) {
+                throw "Invalid or duplicate shard '$($entry.TEST_SHARD)' for '$group'."
+            }
+            $result.Add($title, $entry)
+            continue
+        }
+
+        foreach ($shard in $shards) {
+            if (-not $groups[$group].Add($shard.Name)) {
+                throw "Duplicate shard '$($shard.Name)' for '$group'."
+            }
+            $variables = [ordered]@{}
+            foreach ($pair in $entry.GetEnumerator()) {
+                $variables[$pair.Key] = $pair.Value
+            }
+            $shardTitle = "${title}_$($shard.Name)"
+            $variables["LABEL_WITH_PLATFORM"] = $shardTitle
+            $variables["TEST_PREFIX"] = "$($entry.TEST_STAGE)$shardTitle"
+            $variables["STATUS_CONTEXT"] = "$($entry.STATUS_CONTEXT) - $($shard.DisplayName)"
+            $variables["DISPLAY_NAME"] = "$($entry.LABEL) - $($shard.DisplayName)"
+            $variables["TEST_SHARD"] = $shard.Name
+            if ($shard.Arguments) {
+                $variables["TESTS_LABELS"] = "$($entry.TESTS_LABELS) $($shard.Arguments)"
+            }
+            if ($shard.Filter) {
+                $variables["TEST_FILTER"] = if ($entry.TEST_FILTER) {
+                    "($($entry.TEST_FILTER)) & ($($shard.Filter))"
+                } else {
+                    $shard.Filter
+                }
+            }
+            $result.Add($shardTitle, $variables)
+        }
+    }
+
+    foreach ($group in $groups.Keys) {
+        if ($groups[$group].Count -ne 3) {
+            throw "Expected all three test shards for '$group', found $($groups[$group].Count)."
+        }
+    }
+
+    return $result | ConvertTo-Json -Depth 10
 }
 
 # export public functions, other functions are private and should not be used outside the module.
-Export-ModuleMember -Function Get-TestConfiguration
+Export-ModuleMember -Function Get-TestConfiguration, Split-SimulatorTestMatrix

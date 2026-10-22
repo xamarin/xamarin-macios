@@ -193,7 +193,20 @@ namespace Xharness.Jenkins {
 
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
-				foreach (var test_data in GetTestData (task)) {
+				var testData = GetTestData (task);
+				if (jenkins.Harness.TestVariationShard is { } shard) {
+					var defaultVariation = new TestData { Variation = task.Variation, Ignored = task.Ignored, KnownFailure = task.KnownFailure };
+					var variations = testData.ToArray ();
+					var selected = shard.Select (
+						variations.Prepend (defaultVariation),
+						v => v.Variation ?? "",
+						v => !(v.Ignored ?? task.Ignored) && v.KnownFailure is null).ToHashSet ();
+					if (!selected.Contains (defaultVariation))
+						rv.Remove (task);
+					testData = variations.Where (selected.Contains);
+				}
+
+				foreach (var test_data in testData) {
 					var variation = test_data.Variation;
 					var debug = !(test_data.TestVariation ?? "").Split ('|').Any (v => string.Equals (v, "release", StringComparison.OrdinalIgnoreCase));
 					var configuration = debug ? task.ProjectConfiguration : task.ProjectConfiguration?.Replace ("Debug", "Release");

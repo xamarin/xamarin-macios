@@ -10,3 +10,45 @@ CreateManifest.ps1 -ManifestPath "/output/path.psd1"
 ```
 
 The manifest only needs to be recreated when you add a new module that you want to be able to import in yaml.
+
+## Simulator test shards
+
+The eight `monotouch` and `dotnettests` platform jobs run in three shards each.
+With all four platforms enabled, this expands the simulator matrix from 24 to 40
+jobs; the `Multiple` integration-test job and all other suites are unchanged.
+
+`monotouch` shards use `--test-variation-shard=INDEX/COUNT` (one-based). For each
+base project/platform, xharness sorts the default and additional variations
+ordinally and distributes them round-robin before checking eligibility, cloning
+the additional projects, or discovering simulators. Including ignored variations
+in the assignment prevents a PR-label or runtime-eligibility change from moving
+other configurations between shards. Ignored variations are still not cloned or
+executed by sharded runs. Without this option, local and device runs retain their
+original selection.
+
+`dotnettests` uses complementary `FullyQualifiedName` filters:
+
+| Shard | Cases |
+|---|---|
+| `projects` | `Xamarin.Tests.DotNetProjectTest` |
+| `packaging` | `AppIconTest`, `BundleStructureTest`, `PostBuildTest`, and `PrepareAssembliesTest` |
+| `other` | Every other fixture, including future additions |
+
+The existing platform, `MultiPlatform`, and Windows filters still apply.
+The packaging filter excludes the projects group explicitly, so even a
+parameterized case mentioning another fixture's name cannot run in two shards.
+Splitting only by Debug/Release would not partition most integration tests,
+because those tests select their build configurations internally.
+
+`Split-SimulatorTestMatrix` expands both newly generated and imported build
+configuration. Imported simulator matrices are derived from the expanded full
+matrix, so execution and `Publish Test Results` expect exactly the same shards.
+Shard keys, output titles, artifact prefixes, and display names are distinct;
+the parent suite label is unchanged. Publishing still produces one GitHub
+comment, with a separate result and report link for every shard, and treats
+missing shard outputs or summaries as failures.
+
+This trades additional setup/agent time for lower elapsed test time. Compare
+queue delay, agent-minutes, simulator-stage completion, and final result
+publication on CI: forty jobs only improve latency when the Mac pool has enough
+capacity, and result publication also waits for the other test stages.
