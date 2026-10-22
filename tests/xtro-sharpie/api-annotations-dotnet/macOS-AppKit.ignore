@@ -1513,3 +1513,7 @@
 !missing-null-allowed! 'System.Void AppKit.INSUserInterfaceItemIdentification::set_Identifier(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDocument::RelinquishPresentedItemToReader(Foundation.NSFilePresenterReacquirer)' is missing a '?' on parameter 'readerAction' block parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDocument::RelinquishPresentedItemToWriter(Foundation.NSFilePresenterReacquirer)' is missing a '?' on parameter 'writerAction' block parameter #0
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +NSColor::ignoresAlpha missing a [Deprecated] attribute
+!deprecated-attribute-missing! +NSColor::setIgnoresAlpha: missing a [Deprecated] attribute

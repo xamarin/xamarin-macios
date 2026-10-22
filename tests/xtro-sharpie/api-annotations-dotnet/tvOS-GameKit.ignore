@@ -5,3 +5,7 @@
 !missing-null-allowed! 'System.Void GameKit.GKChallengeDefinition::LoadDefinitions(GameKit.GKChallengeDefinitionLoadDefinitionsHandler)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKPlayer::LoadPhoto(GameKit.GKPhotoSize,GameKit.GKPlayerPhotoLoaded)' is missing a '?' on parameter 'onCompleted' block parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKPlayer::LoadPhoto(GameKit.GKPhotoSize,GameKit.GKPlayerPhotoLoaded)' is missing a '?' on parameter 'onCompleted' block parameter #1
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +GKAchievement::reportAchievements:withEligibleChallenges:withCompletionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +GKPlayer::loadPlayersForIdentifiers:withCompletionHandler: missing a [Deprecated] attribute

@@ -20,3 +20,6 @@
 !missing-null-allowed! 'System.Void PassKit.PKPassLibrary::GetServiceProviderData(PassKit.PKSecureElementPass,System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
 !missing-null-allowed! 'System.Void PassKit.PKVehicleConnectionSession::GetSession(PassKit.PKSecureElementPass,PassKit.IPKVehicleConnectionDelegate,System.Action`2<PassKit.PKVehicleConnectionSession,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #0
 !missing-null-allowed! 'System.Void PassKit.PKVehicleConnectionSession::GetSession(PassKit.PKSecureElementPass,PassKit.IPKVehicleConnectionDelegate,System.Action`2<PassKit.PKVehicleConnectionSession,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +PKAddShareablePassConfiguration::configurationForPassMetadata:provisioningPolicyIdentifier:primaryAction:completion: missing a [Deprecated] attribute

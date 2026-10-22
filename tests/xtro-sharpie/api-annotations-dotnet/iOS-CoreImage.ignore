@@ -5,3 +5,7 @@
 !extra-null-allowed! 'System.Void CoreImage.ICIRoundedRectangleStrokeGeneratorProtocol::set_Color(CoreImage.CIColor)' has a extraneous [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void CoreImage.ICIColorAbsoluteDifferenceProtocol::set_Image2(CoreImage.CIImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void CoreImage.ICIDistanceGradientFromRedMaskProtocol::set_InputImage(CoreImage.CIImage)' is missing an [NullAllowed] on parameter #0
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +CIFilter::filterArrayFromSerializedXMP:inputImageExtent:error: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +CIFilter::serializedXMPFromFilters:inputImageExtent: missing a [Deprecated] attribute

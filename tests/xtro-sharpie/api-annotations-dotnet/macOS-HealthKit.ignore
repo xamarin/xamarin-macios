@@ -36,3 +36,15 @@
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutRouteBuilder::FinishRoute(HealthKit.HKWorkout,Foundation.NSDictionary,System.Action`2<HealthKit.HKWorkoutRoute,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #0
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutRouteBuilder::FinishRoute(HealthKit.HKWorkout,Foundation.NSDictionary,System.Action`2<HealthKit.HKWorkoutRoute,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
 !missing-null-allowed! 'System.Void HealthKit.HKWorkoutRouteBuilder::InsertRouteData(CoreLocation.CLLocation[],System.Action`2<System.Boolean,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +HKQuery::predicateForWorkoutsWithOperatorType:totalEnergyBurned: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKQuery::predicateForWorkoutsWithOperatorType:totalFlightsClimbed: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKQuery::predicateForWorkoutsWithOperatorType:totalSwimmingStrokeCount: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:duration:totalEnergyBurned:totalDistance:device:metadata: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:duration:totalEnergyBurned:totalDistance:metadata: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:device:metadata: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:metadata: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalFlightsClimbed:device:metadata: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +HKWorkout::workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalSwimmingStrokeCount:device:metadata: missing a [Deprecated] attribute

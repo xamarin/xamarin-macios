@@ -9,3 +9,8 @@
 !unknown-selector! +VTLowLatencySuperResolutionScalerConfiguration::processorSupported not found
 !unknown-selector! +VTSuperResolutionScalerConfiguration::processorSupported not found
 !unknown-selector! +VTTemporalNoiseFilterConfiguration::processorSupported not found
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +VTFrameRateConversionConfiguration::processorSupported missing a [Deprecated] attribute
+!deprecated-attribute-missing! +VTMotionBlurConfiguration::processorSupported missing a [Deprecated] attribute
+!deprecated-attribute-missing! +VTOpticalFlowConfiguration::processorSupported missing a [Deprecated] attribute
