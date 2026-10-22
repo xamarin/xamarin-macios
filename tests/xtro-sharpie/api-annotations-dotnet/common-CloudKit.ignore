@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! CKApplicationPermissionStatus missing a [Deprecated] attribute
+
 ## we offer a better managed API using another selector
 !missing-selector! CKRecord::objectForKeyedSubscript: not bound
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound

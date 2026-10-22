@@ -1,3 +1,10 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! AVCaptureVideoOrientation missing a [Deprecated] attribute
+
+## Pending AVAudioSession enum annotations; remove when the binding fix lands.
+!deprecated-attribute-missing! AVAudioSessionInterruptionOptions missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAudioSessionInterruptionType missing a [Deprecated] attribute
+
 # not possible with the generator but added INSFastEnumeration for whenever is supported.
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 

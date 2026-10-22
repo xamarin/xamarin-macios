@@ -1,3 +1,7 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! WebCacheModel missing a [Deprecated] attribute
+!deprecated-attribute-missing! WebNavigationType missing a [Deprecated] attribute
+
 ## only a subset of the old, pre WKWebKit, is bound for macOS
 
 # xcode 15

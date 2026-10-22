@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! HKCategoryValueAudioExposureEvent missing a [Deprecated] attribute
+
 # results from initial block parameter nullability analysis
 !missing-null-allowed! 'Foundation.NSProgress HealthKit.HKAttachmentStore::GetData(HealthKit.HKAttachment,System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #0
 !missing-null-allowed! 'Foundation.NSProgress HealthKit.HKAttachmentStore::GetData(HealthKit.HKAttachment,System.Action`2<Foundation.NSData,Foundation.NSError>)' is missing a '?' on parameter 'completion' block parameter #1

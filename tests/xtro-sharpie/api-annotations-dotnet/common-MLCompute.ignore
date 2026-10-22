@@ -1,3 +1,23 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! MLCActivationType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCArithmeticOperation missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCComparisonOperation missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCConvolutionType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCDataType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCDeviceType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCExecutionOptions missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCGradientClippingType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCGraphCompilationOptions missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCLossType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCPaddingPolicy missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCPaddingType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCPoolingType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCRandomInitializerType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCReductionType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCRegularizationType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCSampleMode missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCSoftmaxOperation missing a [Deprecated] attribute
+
 ## `*Count` are not constant values and can change in the future
 !missing-enum-value! MLCActivationType native value MLCActivationTypeCount = 21 not bound
 !missing-enum-value! MLCArithmeticOperation native value MLCArithmeticOperationCount = 30 not bound

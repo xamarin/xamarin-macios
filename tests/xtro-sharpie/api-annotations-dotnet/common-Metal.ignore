@@ -1,3 +1,8 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! MTLArgumentType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLFeatureSet missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLStoreActionOptions missing a [Deprecated] attribute
+
 # MTLFunctionStitchingAttributeAlwaysInline is not documented and has no exposure
 !missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound
 

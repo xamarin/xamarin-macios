@@ -1,3 +1,24 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! INAddTasksIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INAddTasksTargetTaskListConfirmationReason missing a [Deprecated] attribute
+!deprecated-attribute-missing! INAddTasksTemporalEventTriggerUnsupportedReason missing a [Deprecated] attribute
+!deprecated-attribute-missing! INCreateNoteIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INCreateTaskListIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INDateSearchType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INLocationSearchType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INNoteContentType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INNotebookItemType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSearchForNotebookItemsIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSetTaskAttributeIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSetTaskAttributeTemporalEventTriggerUnsupportedReason missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSnoozeTasksIntentResponseCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSnoozeTasksTaskUnsupportedReason missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSortType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INTaskPriority missing a [Deprecated] attribute
+!deprecated-attribute-missing! INTaskStatus missing a [Deprecated] attribute
+!deprecated-attribute-missing! INTaskType missing a [Deprecated] attribute
+!deprecated-attribute-missing! INTemporalEventTriggerTypeOptions missing a [Deprecated] attribute
+
 ## The following were deprecated in ios(10.0, 10.0)
 !missing-selector! INRideOption::identifier not bound
 !missing-selector! INRideOption::setIdentifier: not bound

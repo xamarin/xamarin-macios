@@ -1,3 +1,7 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! CBCentralManagerState missing a [Deprecated] attribute
+!deprecated-attribute-missing! CBPeripheralManagerState missing a [Deprecated] attribute
+
 # not to be added since it is not needed in any API on macOS as of xcode13 beta 3.
 !missing-enum! CBCentralManagerFeature not bound
 
