@@ -1,4 +1,3 @@
-!missing-enum! CVPixelBufferLockFlags not bound
 !missing-field! kCVImageBufferICCProfileKey not bound
 !missing-field! kCVPixelBufferPoolFreeBufferNotification not bound
 

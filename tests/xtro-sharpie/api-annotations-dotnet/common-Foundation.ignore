@@ -208,10 +208,7 @@
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-enum! NSBinarySearchingOptions not bound
-!missing-enum! NSMachPortOptions not bound
-!missing-enum! NSNetServicesError not bound
 !missing-enum! NSPointerFunctionsOptions not bound
-!missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
 !missing-field! NSCalendarIdentifierIslamic not bound
@@ -760,11 +757,8 @@
 !missing-type! NSFileSecurity not bound
 !missing-type! NSInvocationOperation not bound
 !unknown-native-enum! NSLigatureType bound
-!unknown-native-enum! NSMachPortRights bound
-!unknown-native-enum! NSNetServicesStatus bound
 !unknown-native-enum! NSPropertyListReadOptions bound
 !unknown-native-enum! NSPropertyListWriteOptions bound
-!unknown-native-enum! NSSearchPathDomain bound
 !unknown-native-enum! NSStringEncoding bound
 !unknown-native-enum! NSUbiquitousKeyValueStoreChangeReason bound
 !unknown-protocol! NSObject bound
