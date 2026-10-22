@@ -86,11 +86,14 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void DeviceCtlFailure ()
 		{
-			var task = CreateTask (ApplePlatform.iOS, "", "");
+			if (!Configuration.CanRunArm64)
+				Assert.Ignore ("This test currently only works on arm64"); // because the set of available simulators is different on x64
+
+			var task = CreateTask (ApplePlatform.iOS, SIMCTL_JSON_1, "");
 			task.DeviceCtlResult = DeviceCtlRunResult.Completed (1, "", "devicectl is broken", "");
 			Assert.That (task.Execute (), Is.True, "Task should still succeed, so devices found by simctl are kept.");
 			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Is.EqualTo ("Failed to list physical devices with devicectl: devicectl is broken"), "Error message");
-			Assert.That (task.Devices, Is.Empty, "Devices should be empty.");
+			Assert.That (task.Devices.Select (d => d.ItemSpec), Is.EqualTo (new [] { "3F1C114D-FC3D-481A-9CA1-499EE1339390", "D40CE982-3E65-4756-8162-90EFE50AF7FA" }), "Simulators found by simctl should still be listed.");
 		}
 
 		[Test]
