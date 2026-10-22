@@ -3508,9 +3508,9 @@ Where * can be:
 
 *MSBuild task: IntentDefinitionCompilerTaskBase*
 
-<a name="MT7198"></a>
+<a name="MT7199"></a>
 
-### MT7198: The app's Info.plist does not contain a UIApplicationSceneManifest dictionary.
+### MT7199: The app's Info.plist does not contain a UIApplicationSceneManifest dictionary.
 
 Apps built against the iOS or Mac Catalyst 27.0 SDK or later must adopt the UIKit
 scene lifecycle to launch on iOS or macOS 27.0 or later. Add the scene manifest
