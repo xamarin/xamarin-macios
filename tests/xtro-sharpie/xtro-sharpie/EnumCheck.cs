@@ -7,7 +7,7 @@ namespace Extrospection {
 		}
 
 		Dictionary<string, TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
-		Dictionary<string, TypeDefinition> obsoleted_enums = new Dictionary<string, TypeDefinition> ();
+		Dictionary<string, TypeDefinition> obsoleted_enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
 		Dictionary<object, ManagedValue> managed_values = new Dictionary<object, ManagedValue> ();
 		Dictionary<object, (string Name, EnumConstantDecl Decl)> native_values = new Dictionary<object, (string Name, EnumConstantDecl Decl)> ();
 
@@ -27,7 +27,7 @@ namespace Extrospection {
 			if (!type.IsEnum || type.IsNested)
 				return;
 
-			var name = type.Name;
+			var name = type.GetName () ?? type.Name;
 
 			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
 			if (type.IsObsolete ()) {
@@ -35,7 +35,8 @@ namespace Extrospection {
 				return;
 			}
 
-			if (AttributeHelpers.HasAnyObsoleted (type)) {
+			if (AttributeHelpers.HasAnyObsoleted (type) || (type.HasCustomAttributes && type.CustomAttributes.Any (attribute =>
+				AttributeHelpers.HasObsoletedOSPlatform (attribute, Helpers.Platform) || AttributeHelpers.HasDeprecated (attribute, Helpers.Platform)))) {
 				obsoleted_enums [name] = type;
 				return;
 			}
@@ -82,18 +83,21 @@ namespace Extrospection {
 			if (framework is null)
 				return;
 
-			var mname = Helpers.GetManagedName (name);
-
 			// If our enum is obsoleted, then don't process it.
-			if (obsoleted_enums.ContainsKey (mname))
+			if (obsoleted_enums.ContainsKey (name))
 				return;
 
-			if (!enums.TryGetValue (mname, out var type)) {
+			if (!enums.TryGetValue (name, out var type)) {
 				if (!decl.IsDeprecated ()) // don't report deprecated enums as unbound
 					Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else
-				enums.Remove (mname);
+				enums.Remove (name);
+
+			if (decl.IsDeprecated ())
+				return;
+
+			var mname = type.Name;
 
 			int native_size = 4;
 			bool native = false;
@@ -137,6 +141,7 @@ namespace Extrospection {
 				native_size = 2;
 				break;
 			case "UInt8":
+			case "SInt8":
 			case "int8_t":
 			case "uint8_t":
 			case "MIDIUInteger4": // 4 usable bits in 8 bits
@@ -403,12 +408,12 @@ namespace Extrospection {
 			// e.g. a typo in the name
 			foreach (var extra in enums) {
 				var t = extra.Value;
-				if (obsoleted_enums.ContainsKey (t.Name))
+				if (obsoleted_enums.ContainsKey (extra.Key))
 					continue;
 				if (!IsNative (t))
 					continue;
 				var framework = Helpers.GetFramework (t);
-				Log.On (framework).Add ($"!unknown-native-enum! {extra.Key} bound");
+				Log.On (framework).Add ($"!unknown-native-enum! {t.Name} bound");
 			}
 		}
 	}

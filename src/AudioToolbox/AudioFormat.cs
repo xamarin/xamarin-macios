@@ -225,6 +225,7 @@ namespace AudioToolbox {
 
 	/// <summary>An enumeration whose values specify the panning mode (sound-field vs. vector-based).</summary>
 	///     <remarks>To be added.</remarks>
+	[NativeName ("AudioPanningMode")]
 	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
 		/// <summary>To be added.</summary>

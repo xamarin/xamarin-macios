@@ -32,11 +32,6 @@ namespace MetalPerformanceShaders {
 			var useNesterovMomentum = useNestrovMomentum;
 #endif
 
-			if (!SystemVersion.IsAtLeastXcode12) {
-				InitializeHandle (_InitWithNestrovMomentum (device, momentumScale, useNesterovMomentum, optimizerDescriptor), "initWithDevice:momentumScale:useNestrovMomentum:optimizerDescriptor:");
-				return;
-			}
-
 			InitializeHandle (_InitWithNesterovMomentum (device, momentumScale, useNesterovMomentum, optimizerDescriptor), "initWithDevice:momentumScale:useNestrovMomentum:optimizerDescriptor:");
 		}
 	}

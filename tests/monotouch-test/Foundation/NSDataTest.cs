@@ -66,6 +66,75 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void FromArraySpan ()
+		{
+			byte [] source = { 0, 1, 2, 3, 4 };
+			using var data = NSData.FromArray (source.AsSpan (1, 3));
+			source [1] = 99;
+			Assert.That (data.ToArray (), Is.EqualTo (new byte [] { 1, 2, 3 }), "Independent copy");
+			var copy = data.ToArray ();
+			copy [0] = 88;
+			Assert.That (data.ToArray (), Is.EqualTo (new byte [] { 1, 2, 3 }), "Independent array");
+
+			Span<byte> stackBytes = stackalloc byte [] { 5, 6, 7 };
+			using var stackData = NSData.FromArray (stackBytes);
+			stackBytes [0] = 99;
+			Assert.That (stackData.ToArray (), Is.EqualTo (new byte [] { 5, 6, 7 }), "Stack copy");
+
+			using var empty = NSData.FromArray (ReadOnlySpan<byte>.Empty);
+			Assert.That (empty.Length, Is.EqualTo ((nuint) 0), "Empty");
+			empty.GetBytes (Span<byte>.Empty);
+			Assert.Throws<ArgumentNullException> (() => NSData.FromArray ((byte []) null), "Null array");
+		}
+
+		[Test]
+		public void GetBytesSpan ()
+		{
+			using var data = NSData.FromArray (new byte [] { 1, 2, 3 });
+			Span<byte> destination = stackalloc byte [] { 99, 99, 99, 99, 99 };
+			data.GetBytes (destination.Slice (1));
+			Assert.That (destination.ToArray (), Is.EqualTo (new byte [] { 99, 1, 2, 3, 99 }), "Slice and suffix");
+			data.GetBytes (destination.Slice (0, 3));
+			Assert.That (destination.Slice (0, 3).ToArray (), Is.EqualTo (new byte [] { 1, 2, 3 }), "Exact");
+			destination [0] = 88;
+			Assert.That (data.ToArray (), Is.EqualTo (new byte [] { 1, 2, 3 }), "Independent destination");
+			byte [] shortBuffer = { 99, 99 };
+			Assert.Throws<ArgumentException> (() => data.GetBytes (shortBuffer.AsSpan ()), "Too small");
+			Assert.That (shortBuffer, Is.EqualTo (new byte [] { 99, 99 }), "Unchanged on failure");
+			Assert.Throws<ArgumentException> (() => data.GetBytes (Span<byte>.Empty), "Empty destination");
+		}
+
+		[Test]
+		public void GetBytesSpanRange ()
+		{
+			using var data = NSData.FromArray (new byte [] { 1, 2, 3, 4 });
+			Span<byte> destination = stackalloc byte [] { 99, 99, 99, 99 };
+			data.GetBytes (destination.Slice (1), new NSRange (1, 2));
+			Assert.That (destination.ToArray (), Is.EqualTo (new byte [] { 99, 2, 3, 99 }), "Range and suffix");
+			data.GetBytes (destination.Slice (0, 2), new NSRange (2, 2));
+			Assert.That (destination.Slice (0, 2).ToArray (), Is.EqualTo (new byte [] { 3, 4 }), "Exact");
+			data.GetBytes (Span<byte>.Empty, new NSRange (4, 0));
+			Assert.Throws<ArgumentException> (() => data.GetBytes (new byte [1].AsSpan (), new NSRange (0, 2)), "Too small");
+			foreach (var range in new [] { new NSRange (-1, 1), new NSRange (0, -1), new NSRange (5, 0), new NSRange (3, 2), new NSRange (1, nint.MaxValue) })
+				Assert.Throws<ArgumentOutOfRangeException> (() => data.GetBytes (new byte [4].AsSpan (), range), range.ToString ());
+			using var empty = NSData.FromArray (ReadOnlySpan<byte>.Empty);
+			empty.GetBytes (Span<byte>.Empty, new NSRange (0, 0));
+		}
+
+		[Test]
+		public unsafe void UnmanagedBytes ()
+		{
+			byte* source = stackalloc byte [] { 1, 2, 3, 4 };
+			using var data = NSData.FromBytes ((IntPtr) source, 4);
+			source [0] = 99;
+			byte* destination = stackalloc byte [4];
+			data.GetBytes ((IntPtr) destination, (nuint) 4);
+			Assert.That (new ReadOnlySpan<byte> (destination, 4).ToArray (), Is.EqualTo (new byte [] { 1, 2, 3, 4 }), "Pointer length");
+			data.GetBytes ((IntPtr) destination, new NSRange (1, 2));
+			Assert.That (new ReadOnlySpan<byte> (destination, 4).ToArray (), Is.EqualTo (new byte [] { 2, 3, 3, 4 }), "Pointer range");
+		}
+
+		[Test]
 		public void FromFile ()
 		{
 			Assert.That (NSData.FromFile ("does not exists"), Is.Null, "unexisting");

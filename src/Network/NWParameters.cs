@@ -568,22 +568,22 @@ namespace Network {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_attribution (OS_nw_parameters parameters, NWParametersAttribution attribution);
+		static extern void nw_parameters_set_attribution (OS_nw_parameters parameters, byte attribution);
 
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern NWParametersAttribution nw_parameters_get_attribution (OS_nw_parameters parameters);
+		static extern byte nw_parameters_get_attribution (OS_nw_parameters parameters);
 
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		public NWParametersAttribution Attribution {
-			get => nw_parameters_get_attribution (GetCheckedHandle ());
-			set => nw_parameters_set_attribution (GetCheckedHandle (), value);
+			get => (NWParametersAttribution) nw_parameters_get_attribution (GetCheckedHandle ());
+			set => nw_parameters_set_attribution (GetCheckedHandle (), (byte) value);
 		}
 
 		[SupportedOSPlatform ("tvos")]
