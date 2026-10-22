@@ -90,11 +90,6 @@ namespace Xamarin.Linker {
 		bool ModifyAssembly (AssemblyDefinition assembly)
 #endif
 		{
-			// NativeAOT excludes native library resources using ILC substitutions instead, leaving
-			// them available for extraction even when post-processing runs after ILC.
-			if (App.XamarinRuntime == XamarinRuntime.NativeAOT)
-				return false;
-
 #if ASSEMBLY_PREPARER
 			// In Hot Reload compatible builds, don't strip resources from reloadable (non-linked) assemblies,
 			// because modifying them re-serializes (saves) the assembly, breaking Hot Reload. Linked assemblies
@@ -110,7 +105,19 @@ namespace Xamarin.Linker {
 			if (!module.HasResources)
 				return false;
 
-			var libraries = Xamarin.Bundler.Assembly.GetNativeLibraryResourceNames (assembly);
+			HashSet<string>? libraries = null;
+			if (assembly.HasCustomAttributes) {
+				foreach (var ca in assembly.CustomAttributes) {
+					if (!ca.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
+						continue;
+					var lwa = Xamarin.Bundler.Assembly.GetLinkWithAttribute (ca);
+					if (lwa.LibraryName is not null) {
+						if (libraries is null)
+							libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
+						libraries.Add (lwa.LibraryName);
+					}
+				}
+			}
 
 			var found = false;
 			var resources = module.Resources;

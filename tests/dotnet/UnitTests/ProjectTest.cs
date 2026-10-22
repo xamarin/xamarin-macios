@@ -427,10 +427,13 @@ namespace Xamarin.Tests {
 			var executable = File.ReadAllBytes (GetNativeExecutable (platform, appPath));
 			Assert.That (executable.AsSpan ().IndexOf (embeddedFramework), Is.EqualTo (-1), "The executable must not embed the native framework archive");
 
-			var substitutionsPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, "Release"), "nativeaot-resource-substitutions.xml");
-			var substitutions = System.Xml.Linq.XDocument.Load (substitutionsPath);
-			Assert.That (substitutions.Descendants ("assembly").Single (v => (string?) v.Attribute ("fullname") == "BindingWithEmbeddedFramework")
-				.Elements ("resource").Select (v => (string?) v.Attribute ("name")), Does.Contain ("XTest.framework"), "ILC native resource exclusions");
+			var linkedBindingPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, "Release"), "linked", "BindingWithEmbeddedFramework.dll");
+			using var linkedBinding = AssemblyDefinition.ReadAssembly (linkedBindingPath);
+			Assert.That (linkedBinding.MainModule.Resources.Select (v => v.Name), Does.Not.Contain ("XTest.framework"), "Native framework archive must be removed before ILC");
+			var managedResource = binding.MainModule.Resources.OfType<EmbeddedResource> ().Single (v => v.Name == "ManagedResource").GetResourceData ();
+			Assert.That (managedResource.Length, Is.GreaterThan (0), "The binding must contain the managed resource");
+			Assert.That (linkedBinding.MainModule.Resources.OfType<EmbeddedResource> ().Single (v => v.Name == "ManagedResource").GetResourceData (), Is.EqualTo (managedResource), "Ordinary managed resources must survive trimming");
+			Assert.That (executable.AsSpan ().IndexOf (managedResource), Is.GreaterThanOrEqualTo (0), "The executable must preserve ordinary managed resources");
 		}
 
 		[Test]
