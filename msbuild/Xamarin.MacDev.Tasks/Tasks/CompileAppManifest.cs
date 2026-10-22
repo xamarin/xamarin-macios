@@ -467,7 +467,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected void ValidateSceneLifecycle (PDictionary plist, AppleSdkVersion sdkVersion)
 		{
-			if (!ValidateSceneManifest || IsAppExtension || IsFramework)
+			if (!ValidateSceneManifest || IsAppExtension)
 				return;
 			if (Platform != ApplePlatform.iOS && Platform != ApplePlatform.MacCatalyst)
 				return;

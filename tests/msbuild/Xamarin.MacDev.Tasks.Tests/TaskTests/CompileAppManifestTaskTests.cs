@@ -30,28 +30,25 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "26.9", true, false, false, false)]
-		[TestCase (ApplePlatform.iOS, "27.0", true, false, false, true)]
-		[TestCase (ApplePlatform.iOS, "27.1", true, false, false, true)]
-		[TestCase (ApplePlatform.MacCatalyst, "26.9", true, false, false, false)]
-		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, false, false, true)]
-		[TestCase (ApplePlatform.MacCatalyst, "28.0", true, false, false, true)]
-		[TestCase (ApplePlatform.TVOS, "27.0", true, false, false, false)]
-		[TestCase (ApplePlatform.MacOSX, "27.0", true, false, false, false)]
-		[TestCase (ApplePlatform.iOS, "27.0", false, false, false, false)]
-		[TestCase (ApplePlatform.MacCatalyst, "27.0", false, false, false, false)]
-		[TestCase (ApplePlatform.iOS, "27.0", true, true, false, false)]
-		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, true, false, false)]
-		[TestCase (ApplePlatform.iOS, "27.0", true, false, true, false)]
-		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, false, true, false)]
-		public void SceneLifecycleValidation (ApplePlatform platform, string sdkVersion, bool validateSceneManifest, bool isAppExtension, bool isFramework, bool expectError)
+		[TestCase (ApplePlatform.iOS, "26.9", true, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", true, false, true)]
+		[TestCase (ApplePlatform.iOS, "27.1", true, false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "26.9", true, false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, false, true)]
+		[TestCase (ApplePlatform.MacCatalyst, "28.0", true, false, true)]
+		[TestCase (ApplePlatform.TVOS, "27.0", true, false, false)]
+		[TestCase (ApplePlatform.MacOSX, "27.0", true, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", false, false, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", false, false, false)]
+		[TestCase (ApplePlatform.iOS, "27.0", true, true, false)]
+		[TestCase (ApplePlatform.MacCatalyst, "27.0", true, true, false)]
+		public void SceneLifecycleValidation (ApplePlatform platform, string sdkVersion, bool validateSceneManifest, bool isAppExtension, bool expectError)
 		{
 			var task = CreateTask<SceneLifecycleValidationTask> ();
 			Assert.That (task.ValidateSceneManifest, Is.True, "Default");
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform).ToString ();
 			task.ValidateSceneManifest = validateSceneManifest;
 			task.IsAppExtension = isAppExtension;
-			task.IsFramework = isFramework;
 			task.AppManifest = new TaskItem ("Info.plist");
 
 			task.ValidateManifest (new PDictionary (), sdkVersion);
