@@ -182,39 +182,46 @@ namespace Foundation {
 		/// </remarks>
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
-		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
+		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true, bool unregisterCancellation = true)
 		{
+			InflightData? data = null;
 			lock (inflightRequestsLock) {
-				if (inflightRequests.Remove (task, out var data)) {
-					if (cancel)
-						data.CancellationTokenSource.Cancel ();
-				}
+				if (!inflightRequests.Remove (task, out data))
+					return;
 			}
 
-			if (cancel)
-				task?.Cancel ();
+			if (unregisterCancellation)
+				data.CancellationRegistration.Dispose ();
 
-			task?.Dispose ();
+			if (cancel) {
+				data.CancellationTokenSource.Cancel ();
+				task.Cancel ();
+			}
+
+			// Don't dispose the task: NSURLSession may still invoke delegate callbacks, and other callbacks may still reference the managed wrapper.
 		}
 
 		/// <inheritdoc />
 		protected override void Dispose (bool disposing)
 		{
-			var tasks = new List<NSUrlSessionTask> ();
+			var requests = new List<KeyValuePair<NSUrlSessionTask, InflightData>> ();
 			lock (inflightRequestsLock) {
-				tasks.AddRange (inflightRequests.Keys);
+				disposed = true;
+				requests.AddRange (inflightRequests);
 				inflightRequests.Clear ();
 			}
-			foreach (var task in tasks) {
-				task.Cancel ();
-				task.Dispose ();
+			foreach (var request in requests) {
+				request.Value.CancellationRegistration.Dispose ();
+				request.Value.CancellationTokenSource.Cancel ();
+				request.Value.CompletionSource.TrySetCanceled ();
+				request.Value.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
+				request.Key.Cancel ();
 			}
 
 			// Take the proxy configuration lock so we don't race with ConfigureSessionProxy: either we
 			// invalidate the session it created (if it ran first), or it observes 'disposed' and doesn't
 			// create a new session that would never be invalidated (if we ran first).
 			lock (proxyConfigurationLock) {
-				disposed = true;
 				session.InvalidateAndCancel ();
 			}
 			base.Dispose (disposing);
@@ -470,7 +477,7 @@ namespace Foundation {
 
 				// The handler has been disposed (and the session already invalidated); don't create a new
 				// session, since it would never be invalidated.
-				if (disposed)
+				if (Volatile.Read (ref disposed))
 					return;
 
 				if (TryGetProxyDictionary (request.RequestUri, out var proxyDictionary)) {
@@ -574,29 +581,47 @@ namespace Foundation {
 
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
+			var disposeTask = false;
 			lock (inflightRequestsLock) {
-				inflightRequests.Add (dataTask, inflightData);
+				if (disposed)
+					disposeTask = true;
+				else {
+					inflightRequests.Add (dataTask, inflightData);
+
+					// as per documentation:
+					// If this token is already in the canceled state, the
+					// delegate will be run immediately and synchronously.
+					// Any exception the delegate generates will be
+					// propagated out of this method call.
+					//
+					// The execution of the register ensures that if we
+					// receive a already cancelled token or it is cancelled
+					// just before this call, we will cancel the task.
+					// Other approaches are harder, since querying the state
+					// of the token does not guarantee that in the next
+					// execution a threads cancels it.
+					inflightData.CancellationRegistration = cancellationToken.Register (() => {
+						RemoveInflightData (dataTask, unregisterCancellation: false);
+						inflightData.CompletionSource.TrySetCanceled ();
+					});
+
+					if (inflightRequests.ContainsKey (dataTask)) {
+						if (dataTask.State == NSUrlSessionTaskState.Suspended)
+							dataTask.Resume ();
+					} else {
+						// Register invokes the callback synchronously for an already-canceled token,
+						// before the returned registration can be assigned above.
+						inflightData.CancellationRegistration.Dispose ();
+					}
+				}
 			}
 
-			if (dataTask.State == NSUrlSessionTaskState.Suspended)
-				dataTask.Resume ();
-
-			// as per documentation: 
-			// If this token is already in the canceled state, the 
-			// delegate will be run immediately and synchronously.
-			// Any exception the delegate generates will be 
-			// propagated out of this method call.
-			//
-			// The execution of the register ensures that if we 
-			// receive a already cancelled token or it is cancelled
-			// just before this call, we will cancel the task. 
-			// Other approaches are harder, since querying the state
-			// of the token does not guarantee that in the next
-			// execution a threads cancels it.
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
+			if (disposeTask) {
+				inflightData.CancellationTokenSource.Cancel ();
 				inflightData.CompletionSource.TrySetCanceled ();
-			});
+				inflightData.Stream.TrySetException (new ObjectDisposedException (nameof (NSUrlSessionHandler)));
+				dataTask.Cancel ();
+			}
 
 			return await inflightData.CompletionSource.Task.ConfigureAwait (false);
 		}
@@ -928,8 +953,8 @@ namespace Foundation {
 
 				lock (sessionHandler.inflightRequestsLock)
 					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
-						// ensure that we did not cancel the request, if we did, do cancel the task, if we 
-						// cancel the task it means that we are not interested in any of the delegate methods:
+						// Ensure that we did not cancel the request. If we did, return null to indicate
+						// that we are not interested in any of the delegate methods:
 						// 
 						// DidReceiveResponse     We might have received a response, but either the user cancelled or a 
 						//                        timeout did, if that is the case, we do not care about the response.
@@ -937,16 +962,12 @@ namespace Foundation {
 						//                        reason we would like to add more data.
 						// DidCompleteWithError - We are not changing a behaviour compared to the case in which 
 						//                        we did not find the data.
-						if (inflight.CancellationToken.IsCancellationRequested) {
-							task?.Cancel ();
-							// return null so that we break out of any delegate method.
+						if (inflight.CancellationToken.IsCancellationRequested)
 							return null;
-						}
 						return inflight;
 					}
 
-				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
-				task?.Cancel ();
+				// If we did not manage to get the inflight data, another cleanup path already owns the task.
 				return null;
 			}
 
@@ -985,10 +1006,6 @@ namespace Foundation {
 					var absoluteUri = new Uri (urlResponse.Url.AbsoluteString!);
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
-						if (!inflight.Completed) {
-							dataTask.Cancel ();
-						}
-
 						inflight.Disposed = true;
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
@@ -1068,8 +1085,12 @@ namespace Foundation {
 					// We don't want to send the response back to the task just yet.  Because we want to mimic .NET behavior
 					// as much as possible.  When the response is sent back in .NET, the content stream is ready to read or the
 					// request has completed, because of this we want to send back the response in DidReceiveData or DidCompleteWithError
-					if (dataTask.State == NSUrlSessionTaskState.Suspended)
-						dataTask.Resume ();
+					lock (sessionHandler.inflightRequestsLock) {
+						if (sessionHandler.inflightRequests.TryGetValue (dataTask, out var currentInflight) &&
+							ReferenceEquals (currentInflight, inflight) &&
+							dataTask.State == NSUrlSessionTaskState.Suspended)
+							dataTask.Resume ();
+					}
 
 				} catch (Exception ex) {
 					inflight.CompletionSource.TrySetException (ex);
@@ -1090,7 +1111,7 @@ namespace Foundation {
 					return;
 
 				inflight.Stream.Add (data);
-				SetResponse (inflight);
+				SetResponse (dataTask, inflight);
 			}
 
 			[Preserve (Conditional = true)]
@@ -1115,30 +1136,35 @@ namespace Foundation {
 						inflight.Stream.TrySetReceivedAllData ();
 
 						inflight.Completed = true;
-						SetResponse (inflight);
+						SetResponse (task, inflight);
 					}
 
 					sessionHandler.RemoveInflightData (task, cancel: false);
 				}
 			}
 
-			void SetResponse (InflightData inflight)
+			void SetResponse (NSUrlSessionTask task, InflightData inflight)
 			{
-				lock (inflight.Lock) {
-					if (inflight.ResponseSent)
+				lock (sessionHandler.inflightRequestsLock) {
+					if (!sessionHandler.inflightRequests.TryGetValue (task, out var current) || !ReferenceEquals (current, inflight))
 						return;
 
-					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
-						return;
+					lock (inflight.Lock) {
+						if (inflight.ResponseSent)
+							return;
 
-					if (inflight.CompletionSource.Task.IsCompleted)
-						return;
+						if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
+							return;
 
-					var httpResponse = inflight.Response;
+						if (inflight.CompletionSource.Task.IsCompleted)
+							return;
 
-					inflight.ResponseSent = true;
+						var httpResponse = inflight.Response;
 
-					inflight.CompletionSource.TrySetResult (httpResponse!);
+						inflight.ResponseSent = true;
+
+						inflight.CompletionSource.TrySetResult (httpResponse!);
+					}
 				}
 			}
 
@@ -1461,6 +1487,7 @@ namespace Foundation {
 
 			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; } = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 			public CancellationToken CancellationToken { get; set; }
+			public CancellationTokenRegistration CancellationRegistration { get; set; }
 			public CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource ();
 			public NSUrlSessionDataTaskStream Stream { get; } = new NSUrlSessionDataTaskStream ();
 			public HttpRequestMessage Request { get; set; }
@@ -1620,19 +1647,25 @@ namespace Foundation {
 
 			public void TrySetReceivedAllData ()
 			{
-				receivedAllData = true;
+				lock (dataLock) {
+					receivedAllData = true;
+				}
 			}
 
 			public void TrySetException (Exception e)
 			{
-				exc = e;
-				TrySetReceivedAllData ();
+				lock (dataLock) {
+					exc = e;
+					receivedAllData = true;
+				}
 			}
 
 			void ThrowIfNeeded (CancellationToken cancellationToken)
 			{
-				if (exc is not null)
-					throw exc;
+				lock (dataLock) {
+					if (exc is not null)
+						throw exc;
+				}
 
 				cancellationToken.ThrowIfCancellationRequested ();
 			}
