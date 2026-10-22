@@ -3808,7 +3808,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Name="_ExecutePrepareAssemblies"
 		Condition="'$(IsMacEnabled)' == 'true' And '$(PrepareAssemblies)' == 'true'"
 		Inputs="@(_AssembliesToPrepare);$(_LinkerCachePath);$(_AssemblyPreparerConfigurationStamp)"
-		Outputs="$(_PreparedAssembliesItemsPath);$(_AssemblyPreparerMSBuildOutputFile)"
+		Outputs="$(_PreparedAssembliesItemsPath);$(_AssemblyPreparerMSBuildOutputFile);$(_NativeAOTResourceSubstitutions)"
 		DependsOnTargets="_PrepareAssembliesForPreparation;_ComputeAssembliesToPostprocessOnPublish;SelectRegistrar"
 		>
 		<PrepareAssemblies
@@ -3847,6 +3847,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<FileWrites Include="$(_AssemblyPreparerConfigurationStamp)" />
 			<FileWrites Include="$(_UnmanagedCallersOnlyMapPath)" />
 			<FileWrites Include="$(_AssemblyPreparerMSBuildOutputFile)" Condition="Exists('$(_AssemblyPreparerMSBuildOutputFile)')" />
+			<FileWrites Include="$(_NativeAOTResourceSubstitutions)" Condition="'$(_NativeAOTResourceSubstitutions)' != ''" />
 		</ItemGroup>
 	</Target>
 
