@@ -92,11 +92,11 @@ namespace Extrospection {
 			}
 		}
 
-		public static bool FindObjcDeprecated (IEnumerable<Attr> attrs, out VersionTuple version)
+		public static bool FindObjcDeprecated (IEnumerable<Attr> attrs, out VersionTuple version, string? platform = null)
 		{
 			// Note: the 'anyAppleOS' meta-platform (Xcode 27+) is not handled here; revisit if Apple
 			// starts shipping 'API_DEPRECATED(anyappleos(...))' (see Helpers.IsDeprecated which does).
-			var attr = attrs.GetAvailabilityAttributes ().FirstOrDefault (x => x.AvailabilityAttributeDeprecated.HasValue && !x.AvailabilityAttributeDeprecated.Value.IsEmptyVersionTuple && x.AvailabilityAttributePlatformIdentifierName == Helpers.ClangPlatformName);
+			var attr = attrs.GetAvailabilityAttributes ().FirstOrDefault (x => x.AvailabilityAttributeDeprecated.HasValue && !x.AvailabilityAttributeDeprecated.Value.IsEmptyVersionTuple && x.AvailabilityAttributePlatformIdentifierName == (platform ?? Helpers.ClangPlatformName));
 			if (attr is not null) {
 				version = attr.AvailabilityAttributeDeprecated!.Value;
 				return true;
