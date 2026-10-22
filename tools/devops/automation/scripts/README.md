@@ -66,3 +66,9 @@ an older PR head. Such a source checkout keeps its original unsharded matrices
 and does not run the newer adapter validator. An older checkout rejects already
 sharded configuration instead of passing unsupported options to its xharness.
 A sharding-capable checkout still fails if its validator is missing.
+
+On macOS, integration-test apps that reach their existing 30-second launch
+deadline are sampled before being killed. The one-second native sample has a
+separate five-second diagnostic timeout, and its output is included in the
+current test's NUnit output for `HtmlReport`. Sampling never extends the pass
+deadline: a timed-out app still fails even if it exits during diagnostics.

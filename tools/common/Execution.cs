@@ -128,6 +128,7 @@ namespace Xamarin.Utils {
 
 		public Action<string>? StandardOutputLineCallback;
 		public Action<string>? StandardErrorLineCallback;
+		public Action<int>? TimeoutCallback;
 
 		public ExecutionOutput Output { get; private set; } = new ExecutionOutput ();
 
@@ -234,10 +235,14 @@ namespace Xamarin.Utils {
 								Log?.WriteLine ($"Command '{p.StartInfo.FileName} {p.StartInfo.Arguments}' (pid: {pid}) didn't finish in {Timeout.Value.TotalMilliseconds} ms, and will be killed.");
 								TimedOut = true;
 								try {
-									KillProcess (p);
-								} catch (Exception ex) {
-									// According to the documentation, there can be exceptions here we can't prepare for, so just ignore them.
-									Log?.WriteLine ($"Failed to kill PID {pid}: {ex.Message}");
+									TimeoutCallback?.Invoke (pid);
+								} finally {
+									try {
+										KillProcess (p);
+									} catch (Exception ex) {
+										// According to the documentation, there can be exceptions here we can't prepare for, so just ignore them.
+										Log?.WriteLine ($"Failed to kill PID {pid}: {ex.Message}");
+									}
 								}
 							}
 						}

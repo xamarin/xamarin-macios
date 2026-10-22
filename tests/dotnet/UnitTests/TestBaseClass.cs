@@ -468,7 +468,7 @@ namespace Xamarin.Tests {
 
 			var rv = Execute (executable, out var output, out string magicWord, environment);
 			var outputString = output.ToString ();
-			if (rv.ExitCode != expectedExitCode) {
+			if (rv.TimedOut || rv.ExitCode != expectedExitCode) {
 				var msg = $"'{executable}' exited with exit code {rv.ExitCode} (expected exit code {expectedExitCode}) (timed out: {rv.TimedOut} timeout: {rv.Timeout}):" +
 							"\t" + outputString.Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' });
 				Console.WriteLine (msg);
@@ -483,7 +483,7 @@ namespace Xamarin.Tests {
 			return outputString;
 		}
 
-		protected Execution Execute (string executable, out string output, out string magicWord, Dictionary<string, string?>? environment = null)
+		protected virtual Execution Execute (string executable, out string output, out string magicWord, Dictionary<string, string?>? environment = null)
 		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
@@ -500,7 +500,26 @@ namespace Xamarin.Tests {
 
 			DeleteSavedState (executable, false);
 			try {
-				var rv = Execution.RunAsync (executable, Array.Empty<string> (), environment: env, timeout: TimeSpan.FromSeconds (30)).Result;
+				string? sampleOutput = null;
+				var execution = new Execution {
+					FileName = executable,
+					Arguments = [],
+					Environment = env,
+					Timeout = TimeSpan.FromSeconds (30),
+				};
+				if (RuntimeInformation.IsOSPlatform (OSPlatform.OSX)) {
+					execution.TimeoutCallback = pid => {
+						try {
+							var sample = Execution.RunAsync ("/usr/bin/sample", [pid.ToString (System.Globalization.CultureInfo.InvariantCulture), "1", "10", "-mayDie", "-file", "/dev/stdout"], timeout: TimeSpan.FromSeconds (5)).GetAwaiter ().GetResult ();
+							sampleOutput = $"Native sample for timed-out app '{executable}' (PID {pid}, sampler exit code: {sample.ExitCode}, sampler timed out: {sample.TimedOut}):\n{sample.Output.MergedOutput}";
+						} catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or IOException) {
+							sampleOutput = $"Could not sample timed-out app '{executable}' (PID {pid}): {ex}";
+						}
+					};
+				}
+				var rv = execution.RunAsync ().Result;
+				if (sampleOutput is not null)
+					Console.WriteLine (sampleOutput);
 				output = rv.Output.MergedOutput;
 				return rv;
 			} finally {

@@ -68,6 +68,7 @@ namespace Xamarin.Tests {
 		void AssertCrashReport (string executable, Dictionary<string, string?> environment, string crashReportDir)
 		{
 			var rv = Execute (executable, out var output, out var _, environment);
+			Assert.That (rv.TimedOut, Is.False, $"The app timed out instead of crashing:\n{output}");
 			Assert.That (rv.ExitCode, Is.Not.EqualTo (0), $"The app should have crashed:\n{output}");
 
 			var crashReports = Directory.GetFiles (crashReportDir, "*.crashreport.json", SearchOption.AllDirectories);
