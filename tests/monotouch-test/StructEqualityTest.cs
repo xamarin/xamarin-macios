@@ -544,6 +544,44 @@ namespace MonoTouchFixtures {
 			return values;
 		}
 
+		[TestCaseSource (nameof (EquivalentTimes))]
+		public void CMTimeEquivalentRepresentations (CMTime left, CMTime right)
+		{
+			Assert.That (left.Equals (right), Is.True, "Equals");
+			Assert.That (right.Equals (left), Is.True, "Equals, reversed");
+			Assert.That (object.Equals (left, right), Is.True, "object.Equals");
+			Assert.That (EqualityComparer<CMTime>.Default.Equals (left, right), Is.True, "EqualityComparer");
+			Assert.That (left == right, Is.True, "operator ==");
+			Assert.That (left != right, Is.False, "operator !=");
+			Assert.That (left.GetHashCode (), Is.EqualTo (right.GetHashCode ()), "Equal values must have equal hash codes");
+			Assert.That (new HashSet<CMTime> { left }.Contains (right), Is.True, "HashSet lookup");
+		}
+
+		public static IEnumerable<TestCaseData> EquivalentTimes ()
+		{
+			yield return new TestCaseData (new CMTime (1, 1), new CMTime (2, 2)).SetName ("EquivalentTimes(Whole)");
+			yield return new TestCaseData (new CMTime (1, 3), new CMTime (2, 6)).SetName ("EquivalentTimes(Fraction)");
+			yield return new TestCaseData (new CMTime (-1, 3), new CMTime (-2, 6)).SetName ("EquivalentTimes(Negative)");
+			yield return new TestCaseData (new CMTime (0, 1), new CMTime (0, int.MaxValue)).SetName ("EquivalentTimes(Zero)");
+			yield return new TestCaseData (new CMTime (long.MinValue, 2), new CMTime (long.MinValue / 2, 1)).SetName ("EquivalentTimes(MinValue)");
+			yield return new TestCaseData (new CMTime (long.MaxValue - 1, 2), new CMTime ((long.MaxValue - 1) / 2, 1)).SetName ("EquivalentTimes(MaxValue)");
+			yield return new TestCaseData (new CMTime (9007199254740993, 3), new CMTime (3002399751580331, 1)).SetName ("EquivalentTimes(BeyondDoublePrecision)");
+			yield return new TestCaseData (new CMTime (1, 1, 7), new CMTime (2, 2, 7)).SetName ("EquivalentTimes(Epoch)");
+			yield return new TestCaseData (new CMTime (1, 1), new CMTime (2, 2) { TimeFlags = CMTime.Flags.Valid | CMTime.Flags.HasBeenRounded }).SetName ("EquivalentTimes(Rounded)");
+			yield return new TestCaseData (CMTime.Invalid, new CMTime (123, 456, 7) { TimeFlags = CMTime.Flags.HasBeenRounded }).SetName ("EquivalentTimes(Invalid)");
+			yield return new TestCaseData (CMTime.PositiveInfinity, new CMTime (123, 456, 7) { TimeFlags = CMTime.Flags.Valid | CMTime.Flags.PositiveInfinity | CMTime.Flags.HasBeenRounded }).SetName ("EquivalentTimes(PositiveInfinity)");
+			yield return new TestCaseData (CMTime.NegativeInfinity, new CMTime (123, 456, 7) { TimeFlags = CMTime.Flags.Valid | CMTime.Flags.NegativeInfinity | CMTime.Flags.HasBeenRounded }).SetName ("EquivalentTimes(NegativeInfinity)");
+			yield return new TestCaseData (CMTime.Indefinite, new CMTime (123, 456, 7) { TimeFlags = CMTime.Flags.Valid | CMTime.Flags.Indefinite | CMTime.Flags.HasBeenRounded }).SetName ("EquivalentTimes(Indefinite)");
+		}
+
+		[TestCase (0)]
+		[TestCase (-1)]
+		[TestCase (int.MinValue)]
+		public void CMTimeHashCodeNonpositiveTimescale (int timescale)
+		{
+			Assert.DoesNotThrow (() => new CMTime (long.MinValue, timescale).GetHashCode ());
+		}
+
 #if !(XAMCORE_5_0 && MONOMAC)
 		[Test]
 		public void AudioQueueChannelAssignmentValues ()
