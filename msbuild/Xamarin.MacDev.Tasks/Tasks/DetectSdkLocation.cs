@@ -122,8 +122,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			try {
 				LoggingService.SetCustomLogger (this);
-				ExecuteImpl ();
-				return !Log.HasLoggedErrors;
+				return ExecuteImpl () && !Log.HasLoggedErrors;
 			} finally {
 				LoggingService.SetCustomLogger (null);
 			}
