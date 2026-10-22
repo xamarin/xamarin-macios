@@ -72,12 +72,32 @@ steps:
       # load the configuration files and set the required variables to be used in the later stages
       $configPath = Get-ChildItem -Path "$(Pipeline.Workspace)/macios/build-configuration/configuration.json" -Recurse -Force
       $config = Import-BuildConfiguration -ConfigFile $configPath
-      $testMatrix = Split-SimulatorTestMatrix -TestMatrix $config.TEST_MATRIX
+      $testMatrix = $config.TEST_MATRIX
+      $simulatorTestMatrix = $config.SIMULATOR_TEST_MATRIX
+      if (Get-Command Split-SimulatorTestMatrix -CommandType Function -ErrorAction SilentlyContinue) {
+          $testMatrix = Split-SimulatorTestMatrix -TestMatrix $testMatrix
+          $simulatorTestMatrix = Split-SimulatorTestMatrix -TestMatrix $testMatrix -StageFilter "simulator_tests"
+      } else {
+          foreach ($json in @($testMatrix, $simulatorTestMatrix)) {
+              $matrix = ConvertFrom-Json -InputObject $json -AsHashtable -ErrorAction Stop
+              if ($matrix -isnot [System.Collections.IDictionary]) {
+                  throw "The imported test matrix must be a JSON object."
+              }
+              foreach ($entry in $matrix.Values) {
+                  if ($entry -isnot [System.Collections.IDictionary]) {
+                      throw "The imported test matrix contains an invalid entry."
+                  }
+                  if ($entry.Contains("TEST_SHARD") -or $entry.TESTS_LABELS -match "--test-variation-shard[= ]") {
+                      throw "The checked-out source cannot run sharded test artifacts. Use a build configuration from matching source."
+                  }
+              }
+          }
+          Write-Host "Legacy source checkout: retaining the compatible unsharded test matrices."
+      }
       $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
       Edit-BuildConfiguration -ConfigKey TEST_MATRIX -ConfigValue $testMatrix -ConfigFile $Env:CONFIG_PATH
       Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
 
-      $simulatorTestMatrix = Split-SimulatorTestMatrix -TestMatrix $testMatrix -StageFilter "simulator_tests"
       $simulatorTestMatrix = $simulatorTestMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
       Edit-BuildConfiguration -ConfigKey SIMULATOR_TEST_MATRIX -ConfigValue $simulatorTestMatrix -ConfigFile $Env:CONFIG_PATH
       Write-Host "##vso[task.setvariable variable=SIMULATOR_TEST_MATRIX;isOutput=true]$simulatorTestMatrix"

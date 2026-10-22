@@ -51,7 +51,19 @@ stages:
       displayName: 'Build on Linux'
       workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
 
-    - pwsh: ./tools/devops/automation/scripts/test-simulator-sharding.ps1
+    - pwsh: |
+        $scripts = Join-Path $PWD "tools/devops/automation/scripts"
+        $validator = Join-Path $scripts "test-simulator-sharding.ps1"
+        if (Test-Path -LiteralPath $validator -PathType Leaf) {
+            & $validator
+        } else {
+            Import-Module (Join-Path $scripts "TestConfiguration.psm1")
+            if (Get-Command Split-SimulatorTestMatrix -CommandType Function -ErrorAction SilentlyContinue) {
+                throw "The source supports simulator sharding, but its NUnit partition validator is missing."
+            }
+            Write-Host "Legacy source checkout: simulator sharding and its adapter validator are not present."
+        }
+      name: validate_shards
       displayName: 'Validate NUnit shard partitions'
       workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
       retryCountOnTaskFailure: 2

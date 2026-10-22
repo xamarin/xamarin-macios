@@ -60,3 +60,9 @@ checks that the generated filters select disjoint sets whose union matches the
 unsharded set. This check needs the repository's .NET SDK, but no Apple workloads.
 Run `make -C builds dotnet` first if the SDK is missing, or supply `-DotNetPath`.
 It can also be run locally with `pwsh ./test-simulator-sharding.ps1`.
+
+Pipeline YAML can come from a merge commit while `Undo Github merge` checks out
+an older PR head. Such a source checkout keeps its original unsharded matrices
+and does not run the newer adapter validator. An older checkout rejects already
+sharded configuration instead of passing unsupported options to its xharness.
+A sharding-capable checkout still fails if its validator is missing.
