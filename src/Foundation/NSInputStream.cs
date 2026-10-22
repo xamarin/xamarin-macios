@@ -41,7 +41,7 @@ namespace Foundation {
 			if (buffer is null)
 				throw new ArgumentNullException (nameof (buffer));
 			if (len > (nuint) buffer.Length)
-				throw new ArgumentException ();
+				throw new ArgumentException ("The requested length exceeds the buffer length.", nameof (len));
 			var result = objc_msgSend (Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
 			GC.KeepAlive (this);
 			return result;
