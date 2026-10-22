@@ -165,6 +165,7 @@ public class AssemblyPreparer : IDisposable {
 		var steps = new List<ConfigurationAwareStep> {
 			// CollectAssembliesStep
 			new LoadAssembliesStep (),
+			new GenerateNativeAOTResourceSubstitutionsStep (),
 		};
 		steps.Add (new ComputeMethodOverridesStep ());
 		steps.Add (new CoreTypeMapStep ());

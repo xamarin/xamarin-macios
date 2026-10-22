@@ -22,7 +22,6 @@
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.CollectUnresolvedNativeSymbols" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.ComputeNativeAOTSurvivingNativeSymbols" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.GenerateNativeAOTResourceSubstitutions" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.GetFullPaths" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_TaskAssemblyName)" />
@@ -867,6 +866,7 @@
 			<!-- The files the assembly-preparer writes its MSBuild output properties to (one per pass; read back in _SetDynamicRegistrationSupportedFeature and added to FileWrites). -->
 			<_AssemblyPreparerMSBuildOutputFile Condition="'$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)assembly-preparer-msbuild-output.txt</_AssemblyPreparerMSBuildOutputFile>
 			<_AssemblyPostProcessorMSBuildOutputFile Condition="'$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)assembly-postprocessor-msbuild-output.txt</_AssemblyPostProcessorMSBuildOutputFile>
+			<_NativeAOTResourceSubstitutions Condition="'$(_UseNativeAot)' == 'true' And '$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)nativeaot-resource-substitutions.xml</_NativeAOTResourceSubstitutions>
 
 			<!-- The directory where the linker puts *.items files that will be loaded in the _LoadLinkerOutput target -->
 			<_LinkerItemsDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-items'))</_LinkerItemsDirectory>
@@ -2149,17 +2149,9 @@
 			<IlcReference Include="@(_ManagedAssemblyToLinkFromLinker)" />
 		</ItemGroup>
 
-		<!-- Keep embedded native libraries available for extraction, but don't also embed them in ILC's output. -->
-		<PropertyGroup>
-			<_NativeAOTResourceSubstitutions>$(IntermediateOutputPath)nativeaot-resource-substitutions.xml</_NativeAOTResourceSubstitutions>
-		</PropertyGroup>
-		<GenerateNativeAOTResourceSubstitutions
-			Assemblies="@(IlcCompileInput);@(IlcReference)"
-			SubstitutionsFile="$(_NativeAOTResourceSubstitutions)"
-		/>
+		<!-- Assembly preparation keeps native resources available for extraction, but excludes them from ILC's output. -->
 		<ItemGroup>
-			<IlcArg Include="--substitution:$(_NativeAOTResourceSubstitutions)" />
-			<FileWrites Include="$(_NativeAOTResourceSubstitutions)" />
+			<IlcArg Include="--substitution:$(_NativeAOTResourceSubstitutions)" Condition="'$(_NativeAOTResourceSubstitutions)' != ''" />
 		</ItemGroup>
 
 		<ItemGroup>

@@ -90,12 +90,12 @@ namespace Xamarin.Linker {
 		bool ModifyAssembly (AssemblyDefinition assembly)
 #endif
 		{
-			// NativeAOT excludes native library resources using ILC substitutions instead, leaving
-			// them available for extraction even when post-processing runs after ILC.
+#if ASSEMBLY_PREPARER
+			// Preparation already generated ILC exclusions. Post-processing may run after ILC,
+			// so leave resources available for native library extraction instead of rewriting assemblies.
 			if (App.XamarinRuntime == XamarinRuntime.NativeAOT)
 				return false;
 
-#if ASSEMBLY_PREPARER
 			// In Hot Reload compatible builds, don't strip resources from reloadable (non-linked) assemblies,
 			// because modifying them re-serializes (saves) the assembly, breaking Hot Reload. Linked assemblies
 			// are re-serialized regardless, so stripping them is fine.

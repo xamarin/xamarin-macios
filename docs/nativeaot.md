@@ -62,10 +62,10 @@ because it's not possible to use `dotnet publish` when running from the IDE.
 
 ## Compatibility and limitations
 
-Native libraries embedded in binding assemblies are extracted for native linking,
-but excluded from NativeAOT's embedded resources. Ordinary managed resources are
-preserved. This also applies when assembly post-processing runs after the NativeAOT
-compiler, or when `PrepareAssemblies` and `PostProcessAssemblies` are disabled.
+Assembly preparation generates exclusions for native libraries embedded in binding
+assemblies, keeping them available for native linking without embedding them in the
+executable. When assembly preparation is disabled, ILLink removes these resources
+after extracting the libraries. Ordinary managed resources are preserved.
 
 There are no known issues specific to our platforms with NativeAOT; but the
 [limitations][2] are exactly the same as for other supported platforms.
