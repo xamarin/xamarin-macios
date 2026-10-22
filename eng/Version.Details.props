@@ -6,14 +6,14 @@ This file should be imported by eng/Versions.props
 <Project>
   <PropertyGroup>
     <!-- dotnet-dotnet dependencies -->
-    <MicrosoftDotNetArcadeSdkPackageVersion>11.0.0-beta.26521.105</MicrosoftDotNetArcadeSdkPackageVersion>
-    <MicrosoftDotNetBuildTasksFeedPackageVersion>11.0.0-beta.26521.105</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftDotNetCecilPackageVersion>0.11.5-preview.26521.105</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetSharedFrameworkSdkPackageVersion>11.0.0-beta.26521.105</MicrosoftDotNetSharedFrameworkSdkPackageVersion>
-    <MicrosoftNETILLinkPackageVersion>11.0.0-rtm.26521.105</MicrosoftNETILLinkPackageVersion>
+    <MicrosoftDotNetArcadeSdkPackageVersion>11.0.0-beta.26522.109</MicrosoftDotNetArcadeSdkPackageVersion>
+    <MicrosoftDotNetBuildTasksFeedPackageVersion>11.0.0-beta.26522.109</MicrosoftDotNetBuildTasksFeedPackageVersion>
+    <MicrosoftDotNetCecilPackageVersion>0.11.5-preview.26522.109</MicrosoftDotNetCecilPackageVersion>
+    <MicrosoftDotNetSharedFrameworkSdkPackageVersion>11.0.0-beta.26522.109</MicrosoftDotNetSharedFrameworkSdkPackageVersion>
+    <MicrosoftNETILLinkPackageVersion>11.0.0-rtm.26522.109</MicrosoftNETILLinkPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>11.0.0</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>11.0.0</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
-    <MicrosoftNETSdkPackageVersion>11.0.100-rtm.26521.105</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETSdkPackageVersion>11.0.100-rtm.26522.109</MicrosoftNETSdkPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>11.0.0</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftTemplateEngineAuthoringTasksPackageVersion>11.0.100</MicrosoftTemplateEngineAuthoringTasksPackageVersion>
     <!-- dotnet-macios dependencies -->
