@@ -515,6 +515,10 @@ namespace AVFoundation {
 
 	/// <summary>An enumeration whose values specify optional audio behaviors.</summary>
 	/// <remarks>To be added.</remarks>
+	// Not deprecated in headers on macOS
+	[Deprecated (PlatformName.iOS, 27, 0, message: "Use 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
+	[Deprecated (PlatformName.TvOS, 27, 0, message: "Use 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 27, 0, message: "Use 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -619,6 +623,10 @@ namespace AVFoundation {
 
 	/// <summary>An enumeration whose values specify the beginning and ending of an audio interruption.</summary>
 	/// <remarks>To be added.</remarks>
+	// Not deprecated in headers on macOS
+	[Deprecated (PlatformName.iOS, 27, 0, message: "Use 'AVAudioSession.DidBecomeInactiveNotification' and 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
+	[Deprecated (PlatformName.TvOS, 27, 0, message: "Use 'AVAudioSession.DidBecomeInactiveNotification' and 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 27, 0, message: "Use 'AVAudioSession.DidBecomeInactiveNotification' and 'AVAudioSession.ResumptionRecommendationNotification' instead.")]
 	[MacCatalyst (13, 1)]
 	[Native]
 	// NSUInteger - AVAudioSession.h

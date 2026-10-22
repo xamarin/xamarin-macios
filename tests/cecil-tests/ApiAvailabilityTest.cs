@@ -154,6 +154,8 @@ namespace Cecil.Tests {
 		static HashSet<string> knownFailuresInMissingObsoleteAttributes = new HashSet<string> {
 			"AudioToolbox.AudioSessionActiveFlags",
 			"AVFoundation.AVAssetDownloadUrlSession.GetAssetDownloadTask(AVFoundation.AVUrlAsset, Foundation.NSUrl, Foundation.NSDictionary)",
+			"AVFoundation.AVAudioSessionInterruptionOptions",
+			"AVFoundation.AVAudioSessionInterruptionType",
 			"AVFoundation.AVCaptureDevice.IsFlashModeSupported(AVFoundation.AVCaptureFlashMode)",
 			"AVFoundation.AVCaptureFlashMode AVFoundation.AVCaptureDevice::FlashMode()",
 			"CFNetwork.CFHTTPStream",
