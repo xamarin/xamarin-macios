@@ -50,3 +50,8 @@ stages:
         make -j$(nproc)
       displayName: 'Build on Linux'
       workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+
+    - pwsh: ./tools/devops/automation/scripts/test-simulator-sharding.ps1
+      displayName: 'Validate NUnit shard partitions'
+      workingDirectory: $(System.DefaultWorkingDirectory)/$(BUILD_REPOSITORY_TITLE)
+      retryCountOnTaskFailure: 2

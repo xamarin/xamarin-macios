@@ -198,6 +198,16 @@ Describe "Simulator matrix sharding" {
         { Split-SimulatorTestMatrix -TestMatrix "[]" } | Should -Throw
         { Split-SimulatorTestMatrix -TestMatrix '{"monotouch_ios": "not an entry"}' } | Should -Throw
     }
+
+    It "partitions actual NUnit discovery without omissions or overlaps" {
+        { & "$PSScriptRoot/test-simulator-sharding.ps1" } | Should -Not -Throw
+    }
+
+    It "reports the missing SDK prerequisite instead of skipping adapter validation" {
+        $missingSdk = Join-Path $TestDrive "missing-dotnet"
+        { & "$PSScriptRoot/test-simulator-sharding.ps1" -DotNetPath $missingSdk } |
+            Should -Throw "*SDK was not found*make -C builds dotnet*"
+    }
 }
 
 Describe "Publishing simulator shards" {

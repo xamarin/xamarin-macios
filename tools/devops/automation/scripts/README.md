@@ -52,3 +52,11 @@ This trades additional setup/agent time for lower elapsed test time. Compare
 queue delay, agent-minutes, simulator-stage completion, and final result
 publication on CI: forty jobs only improve latency when the Mac pool has enough
 capacity, and result publication also waits for the other test stages.
+
+Linux build verification runs `test-simulator-sharding.ps1` against the real NUnit
+adapter. It builds a small fixture with all shard classes, future fixtures,
+category exclusions, and parameter values containing other fixture names, then
+checks that the generated filters select disjoint sets whose union matches the
+unsharded set. This check needs the repository's .NET SDK, but no Apple workloads.
+Run `make -C builds dotnet` first if the SDK is missing, or supply `-DotNetPath`.
+It can also be run locally with `pwsh ./test-simulator-sharding.ps1`.
