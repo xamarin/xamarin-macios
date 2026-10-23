@@ -176,14 +176,14 @@ Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher..cctor()
 Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher..ctor()
 Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher.Apply()
 Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__
-Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_2648_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_2649_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_2662_Foundation_NSAsyncDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSAsyncDispatcher/__Registrar_Callbacks__.callback_2663_Foundation_NSAsyncDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher
 Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher..cctor()
 Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher.Apply()
 Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_2651_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSAsyncSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_2665_Foundation_NSAsyncSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.tvOS.dll:Foundation.NSAutoreleasePool
 Microsoft.tvOS.dll:Foundation.NSAutoreleasePool._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.tvOS.dll:Foundation.NSAutoreleasePool..cctor()
@@ -226,8 +226,8 @@ Microsoft.tvOS.dll:Foundation.NSDispatcher..cctor()
 Microsoft.tvOS.dll:Foundation.NSDispatcher..ctor()
 Microsoft.tvOS.dll:Foundation.NSDispatcher.Apply()
 Microsoft.tvOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__
-Microsoft.tvOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_2643_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.tvOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_2644_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_2657_Foundation_NSDispatcher__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSDispatcher/__Registrar_Callbacks__.callback_2658_Foundation_NSDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.tvOS.dll:Foundation.NSException
 Microsoft.tvOS.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::<Exception>k__BackingField
 Microsoft.tvOS.dll:Foundation.NSException ObjCRuntime.MarshalObjectiveCExceptionEventArgs::Exception()
@@ -332,8 +332,8 @@ Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer.Add(Foundation.NSObject
 Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer.Drain(Foundation.NSObject)
 Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer.ScheduleDrain()
 Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__
-Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_2676_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
-Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_2677_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_2690_Foundation_NSObject_NSObject_Disposer__ctor(System.IntPtr, System.IntPtr, System.Byte*, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSObject/NSObject_Disposer/__Registrar_Callbacks__.callback_2691_Foundation_NSObject_NSObject_Disposer_Drain(System.IntPtr, System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.tvOS.dll:Foundation.NSObject/XamarinGCHandleFlags
 Microsoft.tvOS.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::HasManagedRef
 Microsoft.tvOS.dll:Foundation.NSObject/XamarinGCHandleFlags Foundation.NSObject/XamarinGCHandleFlags::InitialSet
@@ -369,7 +369,7 @@ Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher..cctor()
 Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher..ctor(System.Threading.SendOrPostCallback, System.Object)
 Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher.Apply()
 Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__
-Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_2646_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
+Microsoft.tvOS.dll:Foundation.NSSynchronizationContextDispatcher/__Registrar_Callbacks__.callback_2660_Foundation_NSSynchronizationContextDispatcher_Apply(System.IntPtr, System.IntPtr, System.IntPtr*)
 Microsoft.tvOS.dll:Foundation.NSValue
 Microsoft.tvOS.dll:Foundation.NSValue._Xamarin_ConstructINativeObject(ObjCRuntime.NativeHandle, System.Boolean)
 Microsoft.tvOS.dll:Foundation.NSValue..cctor()
