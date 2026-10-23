@@ -24784,7 +24784,7 @@ namespace UIKit {
 		[Field ("UITextContentTypeSublocality")]
 		NSString Sublocality { get; }
 
-		/// <summary>Indicates a text fieldn address field that holds the name of a country.</summary>
+		/// <summary>Indicates a text field that holds the name of a country/region.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[Field ("UITextContentTypeCountryName")]

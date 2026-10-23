@@ -32,17 +32,17 @@ namespace CoreGraphics {
 
 	// untyped enum -> CGPDFPage.h
 	/// <summary>Type of box in a PDF document.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <remarks>The boxes identify different page regions; the crop box is commonly used for display and printing.</remarks>
 	public enum CGPDFBox {
-		/// <summary>To be added.</summary>
+		/// <summary>The boundaries of the physical medium on which the page is intended to be printed.</summary>
 		Media = 0,
-		/// <summary>To be added.</summary>
+		/// <summary>The region to which page contents are clipped for display or printing.</summary>
 		Crop = 1,
-		/// <summary>To be added.</summary>
+		/// <summary>The extent of the page's bleed area for production printing.</summary>
 		Bleed = 2,
-		/// <summary>To be added.</summary>
+		/// <summary>The intended dimensions of the finished page after trimming.</summary>
 		Trim = 3,
-		/// <summary>To be added.</summary>
+		/// <summary>The extent of the page's meaningful content.</summary>
 		Art = 4,
 	}
 

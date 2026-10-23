@@ -36,9 +36,8 @@ using System.IO;
 
 namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
-		/// <summary>To be added.</summary>
-		///         <returns>To be added.</returns>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Copies the data into a new managed array.</summary>
+		/// <returns>An independent copy of the data.</returns>
 		public byte [] ToArray ()
 		{
 			var res = new byte [Length];
@@ -81,21 +80,74 @@ namespace Foundation {
 			return FromString (s, NSStringEncoding.UTF8);
 		}
 
-		/// <param name="buffer">C# Byte array containing the data to wrap.</param>
-		///         <summary>Creates an NSData that wraps a managed C# byte array.</summary>
-		///         <returns>Newly created NSData object wrapping the contents of the array.</returns>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Creates data by copying the contents of a managed array.</summary>
+		/// <param name="buffer">The bytes to copy.</param>
+		/// <returns>A new data object containing an independent copy of <paramref name="buffer" />.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
 		public static NSData FromArray (byte [] buffer)
 		{
 			if (buffer is null)
 				throw new ArgumentNullException (nameof (buffer));
 
+			return FromArray (new ReadOnlySpan<byte> (buffer));
+		}
+
+		/// <summary>Creates data by copying the contents of a span.</summary>
+		/// <param name="buffer">The bytes to copy.</param>
+		/// <returns>A new data object containing an independent copy of <paramref name="buffer" />.</returns>
+		/// <remarks>The bytes are copied during this call; the span is not retained.</remarks>
+		public static NSData FromArray (ReadOnlySpan<byte> buffer)
+		{
 			if (buffer.Length == 0)
 				return FromBytes (IntPtr.Zero, 0);
 
 			unsafe {
 				fixed (byte* ptr = buffer) {
 					return FromBytes ((IntPtr) ptr, (nuint) buffer.Length);
+				}
+			}
+		}
+
+		/// <summary>Copies all the data into a destination span.</summary>
+		/// <param name="buffer">The destination, which must be large enough to contain all the data.</param>
+		/// <exception cref="ArgumentException"><paramref name="buffer" /> is smaller than <see cref="Length" />.</exception>
+		/// <remarks>The copy completes during this call. Any bytes beyond the copied data are unchanged. Do not modify mutable data concurrently with this call.</remarks>
+		public void GetBytes (Span<byte> buffer)
+		{
+			var length = Length;
+			if ((nuint) buffer.Length < length)
+				throw new ArgumentException ("The destination is too small to contain the data.", nameof (buffer));
+
+			if (length == 0)
+				return;
+
+			unsafe {
+				fixed (byte* ptr = buffer) {
+					GetBytes ((IntPtr) ptr, length);
+				}
+			}
+		}
+
+		/// <summary>Copies a range of the data into a destination span.</summary>
+		/// <param name="buffer">The destination, which must be large enough to contain the requested range.</param>
+		/// <param name="range">The range of bytes to copy.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="range" /> is outside the data.</exception>
+		/// <exception cref="ArgumentException"><paramref name="buffer" /> is smaller than the requested range.</exception>
+		/// <remarks>The copy completes during this call. Any bytes beyond the copied data are unchanged. Do not modify mutable data concurrently with this call.</remarks>
+		public void GetBytes (Span<byte> buffer, NSRange range)
+		{
+			var length = Length;
+			if (range.Location < 0 || range.Length < 0 || (nuint) range.Location > length || (nuint) range.Length > length - (nuint) range.Location)
+				throw new ArgumentOutOfRangeException (nameof (range));
+			if ((nuint) buffer.Length < (nuint) range.Length)
+				throw new ArgumentException ("The destination is too small to contain the requested range.", nameof (buffer));
+
+			if (range.Length == 0)
+				return;
+
+			unsafe {
+				fixed (byte* ptr = buffer) {
+					GetBytes ((IntPtr) ptr, range);
 				}
 			}
 		}
