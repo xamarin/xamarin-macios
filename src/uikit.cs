@@ -15863,6 +15863,9 @@ namespace UIKit {
 		[Export ("applicationFrame")]
 		CGRect ApplicationFrame { get; }
 
+		[Deprecated (PlatformName.iOS, 26, 0, message: "Use a 'UIScreen' instance obtained through context (such as 'view.Window.WindowScene.Screen'), or a 'UITraitCollection' obtained through context for properties with trait equivalents (such as 'DisplayScale').")]
+		[Deprecated (PlatformName.TvOS, 26, 0, message: "Use a 'UIScreen' instance obtained through context (such as 'view.Window.WindowScene.Screen'), or a 'UITraitCollection' obtained through context for properties with trait equivalents (such as 'DisplayScale').")]
+		[Deprecated (PlatformName.MacCatalyst, 26, 0, message: "Use a 'UIScreen' instance obtained through context (such as 'view.Window.WindowScene.Screen'), or a 'UITraitCollection' obtained through context for properties with trait equivalents (such as 'DisplayScale').")]
 		[Export ("mainScreen")]
 		[Static]
 		UIScreen MainScreen { get; }
