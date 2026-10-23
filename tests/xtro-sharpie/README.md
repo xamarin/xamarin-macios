@@ -145,6 +145,23 @@ Classify reviewed, already-shipped discrepancies in the appropriate `.ignore`
 files; use `.todo` for short-term fixes. Do not infer new baselines from an older
 SDK or hide all uses of a delegate after checking only one of them.
 
+### Enum deprecation
+
+`DeprecatedCheck` checks public managed enums against native enum declarations and
+typedefs, including trailing availability attributes on `NS_ENUM` and `NS_OPTIONS`.
+It uses the native name and framework to match bindings, checks typedef aliases
+without changing the underlying enum's availability, and reports each managed
+type once. Platform-specific deprecation and iOS inheritance for Mac Catalyst and
+tvOS follow the native availability rules. Existing accepted deprecation,
+obsolete, unavailable, and advice metadata is handled by the shared deprecation
+check.
+
+The regression tests parse synthetic headers and use the production visitor:
+
+```sh
+make -C tests/xtro-sharpie/UnitTests run-tests TEST_FILTER="--filter FullyQualifiedName~DeprecatedEnumTests"
+```
+
 ### Ideas
 
 Anything we do not check but for which data is available, e.g.

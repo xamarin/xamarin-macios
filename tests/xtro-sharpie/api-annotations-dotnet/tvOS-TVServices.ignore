@@ -1,2 +1,5 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! TVTopShelfContentStyle missing a [Deprecated] attribute
+
 # results from initial block parameter nullability analysis
 !missing-null-allowed! 'System.Void TVServices.TVTopShelfContentProvider::LoadTopShelfContent(System.Action`1<TVServices.ITVTopShelfContent>)' is missing a '?' on parameter 'completionHandler' block parameter #0

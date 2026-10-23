@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! SecPadding missing a [Deprecated] attribute
+
 ## 'kSecAttrPersistentReference' (correct), 'kSecAttrPersistantReference' (incorrect). Persistent with an "a" instead of "e".
 !missing-field! kSecAttrPersistantReference not bound
 !missing-field! kSecRandomDefault not bound

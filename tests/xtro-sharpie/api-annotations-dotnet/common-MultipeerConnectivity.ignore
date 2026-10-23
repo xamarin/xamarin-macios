@@ -1,0 +1,8 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! MCEncryptionPreference missing a [Deprecated] attribute
+!deprecated-attribute-missing! MCErrorCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! MCSessionSendDataMode missing a [Deprecated] attribute
+!deprecated-attribute-missing! MCSessionState missing a [Deprecated] attribute

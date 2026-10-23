@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! MTLDeviceLocation missing a [Deprecated] attribute
+
 ## bound selectors with no native declaration reachable from the class in the current SDK headers:
 ## private/SPI selectors, protocol/category members Apple inlines without declaring the conformance on
 ## the class, managed callback infrastructure, or API Apple removed/privatized - kept for compatibility

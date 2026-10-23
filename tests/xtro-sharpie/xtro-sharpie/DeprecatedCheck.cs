@@ -3,6 +3,8 @@ namespace Extrospection {
 		Dictionary<string, VersionTuple> ObjCDeprecatedItems = new Dictionary<string, VersionTuple> ();
 		Dictionary<string, VersionTuple> ObjCDeprecatedSelectors = new Dictionary<string, VersionTuple> ();
 		Dictionary<string, VersionTuple> PlainCDeprecatedFunctions = new Dictionary<string, VersionTuple> ();
+		Dictionary<(string Framework, string Name), VersionTuple> DeprecatedEnums = new Dictionary<(string Framework, string Name), VersionTuple> ();
+		HashSet<(string Framework, string Name)> UnavailableEnums = new HashSet<(string Framework, string Name)> ();
 
 		List<TypeDefinition> ManagedTypes = new List<TypeDefinition> ();
 		Dictionary<string, MethodDefinition> dllimports = new Dictionary<string, MethodDefinition> ();
@@ -41,6 +43,15 @@ namespace Extrospection {
 
 			foreach (var cEntry in PlainCDeprecatedFunctions)
 				ProcessCFunction (cEntry.Key, cEntry.Value);
+
+			foreach (var type in ManagedTypes) {
+				if (!type.IsEnum || !type.IsPublic)
+					continue;
+				var framework = Helpers.GetFramework (type);
+				var name = type.GetName () ?? type.Name;
+				if (!UnavailableEnums.Contains ((framework, name)) && DeprecatedEnums.TryGetValue ((framework, name), out var version))
+					ProcessItem (type, name, version, framework);
+			}
 		}
 
 		void ProcessObjcEntry (string objcClassName, VersionTuple objcVersion)
@@ -139,6 +150,51 @@ namespace Extrospection {
 
 		public override void VisitObjCCategoryDecl (ObjCCategoryDecl decl) => VisitItem (decl);
 		public override void VisitObjCInterfaceDecl (ObjCInterfaceDecl decl) => VisitItem (decl);
+
+		public override void VisitEnumDecl (EnumDecl decl)
+		{
+			VisitEnum (decl, decl);
+		}
+
+		public override void VisitTypedefDecl (TypedefDecl decl)
+		{
+			var enumType = decl.UnderlyingType.UnqualifiedDesugaredType as EnumType;
+			if (!decl.IsAvailable () || (enumType is not null && !enumType.Decl.IsAvailable ())) {
+				var framework = Helpers.GetFramework (decl);
+				if (framework is not null)
+					UnavailableEnums.Add ((framework, decl.Name));
+				return;
+			}
+
+			VisitEnum (decl, decl);
+			if (enumType is not null)
+				VisitEnum (enumType.Decl, decl);
+		}
+
+		void VisitEnum (NamedDecl decl, NamedDecl namedDecl)
+		{
+			var name = namedDecl.Name;
+			if (string.IsNullOrEmpty (name) || !decl.IsAvailable () || !decl.IsDeprecated ())
+				return;
+
+			var framework = Helpers.GetFramework (namedDecl);
+			if (framework is null)
+				return;
+
+			// Match IsDeprecated's platform selection, including iOS inheritance, without changing
+			// the platform selection used by the existing Objective-C and C function checks.
+			var platforms = new [] { Helpers.Platform.AsPlatformAttributeString (), "anyappleos" };
+			if (Helpers.Platform == Platforms.MacCatalyst || Helpers.Platform == Platforms.tvOS)
+				platforms = platforms.Concat (new [] { "ios" }).ToArray ();
+			foreach (var platform in platforms) {
+				if (!AttributeHelpers.FindObjcDeprecated (decl.Attrs, out var version, platform))
+					continue;
+				var key = (framework, name);
+				if (!DeprecatedEnums.TryGetValue (key, out var previous) || VersionHelpers.Convert (version) < VersionHelpers.Convert (previous))
+					DeprecatedEnums [key] = version;
+				break;
+			}
+		}
 
 		void VisitItem (NamedDecl decl)
 		{

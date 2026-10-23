@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! GCMicroGamepadSnapshotDataVersion missing a [Deprecated] attribute
+
 # no generator support for FastEnumeration
 !missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
 

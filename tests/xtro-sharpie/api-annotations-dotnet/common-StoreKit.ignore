@@ -1,2 +1,5 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! SKDownloadState missing a [Deprecated] attribute
+
 # This is one of our own types.
 !unknown-type! XamarinSwiftFunctions bound

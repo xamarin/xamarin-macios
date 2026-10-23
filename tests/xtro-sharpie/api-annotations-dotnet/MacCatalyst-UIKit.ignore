@@ -1,3 +1,7 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! UIMenuControllerArrowDirection missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIRemoteNotificationType missing a [Deprecated] attribute
+
 ## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
 !missing-selector! UIRefreshControl::setTintColor: not bound
 !missing-selector! UIRefreshControl::tintColor not bound

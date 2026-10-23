@@ -1,3 +1,6 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! GKChallengeState missing a [Deprecated] attribute
+
 ## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
 
 # results from initial block parameter nullability analysis

@@ -1,3 +1,10 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! NSAnimationEffect missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSCellStateValue missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSPopoverAppearance missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSSpeechBoundary missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindowBackingLocation missing a [Deprecated] attribute
+
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=30717
 !duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
 

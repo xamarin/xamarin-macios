@@ -1,0 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! RPCameraPosition missing a [Deprecated] attribute

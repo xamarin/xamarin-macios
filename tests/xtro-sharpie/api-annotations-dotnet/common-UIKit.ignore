@@ -1,3 +1,8 @@
+## Existing enum deprecations exposed by enum/typedef checking.
+!deprecated-attribute-missing! UIPreviewActionStyle missing a [Deprecated] attribute
+!deprecated-attribute-missing! UITextItemInteraction missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIWindowScenePresentationStyle missing a [Deprecated] attribute
+
 ## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
 !missing-selector! UIButton::setTintColor: not bound
 !missing-selector! UIButton::tintColor not bound
