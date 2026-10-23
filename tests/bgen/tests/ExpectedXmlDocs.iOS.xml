@@ -306,7 +306,7 @@
         <member name="M:XmlDocumentation.IP1._PMethodWithArgs(XmlDocumentation.IP1,System.Int32)">
             <summary>
             Summary for P1.PMethodWithArgs
-            </summary><param name="arg0">Docs for arg0.</param>
+            </summary><param name="This">The instance on which this method operates.</param><param name="arg0">Docs for arg0.</param>
         </member>
         <member name="M:XmlDocumentation.IP1.PMethodWithUndocumentedArgs(System.Int32)">
             <summary>
@@ -326,7 +326,7 @@
         <member name="M:XmlDocumentation.IP1._PMethodWithBindAs(XmlDocumentation.IP1,XmlDocumentation.E2)">
             <summary>
             Summary for P1.PMethodWithBindAs
-            </summary><param name="value">Docs for value.</param>
+            </summary><param name="This">The instance on which this method operates.</param><param name="value">Docs for value.</param>
         </member>
         <member name="P:XmlDocumentation.IP1.PProperty">
             <summary>
@@ -352,7 +352,7 @@
         <member name="M:XmlDocumentation.P1_Extensions.PMethodWithArgs(XmlDocumentation.IP1,System.Int32)">
             <summary>
             Summary for P1.PMethodWithArgs
-            </summary><param name="arg0">Docs for arg0.</param>
+            </summary><param name="This">The instance on which this method operates.</param><param name="arg0">Docs for arg0.</param>
         </member>
         <member name="M:XmlDocumentation.P1_Extensions.PMethodWithUndocumentedArgs(XmlDocumentation.IP1,System.Int32)">
             <summary>
@@ -362,7 +362,7 @@
         <member name="M:XmlDocumentation.P1_Extensions.PMethodWithBindAs(XmlDocumentation.IP1,XmlDocumentation.E2)">
             <summary>
             Summary for P1.PMethodWithBindAs
-            </summary><param name="value">Docs for value.</param>
+            </summary><param name="This">The instance on which this method operates.</param><param name="value">Docs for value.</param>
         </member>
         <member name="M:XmlDocumentation.P1_Extensions.GetPProperty(XmlDocumentation.IP1)">
             <summary>

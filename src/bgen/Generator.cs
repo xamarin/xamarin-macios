@@ -4459,7 +4459,11 @@ public partial class Generator : IMemberGatherer {
 		var asyncAttribute = AttributeManager.GetOneCustomAttribute<AsyncAttribute> (mi);
 		var xmlDocs = asyncKind == AsyncMethodKind.Plain ? asyncAttribute.XmlDocs : asyncAttribute.XmlDocsWithOutParameter;
 		if (!string.IsNullOrEmpty (xmlDocs)) {
-			var docLines = xmlDocs.Split ('\n');
+			var doc = new XmlDocument { PreserveWhitespace = true };
+			doc.LoadXml ($"<member>{xmlDocs}</member>");
+			var resultParameter = asyncKind == AsyncMethodKind.WithResultOutParameter ? minfo.GetUniqueParamName ("result") : null;
+			var node = CompleteMethodDocumentation (doc.DocumentElement!, minfo, minfo.AsyncInitialParams, resultParameter);
+			var docLines = node.InnerXml.Split ('\n');
 			foreach (var line in docLines)
 				print ($"/// {line}");
 		}
@@ -4657,39 +4661,13 @@ public partial class Generator : IMemberGatherer {
 
 		bool wroteDocs;
 		if (minfo.is_extension_method) {
-			wroteDocs = WriteDocumentation ((MemberInfo?) GetProperty (mi) ?? mi);
-		} else if (minfo.is_category_extension) {
-			// If the method has xml docs, it's unlikely it'll have for the 'This' parameter we add to the method signature.
-			// So in that case, inject docs for the 'This' parameter.
-			var injectParamNode = new Func<XmlNode, XmlNode> (node => {
-				var children = node.ChildNodes.Cast<XmlNode> ();
-				XmlNode? firstParamDocs = null;
-				foreach (var p in children) {
-					if (p.Name != "param")
-						continue;
-					// if the method already has a 'param' doc for 'This', then we don't add any
-					if (p.Attributes? ["name"]?.Value == "This")
-						return p;
-					if (firstParamDocs is null)
-						firstParamDocs = p;
-				}
-				// if the method has parameters, but doesn't have any 'param' docs, then we don't add any 'param' doc for 'This'.
-				if (mi.GetParameters ().Length > 0 && firstParamDocs is null)
-					return node;
-				// we're good for injection
-				var thisParamDoc = node.OwnerDocument!.CreateElement ("param");
-				thisParamDoc.SetAttribute ("name", "This");
-				thisParamDoc.InnerText = "The instance on which this method operates.";
-				node.InsertBefore (thisParamDoc, firstParamDocs);
-				return node;
-			});
-			wroteDocs = WriteDocumentation (mi, transformNode: injectParamNode);
+			wroteDocs = WriteDocumentation ((MemberInfo?) GetProperty (mi) ?? mi, node => CompleteMethodDocumentation (node, minfo, mi.GetParameters ()));
 		} else if (minfo.is_factory_method) {
 			// The xml documentation is written for the generated factory method instead
 			// of the (internal) backing constructor. See GenerateFactoryMethod.
 			wroteDocs = false;
 		} else {
-			wroteDocs = WriteDocumentation (mi);
+			wroteDocs = WriteDocumentation (mi, node => CompleteMethodDocumentation (node, minfo, mi.GetParameters ()));
 		}
 
 		if (!wroteDocs && minfo.is_appearance)
@@ -4850,7 +4828,7 @@ public partial class Generator : IMemberGatherer {
 
 		minfo.render_as_factory_method = true;
 
-		WriteDocumentation (mi);
+		WriteDocumentation (mi, node => CompleteMethodDocumentation (node, minfo, mi.GetParameters ()));
 		PrintMethodAttributes (minfo);
 
 		print_generated_code (optimizable: IsOptimizable (mi), factoryMethod: true);
@@ -5136,9 +5114,6 @@ public partial class Generator : IMemberGatherer {
 		var extensionMethods = optionalInstanceMethods.Concat (requiredInstanceMethods.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 		var extensionProperties = optionalInstanceProperties.Concat (requiredInstanceProperties.Where (v => IsRequired (v, out var generateExtensionMethod) && generateExtensionMethod));
 
-		// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated interface - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
-		print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
-
 		if (!WriteDocumentation (type)) {
 			print ($"/// <summary>This interface represents the Objective-C protocol <c>{protocol_name}</c>.</summary>");
 			print ($"/// <remarks>");
@@ -5374,16 +5349,11 @@ public partial class Generator : IMemberGatherer {
 		print ("}");
 		print ("");
 
-		print ("#pragma warning restore CS1573");
-
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
 		if (backwardsCompatibleCodeGeneration)
 			include_extensions = extensionMethods.Any () || extensionProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
-			// disable CS1573, which can happen when the original member in the api definition has xml comments and we copy that xml comment into the generated extension member - because we may add parameters to method signatures, and the new parameters won't have an xml comment.
-			print ("#pragma warning disable CS1573"); // Parameter 'This' has no matching param tag in the XML comment for '...' (but other parameters do)
-													  // extension methods
 			if (BindingTouch.SupportsXmlDocumentation) {
 				print ($"/// <summary>Extension methods to the <see cref=\"I{TypeName}\" /> interface to support all the methods from the {protocol_name} protocol.</summary>");
 				print ($"/// <remarks>");
@@ -5424,7 +5394,6 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 			print ("");
-			print ("#pragma warning restore CS1573");
 		}
 
 		// Add API from base interfaces we also need to implement.
@@ -5893,6 +5862,44 @@ public partial class Generator : IMemberGatherer {
 	bool WriteDocumentation (MemberInfo info, Func<XmlNode, XmlNode>? transformNode = null)
 	{
 		return DocumentationManager.WriteDocumentation (sw!, indent, info, transformNode);
+	}
+
+	XmlNode CompleteMethodDocumentation (XmlNode node, MemberInformation minfo, ParameterInfo [] parameters, string? resultParameter = null)
+	{
+		if (node.SelectSingleNode ("param") is null && !(minfo.is_category_extension && minfo.Method!.GetParameters ().Length == 0))
+			return node;
+
+		// Documentation nodes are cached and reused for signatures with different parameters.
+		node = node.CloneNode (true);
+		var paramDocs = node.ChildNodes.Cast<XmlNode> ().Where (v => v.Name == "param").ToList ();
+
+		void AddParameter (string? name, string description, bool prepend = false)
+		{
+			if (paramDocs.Any (v => v.Attributes? ["name"]?.Value == name))
+				return;
+			var paramDoc = node.OwnerDocument!.CreateElement ("param");
+			paramDoc.SetAttribute ("name", name);
+			paramDoc.InnerText = description;
+			if (prepend)
+				node.InsertBefore (paramDoc, paramDocs.FirstOrDefault ());
+			else if (paramDocs.Count > 0)
+				node.InsertAfter (paramDoc, paramDocs.Last ());
+			else
+				node.AppendChild (paramDoc);
+			if (prepend)
+				paramDocs.Insert (0, paramDoc);
+			else
+				paramDocs.Add (paramDoc);
+		}
+
+		if (minfo.is_extension_method || minfo.category_extension_type is not null || (minfo.is_protocol_implementation_method && !minfo.is_static))
+			AddParameter ("This", "The instance on which this method operates.", prepend: true);
+		foreach (var parameter in parameters)
+			AddParameter (parameter.Name, $"The {parameter.Name} parameter.");
+		if (resultParameter is not null)
+			AddParameter (resultParameter, "The result returned by the synchronous method.");
+
+		return node;
 	}
 
 	// Emits a generated summary for a member of a strongly-typed appearance class. These members are
