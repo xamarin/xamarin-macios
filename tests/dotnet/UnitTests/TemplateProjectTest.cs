@@ -141,6 +141,8 @@ $@"<Project Sdk=""Microsoft.NET.Sdk"">
 		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<ApplicationId>com.microsoft.VeryManyRegisteredAssemblies</ApplicationId>
+		<!-- This test executes a console entry point, not a UIKit application. -->
+		<ValidateSceneManifest>false</ValidateSceneManifest>
 		<MonoBundlingExtraArgs>--registrar:static --optimize:remove-dynamic-registrar</MonoBundlingExtraArgs>
 		<MtouchExtraArgs>$(MonoBundlingExtraArgs)</MtouchExtraArgs>
 		<LinkMode>Full</LinkMode>

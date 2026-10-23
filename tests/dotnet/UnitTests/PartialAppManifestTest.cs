@@ -4,6 +4,46 @@ namespace Xamarin.Tests {
 	public class PartialAppManifestTest : TestBaseClass {
 
 		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		public void ValidateSceneManifest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var projectPath = GetProjectPath ("MyPartialAppManifestApp", platform: platform);
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			const string target = "_CompileAppManifest";
+
+			// The shared partial manifest supplies the scene configuration.
+			DotNet.AssertBuild (projectPath, properties, target: target);
+
+			// AppManifestEntry is applied after partial manifests and must also be validated.
+			properties ["ManifestKey"] = "UIApplicationSceneManifest";
+			properties ["ManifestValue"] = "invalid";
+			var result = DotNet.AssertBuildFailure (projectPath, properties, target: target);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToArray ();
+			Assert.That (errors.Length, Is.EqualTo (1), "Errors");
+			Assert.That (errors [0].Message, Does.Contain ("https://aka.ms/uiscene"), "Migration instructions");
+
+			// A failed compilation must not leave an output that bypasses validation on the next build.
+			DotNet.AssertBuildFailure (projectPath, properties, target: target);
+
+			properties ["ValidateSceneManifest"] = "false";
+			DotNet.AssertBuild (projectPath, properties, target: target);
+
+			// Re-enabling validation must invalidate the previously successful output.
+			properties ["ValidateSceneManifest"] = "true";
+			result = DotNet.AssertBuildFailure (projectPath, properties, target: target);
+			errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToArray ();
+			Assert.That (errors.Length, Is.EqualTo (1), "Re-enabled errors");
+			Assert.That (errors [0].Message, Does.Contain ("https://aka.ms/uiscene"), "Re-enabled validation");
+
+			properties.Remove ("ManifestKey");
+			properties.Remove ("ManifestValue");
+			DotNet.AssertBuild (projectPath, properties, target: target);
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		public void Build (ApplePlatform platform, string runtimeIdentifiers)
 		{

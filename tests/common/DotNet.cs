@@ -70,9 +70,9 @@ namespace Xamarin.Tests {
 			return Execute ("run", project, properties, true, timeout: timeout, extraArguments: extraArguments);
 		}
 
-		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string>? properties = null, string? target = null)
 		{
-			var rv = Execute ("build", project, properties, false);
+			var rv = Execute ("build", project, properties, false, target: target);
 			Assert.That (rv.ExitCode, Is.Not.EqualTo (0), "Unexpected success");
 			return rv;
 		}
