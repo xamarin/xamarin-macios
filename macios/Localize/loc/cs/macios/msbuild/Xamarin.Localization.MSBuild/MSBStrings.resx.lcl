@@ -2923,6 +2923,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7198" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Podepisování kódu se nezdařilo, protože soubor „{0}“ obsahuje soubory s rozšířenými atributy, jako jsou „com.apple.FinderInfo“ nebo „com.apple.ResourceFork“, které nejsou při podepisování povolené. Spuštěním příkazu „xattr -lr "{0}"“ vyhledejte soubory, kterých se to týká. Odeberte nežádoucí atributy z původních zdrojových souborů, například pomocí příkazu „xattr -cr "path/to/source/files"“, a potom projekt vyčistěte a znovu sestavte. Další informace najdete na https://developer.apple.com/library/archive/qa/qa1940/_index.html.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3265,6 +3274,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Simulátor nepodporuje arm64.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";M7159" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Skipping {0} - {1} is empty.]]></Val>
@@ -3279,6 +3297,15 @@
           <Val><![CDATA[Hashed {0} of {1} R2R input files.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Hashované vstupní soubory R2R: {0} z(e) {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UseNativeHttpHandlerHasNoEffectOnMacOS" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Vlastnost UseNativeHttpHandler nemá žádný vliv na macOS. Předejte NSUrlSessionHandler instanci přímo do HttpClient konstruktoru pro použití nativní obslužné rutiny HTTP.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

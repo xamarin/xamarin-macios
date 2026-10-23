@@ -2923,6 +2923,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7198" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la signature de code, car « {0} » contient des fichiers avec des attributs étendus tels que « com.apple.FinderInfo » ou « com.apple.ResourceFork », qui ne sont pas autorisés lors de la signature. Exécutez 'xattr -lr « {0} » pour localiser les fichiers concernés. Supprimez les attributs indésirables des fichiers sources d’origine, par exemple avec 'xattr -cr « path/to/source/files », puis nettoyez et générez à nouveau. Consultez https://developer.apple.com/library/archive/qa/qa1940/_index.html pour plus d’informations.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3265,6 +3274,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le simulateur ne prend pas en charge l’architecture arm64.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";M7159" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Skipping {0} - {1} is empty.]]></Val>
@@ -3279,6 +3297,15 @@
           <Val><![CDATA[Hashed {0} of {1} R2R input files.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Hachage de {0} fichiers d’entrée R2R sur {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UseNativeHttpHandlerHasNoEffectOnMacOS" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La propriété « UseNativeHttpHandler » n’a aucun effet sur macOS. Passez une instance NSUrlSessionHandler directement au constructeur HttpClient pour utiliser le gestionnaire HTTP natif.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
