@@ -159,6 +159,17 @@
 		<InlineClassGetHandle Condition="'$(InlineClassGetHandle)' == ''">compatibility</InlineClassGetHandle>
 	</PropertyGroup>
 
+	<!-- Resolve conflicting runtime identifiers before computing defaults and platform properties. -->
+	<PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' != '' ">
+		<!-- Clear RuntimeIdentifier -->
+		<RuntimeIdentifier />
+		<!-- Check if RuntimeIdentifier was cleared. If it wasn't it was set on the command line, and in that case, try to clear RuntimeIdentifiers instead -->
+		<_RuntimeIdentifiersClashMessage Condition="'$(RuntimeIdentifier)' != ''">RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.</_RuntimeIdentifiersClashMessage>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' != ''" />
+		<!-- If we couldn't clear RuntimeIdentifiers either, then both were set on the command line. This is an error -->
+		<_RuntimeIdentifiersClashErrorMessage  Condition="'$(RuntimeIdentifier)' != '' And '$(RuntimeIdentifiers)' != ''">Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.</_RuntimeIdentifiersClashErrorMessage>
+	</PropertyGroup>
+
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
 	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
 		<!-- The _<platform>RuntimeIdentifier values are set from the IDE -->
