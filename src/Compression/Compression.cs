@@ -652,7 +652,9 @@ namespace Compression {
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>Releases the resources used by this stream and optionally disposes the underlying stream.</summary>
+		/// <param name="disposing"><see langword="true" /> to release managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
+		/// <remarks>The underlying stream is disposed only when <paramref name="disposing" /> is <see langword="true" /> and this stream was not configured to leave it open.</remarks>
 		protected override void Dispose (bool disposing)
 		{
 			try {

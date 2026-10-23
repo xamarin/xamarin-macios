@@ -7330,7 +7330,7 @@ public partial class Generator : IMemberGatherer {
 					// if there are any [Dispose] attributes then they all must opt-in in order for the generated Dispose method to be optimizable
 					bool optimizable = !has_dispose_attributes || IsOptimizable (type);
 					if (BindingTouch.SupportsXmlDocumentation)
-						print ("/// <inheritdoc />");
+						print ("/// <inheritdoc cref=\"Foundation.NSObject.Dispose(bool)\" />");
 					print_generated_code (optimizable: optimizable);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
