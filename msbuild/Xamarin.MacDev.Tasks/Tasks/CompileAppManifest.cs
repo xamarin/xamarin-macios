@@ -78,6 +78,8 @@ namespace Xamarin.MacDev.Tasks {
 		public string TargetArchitectures { get; set; } = String.Empty;
 
 		public bool Validate { get; set; }
+
+		public bool ValidateSceneManifest { get; set; } = true;
 		#endregion
 
 		protected TargetArchitecture architectures;
@@ -164,6 +166,8 @@ namespace Xamarin.MacDev.Tasks {
 			AddAppManifestEntries (plist);
 
 			Validation (plist);
+			if (Log.HasLoggedErrors)
+				return false;
 
 			// write the resulting app manifest
 			plist.Save (CompiledAppManifest!.ItemSpec, true, true);
@@ -450,6 +454,8 @@ namespace Xamarin.MacDev.Tasks {
 			if (!Validate)
 				return;
 
+			ValidateSceneLifecycle (plist, sdkVersion);
+
 			var supportedDevices = plist.GetUIDeviceFamily ();
 			var macCatalystOptimizedForMac = (supportedDevices & IPhoneDeviceType.MacCatalystOptimizedForMac) == IPhoneDeviceType.MacCatalystOptimizedForMac;
 			if (macCatalystOptimizedForMac && !OnWindows) {
@@ -496,6 +502,22 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				break;
 			}
+		}
+
+		protected void ValidateSceneLifecycle (PDictionary plist, AppleSdkVersion sdkVersion)
+		{
+			if (!ValidateSceneManifest || IsAppExtension || IsFramework)
+				return;
+			if (Platform != ApplePlatform.iOS && Platform != ApplePlatform.MacCatalyst)
+				return;
+			if (sdkVersion < new AppleSdkVersion (27, 0))
+				return;
+
+			// An empty dictionary is valid when the app delegate supplies scene configurations dynamically.
+			if (plist.Get<PDictionary> ("UIApplicationSceneManifest") is not null)
+				return;
+
+			Log.LogError (7199, AppManifest?.ItemSpec, MSBStrings.E7199);
 		}
 
 		bool CompileMac (PDictionary plist)
