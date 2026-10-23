@@ -38,8 +38,8 @@ namespace Xamarin.Tests {
 		public void SkipTrimmerWhenNotTrimming (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			// When we're not trimming anything (the link mode is 'None') and we're not running any custom
-			// trimmer steps (which is the case when both PrepareAssemblies and PostProcessAssemblies are
-			// 'true'), then there's nothing for the trimmer to do, so PublishTrimmed defaults to false.
+			// trimmer steps (they run in the assembly-preparer), then there's nothing for the
+			// trimmer to do, so PublishTrimmed defaults to false.
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
@@ -48,8 +48,6 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["MtouchLink"] = "None";
-			properties ["PrepareAssemblies"] = "true";
-			properties ["PostProcessAssemblies"] = "true";
 
 			var rv = DotNet.AssertBuild (project_path, properties);
 

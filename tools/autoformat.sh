@@ -69,7 +69,6 @@ af_whitespace "$SRC_DIR/src/rgen/Microsoft.Macios.Bindings.CodeFixers/Microsoft.
 af_whitespace "$SRC_DIR/src/rgen/Microsoft.Macios.Generator.Sample/Microsoft.Macios.Generator.Sample.csproj"
 af_whitespace "$SRC_DIR/src/rgen/Microsoft.Macios.Generator/Microsoft.Macios.Generator.csproj"
 af_whitespace "$SRC_DIR/src/rgen/Microsoft.Macios.Transformer/Microsoft.Macios.Transformer.csproj"
-af_whitespace "$SRC_DIR/tools/dotnet-linker/dotnet-linker.csproj"
 af_whitespace "$SRC_DIR/tools/mtouch/mtouch.csproj"
 af_whitespace "$SRC_DIR/tests/xharness/xharness.slnx"
 af_whitespace "$SRC_DIR/tests/introspection/dotnet/iOS/introspection.csproj"

@@ -30,8 +30,8 @@ public class AssemblyPreparer : IDisposable {
 
 	public string MakeReproPath { get; set; } = "";
 
-	// The original assemblies from before preparation and trimming. Used during post-processing with the
-	// trimmable static registrar to read selected registrar attributes that were removed during trimming.
+	// The original assemblies from before preparation and trimming. Used during post-processing by
+	// static registrars to read metadata removed during trimming.
 	// This is a complete metadata universe separate from the post-trim assemblies.
 	public List<string> PreTrimAssemblies { get; } = new List<string> ();
 
@@ -203,8 +203,9 @@ public class AssemblyPreparer : IDisposable {
 		return RunSteps (steps, out exceptions);
 	}
 
-	// Load the original assemblies so the trimmable static registrar can read selected attributes removed
-	// during trimming. The assemblies are loaded into their own resolver (a separate, self-contained
+	// Load the original assemblies so the static registrars can find protocol methods removed
+	// during trimming (and the trimmable static registrar can read selected removed attributes).
+	// The assemblies are loaded into their own resolver (a separate, self-contained
 	// metadata universe from the post-trim assemblies), and stored on the Application for the registrar to
 	// consult. There's no fallback to the post-trim resolver: the original set is complete, and falling back
 	// would mix the two universes and resolve trimmed-away references incorrectly.
@@ -213,7 +214,7 @@ public class AssemblyPreparer : IDisposable {
 		if (PreTrimAssemblies.Count == 0)
 			return;
 
-		if (configuration.Application.Registrar != RegistrarMode.TrimmableStatic)
+		if (configuration.Application.Registrar != RegistrarMode.Static && configuration.Application.Registrar != RegistrarMode.TrimmableStatic && configuration.Application.Registrar != RegistrarMode.ManagedStatic)
 			return;
 
 		var resolver = new PreTrimAssemblyResolver (configuration.Logger, PreTrimAssemblies);
@@ -251,7 +252,6 @@ public class AssemblyPreparer : IDisposable {
 			// The ListExportedSymbols must run after ExtractBindingLibrariesStep, otherwise we won't properly list exported Objective-C classes from binding libraries
 			new ListExportedSymbols (),
 			new RemoveUserResourcesSubStep (), // from PreOutputDispatcher.
-			// We're not doing ClassHandleRewriterStep, that's replaced by InlineClassGetHandleStep, which is run in Prepare().
 
 			// ManagedRegistrarStep/TrimmableRegistrarStep/ManagedRegistrarLookupTablesStep
 			// must run before SaveAssembliesStep because they modify assemblies (adding

@@ -48,7 +48,7 @@ namespace Xamarin.Linker {
 		// Add [assembly: AssemblyMetadata ("IsTrimmable", "True")] to the given assembly.
 		//
 		// The type map assemblies are written to disk and then passed to ILLink as ordinary input assemblies
-		// (this happens when PrepareAssemblies=true, where we generate the type map assemblies before ILLink runs).
+		// (the assembly-preparer generates the type map assemblies before ILLink runs).
 		// ILLink only trims assemblies that are marked as trimmable when TrimMode is 'partial' (which is the
 		// default for our apps) - any other assembly is copied as-is, which also roots everything it references.
 		// The type map assemblies reference every Objective-C type in the app, so if they're not trimmed, nothing
@@ -77,15 +77,6 @@ namespace Xamarin.Linker {
 				Annotations.SetAction (rootTypeMapAssembly, AssemblyAction.Link);
 				addedAssemblies.Add ((createdRootTypeMapAssemblyPath, rootTypeMapAssembly, Configuration.PlatformAssembly + ".dll"));
 
-#if !ASSEMBLY_PREPARER
-				// We're running from inside the linker, but the TypeMapEntryAssembly property can only be set using a command-line
-				// argument, so we need to cheat a bit here and use reflection to set it. This will go away once we're not running
-				// as a custom linker step anymore.
-				var typeMapEntryAssemblyProperty = this.Context.GetType ().GetProperty ("TypeMapEntryAssembly");
-				if (typeMapEntryAssemblyProperty is null)
-					throw ErrorHelper.CreateError (99, "Could not find the 'TypeMapEntryAssembly' property on the linker context.");
-				typeMapEntryAssemblyProperty.SetValue (this.Context, App.TypeMapAssemblyName);
-#endif
 			}
 
 			abr.SetCurrentAssembly (rootTypeMapAssembly);
@@ -757,31 +748,7 @@ namespace Xamarin.Linker {
 				abr.ClearCurrentAssembly ();
 			}
 
-#if ASSEMBLY_PREPARER
 			Configuration.AddedAssemblies.AddRange (addedAssemblies);
-#else
-			// Since we're running inside the trimmer, we need to make sure the trimmer knows about the assemblies we've created.
-			// This will go away once we're running outside of the trimmer.
-			var managedAssemblyToLinkItems = new List<MSBuildItem> ();
-			var resolver = abr.PlatformAssembly.MainModule.AssemblyResolver;
-			var getAssembly = resolver.GetType ().GetMethod ("GetAssembly", new Type [] { typeof (string) })!;
-			var cacheAssembly = resolver.GetType ().GetMethod ("CacheAssembly", new Type [] { typeof (AssemblyDefinition) })!;
-			foreach (var aa in addedAssemblies) {
-				var asm = aa.Assembly;
-				var fn = Path.Combine (App.TypeMapOutputDirectory, asm.Name.Name + ".dll");
-				var asmDef = (AssemblyDefinition) getAssembly.Invoke (resolver, [fn])!;
-				cacheAssembly.Invoke (resolver, [asmDef]);
-				var action = Annotations.GetAction (asm);
-				Annotations.SetAction (asmDef, action);
-
-				var linkedPath = Path.Combine (Configuration.IntermediateLinkDir, asm.Name.Name + ".dll");
-				managedAssemblyToLinkItems.Add (new MSBuildItem (linkedPath, new Dictionary<string, string> {
-					{ "TrimMode", "link" },
-				}));
-			}
-
-			Configuration.WriteOutputForMSBuild ("ManagedAssemblyToLink", managedAssemblyToLinkItems);
-#endif
 
 			// Report back any exceptions that occurred during the processing.
 			exceptions = this.exceptions;

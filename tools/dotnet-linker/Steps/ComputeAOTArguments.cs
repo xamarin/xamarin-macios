@@ -28,11 +28,7 @@ namespace Xamarin.Linker {
 				if (!isAOTCompiled)
 					continue;
 
-#if ASSEMBLY_PREPARER
 				var item = new MSBuildItem (asm.FullPath);
-#else
-				var item = new MSBuildItem (Path.Combine (Configuration.IntermediateLinkDir, asm.FileName));
-#endif
 
 				var input = asm.FullPath;
 				bool? isDedupAssembly = null;

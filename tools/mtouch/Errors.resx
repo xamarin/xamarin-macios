@@ -600,6 +600,10 @@
 	<data name="MX0133" xml:space="preserve">
 		<value>Found more than 1 assembly matching '{0}' choosing first:{1}{2}</value>
 	</data>
+
+	<data name="MX0134" xml:space="preserve">
+		<value>The optimization '{0}' is no longer supported.</value>
+	</data>
 	
 	<data name="MX0135" xml:space="preserve">
 		<value>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.</value>

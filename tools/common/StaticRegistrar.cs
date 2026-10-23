@@ -31,7 +31,6 @@ using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
-using ClassRedirector;
 
 #nullable enable
 
@@ -713,7 +712,7 @@ namespace Registrar {
 			if (name == StringConstants.ProtocolMemberAttribute)
 				return true;
 
-			return App.TrimExportAttributes == true && name == StringConstants.ExportAttribute;
+			return name == StringConstants.ExportAttribute && (App.TrimExportAttributes == true || App.Registrar == RegistrarMode.Static);
 		}
 
 		ICustomAttributeProvider? GetPreTrimAttributeProvider (ICustomAttributeProvider postTrimProvider)
@@ -1573,6 +1572,9 @@ namespace Registrar {
 			switch (attrib.ConstructorArguments.Count) {
 			case 1:
 				var type = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
+#if ASSEMBLY_PREPARER
+				type = GetPostTrimType (type);
+#endif
 				return new BlockProxyAttribute (type);
 			default:
 				throw ErrorHelper.CreateError (4124, Errors.MT4124, "BlockProxyAttribute", ((MethodReference) parameter.Method)?.FullName);
@@ -1587,6 +1589,9 @@ namespace Registrar {
 			switch (attrib.ConstructorArguments.Count) {
 			case 1:
 				var delegateType = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
+#if ASSEMBLY_PREPARER
+				delegateType = GetPostTrimType (delegateType);
+#endif
 				return new DelegateProxyAttribute (delegateType);
 			default:
 				throw ErrorHelper.CreateError (4124, Errors.MT4124, "DelegateProxyAttribute", ((MethodReference) method)?.FullName);
@@ -1651,6 +1656,15 @@ namespace Registrar {
 		}
 
 #if ASSEMBLY_PREPARER
+		TypeDefinition GetPostTrimType (TypeDefinition type)
+		{
+			if (!App.IsPostProcessingAssemblies || App.PreTrimAssemblyResolver is null || App.Registrar != RegistrarMode.Static)
+				return type;
+
+			var postTrimAssembly = GetAssemblies ().FirstOrDefault (v => v.Name.Name == type.Module.Assembly.Name.Name);
+			return postTrimAssembly?.MainModule.GetType (type.FullName) ?? type;
+		}
+
 		// Returns the methods the given type had before it was trimmed. Returns an empty enumerable if the
 		// pre-trim assemblies aren't available (which is the case unless we're post-processing assemblies).
 		IEnumerable<MethodDefinition> GetPreTrimMethods (TypeDefinition type)
@@ -2109,12 +2123,27 @@ namespace Registrar {
 
 		PropertyDefinition GetBasePropertyInTypeHierarchy (PropertyDefinition property)
 		{
-			if (!IsOverride (property))
+			if (!IsOverride (property)) {
+#if ASSEMBLY_PREPARER
+				if (App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null &&
+					GetPreTrimAttributeProvider (property) is PropertyDefinition originalProperty && IsOverride (originalProperty))
+					return GetBasePropertyInTypeHierarchy (originalProperty);
+#endif
 				return property;
+			}
 
 			var @base = GetBaseType (property.DeclaringType);
 			while (@base is not null) {
-				var base_property = TryMatchProperty (@base.Resolve (), property);
+				var baseType = @base.Resolve ();
+				var base_property = TryMatchProperty (baseType, property);
+#if ASSEMBLY_PREPARER
+				if (base_property is null && App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null) {
+					var originalAssembly = App.PreTrimAssemblyResolver.Resolve (baseType.Module.Assembly.Name);
+					var originalBaseType = originalAssembly?.MainModule.GetType (baseType.FullName);
+					if (originalBaseType is not null)
+						base_property = TryMatchProperty (originalBaseType, property);
+				}
+#endif
 				if (base_property is not null)
 					return GetBasePropertyInTypeHierarchy (base_property) ?? base_property;
 
@@ -2164,12 +2193,27 @@ namespace Registrar {
 
 		public MethodDefinition GetBaseMethodInTypeHierarchy (MethodDefinition method)
 		{
-			if (!IsOverride (method))
+			if (!IsOverride (method)) {
+#if ASSEMBLY_PREPARER
+				if (App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null &&
+					GetPreTrimAttributeProvider (method) is MethodDefinition originalMethod && IsOverride (originalMethod))
+					return GetBaseMethodInTypeHierarchy (originalMethod);
+#endif
 				return method;
+			}
 
 			var @base = GetBaseType (method.DeclaringType);
 			while (@base is not null) {
-				var base_method = TryMatchMethod (@base.Resolve (), method);
+				var baseType = @base.Resolve ();
+				var base_method = TryMatchMethod (baseType, method);
+#if ASSEMBLY_PREPARER
+				if (base_method is null && App.IsPostProcessingAssemblies && App.PreTrimAssemblyResolver is not null) {
+					var originalAssembly = App.PreTrimAssemblyResolver.Resolve (baseType.Module.Assembly.Name);
+					var originalBaseType = originalAssembly?.MainModule.GetType (baseType.FullName);
+					if (originalBaseType is not null)
+						base_method = TryMatchMethod (originalBaseType, method);
+				}
+#endif
 				if (base_method is not null)
 					return GetBaseMethodInTypeHierarchy (base_method) ?? base_method;
 
@@ -2935,43 +2979,6 @@ namespace Registrar {
 			return all_types;
 		}
 
-		CSToObjCMap? type_map_dictionary;
-		public CSToObjCMap GetTypeMapDictionary (List<Exception> exceptions)
-		{
-			if (type_map_dictionary is not null)
-				return type_map_dictionary;
-
-			var allTypes = GetAllTypes (exceptions);
-			var map_dict = new CSToObjCMap ();
-
-			foreach (var @class in allTypes) {
-				if (!@class.IsProtocol && !@class.IsCategory) {
-					var name = GetAssemblyQualifiedName (@class.Type);
-					@class.ClassMapIndex = map_dict.Count;
-					map_dict [name] = new ObjCNameIndex (@class.ExportedName, @class.ClassMapIndex);
-				}
-			}
-
-			type_map_dictionary = map_dict;
-			return type_map_dictionary;
-		}
-
-		public void Rewrite ()
-		{
-#if !LEGACY_TOOLS && !ASSEMBLY_PREPARER
-			if (App.Optimizations.RedirectClassHandles == true) {
-				var exceptions = new List<Exception> ();
-				var map_dict = GetTypeMapDictionary (exceptions);
-				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
-				var result = rewriter.Process ();
-				if (!string.IsNullOrEmpty (result)) {
-					App.Log (5, $"Not redirecting class handles because {result}");
-				}
-				ErrorHelper.ThrowIfErrors (App, exceptions);
-			}
-#endif
-		}
-
 		void Specialize (AutoIndentStringBuilder sb, out string initialization_method, AutoIndentStringBuilder? assembly_source, bool assembly_object)
 		{
 			if (interfaces is null)
@@ -2985,9 +2992,6 @@ namespace Registrar {
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
-#if !LEGACY_TOOLS
-			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
-#endif
 			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
 			var protocols = new List<ProtocolInfo> ();
 
@@ -3017,12 +3021,15 @@ namespace Registrar {
 				registered_assemblies.Add (new (GetAssemblies ().Single (v => GetAssemblyName (v) == single_assembly), single_assembly));
 			}
 
-			// Don't need this dictionary, but do need ClassMapIndex
-			GetTypeMapDictionary (exceptions);
+			var classMapIndex = 0;
+			foreach (var @class in allTypes) {
+				if (!@class.IsProtocol && !@class.IsCategory)
+					@class.ClassMapIndex = classMapIndex++;
+			}
 
 #if !LEGACY_TOOLS
 			// When we know which UnmanagedCallersOnly trampolines survived the NativeAOT compiler (ILC) - which
-			// is only the case for the trimmable static registrar with NativeAOT + PrepareAssemblies, where the
+			// is only the case for the trimmable static registrar with NativeAOT, where the
 			// native registrar code is generated after ILC - we can skip generating the native code for any class
 			// whose trampolines were all trimmed away by ILC (ILC only trims a class's trampolines when it has
 			// determined the class can't be constructed, so nothing will reference it). We must however keep any
@@ -3119,8 +3126,6 @@ namespace Registrar {
 					}
 
 					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, @class.ClassMapIndex);
-					if (App.Optimizations.RedirectClassHandles == true)
-						map_init.AppendLine ("__xamarin_class_handles [{0}] = __xamarin_class_map [{0}].handle;", @class.ClassMapIndex);
 					i++;
 				} else if (App.Registrar == RegistrarMode.TrimmableStatic && @class.IsStubClass) {
 					map_init.AppendLine ("[{0} class];", EncodeNonAsciiCharacters (@class.ExportedName));
@@ -3357,9 +3362,6 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
-			if (App.Optimizations.RedirectClassHandles == true)
-				map.AppendLine ("static void *__xamarin_class_handles [{0}];", i);
-
 			var has_skipped_map = App.Registrar != RegistrarMode.TrimmableStatic && skipped_types.Count > 0;
 			if (has_skipped_map) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
@@ -3468,10 +3470,6 @@ namespace Registrar {
 			map.AppendLine ("{0},", has_skipped_map ? skipped_types.Count : 0);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
 			map.AppendLine ("{0},", needs_protocol_map ? protocols.Count : 0);
-			if (App.Optimizations.RedirectClassHandles == true)
-				map.AppendLine ("&__xamarin_class_handles [0]");
-			else
-				map.AppendLine ("(void **)0");
 			map.AppendLine ("};");
 
 

@@ -49,7 +49,7 @@ namespace Xamarin.Bundler {
 			/* Opt.CustomAttributesRemoval            */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ExperimentalFormsProductType       */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.ForceRejectedTypesRemoval          */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
-			/* Opt.RedirectClassHandles               */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
+			/* Opt.RedirectClassHandles               */ new ApplePlatform [] {                                                                                        },
 		};
 
 		enum Opt {
@@ -152,11 +152,6 @@ namespace Xamarin.Bundler {
 			set { values [(int) Opt.ForceRejectedTypesRemoval] = value; }
 		}
 
-		public bool? RedirectClassHandles {
-			get { return values [(int) Opt.RedirectClassHandles]; }
-			set { values [(int) Opt.RedirectClassHandles] = value; }
-		}
-
 		public Optimizations ()
 		{
 			values = new bool? [opt_names.Length];
@@ -206,7 +201,6 @@ namespace Xamarin.Bundler {
 					break; // Does not require linker
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
-				case Opt.RedirectClassHandles:
 					if (!app.IsAnyStaticRegistrar) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (value.Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
@@ -338,7 +332,9 @@ namespace Xamarin.Bundler {
 				break;
 			}
 
-			if (opt == "all") {
+			if (opt == "redirect-class-handles") {
+				messages.Add (ErrorHelper.CreateError (134, Errors.MX0134, opt));
+			} else if (opt == "all") {
 				for (int i = 0; i < values.Length; i++) {
 					var valid = valid_platforms [i];
 					if (Array.IndexOf (valid, platform) < 0)

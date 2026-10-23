@@ -599,7 +599,6 @@ Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.INativeObject::Ha
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::Zero
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.ObjCSuper::classHandle
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.ObjCSuper::receiver
-Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.Runtime/ClassHandles::unused
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.Selector::handle
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle ObjCRuntime.Selector::Handle()
 Microsoft.MacCatalyst.dll:ObjCRuntime.NativeHandle UIKit.UIApplication::class_ptr
@@ -892,9 +891,6 @@ Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime.xamarin_log(System.IntPtr)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime.xamarin_mono_object_retain(ObjCRuntime.Runtime/MonoObject*)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime.xamarin_mono_object_retain(System.IntPtr)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/<>O
-Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/ClassHandles
-Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/ClassHandles.InitializeClassHandles(System.IntPtr*)
-Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/ClassHandles.SetHandle(System.Int32, ObjCRuntime.NativeHandle*, System.IntPtr*)
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/Delegates
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/Delegates* ObjCRuntime.Runtime/InitializationOptions::Delegates
 Microsoft.MacCatalyst.dll:ObjCRuntime.Runtime/ExceptionType
@@ -1245,7 +1241,6 @@ Microsoft.MacCatalyst.dll:System.IntPtr ObjCRuntime.Runtime/Trampolines::tramp
 Microsoft.MacCatalyst.dll:System.IntPtr ObjCRuntime.TransientCFString::ptr
 Microsoft.MacCatalyst.dll:System.IntPtr ObjCRuntime.TransientString::ptr
 Microsoft.MacCatalyst.dll:System.IntPtr* ObjCRuntime.Runtime/MTProtocolMap::protocols
-Microsoft.MacCatalyst.dll:System.IntPtr* ObjCRuntime.Runtime/MTRegistrationMap::classHandles
 Microsoft.MacCatalyst.dll:System.Nullable`1<System.Boolean> ObjCRuntime.Class::verify_static_registrar_code
 Microsoft.MacCatalyst.dll:System.Object Foundation.NSAsyncSynchronizationContextDispatcher::state
 Microsoft.MacCatalyst.dll:System.Object Foundation.NSObject/NSObject_Disposer::lock_obj

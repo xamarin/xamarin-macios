@@ -3190,6 +3190,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The optimization &apos;{0}&apos; is no longer supported..
+        /// </summary>
+        public static string MX0134 {
+            get {
+                return ResourceManager.GetString("MX0134", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Did not link system framework &apos;{0}&apos; (referenced by assembly &apos;{1}&apos;) because it was introduced in {2} {3}, and we&apos;re using the {2} {4} SDK..
         /// </summary>
         public static string MX0135 {

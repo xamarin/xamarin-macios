@@ -198,7 +198,7 @@ namespace Xamarin.Linker.Steps {
 		// * when inlining is disabled globally, or
 		// * in a Hot Reload compatible build, for reloadable assemblies (AssemblyAction != Link), which
 		//   InlineDlfcnMethodsStep intentionally leaves byte-unmodified.
-		// In prepare-assemblies mode InlineDlfcnMethodsStep runs in a separate process (the "prepare" pass)
+		// InlineDlfcnMethodsStep runs in a separate process (the "prepare" pass)
 		// whose collected symbols are discarded before the "post-process" pass runs GenerateReferencesStep,
 		// so collecting here (in the post-process pass) is what actually keeps the symbol alive.
 		bool ShouldCollectFieldSymbols (MethodDefinition method)

@@ -77,7 +77,6 @@
 
   <ItemGroup>
     <FirstParty Include="bgen.dll" />
-    <FirstParty Include="dotnet-linker.dll" />
     <!-- assembly-preparer tool (replaces pre-mark custom linker steps) + localized satellites -->
     <FirstParty Include="assembly-preparer.dll" />
     <FirstParty Include="assembly-preparer.resources.dll" />

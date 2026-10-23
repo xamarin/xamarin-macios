@@ -127,18 +127,6 @@
 		<DefineConstants Condition="'$(ExcludeTouchUnitReference)' == 'true'">$(DefineConstants);EXCLUDE_TOUCH_UNIT_REFERENCE</DefineConstants>
 	</PropertyGroup>
 
-	<!--
-		Define PREPARE_ASSEMBLIES when the assembly-preparer is used. Just like
-		$(HotReloadCompatibleBuild), $(PrepareAssemblies) may be computed in the platform SDK
-		targets/props (it's enabled by default in some configurations), so this has to happen in a
-		target, and not in a plain PropertyGroup.
-	-->
-	<Target Name="_AddPrepareAssembliesDefine" BeforeTargets="CoreCompile" Condition="'$(PrepareAssemblies)' == 'true' And !$(DefineConstants.Contains('PREPARE_ASSEMBLIES'))">
-		<PropertyGroup>
-			<DefineConstants>$(DefineConstants);PREPARE_ASSEMBLIES</DefineConstants>
-		</PropertyGroup>
-	</Target>
-
 	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
 

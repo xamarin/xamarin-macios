@@ -23,11 +23,9 @@ namespace Xamarin.Linker.Steps {
 	// The end result is that a custom step is the best solution for now.
 
 	public class RemoveAttributesStep : AttributeIteratorBaseStep {
-#if ASSEMBLY_PREPARER
 		protected override string Name { get; } = "RemoveAttributes";
 		protected override int ErrorCode { get; } = 2550;
 
-#endif
 		protected override void ProcessAttribute (ICustomAttributeProvider provider, CustomAttribute attribute, out bool remove)
 		{
 			remove = IsRemovedAttribute (attribute);

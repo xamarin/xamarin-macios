@@ -497,7 +497,6 @@ namespace LinkAll {
 #endif
 		}
 
-#if PREPARE_ASSEMBLIES
 		// https://github.com/dotnet/macios/issues/11280
 		// When using the trimmable static registrar together with PrepareAssemblies, the [ProtocolMember] attributes
 		// are only needed by the assembly-preparer's registrar (not at runtime), so the trimmer is told to remove
@@ -529,7 +528,6 @@ namespace LinkAll {
 		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember {
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
 		}
-#endif // PREPARE_ASSEMBLIES
 
 		[Test]
 		public void NoFatCorlib ()

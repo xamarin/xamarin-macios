@@ -54,6 +54,10 @@ public class InlineClassGetHandleStep : AssemblyModifierStep {
 			Report (ErrorHelper.CreateError (Configuration.Application, 2262, null, Errors.MX2262));
 		}
 
+		// The native static registrar otherwise registers types only during postprocessing.
+		if (App.Registrar == RegistrarMode.Static)
+			DerivedLinkContext.StaticRegistrar.Register (Configuration.GetNonDeletedAssemblies (this));
+
 		objectiveCTypeMap = DerivedLinkContext.StaticRegistrar.Types.ToDictionary (v => v.Value.ExportedName, v => v.Value);
 
 		if (!string.IsNullOrEmpty (Configuration.TypeMapFilePath)) {

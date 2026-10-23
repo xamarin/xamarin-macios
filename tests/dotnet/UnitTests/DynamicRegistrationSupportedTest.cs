@@ -28,8 +28,6 @@ namespace Xamarin.Tests {
 			// valid with a static registrar, so use one (managed-static) and enable trimming.
 			properties ["MtouchLink"] = "SdkOnly";
 			properties ["Registrar"] = "managed-static";
-			properties ["PrepareAssemblies"] = "true";
-			properties ["PostProcessAssemblies"] = "true";
 			properties ["DynamicRegistrationSupported"] = dynamicRegistrationSupported;
 			// Link libxamarin statically so the native linker dead-strips the dynamic registrar's trampoline
 			// into (or out of) the main executable. Otherwise the simulator default (a dynamic libxamarin)
@@ -68,8 +66,6 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["MtouchLink"] = "None";
-			properties ["PrepareAssemblies"] = "true";
-			properties ["PostProcessAssemblies"] = "true";
 
 			var rv = DotNet.AssertBuild (project_path, properties);
 

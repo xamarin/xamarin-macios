@@ -12,60 +12,6 @@ using Mono.Tuner;
 #nullable enable
 
 namespace Xamarin.Linker.Steps {
-#if !ASSEMBLY_PREPARER
-	public partial class ApplyPreserveAttribute : ConfigurationAwareSubStep, IApplyPreserveAttribute {
-		ApplyPreserveAttributeImpl impl;
-
-		protected override string Name { get => "Apply Preserve Attribute"; }
-
-		protected override int ErrorCode { get => 2450; }
-
-		public override SubStepTargets Targets => SubStepTargets.Assembly;
-
-		public ApplyPreserveAttribute ()
-		{
-			impl = new ApplyPreserveAttributeImpl (this);
-		}
-
-		public override bool IsActiveFor (AssemblyDefinition assembly)
-		{
-			// It's either this step, or ApplyPreserveAttributeStep. If ApplyPreserveAttributeStep already ran, then we shouldn't run this step.
-			if (Configuration.DerivedLinkContext.DidRunApplyPreserveAttributeStep)
-				return false;
-
-			return Annotations.GetAction (assembly) == AssemblyAction.Link;
-		}
-
-		protected override void Process (AssemblyDefinition assembly)
-		{
-			impl.Process (assembly);
-		}
-
-		bool IApplyPreserveAttribute.PreserveUnconditional (IMetadataTokenProvider provider)
-		{
-			if (provider is MethodDefinition method)
-				Annotations.SetAction (method, MethodAction.Parse);
-			Annotations.Mark (provider);
-			return true;
-		}
-
-		bool IApplyPreserveAttribute.PreserveType (TypeDefinition type, bool allMembers)
-		{
-			Annotations.Mark (type);
-			if (allMembers)
-				Annotations.SetPreserve (type, TypePreserve.All);
-			return true;
-		}
-
-		bool IApplyPreserveAttribute.PreserveConditional (TypeDefinition onType, MethodDefinition forMethod)
-		{
-			Annotations.SetAction (forMethod, MethodAction.Parse);
-			Annotations.AddPreservedMethod (onType, forMethod);
-			return true;
-		}
-	}
-#endif
-
 	public interface IApplyPreserveAttribute {
 		bool PreserveType (TypeDefinition type, bool allMembers);
 		bool PreserveUnconditional (IMetadataTokenProvider provider);

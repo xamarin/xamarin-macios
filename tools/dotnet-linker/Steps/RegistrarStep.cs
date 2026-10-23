@@ -46,14 +46,6 @@ namespace Xamarin.Linker {
 				var assemblySource = separateAssemblies && assemblyObject is null
 					? Path.Combine (dir, "registrar-assemblies.mm")
 					: null;
-#if !ASSEMBLY_PREPARER
-				if (app.Registrar == RegistrarMode.ManagedStatic || app.Registrar == RegistrarMode.TrimmableStatic) {
-					// Every api has been registered if we're using the managed registrar
-					// (since we registered types before the trimmer did anything),
-					// so we need to remove those that were later trimmed away by the trimmer.
-					Configuration.Application.StaticRegistrar.FilterTrimmedApi (Annotations);
-				}
-#endif
 				Configuration.Application.StaticRegistrar.Generate (header, code, out var initialization_method, assemblySource, assemblyObject);
 
 				var items = new List<MSBuildItem> ();

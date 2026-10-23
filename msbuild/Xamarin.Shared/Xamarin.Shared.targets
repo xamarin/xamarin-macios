@@ -3764,11 +3764,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="GetApplicationArtifacts" DependsOnTargets="$(GetApplicationArtifactsDependsOn)" Returns="@(ApplicationArtifact)" />
 
 	<PropertyGroup>
-		<PrepareAssemblies Condition="'$(PrepareAssemblies)' == ''">false</PrepareAssemblies>
-		<PostProcessAssemblies Condition="'$(PostProcessAssemblies)' == ''">$(PrepareAssemblies)</PostProcessAssemblies>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<_PrepareAssembliesForPreparationDependsOn>
 			_ComputeAssembliesToPostprocessOnPublish;
 			_ComputeLinkerInputs;
@@ -3802,7 +3797,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<!-- Persist the task outputs so _PrepareAssemblies can restore its item changes when this target is skipped. -->
 	<Target
 		Name="_ExecutePrepareAssemblies"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(PrepareAssemblies)' == 'true'"
+		Condition="'$(IsMacEnabled)' == 'true'"
 		Inputs="@(_AssembliesToPrepare);$(_LinkerCachePath);$(_AssemblyPreparerConfigurationStamp)"
 		Outputs="$(_PreparedAssembliesItemsPath);$(_AssemblyPreparerMSBuildOutputFile)"
 		DependsOnTargets="_PrepareAssembliesForPreparation;_ComputeAssembliesToPostprocessOnPublish;SelectRegistrar"
@@ -3828,7 +3823,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target
 		Name="_PrepareAssemblies"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(PrepareAssemblies)' == 'true'"
+		Condition="'$(IsMacEnabled)' == 'true'"
 		DependsOnTargets="_ExecutePrepareAssemblies"
 		>
 		<ReadItemsFromFile File="$(_PreparedAssembliesItemsPath)">
@@ -3870,7 +3865,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<!-- Persist the task outputs so _PostprocessAssemblies can restore its item changes when this target is skipped. -->
 	<Target
 		Name="_ExecutePostprocessAssemblies"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(PostProcessAssemblies)' == 'true' And '$(RuntimeIdentifiers)' == '' And '$(_PostprocessAssembliesAfterIlc)' != 'true'"
+		Condition="'$(IsMacEnabled)' == 'true' And '$(RuntimeIdentifiers)' == '' And '$(_PostprocessAssembliesAfterIlc)' != 'true'"
 		Inputs="@(_AssembliesToPostProcess);$(_LinkerCachePath)"
 		Outputs="$(_PostprocessedAssembliesItemsPath);$(_AssemblyPostProcessorMSBuildOutputFile)"
 		DependsOnTargets="_PrepareAssembliesForPostProcessing;_ComputeLinkerInputs"
@@ -3899,7 +3894,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target
 		Name="_PostprocessAssemblies"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(PostProcessAssemblies)' == 'true' And '$(RuntimeIdentifiers)' == '' And '$(_PostprocessAssembliesAfterIlc)' != 'true'"
+		Condition="'$(IsMacEnabled)' == 'true' And '$(RuntimeIdentifiers)' == '' And '$(_PostprocessAssembliesAfterIlc)' != 'true'"
 		AfterTargets="ILLink"
 		BeforeTargets="NativeCompile;CreateReadyToRunImages"
 		DependsOnTargets="_ExecutePostprocessAssemblies"

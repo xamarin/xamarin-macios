@@ -13,7 +13,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "dynamic", "None", "Debug")]
 		public void IncrementalBuild (ApplePlatform platform, string runtimeIdentifiers, string registrar, string linkMode, string configuration)
 		{
-			// An incremental (second, no-source-change) build with PrepareAssemblies=true must not fail.
+			// An incremental (second, no-source-change) build must not fail.
 			// The PrepareAssemblies task must not run in a partial incremental build,
 			// because the assembly-preparer needs the complete set of assemblies to
 			// resolve inter-assembly references (otherwise it fails with MT4116/MT2362). See
@@ -26,7 +26,6 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["Configuration"] = configuration;
-			properties ["PrepareAssemblies"] = "true";
 			properties ["MtouchLink"] = linkMode;
 			properties ["Registrar"] = registrar;
 
@@ -77,13 +76,11 @@ namespace Xamarin.Tests {
 			AssertTargetNotExecuted (targets, "_ExecutePostprocessAssembliesAfterIlc", "Incremental NativeAOT post-processing");
 		}
 
-		[TestCase (true, true, "trimmable-static", null, null, true)]
-		[TestCase (false, true, "trimmable-static", null, null, false)]
-		[TestCase (true, false, "trimmable-static", null, null, false)]
-		[TestCase (true, true, "managed-static", null, null, false)]
-		[TestCase (true, true, "trimmable-static", "false", null, false)]
-		[TestCase (true, true, "trimmable-static", null, "true", false)]
-		public void ExportAttributeRemovalEligibility (bool prepareAssemblies, bool postProcessAssemblies, string registrar, string? trimExportAttributes, string? dynamicRegistrationSupported, bool expectedRemoval)
+		[TestCase ("trimmable-static", null, null, true)]
+		[TestCase ("managed-static", null, null, false)]
+		[TestCase ("trimmable-static", "false", null, false)]
+		[TestCase ("trimmable-static", null, "true", false)]
+		public void ExportAttributeRemovalEligibility (string registrar, string? trimExportAttributes, string? dynamicRegistrationSupported, bool expectedRemoval)
 		{
 			var platform = ApplePlatform.iOS;
 			var runtimeIdentifiers = "iossimulator-arm64";
@@ -99,28 +96,17 @@ namespace Xamarin.Tests {
 			properties ["EnableAssemblyILStripping"] = "true";
 			properties ["MtouchLink"] = registrar == "managed-static" ? "SdkOnly" : "Full";
 			properties ["PublishReadyToRun"] = "false";
-			properties ["PostProcessAssemblies"] = postProcessAssemblies.ToString ();
-			properties ["PrepareAssemblies"] = prepareAssemblies.ToString ();
 			properties ["Registrar"] = registrar;
 			if (trimExportAttributes is not null)
 				properties ["TrimExportAttributes"] = trimExportAttributes;
 			if (dynamicRegistrationSupported is not null)
 				properties ["DynamicRegistrationSupported"] = dynamicRegistrationSupported;
 
-			string platformAssemblyPath;
-			string appAssemblyPath;
-			string? target = null;
-			if (!prepareAssemblies) {
-				DotNet.AssertBuild (projectPath, properties, target: "Compile");
-				platformAssemblyPath = Configuration.GetBaseLibraryImplementations (platform).First ();
-				appAssemblyPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, configuration), project + ".dll");
-			} else {
-				target = "Compile;_ComputePublishTrimmed;_ComputeLinkMode;_ComputeLinkerArguments;_PrepareAssemblies;_SetDynamicRegistrationSupportedFeature;_SetTrimExportAttributesFeature;_ComputeFrameworkFilesToPublish;_ComputeDynamicLibrariesToPublish;ComputeFilesToPublish;_ComputeStripAssemblyIL;_StripAssemblyIL";
-				var assemblyDirectory = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, configuration), "stripped");
-				DotNet.AssertBuild (projectPath, properties, target: target);
-				platformAssemblyPath = Path.Combine (assemblyDirectory, Configuration.GetBaseLibraryName (platform));
-				appAssemblyPath = Path.Combine (assemblyDirectory, project + ".dll");
-			}
+			var target = "Compile;_ComputePublishTrimmed;_ComputeLinkMode;_ComputeLinkerArguments;_PrepareAssemblies;_SetDynamicRegistrationSupportedFeature;_SetTrimExportAttributesFeature;_ComputeFrameworkFilesToPublish;_ComputeDynamicLibrariesToPublish;ComputeFilesToPublish;_ComputeStripAssemblyIL;_StripAssemblyIL";
+			var assemblyDirectory = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, configuration), "stripped");
+			DotNet.AssertBuild (projectPath, properties, target: target);
+			var platformAssemblyPath = Path.Combine (assemblyDirectory, Configuration.GetBaseLibraryName (platform));
+			var appAssemblyPath = Path.Combine (assemblyDirectory, project + ".dll");
 
 			AssertExportMetadata (platformAssemblyPath, appAssemblyPath, !expectedRemoval);
 
@@ -164,8 +150,6 @@ namespace Xamarin.Tests {
 			properties ["AdditionalDefineConstants"] = "EXPORT_ATTRIBUTE_REMOVAL_NSXPC";
 			properties ["Configuration"] = configuration;
 			properties ["MtouchLink"] = "Full";
-			properties ["PostProcessAssemblies"] = "true";
-			properties ["PrepareAssemblies"] = "true";
 			properties ["Registrar"] = "trimmable-static";
 			properties ["DynamicRegistrationSupported"] = "false";
 			if (explicitlyEnabled)

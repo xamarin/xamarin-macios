@@ -47,9 +47,7 @@ namespace Xamarin {
 
 			if (app.GenerateTrustedPlatformAssemblies) {
 				app.TrustedPlatformAssemblies.AddRange (app.Assemblies.Select (v => v.FileName));
-#if ASSEMBLY_PREPARER
 				app.TrustedPlatformAssemblies.AddRange (Configuration.AddedAssemblies.Select (v => Path.GetFileName (v.Path)));
-#endif
 			}
 
 			// We want this called before any other initialization methods.

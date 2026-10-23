@@ -11,7 +11,6 @@ using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
 
-#if ASSEMBLY_PREPARER
 	public abstract class AttributeIteratorBaseStep : AssemblyModifierStep {
 
 		protected DerivedLinkContext LinkContext {
@@ -66,8 +65,6 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-		// The linker's BaseSubStep declares these as overridable methods, the assembly-preparer's
-		// AssemblyModifierStep doesn't, so declare them here to keep the rest of the code identical.
 		bool modified;
 
 		void ProcessAssemblyAttributes (AssemblyDefinition assembly)
@@ -106,65 +103,6 @@ namespace Xamarin.Linker.Steps {
 		{
 			ProcessAttributeProvider (@event);
 		}
-#else
-	public abstract class AttributeIteratorBaseStep : BaseSubStep {
-
-		protected DerivedLinkContext LinkContext {
-			get {
-				return LinkerConfiguration.GetInstance (Context).DerivedLinkContext;
-			}
-		}
-
-		public override SubStepTargets Targets {
-			get {
-				return SubStepTargets.Assembly
-					| SubStepTargets.Type
-					| SubStepTargets.Field
-					| SubStepTargets.Method
-					| SubStepTargets.Property
-					| SubStepTargets.Event;
-			}
-		}
-
-		public override bool IsActiveFor (AssemblyDefinition assembly)
-		{
-			return Annotations.GetAction (assembly) == AssemblyAction.Link;
-		}
-
-		public override void ProcessAssembly (AssemblyDefinition assembly)
-		{
-			ProcessAttributeProvider (assembly);
-			ProcessAttributeProvider (assembly.MainModule);
-		}
-
-		public override void ProcessType (TypeDefinition type)
-		{
-			ProcessAttributeProvider (type);
-
-			if (type.HasGenericParameters)
-				ProcessAttributeProviderCollection (type.GenericParameters);
-		}
-
-		public override void ProcessField (FieldDefinition field)
-		{
-			ProcessAttributeProvider (field);
-		}
-
-		public override void ProcessMethod (MethodDefinition method)
-		{
-			ProcessMethodAttributeProvider (method);
-		}
-
-		public override void ProcessProperty (PropertyDefinition property)
-		{
-			ProcessAttributeProvider (property);
-		}
-
-		public override void ProcessEvent (EventDefinition @event)
-		{
-			ProcessAttributeProvider (@event);
-		}
-#endif
 
 		void ProcessAttributeProviderCollection (IList list)
 		{
@@ -195,9 +133,7 @@ namespace Xamarin.Linker.Steps {
 
 				if (remove) {
 					provider.CustomAttributes.RemoveAt (i--);
-#if ASSEMBLY_PREPARER
 					modified = true;
-#endif
 				}
 			}
 		}

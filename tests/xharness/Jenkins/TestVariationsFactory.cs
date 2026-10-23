@@ -52,22 +52,12 @@ namespace Xharness.Jenkins {
 			switch (test.TestName) {
 			case "dont link":
 				if (supports_coreclr) {
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, CoreCLR, Dynamic Registrar)", TestVariation = "coreclr|prepare-assemblies|dynamic-registrar", Ignored = ignore };
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, CoreCLR, Managed Static Registrar)", TestVariation = "coreclr|prepare-assemblies|managed-static-registrar", Ignored = ignore };
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, CoreCLR, Trimmable Static Registrar)", TestVariation = "coreclr|prepare-assemblies|trimmable-static-registrar", Ignored = ignore };
-				}
-				break;
-			case "link sdk":
-				if (supports_coreclr) {
-					// if prepare-assemblies is enabled, then linking only works in any meaningful way when using the trimmable static registrar, which only works on CoreCLR in .NET 10
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, CoreCLR, Trimmable Static Registrar)", TestVariation = "coreclr|prepare-assemblies|trimmable-static-registrar", Ignored = ignore };
+					yield return new TestData { Variation = $"{test.ProjectConfiguration} (CoreCLR, Dynamic Registrar)", TestVariation = "coreclr|dynamic-registrar", Ignored = ignore };
+					yield return new TestData { Variation = $"{test.ProjectConfiguration} (CoreCLR, Managed Static Registrar)", TestVariation = "coreclr|managed-static-registrar", Ignored = ignore };
+					yield return new TestData { Variation = $"{test.ProjectConfiguration} (CoreCLR, Trimmable Static Registrar)", TestVariation = "coreclr|trimmable-static-registrar", Ignored = ignore };
 				}
 				break;
 			case "link all":
-				if (supports_coreclr) {
-					// if prepare-assemblies is enabled, then linking only works in any meaningful way when using the trimmable static registrar, which only works on CoreCLR in .NET 10
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, CoreCLR, Trimmable Static Registrar)", TestVariation = "coreclr|prepare-assemblies|trimmable-static-registrar", Ignored = ignore };
-				}
 				if (test.ProjectConfiguration == "Debug") {
 					yield return new TestData { Variation = "Debug (don't bundle original resources)", TestVariation = "do-not-bundle-original-resources" };
 				}
@@ -75,19 +65,12 @@ namespace Xharness.Jenkins {
 			case "monotouch-test":
 				yield return new TestData { Variation = "Release (link sdk)", TestVariation = "release|linksdk", Ignored = ignore };
 				yield return new TestData { Variation = "Release (link all)", TestVariation = "release|linkall", Ignored = ignore };
-				yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies)", TestVariation = "prepare-assemblies", Ignored = ignore };
-				// With PrepareAssemblies the registrar runs in a separate process after the trimmer, so it
+				// The registrar runs in a separate process after the trimmer, so it
 				// can't get any information from the trimmer directly, and has to look up trimmed-away
 				// metadata in the pre-trim assemblies instead. Enable the trimmer (linksdk), because
 				// otherwise nothing is trimmed away and none of this is exercised.
 				if (supports_coreclr)
-					yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, Trimmable Static Registrar, link sdk)", TestVariation = "linksdk|prepare-assemblies|trimmable-static-registrar", Ignored = ignore };
-				// Explicitly disable the trimmer (dontlink) and enable InlineDlfcnMethods together with
-				// PrepareAssemblies to exercise the inlined-dlfcn native symbol generation when the trimmer
-				// is skipped. On .NET 11+ this is already covered by the plain 'prepare-assemblies' variation
-				// above (iOS defaults to CoreCLR, which doesn't link, and InlineDlfcnMethods is enabled by
-				// default there), so only run this explicit combination on .NET 10.
-				yield return new TestData { Variation = $"{test.ProjectConfiguration} (PrepareAssemblies, inline dlfcn, dont link)", TestVariation = "dontlink|prepare-assemblies|inline-dlfcn-methods-compat", Ignored = jenkins.Harness.DotNetVersion.Major >= 11 ? true : ignore };
+					yield return new TestData { Variation = $"{test.ProjectConfiguration} (Trimmable Static Registrar, link sdk)", TestVariation = "linksdk|trimmable-static-registrar", Ignored = ignore };
 				break;
 			}
 

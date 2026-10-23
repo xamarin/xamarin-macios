@@ -22,19 +22,14 @@ namespace Xamarin.Linker.Steps {
 		// injecting [DynamicDependency] attributes into the referencing (possibly user) assembly, we collect
 		// the framework-side conversion methods and emit an ILLink root-descriptor XML that preserves them
 		// unconditionally. This only makes sense in the assembly-preparer, where the descriptor is consumed
-		// by the subsequent trimmer pass (in the trimmer itself we keep the current attribute-injection
-		// behaviour, which doesn't affect Hot Reload since Hot Reload requires the assembly-preparer).
+		// by the subsequent trimmer pass.
 		//
 		// Assemblies that are trimmed can't be hot reloaded, so we can modify those, and it's important that
 		// we do: preserving every smart enum conversion in our platform assembly unconditionally would keep
 		// a lot of code (and thus native frameworks) alive that should have been trimmed away.
 		bool UseXmlDescriptionFile (AssemblyDefinition assembly)
 		{
-#if ASSEMBLY_PREPARER
 			return Configuration.HotReloadCompatibleBuild && Annotations.GetAction (assembly) != AssemblyAction.Link;
-#else
-			return false;
-#endif
 		}
 
 		// The framework-side conversion methods to preserve via the root-descriptor XML.

@@ -8,15 +8,10 @@ using Mono.Tuner;
 #nullable enable
 
 namespace Xamarin.Linker.Steps {
-#if ASSEMBLY_PREPARER
 	public class SetBeforeFieldInitStep : AssemblyModifierStep {
-#else
-	public class SetBeforeFieldInitStep : ConfigurationAwareSubStep {
-#endif
 		protected override string Name { get; } = "Set BeforeFieldInit";
 		protected override int ErrorCode { get; } = 2380;
 
-#if ASSEMBLY_PREPARER
 		protected override bool ModifyAssembly (AssemblyDefinition assembly)
 		{
 			if (Configuration.DerivedLinkContext.App.Optimizations.RegisterProtocols != true)
@@ -28,18 +23,6 @@ namespace Xamarin.Linker.Steps {
 		{
 			return ProcessTypeImpl (type);
 		}
-#else
-		public override SubStepTargets Targets {
-			get {
-				return SubStepTargets.Type;
-			}
-		}
-
-		protected override void Process (TypeDefinition type)
-		{
-			ProcessTypeImpl (type);
-		}
-#endif
 
 		bool ProcessTypeImpl (TypeDefinition type)
 		{

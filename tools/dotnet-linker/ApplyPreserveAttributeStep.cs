@@ -29,11 +29,7 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-#if ASSEMBLY_PREPARER
 		public bool UseXmlDescriptionFile { get; set; }
-#else
-		public bool UseXmlDescriptionFile { get; set; } = true;
-#endif
 		public string XmlDescriptionPath { get; set; } = string.Empty;
 
 		public ApplyPreserveAttributeStep ()
@@ -187,18 +183,6 @@ namespace Xamarin.Linker.Steps {
 				Configuration.WriteOutputForMSBuild ("TrimmerRootDescriptor", items);
 			}
 
-#if !ASSEMBLY_PREPARER
-			// The current linker run still needs these roots immediately. Writing the TrimmerRootDescriptor item only
-			// makes the descriptor available to MSBuild after this step has already finished running.
-			var applyXmlStepType = Context.GetType ().Assembly.GetType ("Mono.Linker.Steps.ResolveFromXmlStep");
-			if (applyXmlStepType is not null) {
-				var documentStream = File.OpenRead (xmlPath); // ResolveFromXmlStep will dispose the stream.
-				var applyXmlStep = (BaseStep) Activator.CreateInstance (applyXmlStepType, new object [] { documentStream, xmlPath })!;
-				applyXmlStep.Process (Context);
-			} else {
-				throw ErrorHelper.CreateError (99, $"Unable to find Mono.Linker.Steps.ResolveFromXmlStep to apply the generated XML description file {xmlPath}");
-			}
-#endif
 		}
 	}
 }

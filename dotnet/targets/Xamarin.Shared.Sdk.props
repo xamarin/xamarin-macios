@@ -47,44 +47,11 @@
 		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == ''">false</UseMonoRuntime>
 
 		<!--
-			On .NET 11+, make the trimmable-static registrar the default for NativeAOT. This has to be set here,
+			Make the trimmable-static registrar the default for NativeAOT. This has to be set here,
 			at evaluation time, because the static _PostprocessAssembliesAfterIlc gate checks the registrar at
 			evaluation time. The CoreCLR default is set later in SelectRegistrar, once the exact link mode is known.
 		-->
-		<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '11.0'))">trimmable-static</Registrar>
-
-		<!--
-			Enable the PrepareAssemblies flow by default for CoreCLR and NativeAOT on .NET 11+. This runs our
-			custom linker steps in the assembly-preparer. For NativeAOT it additionally generates the native
-			static registrar code *after* the NativeAOT compiler (ILC) has run (see
-			_PostprocessAssembliesAfterIlc, which is NativeAOT-only), so the registrar can drop the native code
-			for the UnmanagedCallersOnly trampolines ILC trimmed away (an app-size optimization).
-
-			This is *required* for the trimmable-static registrar to produce a small app: the assembly-preparer
-			writes the generated type map assemblies to disk (marked with [AssemblyMetadata ("IsTrimmable", "True")])
-			before the trimmer runs, so the trimmer treats them as ordinary trimmable input assemblies. Without it
-			the type map assemblies are created from inside the trimmer, where they end up with the 'copy' assembly
-			action - which means they're not trimmed, and since they reference every Objective-C type in the app,
-			nothing else can be trimmed either (that made apps ~3x larger).
-
-			The $(Registrar) check means a CoreCLR app that explicitly opts in to a registrar before this point
-			only gets PrepareAssemblies enabled for the trimmable-static and partial-static registrars. The default
-			CoreCLR registrar is still empty here (it is selected later), so the default CoreCLR flow also enables
-			PrepareAssemblies - this is safe because SelectRegistrar's own '$(UseMonoRuntime)' != 'true' and
-			TargetFrameworkVersion >= 11.0 fallback (the same conditions checked here) always resolves an empty
-			registrar to 'trimmable-static' or 'partial-static', never 'managed-static': the managed-static
-			conditions in SelectRegistrar only apply when $(Registrar) is still empty when they run, which can't
-			happen once that fallback has already set it. NativeAOT always gets PrepareAssemblies regardless of
-			the registrar, which is the pre-existing behavior.
-		-->
-		<PrepareAssemblies Condition="'$(PrepareAssemblies)' == '' And '$(UseMonoRuntime)' != 'true' And ('$(_UseNativeAot)' == 'true' Or '$(Registrar)' == 'trimmable-static' Or '$(Registrar)' == 'partial-static' Or '$(Registrar)' == '') And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '11.0'))">true</PrepareAssemblies>
-
-		<!--
-			PostProcessAssemblies defaults to $(PrepareAssemblies) (see Xamarin.Shared.targets), but the static
-			_PostprocessAssembliesAfterIlc gate reads it at evaluation time - earlier than that default runs - so
-			apply the same $(PrepareAssemblies) default here too, otherwise the gate wouldn't see it.
-		-->
-		<PostProcessAssemblies Condition="'$(PostProcessAssemblies)' == '' And '$(UseMonoRuntime)' != 'true' And ('$(_UseNativeAot)' == 'true' Or '$(Registrar)' == 'trimmable-static' Or '$(Registrar)' == 'partial-static' Or '$(Registrar)' == '') And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '11.0'))">$(PrepareAssemblies)</PostProcessAssemblies>
+		<Registrar Condition="'$(Registrar)' == '' And '$(_UseNativeAot)' == 'true'">trimmable-static</Registrar>
 
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 
@@ -147,14 +114,14 @@
 		<AccelerateBuildsInVisualStudio Condition="'$(AccelerateBuildsInVisualStudio)' == ''">false</AccelerateBuildsInVisualStudio>
 	</PropertyGroup>
 
-	<!-- Set default value for InlineDlfcnMethods based on .NET version and NativeAOT -->
-	<PropertyGroup Condition="'$(InlineDlfcnMethods)' == '' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '11.0'))">
+	<!-- Set default value for InlineDlfcnMethods based on NativeAOT -->
+	<PropertyGroup Condition="'$(InlineDlfcnMethods)' == ''">
 		<InlineDlfcnMethods Condition="'$(_UseNativeAot)' == 'true'">strict</InlineDlfcnMethods>
 		<InlineDlfcnMethods Condition="'$(InlineDlfcnMethods)' == ''">compatibility</InlineDlfcnMethods>
 	</PropertyGroup>
 
-	<!-- Set default value for InlineClassGetHandle based on .NET version -->
-	<PropertyGroup Condition="'$(InlineClassGetHandle)' == '' And $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '11.0')) And !('$(Registrar)' == 'static' And '$(PrepareAssemblies)' != 'true')">
+	<!-- Set default value for InlineClassGetHandle -->
+	<PropertyGroup Condition="'$(InlineClassGetHandle)' == ''">
 		<InlineClassGetHandle Condition="'$(_UseNativeAot)' == 'true'">strict</InlineClassGetHandle>
 		<InlineClassGetHandle Condition="'$(InlineClassGetHandle)' == ''">compatibility</InlineClassGetHandle>
 	</PropertyGroup>
