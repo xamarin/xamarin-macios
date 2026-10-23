@@ -138,5 +138,38 @@ namespace MonoTouchFixtures.CoreImage {
 			Assert.That (a.Length, Is.GreaterThan (0), "Filtered A");
 			Assert.That (b.Length, Is.GreaterThan (0), "Filtered B");
 		}
+
+		[TestCase (true)]
+		[TestCase (false)]
+		public void ConvertLab (bool labToRgb)
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			var name = labToRgb ? "CIConvertLabToRGB" : "CIConvertRGBtoLab";
+			using (CIFilter filter = labToRgb ? new CIConvertLabToRGB () : new CIConvertRGBtoLab ()) {
+				Assert.That (filter.Name, Is.EqualTo (name), "Name");
+				var conversion = (ICIConvertLabProtocol) filter;
+				Assert.That (conversion.InputImage, Is.Null, "InputImage/default");
+				conversion.Normalize = true;
+				Assert.That (conversion.Normalize, Is.True, "Normalize/true");
+				conversion.Normalize = false;
+				Assert.That (conversion.Normalize, Is.False, "Normalize/false");
+
+				using (var color = CIColor.FromRgb (0.5f, 0.25f, 0.75f))
+				using (var image = new CIImage (color)) {
+					conversion.InputImage = image;
+					Assert.That (conversion.InputImage, Is.EqualTo (image), "InputImage");
+					using (var output = conversion.OutputImage)
+						Assert.That (output, Is.Not.Null, "OutputImage");
+					conversion.InputImage = null;
+					Assert.That (conversion.InputImage, Is.Null, "InputImage/reset-null");
+				}
+
+				using (var namedFilter = CIFilter.FromName (name)) {
+					Assert.That (namedFilter, Is.Not.Null, "FromName");
+					Assert.That (namedFilter.Name, Is.EqualTo (name), "FromName/Name");
+				}
+			}
+		}
 	}
 }

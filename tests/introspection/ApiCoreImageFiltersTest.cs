@@ -65,9 +65,6 @@ namespace Introspection {
 			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
 				return false;
-			case "CIConvertLabToRGB":
-			case "CIConvertRGBtoLab":
-				return true;
 			case "CIAreaAlphaWeightedHistogram": // not in Xcode 16 b1 or b2 headers.
 				return true;
 			// The iOS and tvOS 27 runtimes started exposing these barcode generator filters, but they are
