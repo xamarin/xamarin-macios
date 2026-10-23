@@ -9,6 +9,7 @@
 
 #nullable enable
 
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CoreFoundation;
 
@@ -16,6 +17,12 @@ using OS_nw_protocol_options = System.IntPtr;
 using nw_ws_request_t = System.IntPtr;
 
 namespace Network {
+	/// <summary>Handles a WebSocket client's handshake request.</summary>
+	/// <param name="request">The client's WebSocket handshake request.</param>
+	/// <returns>The server's response to the handshake.</returns>
+	/// <remarks>The <paramref name="request" /> wrapper is disposed when the callback returns and must not be retained for later use.</remarks>
+	public delegate NWWebSocketResponse NWWebSocketClientRequestHandler (NWWebSocketRequest request);
+
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
@@ -93,29 +100,75 @@ namespace Network {
 		unsafe static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, BlockLiteral* handler);
 
 		[UnmanagedCallersOnly]
-		static void TrampolineClientRequestHandler (IntPtr block, nw_ws_request_t request)
+		static IntPtr TrampolineClientRequestHandler (IntPtr block, nw_ws_request_t request)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
-			if (del is not null) {
-				var nwRequest = new NWWebSocketRequest (request, owns: true);
-				del (nwRequest);
-			}
+			var del = BlockLiteral.GetTarget<NWWebSocketClientRequestHandler> (block);
+			if (del is null)
+				return IntPtr.Zero;
+
+			using var nwRequest = new NWWebSocketRequest (request, owns: false);
+			var response = del (nwRequest);
+			if (response is not null)
+				return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
+
+			using var rejectResponse = new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
+			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (rejectResponse);
 		}
 
+		/// <summary>Sets the callback that handles incoming WebSocket handshake requests.</summary>
+		/// <param name="queue">The queue on which to invoke <paramref name="handler" />.</param>
+		/// <param name="handler">The callback that returns the server's response to each request.</param>
+		/// <exception cref="ArgumentNullException">
+		///   <paramref name="queue" /> or <paramref name="handler" /> is <see langword="null" />.
+		/// </exception>
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
+		public void SetClientRequestHandler (DispatchQueue queue, NWWebSocketClientRequestHandler handler)
 		{
 			if (queue is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
-				delegate* unmanaged<IntPtr, nw_ws_request_t, void> trampoline = &TrampolineClientRequestHandler;
+				delegate* unmanaged<IntPtr, nw_ws_request_t, IntPtr> trampoline = &TrampolineClientRequestHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketOptions), nameof (TrampolineClientRequestHandler));
 				nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, &block);
 				GC.KeepAlive (queue);
 			}
 		}
+
+#if !XAMCORE_5_0
+		[UnmanagedCallersOnly]
+		static IntPtr TrampolineClientRequestHandlerAction (IntPtr block, nw_ws_request_t request)
+		{
+			var handler = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
+			if (handler is null)
+				return IntPtr.Zero;
+
+			using var nwRequest = new NWWebSocketRequest (request, owns: false);
+			handler (nwRequest);
+			using var response = new NWWebSocketResponse (NWWebSocketResponseStatus.Reject, "ignored");
+			return ObjCRuntime.Runtime.RetainAndAutoreleaseHandle (response);
+		}
+
+		[Obsolete ("This overload cannot return a WebSocket response and rejects every handshake. Use the overload that takes an 'NWWebSocketClientRequestHandler' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[OverloadResolutionPriority (-1)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
+		{
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+
+			unsafe {
+				delegate* unmanaged<IntPtr, nw_ws_request_t, IntPtr> trampoline = &TrampolineClientRequestHandlerAction;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketOptions), nameof (TrampolineClientRequestHandlerAction));
+				nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, &block);
+				GC.KeepAlive (queue);
+			}
+		}
+#endif
 	}
 }

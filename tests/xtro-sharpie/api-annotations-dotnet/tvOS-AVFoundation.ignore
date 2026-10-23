@@ -13,11 +13,6 @@
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
 
-## removed in XAMCORE_5_0
-!extra-enum-value! Managed value 1684369017 for AVAudioSessionRecordPermission.Denied is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 1735552628 for AVAudioSessionRecordPermission.Granted is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 1970168948 for AVAudioSessionRecordPermission.Undetermined is available for the current platform while the value in the native header is not
-
 ## Introspection says otherwise
 !missing-selector! +AVCaptionRenderer::captionPreviewForProfileID:extendedLanguageTag:renderSize: not bound
 !missing-type! AVCaptionRenderer not bound

@@ -81,7 +81,7 @@ namespace Xamarin.MacDev.Tasks {
 				return;
 
 			if (!Enum.TryParse<ObjCRuntime.DlsymOption> (value, true, out var option) || !Enum.IsDefined (typeof (ObjCRuntime.DlsymOption), option)) {
-				Log.LogError (MSBStrings.E7198, value, item.ItemSpec);
+				Log.LogError (MSBStrings.E7199, value, item.ItemSpec);
 				return;
 			}
 

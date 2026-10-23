@@ -52,6 +52,7 @@ namespace Network {
 
 	/// <summary>Describes the state of a network connection.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_connection_state_t")]
 	public enum NWConnectionState {
 		/// <summary>The connection state is invalid.</summary>
 		Invalid = 0,
@@ -70,6 +71,7 @@ namespace Network {
 	/// <summary>Describes the state of a network connection group.</summary>
 	[TV (14, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
+	[NativeName ("nw_connection_group_state_t")]
 	public enum NWConnectionGroupState {
 		/// <summary>The connection group state is invalid.</summary>
 		Invalid = 0,
@@ -85,6 +87,7 @@ namespace Network {
 
 	/// <summary>Describes whether a network data transfer report is still collecting data.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_data_transfer_report_state_t")]
 	public enum NWDataTransferReportState {
 		/// <summary>The report is collecting transfer data.</summary>
 		Collecting = 1,
@@ -94,6 +97,7 @@ namespace Network {
 
 	/// <summary>Identifies the kind of network endpoint.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_endpoint_type_t")]
 	public enum NWEndpointType {
 		/// <summary>The endpoint type is invalid.</summary>
 		Invalid = 0,
@@ -110,6 +114,7 @@ namespace Network {
 
 	/// <summary>Identifies where a network name resolution result came from.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_report_resolution_source_t")]
 	public enum NWReportResolutionSource {
 		/// <summary>The result came from a network query.</summary>
 		Query = 1,
@@ -150,6 +155,7 @@ namespace Network {
 	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
 	/// <summary>Indicates when a custom framer protocol becomes ready.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_framer_start_result_t")]
 	public enum NWFramerStartResult {
 		/// <summary>The result is unknown.</summary>
 		Unknown = 0,
@@ -161,6 +167,7 @@ namespace Network {
 
 	/// <summary>Specifies a preference for choosing a local IP address for an outbound connection.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ip_local_address_preference_t")]
 	public enum NWIPLocalAddressPreference {
 		/// <summary>Use the system's default address selection.</summary>
 		Default = 0,
@@ -172,6 +179,7 @@ namespace Network {
 
 	/// <summary>Specifies which version of the Internet Protocol a connection can use.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ip_version_t")]
 	public enum NWIPVersion {
 		/// <summary>Allow either IP version.</summary>
 		Any = 0,
@@ -183,6 +191,7 @@ namespace Network {
 
 	/// <summary>Identifies the underlying media of a network interface.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_interface_type_t")]
 	public enum NWInterfaceType {
 		/// <summary>A virtual interface or an interface of an unknown type.</summary>
 		Other = 0,
@@ -198,6 +207,7 @@ namespace Network {
 
 	/// <summary>Describes the state of a network listener.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_listener_state_t")]
 	public enum NWListenerState {
 		/// <summary>The listener state is invalid.</summary>
 		Invalid = 0,
@@ -213,6 +223,7 @@ namespace Network {
 
 	/// <summary>Specifies how a connection can use multiple network interfaces.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_multipath_service_t")]
 	public enum NWMultiPathService {
 		/// <summary>Do not attempt multipath transport.</summary>
 		Disabled = 0,
@@ -226,6 +237,7 @@ namespace Network {
 
 	/// <summary>Specifies whether a connection can use expired DNS answers during establishment.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_parameters_expired_dns_behavior_t")]
 	public enum NWParametersExpiredDnsBehavior {
 		/// <summary>Let the system decide whether to use expired DNS answers.</summary>
 		Default = 0,
@@ -241,6 +253,7 @@ namespace Network {
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
 	/// <summary>Describes whether a network path has a usable route.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_path_status_t")]
 	public enum NWPathStatus {
 		/// <summary>The path is invalid.</summary>
 		Invalid = 0,
@@ -253,6 +266,7 @@ namespace Network {
 	}
 
 	/// <summary>Specifies the network queuing priority for a connection's traffic.</summary>
+	[NativeName ("nw_service_class_t")]
 	public enum NWServiceClass {
 		/// <summary>Use the default traffic priority.</summary>
 		BestEffort = 0,
@@ -269,6 +283,7 @@ namespace Network {
 	}
 
 	/// <summary>Identifies the explicit congestion notification (ECN) marking in an IP header.</summary>
+	[NativeName ("nw_ip_ecn_flag_t")]
 	public enum NWIPEcnFlag {
 		/// <summary>The transport is not ECN-capable.</summary>
 		NonEct = 0,
@@ -282,6 +297,7 @@ namespace Network {
 
 	/// <summary>Describes the result of looking up a key in a DNS TXT record.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_txt_record_find_key_t")]
 	public enum NWTxtRecordFindKey {
 		/// <summary>The key is empty, contains non-ASCII characters, or exceeds 255 bytes.</summary>
 		Invalid = 0,
@@ -297,6 +313,7 @@ namespace Network {
 
 	/// <summary>Identifies the type of a WebSocket frame.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ws_opcode_t")]
 	public enum NWWebSocketOpCode : int {
 		/// <summary>A continuation frame. The WebSocket protocol handles these frames internally.</summary>
 		Cont = 0x0,
@@ -316,6 +333,7 @@ namespace Network {
 
 	/// <summary>Indicates why a WebSocket connection was closed.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ws_close_code_t")]
 	public enum NWWebSocketCloseCode : int {
 		/// <summary>The connection completed its intended purpose.</summary>
 		NormalClosure = 1000,
@@ -346,6 +364,7 @@ namespace Network {
 	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
 	/// <summary>Identifies the WebSocket protocol version used by Network framework options.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ws_version_t")]
 	public enum NWWebSocketVersion {
 		/// <summary>An invalid WebSocket protocol version.</summary>
 		Invalid = 0,
@@ -355,6 +374,7 @@ namespace Network {
 
 	/// <summary>Indicates whether a WebSocket server accepts a connection request.</summary>
 	[MacCatalyst (13, 1)]
+	[NativeName ("nw_ws_response_status_t")]
 	public enum NWWebSocketResponseStatus {
 		/// <summary>An invalid response status.</summary>
 		Invalid = 0,
@@ -366,6 +386,7 @@ namespace Network {
 
 	/// <summary>Identifies the protocol used to resolve an endpoint in a resolution report.</summary>
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NativeName ("nw_report_resolution_protocol_t")]
 	public enum NWReportResolutionProtocol {
 		/// <summary>The resolution protocol is unknown or not applicable.</summary>
 		Unknown = 0,
@@ -392,6 +413,7 @@ namespace Network {
 	/// <summary>Identifies the Multipath TCP (MPTCP) protocol version.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
+	[NativeName ("nw_multipath_version_t")]
 	public enum NWMultipathVersion {
 		/// <summary>No specific MPTCP version is selected.</summary>
 		Unspecified = -1,
@@ -404,6 +426,7 @@ namespace Network {
 	/// <summary>Identifies the radio technology used by a network interface.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
+	[NativeName ("nw_interface_radio_type_t")]
 	public enum NWInterfaceRadioType {
 		/// <summary>The radio technology is unknown.</summary>
 		Unknown = 0,
@@ -443,7 +466,12 @@ namespace Network {
 	/// <summary>Identifies who selected the network content accessed using these parameters.</summary>
 	[TV (15, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
+	[NativeName ("nw_parameters_attribution_t")]
+#if XAMCORE_5_0
+	public enum NWParametersAttribution : byte {
+#else
 	public enum NWParametersAttribution {
+#endif
 		/// <summary>The developer selected the content.</summary>
 		Developer = 1,
 		/// <summary>The user selected the content.</summary>
@@ -452,6 +480,7 @@ namespace Network {
 
 	/// <summary>Identifies the direction or datagram nature of a QUIC stream.</summary>
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NativeName ("nw_quic_stream_type_t")]
 	public enum NWQuicStreamType {
 		/// <summary>The stream direction cannot be determined.</summary>
 		Unknown = 0,

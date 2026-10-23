@@ -234,6 +234,7 @@ namespace AppKit {
 
 	/// <summary>Specifies how a window's drawing is buffered before being flushed to the screen.</summary>
 	[NoMacCatalyst]
+	[NativeName ("NSBackingStoreType")]
 	[Native]
 	public enum NSBackingStore : ulong {
 		/// <summary>The window renders visible portions directly to the screen and retains obscured portions in a buffer.</summary>
@@ -509,6 +510,7 @@ namespace AppKit {
 	/// <summary>Specifies which part of a cell, if any, a hit-test point falls within.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSCellHitResult")]
 	[Native]
 	public enum NSCellHit : ulong {
 		/// <summary>The point does not fall within any part of the cell.</summary>
@@ -1297,6 +1299,7 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of options that describe how a view resizes relative to its superview.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSAutoresizingMaskOptions")]
 	[Native]
 	public enum NSViewResizingMask : ulong {
 		/// <summary>The view does not resize with its superview.</summary>
@@ -1899,6 +1902,7 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of the color-picking modes available in the shared color panel.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSColorPanelOptions")]
 	[Native]
 	public enum NSColorPanelFlags : ulong {
 		/// <summary>The grayscale picker.</summary>
@@ -2180,6 +2184,7 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of the properties of a menu item that should be observed for changes, or included in comparisons.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSMenuProperties")]
 	[Native]
 	public enum NSMenuProperty : ulong {
 		/// <summary>The menu item's title.</summary>
@@ -2408,6 +2413,7 @@ namespace AppKit {
 
 	/// <summary>Specifies the orientation of printed pages.</summary>
 	[NoMacCatalyst]
+	[NativeName ("NSPaperOrientation")]
 	[Native]
 	public enum NSPrintingOrientation : ulong {
 		/// <summary>Prints pages in portrait orientation.</summary>
@@ -2605,7 +2611,12 @@ namespace AppKit {
 	/// <summary>Specifies a bitmask of stylistic traits, such as weight, slant, and font-family classification, associated with a font descriptor.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSFontDescriptorSymbolicTraits")]
+#if XAMCORE_5_0
+	public enum NSFontSymbolicTraits : uint {
+#else
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
+#endif
 		/// <summary>The font has an italic or oblique style.</summary>
 		ItalicTrait = (1 << 0),
 		/// <summary>The font has a bold weight.</summary>
@@ -2641,16 +2652,36 @@ namespace AppKit {
 		/// <summary>The font belongs to the freeform serif design classification.</summary>
 		FreeformSerifsClass = 7 << 28,
 		/// <summary>The font belongs to the sans-serif design classification.</summary>
+#if XAMCORE_5_0
+		SansSerifClass = 8u << 28,
+#else
 		SansSerifClass = 8 << 28,
+#endif
 		/// <summary>The font belongs to the ornamental design classification, such as display or decorative faces.</summary>
+#if XAMCORE_5_0
+		OrnamentalsClass = 9u << 28,
+#else
 		OrnamentalsClass = 9 << 28,
+#endif
 		/// <summary>The font belongs to the script design classification, resembling handwriting.</summary>
+#if XAMCORE_5_0
+		ScriptsClass = 10u << 28,
+#else
 		ScriptsClass = 10 << 28,
+#endif
 		/// <summary>The font belongs to the symbolic design classification, such as an icon or dingbat font.</summary>
+#if XAMCORE_5_0
+		SymbolicClass = 12u << 28,
+#else
 		SymbolicClass = 12 << 28,
+#endif
 
 		/// <summary>A mask that isolates the font-family classification bits.</summary>
+#if XAMCORE_5_0
+		FamilyClassMask = 15u << 28,
+#else
 		FamilyClassMask = (int) -268435456,
+#endif
 	}
 
 	/// <summary>Specifies a bitmask of stylistic traits used with the legacy <see cref="T:AppKit.NSFontManager" /> font-selection APIs.</summary>
@@ -2777,6 +2808,7 @@ namespace AppKit {
 	/// <summary>Specifies how a table column can be resized.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSTableColumnResizingOptions")]
 	[Native]
 	public enum NSTableColumnResizing : long {
 		/// <summary>Represents -1, which sets all table column resizing option bits.</summary>
@@ -2790,6 +2822,7 @@ namespace AppKit {
 	/// <summary>Specifies which grid lines a table view draws.</summary>
 	[NoMacCatalyst]
 	[Flags]
+	[NativeName ("NSTableViewGridLineStyle")]
 	[Native]
 	public enum NSTableViewGridStyle : ulong {
 		/// <summary>Does not draw grid lines.</summary>

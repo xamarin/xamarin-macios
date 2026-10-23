@@ -348,15 +348,16 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[Test]
-		public void AttributionPropertyTest ()
+		[TestCase (NWParametersAttribution.Developer)]
+		[TestCase (NWParametersAttribution.User)]
+		public void AttributionPropertyTest (NWParametersAttribution attribution)
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 			using (var parameters = new NWParameters ()) {
 				Assert.DoesNotThrow (() => {
-					parameters.Attribution = NWParametersAttribution.Developer;
+					parameters.Attribution = attribution;
 				});
-				Assert.That (parameters.Attribution, Is.EqualTo (NWParametersAttribution.Developer));
+				Assert.That (parameters.Attribution, Is.EqualTo (attribution));
 			}
 		}
 
