@@ -44,6 +44,21 @@ $ dotnet run --device UDID
 
 Added in .NET 11.
 
+## DeployToDevice
+
+Deploys an already-built iOS or tvOS app to a device or simulator without
+building it again. A specific deployment target can be selected with the
+`$(Device)` property.
+
+```dotnetcli
+dotnet build -t:DeployToDevice project.csproj -p:Device=<udid>
+```
+
+The .NET SDK calls this target during `dotnet run`, including when the
+`--no-build` option is specified.
+
+Added in .NET 11.
+
 ## GetApplicationArtifacts
 
 Builds the project and returns the `@(ApplicationArtifact)` item group. This

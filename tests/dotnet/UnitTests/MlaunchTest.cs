@@ -55,6 +55,129 @@ namespace Xamarin.Tests {
 			Assert.That (scriptContents, Is.EqualTo (expectedScriptContents), "Script contents");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "--installdev", "", "")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "--installdev", "explicit-device", "--devname explicit-device")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "--installsim", "", "")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", "--installdev", "", "")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", "--installsim", "", "")]
+		[NonParallelizable]
+		public void DeployToDevice (ApplePlatform platform, string runtimeIdentifiers, string expectedInstallArgument, string device, string expectedDeviceArgument)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["EnableCodeSigning"] = "false"; // Skip code signing, since that would require making sure we have code signing configured on bots.
+			properties ["Device"] = device;
+			string? mlaunchOutput = null;
+			if (!string.IsNullOrEmpty (device) && !OperatingSystem.IsWindows ()) {
+				var temporaryDirectory = Cache.CreateTemporaryDirectory ();
+				var mlaunchPath = Path.Combine (temporaryDirectory, "mlaunch");
+				mlaunchOutput = Path.Combine (temporaryDirectory, "mlaunch-output.txt");
+				File.WriteAllText (mlaunchPath, $"#!/bin/sh\nprintf '%s\\n' \"$*\" >> '{mlaunchOutput}'\n");
+				File.SetUnixFileMode (mlaunchPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+				properties ["MlaunchPath"] = mlaunchPath;
+			}
+
+			// Build the app first, since 'DeployToDevice' is meant to deploy an already-built app.
+			var cleanProperties = new Dictionary<string, string> (properties) {
+				["BuildProjectReferences"] = "false",
+			};
+			DotNet.Execute ("build", project_path, cleanProperties, target: "Clean");
+			DotNet.AssertBuild (project_path, properties);
+
+			var rv = DotNet.Execute ("build", project_path, properties, assert_success: false, target: "DeployToDevice");
+			var executedTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			Assert.That (executedTargets, Does.Not.Contain ("Build"), "Build target");
+			Assert.That (executedTargets, Does.Not.Contain ("Compile"), "Compile target");
+			Assert.That (executedTargets, Does.Not.Contain ("CoreCompile"), "CoreCompile target");
+
+			// The 'MlaunchInstallArguments' property is computed (and thus present in the binlog) as soon as a device/simulator
+			// was found, regardless of whether the actual install (done by mlaunch, executed via an <Exec/> task) succeeds - and
+			// bots may not have any devices/simulators available to actually install to, so only verify the computed arguments,
+			// not whether the whole build (which includes actually installing the app) succeeded.
+			if (BinLog.TryFindPropertyValue (rv.BinLogPath, "MlaunchInstallArguments", out var mlaunchInstallArguments) && !string.IsNullOrEmpty (mlaunchInstallArguments)) {
+				Assert.That (mlaunchInstallArguments, Does.StartWith (expectedInstallArgument), "install arguments");
+				if (!string.IsNullOrEmpty (expectedDeviceArgument))
+					Assert.That (mlaunchInstallArguments, Does.Contain (expectedDeviceArgument), "device arguments");
+				if (mlaunchOutput is not null) {
+					Assert.That (mlaunchOutput, Does.Exist, "mlaunch output");
+					Assert.That (File.ReadAllLines (mlaunchOutput), Does.Contain (mlaunchInstallArguments), "mlaunch invocation");
+				}
+				return;
+			}
+
+			Assert.That (rv.ExitCode, Is.Not.EqualTo (0), "should have failed if no arguments were computed");
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (v => v.Message).OfType<string> ().ToArray ();
+			Assert.That (string.Join ("\n", errors), Does.Contain ("No applicable and available devices found."));
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void DeployToDevice_AppNotBuilt (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["EnableCodeSigning"] = "false";
+
+			// Make sure the app manifest doesn't exist, regardless of whether this project has been built by another test already.
+			var manifestPath = Path.Combine (appPath, "Info.plist");
+			if (File.Exists (manifestPath))
+				File.Delete (manifestPath);
+
+			var rv = DotNet.Execute ("build", project_path, properties, assert_success: false, target: "DeployToDevice");
+
+			Assert.That (rv.ExitCode, Is.Not.EqualTo (0), "should fail because the app hasn't been built");
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).Select (v => v.Message).OfType<string> ().ToArray ();
+			Assert.That (string.Join ("\n", errors), Does.Contain ("The app must be built before the arguments to launch the app using mlaunch can be computed."));
+		}
+
+		[Test]
+		[NonParallelizable]
+		public void RunDeploysToDevice ()
+		{
+			if (OperatingSystem.IsWindows ()) {
+				Assert.Ignore ("Launching an app from the command line is not supported on Windows.");
+				return;
+			}
+
+			var platform = ApplePlatform.iOS;
+			var runtimeIdentifiers = "ios-arm64";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath ("MySimpleApp", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out _);
+			var temporaryDirectory = Cache.CreateTemporaryDirectory ();
+			var mlaunchPath = Path.Combine (temporaryDirectory, "mlaunch");
+			var mlaunchOutput = Path.Combine (temporaryDirectory, "mlaunch-output.txt");
+			File.WriteAllText (mlaunchPath, $"#!/bin/sh\nprintf '%s\\n' \"$*\" >> '{mlaunchOutput}'\n");
+			File.SetUnixFileMode (mlaunchPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Device"] = "explicit-device";
+			properties ["EnableCodeSigning"] = "false";
+			properties ["MlaunchPath"] = mlaunchPath;
+
+			var cleanProperties = new Dictionary<string, string> (properties) {
+				["BuildProjectReferences"] = "false",
+			};
+			DotNet.Execute ("build", project_path, cleanProperties, target: "Clean");
+			DotNet.AssertBuild (project_path, properties);
+			DotNet.AssertBuild (project_path, properties, target: "Run");
+
+			var invocations = File.ReadAllLines (mlaunchOutput);
+			Assert.That (invocations, Has.Length.EqualTo (2), "mlaunch invocation count");
+			Assert.That (invocations [0], Does.StartWith ("--installdev "), "install invocation");
+			Assert.That (invocations [1], Does.StartWith ("--launchdev "), "run invocation");
+		}
+
 		public static object [] GetMlaunchRunArgumentsTestCases ()
 		{
 			return new object [] {

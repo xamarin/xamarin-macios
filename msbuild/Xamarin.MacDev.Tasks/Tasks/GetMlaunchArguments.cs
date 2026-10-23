@@ -546,7 +546,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			FilterTaskItemInputs ();
-			if (Devices.Length == 0) {
+			if (Devices.Length == 0 && string.IsNullOrEmpty (DeviceName)) {
 				LogNoAvailableDevicesError ();
 				return false;
 			}

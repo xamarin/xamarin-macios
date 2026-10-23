@@ -47,7 +47,7 @@
 	<Target Name="_ShowRunHelpConditioned" Condition="'$(Help)' == 'true'" DependsOnTargets="ShowRunHelp" />
 
 	<Target Name="ComputeMlaunchInstallArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;_ShowRunHelpConditioned;_ComputeMlaunchInstallArguments" />
-	<Target Name="_ComputeMlaunchInstallArguments" Condition="'$(_SdkIsSimulator)' == 'false' And '$(Help)' != 'true'">
+	<Target Name="_ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true' And '$(Help)' != 'true'">
 		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/dotnet/macios/issues/16609 -->
 		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<Error Condition="!Exists('$(_AppBundleManifestPath)')" Text="The app must be built before the arguments to launch the app using mlaunch can be computed." />
@@ -77,8 +77,22 @@
 			 />
 	</Target>
 
-	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;ComputeMlaunchInstallArguments" Condition="'$(_SdkIsSimulator)' == 'false'">
+	<Target Name="_DeployToDevice" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;ComputeMlaunchInstallArguments" Condition="'$(SdkIsMobile)' == 'true'">
 		<Exec SessionId="$(BuildSessionId)" Command="'$(MlaunchPath)' $(MlaunchInstallArguments)" />
+	</Target>
+
+	<!--
+	***********************************************************************************************
+	DeployToDevice
+
+	Target that deploys an already-built app to a device or simulator.
+	This target is called by 'dotnet run' to support deployment without rebuilding.
+	It accepts the $(Device) property for device selection.
+
+	See: https://github.com/dotnet/sdk/blob/c164a9bc1246c48191fb780992530f0fe975141b/documentation/specs/dotnet-run-for-maui.md
+	***********************************************************************************************
+	-->
+	<Target Name="DeployToDevice" DependsOnTargets="_ValidateHotReloadConfiguration;_DeployToDevice;_CopyStartupHooksToDevice" Condition="'$(SdkIsMobile)' == 'true'">
 	</Target>
 
 	<Target Name="ComputeMlaunchRunArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;ComputeAvailableDevices;_ShowRunHelpConditioned;_ComputeMlaunchRunArguments" Condition="'$(SdkIsDesktop)' != 'true'" />
@@ -144,11 +158,16 @@
 		</PropertyGroup>
 	</Target>
 
+	<!-- The .NET SDK invokes DeployToDevice and ComputeRunArguments separately, but direct Run target invocations need both. -->
+	<Target Name="Run" DependsOnTargets="DeployToDevice;ComputeRunArguments">
+		<Exec Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)" />
+	</Target>
+
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
 	<Target
 		Name="_PrepareRunMobile"
 		BeforeTargets="ComputeRunArguments"
-		DependsOnTargets="_ValidateHotReloadConfiguration;_InstallMobile;_CopyStartupHooksToDevice;ComputeMlaunchRunArguments"
+		DependsOnTargets="_ValidateHotReloadConfiguration;ComputeMlaunchRunArguments"
 		Condition="'$(SdkIsDesktop)' != 'true'">
 	</Target>
 
@@ -161,7 +180,7 @@
 	-->
 	<Target
 		Name="_CopyStartupHooksToDevice"
-		DependsOnTargets="_ValidateHotReloadConfiguration;_InstallMobile;_ReadAppManifest"
+		DependsOnTargets="_ValidateHotReloadConfiguration;_ReadAppManifest"
 		Condition="'$(SdkIsDevice)' == 'true'">
 
 		<ItemGroup>
