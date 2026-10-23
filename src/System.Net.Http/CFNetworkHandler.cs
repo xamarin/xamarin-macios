@@ -152,8 +152,8 @@ namespace System.Net.Http {
 
 		// TODO: Add more properties
 
-		/// <summary>Releases the resources used by this handler.</summary>
-		/// <param name="disposing"><see langword="true" /> to release managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
+		/// <summary>Invokes the base handler's disposal implementation.</summary>
+		/// <param name="disposing">The disposal flag passed to the base handler.</param>
 		protected override void Dispose (bool disposing)
 		{
 			// TODO: CloseStream remaining stream buckets if there are any
