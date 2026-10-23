@@ -31,6 +31,7 @@
 #nullable enable
 
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using CoreFoundation;
 
@@ -631,7 +632,7 @@ namespace Security {
 			 * SecPSK12Import does not allow any empty passwords, so let's generate
 			 * a semi-random one here.
 			 */
-			var password = Guid.NewGuid ().ToString ();
+			var password = RandomNumberGenerator.GetHexString (36);
 			var pkcs12 = certificate.Export (X509ContentType.Pfx, password);
 			return Import (pkcs12, password);
 		}

@@ -10,6 +10,7 @@
 #nullable enable
 
 #if MONOMAC
+using System.ComponentModel;
 using System.Text;
 using System.Runtime.CompilerServices;
 using CoreFoundation;
@@ -166,8 +167,28 @@ namespace Network {
 			}
 		}
 
+#if !XAMCORE_5_0
 		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the overload that takes an 'Action<NWEthernetChannelState, NWError?>' instead.")]
+		[OverloadResolutionPriority (-1)]
 		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
+		{
+			if (handler is null) {
+				unsafe {
+					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), null);
+				}
+				return;
+			}
+
+			SetStateChangesHandler ((NWEthernetChannelState state, NWError? error) => handler ((NWBrowserState) state, error));
+		}
+#endif
+
+		/// <summary>Sets the callback invoked when the Ethernet channel state changes.</summary>
+		/// <param name="handler">The callback receives the new <see cref="NWEthernetChannelState"/> and an associated <see cref="NWError"/>, if any. Pass <see langword="null"/> to remove the callback.</param>
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetStateChangesHandler (Action<NWEthernetChannelState, NWError?>? handler)
 		{
 			unsafe {
 				if (handler is null) {

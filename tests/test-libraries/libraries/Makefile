@@ -20,9 +20,9 @@ mac_COMPILER_FLAGS=$(COMMON_ARGS) -mmacosx-version-min=$(DOTNET_MIN_MACOS_SDK_VE
 maccatalyst-x64_COMPILER_FLAGS=$(maccatalyst-x64_CFLAGS)
 maccatalyst-arm64_COMPILER_FLAGS=$(maccatalyst-arm64_CFLAGS)
 
-iossimulator-x64_ARCHITECTURES=x86_64
+iossimulator-arm64_ARCHITECTURES=arm64
 ios-arm64_ARCHITECTURES=arm64
-tvossimulator-x64_ARCHITECTURES=x86_64
+tvossimulator-arm64_ARCHITECTURES=arm64
 tvos-arm64_ARCHITECTURES=arm64
 osx-x64_ARCHITECTURES=x86_64
 osx-arm64_ARCHITECTURES=arm64

@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BundleStructureNonRemotablePlatforms (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -36,7 +36,7 @@ namespace Xamarin.Tests {
 		[Category ("Windows")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void BuildAppWithXCFrameworkWithSymlinks (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -271,7 +271,7 @@ namespace Xamarin.Tests {
 		[Category ("RemoteWindows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "Release")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm64;iossimulator-x64", "Debug")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64", "Debug")]
 		public void PluralRuntimeIdentifiersWithRemoteMac (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var properties = AddRemoteProperties ();

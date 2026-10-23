@@ -173,15 +173,13 @@
 		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'arm64'">true</_IsArm64Machine>
 		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == ''">false</_IsArm64Machine>
 
-		<!-- for mobile non-publish builds we default to the simulator (and the host mac's architecture) -->
+		<!-- for mobile non-publish builds we default to the arm64 simulator -->
 		<!-- for mobile publish builds we default to the device architecture -->
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' == 'true'">ios-arm64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">iossimulator-arm64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">iossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true'">iossimulator-arm64</RuntimeIdentifier>
 
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' == 'true'">tvos-arm64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">tvossimulator-arm64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">tvossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true'">tvossimulator-arm64</RuntimeIdentifier>
 
 		<!-- For debug desktop builds we default to the host architecture -->
 		<!-- For release desktop builds we default to universal apps in .NET 7+, except for macOS and Mac Catalyst 27+ -->

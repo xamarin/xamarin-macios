@@ -85,6 +85,10 @@ so this produces the following error:
 
 ### Implementation details
 
+The following package names describe the original .NET 7 multi-targeting design,
+not the current workload. In particular, `iossimulator-x64` is no longer supported;
+see [configuration properties](configuration-properties.md) for current runtime identifiers.
+
 We'll release a single workload (per platform), with bindings for every OS
 version we currently support or plan to support. This means our stable
 releases may point to preview packages (but these preview packages have to be

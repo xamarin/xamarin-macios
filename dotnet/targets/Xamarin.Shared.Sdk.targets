@@ -374,6 +374,12 @@
 		<Warning Text="$(_RuntimeIdentifiersClashMessage)" />
 	</Target>
 
+	<Target Name="_ValidateRuntimeIdentifiers"
+		Condition="'$(RuntimeIdentifiers)' != '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+		<Warning Condition="$([MSBuild]::VersionLessThan('$(TargetFrameworkVersion)', '13.0'))" Text="RuntimeIdentifiers is not recommended for $(_PlatformName) projects. Use RuntimeIdentifier instead to build for a single architecture." />
+		<Error Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(TargetFrameworkVersion)', '13.0'))" Text="RuntimeIdentifiers is not supported for $(_PlatformName) projects. Use RuntimeIdentifier instead to build for a single architecture." />
+	</Target>
+
 	<Target Name="_ErrorRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashErrorMessage)' != ''">
 		<Error Text="$(_RuntimeIdentifiersClashErrorMessage)" />
 	</Target>
@@ -1638,6 +1644,11 @@
 	</Target>
 
 	<Target Name="_VerifyValidProperties">
+		<MacDevMessage
+			Warning="true"
+			ResourceName="UseNativeHttpHandlerHasNoEffectOnMacOS"
+			Condition="'$(_PlatformName)' == 'macOS' And '$(UseNativeHttpHandler)' == 'true'"
+			/>
 		<Error
 			Text="The property 'MtouchArch' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture."
 			Condition="'$(MtouchArch)' != '' And '$(AllowMtouchArchProperty)' != 'true'"
@@ -3136,6 +3147,7 @@
 
 	<PropertyGroup>
 		<BuildDependsOn>
+			_ValidateRuntimeIdentifiers;
 			_VerifyValidOutputType;
 			$(BuildDependsOn);
 		</BuildDependsOn>

@@ -44,6 +44,7 @@ namespace CoreVideo {
 	/// <summary>An enumeration that flags whether a <see cref="CoreVideo.CVPixelBuffer" /> is read-only or not.</summary>
 	[Flags]
 	[MacCatalyst (13, 1)]
+	[NativeName ("CVPixelBufferLockFlags")]
 	public enum CVPixelBufferLock : ulong {
 		/// <summary>To be added.</summary>
 		None = 0x00000000,

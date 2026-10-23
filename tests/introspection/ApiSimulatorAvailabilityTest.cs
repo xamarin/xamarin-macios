@@ -35,7 +35,7 @@ namespace Introspection {
 
 		protected virtual bool SkipField (PropertyInfo pi)
 		{
-			return false;
+			return SkipMissingSimulatorField (pi);
 		}
 
 		protected virtual bool SkipLibrary (string? libraryName)

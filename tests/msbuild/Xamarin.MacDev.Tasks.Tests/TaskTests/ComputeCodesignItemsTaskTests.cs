@@ -20,6 +20,69 @@ namespace Xamarin.MacDev.Tasks {
 	public class ComputeCodesignItemsTaskTests : TestBase {
 
 		[Test]
+		public void StampPaths (
+			[Values (ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst)] ApplePlatform platform,
+			[Values (".", "bin/Debug", "../out", "../../out", "../../../out")] string outputPath,
+			[Values] bool absolutePath)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var projectDir = Path.Combine (tmpdir, "repo", "src", "App");
+			Directory.CreateDirectory (projectDir);
+
+			var currentDir = Environment.CurrentDirectory;
+			try {
+				Environment.CurrentDirectory = projectDir;
+				var appBundleDir = Path.Combine (outputPath, "Bundle.app");
+				if (absolutePath)
+					appBundleDir = Path.GetFullPath (appBundleDir);
+				var contents = platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst ? "Contents/" : "";
+				var entries = new [] {
+					$"{contents}Frameworks/Test.framework",
+					$"{contents}libTest.dylib",
+					$"{contents}Resources/Test.metallib",
+					$"{contents}XPCServices/Test.xpc",
+				};
+				var bundles = new [] { "Bundle.app", "Bundle.app/PlugIns/Test.appex" };
+				var codesignBundle = new List<ITaskItem> ();
+				var expectedStamps = new Dictionary<string, string> ();
+				var stampPath = "obj/Debug/codesign";
+
+				foreach (var bundle in bundles) {
+					var bundlePath = Path.Combine (Path.GetDirectoryName (appBundleDir) ?? throw new InvalidOperationException ("App bundle directory has no parent"), bundle);
+					codesignBundle.Add (new TaskItem (bundle, new Dictionary<string, string> { { "RequireCodeSigning", "true" } }));
+					expectedStamps.Add (bundlePath, Path.Combine (stampPath, Path.GetFileName (bundle), ".stampfile"));
+					foreach (var entry in entries) {
+						var itemPath = Path.Combine (bundlePath, entry);
+						var stampFile = Path.Combine (stampPath, bundle, entry);
+						if (entry.EndsWith (".framework", StringComparison.Ordinal) || entry.EndsWith (".xpc", StringComparison.Ordinal)) {
+							Directory.CreateDirectory (itemPath);
+							stampFile = Path.Combine (stampFile, ".stampfile");
+						} else {
+							Directory.CreateDirectory (Path.GetDirectoryName (itemPath) ?? throw new InvalidOperationException ("Signing item has no parent directory"));
+							File.WriteAllText (itemPath, "");
+						}
+						expectedStamps.Add (itemPath, stampFile);
+					}
+				}
+
+				var task = CreateTask<ComputeCodesignItems> ();
+				task.AppBundleDir = appBundleDir;
+				task.CodesignBundle = codesignBundle.ToArray ();
+				task.CodesignStampPath = stampPath;
+				task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform).ToString ();
+				ExecuteTask (task);
+
+				Assert.That (task.OutputCodesignItems.Length, Is.EqualTo (expectedStamps.Count), "Item count");
+				foreach (var item in task.OutputCodesignItems) {
+					Assert.That (expectedStamps, Does.ContainKey (item.ItemSpec), $"Unexpected item: {item.ItemSpec}");
+					Assert.That (item.GetMetadata ("CodesignStampFile"), Is.EqualTo (expectedStamps [item.ItemSpec]), item.ItemSpec);
+				}
+			} finally {
+				Environment.CurrentDirectory = currentDir;
+			}
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
@@ -778,4 +841,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-

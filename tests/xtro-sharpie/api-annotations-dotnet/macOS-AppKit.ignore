@@ -145,20 +145,13 @@
 !missing-selector! NSTextStorage::words not bound
 !missing-selector! NSWindow::anchorAttributeForOrientation: not bound
 !unknown-native-enum! NSAlertButtonReturn bound
-!unknown-native-enum! NSBackingStore bound
-!unknown-native-enum! NSCellHit bound
 !unknown-native-enum! NSCellStateValue bound
-!unknown-native-enum! NSColorPanelFlags bound
 !unknown-native-enum! NSComposite bound
 !unknown-native-enum! NSEventModifierMask bound
 !unknown-native-enum! NSFontPanelMode bound
 !unknown-native-enum! NSImageScale bound
-!unknown-native-enum! NSMenuProperty bound
 !unknown-native-enum! NSRunResponse bound
-!unknown-native-enum! NSTableColumnResizing bound
 !unknown-native-enum! NSTableViewAnimation bound
-!unknown-native-enum! NSTableViewGridStyle bound
-!unknown-native-enum! NSViewResizingMask bound
 
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
@@ -934,7 +927,6 @@
 
 # helpers
 !extra-enum-value! Managed value 0 for NSApplicationActivationOptions.Default not found in native headers
-!extra-enum-value! Managed value 196608 for NSWorkspaceLaunchOptions.Default not found in native headers
 
 # helpers / alternative names
 !extra-enum-value! Managed value 2 for NSTickMarkPosition.Leading not found in native headers
@@ -962,21 +954,31 @@
 !missing-selector! NSTabViewController::viewDidLoad not bound
 
 ## unsorted
-!missing-enum! NSAutoresizingMaskOptions not bound
-!missing-enum! NSBackingStoreType not bound
-!missing-enum! NSCellHitResult not bound
-!missing-enum! NSColorPanelOptions not bound
 !missing-enum! NSFindPanelAction not bound
 !missing-enum! NSFindPanelSubstringMatchType not bound
 !missing-enum! NSFontAction not bound
-!missing-enum! NSFontDescriptorSymbolicTraits not bound
 !missing-enum! NSMediaLibrary not bound
-!missing-enum! NSMenuProperties not bound
 !missing-enum! NSPDFPanelOptions not bound
-!missing-enum! NSPaperOrientation not bound
 !missing-enum! NSSplitViewItemCollapseBehavior not bound
-!missing-enum! NSTableColumnResizingOptions not bound
-!missing-enum! NSTableViewGridLineStyle not bound
+
+## NSFontSymbolicTraits uses a signed backing type for binary compatibility; fixed in XAMCORE_5_0.
+!missing-enum-value! NSFontSymbolicTraits native value NSFontDescriptorClassMask = 4026531840 not bound
+!missing-enum-value! NSFontSymbolicTraits native value NSFontDescriptorClassSansSerif = 2147483648 not bound
+!missing-enum-value! NSFontSymbolicTraits native value NSFontDescriptorClassOrnamentals = 2415919104 not bound
+!missing-enum-value! NSFontSymbolicTraits native value NSFontDescriptorClassScripts = 2684354560 not bound
+!missing-enum-value! NSFontSymbolicTraits native value NSFontDescriptorClassSymbolic = 3221225472 not bound
+!extra-enum-value! Managed value -2147483648 for NSFontSymbolicTraits.SansSerifClass not found in native headers
+!extra-enum-value! Managed value -1879048192 for NSFontSymbolicTraits.OrnamentalsClass not found in native headers
+!extra-enum-value! Managed value -1610612736 for NSFontSymbolicTraits.ScriptsClass not found in native headers
+!extra-enum-value! Managed value -1073741824 for NSFontSymbolicTraits.SymbolicClass not found in native headers
+!extra-enum-value! Managed value -268435456 for NSFontSymbolicTraits.FamilyClassMask not found in native headers
+
+## TraitEmphasized aliases BoldTrait, but only the alias is unavailable in the macOS headers.
+!extra-enum-value! Managed value 2 for NSFontSymbolicTraits.TraitEmphasized is available for the current platform while the value in the native header is not
+
+## Preserve the existing NSTableColumnResizing.None value; correcting it is a separate behavioral change.
+!missing-enum-value! NSTableColumnResizing native value NSTableColumnNoResizing = 0 not bound
+!extra-enum-value! Managed value -1 for NSTableColumnResizing.None not found in native headers
 !missing-field! NSAbortModalException not bound
 !missing-field! NSAbortPrintingException not bound
 !missing-field! NSAccessibilityAscendingSortDirectionValue not bound

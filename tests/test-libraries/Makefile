@@ -167,7 +167,7 @@ endef
 $(foreach testFramework,$(DYNAMIC_TEST_FRAMEWORKS),$(foreach platform,$(DOTNET_DESKTOP_PLATFORMS),$(foreach rid,$(DOTNET_$(call uppercase,$(platform))_RUNTIME_IDENTIFIERS),$(eval $(call TestFrameworkSymlinksTemplate,$(rid),$(testFramework))))))
 
 # Create a framework for each platform, which would potentially be a fat framework.
-# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another (which would be fat: iossimulator-x64,iossimulator-arm64).
+# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another.
 define PlatformFrameworkTemplate
 .libs/$(1)/$(2).framework$($(1)_BINARY_INFIX)/$(2): $$(foreach rid,$(3),.libs/$$(rid)/$(2).framework$($(1)_BINARY_INFIX)/$(2))
 	$$(Q) mkdir -p $$(dir $$@)
@@ -188,7 +188,7 @@ endef
 $(foreach testFramework,$(DYNAMIC_TEST_FRAMEWORKS),$(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(eval $(call PlatformFrameworkTemplate,$(xcframeworkPlatform),$(testFramework),$(XCFRAMEWORK_$(xcframeworkPlatform)_RUNTIME_IDENTIFIERS)))))
 
 # Create a framework for each platform, which would potentially be a fat framework.
-# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another (which would be fat: iossimulator-x64,iossimulator-arm64).
+# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another.
 define PlatformDynamicFrameworkTemplate
 .libs/$(1)/$(2).framework$($(1)_INFO_PLIST_INFIX)/Info.plist: $$(foreach rid,$(3),.libs/$$(rid)/$(2).framework$($(1)_INFO_PLIST_INFIX)/Info.plist)
 	$$(Q) mkdir -p $$(dir $$@)
@@ -204,7 +204,7 @@ endef
 $(foreach testFramework,$(DYNAMIC_TEST_FRAMEWORKS),$(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(eval $(call PlatformDynamicFrameworkTemplate,$(xcframeworkPlatform),$(testFramework),$(XCFRAMEWORK_$(xcframeworkPlatform)_RUNTIME_IDENTIFIERS)))))
 
 # Create a framework for each platform, which would potentially be a fat framework.
-# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another (which would be fat: iossimulator-x64,iossimulator-arm64).
+# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another.
 define PlatformStaticFrameworkTemplate
 .libs/$(1)/$(2).framework/$(2): $$(foreach rid,$(3),.libs/$$(rid)/$(2).framework/$(2))
 	$$(Q) mkdir -p $$(dir $$@)
@@ -222,7 +222,7 @@ $(foreach testFramework,$(STATIC_AR_TEST_FRAMEWORKS),$(foreach xcframeworkPlatfo
 $(foreach testFramework,$(STATIC_OBJECT_TEST_FRAMEWORKS),$(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(eval $(call PlatformStaticFrameworkTemplate,$(xcframeworkPlatform),$(testFramework),$(XCFRAMEWORK_$(xcframeworkPlatform)_RUNTIME_IDENTIFIERS)))))
 
 # Create a static library for each platform, which would potentially be a fat static library.
-# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another (which would be fat: iossimulator-x64,iossimulator-arm64).
+# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another.
 define PlatformStaticTemplate
 .libs/$(1)/$(2).a: $$(foreach rid,$(3),.libs/$$(rid)/$(2).a)
 	$$(Q) mkdir -p $$(dir $$@)
@@ -233,7 +233,7 @@ endef
 $(foreach testFramework,libtest libtest2,$(foreach xcframeworkPlatform,$(XCFRAMEWORK_PLATFORMS),$(eval $(call PlatformStaticTemplate,$(xcframeworkPlatform),$(testFramework),$(XCFRAMEWORK_$(xcframeworkPlatform)_RUNTIME_IDENTIFIERS)))))
 
 # Create a dynamic library for each platform, which would potentially be a fat dynamic library.
-# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another (which would be fat: iossimulator-x64,iossimulator-arm64).
+# Here 'platform' is defined as a platform for xcframework - ios device is one platform, where ios simulator is another.
 define PlatformDynamicTemplate
 .libs/$(1)/$(2).dylib: $$(foreach rid,$(3),.libs/$$(rid)/$(2).dylib)
 	$$(Q) mkdir -p $$(dir $$@)
