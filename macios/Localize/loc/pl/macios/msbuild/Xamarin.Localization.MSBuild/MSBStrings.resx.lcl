@@ -3301,6 +3301,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";UseNativeHttpHandlerHasNoEffectOnMacOS" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Właściwość „UseNativeHttpHandle”" nie ma wpływu na system macOS. Przekaż wystąpienie NSUrlSessionHandler bezpośrednio do konstruktora HttpClient, aby użyć natywnego programu obsługi HTTP.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";W0016" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Can only fake the watchOS 4.3 SDK when building for watchOS.]]></Val>
