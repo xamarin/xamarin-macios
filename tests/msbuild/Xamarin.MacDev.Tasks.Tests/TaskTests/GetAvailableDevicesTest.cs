@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -11,25 +12,43 @@ namespace Xamarin.MacDev.Tasks {
 	public class GetAvailableDevicesTests : TestBase {
 		class GetAvailableDevicesTaskWrapper : GetAvailableDevices {
 			public string SimCtlJson = string.Empty;
-			public string DeviceCtlJson = string.Empty;
+			public DeviceCtlRunResult DeviceCtlResult = DeviceCtlRunResult.FromJson ("");
 			protected override async System.Threading.Tasks.Task<string> ExecuteCtlAsync (params string [] args)
 			{
 				switch (args [0]) {
 				case "simctl":
 					return SimCtlJson;
-				case "devicectl":
-					return DeviceCtlJson;
 				default:
 					throw new Exception ();
 				}
+			}
+
+			protected override PhysicalDeviceService CreatePhysicalDeviceService ()
+			{
+				return new FakePhysicalDeviceService (this, DeviceCtlResult);
+			}
+		}
+
+		class FakePhysicalDeviceService : PhysicalDeviceService {
+			readonly DeviceCtlRunResult result;
+
+			public FakePhysicalDeviceService (ICustomLogger log, DeviceCtlRunResult result) : base (log)
+			{
+				this.result = result;
+			}
+
+			protected override System.Threading.Tasks.Task<DeviceCtlRunResult> ExecuteDeviceCtlAsync (CancellationToken cancellationToken)
+			{
+				return System.Threading.Tasks.Task.FromResult (result);
 			}
 		}
 
 		GetAvailableDevicesTaskWrapper CreateTask (ApplePlatform platform, string simctlJson, string devicectlJson, string appManifest = "")
 		{
 			var task = new GetAvailableDevicesTaskWrapper () {
+				BuildEngine = Engine,
 				SimCtlJson = simctlJson,
-				DeviceCtlJson = devicectlJson,
+				DeviceCtlResult = DeviceCtlRunResult.FromJson (devicectlJson),
 			};
 			task.SdkDevPath = Configuration.XcodeLocation;
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform).ToString ();
@@ -61,6 +80,30 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.That (task.Execute (), Is.True, "Task should have succeeded.");
 			Assert.That (task.Devices.Count, Is.EqualTo (0), "Devices should be empty.");
 			Assert.That (task.DiscardedDevices.Count, Is.EqualTo (0), "No devices should have been discarded.");
+			Assert.That (Engine.Logger.ErrorEvents, Is.Empty, "No errors should have been logged.");
+		}
+
+		[Test]
+		public void DeviceCtlFailure ()
+		{
+			if (!Configuration.CanRunArm64)
+				Assert.Ignore ("This test currently only works on arm64"); // because the set of available simulators is different on x64
+
+			var task = CreateTask (ApplePlatform.iOS, SIMCTL_JSON_1, "");
+			task.DeviceCtlResult = DeviceCtlRunResult.Completed (1, "", "devicectl is broken", "");
+			Assert.That (task.Execute (), Is.True, "Task should still succeed, so devices found by simctl are kept.");
+			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Is.EqualTo ("Failed to list physical devices with devicectl: devicectl is broken"), "Error message");
+			Assert.That (task.Devices.Select (d => d.ItemSpec), Is.EqualTo (new [] { "3F1C114D-FC3D-481A-9CA1-499EE1339390", "D40CE982-3E65-4756-8162-90EFE50AF7FA" }), "Simulators found by simctl should still be listed.");
+		}
+
+		[Test]
+		public void DeviceCtlNotFound ()
+		{
+			var task = CreateTask (ApplePlatform.iOS, "", "");
+			task.DeviceCtlResult = DeviceCtlRunResult.NotFound ("xcrun could not be started.");
+			Assert.That (task.Execute (), Is.True, "Task should still succeed, so devices found by simctl are kept.");
+			Assert.That (Engine.Logger.ErrorEvents.Single ().Message, Is.EqualTo ("Failed to list physical devices with devicectl: xcrun could not be started."), "Error message");
+			Assert.That (task.Devices, Is.Empty, "Devices should be empty.");
 		}
 
 		[Test]
@@ -122,6 +165,7 @@ namespace Xamarin.MacDev.Tasks {
 			});
 		}
 
+		[Test]
 		public void DeviceCtlJsonVersion5 ()
 		{
 			var platform = ApplePlatform.iOS;
