@@ -102,14 +102,28 @@ namespace MonoTouchFixtures.Network {
 		{
 			var listenerState = new TaskCompletionSource<string?> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var listenerCancelled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
-			var requestHandled = new TaskCompletionSource<bool> (TaskCreationOptions.RunContinuationsAsynchronously);
+			var requestValues = new TaskCompletionSource<(Dictionary<string, string> Headers, List<string> Subprotocols)> (TaskCreationOptions.RunContinuationsAsynchronously);
 			var acceptedConnection = new TaskCompletionSource<NWConnection> (TaskCreationOptions.RunContinuationsAsynchronously);
 
 			using var serverOptions = new NWWebSocketOptions (NWWebSocketVersion.Version13);
 			using var acceptResponse = new NWWebSocketResponse (NWWebSocketResponseStatus.Accept, "accepted");
 #pragma warning disable CS8603 // Intentionally validate the null-response rejection fallback.
 			serverOptions.SetClientRequestHandler (DispatchQueue.DefaultGlobalQueue, request => {
-				requestHandled.TrySetResult (true);
+				try {
+					var headers = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase);
+					request.EnumerateAdditionalHeaders ((name, value) => {
+						if (name is not null && value is not null)
+							headers.Add (name, value);
+					});
+					var subprotocols = new List<string> ();
+					request.EnumerateSubprotocols (subprotocol => {
+						if (subprotocol is not null)
+							subprotocols.Add (subprotocol);
+					});
+					requestValues.TrySetResult ((headers, subprotocols));
+				} catch (Exception e) {
+					requestValues.TrySetException (e);
+				}
 				return returnNull ? null : acceptResponse;
 			});
 #pragma warning restore CS8603
@@ -158,11 +172,18 @@ namespace MonoTouchFixtures.Network {
 						$"GET / HTTP/1.1\r\nHost: 127.0.0.1:{listener.Port.ToString (CultureInfo.InvariantCulture)}\r\n" +
 						"Upgrade: websocket\r\nConnection: Upgrade\r\n" +
 						"Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\nSec-WebSocket-Version: 13\r\n" +
-						"Sec-WebSocket-Protocol: accepted\r\n\r\n");
+						"Sec-WebSocket-Protocol: accepted, second\r\n" +
+						"X-First: first\r\nX-Second: second\r\n\r\n");
 					stream.Write (request, 0, request.Length);
 					using var reader = new StreamReader (stream, Encoding.ASCII);
 					var statusLine = reader.ReadLine ();
-					Assert.That (requestHandled.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler was not called.");
+					Assert.That (requestValues.Task.Wait (TimeSpan.FromSeconds (10)), Is.True, "Request handler did not enumerate the request.");
+					var values = requestValues.Task.Result;
+					Assert.That (values.Headers, Does.ContainKey ("X-First"), "First header present");
+					Assert.That (values.Headers ["X-First"], Is.EqualTo ("first"), "First header");
+					Assert.That (values.Headers, Does.ContainKey ("X-Second"), "Second header present");
+					Assert.That (values.Headers ["X-Second"], Is.EqualTo ("second"), "Second header");
+					Assert.That (values.Subprotocols, Is.EqualTo (new [] { "accepted", "second" }), "Subprotocols");
 					Assert.That (statusLine, Does.StartWith (returnNull ? "HTTP/1.1 400 " : "HTTP/1.1 101 "), "Handshake response");
 				} finally {
 					listener.Cancel ();
