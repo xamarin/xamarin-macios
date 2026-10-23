@@ -85,7 +85,7 @@ namespace Xamarin.MacDev.Tasks {
 				plist [ProductDefinitionKeys.MinimumSystemVersion] = osVersionArray;
 
 			CompiledProductDefinition = new TaskItem (Path.Combine (OutputDirectory, "Product.plist"));
-			plist.Save (CompiledProductDefinition.ItemSpec, true, false);
+			FileUtils.UpdateFile (CompiledProductDefinition.ItemSpec, path => plist.Save (path, true, false));
 
 			return !Log.HasLoggedErrors;
 		}
