@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -20,7 +21,10 @@ namespace Cecil.Tests {
 	public class SignListTest {
 		const int MaxZipDepth = 8;
 
-		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign" };
+		static readonly string [] signingGroups = { "Skip", "FirstParty", "ThirdParty", "MacDeveloperSign", "MacDeveloperSignHarden", "MacDeveloperSignBundle", "MacDeveloperSignHardenBundle" };
+
+		// The bundle groups contain the name of an app bundle, and not the name of a file.
+		static bool IsBundleGroup (string group) => group.EndsWith ("Bundle", StringComparison.Ordinal);
 
 		[Test]
 		public void WorkloadPackagesHaveSigningEntries ()
@@ -36,9 +40,10 @@ namespace Cecil.Tests {
 			var patterns = ReadPatterns (signList);
 			var matched = new bool [patterns.Count];
 			var missing = new List<string> ();
+			var notExecutables = new List<string> ();
 			foreach (var package in packages) {
 				using var archive = ZipFile.OpenRead (package);
-				CheckArchive (archive, Path.GetFileName (package), "", "", patterns, matched, missing, 0);
+				CheckArchive (archive, Path.GetFileName (package), "", "", patterns, matched, missing, notExecutables, 0);
 			}
 			if (!Configuration.AnyIgnoredPlatforms ()) {
 				for (var i = 0; i < patterns.Count; i++) {
@@ -47,6 +52,7 @@ namespace Cecil.Tests {
 				}
 			}
 			Assert.That (missing, Is.Empty, $"Files missing from {signList}:\n{string.Join ("\n", missing)}");
+			Assert.That (notExecutables, Is.Empty, $"Files matched by a Mach-O signing entry in {signList} that aren't Mach-O executables:\n{string.Join ("\n", notExecutables)}");
 		}
 
 		static List<(string Group, string Include, Regex Pattern)> ReadPatterns (string signList)
@@ -61,7 +67,14 @@ namespace Cecil.Tests {
 						continue;
 					}
 					Assert.That (include, Does.Not.Contain ("/"), $"Use Windows-style separators in {signList}: {include}");
-					var expression = Regex.Escape (include).Replace (@"\*", @"[^\\]*").Replace (@"\?", @"[^\\]");
+					string expression;
+					if (IsBundleGroup (group)) {
+						Assert.That (include, Does.EndWith (".app"), $"{group} entries must be the name of an app bundle in {signList}: {include}");
+						Assert.That (include.IndexOfAny (new char [] { '\\', '*', '?' }), Is.EqualTo (-1), $"{group} entries must not contain a path or wildcards in {signList}: {include}");
+						expression = Regex.Escape (include) + @"\\Contents\\Info\.plist";
+					} else {
+						expression = Regex.Escape (include).Replace (@"\*", @"[^\\]*").Replace (@"\?", @"[^\\]");
+					}
 					patterns.Add ((group, include, new Regex ($"(^|\\\\){expression}$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)));
 				}
 			}
@@ -69,7 +82,19 @@ namespace Cecil.Tests {
 			return patterns;
 		}
 
-		static void CheckArchive (ZipArchive archive, string archiveName, string zipPath, string matchPrefix, IReadOnlyList<(string Group, string Include, Regex Pattern)> patterns, bool [] matched, List<string> missing, int depth)
+		static bool IsMachO (ZipArchiveEntry entry)
+		{
+			if (entry.Length < 4)
+				return false;
+
+			var magic = new byte [4];
+			using var stream = entry.Open ();
+			stream.ReadExactly (magic);
+			// Thin Mach-O files (32/64-bit, both byte orders) and universal (fat) binaries.
+			return BinaryPrimitives.ReadUInt32BigEndian (magic) is 0xFEEDFACE or 0xFEEDFACF or 0xCEFAEDFE or 0xCFFAEDFE or 0xCAFEBABE or 0xCAFEBABF;
+		}
+
+		static void CheckArchive (ZipArchive archive, string archiveName, string zipPath, string matchPrefix, IReadOnlyList<(string Group, string Include, Regex Pattern)> patterns, bool [] matched, List<string> missing, List<string> notExecutables, int depth)
 		{
 			foreach (var entry in archive.Entries) {
 				if (entry.Name.Length == 0)
@@ -80,7 +105,7 @@ namespace Cecil.Tests {
 					Assert.That (depth, Is.LessThan (MaxZipDepth), $"Nested ZIP depth exceeds {MaxZipDepth}: {archiveName}!{zipPath}{entry.FullName}");
 					using var stream = entry.Open ();
 					using var nested = new ZipArchive (stream, ZipArchiveMode.Read);
-					CheckArchive (nested, archiveName, zipPath + entry.FullName + "!", matchPrefix + Path.GetFileNameWithoutExtension (entry.Name) + "\\", patterns, matched, missing, depth + 1);
+					CheckArchive (nested, archiveName, zipPath + entry.FullName + "!", matchPrefix + Path.GetFileNameWithoutExtension (entry.Name) + "\\", patterns, matched, missing, notExecutables, depth + 1);
 				} else if (name.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)
 					|| name.EndsWith (".exe", StringComparison.OrdinalIgnoreCase)
 					|| name.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
@@ -93,6 +118,37 @@ namespace Cecil.Tests {
 					}
 					if (!found)
 						missing.Add ($"{archiveName}!{zipPath}{entry.FullName}");
+				} else {
+					// macOS app bundles (with a Contents/Info.plist) are signed as a unit, and have to be listed too.
+					if (name.EndsWith (".app\\Contents\\Info.plist", StringComparison.OrdinalIgnoreCase)) {
+						var found = false;
+						for (var i = 0; i < patterns.Count; i++) {
+							if (!IsBundleGroup (patterns [i].Group) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+								continue;
+							matched [i] = true;
+							found = true;
+						}
+						if (!found)
+							missing.Add ($"{archiveName}!{zipPath}{entry.FullName} (app bundle)");
+						continue;
+					}
+					// Executables don't have a well-known file extension, so identify them by their Mach-O header.
+					var isMachO = IsMachO (entry);
+					// The debug symbols in a .dSYM are Mach-O files too, but they're not executables (and can't be signed).
+					var isDebugSymbols = name.Contains (".dSYM\\", StringComparison.OrdinalIgnoreCase);
+					var listed = false;
+					for (var i = 0; i < patterns.Count; i++) {
+						if (IsBundleGroup (patterns [i].Group) || !patterns [i].Pattern.IsMatch (matchPrefix + name))
+							continue;
+						matched [i] = true;
+						listed = true;
+						if (patterns [i].Group.StartsWith ("MacDeveloperSign", StringComparison.Ordinal) && (!isMachO || isDebugSymbols))
+							notExecutables.Add ($"{archiveName}!{zipPath}{entry.FullName} (<{patterns [i].Group} Include=\"{patterns [i].Include}\" />)");
+					}
+					// The Mach-O files in an app bundle are signed with the bundle, and static libraries (which are universal
+					// binaries here, so they look like Mach-O files) aren't signed.
+					if (!listed && isMachO && !isDebugSymbols && !name.EndsWith (".a", StringComparison.OrdinalIgnoreCase) && !name.Contains (".app\\Contents\\", StringComparison.OrdinalIgnoreCase))
+						missing.Add ($"{archiveName}!{zipPath}{entry.FullName} (Mach-O file)");
 				}
 			}
 		}
