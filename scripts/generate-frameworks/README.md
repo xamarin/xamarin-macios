@@ -9,7 +9,7 @@ Example output file for iOS:
 ```cs
 using System.Collections.Generic;
 
-partial class Frameworks {
+partial class BGenFrameworks {
 	internal readonly HashSet<string> iosframeworks = new HashSet<string> {
 		"Accelerate",
 		"Accessibility",

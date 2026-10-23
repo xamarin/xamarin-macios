@@ -3105,6 +3105,10 @@ namespace Xamarin.Tests {
 								.FilterWarnings (platform);
 			var expectedWarnings = new ExpectedBuildMessage [] {
 				new ExpectedBuildMessage ($"ILC", $"MonoTouchFixtures.ObjCRuntime.ClassTest.GetHandle(): Using member 'System.Type.MakeArrayType()' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. The code for an array of the specified type might not be available."),
+				new ExpectedBuildMessage ($"MSBuild", $"The type Bindings.Test.Protocol.P2 has a [Protocol] and a [BaseType] attribute, but no [Model] attribute. This is likely incorrect; either remove the [BaseType] attribute, or add a [Model] attribute."),
+				new ExpectedBuildMessage ($"MSBuild", $"The type Bindings.Test.ProtocolWithBlockProperties has a [Protocol] and a [BaseType] attribute, but no [Model] attribute. This is likely incorrect; either remove the [BaseType] attribute, or add a [Model] attribute."),
+				new ExpectedBuildMessage ($"MSBuild", $"[NullAllowed] should not be used on methods, like 'Element GetElement(Key)', but only on properties, parameters and return values."),
+				new ExpectedBuildMessage ($"MSBuild", $"[NullAllowed] should not be used on methods, like 'Foundation.NSEnumerator`1[Element] GetEnumerator()', but only on properties, parameters and return values."),
 				new ExpectedBuildMessage ($"MSBuild", $"It's not safe to remove the dynamic registrar, because monotouchtest references 'ObjCRuntime.Runtime.ConnectMethod (System.Reflection.MethodInfo, ObjCRuntime.Selector)'."),
 				new ExpectedBuildMessage ($"MSBuild", $"It's not safe to remove the dynamic registrar, because monotouchtest references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, Foundation.ExportAttribute)'."),
 				new ExpectedBuildMessage ($"MSBuild", $"It's not safe to remove the dynamic registrar, because monotouchtest references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, ObjCRuntime.Selector)'."),

@@ -59,6 +59,13 @@ public class BindingException : Exception {
 
 	public bool Error { get; private set; }
 
+#if MSBUILD_TASKS
+	public Xamarin.Bundler.ProductException ToProductException ()
+	{
+		return new Xamarin.Bundler.ProductException (Code, Error, Message);
+	}
+#endif
+
 	// http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
 	public override string ToString ()
 	{
@@ -156,9 +163,17 @@ public static class ErrorHelper {
 				return false;
 
 			if (error)
+#if MSBUILD_TASKS
+				log.LogError (mte.ToProductException ());
+#else
 				log.LogError (mte);
+#endif
 			else
+#if MSBUILD_TASKS
+				log.LogWarning (mte.ToProductException ());
+#else
 				log.LogWarning (mte);
+#endif
 
 			if (log.Verbosity > 1) {
 				var ie = e.InnerException;

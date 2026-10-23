@@ -80,13 +80,21 @@ public partial class Generator {
 		if (!anyPropertiesWithFields)
 			return false;
 
+#if NET
 		var getConstantMethod = type.GetMethod ("GetConstant", BindingFlags.Public | BindingFlags.Static, new Type [] { type });
+#else
+		var getConstantMethod = type.GetMethod ("GetConstant", BindingFlags.Public | BindingFlags.Static, null, new Type [] { type }, null);
+#endif
 		if (getConstantMethod is null)
 			return false;
 
 		backingFieldType = getConstantMethod.ReturnType;
 
+#if NET
 		var getValueMethod = type.GetMethod ("GetValue", BindingFlags.Public | BindingFlags.Static, new Type [] { backingFieldType });
+#else
+		var getValueMethod = type.GetMethod ("GetValue", BindingFlags.Public | BindingFlags.Static, null, new Type [] { backingFieldType }, null);
+#endif
 		if (getValueMethod is null)
 			return false;
 

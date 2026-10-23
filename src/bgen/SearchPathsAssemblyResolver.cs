@@ -1,6 +1,8 @@
 using System.IO;
 using System.Reflection;
 
+using Assembly = System.Reflection.Assembly;
+
 #nullable enable
 
 class SearchPathsAssemblyResolver : MetadataAssemblyResolver {

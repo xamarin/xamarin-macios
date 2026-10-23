@@ -5,6 +5,7 @@ using System.Reflection;
 
 #nullable enable
 
+#if NET
 namespace bgen {
 
 	public static class NullabilityInfoExtensions {
@@ -12,3 +13,4 @@ namespace bgen {
 			=> self.ReadState == NullabilityState.Nullable;
 	}
 }
+#endif

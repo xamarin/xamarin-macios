@@ -4,6 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
+#if !NET
+#pragma warning disable CS8602
+#endif
+
 // Fixes bug 27430 - btouch doesn't escape identifiers with the same name as C# keywords
 public static class StringExtensions {
 

@@ -52,6 +52,7 @@ using System.Reflection;
 using System.Xml;
 
 using ObjCBindings;
+using Assembly = System.Reflection.Assembly;
 using Xamarin.Utils;
 
 #nullable enable
@@ -60,7 +61,7 @@ public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal const string NativeHandleType = "NativeHandle";
 	BindingTouch BindingTouch;
-	Frameworks Frameworks { get { return BindingTouch.Frameworks!; } }
+	BGenFrameworks Frameworks { get { return BindingTouch.Frameworks!; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }

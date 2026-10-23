@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ObjCRuntime;
 
+using Assembly = System.Reflection.Assembly;
+
 #nullable enable
 
 public class TypeCache {
@@ -164,7 +166,7 @@ public class TypeCache {
 	public TypeCache () { }
 #pragma warning restore CS8618
 
-	public TypeCache (MetadataLoadContext universe, Frameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
+	public TypeCache (MetadataLoadContext universe, BGenFrameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
 	{
 		if (frameworks is null)
 			throw ErrorHelper.CreateError (3, currentPlatform);
@@ -322,7 +324,7 @@ public class TypeCache {
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
 	}
 
-	Dictionary<Type, string> BuildNSValueCreateMap (Frameworks frameworks)
+	Dictionary<Type, string> BuildNSValueCreateMap (BGenFrameworks frameworks)
 	{
 		var nsvalueCreateMap = new Dictionary<Type, string> {
 			[CGAffineTransform] = "CGAffineTransform",

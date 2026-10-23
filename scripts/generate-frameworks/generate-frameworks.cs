@@ -38,7 +38,7 @@ try {
 	var sb = new StringBuilder ();
 	sb.AppendLine ("using System.Collections.Generic;");
 	sb.AppendLine ();
-	sb.AppendLine ("partial class Frameworks {");
+	sb.AppendLine ("partial class BGenFrameworks {");
 
 	for (int i = 0; i < names.Length; i++) {
 		var name = names [i];

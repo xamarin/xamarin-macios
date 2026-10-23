@@ -84,7 +84,11 @@ public class DocumentationManager {
 				var idx2 = line.IndexOf ('"', idx + needle.Length);
 				if (idx2 < idx)
 					break;
+#if NET
 				var cref = line [(idx + needle.Length)..idx2];
+#else
+				var cref = line.Substring (idx + needle.Length, idx2 - idx - needle.Length);
+#endif
 
 				// Fixup this:
 				// error CS1584: XML comment has syntactically incorrect cref attribute
@@ -93,7 +97,11 @@ public class DocumentationManager {
 				cref = cref.Replace ("&amp;gt;", "}");
 
 				// replace the existing cref with the fixed version
+#if NET
 				line = line [..idx] + "cref=\"" + cref + "\"" + line [(idx2 + 1)..];
+#else
+				line = line.Substring (0, idx) + "cref=\"" + cref + "\"" + line.Substring (idx2 + 1);
+#endif
 
 				// there can be more than one cref per line, so keep looking
 				idx = line.IndexOf (needle, idx + needle.Length);
@@ -177,7 +185,7 @@ public class DocumentationManager {
 				name.Append ('`');
 			}
 			name.Append (tr.GenericParameterPosition);
-		} else if (tr.IsSZArray) {
+		} else if (IsSZArray (tr)) {
 			name.Append (GetDocId (tr.GetElementType ()!));
 			name.Append ("[]");
 		} else if (tr.IsArray) {
@@ -229,5 +237,15 @@ public class DocumentationManager {
 		}
 
 		return name.ToString ();
+	}
+
+	static bool IsSZArray (Type type)
+	{
+#if NET
+		return type.IsSZArray;
+#else
+		var elementType = type.GetElementType ();
+		return elementType is not null && type == elementType.MakeArrayType ();
+#endif
 	}
 }

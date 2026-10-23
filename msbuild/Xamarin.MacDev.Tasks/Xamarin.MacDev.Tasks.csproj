@@ -8,18 +8,21 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
+    <DefineConstants>$(DefineConstants);MSBUILD_TASKS;BGENERATOR;NET_4_0</DefineConstants>
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
     <NoWarn>$(NoWarn);NU1701</NoWarn> <!-- Package 'Microsoft.Build 16.10.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project. -->
     <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.Reflection.Metadata" that could not be resolved. -->
     <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
     <NoWarn>$(NoWarn);CS0618</NoWarn> <!-- AppleSdkSettings is [Obsolete] in favor of XcodeLocator; suppress until migration is complete -->
+    <NoWarn>$(NoWarn);CS8600;CS8602;CS8604</NoWarn> <!-- bgen sources are also compiled with their standalone nullable context -->
+    <NoWarn>$(NoWarn);APL0003</NoWarn>
     <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'net$(BundledNETCoreAppTargetFrameworkVersion)'">true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <Import Project="..\..\eng\Versions.props" />
 
   <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
@@ -51,6 +54,16 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" Condition="'$(TargetFramework)' != 'net$(BundledNETCoreAppTargetFrameworkVersion)'" />
 
+  <!-- bgen looks up these compatibility types by name; merge duplicate polyfills instead of renaming them. -->
+  <ItemGroup>
+    <ILRepackAllowedDuplicateTypes Include="System.Diagnostics.CodeAnalysis.ExperimentalAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.OSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.SupportedOSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.UnsupportedOSPlatformAttribute" />
+    <ILRepackAllowedDuplicateTypes Include="System.Runtime.Versioning.ObsoletedOSPlatformAttribute" />
+  </ItemGroup>
+
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
       <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
@@ -68,6 +81,27 @@
   </Target>
 
   <ItemGroup>
+    <Compile Include="..\..\src\bgen\**\*.cs" Exclude="..\..\src\bgen\bin\**\*.cs;..\..\src\bgen\obj\**\*.cs" />
+    <Compile Include="..\..\src\ObjCBindings\BindingTypeAttribute.cs" />
+    <Compile Include="..\..\src\ObjCBindings\BindingTypeTag.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\..\src\build\dotnet\generator-frameworks.g.cs" />
+    <Compile Include="..\..\src\Foundation\AdviceAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\FieldAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\ModelAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\NotImplementedAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\PreserveAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\ProtocolAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\RegisterAttribute.cs" />
+    <Compile Include="..\..\src\Foundation\XpcInterfaceAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\BindAsAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\BlockCallbackAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\CCallbackAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\ObjectiveCFrameworkAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\SupportedSimulatorAttribute.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\RequiresSuperAttribute.cs" />
     <Compile Include="..\Versions.g.cs">
       <Link>Versions.g.cs</Link>
     </Compile>
@@ -96,6 +130,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="../../src/Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <StronglyTypedFileName>$(IntermediateOutputPath)BGenResources.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>bgen</StronglyTypedNamespace>
+      <StronglyTypedClassName>Resources</StronglyTypedClassName>
+      <ManifestResourceName>bgen.Resources</ManifestResourceName>
+      <GenerateResource>true</GenerateResource>
+      <PublicClass>false</PublicClass>
+    </EmbeddedResource>
     <EmbeddedResource Include="../Xamarin.Localization.MSBuild/MSBStrings.resx">
       <Type>Resx</Type>
       <Generator>PublicResXFileCodeGenerator</Generator>

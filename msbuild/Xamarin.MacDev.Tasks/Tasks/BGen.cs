@@ -59,6 +59,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ProcessEnums { get; set; }
 
+		public bool UseExternalProcess { get; set; }
+
 		[Required]
 		public string ProjectDir { get; set; } = string.Empty;
 
@@ -207,30 +209,41 @@ namespace Xamarin.MacDev.Tasks {
 			AttributeAssembly = PathUtils.ConvertToMacPath (AttributeAssembly);
 			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
 
-			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
-			var env = new Dictionary<string, string?> ();
-			if (!string.IsNullOrEmpty (customHome)) {
-				env ["HOME"] = customHome;
-			}
-
 			if (!string.IsNullOrEmpty (SessionId) &&
 				!string.IsNullOrEmpty (GeneratedSourcesDir) &&
 				!Directory.Exists (GeneratedSourcesDir)) {
 				Directory.CreateDirectory (GeneratedSourcesDir);
 			}
 
-			var bgenPath = PathUtils.ConvertToMacPath (BGenToolPath);
-			var bgenExe = PathUtils.ConvertToMacPath (BGenToolExe);
-			var bgen = Path.Combine (bgenPath, bgenExe);
 			var args = GenerateCommandLineArguments ();
-			args.Insert (0, bgen);
-			var executable = this.GetDotNetPath ();
 			if (Log.HasLoggedErrors)
 				return false;
 
-			cancellationTokenSource = new CancellationTokenSource ();
-			ExecuteAsync (executable, args, environment: env, cancellationToken: cancellationTokenSource.Token).Wait ();
-			return !Log.HasLoggedErrors;
+			if (UseExternalProcess) {
+				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
+				var env = new Dictionary<string, string?> ();
+				if (!string.IsNullOrEmpty (customHome))
+					env ["HOME"] = customHome;
+
+				var bgenPath = PathUtils.ConvertToMacPath (BGenToolPath);
+				var bgenExe = PathUtils.ConvertToMacPath (BGenToolExe);
+				args.Insert (0, Path.Combine (bgenPath, bgenExe));
+				var executable = this.GetDotNetPath ();
+
+				cancellationTokenSource = new CancellationTokenSource ();
+				ExecuteAsync (executable, args, environment: env, cancellationToken: cancellationTokenSource.Token).Wait ();
+				return !Log.HasLoggedErrors;
+			}
+
+			var exitCode = ExecuteBGen (args);
+			if (exitCode != 0 && !Log.HasLoggedErrors)
+				Log.LogError (MSBStrings.E7199 /* The binding generator failed for unknown reasons. Please file an issue at https://github.com/dotnet/macios/issues/new/choose. */);
+			return exitCode == 0 && !Log.HasLoggedErrors;
+		}
+
+		protected virtual int ExecuteBGen (List<string> args)
+		{
+			return BindingTouch.Run (args.ToArray (), this);
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => !item.IsFrameworkItem ();

@@ -22,6 +22,7 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILLink.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILStrip'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Mono.Options'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'BouncyCastle.Cryptography'" />
@@ -72,6 +73,7 @@
       <AbsoluteAssemblyOriginatorKeyFile Condition="'$(AssemblyOriginatorKeyFile)' != ''">$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(AssemblyOriginatorKeyFile)'))))</AbsoluteAssemblyOriginatorKeyFile>
       <ILRepackArgs Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AbsoluteAssemblyOriginatorKeyFile)"</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /union</ILRepackArgs> <!-- This is needed to merge types with identical names into one, wich happens with IFluentInterface in Merq and Merq.Core (Xamarin.Messaging dependencies) -->
+      <ILRepackArgs>$(ILRepackArgs) @(ILRepackAllowedDuplicateTypes -&gt; '/allowdup:%(Identity)', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /illink</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:"%(Identity)."', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /out:"@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>

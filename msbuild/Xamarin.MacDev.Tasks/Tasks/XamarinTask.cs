@@ -426,13 +426,13 @@ namespace Xamarin.MacDev.Tasks {
 		protected void LogDiagnostic (ProductException exception)
 		{
 			switch (exception.GetWarningLevel (this)) {
-			case ErrorHelper.WarningLevel.Warning:
+			case Xamarin.Bundler.ErrorHelper.WarningLevel.Warning:
 				Log.LogWarning (exception.Code, exception.FileName, exception.LineNumber, exception.Message);
 				break;
-			case ErrorHelper.WarningLevel.Error:
+			case Xamarin.Bundler.ErrorHelper.WarningLevel.Error:
 				Log.LogError (exception.Code, exception.FileName, exception.LineNumber, exception.Message);
 				break;
-			case ErrorHelper.WarningLevel.Disable:
+			case Xamarin.Bundler.ErrorHelper.WarningLevel.Disable:
 			default:
 				Log.LogMessage (MessageImportance.Low, exception.Code, exception.FileName, exception.LineNumber, exception.Message);
 				break;

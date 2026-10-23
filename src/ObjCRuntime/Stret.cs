@@ -38,9 +38,9 @@ namespace ObjCRuntime {
 		/// <returns><see langword="true"/> if stret calling conventions are required; otherwise, <see langword="false"/>.</returns>
 		public static bool X86_64NeedStret (Type returnType, Generator? generator)
 		{
-			ArgumentNullException.ThrowIfNull (returnType);
+			ThrowIfNull (returnType, nameof (returnType));
 #if BGENERATOR
-			ArgumentNullException.ThrowIfNull (generator);
+			ThrowIfNull (generator, nameof (generator));
 #endif
 
 			Type t = returnType;
@@ -56,10 +56,10 @@ namespace ObjCRuntime {
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "Computing the size of a struct is safe, because the trimmer can't remove fields that would affect the size of a marshallable struct (it could affect marshalling behavior).")]
 		internal static int GetValueTypeSize (Type type, List<Type> fieldTypes, Generator? generator)
 		{
-			ArgumentNullException.ThrowIfNull (type);
-			ArgumentNullException.ThrowIfNull (fieldTypes);
+			ThrowIfNull (type, nameof (type));
+			ThrowIfNull (fieldTypes, nameof (fieldTypes));
 #if BGENERATOR
-			ArgumentNullException.ThrowIfNull (generator);
+			ThrowIfNull (generator, nameof (generator));
 #endif
 
 			int size = 0;
@@ -99,13 +99,13 @@ namespace ObjCRuntime {
 
 		static bool IsBuiltInType (Type type)
 		{
-			ArgumentNullException.ThrowIfNull (type);
+			ThrowIfNull (type, nameof (type));
 			return IsBuiltInType (type, out var _);
 		}
 
 		internal static bool IsBuiltInType (Type type, out int type_size)
 		{
-			ArgumentNullException.ThrowIfNull (type);
+			ThrowIfNull (type, nameof (type));
 			type_size = 0;
 
 			if (type.IsNested)
@@ -168,11 +168,11 @@ namespace ObjCRuntime {
 		[UnconditionalSuppressMessage ("", "IL2070", Justification = "Computing the size of a struct is safe, because the trimmer can't remove fields that would affect the size of a marshallable struct (it could affect marshalling behavior).")]
 		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, ref int size, ref int max_element_size, Generator? generator)
 		{
-			ArgumentNullException.ThrowIfNull (original_type);
-			ArgumentNullException.ThrowIfNull (type);
-			ArgumentNullException.ThrowIfNull (field_types);
+			ThrowIfNull (original_type, nameof (original_type));
+			ThrowIfNull (type, nameof (type));
+			ThrowIfNull (field_types, nameof (field_types));
 #if BGENERATOR
-			ArgumentNullException.ThrowIfNull (generator);
+			ThrowIfNull (generator, nameof (generator));
 #endif
 
 			// FIXME:
@@ -233,6 +233,16 @@ namespace ObjCRuntime {
 				size = AlignAndAdd (original_type, size, type_size, ref max_element_size);
 				size += (multiplier - 1) * size;
 			}
+		}
+
+		static void ThrowIfNull ([NotNull] object? value, string parameterName)
+		{
+#if NET
+			ArgumentNullException.ThrowIfNull (value, parameterName);
+#else
+			if (value is null)
+				throw new ArgumentNullException (parameterName);
+#endif
 		}
 
 		static string GetTypeName (Type? type)

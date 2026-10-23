@@ -3,6 +3,8 @@
 using System;
 using System.Reflection;
 
+using Assembly = System.Reflection.Assembly;
+
 // contains all the types defined in the API to generate. This could have
 // been a (Type [] Types, Type [] StrongDictionaries) but we have to keep 
 // backcompat before dotnet. records do work ;)

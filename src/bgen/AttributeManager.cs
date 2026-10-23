@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
+using Assembly = System.Reflection.Assembly;
+
 #nullable enable
 
 public class AttributeManager {
@@ -279,7 +281,8 @@ public class AttributeManager {
 					continue;
 				}
 				// we will just throw if we do find a type multiple times but if it was not injected by the compiler.
-				if (rv is not null && !ignoredAttributes.Contains (rv.FullName)) {
+				if (rv is not null && !ignoredAttributes.Contains (rv.FullName) &&
+					rv.FullName != typeof (System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute).FullName) {
 					ErrorHelper.Warning (log, 1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/dotnet/macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
@@ -396,7 +399,11 @@ public class AttributeManager {
 
 		Version? version = null;
 		if (arg.Length > len) {
+#if NET
 			if (!Version.TryParse (arg [len..], out version))
+#else
+			if (!Version.TryParse (arg.Substring (len), out version))
+#endif
 				throw new BindingException (1047, arg);
 		}
 		return (name, version);

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-partial class Frameworks {
+partial class BGenFrameworks {
 	// GENERATED FILE - DO NOT EDIT
 	internal readonly HashSet<string> iosframeworks = new HashSet<string> {
 		"Accelerate",

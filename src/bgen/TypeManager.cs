@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using Assembly = System.Reflection.Assembly;
+
 #nullable enable
 
 public class TypeManager {
 	public BindingTouch BindingTouch;
-	Frameworks Frameworks { get; }
+	BGenFrameworks Frameworks { get; }
 	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }

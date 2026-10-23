@@ -34,6 +34,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mono.Options;
 
+using Assembly = System.Reflection.Assembly;
+
 using Xamarin.Utils;
 
 #if XAMMACIOS_DEBUGGER
@@ -63,7 +65,7 @@ public class BindingTouch : IDisposable, IToolLog {
 	public bool SupportsXmlDocumentation { get => supportsXmlDocumentation; }
 
 	public MetadataLoadContext? universe;
-	public Frameworks? Frameworks;
+	public BGenFrameworks? Frameworks;
 
 	DocumentationManager? documentationManager;
 	public DocumentationManager DocumentationManager => documentationManager!;
@@ -267,7 +269,7 @@ public class BindingTouch : IDisposable, IToolLog {
 
 			documentationManager = new DocumentationManager (supportsXmlDocumentation ? tmpass : string.Empty);
 
-			Frameworks = new Frameworks (CurrentPlatform);
+			Frameworks = new BGenFrameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (LibraryInfo, CurrentPlatform));
@@ -455,13 +457,33 @@ public class BindingTouch : IDisposable, IToolLog {
 
 	public void LogError (BindingException exception)
 	{
+#if MSBUILD_TASKS
+		log.LogError (exception.ToProductException ());
+#else
 		log.LogError (exception);
+#endif
 	}
 
 	public void LogWarning (BindingException exception)
 	{
+#if MSBUILD_TASKS
+		log.LogWarning (exception.ToProductException ());
+#else
+		log.LogWarning (exception);
+#endif
+	}
+
+#if MSBUILD_TASKS
+	public void LogError (Xamarin.Bundler.ProductException exception)
+	{
+		log.LogError (exception);
+	}
+
+	public void LogWarning (Xamarin.Bundler.ProductException exception)
+	{
 		log.LogWarning (exception);
 	}
+#endif
 
 	public void LogException (Exception exception)
 	{
@@ -476,7 +498,9 @@ public class BindingTouch : IDisposable, IToolLog {
 }
 
 namespace Xamarin.Bundler {
+#if !MSBUILD_TASKS
 	public partial class Driver {
 		public static int GetDefaultVerbosity () => 0;
 	}
+#endif
 }

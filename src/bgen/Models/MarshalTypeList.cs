@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 public class MarshalTypeList : List<MarshalType> {
 
-	public void Load (TypeCache typeCache, Frameworks frameworks)
+	public void Load (TypeCache typeCache, BGenFrameworks frameworks)
 	{
 		Add (new MarshalType (typeCache.NSObject, create: "Runtime.GetNSObject (", closingCreate: ", %OWNS%)!"));
 		Add (new MarshalType (typeCache.Selector, create: "Selector.FromHandle (", closingCreate: ", %OWNS%)!"));

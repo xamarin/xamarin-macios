@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 #nullable enable
 
-public partial class Frameworks {
+public partial class BGenFrameworks {
 	HashSet<string>? frameworks;
 
 	public PlatformName CurrentPlatform { get; private set; }
 
-	public Frameworks (PlatformName currentPlatform)
+	public BGenFrameworks (PlatformName currentPlatform)
 	{
 		CurrentPlatform = currentPlatform;
 	}
