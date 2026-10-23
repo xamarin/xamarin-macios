@@ -260,7 +260,28 @@ namespace CoreMedia {
 		///         <remarks>To be added.</remarks>
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine (Value, TimeScale, TimeFlags, TimeEpoch);
+			if (IsInvalid)
+				return 0;
+			if (IsPositiveInfinity)
+				return (int) Flags.PositiveInfinity;
+			if (IsIndefinite)
+				return (int) Flags.Indefinite;
+			if (IsNegativeInfinity)
+				return (int) Flags.NegativeInfinity;
+			if (TimeScale <= 0)
+				return HashCode.Combine (Value, TimeScale, TimeEpoch);
+
+			// Reduce the fraction without taking the absolute value of long.MinValue.
+			var divisor = (long) TimeScale;
+			var remainder = Math.Abs (Value % divisor);
+			while (remainder != 0) {
+				var next = divisor % remainder;
+				divisor = remainder;
+				remainder = next;
+			}
+
+			// CMTimeCompare ignores rounding flags, but compares numeric epochs.
+			return HashCode.Combine (Value / divisor, TimeScale / divisor, TimeEpoch);
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
