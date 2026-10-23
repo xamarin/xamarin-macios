@@ -9,6 +9,7 @@
 #if !__MACCATALYST__
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using CoreFoundation;
 using CoreGraphics;
@@ -231,5 +232,122 @@ namespace AppKit {
 		}
 #endif
 	}
+
+#if !XAMCORE_5_0
+#if !COREBUILD
+	partial interface INSAccessibility {
+		/// <summary>Use <see cref="AccessibilityChildrenInNavigationOrder2" /> instead.</summary>
+		/// <remarks>This property is declared with the wrong property type (it's declared using the <see cref="NSAccessibilityElement" /> type instead of the <see cref="INSAccessibilityElementProtocol" /> interface). The property accessors for this property will try to convert between the type and the interface, and if unsuccessful an exception will be thrown at runtime.</remarks>
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => _AccessibilityChildrenInNavigationOrder;
+			set => _AccessibilityChildrenInNavigationOrder = value;
+		}
+
+		internal NSAccessibilityElement []? _AccessibilityChildrenInNavigationOrder {
+			get {
+				var result = AccessibilityChildrenInNavigationOrder2;
+				if (result is null)
+					return null;
+				return Array.ConvertAll (result, element => (NSAccessibilityElement) element);
+			}
+			set {
+				AccessibilityChildrenInNavigationOrder2 = value is null ? null : Array.ConvertAll (value, element => (INSAccessibilityElementProtocol) element);
+			}
+		}
+	}
+
+	partial class NSApplication {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSCell {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSMenuItem {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSView {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSWindow {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSAccessibilityElement {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSDrawer {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSMenu {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSPopover {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+
+	partial class NSSliderAccessory {
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'AccessibilityChildrenInNavigationOrder2' instead.")]
+		public virtual NSAccessibilityElement []? AccessibilityChildrenInNavigationOrder {
+			get => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder;
+			set => ((INSAccessibility) this)._AccessibilityChildrenInNavigationOrder = value;
+		}
+	}
+#endif
+#endif // XAMCORE_5_0
 }
 #endif // !__MACCATALYST__

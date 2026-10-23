@@ -30588,9 +30588,15 @@ namespace AppKit {
 		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
 		NSString AnnouncementRequestedNotification { get; }
 
+		/// <summary>Gets or sets the child accessibility elements in navigation order.</summary>
+		/// <value>The child accessibility elements in navigation order, or <see langword="null" /> if no explicit navigation order is specified.</value>
 		[Abstract]
 		[NullAllowed, Export ("accessibilityChildrenInNavigationOrder", ArgumentSemantic.Copy)]
-		NSAccessibilityElement [] AccessibilityChildrenInNavigationOrder { get; set; }
+#if XAMCORE_5_0
+		INSAccessibilityElementProtocol [] AccessibilityChildrenInNavigationOrder { get; set; }
+#else
+		INSAccessibilityElementProtocol [] AccessibilityChildrenInNavigationOrder2 { get; set; }
+#endif
 
 		[Abstract]
 		[Export ("accessibilityCustomRotors", ArgumentSemantic.Copy)]
@@ -32359,6 +32365,8 @@ namespace AppKit {
 		string AccessibilityIdentifier { get; }
 	}
 
+	interface INSAccessibilityElementProtocol { }
+
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSAccessibilityGroup : NSAccessibilityElementProtocol {
@@ -33803,7 +33811,11 @@ namespace AppKit {
 		[Abstract]
 		[Export ("accessibilityElementWithToken:")]
 		[return: NullAllowed]
-		NSAccessibilityElement GetAccessibilityElement (INSSecureCoding token);
+#if XAMCORE_5_0
+		INSAccessibilityElementProtocol GetAccessibilityElement (INSSecureCoding token);
+#else
+		INSAccessibilityElementProtocol GetAccessibilityElement2 (INSSecureCoding token);
+#endif
 
 		/// <param name="token">To be added.</param>
 		/// <summary>To be added.</summary>
