@@ -1,11 +1,11 @@
-AppBundleSize: 216,957,005 bytes (211,872.1 KB = 206.9 MB)
+AppBundleSize: 216,961,277 bytes (211,876.2 KB = 206.9 MB)
 # The following list of files and their sizes is just informational / for review, and isn't used in the test:
 Contents/Info.plist:
-    765 bytes (0.7 KB = 0.0 MB)
+    733 bytes (0.7 KB = 0.0 MB)
 Contents/MacOS/SizeTestApp:
-    7,439,592 bytes (7,265.2 KB = 7.1 MB)
+    7,439,288 bytes (7,264.9 KB = 7.1 MB)
 Contents/MonoBundle/_Microsoft.macOS.TypeMap.dll:
-    4,837,888 bytes (4,724.5 KB = 4.6 MB)
+    4,838,400 bytes (4,725.0 KB = 4.6 MB)
 Contents/MonoBundle/_Microsoft.macOS.TypeMaps.dll:
     2,560 bytes (2.5 KB = 0.0 MB)
 Contents/MonoBundle/_SizeTestApp.TypeMap.dll:
@@ -445,7 +445,7 @@ Contents/MonoBundle/libSystem.Net.Security.Native.dylib:
 Contents/MonoBundle/libSystem.Security.Cryptography.Native.Apple.dylib:
     499,360 bytes (487.7 KB = 0.5 MB)
 Contents/MonoBundle/Microsoft.macOS.dll:
-    36,833,280 bytes (35,970.0 KB = 35.1 MB)
+    36,837,376 bytes (35,974.0 KB = 35.1 MB)
 Contents/MonoBundle/Microsoft.VisualBasic.dll:
     7,168 bytes (7.0 KB = 0.0 MB)
 Contents/MonoBundle/Microsoft.Win32.Primitives.dll:
