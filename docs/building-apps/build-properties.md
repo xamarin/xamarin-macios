@@ -231,6 +231,18 @@ faster.
 If this value is not specified, the checks are kept in debug builds and removed
 in release builds.
 
+## ClangPath
+
+The full path to the `clang` tool used to compile native code.
+
+The default behavior is to use `xcrun clang`.
+
+## ClangPlusPlusPath
+
+The full path to the `clang++` tool used to link native code.
+
+The default behavior is to use `xcrun clang++`.
+
 ## CodesignAllocate
 
 The path to the `codesign_allocate` tool.
@@ -299,6 +311,15 @@ The keychain to use during code signing.
 Specifies the code signing key to use when signing the app bundle.
 
 Only applicable to macOS and Mac Catalyst apps, but it's recommended to use the [CodesignKey](#codesignkey) property instead (which works on all platforms).
+
+## CodesignPath
+
+The directory containing the `codesign` tool.
+
+The default behavior is to use `/usr/bin/codesign`, falling back to `codesign`
+on `PATH` if `/usr/bin/codesign` does not exist.
+
+Use `CodesignExe` to override the executable name (the default is `codesign`).
 
 ## CodesignProvision
 
@@ -427,6 +448,13 @@ Only applicable to macOS and Mac Catalyst projects.
 See [BuildIpa](#buildipa) for iOS and tvOS projects.
 
 Created PKG packages are exposed in the [ApplicationArtifact](build-items.md#applicationartifact) item group.
+
+## DerqPath
+
+The full path to the `derq` tool used to convert entitlements to DER format
+when embedding them in the native executable.
+
+The default behavior is to use `xcrun derq`.
 
 ## Device
 
@@ -863,6 +891,13 @@ Custom behavior for specific symbols can be set using the [ReferenceNativeSymbol
     <ReferenceNativeSymbol SymbolMode="Ignore" SymbolType="Field" Include="InexistentSymbol" />
 </ItemGroup>
 ```
+
+## InstallNameToolPath
+
+The full path to the `install_name_tool` tool used to update native library
+install names and references.
+
+The default behavior is to use `xcrun install_name_tool`.
 
 ## iOSMinimumVersion
 

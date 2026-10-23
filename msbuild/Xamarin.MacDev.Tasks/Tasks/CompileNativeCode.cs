@@ -17,6 +17,8 @@ namespace Xamarin.MacDev.Tasks {
 	public class CompileNativeCode : XamarinTask, ICancelableTask, ITaskCallback {
 
 		#region Inputs
+		public string ClangPath { get; set; } = "";
+
 		[Required]
 		public ITaskItem [] CompileInfo { get; set; } = [];
 
@@ -78,7 +80,6 @@ namespace Xamarin.MacDev.Tasks {
 				var info = compileInfo [i];
 				var arguments = new List<string> ();
 
-				arguments.Add ("clang");
 				arguments.Add ("-g");
 
 				var arch = info.GetMetadata ("Arch");
@@ -143,7 +144,8 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.Add ("-c");
 				arguments.Add (src);
 
-				processes [i] = ExecuteAsync ("xcrun", arguments);
+				var executable = GetExecutable (arguments, "clang", ClangPath);
+				processes [i] = ExecuteAsync (executable, arguments);
 			}
 
 			System.Threading.Tasks.Task.WaitAll (processes);

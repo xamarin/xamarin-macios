@@ -2078,6 +2078,7 @@
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			ClangPath="$(ClangPath)"
 			CompileInfo="@(_AOTAssemblyFiles)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -2327,6 +2328,7 @@
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			ClangPath="$(ClangPath)"
 			CompileInfo="@(_PostTrimmingSourceFiles)"
 			DotNetRoot="$(_DotNetRoot)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
@@ -2373,6 +2375,7 @@
 
 		<CompileNativeCode
 			SessionId="$(BuildSessionId)"
+			ClangPath="$(ClangPath)"
 			CompileInfo="@(_CompileNativeExecutableFile)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			IncludeDirectories="@(_XamarinMainIncludeDirectory)"
@@ -2648,6 +2651,7 @@
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			DynamicLibrary="@(_DynamicLibraryToReidentify)"
+			InstallNameToolPath="$(InstallNameToolPath)"
 			IntermediateNativeLibraryDir="$(_IntermediateNativeLibraryDir)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
@@ -2674,6 +2678,8 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			ClangPlusPlusPath="$(ClangPlusPlusPath)"
+			DerqPath="$(DerqPath)"
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
