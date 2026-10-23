@@ -87,6 +87,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, NWReportResolutionSource, nuint, int, nw_endpoint_t, nw_endpoint_t, byte> trampoline = &TrampolineResolutionEnumeratorHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWEstablishmentReport), nameof (TrampolineResolutionEnumeratorHandler));
 				nw_establishment_report_enumerate_resolutions (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -115,6 +116,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, nw_protocol_definition_t, nuint, nuint, byte> trampoline = &TrampolineEnumerateProtocolsHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWEstablishmentReport), nameof (TrampolineEnumerateProtocolsHandler));
 				nw_establishment_report_enumerate_protocols (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -164,6 +166,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, nw_resolution_report_t, byte> trampoline = &TrampolineEnumerateResolutionReport;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWEstablishmentReport), nameof (TrampolineEnumerateResolutionReport));
 				nw_establishment_report_enumerate_resolution_reports (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 	}

@@ -32,6 +32,14 @@ namespace MonoTouchFixtures.Network {
 		public void TestSetQPropertyNull () => Assert.Throws<ArgumentNullException> (() => connection.SetQueue (null));
 
 		[Test]
+		public void TestBatch ()
+		{
+			var count = 0;
+			connection.Batch (() => count++);
+			Assert.That (count, Is.EqualTo (1), "Batch callback must run before returning");
+		}
+
+		[Test]
 		public void TestCancel ()
 		{
 			// call cancel, several times, we should not crash

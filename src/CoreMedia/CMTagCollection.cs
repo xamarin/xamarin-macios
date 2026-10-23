@@ -359,6 +359,7 @@ namespace CoreMedia {
 			nint rv;
 			unsafe {
 				rv = CMTagCollectionCountTagsWithFilterFunction (GetCheckedHandle (), &CMTagCollectionTagFilterFunction_Callback, GCHandle.ToIntPtr (gchandle));
+				GC.KeepAlive (this);
 			}
 			gchandle.Free ();
 			return rv;
@@ -418,6 +419,7 @@ namespace CoreMedia {
 							tagsCopiedPtr,
 							&CMTagCollectionTagFilterFunction_Callback,
 							GCHandle.ToIntPtr (gchandle));
+						GC.KeepAlive (this);
 					}
 				}
 			}
@@ -471,6 +473,7 @@ namespace CoreMedia {
 			var gchandle = GCHandle.Alloc (callback);
 			unsafe {
 				CMTagCollectionApply (GetCheckedHandle (), &CMTagCollectionApplyFunction_Callback, GCHandle.ToIntPtr (gchandle));
+				GC.KeepAlive (this);
 			}
 			gchandle.Free ();
 		}
@@ -490,6 +493,7 @@ namespace CoreMedia {
 			CMTag rv;
 			unsafe {
 				rv = CMTagCollectionApplyUntil (GetCheckedHandle (), &CMTagCollectionTagFilterFunction_Callback, GCHandle.ToIntPtr (gchandle));
+				GC.KeepAlive (this);
 			}
 			gchandle.Free ();
 			return rv;

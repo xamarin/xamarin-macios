@@ -254,6 +254,12 @@ namespace MonoTouchFixtures.Network {
 				Assert.Throws<ArgumentNullException> (() => parameters.ProhibitInterface (null), "");
 				Assert.That (interfaces.Count, Is.Not.EqualTo (0), "No network interfaces found.");
 				parameters.ProhibitInterface (interfaces [0]);
+				var found = new List<string> ();
+				parameters.IterateProhibitedInterfaces ((NWInterface iface) => {
+					found.Add (iface.Name);
+					return true;
+				});
+				Assert.That (found, Is.EqualTo (new [] { interfaces [0].Name }), "Prohibited interfaces");
 			}
 		}
 

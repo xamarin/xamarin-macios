@@ -7,6 +7,8 @@
 // Copyright 2024 Microsoft Corp. All rights reserved.
 //
 
+using System.Linq;
+
 using CoreMedia;
 
 using Xamarin.Utils;
@@ -297,8 +299,10 @@ namespace MonoTouchFixtures.CoreMedia {
 			TestRuntime.AssertXcodeVersion (15, 0);
 
 			using var tagCollection = CMTagCollection.Create (CMTag.MediaTypeVideo, CMTag.MediaTypeAudio, CMTag.PackingTypeNone);
-			var count = tagCollection.GetCount ((v) => v.Category == CMTagCategory.MediaType);
-			Assert.That ((int) count, Is.EqualTo (2), "Count");
+			var tags = tagCollection.GetTags ((v) => v.Category == CMTagCategory.MediaType);
+			Assert.That (tags.Length, Is.EqualTo (2), "Length");
+			Assert.That (tags.Count (tag => CMTag.Equals (tag, CMTag.MediaTypeVideo)), Is.EqualTo (1), "Video tag count");
+			Assert.That (tags.Count (tag => CMTag.Equals (tag, CMTag.MediaTypeAudio)), Is.EqualTo (1), "Audio tag count");
 		}
 
 		[Test]
@@ -367,6 +371,52 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (counter, Is.LessThanOrEqualTo ((int) tagCollection.Count), "Counter B2");
 			Assert.That (tag.IsValid, Is.True, "IsValid B");
 			Assert.That (CMTag.Equals (tag, CMTag.PackingTypeNone), Is.True, "Equals B");
+		}
+
+		[TestCase ("Count")]
+		[TestCase ("GetTags")]
+		[TestCase ("Apply")]
+		[TestCase ("ApplyUntil")]
+		public void EnumerationKeepsCollectionAlive (string operation)
+		{
+			TestRuntime.AssertXcodeVersion (15, 0);
+			var collection = CMTagCollection.Create (CMTag.MediaTypeVideo, CMTag.MediaTypeAudio);
+			var reference = new WeakReference (collection);
+			var handle = collection.Handle;
+			var alive = true;
+			var count = 0;
+			CMTagCollectionTagFilterFunction callback = tag => {
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				alive &= reference.IsAlive;
+				count++;
+				return true;
+			};
+
+			// An independent native retain makes a lifetime regression fail without crashing.
+			TestRuntime.CFRetain (handle);
+			try {
+				switch (operation) {
+				case "Count":
+					Assert.That ((int) collection.GetCount (callback), Is.EqualTo (2), "Count");
+					break;
+				case "GetTags":
+					var tags = new CMTag [2];
+					Assert.That (collection.GetTags (callback, tags, tags.Length, out var copied), Is.EqualTo (CMTagCollectionError.Success), "Status");
+					Assert.That ((int) copied, Is.EqualTo (2), "Copied");
+					break;
+				case "Apply":
+					collection.Apply (tag => { callback (tag); });
+					break;
+				case "ApplyUntil":
+					Assert.That (collection.ApplyUntil (callback).IsValid, Is.True, "Tag");
+					break;
+				}
+				Assert.That (alive, Is.True, "Collection must remain alive during enumeration");
+				Assert.That (count, Is.EqualTo (operation == "ApplyUntil" ? 1 : 2), "Callbacks");
+			} finally {
+				TestRuntime.CFRelease (handle);
+			}
 		}
 
 		[Test]

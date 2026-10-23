@@ -170,6 +170,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateMatchDomainHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWProxyConfig), nameof (TrampolineEnumerateMatchDomainHandler));
 				nw_proxy_config_enumerate_match_domains (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -196,6 +197,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateExcludeDomainHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWProxyConfig), nameof (TrampolineEnumerateExcludeDomainHandler));
 				nw_proxy_config_enumerate_excluded_domains (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 #endif // COREBUILD

@@ -96,6 +96,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineIterateHandler;
 				using var block = new BlockLiteral (trampoline, callback, typeof (NWProtocolStack), nameof (TrampolineIterateHandler));
 				nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 

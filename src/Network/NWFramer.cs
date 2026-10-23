@@ -323,8 +323,11 @@ namespace Network {
 			unsafe {
 				delegate* unmanaged<IntPtr, IntPtr, nuint, byte, void> trampoline = &TrampolineParseOutputHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWFramer), nameof (TrampolineParseOutputHandler));
-				using (var mh = tempBuffer.Pin ())
-					return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
+				using (var mh = tempBuffer.Pin ()) {
+					var result = nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
+					GC.KeepAlive (this);
+					return result;
+				}
 			}
 		}
 
@@ -352,8 +355,11 @@ namespace Network {
 			unsafe {
 				delegate* unmanaged<IntPtr, IntPtr, nuint, byte, nuint> trampoline = &TrampolineParseInputHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWFramer), nameof (TrampolineParseInputHandler));
-				using (var mh = tempBuffer.Pin ())
-					return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
+				using (var mh = tempBuffer.Pin ()) {
+					var result = nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block) != 0;
+					GC.KeepAlive (this);
+					return result;
+				}
 			}
 		}
 

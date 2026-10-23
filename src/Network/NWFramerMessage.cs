@@ -111,6 +111,7 @@ namespace Network {
 				// the callback is inlined!!!
 				using var keyPtr = new TransientString (key);
 				var found = nw_framer_message_access_value (GetCheckedHandle (), keyPtr, &block) != 0;
+				GC.KeepAlive (this);
 				if (found) {
 					unsafe {
 						outData = new ReadOnlySpan<byte> ((void*) outPointer, dataLength);

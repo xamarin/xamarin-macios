@@ -241,6 +241,7 @@ namespace CoreText {
 						Handle,
 						&CompareDescriptors,
 						GCHandle.ToIntPtr (comparison));
+					GC.KeepAlive (this);
 				}
 				if (cfArrayRef == IntPtr.Zero)
 					return Array.Empty<CTFontDescriptor> ();

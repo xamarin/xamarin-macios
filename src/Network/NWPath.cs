@@ -163,6 +163,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineEnumerator;
 				using var block = new BlockLiteral (trampoline, callback, typeof (NWPath), nameof (TrampolineEnumerator));
 				nw_path_enumerate_interfaces (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -229,6 +230,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineGatewaysHandler;
 				using var block = new BlockLiteral (trampoline, callback, typeof (NWPath), nameof (TrampolineGatewaysHandler));
 				nw_path_enumerate_gateways (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 

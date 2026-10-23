@@ -150,7 +150,9 @@ namespace Network {
 			unsafe {
 				delegate* unmanaged<IntPtr, IntPtr, NWTxtRecordFindKey, IntPtr, nuint, byte> trampoline = &TrampolineApplyHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWTxtRecord), nameof (TrampolineApplyHandler));
-				return nw_txt_record_apply (GetCheckedHandle (), &block) != 0;
+				var result = nw_txt_record_apply (GetCheckedHandle (), &block) != 0;
+				GC.KeepAlive (this);
+				return result;
 			}
 		}
 
@@ -184,7 +186,9 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, NWTxtRecordFindKey, IntPtr, nuint, void> trampoline = &TrampolineAccessKeyHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWTxtRecord), nameof (TrampolineAccessKeyHandler));
 				using var keyPtr = new TransientString (key);
-				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, &block) != 0;
+				var result = nw_txt_record_access_key (GetCheckedHandle (), keyPtr, &block) != 0;
+				GC.KeepAlive (this);
+				return result;
 			}
 		}
 
@@ -212,7 +216,9 @@ namespace Network {
 			unsafe {
 				delegate* unmanaged<IntPtr, IntPtr, nuint, void> trampoline = &TrampolineRawBytesHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWTxtRecord), nameof (TrampolineRawBytesHandler));
-				return nw_txt_record_access_bytes (GetCheckedHandle (), &block) != 0;
+				var result = nw_txt_record_access_bytes (GetCheckedHandle (), &block) != 0;
+				GC.KeepAlive (this);
+				return result;
 			}
 		}
 	}

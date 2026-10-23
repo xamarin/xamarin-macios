@@ -204,6 +204,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineProtocolIterator;
 				using var block = new BlockLiteral (trampoline, callback, typeof (NWContentContext), nameof (TrampolineProtocolIterator));
 				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 

@@ -47,6 +47,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateHeaderHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketRequest), nameof (TrampolineEnumerateHeaderHandler));
 				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -73,6 +74,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateSubprotocolHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketRequest), nameof (TrampolineEnumerateSubprotocolHandler));
 				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 	}

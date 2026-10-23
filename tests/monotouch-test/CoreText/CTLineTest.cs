@@ -21,6 +21,35 @@ namespace MonoTouchFixtures.CoreText {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CTLineTests {
+		[TestCase (false)]
+		[TestCase (true)]
+		public void EnumerateCaretOffsetsKeepsLineAlive (bool stopAfterFirst)
+		{
+			TestRuntime.AssertXcodeVersion (7, 0);
+			using var text = new NSAttributedString ("Hello");
+			var line = new CTLine (text);
+			var reference = new WeakReference (line);
+			var handle = line.Handle;
+			var alive = true;
+			var count = 0;
+
+			// An independent native retain makes a lifetime regression fail without crashing.
+			TestRuntime.CFRetain (handle);
+			try {
+				line.EnumerateCaretOffsets ((double offset, nint charIndex, bool leadingEdge, ref bool stop) => {
+					GC.Collect ();
+					GC.WaitForPendingFinalizers ();
+					alive &= reference.IsAlive;
+					count++;
+					stop = stopAfterFirst;
+				});
+				Assert.That (alive, Is.True, "Line must remain alive during enumeration");
+				Assert.That (count, stopAfterFirst ? Is.EqualTo (1) : Is.GreaterThan (1), "Callbacks");
+			} finally {
+				TestRuntime.CFRelease (handle);
+			}
+		}
+
 		[Test]
 		public void EnumerateCaretOffsets ()
 		{

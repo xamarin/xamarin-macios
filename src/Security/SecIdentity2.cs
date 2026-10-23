@@ -114,7 +114,9 @@ namespace Security {
 			unsafe {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineAccessCertificates;
 				using var block = new BlockLiteral (trampoline, handler, typeof (SecIdentity2), nameof (TrampolineAccessCertificates));
-				return sec_identity_access_certificates (GetCheckedHandle (), &block) != 0;
+				var result = sec_identity_access_certificates (GetCheckedHandle (), &block) != 0;
+				GC.KeepAlive (this);
+				return result;
 			}
 		}
 #endif

@@ -87,6 +87,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineEnumerateInterfacesHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowseResult), nameof (TrampolineEnumerateInterfacesHandler));
 				nw_browse_result_enumerate_interfaces (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 	}

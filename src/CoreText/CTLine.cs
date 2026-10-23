@@ -339,6 +339,7 @@ namespace CoreText {
 				delegate* unmanaged<IntPtr, double, nint, byte, byte*, void> trampoline = &TrampolineEnumerate;
 				using var block = new BlockLiteral (trampoline, enumerator, typeof (CTLine), nameof (TrampolineEnumerate));
 				CTLineEnumerateCaretOffsets (Handle, &block);
+				GC.KeepAlive (this);
 			}
 		}
 		#endregion

@@ -82,6 +82,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, OS_nw_endpoint, byte> trampoline = &TrampolineEnumerateEndpointsHandler;
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWMulticastGroup), nameof (TrampolineEnumerateEndpointsHandler));
 				nw_group_descriptor_enumerate_endpoints (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 	}

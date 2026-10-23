@@ -19,6 +19,36 @@ namespace MonoTouchFixtures.CoreGraphics {
 		extern static nint CFGetRetainCount (IntPtr handle);
 
 		[Test]
+		public void ApplyKeepsPathAlive ()
+		{
+			var path = new CGPath ();
+			path.MoveToPoint (0, 0);
+			path.AddLineToPoint (10, 10);
+			path.CloseSubpath ();
+			var reference = new WeakReference (path);
+			var handle = path.Handle;
+			var elements = new List<CGPathElementType> ();
+			var alive = true;
+
+			// An independent native retain makes a lifetime regression fail without crashing.
+			TestRuntime.CFRetain (handle);
+			try {
+				path.Apply (element => {
+					GC.Collect ();
+					GC.WaitForPendingFinalizers ();
+					alive &= reference.IsAlive;
+					elements.Add (element.Type);
+				});
+				Assert.That (alive, Is.True, "Path must remain alive during enumeration");
+				Assert.That (elements, Is.EqualTo (new [] {
+					CGPathElementType.MoveToPoint, CGPathElementType.AddLineToPoint, CGPathElementType.CloseSubpath,
+				}), "Elements");
+			} finally {
+				TestRuntime.CFRelease (handle);
+			}
+		}
+
+		[Test]
 		public void EllipseFromRect ()
 		{
 			var rect = new CGRect (0, 0, 15, 15);

@@ -148,6 +148,7 @@ namespace VideoToolbox {
 		{
 			var callbackHandle = GCHandle.Alloc (callback);
 			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (Handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), &BufferCallback);
+			GC.KeepAlive (this);
 			callbackHandle.Free ();
 			return foreachResult;
 		}

@@ -699,6 +699,7 @@ namespace CoreGraphics {
 			GCHandle gch = GCHandle.Alloc (func);
 			unsafe {
 				CGPathApply (Handle, GCHandle.ToIntPtr (gch), &ApplierCallback);
+				GC.KeepAlive (this);
 			}
 			gch.Free ();
 		}

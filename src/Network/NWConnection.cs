@@ -637,6 +637,7 @@ namespace Network {
 			unsafe {
 				using var block = BlockStaticDispatchClass.CreateBlock (method);
 				nw_connection_batch (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 

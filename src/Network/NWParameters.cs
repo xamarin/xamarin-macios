@@ -417,6 +417,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineIterateProhibitedHandler;
 				using var block = new BlockLiteral (trampoline, iterationCallback, typeof (NWParameters), nameof (TrampolineIterateProhibitedHandler));
 				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
@@ -442,6 +443,7 @@ namespace Network {
 				delegate* unmanaged<IntPtr, NWInterfaceType, byte> trampoline = &TrampolineIterateProhibitedTypeHandler;
 				using var block = new BlockLiteral (trampoline, callback, typeof (NWParameters), nameof (TrampolineIterateProhibitedTypeHandler));
 				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), &block);
+				GC.KeepAlive (this);
 			}
 		}
 
