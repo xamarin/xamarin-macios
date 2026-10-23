@@ -247,7 +247,8 @@ namespace Xamarin.Linker.Steps {
 					Select (v => Path.GetFileNameWithoutExtension (v)).
 					Select (v => v.StartsWith ("lib", StringComparison.OrdinalIgnoreCase) ? v.Substring (3) : v);
 				var monoLibraryVariations = new HashSet<string> (monoLibraryVariationsEnumerable);
-				monoLibraryVariations.Add ("System.Globalization.Native"); // System.Private.CoreLib has P/Invokes pointing to libSystem.Globalization.Native, but they're actually in libmonosgen-2.0
+				if (app.XamarinRuntime == XamarinRuntime.MonoVM)
+					monoLibraryVariations.Add ("System.Globalization.Native"); // System.Private.CoreLib has P/Invokes pointing to libSystem.Globalization.Native, but they're actually in libmonosgen-2.0
 				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => "lib" + v).ToArray ());
 				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => v + ".dylib").ToArray ());
 				// If the P/Invoke points to any of those libraries, then we add it as a P/Invoke symbol.

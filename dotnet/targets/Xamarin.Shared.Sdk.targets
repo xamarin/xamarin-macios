@@ -2474,7 +2474,7 @@
 
 	<Target Name="_ComputeLinkNativeExecutableInputs" Condition="'$(IsMacEnabled)' == 'true'">
 		<PropertyGroup>
-			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == '' and '$(_MtouchSymbolsList)' == ''">/dev/null</_ExportedSymbolsFile> <!-- nothing to export -->
+			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == '' And ('$(_MtouchSymbolsList)' == '' Or @(_ProcessedReferenceNativeSymbol->Count()) == 0)">/dev/null</_ExportedSymbolsFile> <!-- nothing to export -->
 			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == ''">$(_MtouchSymbolsList)</_ExportedSymbolsFile>
 
 			<_NativeLinkCachePath>$(DeviceSpecificOutputPath)NativeLink.cache</_NativeLinkCachePath>
