@@ -2,11 +2,9 @@
 
 !missing-enum! _CGLContextEnable not bound
 !missing-enum! _CGLContextParameter not bound
-!missing-enum! _CGLError not bound
 !missing-enum! _CGLGlobalOption not bound
 !missing-enum! _CGLGPURestartStatus not bound
 !missing-enum! _CGLOpenGLProfile not bound
-!missing-enum! _CGLPixelFormatAttribute not bound
 !missing-enum! _CGLRendererProperty not bound
 !missing-pinvoke! CGLGetContextRetainCount is not bound
 !missing-pinvoke! CGLGetDeviceFromGLRenderer is not bound

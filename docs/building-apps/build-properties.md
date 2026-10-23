@@ -804,7 +804,7 @@ Controls whether the build system replaces runtime calls to `Class.GetHandle` /
 `Class.GetHandleIntrinsic` with direct native references to Objective-C classes
 at build time.
 
-See [docs/code/class-handles.md](../code/class-handles.md) for an overview.
+See [Objective-C classes](https://github.com/dotnet/macios/blob/d556da5e28cfbb4e7488c3f57d989be56d01a92b/docs/code/class-handles.md) for an overview.
 
 The valid options are:
 
@@ -1906,7 +1906,16 @@ Mac Catalyst projects.
 
 Whether the native http handler should be the default http handler or not.
 
-Default: true for all platforms except macOS.
+Default: `true` for iOS, tvOS and Mac Catalyst.
+
+This property has no effect on macOS. Setting it to `true` emits a build warning.
+On macOS, `HttpClient` uses `SocketsHttpHandler` by default. To use the native HTTP
+handler, pass a `Foundation.NSUrlSessionHandler` instance directly to the
+`HttpClient` constructor:
+
+```csharp
+using var client = new System.Net.Http.HttpClient (new Foundation.NSUrlSessionHandler ());
+```
 
 ## ValidateEntitlements
 

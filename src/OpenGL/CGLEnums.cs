@@ -28,6 +28,7 @@ namespace OpenGL {
 	///     <remarks>To be added.</remarks>
 	[SupportedOSPlatform ("macos")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
+	[NativeName ("_CGLError")]
 	public enum CGLErrorCode : uint {
 		/// <summary>To be added.</summary>
 		NoError = 0,        /* no error */
@@ -74,6 +75,7 @@ namespace OpenGL {
 	///     <remarks>To be added.</remarks>
 	[SupportedOSPlatform ("macos")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
+	[NativeName ("_CGLPixelFormatAttribute")]
 	public enum CGLPixelFormatAttribute : uint {
 		/// <summary>To be added.</summary>
 		AllRenderers = 1,

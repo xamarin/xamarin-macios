@@ -1,9 +1,7 @@
 <Project>
   <!--Package versions-->
-  <Import Project="$(MSBuildThisFileDirectory)Version.Details.props" />
+  <Import Project="Version.Details.props" Condition="Exists('Version.Details.props')" />
   <PropertyGroup>
-    <!-- Versions updated by maestro -->
-    <MicrosoftDotNetSharedFrameworkSdkVersion>8.0.0-beta.24413.2</MicrosoftDotNetSharedFrameworkSdkVersion>
     <!-- Manually updated versions -->
     <MicrosoftDotnetSdkInternalPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftDotnetSdkInternalPackageVersion>
   </PropertyGroup>
