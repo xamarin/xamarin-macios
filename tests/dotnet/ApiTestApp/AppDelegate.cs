@@ -14,6 +14,15 @@ namespace MySimpleApp {
 #if HttpClientHandlerFeatureTrimmedAway
 			var client = new System.Net.Http.HttpClient ();
 			client.GetStringAsync ("https://microsoft.com");
+#elif KEEP_LARIGHT
+			if (OperatingSystem.IsIOSVersionAtLeast (17))
+				GC.KeepAlive (typeof (LocalAuthentication.LARight));
+#elif KEEP_LAPERSISTEDRIGHT
+			if (OperatingSystem.IsIOSVersionAtLeast (17))
+				GC.KeepAlive (typeof (LocalAuthentication.LAPersistedRight));
+#elif KEEP_LACONTEXT
+			using (var context = new LocalAuthentication.LAContext ())
+				Console.WriteLine (context.BiometryType);
 #endif
 
 			return args.Length;

@@ -1,7 +1,9 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Messaging.Build.Contracts;
+using Xamarin.Messaging.Build.Properties;
 using Xamarin.Messaging.Build.Serialization;
 using Xamarin.Messaging.Client;
 
@@ -25,6 +27,9 @@ namespace Xamarin.Messaging.Build {
 
 		protected override async Task<ExecuteTaskResult> ExecuteAsync (ExecuteTaskMessage message)
 		{
+			if (message.AppName is null)
+				throw new ArgumentNullException (nameof (message.AppName), string.Format (Resources.ExecuteTaskMessageHandler_MissingAppName, message.TaskName, message.SessionId));
+
 			return await Task.Run (() => {
 				// We need to lock in order to change the current directory
 				lock (lockObject) {

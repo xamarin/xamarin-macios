@@ -26,6 +26,3 @@
 !missing-protocol! MTLIOFileHandle not bound
 !missing-protocol-member! MTLDevice::newIOFileHandleWithURL:compressionMethod:error: not found
 !missing-protocol-member! MTLDevice::newIOFileHandleWithURL:error: not found
-
-## Removed in XAMCORE_5_0
-!unknown-native-enum! MTLArgumentAccess bound

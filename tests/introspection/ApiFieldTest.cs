@@ -52,6 +52,9 @@ namespace Introspection {
 		/// <param name="property">Property to be tested</param>
 		protected virtual bool Skip (PropertyInfo property)
 		{
+			if (SkipMissingSimulatorField (property))
+				return true;
+
 			switch (property.DeclaringType?.Name) {
 			case "AVPlayerInterstitialEventObserver":
 				switch (property.Name) { // deprecated

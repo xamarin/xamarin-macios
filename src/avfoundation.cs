@@ -18320,6 +18320,16 @@ namespace AVFoundation {
 		[NoTV, NoMacCatalyst, NoiOS]
 		[Field ("AVCaptureDeviceTypeDeskViewCamera")]
 		DeskViewCamera,
+
+		/// <summary>A built-in outer ultra-wide camera discoverable through a device discovery session.</summary>
+		[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+		[Field ("AVCaptureDeviceTypeBuiltInOuterUltraWideCamera")]
+		BuiltInOuterUltraWideCamera,
+
+		/// <summary>A built-in inner ultra-wide camera discoverable through a device discovery session.</summary>
+		[NoTV, NoMac, NoMacCatalyst, iOS (27, 1)]
+		[Field ("AVCaptureDeviceTypeBuiltInInnerUltraWideCamera")]
+		BuiltInInnerUltraWideCamera,
 	}
 
 	[TV (17, 0)] // matches API that uses it.

@@ -52,12 +52,10 @@ no-xcode-build:: .libs/Microsoft.$(9).registrar.$(10).m .libs/Microsoft.$(9).reg
 no-xcode-build:: .libs/Microsoft.$(9).registrar.coreclr.$(10).m .libs/Microsoft.$(9).registrar.$(10).h
 endef
 ifdef INCLUDE_IOS
-$(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(iossimulator-x64_CFLAGS),,,iOS,iossimulator-x64))
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(iossimulator-arm64_CFLAGS),,,iOS,iossimulator-arm64))
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(ios-arm64_CFLAGS),,,iOS,ios-arm64))
 endif
 ifdef INCLUDE_TVOS
-$(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(tvossimulator-x64_CFLAGS),,,tvOS,tvossimulator-x64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(tvossimulator-arm64_CFLAGS),,,tvOS,tvossimulator-arm64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(tvos-arm64_CFLAGS),,,tvOS,tvos-arm64))
 endif

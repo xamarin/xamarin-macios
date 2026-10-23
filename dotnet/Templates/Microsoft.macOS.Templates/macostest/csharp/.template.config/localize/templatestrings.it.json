@@ -2,6 +2,9 @@
   "author": "Microsoft",
   "name": "macOS Test Project",
   "description": "A project for creating a .NET macOS test project using MSTest",
+  "symbols/Framework/description": "The target framework for the project.",
+  "symbols/Framework/choices/net11.0-macos/description": "Target net11.0-macos",
+  "symbols/Framework/choices/net10.0-macos/description": "Target net10.0-macos",
   "symbols/bundleId/description": "Overrides the ApplicationId in the project file",
   "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
 }

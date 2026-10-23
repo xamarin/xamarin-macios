@@ -181,7 +181,7 @@ namespace Xamarin.Tests {
 		public static object [] GetMlaunchRunArgumentsTestCases ()
 		{
 			return new object [] {
-				new object [] {ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", @":v2:udid=[A-F0-9-]+" },
+				new object [] {ApplePlatform.iOS, "iossimulator-arm64", @":v2:udid=[A-F0-9-]+" },
 				new object [] {ApplePlatform.iOS, "ios-arm64", "" },
 				new object [] {ApplePlatform.TVOS, "tvossimulator-arm64", @":v2:udid=[A-F0-9-]+" },
 			};
@@ -240,7 +240,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		public void GetMlaunchRunArguments_NewProperties (ApplePlatform platform, string runtimeIdentifiers)
 		{
@@ -283,7 +283,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")]
 		public void GetMlaunchRunArguments_NewPropertiesTakePrecedence (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";

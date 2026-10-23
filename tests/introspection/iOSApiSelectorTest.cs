@@ -9,6 +9,7 @@
 
 using System.Reflection;
 using UIKit;
+using Xamarin.Tests;
 #if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
@@ -31,7 +32,17 @@ namespace Introspection {
 		protected override bool Skip (Type type, string selectorName)
 		{
 #if !__MACCATALYST__
+			var isSimulator17 = TestRuntime.IsSimulator && PlatformInfo.Host.Version is { Major: 17, Minor: 0 };
 			switch (type.Name) {
+			// Declared for 17.0, but these HDR selectors are missing from the iOS/tvOS 17.0 simulators.
+			case "PHImageRequestOptions":
+				if (isSimulator17 && (selectorName == "targetHDRHeadroom" || selectorName == "setTargetHDRHeadroom:"))
+					return true;
+				break;
+			case "PHLivePhotoRequestOptions":
+				if (isSimulator17 && (selectorName == "preferHDR" || selectorName == "setPreferHDR:"))
+					return true;
+				break;
 #if __TVOS__
 			case "AVAssetWriter":
 				switch (selectorName) {

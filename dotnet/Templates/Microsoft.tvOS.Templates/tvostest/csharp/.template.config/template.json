@@ -23,6 +23,23 @@
     { "path": "tvOSTest1.csproj" }
   ],
   "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net11.0-tvos",
+          "description": "Target net11.0-tvos"
+        },
+        {
+          "choice": "net10.0-tvos",
+          "description": "Target net10.0-tvos"
+        }
+      ],
+      "replaces": "net11.0-tvos",
+      "defaultValue": "net11.0-tvos"
+    },
     "bundleId": {
       "type": "parameter",
       "description": "Overrides the ApplicationId in the project file",
