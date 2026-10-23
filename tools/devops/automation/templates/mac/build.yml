@@ -84,23 +84,7 @@ steps:
   continueOnError: true
   timeoutInMinutes: 60
 
-- bash: |
-    if [[ $(ioreg -l | grep -e 'VMware' | wc -l) -ne 0 ]]; then
-      echo "Using VMware virtualization."
-      echo "##vso[task.setvariable variable=VM_VENDOR]VMware"
-    fi
-
-    if [[ $(ioreg -l | grep -e 'VirtualBox' | wc -l) -ne 0 ]]; then
-      echo "Using VirtualBox virtualization."
-      echo "##vso[task.setvariable variable=VM_VENDOR]VirtualBox"
-    fi
-
-    if [[ $(ioreg -l | grep -e 'Parallels' | wc -l) -ne 0 ]]; then
-      echo "Using Parallels virtualization."
-      echo "##vso[task.setvariable variable=VM_VENDOR]Parallels"
-    fi
-
-  displayName: 'Set VM Vendor'
+- template: ../common/detect-vm.yml
 
 - bash: |
     sudo rm -Rf $(Build.SourcesDirectory)/package
@@ -247,5 +231,4 @@ steps:
   parameters:
     rootFolder: '$(BUILD_REPOSITORY_TITLE)/jenkins-results'
     artifactName: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.stageName }}${{ parameters.label }}-$(System.JobAttempt)'
-
 

@@ -81,7 +81,6 @@ parameters:
       macPool: 'AcesShared',
       useImage: false,
       statusContext: 'arm64 - Mac Golden Gate (27)',
-      vmVendor: 'ACES',
       demands: [
         "ImageOverride -equals ACES_VM_SharedPool_GoldenGate"
       ]
@@ -290,4 +289,3 @@ stages:
       xqaCertPass: $(xqa--certificates--password)
       postPipeline: ${{ not(parameters.buildPackages) }}
       label: ${{ config.label }}
-      vmVendor: ${{ config.vmVendor }}

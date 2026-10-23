@@ -207,6 +207,8 @@ Core variables used across all pipelines:
 
 For test pipelines, `useACES: true` selects `CIBuildPoolACES` (`AcesShared`) with `CIBuildPoolACESImage` for simulator tests, macOS test builds, and package builds when `buildPackages: true`. Set `useACES: false` to retain the traditional pool and demands.
 
+Simulator and macOS test jobs use `templates/common/detect-vm.yml` to detect virtualized hosts independently of the pool. Apple VMs are identified by the `VirtualMac` model identifier from `system_profiler`; VMware, VirtualBox, and Parallels are detected using `ioreg`. The detected vendor is exposed through `VM_VENDOR` for VM-sensitive tests. Xharness forwards this host signal to iOS/tvOS simulators, but not to physical devices.
+
 ### `api-scan.yml`
 APIScan-specific variables:
 - `TeamName: xamarin-macios`

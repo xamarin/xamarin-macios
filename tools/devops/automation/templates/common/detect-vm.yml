@@ -1,0 +1,27 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+steps:
+- bash: |
+    set -euo pipefail
+
+    vm_vendor=""
+    hardware_model=$(system_profiler SPHardwareDataType -xml | plutil -extract 0._items.0.machine_model raw -o - -)
+    if [[ "$hardware_model" == VirtualMac* ]]; then
+      vm_vendor=Apple
+    else
+      io_registry=$(ioreg -l)
+      for vendor in VMware VirtualBox Parallels; do
+        if [[ "$io_registry" == *"$vendor"* ]]; then
+          vm_vendor="$vendor"
+        fi
+      done
+    fi
+
+    if [[ -n "$vm_vendor" ]]; then
+      echo "Using $vm_vendor virtualization."
+      echo "##vso[task.setvariable variable=VM_VENDOR]$vm_vendor"
+    else
+      echo "No VM vendor detected."
+    fi
+  displayName: 'Set VM Vendor'
