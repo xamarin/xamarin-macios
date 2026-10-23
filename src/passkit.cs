@@ -893,7 +893,7 @@ namespace PassKit {
 		[Export ("merchantIdentifier")]
 		string MerchantIdentifier { get; set; }
 
-		/// <summary>The ISO 3166 country code for the country defining the payment request.</summary>
+		/// <summary>The ISO 3166 code for the country/region defining the payment request.</summary>
 		///         <value>
 		///           <para>(More documentation for this node is coming)</para>
 		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
@@ -2589,7 +2589,7 @@ namespace PassKit {
 		[Export ("greenCarTicketUsed")]
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
 
-		/// <summary>Gets a value that tells whether the pass is blacklisted.</summary>
+		/// <summary>Gets a value that tells whether the pass is on a block list.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[Export ("blacklisted")]

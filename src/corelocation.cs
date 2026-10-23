@@ -1160,7 +1160,7 @@ namespace CoreLocation {
 		[NullAllowed, Export ("locality")]
 		string Locality { get; }
 
-		/// <summary>The name of the country associated with the placemark.</summary>
+		/// <summary>The name of the country/region associated with the placemark.</summary>
 		///         <value>The name is spelled out, not an ISO-3166 code (e.g., "United States" not "US").</value>
 		///         <remarks>To be added.</remarks>
 		///         <altmember cref="CoreLocation.CLPlacemark.IsoCountryCode" />
