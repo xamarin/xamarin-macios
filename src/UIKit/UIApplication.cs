@@ -26,7 +26,11 @@ namespace UIKit {
 
 	public partial class UIApplication
 	: UIResponder {
-		/// <inheritdoc cref="Runtime.CheckForIllegalCrossThreadCalls" />
+		/// <summary>Controls whether calls to UIKit APIs are checked to ensure that they are made on the UI thread.</summary>
+		/// <remarks>
+		///   <para>Accessing UIKit APIs from a background thread can corrupt application state. These checks help identify such accesses.</para>
+		///   <para>The initial value is controlled by the <c>CheckForIllegalCrossThreadCalls</c> build property, which defaults to <see langword="true" /> in debug builds and <see langword="false" /> in release builds.</para>
+		/// </remarks>
 		public static bool CheckForIllegalCrossThreadCalls;
 		/// <summary>If <see langword="true" />, the system will try to diagnose potential mistakes where events and delegate-object overrides are in conflict.</summary>
 		public static bool CheckForEventAndDelegateMismatches = true;
@@ -115,7 +119,9 @@ namespace UIKit {
 #endif
 		}
 
-		/// <inheritdoc cref="ObjCRuntime.Runtime.EnsureUIThread" />
+		/// <summary>Checks that the current call is made on the UI thread.</summary>
+		/// <exception cref="UIKitThreadAccessException">Thread checks are enabled and the current thread is not the UI thread.</exception>
+		/// <remarks>This method does nothing when <see cref="CheckForIllegalCrossThreadCalls" /> is <see langword="false" />. Thread checks are enabled by default in debug builds and disabled by default in release builds.</remarks>
 		public static void EnsureUIThread ()
 		{
 			Runtime.EnsureUIThread ();

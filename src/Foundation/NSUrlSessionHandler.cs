@@ -201,7 +201,8 @@ namespace Foundation {
 			// Don't dispose the task: NSURLSession may still invoke delegate callbacks, and other callbacks may still reference the managed wrapper.
 		}
 
-		/// <inheritdoc />
+		/// <summary>Cancels pending requests and releases the resources used by this handler.</summary>
+		/// <param name="disposing"><see langword="true" /> to release managed and unmanaged resources; <see langword="false" /> to release only unmanaged resources.</param>
 		protected override void Dispose (bool disposing)
 		{
 			var requests = new List<KeyValuePair<NSUrlSessionTask, InflightData>> ();

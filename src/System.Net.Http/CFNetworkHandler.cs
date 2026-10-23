@@ -152,7 +152,8 @@ namespace System.Net.Http {
 
 		// TODO: Add more properties
 
-		/// <inheritdoc />
+		/// <summary>Invokes the base handler's disposal implementation.</summary>
+		/// <param name="disposing">The disposal flag passed to the base handler.</param>
 		protected override void Dispose (bool disposing)
 		{
 			// TODO: CloseStream remaining stream buckets if there are any
