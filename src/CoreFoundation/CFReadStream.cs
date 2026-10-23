@@ -164,10 +164,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFReadStreamRead (/* CFReadStreamRef */ IntPtr handle, /* UInt8* */ IntPtr buffer, /* CFIndex */ nint count);
 
-		/// <param name="buffer">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <returns>To be added.</returns>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Reads bytes from the stream into the provided buffer.</summary>
+		/// <param name="buffer">The nonempty destination buffer.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="buffer" /> is empty.</exception>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
 		public nint Read (byte [] buffer)
 		{
 			if (buffer is null)
@@ -175,12 +177,14 @@ namespace CoreFoundation {
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		/// <param name="buffer">To be added.</param>
-		///         <param name="offset">To be added.</param>
-		///         <param name="count">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <returns>To be added.</returns>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Reads bytes from the stream into a range of the provided buffer.</summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <param name="offset">The nonnegative byte offset at which to store data.</param>
+		/// <param name="count">The positive maximum number of bytes to read.</param>
+		/// <returns>The number of bytes read, zero at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ArgumentNullException"><paramref name="buffer" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="offset" /> is negative, <paramref name="count" /> is not positive, or the range exceeds the buffer length.</exception>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
 		public unsafe nint Read (byte [] buffer, int offset, int count)
 		{
 			if (buffer is null)
@@ -190,10 +194,26 @@ namespace CoreFoundation {
 				throw new ArgumentException ();
 			if (count < 1)
 				throw new ArgumentException ();
-			if (offset + count > buffer.Length)
+			if (offset > buffer.Length || count > buffer.Length - offset)
 				throw new ArgumentException ();
-			fixed (byte* ptr = buffer)
-				return CFReadStreamRead (Handle, ((IntPtr) ptr) + offset, count);
+			return Read (buffer.AsSpan (offset, count));
+		}
+
+		/// <summary>Reads bytes from the stream into the provided span.</summary>
+		/// <param name="buffer">The destination buffer.</param>
+		/// <returns>The number of bytes read, zero for an empty span or at the end of the stream, or -1 if an error occurs.</returns>
+		/// <exception cref="ObjectDisposedException">The stream has been disposed.</exception>
+		/// <remarks>An empty span does not access the native stream. Otherwise, the buffer is pinned only during the native call.</remarks>
+		public unsafe nint Read (Span<byte> buffer)
+		{
+			var handle = GetCheckedHandle ();
+			if (buffer.IsEmpty)
+				return 0;
+			fixed (byte* ptr = buffer) {
+				var result = CFReadStreamRead (handle, (IntPtr) ptr, buffer.Length);
+				GC.KeepAlive (this);
+				return result;
+			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
