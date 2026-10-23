@@ -28,7 +28,7 @@ xamarin_get_locale_country_code ()
 	NSLocale *locale = [NSLocale currentLocale];
 	NSString *cc = [locale objectForKey: NSLocaleCountryCode];
 	if (cc == NULL) {
-		// Assume the US if the country isn't available.
+		// Assume the US if the country/region isn't available.
 		return strdup ("US");
 	}
 	return strdup ([cc UTF8String]);
