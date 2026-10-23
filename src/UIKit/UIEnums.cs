@@ -517,6 +517,7 @@ namespace UIKit {
 	// NSInteger -> UIStringDrawing.h
 	/// <summary>An enumeration of values used to specify line break mode.</summary>
 	/// <remarks>To be added.</remarks>
+	[NativeName ("NSLineBreakMode")]
 	[Native]
 	// note: __TVOS_PROHIBITED -> because it uses NSLineBreakMode (but we need this because we don't expose the later)
 	public enum UILineBreakMode : long {
@@ -1058,6 +1059,7 @@ namespace UIKit {
 #else
 	[Native]
 #endif
+	[NativeName ("NSTextAlignment")]
 	public enum UITextAlignment : long {
 		/// <summary>Text is left-aligned.</summary>
 		Left,

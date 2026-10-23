@@ -1,8 +1,5 @@
 ## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
 
-## enum size declared after the enum, e.g. `typedef NSInteger GKInviteeResponse;`, so we miss the metadata
-!unknown-native-enum! GKInviteeResponse bound
-
 # results from initial block parameter nullability analysis
 !missing-null-allowed! 'System.Void GameKit.GKAchievement::ReportAchievements(GameKit.GKAchievement[],System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void GameKit.GKAchievement::ResetAchivements(System.Action`1<Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0

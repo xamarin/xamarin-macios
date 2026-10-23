@@ -60,6 +60,12 @@ namespace Xamarin.Messaging.Build.Properties {
             }
         }
         
+        internal static string ExecuteTaskMessageHandler_MissingAppName {
+            get {
+                return ResourceManager.GetString("ExecuteTaskMessageHandler_MissingAppName", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Task not found for &apos;{0}&apos;.
         /// </summary>
