@@ -1,0 +1,2 @@
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +NISession::isSupported missing a [Deprecated] attribute

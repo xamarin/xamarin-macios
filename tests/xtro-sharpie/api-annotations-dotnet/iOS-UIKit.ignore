@@ -458,3 +458,11 @@
 !missing-null-allowed! 'System.Void UIKit.UINavigationItem::set_TitleMenuProvider(System.Func`2<Foundation.NSArray`1<UIKit.UIMenuElement>,UIKit.UIMenu>)' is missing a '?' on parameter 'value' block return type
 !missing-null-allowed! 'System.Void UIKit.UITableViewDropPlaceholder::set_PreviewParametersProvider(System.Func`2<UIKit.UITableViewCell,UIKit.UIDragPreviewParameters>)' is missing a '?' on parameter 'value' block return type
 !missing-null-allowed! 'UIKit.UIViewControllerTransition UIKit.UIViewControllerTransition::Zoom(UIKit.UIZoomTransitionOptions,System.Func`2<UIKit.UIZoomTransitionSourceViewProviderContext,UIKit.UIView>)' is missing a '?' on parameter 'sourceViewProvider' block return type
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +NSCollectionLayoutGroup::horizontalGroupWithLayoutSize:subitem:count: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +NSCollectionLayoutGroup::verticalGroupWithLayoutSize:subitem:count: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIFontPickerViewControllerConfiguration::filterPredicateForFilteredLanguages: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIScreen::mainScreen missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIScreen::screens missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIViewController::attemptRotationToDeviceOrientation missing a [Deprecated] attribute

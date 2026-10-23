@@ -73,3 +73,9 @@
 !missing-null-allowed! 'System.Void AVFoundation.AVComposition_AVCompositionTrackInspection::LoadTrack(AVFoundation.AVComposition,System.Int32,System.Action`2<AVFoundation.AVMutableCompositionTrack,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void AVFoundation.AVFragmentedMovie_AVFragmentedMovieTrackInspection::LoadTrack(AVFoundation.AVFragmentedMovie,System.Int32,System.Action`2<AVFoundation.AVMutableCompositionTrack,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
 !missing-null-allowed! 'System.Void AVFoundation.AVMovie_AVMovieTrackInspection::LoadTrack(AVFoundation.AVMovie,System.Int32,System.Action`2<AVFoundation.AVMutableCompositionTrack,Foundation.NSError>)' is missing a '?' on parameter 'completionHandler' block parameter #0
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +AVAssetExportSession::exportPresetsCompatibleWithAsset: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:identifier:date:templateItems:restrictions:resumptionOffset:playoutLimit:userDefinedAttributes: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:identifier:time:templateItems:restrictions:resumptionOffset:playoutLimit:userDefinedAttributes: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +AVVideoComposition::videoCompositionWithPropertiesOfAsset: missing a [Deprecated] attribute

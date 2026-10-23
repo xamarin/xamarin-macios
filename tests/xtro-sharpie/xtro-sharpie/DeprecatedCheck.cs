@@ -57,7 +57,8 @@ namespace Extrospection {
 		{
 			var class_method = fullname [0] == '+';
 			var n = fullname.IndexOf ("::");
-			string objcClassName = fullname.Substring (class_method ? 1 : 0, n);
+			var start = class_method ? 1 : 0;
+			string objcClassName = fullname.Substring (start, n - start);
 			string selector = fullname.Substring (n + 2);
 
 			var managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName);

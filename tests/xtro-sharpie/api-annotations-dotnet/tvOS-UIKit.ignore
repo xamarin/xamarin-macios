@@ -395,3 +395,9 @@
 !missing-null-allowed! 'UIKit.UIView UIKit.IUIViewControllerTransitionCoordinatorContext::GetTransitionViewControllerForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewController UIKit.IUIViewControllerTransitionCoordinatorContext::GetViewControllerForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIViewControllerTransition UIKit.UIViewControllerTransition::Zoom(UIKit.UIZoomTransitionOptions,System.Func`2<UIKit.UIZoomTransitionSourceViewProviderContext,UIKit.UIView>)' is missing a '?' on parameter 'sourceViewProvider' block return type
+
+## Existing deprecations exposed by fixing Objective-C class-selector matching.
+!deprecated-attribute-missing! +NSCollectionLayoutGroup::horizontalGroupWithLayoutSize:subitem:count: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +NSCollectionLayoutGroup::verticalGroupWithLayoutSize:subitem:count: missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIScreen::mainScreen missing a [Deprecated] attribute
+!deprecated-attribute-missing! +UIScreen::screens missing a [Deprecated] attribute
