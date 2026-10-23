@@ -118,12 +118,12 @@ namespace AddressBook {
 		[NullAllowed]
 		NSString City { get; }
 
-		/// <summary>Gets the key for the country component of an address.</summary>
+		/// <summary>Gets the key for the country/region component of an address.</summary>
 		[Field ("kABPersonAddressCountryKey")]
 		[NullAllowed]
 		NSString Country { get; }
 
-		/// <summary>Gets the key for the country-code component of an address.</summary>
+		/// <summary>Gets the key for the country/region code component of an address.</summary>
 		[Field ("kABPersonAddressCountryCodeKey")]
 		[NullAllowed]
 		NSString CountryCode { get; }
