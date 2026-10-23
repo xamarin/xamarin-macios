@@ -43,9 +43,6 @@
 ## no documentation from apple. So we do nothing, specially with the _ prefix. Leak?
 !missing-field! _nw_data_transfer_report_all_paths not bound
 
-# updated sharpie results
-!missing-enum! nw_browser_state_t not bound
-
 ## nw_link_quality_t - changing the backing type from uint to byte is a breaking change; fixed in XAMCORE_5_0
 !wrong-enum-size! nw_link_quality_t managed 4 vs native 1
 
