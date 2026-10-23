@@ -19,6 +19,12 @@ namespace Xamarin.Utils {
 			if (member is MethodDefinition md)
 				return GetSignature (md);
 
+			if (member is PropertyDefinition pd)
+				return GetSignature (pd);
+
+			if (member is EventDefinition ed)
+				return GetSignature (ed);
+
 			if (member is TypeDefinition td)
 				return GetSignature (td);
 
@@ -35,6 +41,16 @@ namespace Xamarin.Utils {
 		public static string GetSignature (FieldDefinition field)
 		{
 			return field.Name.Replace ('.', '#');
+		}
+
+		public static string GetSignature (PropertyDefinition property)
+		{
+			return property.Name.Replace ('.', '#');
+		}
+
+		public static string GetSignature (EventDefinition @event)
+		{
+			return @event.Name.Replace ('.', '#');
 		}
 
 		public static string GetSignature (MethodDefinition method)
