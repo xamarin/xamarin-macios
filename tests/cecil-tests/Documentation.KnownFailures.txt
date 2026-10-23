@@ -2284,16 +2284,6 @@ F:CoreMidi.MidiCIProcessInquiryMessageType.InquiryMidiMessageReport
 F:CoreMidi.MidiCIProcessInquiryMessageType.InquiryProcessInquiryCapabilities
 F:CoreMidi.MidiCIProcessInquiryMessageType.ReplyToMidiMessageReport
 F:CoreMidi.MidiCIProcessInquiryMessageType.ReplyToProcessInquiryCapabilities
-F:CoreMidi.MidiCIProfileIdManufacturerSpecific.Info1
-F:CoreMidi.MidiCIProfileIdManufacturerSpecific.Info2
-F:CoreMidi.MidiCIProfileIdManufacturerSpecific.SysExId1
-F:CoreMidi.MidiCIProfileIdManufacturerSpecific.SysExId2
-F:CoreMidi.MidiCIProfileIdManufacturerSpecific.SysExId3
-F:CoreMidi.MidiCIProfileIdStandard.ProfileBank
-F:CoreMidi.MidiCIProfileIdStandard.ProfileIdByte1
-F:CoreMidi.MidiCIProfileIdStandard.ProfileLevel
-F:CoreMidi.MidiCIProfileIdStandard.ProfileNumber
-F:CoreMidi.MidiCIProfileIdStandard.ProfileVersion
 F:CoreMidi.MidiCIProfileMessageType.DetailsInquiry
 F:CoreMidi.MidiCIProfileMessageType.ProfileAdded
 F:CoreMidi.MidiCIProfileMessageType.ProfileDisabledReport
@@ -15445,8 +15435,6 @@ M:CoreMidi.IMidiCIProfileResponderDelegate.InitiatorDisconnected(Foundation.NSNu
 M:CoreMidi.IMidiCIProfileResponderDelegate.WillSetProfile(CoreMidi.MidiCIProfile,System.Byte,System.Boolean)
 M:CoreMidi.Midi2DeviceInfo.#ctor(CoreMidi.Midi2DeviceManufacturer,System.UInt16,System.UInt16,CoreMidi.Midi2DeviceRevisionLevel)
 M:CoreMidi.MidiBluetoothDriver.#ctor
-M:CoreMidi.MidiBluetoothDriver.ActivateAllConnections
-M:CoreMidi.MidiBluetoothDriver.Disconnect(Foundation.NSString)
 M:CoreMidi.MidiCIDeviceInfo.#ctor(CoreMidi.MidiEndpoint,Foundation.NSData,Foundation.NSData,Foundation.NSData,Foundation.NSData)
 M:CoreMidi.MidiCIDeviceInfo.GetMidiDestination
 M:CoreMidi.MidiCIDiscoveredNode.GetDestination
@@ -15473,6 +15461,7 @@ M:CoreMidi.MidiEndpoint.GetDestination(System.IntPtr)
 M:CoreMidi.MidiEndpoint.GetSource(System.IntPtr)
 M:CoreMidi.MidiEntity.GetDestination(System.IntPtr)
 M:CoreMidi.MidiEntity.GetSource(System.IntPtr)
+M:CoreMidi.MidiEventList.Finalize
 M:CoreMidi.MidiNetworkSession.GetDestinationEndPoint
 M:CoreMidi.MidiNetworkSession.GetSourceEndpoint
 M:CoreMidi.MidiObject.Finalize
@@ -38342,8 +38331,6 @@ P:CoreMidi.Midi2DeviceInfo.Family
 P:CoreMidi.Midi2DeviceInfo.ManufacturerId
 P:CoreMidi.Midi2DeviceInfo.ModelNumber
 P:CoreMidi.Midi2DeviceInfo.RevisionLevel
-P:CoreMidi.Midi2DeviceManufacturer.SysExIdByte
-P:CoreMidi.Midi2DeviceRevisionLevel.RevisionLevel
 P:CoreMidi.MidiCIDevice.DeviceInfo
 P:CoreMidi.MidiCIDevice.DeviceType
 P:CoreMidi.MidiCIDevice.MaxPropertyExchangeRequests
@@ -38365,8 +38352,6 @@ P:CoreMidi.MidiCIDiscoveredNode.MaximumSysExSize
 P:CoreMidi.MidiCIDiscoveredNode.SupportsProfiles
 P:CoreMidi.MidiCIDiscoveredNode.SupportsProperties
 P:CoreMidi.MidiCIDiscoveryManager.SharedInstance
-P:CoreMidi.MidiCIProfileId.ManufacturerSpecific
-P:CoreMidi.MidiCIProfileId.Standard
 P:CoreMidi.MidiCIProfileState.MidiChannel
 P:CoreMidi.MidiCIResponder.DeviceInfo
 P:CoreMidi.MidiCIResponder.Initiators
@@ -55627,9 +55612,6 @@ T:CoreMedia.CMTaggedBufferGroupFormatType
 T:CoreMedia.CMTextFormatType
 T:CoreMedia.LensStabilizationStatus
 T:CoreMidi.Midi2DeviceInfo
-T:CoreMidi.Midi2DeviceManufacturer
-T:CoreMidi.Midi2DeviceRevisionLevel
-T:CoreMidi.MidiBluetoothDriver
 T:CoreMidi.MidiCICategoryOptions
 T:CoreMidi.MidiCIDevice
 T:CoreMidi.MidiCIDeviceInfo
@@ -55643,9 +55625,6 @@ T:CoreMidi.MidiCIManagementMessageType
 T:CoreMidi.MidiCIProcessInquiryMessageType
 T:CoreMidi.MidiCIProfile
 T:CoreMidi.MidiCIProfileChangedHandler
-T:CoreMidi.MidiCIProfileId
-T:CoreMidi.MidiCIProfileIdManufacturerSpecific
-T:CoreMidi.MidiCIProfileIdStandard
 T:CoreMidi.MidiCIProfileMessageType
 T:CoreMidi.MidiCIProfileSpecificDataHandler
 T:CoreMidi.MidiCIProfileState

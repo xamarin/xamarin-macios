@@ -1,5 +1,4 @@
-#if !TVOS
-// 
+
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
@@ -19,6 +18,7 @@ using MidiUniqueID = System.Int32;
 namespace CoreMidi {
 	/// <summary>MIDI transform types.</summary>
 	///     <remarks>To be added.</remarks>
+	[NativeName ("MIDITransformType")]
 	public enum MidiTransformType : ushort {
 		/// <summary>To be added.</summary>
 		None = 0,
@@ -40,6 +40,7 @@ namespace CoreMidi {
 
 	/// <summary>MIDI Control Transformation Type.</summary>
 	///     <remarks>To be added.</remarks>
+	[NativeName ("MIDITransformControlType")]
 	public enum MidiTransformControlType : byte {
 		/// <summary>To be added.</summary>
 		SevenBit = 0,
@@ -55,6 +56,7 @@ namespace CoreMidi {
 		FourteenBitNRpn = 5,
 	}
 
+#if !TVOS
 	/// <summary>Object that defines how a MIDI event is transformed.</summary>
 	///     <remarks>To be added.</remarks>
 	[SupportedOSPlatform ("ios")]
@@ -648,5 +650,5 @@ namespace CoreMidi {
 		}
 	}
 #endif // !COREBUILD
+#endif // TVOS
 }
-#endif

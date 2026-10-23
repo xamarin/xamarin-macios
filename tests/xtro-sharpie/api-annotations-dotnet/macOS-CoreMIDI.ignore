@@ -1,34 +1,8 @@
-# deprecated pinvokes and not binded.
-!missing-pinvoke! MIDIDriverEnableMonitoring is not bound
-
-# no known use
-!missing-pinvoke! MIDIEndpointGetRefCons is not bound
-!missing-pinvoke! MIDIEndpointSetRefCons is not bound
-
-# old apis that have been ignored, please refer to issue https://github.com/dotnet/macios/issues/4452
+# There's no need to bind this P/Invoke, we bind/use 'MIDIClientCreate' which provides the exact same capabilities.
 !missing-pinvoke! MIDIClientCreateWithBlock is not bound
-!missing-pinvoke! MIDIDeviceCreate is not bound
+
+# These functions are only useful to CoreMIDI driver plug-ins, which can't be implemented entirely in managed code.
 !missing-pinvoke! MIDIDeviceDispose is not bound
-!missing-pinvoke! MIDIDeviceRemoveEntity is not bound
-!missing-pinvoke! MIDIEntityAddOrRemoveEndpoints is not bound
-!missing-pinvoke! MIDIExternalDeviceCreate is not bound
+!missing-pinvoke! MIDIDriverEnableMonitoring is not bound
 !missing-pinvoke! MIDIGetDriverDeviceList is not bound
 !missing-pinvoke! MIDIGetDriverIORunLoop is not bound
-!missing-pinvoke! MIDISendSysex is not bound
-!missing-pinvoke! MIDISetupAddDevice is not bound
-!missing-pinvoke! MIDISetupAddExternalDevice is not bound
-!missing-pinvoke! MIDISetupRemoveDevice is not bound
-!missing-pinvoke! MIDISetupRemoveExternalDevice is not bound
-
-# same as the above, we should bind all of them, these have been added on Xcode 12 beta 2
-# https://github.com/dotnet/macios/issues/4452#issuecomment-660220392
-!missing-pinvoke! MIDIDestinationCreateWithProtocol is not bound
-!missing-pinvoke! MIDIDeviceNewEntity is not bound
-!missing-pinvoke! MIDIInputPortCreateWithProtocol is not bound
-!missing-pinvoke! MIDIReceivedEventList is not bound
-!missing-pinvoke! MIDISendEventList is not bound
-!missing-pinvoke! MIDISourceCreateWithProtocol is not bound
-
-!missing-pinvoke! MIDIEventPacketSysexBytesForGroup is not bound
-!missing-pinvoke! MIDISendUMPSysex is not bound
-!missing-pinvoke! MIDISendUMPSysex8 is not bound
