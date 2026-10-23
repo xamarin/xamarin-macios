@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../AppExtension/AppExtension.csproj" />
+  <Project Path="ContainerApp.csproj" />
+</Solution>

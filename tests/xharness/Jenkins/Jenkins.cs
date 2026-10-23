@@ -129,6 +129,7 @@ namespace Xharness.Jenkins {
 				new NUnitTestTasksEnumerable (this, processManager, testVariationsFactory),
 				new RunDeviceTasksFactory (this, processManager, testVariationsFactory),
 				new MacTestTasksFactory (this, processManager, testVariationsFactory, crashReportSnapshotFactory),
+				new AppExtensionTestTasksFactory (this, processManager, testVariationsFactory),
 			};
 
 			// Start creating all the tasks in parallel
@@ -366,6 +367,7 @@ namespace Xharness.Jenkins {
 					var allExecuteTasks = new List<MacExecuteTask> ();
 					var allDeviceTasks = new List<RunDeviceTask> ();
 					var allDotNetTestTasks = new List<DotNetTestTask> ();
+					var allAppExtensionTestTasks = new List<AppExtensionTestTask> ();
 
 					foreach (var task in Tasks) {
 						var aggregated = task as AggregatedRunSimulatorTask;
@@ -397,6 +399,11 @@ namespace Xharness.Jenkins {
 							continue;
 						}
 
+						if (task is AppExtensionTestTask appExtension) {
+							allAppExtensionTestTasks.Add (appExtension);
+							continue;
+						}
+
 						throw new NotImplementedException ();
 					}
 
@@ -406,6 +413,7 @@ namespace Xharness.Jenkins {
 						allTasks.AddRange (allSimulatorTasks);
 						allTasks.AddRange (allDeviceTasks);
 						allTasks.AddRange (allDotNetTestTasks);
+						allTasks.AddRange (allAppExtensionTestTasks);
 					}
 
 					// write the html

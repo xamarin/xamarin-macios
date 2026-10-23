@@ -55,6 +55,9 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		}
 
 		[Test]
+#if APP_EXTENSION
+		[Ignore ("App extension bundle resources are read-only.")]
+#endif
 		public void SetCaption ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);

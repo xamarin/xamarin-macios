@@ -123,6 +123,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		}
 
 		[Test]
+#if APP_EXTENSION
+		[Ignore ("App extensions don't have CaptiveNetwork entitlements.")]
+#endif
 		public void SetSupportedSSIDs ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);

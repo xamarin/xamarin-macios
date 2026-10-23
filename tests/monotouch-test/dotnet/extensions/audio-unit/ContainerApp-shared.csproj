@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains the logic shared by all the platform-specific ContainerApp.csproj projects. -->
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ApplicationTitle>ContainerApp</ApplicationTitle>
+    <ApplicationId Condition="$(TargetFramework.EndsWith('-ios')) Or $(TargetFramework.EndsWith('-tvos'))">com.xamarin.monotouch-test</ApplicationId>
+    <ApplicationId Condition="!$(TargetFramework.EndsWith('-ios')) And !$(TargetFramework.EndsWith('-tvos'))">com.xamarin.monotouch-test.audiounit.containerapp</ApplicationId>
+    <ApplicationVersion>1.0</ApplicationVersion>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\..\common\shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ContainerApp.cs">
+      <Link>ContainerApp.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppExtension\AppExtension.csproj">
+      <IsAppExtension>true</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

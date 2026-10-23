@@ -116,6 +116,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public virtual TestPlatform Platform { get; set; }
 		public virtual string? ProgressMessage { get; }
 		public virtual string? Mode { get; set; }
+		public virtual bool ShowModeGroup => false;
 		public virtual string? Variation { get; set; }
 
 		public virtual bool SupportsParallelExecution {

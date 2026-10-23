@@ -333,7 +333,7 @@ namespace Xharness.Jenkins.Reports {
 				// Test data
 				var groupedByMode = group.GroupBy ((v) => v.Mode);
 				foreach (var modeGroup in groupedByMode) {
-					var multipleModes = modeGroup.Count () > 1;
+					var multipleModes = modeGroup.Count () > 1 || modeGroup.Any ((v) => v.ShowModeGroup);
 					if (multipleModes) {
 						var modeGroupId = id_counter++.ToString ();
 						var autoExpand = !jenkins.IsServerMode && modeGroup.Any ((v) => v.Failed);

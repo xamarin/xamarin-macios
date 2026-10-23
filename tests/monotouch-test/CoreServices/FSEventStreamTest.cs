@@ -2,7 +2,7 @@
 // Unit tests for FSEventStream
 //
 
-#if __MACOS__
+#if __MACOS__ && !APP_EXTENSION
 
 using System.IO;
 using System.Runtime.InteropServices;

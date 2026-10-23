@@ -73,6 +73,20 @@ namespace MonoTouch.NUnit.UI {
 		ITestFilter filter = TestFilter.Empty;
 		bool connection_failure;
 
+		public Action<string>? LogCallback;
+
+		public void LogLine (string format, params object? [] args)
+		{
+			LogLine (string.Format (format, args));
+		}
+
+		public void LogLine (string message)
+		{
+			if (LogCallback is not null)
+				LogCallback (message);
+			Console.WriteLine (message);
+		}
+
 		public int PassedCount { get; private set; }
 		public int FailedCount { get; private set; }
 		public int IgnoredCount { get; private set; }
@@ -95,6 +109,8 @@ namespace MonoTouch.NUnit.UI {
 		}
 
 		public HashSet<string>? ExcludedCategories { get; set; }
+
+		public bool RunOnMainThread { get; set; } = true;
 
 		public bool TerminateAfterExecution {
 			get { return TouchOptions.Current.TerminateAfterExecution && !connection_failure; }
@@ -134,7 +150,7 @@ namespace MonoTouch.NUnit.UI {
 		static extern void exit (int code);
 		protected virtual void TerminateWithSuccess ()
 		{
-			Console.WriteLine ("Exiting test run with success");
+			LogLine ("Exiting test run with success");
 			FlushConsole ();
 			exit (0);
 		}
@@ -145,7 +161,7 @@ namespace MonoTouch.NUnit.UI {
 			if (exitCode == 0) {
 				TerminateWithSuccess ();
 			} else {
-				Console.WriteLine ($"Exiting test run with code {exitCode}");
+				LogLine ($"Exiting test run with code {exitCode}");
 				exit (exitCode);
 			}
 		}
@@ -209,9 +225,9 @@ namespace MonoTouch.NUnit.UI {
 #if !__MACCATALYST__
 		[Conditional ("IGNORED")]
 #endif
-		internal static void TraceLine (string message)
+		internal void TraceLine (string message)
 		{
-			Console.WriteLine (message);
+			LogLine (message);
 		}
 
 		public void AutoRun ()
@@ -246,6 +262,7 @@ namespace MonoTouch.NUnit.UI {
 
 		public Task RunAsync ()
 		{
+			LogLine ($"Running tests async...");
 			Run ();
 			return Task.CompletedTask;
 		}
@@ -254,7 +271,7 @@ namespace MonoTouch.NUnit.UI {
 		public void Run ()
 		{
 			if (running) {
-				Console.WriteLine ("Not running because another test run is already in progress.");
+				LogLine ("Not running because another test run is already in progress.");
 				return;
 			}
 
@@ -340,7 +357,7 @@ namespace MonoTouch.NUnit.UI {
 						case "FILE":
 							if (string.IsNullOrEmpty (options.LogFile))
 								throw new InvalidOperationException ("The FILE transport requires a log file path.");
-							Console.WriteLine ("[{0}] Sending '{1}' results to the file {2}", now, message, options.LogFile);
+							LogLine ("[{0}] Sending '{1}' results to the file {2}", now, message, options.LogFile);
 							defaultWriter = new StreamWriter (options.LogFile, true, System.Text.Encoding.UTF8) {
 								AutoFlush = true,
 							};
@@ -351,8 +368,8 @@ namespace MonoTouch.NUnit.UI {
 							var hostnames = options.HostName.Split (',');
 							hostname = hostnames [0];
 							if (hostnames.Length > 1)
-								Console.WriteLine ("[{0}] Found multiple host names ({1}); will only try sending to the first ({2})", now, options.HostName, hostname);
-							Console.WriteLine ("[{0}] Sending '{1}' results to {2}:{3}", now, message, hostname, options.HostPort);
+								LogLine ("[{0}] Found multiple host names ({1}); will only try sending to the first ({2})", now, options.HostName, hostname);
+							LogLine ("[{0}] Sending '{1}' results to {2}:{3}", now, message, hostname, options.HostPort);
 							var w = new HttpTextWriter () {
 								HostName = hostname,
 								Port = options.HostPort,
@@ -362,7 +379,7 @@ namespace MonoTouch.NUnit.UI {
 							WriterFinishedTask = w.FinishedTask;
 							break;
 						default:
-							Console.WriteLine ("Unknown transport '{0}': switching to default (TCP)", options.Transport);
+							LogLine ("Unknown transport '{0}': switching to default (TCP)", options.Transport);
 							goto case "TCP";
 						case "TCP":
 							if (string.IsNullOrWhiteSpace (options.HostName))
@@ -372,13 +389,13 @@ namespace MonoTouch.NUnit.UI {
 							else
 								hostname = "localhost";
 							if (string.IsNullOrEmpty (hostname)) {
-								Console.WriteLine ("Couldn't establish a TCP connection with any of the hostnames: {0}", options.HostName);
+								LogLine ("Couldn't establish a TCP connection with any of the hostnames: {0}", options.HostName);
 								break;
 							}
 							if (!options.UseTcpTunnel)
-								Console.WriteLine ("[{0}] Sending '{1}' results to {2}:{3}", now, message, hostname, options.HostPort);
+								LogLine ("[{0}] Sending '{1}' results to {2}:{3}", now, message, hostname, options.HostPort);
 							else
-								Console.WriteLine ("[{0}] Sending '{1}' results to {2} over a tcp tunnel", now, message, options.HostPort);
+								LogLine ("[{0}] Sending '{1}' results to {2} over a tcp tunnel", now, message, options.HostPort);
 							defaultWriter = new TcpTextWriter (hostname, options.HostPort, options.UseTcpTunnel);
 							break;
 						}
@@ -410,12 +427,14 @@ namespace MonoTouch.NUnit.UI {
 						if (!ShowConnectionErrorAlert (options.HostName, options.HostPort, ex))
 							return false;
 
-						Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}. Continuing on console.", options.HostName, options.HostPort, ex);
+						LogLine ("Network error: Cannot connect to {0}:{1}: {2}. Continuing on console.", options.HostName, options.HostPort, ex);
 					}
 				}
 				// NUnit redirects Console.Out while tests run. Resolve it for each write instead of
 				// keeping the original writer, which can deadlock with NUnit's forwarding writer.
 				writers.Add (new ConsoleTextWriter ());
+				if (LogCallback is not null)
+					writers.Add (new CallbackTextWriter (LogCallback));
 				Writer = new MultiplexedTextWriter (writers);
 			}
 
@@ -456,7 +475,7 @@ namespace MonoTouch.NUnit.UI {
 			if (NSBundle.MainBundle.BundlePath.EndsWith (".appex", StringComparison.Ordinal))
 				return true;
 
-			Console.WriteLine ("Network error: Cannot connect to {0}:{1}: {2}.", hostname, port, ex);
+			LogLine ("Network error: Cannot connect to {0}:{1}: {2}.", hostname, port, ex);
 			var alertDelegate = new UIAlertViewDelegate ();
 			UIAlertView alert = new UIAlertView ("Network Error",
 				String.Format ("Cannot connect to {0}:{1}: {2}. Continue on console ?", hostname, port, ex.Message),
@@ -469,8 +488,8 @@ namespace MonoTouch.NUnit.UI {
 			alert.Show ();
 			while (button == -1)
 				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
-			Console.WriteLine (button);
-			Console.WriteLine ("[Host unreachable: {0}]", button == 0 ? "Execution cancelled" : "Switching to console output");
+			LogLine (button.ToString ());
+			LogLine ("[Host unreachable: {0}]", button == 0 ? "Execution cancelled" : "Switching to console output");
 			return button != 0;
 #endif
 		}
@@ -578,18 +597,12 @@ namespace MonoTouch.NUnit.UI {
 			}
 		}
 
-		Dictionary<string, object> default_settings = new Dictionary<string, object> () {
-#if NUNITLITE_NUGET
-			{ "RunOnMainThread", true },
-#endif
-		};
-
 		SettingsDictionary CreateSettings (SettingsDictionary? settings)
 		{
-			if (fixtures is null && (settings is null || settings.Count == 0))
-				return default_settings;
+			var dict = new Dictionary<string, object> ();
 
-			var dict = new Dictionary<string, object> (default_settings);
+			if (RunOnMainThread)
+				dict ["RunOnMainThread"] = true;
 
 			if (settings is not null) {
 				foreach (var key in settings.Keys) {
@@ -648,6 +661,7 @@ namespace MonoTouch.NUnit.UI {
 
 		bool AddSuite (TestSuite ts)
 		{
+			LogLine ($"AddSuite ({ts})");
 			if (ts is null)
 				return false;
 			suite.Add (ts);
@@ -656,6 +670,7 @@ namespace MonoTouch.NUnit.UI {
 
 		public void Run (Test test)
 		{
+			LogLine ($"Run ({test} - {test.FullName})");
 			PassedCount = 0;
 			IgnoredCount = 0;
 			FailedCount = 0;
@@ -671,8 +686,12 @@ namespace MonoTouch.NUnit.UI {
 				filter.AndFilters.Add (new ExcludeCategoryFilter (ExcludedCategories));
 			if (!string.IsNullOrEmpty (TouchOptions.Current.TestName))
 				filter.AndFilters.Add (TestFilter.FromXml ($"<filter><test>{TouchOptions.Current.TestName.Replace ("&", "&amp").Replace ("<", "&lt;")}</test></filter>"));
-			foreach (var runner in runners)
+
+			LogLine ($"Run ({test} - {test.FullName}) {runners.Count ()} runners");
+			foreach (var runner in runners) {
+				LogLine ($"Run ({test} - {test.FullName}) runner: {runner}");
 				runner.Run (this, filter);
+			}
 
 			// The TestResult we get back from the runner is for the top-most test suite,
 			// which isn't necessarily the test that we ran. So look for the TestResult
@@ -763,7 +782,7 @@ namespace MonoTouch.NUnit.UI {
 
 		protected override void TerminateWithSuccess ()
 		{
-			Console.WriteLine ($"Exiting test run with success");
+			LogLine ($"Exiting test run with success");
 			FlushConsole ();
 			Selector selector = new Selector ("terminateWithSuccess");
 			UIApplication.SharedApplication.PerformSelector (selector, UIApplication.SharedApplication, 0);
@@ -1033,6 +1052,70 @@ namespace MonoTouch.NUnit.UI {
 		{
 			foreach (var writer in writers)
 				writer.WriteLine (value);
+		}
+	}
+
+	class CallbackTextWriter : TextWriter {
+		Action<string> writeLine;
+		StringBuilder lineBuffer = new StringBuilder ();
+
+		public CallbackTextWriter (Action<string> writeLine)
+		{
+			this.writeLine = writeLine;
+		}
+
+		public override Encoding Encoding {
+			get {
+				return Encoding.UTF8;
+			}
+		}
+
+		public override void Close ()
+		{
+			Flush ();
+		}
+
+		public override void Flush ()
+		{
+			if (lineBuffer.Length > 0) {
+				writeLine (lineBuffer.ToString ());
+				lineBuffer.Clear ();
+			}
+		}
+
+		public override void Write (char value)
+		{
+			if (value == '\n') {
+				Flush ();
+			} else {
+				lineBuffer.Append (value);
+			}
+		}
+
+		public override void Write (char []? buffer)
+		{
+			if (buffer is not null)
+				Write (new string (buffer));
+		}
+
+		public override void Write (string? value)
+		{
+			if (value is null)
+				return;
+
+			var lines = value.Split ('\n');
+			for (var i = 0; i < lines.Length; i++) {
+				lineBuffer.Append (lines [i]);
+				if (i < lines.Length - 1)
+					Flush ();
+			}
+		}
+
+		public override void WriteLine (string? value)
+		{
+			if (value is not null)
+				lineBuffer.Append (value);
+			Flush ();
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SearchKitTests {
-		string path = $"/tmp/mmptest-my-{System.Diagnostics.Process.GetCurrentProcess ().Id}.index";
+		string path = Path.Combine (Path.GetTempPath (), $"mmptest-my-{System.Diagnostics.Process.GetCurrentProcess ().Id}.index");
 
 		[SetUp]
 		public void Setup ()

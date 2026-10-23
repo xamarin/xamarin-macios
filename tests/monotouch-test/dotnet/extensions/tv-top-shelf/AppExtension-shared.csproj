@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains the logic shared by all the platform-specific AppExtension.csproj projects. -->
+<Project>
+  <PropertyGroup>
+    <IsAppExtension>true</IsAppExtension>
+    <ApplicationId>com.xamarin.monotouch-test.TopShelfExtension</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\shared.csproj" />
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <!-- The normal monotouch-test projects are two directory levels closer to product.snk. -->
+    <AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PartialAppManifest Include="$(MSBuildThisFileDirectory)AppExtension-Info.plist" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\AppExtensionTestHost.cs">
+      <Link>AppExtensionTestHost.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TopShelfTestExtension.cs">
+      <Link>TopShelfTestExtension.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

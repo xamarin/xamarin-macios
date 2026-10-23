@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains the logic shared by all the platform-specific AppExtension.csproj projects. -->
+<Project>
+  <PropertyGroup>
+    <IsAppExtension>true</IsAppExtension>
+    <!-- macOS and Mac Catalyst extensions are registered on the same host, so they need distinct bundle identifiers. -->
+    <ApplicationId Condition="$(TargetFramework.EndsWith('-maccatalyst'))">com.xamarin.monotouch-test.AudioUnitExtension.MacCatalyst</ApplicationId>
+    <ApplicationId Condition="!$(TargetFramework.EndsWith('-maccatalyst'))">com.xamarin.monotouch-test.AudioUnitExtension</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\shared.csproj" />
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <!-- The normal monotouch-test projects are two directory levels closer to product.snk. -->
+    <AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.EndsWith('-maccatalyst'))">
+    <!-- The Info.plist values shared by the iOS and macOS Audio Unit extensions. -->
+    <PartialAppManifest Include="$(MSBuildThisFileDirectory)AppExtension-Info.plist" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
+    <PartialAppManifest Include="$(MSBuildThisFileDirectory)AppExtension-MacCatalyst-Info.plist" />
+  </ItemGroup>
+  <!-- On desktop the audio unit extension must be sandboxed. On mobile there's no app sandbox entitlement. -->
+  <ItemGroup Condition="'$(SdkIsDesktop)' == 'true'">
+    <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" />
+    <CustomEntitlements Include="com.apple.security.files.user-selected.read-only" Type="boolean" Value="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\AppExtensionTestHost.cs">
+      <Link>AppExtensionTestHost.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AudioUnitTestExtension.cs">
+      <Link>AudioUnitTestExtension.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(RootTestsDirectory)\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\ConfigurationNUnit.cs">
+      <Link>ConfigurationNUnit.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\Profile.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

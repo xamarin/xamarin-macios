@@ -19,6 +19,9 @@ namespace MonoTouchFixtures.NetworkExtension {
 	public class VpnManagerTest {
 
 		[Test]
+#if APP_EXTENSION
+		[Ignore ("App extensions don't have VPN entitlements.")]
+#endif
 		public void SharedManager ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);

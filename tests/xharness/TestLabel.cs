@@ -52,7 +52,8 @@ namespace Xharness {
 		Linker = 1 << 15,
 		[Label ("library-projects")]
 		LibraryProjects = 1 << 16,
-		// 1 << 17 is unused
+		[Label ("appextensions")]
+		AppExtensions = 1 << 17,
 		// 1 << 18 is unused
 		// 1 << 19 is unused
 		[Label ("monotouch")]

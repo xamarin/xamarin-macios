@@ -24,6 +24,9 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+#if APP_EXTENSION
+		[Ignore ("App extensions don't have an entry assembly.")]
+#endif
 		public void GetEntryAssemblyReturnsOk ()
 		{
 			Assert.That (Assembly.GetEntryAssembly (), Is.Not.Null);

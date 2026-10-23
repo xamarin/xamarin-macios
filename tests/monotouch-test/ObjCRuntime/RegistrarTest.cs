@@ -2263,7 +2263,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		// This test uses Assembly.LoadFrom, which isn't supported with NativeAOT
-#if __MACOS__ && !NATIVEAOT
+#if __MACOS__ && !NATIVEAOT && !APP_EXTENSION
 		[Test]
 		[UnconditionalSuppressMessage ("Trimming", "IL2026", Justification = "This test loads an assembly dynamically, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]
 		[UnconditionalSuppressMessage ("Trimming", "IL2072", Justification = "This test loads an assembly dynamically, so it's expected to not be trimmer safe. It works though, so unless something changes, we're going to assume it's trimmer-compatible.")]

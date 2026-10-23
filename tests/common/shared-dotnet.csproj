@@ -46,6 +46,11 @@
 		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">maccatalyst-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
+	<!-- Define APP_EXTENSION for app extension projects -->
+	<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
+		<DefineConstants>$(DefineConstants);APP_EXTENSION</DefineConstants>
+	</PropertyGroup>
+
 	<!-- Logic for all test suites -->
 	<PropertyGroup>
 		<!-- Disable the implicit FSharp.Core reference, because sometimes the implicit reference wants a version that isn't available anywhere -->

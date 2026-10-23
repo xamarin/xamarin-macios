@@ -31,7 +31,8 @@ namespace MonoTouch.NUnit {
 			Port = port;
 
 #if __IOS__
-			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
+			if (UIApplication.SharedApplication is UIApplication application)
+				application.NetworkActivityIndicatorVisible = true;
 #endif
 
 			try {
@@ -55,7 +56,8 @@ namespace MonoTouch.NUnit {
 				writer = new StreamWriter (client.GetStream ());
 			} catch {
 #if __IOS__
-				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
+				if (UIApplication.SharedApplication is UIApplication applicationOnFailure)
+					applicationOnFailure.NetworkActivityIndicatorVisible = false;
 #endif
 				throw;
 			}
@@ -75,7 +77,8 @@ namespace MonoTouch.NUnit {
 		public override void Close ()
 		{
 #if __IOS__
-			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
+			if (UIApplication.SharedApplication is UIApplication application)
+				application.NetworkActivityIndicatorVisible = false;
 #endif
 			writer.Close ();
 		}

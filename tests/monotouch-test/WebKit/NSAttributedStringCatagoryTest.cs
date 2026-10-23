@@ -1,4 +1,7 @@
 #if __IOS__ || MONOMAC
+#if APP_EXTENSION
+// WebKit's web content process is not available in app extensions.
+#else
 
 using System.IO;
 
@@ -42,4 +45,5 @@ namespace MonoTouchFixtures.WebKit {
 		}
 	}
 }
-#endif
+#endif // !APP_EXTENSION
+#endif // __IOS__ || MONOMAC

@@ -37,6 +37,12 @@ parameters:
       testPrefix: 'simulator_tests',
     },
     {
+      label: appextensions,
+      splitByPlatforms: false,
+      needsMultiplePlatforms: false,
+      testPrefix: 'simulator_tests',
+    },
+    {
       label: cecil,
       splitByPlatforms: false,
       testPrefix: 'simulator_tests',

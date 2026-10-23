@@ -3,12 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <RootNamespace>monotouchtest</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>monotouchtest</AssemblyName>
-
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <MonoTouchTestDirectory>$(RootTestsDirectory)\monotouch-test</MonoTouchTestDirectory>
 
@@ -109,7 +108,7 @@
     <Compile Include="$(RootTestsDirectory)\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
-    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="'$(IncludeMonoTouchAppDelegate)' != 'false' And !$(TargetFramework.EndsWith('-macos'))" />
   </ItemGroup>
 
   <ItemGroup>

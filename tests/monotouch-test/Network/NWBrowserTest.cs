@@ -64,6 +64,9 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
+#if APP_EXTENSION
+		[Ignore ("Local network access is not available in app extensions.")]
+#endif
 		public void TestStateChangesHandler ()
 		{
 			// This test may cause cause a dialog asking for access to the local network. The test will work if access is either granted or

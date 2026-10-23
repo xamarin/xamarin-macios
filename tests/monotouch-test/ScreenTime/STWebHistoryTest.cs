@@ -21,7 +21,8 @@ namespace MonoTouchFixtures.ScreenTime {
 		public void Create_WithBundleIdentifier ()
 		{
 			TestRuntime.AssertXcodeVersion (16, 3);
-			using var obj = STWebHistory.Create ("com.xamarin.monotouch-test", out var error);
+			var bundleId = NSBundle.MainBundle.BundleIdentifier;
+			using var obj = STWebHistory.Create (bundleId, out var error);
 			Assert.That (obj, Is.Not.Null, "Object");
 			Assert.That (error, Is.Null, "Error");
 		}
@@ -30,7 +31,8 @@ namespace MonoTouchFixtures.ScreenTime {
 		public void Create_WithBundleIdentifierAndProfile ()
 		{
 			TestRuntime.AssertXcodeVersion (16, 3);
-			using var obj = STWebHistory.Create ("com.xamarin.monotouch-test", (NSString) "profile", out var error);
+			var bundleId = NSBundle.MainBundle.BundleIdentifier;
+			using var obj = STWebHistory.Create (bundleId, (NSString) "profile", out var error);
 			Assert.That (obj, Is.Not.Null, "Object");
 			Assert.That (error, Is.Null, "Error");
 		}
