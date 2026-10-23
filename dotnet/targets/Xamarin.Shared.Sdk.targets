@@ -2129,15 +2129,6 @@
 		</ItemGroup>
 
 		<ItemGroup>
-			<!--
-				Tell our substitution XML that it's being processed by ILC and not by ILLink, because the two
-				disagree about how to specify the substitution value for an enum-typed field.
-				See src/ILLink.Substitutions.iOS.xml and https://github.com/dotnet/runtime/issues/131601.
-			-->
-			<IlcArg Include="--feature:ObjCRuntime.IsILCompiler=true" />
-		</ItemGroup>
-
-		<ItemGroup>
 			<!-- Give ILLink's output to ILC -->
 			<_UpdatedManagedAssemblyToLink Include="@(ManagedAssemblyToLink->'$(IntermediateLinkDir)%(Filename)%(Extension)')" Condition="Exists('$(IntermediateLinkDir)%(Filename)%(Extension)')" />
 			<ManagedAssemblyToLink Remove="@(ManagedAssemblyToLink)" />

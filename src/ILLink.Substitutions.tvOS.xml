@@ -27,20 +27,9 @@
       <method signature="System.Boolean get_UseNSUrlSessionHandler()" body="stub" feature="System.Net.Http.NativeHandler.UseNSUrlSessionHandler" featurevalue="false" value="false" />
       <method signature="System.Boolean get_UseNSUrlSessionHandler()" body="stub" feature="System.Net.Http.NativeHandler.UseNSUrlSessionHandler" featurevalue="true" value="true" />
     </type>
-    <!--
-      ILLink and ILC disagree about how to specify the substitution value for an enum-typed field:
-      ILLink only accepts the name of the enum value, while ILC only accepts the numerical value
-      (each one reports IL2015 for the other's form). So specify both variants, and select between
-      them using the 'ObjCRuntime.IsILCompiler' feature switch, which we only pass to ILC (see
-      Xamarin.Shared.Sdk.targets). Ref: https://github.com/dotnet/runtime/issues/131601
-    -->
-    <type fullname="ObjCRuntime.Runtime" feature="ObjCRuntime.IsILCompiler" featurevalue="false" featuredefault="true">
+    <type fullname="ObjCRuntime.Runtime">
       <field name="Arch" feature="ObjCRuntime.Runtime.Arch.IsSimulator" featurevalue="false" value="DEVICE" />
       <field name="Arch" feature="ObjCRuntime.Runtime.Arch.IsSimulator" featurevalue="true" value="SIMULATOR" />
-    </type>
-    <type fullname="ObjCRuntime.Runtime" feature="ObjCRuntime.IsILCompiler" featurevalue="true">
-      <field name="Arch" feature="ObjCRuntime.Runtime.Arch.IsSimulator" featurevalue="false" value="0" />
-      <field name="Arch" feature="ObjCRuntime.Runtime.Arch.IsSimulator" featurevalue="true" value="1" />
     </type>
     <type fullname="ObjCRuntime.Runtime">
       <method signature="System.Boolean get_ValidateObjectPointers()" body="stub" feature="ObjCRuntime.Class.ValidateObjectPointers" featurevalue="false" value="false" />
