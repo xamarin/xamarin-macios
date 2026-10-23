@@ -17,7 +17,7 @@
       "rollForward": false
     },
     "microsoft.dotnet.apicompat.tool": {
-      "version": "9.0.304",
+      "version": "11.0.100-rc.1.26425.128",
       "commands": [
         "apicompat"
       ],

@@ -1,27 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- https://learn.microsoft.com/dotnet/fundamentals/package-validation/diagnostic-ids -->
 <Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <!-- FSKit is preview API, and these suppressions cover preview-only removals.
-       Left and Right are intentionally omitted so they apply to both stable and PR-to-base comparisons.
-       Re-edit output from 'make regenerate-suppression-files' to preserve this before committing. -->
-  <Suppression>
-    <DiagnosticId>CP0001</DiagnosticId>
-    <Target>T:FSKit.FSVolumeHandlerMountHandler</Target>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0001</DiagnosticId>
-    <Target>T:FSKit.FSVolumeHandlerReclaimHandler</Target>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0001</DiagnosticId>
-    <Target>T:FSKit.FSVolumeHandlerSynchronizeHandler</Target>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0002</DiagnosticId>
-    <Target>M:FSKit.IFSVolumeOperations.set_EnableOpenUnlinkEmulation(System.Boolean)</Target>
-  </Suppression>
-  <Suppression>
-    <DiagnosticId>CP0002</DiagnosticId>
-    <Target>M:FSKit.IFSVolumeOperations.set_RequestedMountOptions(FSKit.FSMountOptions)</Target>
-  </Suppression>
 </Suppressions>
