@@ -41,7 +41,7 @@ namespace AddressBookUI {
 
 		/// <summary>Creates a formatted, human-readable address string from the given address dictionary.</summary>
 		/// <param name="address">A dictionary containing the address fields.</param>
-		/// <param name="addCountryName">Whether to include the country name in the formatted string.</param>
+		/// <param name="addCountryName">Whether to include the country/region name in the formatted string.</param>
 		/// <returns>A formatted string representing the address.</returns>
 		static public string ToString (NSDictionary address, bool addCountryName)
 		{
