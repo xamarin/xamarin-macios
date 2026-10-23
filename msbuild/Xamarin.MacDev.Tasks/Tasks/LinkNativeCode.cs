@@ -150,7 +150,9 @@ namespace Xamarin.MacDev.Tasks {
 						var libName = Path.GetFileNameWithoutExtension (lib);
 						if (libName.StartsWith ("lib", StringComparison.Ordinal)) {
 							arguments.Add ("-L" + Path.GetDirectoryName (lib));
-							arguments.Add ("-l" + libName.Substring (3));
+							var flag = "-l" + libName.Substring (3);
+							if (!arguments.Contains (flag))
+								arguments.Add (flag);
 						} else {
 							arguments.Add (libSpec.ItemSpec);
 						}
