@@ -379,6 +379,29 @@ namespace Foundation {
 			GC.SuppressFinalize (this);
 		}
 
+		/// <summary>Registers this object for finalization again and updates its native lifetime bookkeeping.</summary>
+		/// <remarks>
+		///   <para>
+		///     Use this method instead of <see cref="GC.ReRegisterForFinalize(object)" /> for objects derived from <see cref="NSObject" />.
+		///     Do not call both methods, because doing so can cause the finalizer to run more than once.
+		///   </para>
+		///   <para>
+		///     When deferring cleanup from <see cref="Dispose(bool)" />, call this method before publishing the object or scheduling
+		///     work that uses it, and do not call the base disposal method until the object is ready to be disposed.
+		///     This method also clears the finalization-queue flag so that native-to-managed lookups can reuse this object.
+		///   </para>
+		///   <para>
+		///     Re-registering an object whose disposal has started is unsupported and may result in invalid behavior.
+		///     This method does not undo disposal, restore released native references, or cancel pending cleanup.
+		///     Calls to this method must be synchronized with disposal and other uses of the object.
+		///   </para>
+		/// </remarks>
+		public void ReRegisterForFinalize ()
+		{
+			GC.ReRegisterForFinalize (this);
+			flags &= ~Flags.InFinalizerQueue;
+		}
+
 		// This method should never be called when using the managed static registrar, so assert that never happens by throwing an exception in that case.
 		// This method doesn't necessarily work with NativeAOT, but this is covered by the exception, because the managed static registrar is required for NativeAOT.
 		//

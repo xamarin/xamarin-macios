@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -541,6 +542,106 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That ((int) obj.RetainCount, Is.LessThan (count / 2), "RC");
 
 			obj.Dispose ();
+		}
+
+		class ReRegisteredObject : NSObject {
+			public static ReRegisteredObject Instance;
+			public int FinalizationCount;
+			public bool LookupReusedInstance;
+			public bool GenericLookupReusedInstance;
+			public bool TryLookupReusedInstance;
+			public nuint InitialRetainCount;
+
+			public ReRegisteredObject ()
+			{
+				InitialRetainCount = RetainCount;
+			}
+
+			public ReRegisteredObject (NativeHandle handle) : base (handle)
+			{
+			}
+
+			protected override void Dispose (bool disposing)
+			{
+				if (disposing) {
+					base.Dispose (disposing);
+					return;
+				}
+
+				FinalizationCount++;
+				ReRegisterForFinalize ();
+				TryLookupReusedInstance = ReferenceEquals (Runtime.TryGetNSObject (Handle), this);
+				LookupReusedInstance = ReferenceEquals (Runtime.GetNSObject (Handle), this);
+				GenericLookupReusedInstance = ReferenceEquals (Runtime.GetNSObject<ReRegisteredObject> (Handle), this);
+				Instance = this;
+			}
+		}
+
+		[MethodImpl (MethodImplOptions.NoInlining)]
+		static void CreateReRegisteredObject ()
+		{
+			_ = new ReRegisteredObject ();
+		}
+
+		[MethodImpl (MethodImplOptions.NoInlining)]
+		static bool HasReRegisteredObject ()
+		{
+			return ReRegisteredObject.Instance is not null;
+		}
+
+		[MethodImpl (MethodImplOptions.NoInlining)]
+		static void VerifyReRegisteredObject (int finalizationCount)
+		{
+			var obj = ReRegisteredObject.Instance;
+			var verified = false;
+			try {
+				Assert.That (obj.FinalizationCount, Is.EqualTo (finalizationCount), "Finalization count");
+				Assert.That (obj.TryLookupReusedInstance, Is.True, "TryGetNSObject");
+				Assert.That (obj.LookupReusedInstance, Is.True, "GetNSObject");
+				Assert.That (obj.GenericLookupReusedInstance, Is.True, "GetNSObject<T>");
+				Assert.That (obj.RetainCount, Is.EqualTo (obj.InitialRetainCount), "Retain count");
+				verified = true;
+			} finally {
+				ReRegisteredObject.Instance = null;
+				if (!verified || finalizationCount == 2)
+					obj.Dispose ();
+			}
+			if (finalizationCount == 2)
+				Assert.That (obj.Handle, Is.EqualTo (NativeHandle.Zero), "Disposed handle");
+		}
+
+		[Test]
+		public void ReRegisterForFinalize ()
+		{
+			try {
+				var creator = new Thread (CreateReRegisteredObject);
+				creator.Start ();
+				Assert.That (creator.Join (TimeSpan.FromSeconds (5)), Is.True, "Creator thread");
+				for (var finalizationCount = 1; finalizationCount <= 2; finalizationCount++) {
+					for (var attempt = 0; attempt < 10 && !HasReRegisteredObject (); attempt++) {
+						GC.Collect ();
+						GC.WaitForPendingFinalizers ();
+					}
+					Assert.That (HasReRegisteredObject (), Is.True, $"Finalization #{finalizationCount}");
+					VerifyReRegisteredObject (finalizationCount);
+				}
+			} finally {
+				ReRegisteredObject.Instance?.Dispose ();
+				ReRegisteredObject.Instance = null;
+			}
+		}
+
+		[Test]
+		public void ReRegisterForFinalizeAfterDispose ()
+		{
+			var obj = new NSObject ();
+			obj.Dispose ();
+			try {
+				Assert.DoesNotThrow (() => obj.ReRegisterForFinalize ());
+				Assert.That (obj.Handle, Is.EqualTo (NativeHandle.Zero), "Disposed handle");
+			} finally {
+				GC.SuppressFinalize (obj);
+			}
 		}
 
 		class ResurrectedObjectsDisposedTestClass : NSObject {
