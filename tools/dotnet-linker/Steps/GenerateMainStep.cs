@@ -22,6 +22,7 @@ namespace Xamarin {
 		static readonly string [] reservedRuntimeConfigProperties = new [] {
 			"APP_CONTEXT_BASE_DIRECTORY",
 			"APP_PATHS",
+			"HOST_RUNTIME_CONTRACT",
 			"PINVOKE_OVERRIDE",
 			"TRUSTED_PLATFORM_ASSEMBLIES",
 			"NATIVE_DLL_SEARCH_DIRECTORIES",

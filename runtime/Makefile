@@ -39,7 +39,7 @@ coreclrhost.h: Makefile
 	$(Q) mv "$@.tmp" "$@"
 
 host_runtime_contract.h: Makefile
-	$(Q_CURL) curl -L --retry 3 --retry-all-errors --fail --output "$@.tmp" https://raw.githubusercontent.com/dotnet/runtime/61fac3bf280af337390a34c3d54157a96051e831/src/native/corehost/host_runtime_contract.h
+	$(Q_CURL) curl -L --retry 3 --retry-all-errors --fail --output "$@.tmp" https://raw.githubusercontent.com/dotnet/runtime/c95e736db2bf873e681af9f0c7d262acc751ed9f/src/native/corehost/host_runtime_contract.h
 	$(Q) mv "$@.tmp" "$@"
 
 coreclr-bridge.m: coreclrhost.h host_runtime_contract.h
