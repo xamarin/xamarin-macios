@@ -25371,10 +25371,6 @@ M:UIKit.IUITextViewDelegate.WillPresentEditMenu(UIKit.UITextView,UIKit.IUIEditMe
 M:UIKit.IUITextViewDelegate.WritingToolsDidEnd(UIKit.UITextView)
 M:UIKit.IUITextViewDelegate.WritingToolsWillBegin(UIKit.UITextView)
 M:UIKit.IUIToolTipInteractionDelegate.GetConfiguration(UIKit.UIToolTipInteraction,CoreGraphics.CGPoint)
-M:UIKit.IUITraitChangeObservable.RegisterForTraitChanges(ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.IUITraitChangeObservable.RegisterForTraitChanges(ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.IUITraitChangeObservable.RegisterForTraitChanges(ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
-M:UIKit.IUITraitChangeObservable.UnregisterForTraitChanges(UIKit.IUITraitChangeRegistration)
 M:UIKit.IUITraitDefinition.GetAffectsColorAppearance``1
 M:UIKit.IUITraitDefinition.GetIdentifier``1
 M:UIKit.IUITraitDefinition.GetName``1
@@ -26896,10 +26892,6 @@ M:UIKit.UIPresentationController.DismissalTransitionWillBegin
 M:UIKit.UIPresentationController.GetSoundIdentifier(UIKit.UIFocusUpdateContext)
 M:UIKit.UIPresentationController.PresentationTransitionDidEnd(System.Boolean)
 M:UIKit.UIPresentationController.PresentationTransitionWillBegin
-M:UIKit.UIPresentationController.RegisterForTraitChanges(ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UIPresentationController.RegisterForTraitChanges(ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.UIPresentationController.RegisterForTraitChanges(ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
-M:UIKit.UIPresentationController.UnregisterForTraitChanges(UIKit.IUITraitChangeRegistration)
 M:UIKit.UIPressesEvent.GetPresses(UIKit.UIGestureRecognizer)
 M:UIKit.UIPreviewAction.Create(System.String,UIKit.UIPreviewActionStyle,UIKit.UIPreviewHandler)
 M:UIKit.UIPreviewActionGroup.Create(System.String,UIKit.UIPreviewActionStyle,UIKit.UIPreviewAction[])
@@ -27752,9 +27744,6 @@ M:UIKit.UITrackingLayoutGuide.GetConstraintsActiveWhenNear(UIKit.NSDirectionalRe
 M:UIKit.UITrackingLayoutGuide.RemoveAllTrackedConstraints
 M:UIKit.UITrackingLayoutGuide.SetConstraintsActiveWhenAway(UIKit.NSLayoutConstraint[],UIKit.NSDirectionalRectEdge)
 M:UIKit.UITrackingLayoutGuide.SetConstraintsActiveWhenNear(UIKit.NSLayoutConstraint[],UIKit.NSDirectionalRectEdge)
-M:UIKit.UITraitChangeObservable_Extensions.RegisterForTraitChanges(UIKit.IUITraitChangeObservable,ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UITraitChangeObservable_Extensions.RegisterForTraitChanges(UIKit.IUITraitChangeObservable,ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.UITraitChangeObservable_Extensions.RegisterForTraitChanges(UIKit.IUITraitChangeObservable,ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
 M:UIKit.UITraitCollection.Contains(UIKit.UITraitCollection)
 M:UIKit.UITraitCollection.FromAccessibilityContrast(UIKit.UIAccessibilityContrast)
 M:UIKit.UITraitCollection.FromActiveAppearance(UIKit.UIUserInterfaceActiveAppearance)
@@ -27867,9 +27856,6 @@ M:UIKit.UIView.NeedsUpdateConstraints
 M:UIKit.UIView.PerformSystemAnimation(UIKit.UISystemAnimation,UIKit.UIView[],UIKit.UIViewAnimationOptions,System.Action,UIKit.UICompletionHandler)
 M:UIKit.UIView.PerformWithoutAnimation(System.Action)
 M:UIKit.UIView.PointInside(CoreGraphics.CGPoint,UIKit.UIEvent)
-M:UIKit.UIView.RegisterForTraitChanges(ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UIView.RegisterForTraitChanges(ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.UIView.RegisterForTraitChanges(ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
 M:UIKit.UIView.RemoveConstraint(UIKit.NSLayoutConstraint)
 M:UIKit.UIView.RemoveConstraints(UIKit.NSLayoutConstraint[])
 M:UIKit.UIView.RemoveFromSuperview
@@ -27909,7 +27895,6 @@ M:UIKit.UIView.SystemLayoutSizeFittingSize(CoreGraphics.CGSize)
 M:UIKit.UIView.TintColorDidChange
 M:UIKit.UIView.TransitionNotify(UIKit.UIView,System.Double,UIKit.UIViewAnimationOptions,System.Action,UIKit.UICompletionHandler)
 M:UIKit.UIView.TransitionNotify(UIKit.UIView,UIKit.UIView,System.Double,UIKit.UIViewAnimationOptions,UIKit.UICompletionHandler)
-M:UIKit.UIView.UnregisterForTraitChanges(UIKit.IUITraitChangeRegistration)
 M:UIKit.UIView.UpdateConstraints
 M:UIKit.UIView.UpdateConstraintsIfNeeded
 M:UIKit.UIView.UpdateProperties
@@ -27963,9 +27948,6 @@ M:UIKit.UIViewController.PrepareForSegue(UIKit.UIStoryboardSegue,Foundation.NSOb
 M:UIKit.UIViewController.PresentModalViewController(UIKit.UIViewController,System.Boolean)
 M:UIKit.UIViewController.PresentViewController(UIKit.UIViewController,System.Boolean,System.Action)
 M:UIKit.UIViewController.RegisterForPreviewingWithDelegate(UIKit.IUIViewControllerPreviewingDelegate,UIKit.UIView)
-M:UIKit.UIViewController.RegisterForTraitChanges(ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UIViewController.RegisterForTraitChanges(ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.UIViewController.RegisterForTraitChanges(ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
 M:UIKit.UIViewController.RegisterSceneAccessory(UIKit.UISceneAccessory)
 M:UIKit.UIViewController.RemoveFromParentViewController
 M:UIKit.UIViewController.RemoveKeyCommand(UIKit.UIKeyCommand)
@@ -27991,7 +27973,6 @@ M:UIKit.UIViewController.ShowDetailViewController(UIKit.UIViewController,Foundat
 M:UIKit.UIViewController.ShowViewController(UIKit.UIViewController,Foundation.NSObject)
 M:UIKit.UIViewController.Transition(UIKit.UIViewController,UIKit.UIViewController,System.Double,UIKit.UIViewAnimationOptions,System.Action,UIKit.UICompletionHandler)
 M:UIKit.UIViewController.UnregisterForPreviewingWithContext(UIKit.IUIViewControllerPreviewing)
-M:UIKit.UIViewController.UnregisterForTraitChanges(UIKit.IUITraitChangeRegistration)
 M:UIKit.UIViewController.UnregisterSceneAccessory(UIKit.UISceneAccessoryRegistration)
 M:UIKit.UIViewController.Unwind(UIKit.UIStoryboardSegue,UIKit.UIViewController)
 M:UIKit.UIViewController.UpdateContentUnavailableConfiguration(UIKit.UIContentUnavailableConfigurationState)
@@ -28053,11 +28034,7 @@ M:UIKit.UIWindow.ResignKeyWindow
 M:UIKit.UIWindow.SendEvent(UIKit.UIEvent)
 M:UIKit.UIWindowScene.#ctor(UIKit.UISceneSession,UIKit.UISceneConnectionOptions)
 M:UIKit.UIWindowScene.CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UIWindowScene.RegisterForTraitChanges(ObjCRuntime.Class[],Foundation.NSObject,ObjCRuntime.Selector)
-M:UIKit.UIWindowScene.RegisterForTraitChanges(ObjCRuntime.Class[],ObjCRuntime.Selector)
-M:UIKit.UIWindowScene.RegisterForTraitChanges(ObjCRuntime.Class[],System.Action{UIKit.IUITraitEnvironment,UIKit.UITraitCollection})
 M:UIKit.UIWindowScene.RequestGeometryUpdate(UIKit.UIWindowSceneGeometryPreferences,System.Action{Foundation.NSError})
-M:UIKit.UIWindowScene.UnregisterForTraitChanges(UIKit.IUITraitChangeRegistration)
 M:UIKit.UIWindowSceneActivationAction.Create(UIKit.UIActionIdentifier,UIKit.UIAction,UIKit.UIWindowSceneActivationActionConfigurationProvider)
 M:UIKit.UIWindowSceneActivationConfiguration.#ctor(Foundation.NSUserActivity)
 M:UIKit.UIWindowSceneActivationInteraction.#ctor(UIKit.UIWindowSceneActivationInteractionConfigurationProvider,System.Action{Foundation.NSError})

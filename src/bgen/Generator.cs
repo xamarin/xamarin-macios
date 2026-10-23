@@ -4726,6 +4726,8 @@ public partial class Generator : IMemberGatherer {
 			do_not_call_base = false;
 		} else if (minfo.is_protocol_implementation_method) {
 			do_not_call_base = false;
+		} else if (minfo.is_protocol_member && minfo.wrap_method is not null) {
+			do_not_call_base = false;
 		} else if (minfo.is_abstract || minfo.is_model) {
 			do_not_call_base = true;
 		} else {
@@ -4773,7 +4775,11 @@ public partial class Generator : IMemberGatherer {
 					indent++;
 
 					var ret = mi.ReturnType == TypeCache.System_Void ? null : "return ";
-					print ("{0}{1}{2};", ret, minfo.is_extension_method ? "This." : "", minfo.wrap_method);
+					if (minfo.is_extension_method && AttributeManager.HasAttribute<ExportAttribute> (mi)) {
+						print ("{0}This.{1} ({2});", ret, GetMethodName (minfo, false), RenderArgs (mi.GetParameters ()));
+					} else {
+						print ("{0}{1}{2};", ret, minfo.is_extension_method ? "This." : "", minfo.wrap_method);
+					}
 					indent--;
 				}
 			} else {
@@ -5292,7 +5298,7 @@ public partial class Generator : IMemberGatherer {
 
 		foreach (var mi in allProtocolMethods) {
 			var minfo = new MemberInformation (this, this, mi, type, null);
-			var useSeparateImplementationMethod = !minfo.is_static;
+			var useSeparateImplementationMethod = !minfo.is_static && minfo.wrap_method is null;
 			minfo.is_protocol_member = true;
 			minfo.is_protocol_member_required = IsRequired (mi);
 			minfo.call_protocol_implementation_method = useSeparateImplementationMethod;

@@ -157,6 +157,7 @@ public class MemberInformation {
 		if (!is_unsafe && mi.ReturnType.IsSubclassOf (Generator.TypeCache.System_Delegate))
 			is_unsafe = true;
 
+		var wrapAttribute = AttributeManager.GetCustomAttribute<WrapAttribute> (mi);
 		if (selector is not null) {
 			this.selector = selector;
 			if (!is_sealed && !is_wrapper) {
@@ -168,13 +169,8 @@ public class MemberInformation {
 			if (attr.Length != 1) {
 				attr = AttributeManager.GetCustomAttributes<BindAttribute> (mi);
 				if (attr.Length != 1) {
-					attr = AttributeManager.GetCustomAttributes<WrapAttribute> (mi);
-					if (attr.Length != 1)
+					if (wrapAttribute is null)
 						throw new BindingException (1012, true, type, mi.Name);
-
-					var wrapAtt = (WrapAttribute) attr [0];
-					wrap_method = wrapAtt.MethodName;
-					is_virtual_method = wrapAtt.IsVirtual;
 				} else {
 					var ba = (BindAttribute) attr [0];
 					this.selector = ba.Selector;
@@ -190,6 +186,11 @@ public class MemberInformation {
 					is_export = !isExtensionMethod;
 				}
 			}
+		}
+
+		if (wrapAttribute is not null) {
+			wrap_method = wrapAttribute.MethodName;
+			is_virtual_method = wrapAttribute.IsVirtual;
 		}
 
 		this.category_extension_type = categoryExtensionType;

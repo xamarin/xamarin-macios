@@ -565,7 +565,7 @@ namespace Introspection {
 		{
 			// get all tupes that are public, native object but not NSobjects or DispatchSources and that are not interfaces or abstract classes
 			var types = CMClockType.Assembly.GetTypes ()
-				.Where (t => !t.IsNotPublic && !CMAttachmentInterfaceType.IsAssignableFrom (t)
+				.Where (t => t.IsVisible && !CMAttachmentInterfaceType.IsAssignableFrom (t)
 					&& NativeObjectInterfaceType.IsAssignableFrom (t) && !t.IsSubclassOf (NSObjectType)
 					&& !t.IsSubclassOf (DispatchSourceType) && !t.IsInterface && !t.IsAbstract
 					&& !t.IsSubclassOf (typeof (BaseWrapper)) // the trimmer can make some BaseWrapper subclasses public, so exclude those.	

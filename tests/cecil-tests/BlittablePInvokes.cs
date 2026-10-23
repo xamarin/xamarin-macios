@@ -453,6 +453,7 @@ namespace Cecil.Tests {
 							switch (instr.OpCode.Code) {
 							case Code.Call:
 							case Code.Callvirt:
+							case Code.Newobj:
 								break;
 							default:
 								continue;
