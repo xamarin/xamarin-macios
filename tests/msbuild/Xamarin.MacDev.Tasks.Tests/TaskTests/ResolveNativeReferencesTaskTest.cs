@@ -60,13 +60,17 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			Assert.That (warnings.Length, Is.EqualTo (expectWarning ? 1 : 0), "Warning count");
 			if (expectWarning) {
 				Assert.That (warnings [0].Message, Does.Contain ("lowercase '.framework'"), "Warning message");
-				Assert.That (warnings [0].Code, Does.EndWith ("7198"), "Warning code");
+				Assert.That (warnings [0].Code, Does.EndWith ("7199"), "Warning code");
 			}
 			Assert.That (task.NativeFrameworks, Has.Length.EqualTo (1), "Reference is still processed");
 		}
 
 		[TestCase ("XTest.framework/XTest", false, false)]
 		[TestCase ("XTest.Framework/XTest", true, false)]
+		[TestCase ("XTest.Framework/.", true, false)]
+		[TestCase ("XTest.framework/.", false, false)]
+		[TestCase ("Foo.zip.Framework/.", true, false)]
+		[TestCase ("Foo.zip.framework/.", false, false)]
 		[TestCase ("Foo.zip.Framework/Foo.zip", true, false)]
 		[TestCase ("Foo.zip.framework/Foo.zip", false, false)]
 		[TestCase ("XTest.Framework", true, true)]
@@ -103,7 +107,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 
 			Assert.That (project.Build ("CaptureNativeReferences", new [] { logger }), Is.True, string.Join ("\n", logger.Errors.Select (v => v.Message)));
 
-			var warnings = logger.Warnings.Where (v => v.Code == "MT7198").ToArray ();
+			var warnings = logger.Warnings.Where (v => v.Code == "MT7199").ToArray ();
 			Assert.That (warnings.Length, Is.EqualTo (expectWarning ? 1 : 0), "Framework extension warning count");
 			if (expectWarning)
 				Assert.That (warnings [0].Message, Does.Contain (isDirectory ? referencePath : Path.GetDirectoryName (referencePath)), "Warning identifies the framework");

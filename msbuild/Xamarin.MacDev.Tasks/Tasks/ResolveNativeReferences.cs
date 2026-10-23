@@ -106,6 +106,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		static void WarnIfIncorrectFrameworkExtension (TaskLoggingHelper log, string path)
 		{
+			if (Path.GetFileName (path) == ".")
+				path = Path.GetDirectoryName (path) ?? path;
+
 			var parent = Path.GetDirectoryName (path);
 			if (parent is not null && parent.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && Path.GetFileName (path) == Path.GetFileNameWithoutExtension (parent)) {
 				path = parent;
@@ -114,7 +117,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (path.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && !path.EndsWith (".framework", StringComparison.Ordinal))
-				log.LogWarning (7198, path, MSBStrings.W7198 /* The framework '{0}' has an incorrectly capitalized extension. Rename it to use the lowercase '.framework' extension to ensure it is linked and bundled correctly. */, path);
+				log.LogWarning (7199, path, MSBStrings.W7199 /* The framework '{0}' has an incorrectly capitalized extension. Rename it to use the lowercase '.framework' extension to ensure it is linked and bundled correctly. */, path);
 		}
 
 		public override bool Execute ()

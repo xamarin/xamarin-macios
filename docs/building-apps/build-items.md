@@ -305,7 +305,7 @@ Example:
 <Target Name="WriteApplicationArtifacts" AfterTargets="Build">
     <WriteLinesToFile
         File="$(OutputPath)application-artifacts.txt"
-        Lines="%(ApplicationArtifact.Identity)|%(ApplicationArtifact.PackageFormat)"
+        Lines="@(ApplicationArtifact->'%(Identity)|%(PackageFormat)')"
         Overwrite="true" />
 </Target>
 ```
@@ -319,7 +319,7 @@ or linked with when building the native executable.
 
 Native framework directory names must use the lowercase `.framework` extension.
 Other capitalization, such as `.Framework` or `.FRAMEWORK`, produces warning
-`MT7198` because the framework may not be linked or bundled
+`MT7199` because the framework may not be linked or bundled
 correctly. Rename the directory and update the reference to use `.framework`.
 
 ## ObjcBindingApiDefinition

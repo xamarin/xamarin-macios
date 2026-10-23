@@ -153,7 +153,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			ExecuteTask (task);
 
-			var warnings = Engine.Logger.WarningsEvents.Where (v => (v.Code ?? "").EndsWith ("7198")).ToArray ();
+			var warnings = Engine.Logger.WarningsEvents.Where (v => (v.Code ?? "").EndsWith ("7199")).ToArray ();
 			Assert.That (warnings.Length, Is.EqualTo (expectWarning ? 1 : 0), "Framework extension warning count");
 			if (expectWarning)
 				Assert.That (warnings [0].Message, Does.Contain (framework), "Warning identifies the framework");

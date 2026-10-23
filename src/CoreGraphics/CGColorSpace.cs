@@ -52,7 +52,7 @@ namespace CoreGraphics {
 
 	// untyped enum -> CGColorSpace.h
 	/// <summary>Color space model.</summary>
-	///     <remarks>To be added.</remarks>
+	/// <remarks>The model of a color space can be queried through the <see cref="CGColorSpace.Model"/> property.</remarks>
 	public enum CGColorSpaceModel {
 		/// <summary>Unknown color space model.</summary>
 		Unknown = -1,
@@ -70,7 +70,7 @@ namespace CoreGraphics {
 		Indexed,
 		/// <summary>Pattern color space, used when stroking or filling with a pattern.</summary>
 		Pattern,
-		/// <summary>To be added.</summary>
+		/// <summary>CIE XYZ color space model.</summary>
 		Xyz,
 	}
 
