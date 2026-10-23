@@ -32,7 +32,7 @@ namespace StoreKit {
 	[Internal]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface XamarinSwiftFunctions {
+	interface XamarinStoreKitSwiftFunctions {
 		[Export ("requestReview:")]
 		[Static]
 		[iOS (16, 0), MacCatalyst (16, 0), NoTV]

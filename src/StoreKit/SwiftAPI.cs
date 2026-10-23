@@ -26,7 +26,7 @@ namespace StoreKit {
 		public static void RequestReview (UIWindowScene @in)
 #endif
 		{
-			XamarinSwiftFunctions.RequestReview (@in);
+			XamarinStoreKitSwiftFunctions.RequestReview (@in);
 		}
 	}
 }

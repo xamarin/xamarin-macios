@@ -10,6 +10,18 @@ namespace MySimpleApp {
 		{
 			GC.KeepAlive (typeof (NSObject)); // prevent linking away the platform assembly
 
+#if USE_SWIFT_REVIEW || USE_SWIFT_WIDGETKIT
+#if __MACOS__
+			GC.KeepAlive ((Action<AppKit.NSViewController>) StoreKit.AppStore.RequestReview);
+#else
+			GC.KeepAlive ((Action<UIKit.UIWindowScene>) StoreKit.AppStore.RequestReview);
+#endif
+#endif
+#if USE_SWIFT_WIDGETKIT
+			WidgetKit.WidgetCenter.ReloadTimelines ("com.xamarin.apitestapp.widget");
+			WidgetKit.WidgetCenter.ReloadAllTimelines ();
+#endif
+
 			Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
 #if HttpClientHandlerFeatureTrimmedAway
 			var client = new System.Net.Http.HttpClient ();

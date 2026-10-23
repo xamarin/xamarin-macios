@@ -288,6 +288,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "ScreenTime", "ScreenTime", 11,0 },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
+					{ "WidgetKit", "WidgetKit", 11, 0 },
 
 					{ "AdServices", "AdServices", 11,1 },
 
@@ -475,6 +476,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "ScreenTime", "ScreenTime", 14, 0 },
 					{ "SensorKit", "SensorKit", new Version (14, 0), null, true }, /* not always present on device, e.g. any iPad, so must be weak linked; https://github.com/dotnet/macios/issues/9938 */
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14, 0 },
+					{ "WidgetKit", "WidgetKit", 14, 0 },
 
 					{ "AdServices", "AdServices", 14, 3 },
 
