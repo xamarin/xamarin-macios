@@ -74,7 +74,7 @@ class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 				List<string> testArgs = [.. mtpArgs];
 				if (!testArgs.Contains ("--results-directory"))
 					testArgs.AddRange (["--results-directory", resultsPath]);
-				if (!testArgs.Contains ("--report-trx"))
+				if (!testArgs.Contains ("--list-tests") && !testArgs.Contains ("--report-trx"))
 					testArgs.Add ("--report-trx");
 				var builder = await TestApplication.CreateBuilderAsync ([.. testArgs]);
 				builder.AddMSTest (() => [typeof (Test1).Assembly]);

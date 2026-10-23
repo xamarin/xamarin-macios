@@ -159,6 +159,10 @@
 		<InlineClassGetHandle Condition="'$(InlineClassGetHandle)' == ''">compatibility</InlineClassGetHandle>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<_IPadAppOnMacDeviceName>My Mac (Designed for iPad)</_IPadAppOnMacDeviceName>
+	</PropertyGroup>
+
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
 	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
 		<!-- The _<platform>RuntimeIdentifier values are set from the IDE -->
@@ -172,6 +176,9 @@
 		<!-- Figure out which architecture we're running on -->
 		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'arm64'">true</_IsArm64Machine>
 		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == ''">false</_IsArm64Machine>
+
+		<!-- Explicit device selection skips the CLI's device discovery, so select the Mac destination's RID here too. -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And ('$(Device)' == '$(_IPadAppOnMacDeviceName)' Or ('$(Device)' == '' And '$(_DeviceName)' == '$(_IPadAppOnMacDeviceName)'))">ios-arm64</RuntimeIdentifier>
 
 		<!-- for mobile non-publish builds we default to the arm64 simulator -->
 		<!-- for mobile publish builds we default to the device architecture -->
