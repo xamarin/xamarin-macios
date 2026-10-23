@@ -306,15 +306,15 @@ namespace Mono.ApiTools {
 
 		public bool Add (string name)
 		{
-			AssemblyDefinition ass = LoadAssembly (name);
-			assemblies.Add (ass);
+			AssemblyDefinition assembly = LoadAssembly (name);
+			assemblies.Add (assembly);
 			return true;
 		}
 
 		public bool Add (Stream stream)
 		{
-			AssemblyDefinition ass = LoadAssembly (stream);
-			assemblies.Add (ass);
+			AssemblyDefinition assembly = LoadAssembly (stream);
+			assemblies.Add (assembly);
 			return true;
 		}
 
@@ -368,17 +368,17 @@ namespace Mono.ApiTools {
 	}
 
 	class TypeForwardedToData : BaseData {
-		AssemblyDefinition ass;
+		AssemblyDefinition assembly;
 
-		public TypeForwardedToData (XmlWriter writer, AssemblyDefinition ass, State state)
+		public TypeForwardedToData (XmlWriter writer, AssemblyDefinition assembly, State state)
 			: base (writer, state)
 		{
-			this.ass = ass;
+			this.assembly = assembly;
 		}
 
 		public override void DoOutput ()
 		{
-			foreach (ExportedType type in ass.MainModule.ExportedTypes) {
+			foreach (ExportedType type in assembly.MainModule.ExportedTypes) {
 
 				if (((uint) type.Attributes & 0x200000u) == 0)
 					continue;
@@ -395,20 +395,20 @@ namespace Mono.ApiTools {
 			}
 		}
 
-		public static void OutputForwarders (XmlWriter writer, AssemblyDefinition ass, State state)
+		public static void OutputForwarders (XmlWriter writer, AssemblyDefinition assembly, State state)
 		{
-			TypeForwardedToData tftd = new TypeForwardedToData (writer, ass, state);
+			TypeForwardedToData tftd = new TypeForwardedToData (writer, assembly, state);
 			tftd.DoOutput ();
 		}
 	}
 
 	class AssemblyData : BaseData {
-		AssemblyDefinition ass;
+		AssemblyDefinition assembly;
 
-		public AssemblyData (XmlWriter writer, AssemblyDefinition ass, State state)
+		public AssemblyData (XmlWriter writer, AssemblyDefinition assembly, State state)
 			: base (writer, state)
 		{
-			this.ass = ass;
+			this.assembly = assembly;
 		}
 
 		public override void DoOutput ()
@@ -417,22 +417,22 @@ namespace Mono.ApiTools {
 				throw new InvalidOperationException ("Document not set");
 
 			writer.WriteStartElement ("assembly");
-			AssemblyNameDefinition aname = ass.Name;
+			AssemblyNameDefinition aname = assembly.Name;
 			AddAttribute ("name", aname.Name);
 			AddAttribute ("version", aname.Version.ToString ());
 
-			AttributeData.OutputAttributes (writer, state, ass);
+			AttributeData.OutputAttributes (writer, state, assembly);
 
 			var types = new List<TypeDefinition> ();
-			if (ass.MainModule.Types is not null) {
-				types.AddRange (ass.MainModule.Types);
+			if (assembly.MainModule.Types is not null) {
+				types.AddRange (assembly.MainModule.Types);
 			}
 
-			if (state.FollowForwarders && ass.MainModule.ExportedTypes is not null) {
-				foreach (var t in ass.MainModule.ExportedTypes) {
+			if (state.FollowForwarders && assembly.MainModule.ExportedTypes is not null) {
+				foreach (var t in assembly.MainModule.ExportedTypes) {
 					var forwarded = t.Resolve ();
 					if (forwarded is null) {
-						throw new Exception ("Could not resolve forwarded type " + t.FullName + " in " + ass.Name);
+						throw new Exception ("Could not resolve forwarded type " + t.FullName + " in " + assembly.Name);
 					}
 					types.Add (forwarded);
 				}
@@ -1352,9 +1352,9 @@ namespace Mono.ApiTools {
 				if (!provider.HasCustomAttributes)
 					continue;
 
-				var ass = provider as AssemblyDefinition;
-				if (ass is not null && !state.FollowForwarders)
-					TypeForwardedToData.OutputForwarders (writer, ass, state);
+				var assembly = provider as AssemblyDefinition;
+				if (assembly is not null && !state.FollowForwarders)
+					TypeForwardedToData.OutputForwarders (writer, assembly, state);
 
 				var attributes = provider.CustomAttributes.
 					Where ((att) => !SkipAttribute (att)).

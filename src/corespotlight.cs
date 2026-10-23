@@ -2113,7 +2113,7 @@ namespace CoreSpotlight {
 		[Export ("stateOrProvince")]
 		string StateOrProvince { get; set; }
 
-		/// <summary>Gets or sets the name of the country were a media item was created.</summary>
+		/// <summary>Gets or sets the name of the country/region where a media item was created.</summary>
 		///         <value>
 		///           <para>(More documentation for this node is coming)</para>
 		///           <para tool="nullallowed">This value can be <see langword="null" />.</para>
