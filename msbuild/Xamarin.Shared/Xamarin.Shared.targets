@@ -18,15 +18,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<!-- Tasks that override built-in tasks to support remoting from VS/Windows -->
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_TaskAssemblyName)" />
+	<!-- Tasks that override built-in tasks to support remoting from VS/Windows.
+		 These always use the netstandard2.0 assembly (via _DesktopTaskAssemblyName) and don't set a
+		 Runtime, so they run in-process and don't require the .NET task host. Setting Runtime="NET"
+		 on these overrides causes failures in VS because the task host can't be created reliably
+		 (especially on ARM64). -->
+	<UsingTask TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="$(_DesktopTaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_DesktopTaskAssemblyName)" />
 
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.ALToolUpload" AssemblyFile="$(_TaskAssemblyName)" />

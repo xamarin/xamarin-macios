@@ -15,6 +15,17 @@
 		<_TaskAssemblyName Condition="'$(_UseDesktopTaskAssemblies)' == 'true'">$(_TaskAssemblyRootDirectory)netstandard2.0\$(_TaskAssemblyFileName)</_TaskAssemblyName>
 		<_TaskRuntime Condition="'$(_UseDesktopTaskAssemblies)' != 'true'">NET</_TaskRuntime>
 		<_TaskRuntime Condition="'$(_UseDesktopTaskAssemblies)' == 'true'">CurrentRuntime</_TaskRuntime>
+		<!--
+			The standard MSBuild task overrides (MakeDir, Copy, Delete, etc.) exist to support remoting
+			from VS/Windows to a Mac. These tasks inherit from the built-in MSBuild tasks and add remoting
+			logic, so they work fine with the netstandard2.0 assembly running in-process.
+			They do NOT need to use the .NET task host, and forcing them through it (Runtime="NET") causes
+			failures in Visual Studio, because VS can't reliably create the .NET task host process
+			(especially on Windows ARM64). By always using netstandard2.0 for these overrides (and not
+			setting the Runtime metadata), we avoid the task host issue while still allowing our custom
+			tasks to use the .NET Core assemblies via the task host.
+		-->
+		<_DesktopTaskAssemblyName>$(_TaskAssemblyRootDirectory)netstandard2.0\$(_TaskAssemblyFileName)</_DesktopTaskAssemblyName>
 	</PropertyGroup>
 
 	<UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_TaskAssemblyName)" />

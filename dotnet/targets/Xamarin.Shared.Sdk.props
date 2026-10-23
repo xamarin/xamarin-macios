@@ -19,9 +19,6 @@
 	<Import Project="$(_MobilePropsPath)" Condition="Exists('$(_MobilePropsPath)') And ('$(BuildingInsideVisualStudio)' == 'true' Or '$(DesignTimeBuild)' == 'true')" />
 	
 	<PropertyGroup>
-		<!-- Keep using the desktop (netstandard2.0) MSBuild task assemblies when building from within Visual Studio (on Windows), instead of the net assemblies that require a .NET task host (which doesn't work reliably, in particular on Windows ARM64). The iOS Sdk.props sets this earlier because it also drives CoreiOSSdkDirectory; the condition below makes it apply to the other platforms (MacCatalyst, macOS, tvOS) too. -->
-		<_UseDesktopTaskAssemblies Condition="'$(_UseDesktopTaskAssemblies)' == '' And '$(BuildingInsideVisualStudio)' == 'true'">true</_UseDesktopTaskAssemblies>
-
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/MacCatalyst/macOS].Sdk) on the platform the build is running from (Mac or Win) -->
