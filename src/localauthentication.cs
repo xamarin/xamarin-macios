@@ -297,6 +297,9 @@ namespace LocalAuthentication {
 
 	[iOS (16, 0), MacCatalyst (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
+#if IOS && !__MACCATALYST__
+	[ObjectiveCFramework ("LocalAuthenticationEmbeddedUI")]
+#endif
 	interface LARight {
 		[Export ("state")]
 		LARightState State { get; }

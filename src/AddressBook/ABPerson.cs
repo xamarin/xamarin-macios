@@ -1374,7 +1374,7 @@ namespace AddressBook {
 			}
 		}
 
-		/// <summary>Represents country name.</summary>
+		/// <summary>Represents the country/region name.</summary>
 		///         <value>
 		///         </value>
 		///         <remarks>The property uses constant kABPersonAddressCountryKey value to access the underlying dictionary.</remarks>

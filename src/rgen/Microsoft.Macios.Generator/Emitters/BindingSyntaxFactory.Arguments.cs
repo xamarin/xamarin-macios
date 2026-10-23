@@ -282,7 +282,7 @@ static partial class BindingSyntaxFactory {
 						type: NativeHandle)
 				],
 			
-			// enums that are not smart enums arse going to be passed as pointers
+			// enums that are not smart enums are going to be passed as pointers
 			{ IsByRef: true, Type.IsEnum: true, Type.IsSmartEnum: false} => [],
 			
 			// other types that are not objects
@@ -474,7 +474,7 @@ static partial class BindingSyntaxFactory {
 					SyntaxKind.AddressOfExpression, 
 					IdentifierName (GetNameForVariableType (argumentInfo.Name, VariableType.NSString)!)), 
 			
-			// enums that are not smart enums arse going to be passed as pointers
+			// enums that are not smart enums are going to be passed as pointers
 			{ Parameter.IsByRef: true, Type.IsEnum: true, Type.IsSmartEnum: false} 
 				=> AsPointer (parameterType, [ArgumentForParameter (argumentInfo.Name, ReferenceKind.Ref)]),
 			

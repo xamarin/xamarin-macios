@@ -3656,6 +3656,7 @@ namespace Xamarin.Tests {
 			"/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation",
 			"/System/Library/Frameworks/LinkSecurity.framework/LinkSecurity",
 			"/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication",
+			"/System/Library/Frameworks/LocalAuthenticationEmbeddedUI.framework/LocalAuthenticationEmbeddedUI",
 			"/System/Library/Frameworks/MapKit.framework/MapKit",
 			"/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility",
 			"/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
@@ -4357,6 +4358,39 @@ namespace Xamarin.Tests {
 				"Frameworks");
 		}
 
+		[TestCase ("KEEP_LARIGHT", true)]
+		[TestCase ("KEEP_LAPERSISTEDRIGHT", true)]
+		[TestCase ("KEEP_LACONTEXT", false)]
+		public void LocalAuthenticationUILinking (string defineConstant, bool expected)
+		{
+			var platform = ApplePlatform.iOS;
+			var runtimeIdentifier = "ios-arm64";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
+			var projectPath = GetProjectPath ("ApiTestApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["AdditionalDefineConstants"] = defineConstant;
+			properties ["MtouchLink"] = "Full";
+			properties ["LinkMode"] = "Full";
+			properties ["UseInterpreter"] = "true";
+			DotNet.AssertBuild (projectPath, properties);
+			var executable = GetNativeExecutable (platform, appPath);
+			Assert.That (GetLinkedWithFrameworks (executable), Does.Contain ("/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication"), "LocalAuthentication must be retained");
+			AssertLocalAuthenticationUILinked (executable, expected);
+		}
+
+		static void AssertLocalAuthenticationUILinked (string executable, bool expected)
+		{
+			const string library = "/System/Library/Frameworks/LocalAuthenticationEmbeddedUI.framework/LocalAuthenticationEmbeddedUI";
+			foreach (var file in MachO.Read (executable)) {
+				var commands = file.load_commands.OfType<DylibLoadCommand> ().Where (v => v.name == library).ToArray ();
+				Assert.That (commands.Length, Is.EqualTo (expected ? 1 : 0), "LocalAuthenticationEmbeddedUI load commands");
+				if (expected)
+					Assert.That (commands [0].cmd, Is.EqualTo ((uint) MachO.LoadCommands.LoadWeakDylib), "LocalAuthenticationEmbeddedUI must be weakly linked");
+			}
+		}
+
 		static HashSet<string> GetLinkedWithFrameworks (string path)
 		{
 			var rv = new HashSet<string> ();
@@ -4431,6 +4465,29 @@ namespace Xamarin.Tests {
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			AssertErrorMessages (errors, $"The SupportedOSPlatformVersion value '{version}' in the project file is lower than the minimum value '{minVersion}'.");
+		}
+
+		[TestCase (ApplePlatform.MacOSX, "true")]
+		[TestCase (ApplePlatform.MacOSX, "True")]
+		[TestCase (ApplePlatform.MacOSX, "false")]
+		[TestCase (ApplePlatform.MacOSX, "")]
+		[TestCase (ApplePlatform.iOS, "true")]
+		[TestCase (ApplePlatform.TVOS, "true")]
+		[TestCase (ApplePlatform.MacCatalyst, "true")]
+		public void UseNativeHttpHandlerWarning (ApplePlatform platform, string useNativeHttpHandler)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var projectPath = Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.targets");
+			var properties = new Dictionary<string, string> ();
+			properties ["_TaskAssemblyName"] = Path.Combine (Configuration.GetSdkRoot (platform), "msbuild", Configuration.DotNetTfm, "Xamarin.MacDev.Tasks.dll");
+			properties ["_PlatformName"] = platform.AsString ();
+			properties ["UseNativeHttpHandler"] = useNativeHttpHandler;
+			var rv = DotNet.AssertBuild (projectPath, properties, target: "_VerifyValidProperties");
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			string [] expectedWarnings = platform == ApplePlatform.MacOSX && string.Equals (useNativeHttpHandler, "true", StringComparison.OrdinalIgnoreCase)
+				? ["The property 'UseNativeHttpHandler' has no effect on macOS. Pass an NSUrlSessionHandler instance directly to the HttpClient constructor to use the native HTTP handler."]
+				: [];
+			AssertWarningMessages (warnings, expectedWarnings);
 		}
 
 		// macOS doesn't support UseNativeHttpHandler / any of our native http handlers being the default http handler.

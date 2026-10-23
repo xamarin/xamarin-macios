@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using System.Text.Json;
+using System.Xml.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
@@ -232,6 +233,46 @@ namespace Xamarin.Tests {
 			// keeps pointing at the Mac path. The Windows archive path is date-based, so match on the
 			// package format rather than an exact path.
 			AssertApplicationArtifact (result.BinLogPath, platform, "xcarchive", isDirectory: true);
+		}
+
+		[Test]
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "GetApplicationArtifacts", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "GetApplicationArtifacts", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Publish", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", "Publish", true)]
+		public void ApplicationArtifactMetadataOnRemoteWindowsTest (ApplePlatform platform, string runtimeIdentifiers, string target, bool archive)
+		{
+			var project = "MySimpleAppWithArtifactMetadata";
+			var configuration = "Release";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			properties ["BuildIpa"] = "true";
+			properties ["ArchiveOnBuild"] = archive ? "true" : "false";
+			properties ["CustomApplicationManifest"] = "InfoWithoutDisplayName.plist";
+			properties ["GenerateApplicationManifest"] = "false";
+			// Isolate artifact metadata from the separate publish-time dSYM copy.
+			properties ["CopyDSYMToPublishDirectory"] = "false";
+
+			var outputPath = Path.Combine (Cache.CreateTemporaryDirectory (), "artifacts.json");
+			DotNet.Execute ("build", project_path, properties, target: target, timeout: TimeSpan.FromMinutes (25),
+				extraArguments: ["-getItem:ApplicationArtifact", $"-getResultOutputFile:{outputPath}"]);
+			using var document = JsonDocument.Parse (File.ReadAllText (outputPath));
+			var outputs = document.RootElement.GetProperty ("Items").GetProperty ("ApplicationArtifact").EnumerateArray ().ToArray ();
+			Assert.That (Path.Combine (appPath, "Info.plist"), Does.Exist, "Final manifest copied to Windows");
+			Assert.That (outputs.Select (v => GetMetadata (v, "PackageFormat")), Does.Not.Contain ("app"), "No incomplete Windows app artifact");
+			var ipaOutput = AssertApplicationArtifact (outputs, platform, "ipa", isDirectory: false);
+			AssertApplicationMetadata (ipaOutput, "com.xamarin.customartifactmetadata", "", "Fallback Bundle Name", "9.8.7", "123");
+			if (archive) {
+				var archiveOutput = AssertApplicationArtifact (outputs, platform, "xcarchive", isDirectory: true);
+				AssertApplicationMetadata (archiveOutput, "com.xamarin.customartifactmetadata", "", "Fallback Bundle Name", "9.8.7", "123");
+			}
 		}
 
 		[Test]
@@ -799,6 +840,82 @@ namespace Xamarin.Tests {
 			} else {
 				Assert.That (publishedDSym, Does.Not.Exist, "Published dSYM (disabled)");
 			}
+		}
+
+		[Test]
+		[Combinatorial]
+		public void PublishDSymTargetOrdering ([Values ("Build", "Publish")] string target, [Values] bool remote, [Values] bool copyDSym)
+		{
+			var directory = Cache.CreateTemporaryDirectory ();
+			var publishTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "dotnet", "targets", "Xamarin.Shared.Sdk.Publish.targets"));
+			var publishRoot = publishTargets.Root ?? throw new InvalidOperationException ("Missing publish targets root.");
+			var ns = publishRoot.Name.Namespace;
+			var sharedTargets = XDocument.Load (Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.Shared", "Xamarin.Shared.targets"));
+			var sharedRoot = sharedTargets.Root ?? throw new InvalidOperationException ("Missing shared targets root.");
+			var postProcessDependencies = sharedRoot.Elements (ns + "PropertyGroup").Single (v => v.Element (ns + "_PostProcessAppBundleDependsOn") is not null);
+			publishRoot.AddFirst (new XElement (postProcessDependencies));
+			publishRoot.Add (new XElement (sharedRoot.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_PostProcessAppBundle")));
+			var dependencies = postProcessDependencies.Elements (ns + "_PostProcessAppBundleDependsOn").Single ().Value.Split (';')
+				.Select (v => v.Trim ())
+				.Where (v => v.Length > 0 && !v.StartsWith ("$(", StringComparison.Ordinal) && v != "_GenerateDSym");
+			foreach (var dependency in dependencies)
+				publishRoot.Add (new XElement (ns + "Target", new XAttribute ("Name", dependency)));
+			var copyTarget = publishRoot.Elements (ns + "Target").Single (v => (string?) v.Attribute ("Name") == "_CopyDSymToPublishDirectory");
+			// Keep the real target graph and conditions, replacing only the session-aware task bodies.
+			copyTarget.ReplaceNodes (
+				new XElement (ns + "Error", new XAttribute ("Condition", "'$(_DSymGenerated)' != 'true'"), new XAttribute ("Text", "dSYM copy ran before symbol generation.")),
+				new XElement (ns + "Error", new XAttribute ("Condition", "'$(IsRemoteBuild)' == 'true' And '$(_Connected)' != 'true'"), new XAttribute ("Text", "dSYM copy ran after disconnect.")),
+				new XElement (ns + "PropertyGroup", new XElement (ns + "_CopyCount", "$(_CopyCount)x")));
+			var publishTargetsPath = Path.Combine (directory, "Publish.targets");
+			publishTargets.Save (publishTargetsPath);
+
+			var projectPath = Path.Combine (directory, "Ordering.proj");
+			var messagingTargetsPath = Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.iOS.Tasks.Windows", "Xamarin.Messaging.targets");
+			File.WriteAllText (projectPath, $"""
+				<Project>
+					<PropertyGroup>
+						<_TaskAssemblyName>$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll</_TaskAssemblyName>
+						<BuildDependsOn>_PostProcessAppBundle</BuildDependsOn>
+						<_CanOutputAppBundle>true</_CanOutputAppBundle>
+						<IsMacEnabled>true</IsMacEnabled>
+					</PropertyGroup>
+					<Import Project="{messagingTargetsPath}" Condition="'$(IsRemoteBuild)' == 'true'" />
+					<Import Project="{publishTargetsPath}" />
+					<Target Name="Restore" />
+					<Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+					<Target Name="GetApplicationArtifacts" DependsOnTargets="Build" />
+					<Target Name="_GenerateBundleName" />
+					<Target Name="_GenerateBuildSessionId" />
+					<Target Name="_VerifyBuildSignature" />
+					<Target Name="_GenerateDSym">
+						<PropertyGroup>
+							<_DSymGenerated>true</_DSymGenerated>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_SayHello">
+						<PropertyGroup>
+							<_Connected>true</_Connected>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_SayGoodbye">
+						<PropertyGroup>
+							<_Connected>false</_Connected>
+						</PropertyGroup>
+					</Target>
+					<Target Name="_AssertOrdering">
+						<Error Condition="'$(_CopyCount)' != '$(ExpectedCopyCount)'"
+							Text="Unexpected dSYM copy count: '$(_CopyCount)', expected '$(ExpectedCopyCount)'." />
+						<Error Condition="'$(IsRemoteBuild)' == 'true' And '$(_Connected)' != 'false'" Text="Build did not disconnect." />
+					</Target>
+				</Project>
+				""");
+
+			var properties = new Dictionary<string, string> {
+				["IsRemoteBuild"] = remote.ToString (),
+				["CopyDSYMToPublishDirectory"] = copyDSym.ToString (),
+				["ExpectedCopyCount"] = target == "Publish" && copyDSym ? "x" : "",
+			};
+			DotNet.AssertBuild (projectPath, properties, target: $"{target};_AssertOrdering");
 		}
 
 		static ITaskItem AssertApplicationArtifact (string binLogPath, string path, ApplePlatform platform, string packageFormat, bool isDirectory)

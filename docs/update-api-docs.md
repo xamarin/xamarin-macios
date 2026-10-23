@@ -10,7 +10,7 @@ is often to wait until packages have been published to NuGet).
 
 The steps are:
 
-1. [Create new monikers](#how_to_create_new_monikers).
+1. [Create new monikers](#how-to-create-new-monikers).
 	This might take a few days, and can be done before we have the final packages.
 
 2. Clone the [binaries](https://apidrop.visualstudio.com/_git/binaries) repository if you haven't already done so.
