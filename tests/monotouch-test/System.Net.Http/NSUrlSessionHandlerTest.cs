@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -25,6 +26,221 @@ namespace MonoTests.System.Net.Http {
 		// in CI. Set this to true to restore the usual "ignore transient network failures in CI"
 		// behavior if these tests ever turn out to be flaky on the bots.
 		bool ignoreLocalOnlyCIFailures = false;
+
+		[Test]
+		public void StreamReadAsyncWaitsForDataWithoutPolling ()
+		{
+			WithStreamingResponse (async (handler, response, stream, serverStream, token) => {
+				var buffer = new byte [8192];
+				var chunk = Encoding.ASCII.GetBytes ("400\r\n" + new string ('B', 1024) + "\r\n");
+				var elapsed = new Stopwatch ();
+
+				for (var i = 0; i < 20; i++) {
+					var readTask = stream.ReadAsync (buffer, 0, buffer.Length, token);
+					Assert.That (readTask.IsCompleted, Is.False, $"Read {i} should wait for data");
+
+					elapsed.Start ();
+					await serverStream.WriteAsync (chunk, token).ConfigureAwait (false);
+					var count = await readTask.WaitAsync (token).ConfigureAwait (false);
+					Assert.That (count, Is.GreaterThan (0), $"Read {i}");
+					await ReadRemainingChunkAsync (stream, buffer, count, token).ConfigureAwait (false);
+					elapsed.Stop ();
+					Assert.That (Encoding.ASCII.GetString (buffer, 0, 1024), Is.EqualTo (new string ('B', 1024)), $"Chunk {i}");
+				}
+
+				// Polling adds about a second across these handoffs. Allow ample scheduling
+				// headroom without accepting a fixed 50 ms delay on each read.
+				Assert.That (elapsed.Elapsed, Is.LessThan (TimeSpan.FromMilliseconds (750)), "Total time waiting for 20 loopback chunks");
+				await serverStream.WriteAsync (Encoding.ASCII.GetBytes ("0\r\n\r\n"), token).ConfigureAwait (false);
+				Assert.That (await stream.ReadAsync (buffer, 0, buffer.Length, token).ConfigureAwait (false), Is.Zero, "End of stream");
+			});
+		}
+
+		[Test]
+		public void StreamReadAsyncCancellationDoesNotCancelLaterReads ()
+		{
+			WithStreamingResponse (async (handler, response, stream, serverStream, token) => {
+				var buffer = new byte [8192];
+				using var readCts = CancellationTokenSource.CreateLinkedTokenSource (token);
+				var readTask = stream.ReadAsync (buffer, 0, buffer.Length, readCts.Token);
+				Assert.That (readTask.IsCompleted, Is.False, "Read should wait for data");
+				var cancellationThread = Environment.CurrentManagedThreadId;
+				var cancellationInProgress = 1;
+				var completedInline = readTask.ContinueWith (
+					task => Environment.CurrentManagedThreadId == cancellationThread && Volatile.Read (ref cancellationInProgress) != 0,
+					CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+				try {
+					readCts.Cancel ();
+				} finally {
+					Volatile.Write (ref cancellationInProgress, 0);
+				}
+
+				try {
+					await readTask.WaitAsync (token).ConfigureAwait (false);
+					Assert.Fail ("Expected cancellation");
+				} catch (OperationCanceledException) {
+					Assert.That (readTask.IsCanceled, Is.True, "Read task");
+				}
+				Assert.That (await completedInline.WaitAsync (token).ConfigureAwait (false), Is.False, "Read continuation must not run inside Cancel");
+
+				var nextRead = stream.ReadAsync (buffer, 0, buffer.Length, token);
+				Assert.That (nextRead.IsCompleted, Is.False, "Later read should still wait for data");
+				await serverStream.WriteAsync (Encoding.ASCII.GetBytes ("400\r\n" + new string ('B', 1024) + "\r\n"), token).ConfigureAwait (false);
+				var count = await nextRead.WaitAsync (token).ConfigureAwait (false);
+				Assert.That (count, Is.GreaterThan (0), "Later read");
+				await ReadRemainingChunkAsync (stream, buffer, count, token).ConfigureAwait (false);
+				Assert.That (Encoding.ASCII.GetString (buffer, 0, 1024), Is.EqualTo (new string ('B', 1024)), "Later chunk");
+			});
+		}
+
+		[Test]
+		public void BufferedConnectionFailureDoesNotBlockDelegateQueue ()
+		{
+			WithStreamingResponse (async (handler, response, stream, serverStream, token) => {
+				// Use the content's buffering path so reads use the handler's internal token,
+				// which DidCompleteWithError cancels on the native delegate queue.
+				var buffering = response.Content.LoadIntoBufferAsync ();
+				Assert.That (buffering.IsCompleted, Is.False, "Buffering should wait for the rest of the body");
+
+				var listener = new TcpListener (IPAddress.Loopback, 0);
+				listener.Start ();
+				try {
+					var port = ((IPEndPoint) listener.LocalEndpoint).Port;
+					var acceptTask = listener.AcceptTcpClientAsync (token).AsTask ();
+					using var client = new HttpClient (handler, disposeHandler: false) {
+						Timeout = TimeSpan.FromSeconds (5),
+					};
+					var recovery = buffering.ContinueWith (task => {
+						var exception = Assert.Catch (() => task.GetAwaiter ().GetResult (), "Buffering should fail");
+						Assert.That (exception, Is.InstanceOf<OperationCanceledException> ().Or.InstanceOf<HttpRequestException> (), "Buffering exception");
+						// This blocks NSURLSession's serial delegate queue if cancellation inlines
+						// the buffering consumer, preventing the next response from being delivered.
+						return client.GetStringAsync ($"http://127.0.0.1:{port}/recovery", token).GetAwaiter ().GetResult ();
+					}, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+
+					serverStream.Dispose ();
+					await Task.WhenAny (recovery, acceptTask).ConfigureAwait (false);
+					if (recovery.IsCompleted)
+						await recovery.ConfigureAwait (false);
+					using var serverClient = await acceptTask.ConfigureAwait (false);
+					using var recoveryStream = serverClient.GetStream ();
+					await ReadRequestHeadersAsync (recoveryStream, token).ConfigureAwait (false);
+					await recoveryStream.WriteAsync (Encoding.ASCII.GetBytes (
+						"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok"), token).ConfigureAwait (false);
+					Assert.That (await recovery.WaitAsync (token).ConfigureAwait (false), Is.EqualTo ("ok"), "Synchronous recovery request");
+				} finally {
+					listener.Stop ();
+				}
+			}, consumeInitialChunk: false, resetConnection: true);
+		}
+
+		[TestCase ("complete", null)]
+		[TestCase ("disconnect", typeof (HttpRequestException))]
+		[TestCase ("response-dispose", typeof (ObjectDisposedException))]
+		[TestCase ("handler-dispose", typeof (ObjectDisposedException))]
+		public void StreamReadAsyncWakesForTerminalState (string terminalState, Type? expectedException)
+		{
+			WithStreamingResponse (async (handler, response, stream, serverStream, token) => {
+				var buffer = new byte [8192];
+				var readTask = stream.ReadAsync (buffer, 0, buffer.Length, token);
+				Assert.That (readTask.IsCompleted, Is.False, "Read should wait for data");
+
+				switch (terminalState) {
+				case "complete":
+					await serverStream.WriteAsync (Encoding.ASCII.GetBytes ("0\r\n\r\n"), token).ConfigureAwait (false);
+					break;
+				case "disconnect":
+					serverStream.Dispose ();
+					break;
+				case "response-dispose":
+					response.Dispose ();
+					break;
+				case "handler-dispose":
+					handler.Dispose ();
+					break;
+				}
+
+				Exception? caught = null;
+				try {
+					var count = await readTask.WaitAsync (token).ConfigureAwait (false);
+					Assert.That (count, Is.Zero, "End of stream");
+				} catch (Exception ex) {
+					caught = ex;
+				}
+
+				if (expectedException is null)
+					Assert.That (caught, Is.Null, "Read exception");
+				else
+					Assert.That (caught, Is.InstanceOf (expectedException), "Read exception");
+			}, resetConnection: terminalState == "disconnect");
+		}
+
+		static async Task ReadRemainingChunkAsync (Stream stream, byte [] buffer, int count, CancellationToken token)
+		{
+			Assert.That (count, Is.LessThanOrEqualTo (1024), "Chunk size");
+			while (count < 1024) {
+				var read = await stream.ReadAsync (buffer, count, 1024 - count, token).ConfigureAwait (false);
+				Assert.That (read, Is.GreaterThan (0), "Remaining chunk data");
+				count += read;
+			}
+		}
+
+		static async Task ReadRequestHeadersAsync (NetworkStream stream, CancellationToken token)
+		{
+			using var reader = new StreamReader (stream, Encoding.ASCII, false, 1024, leaveOpen: true);
+			while (true) {
+				var line = await reader.ReadLineAsync (token).ConfigureAwait (false);
+				if (line is null)
+					throw new EndOfStreamException ();
+				if (line.Length == 0)
+					return;
+			}
+		}
+
+		static void WithStreamingResponse (Func<NSUrlSessionHandler, HttpResponseMessage, Stream, NetworkStream, CancellationToken, Task> test, bool consumeInitialChunk = true, bool resetConnection = false)
+		{
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				using var cts = new CancellationTokenSource (TimeSpan.FromSeconds (20));
+				var token = cts.Token;
+				var listener = new TcpListener (IPAddress.Loopback, 0);
+				listener.Start ();
+				try {
+					var port = ((IPEndPoint) listener.LocalEndpoint).Port;
+					var acceptTask = listener.AcceptTcpClientAsync (token);
+					using var handler = new NSUrlSessionHandler { UseProxy = false };
+					using var client = new HttpClient (handler);
+					using var request = new HttpRequestMessage (HttpMethod.Get, $"http://127.0.0.1:{port}/stream");
+					var responseTask = client.SendAsync (request, HttpCompletionOption.ResponseHeadersRead, token);
+					using var serverClient = await acceptTask.ConfigureAwait (false);
+					serverClient.NoDelay = true;
+					if (resetConnection)
+						serverClient.LingerState = new LingerOption (true, 0);
+					using var serverStream = serverClient.GetStream ();
+					await ReadRequestHeadersAsync (serverStream, token).ConfigureAwait (false);
+
+					var initialResponse = Encoding.ASCII.GetBytes (
+						"HTTP/1.1 200 OK\r\n" +
+						"Content-Type: application/octet-stream\r\n" +
+						"Transfer-Encoding: chunked\r\n" +
+						"Connection: close\r\n\r\n" +
+						"400\r\n" + new string ('A', 1024) + "\r\n");
+					await serverStream.WriteAsync (initialResponse, token).ConfigureAwait (false);
+					using var response = await responseTask.ConfigureAwait (false);
+					response.EnsureSuccessStatusCode ();
+					using var stream = await response.Content.ReadAsStreamAsync (token).ConfigureAwait (false);
+					if (consumeInitialChunk) {
+						var buffer = new byte [8192];
+						await ReadRemainingChunkAsync (stream, buffer, 0, token).ConfigureAwait (false);
+						Assert.That (Encoding.ASCII.GetString (buffer, 0, 1024), Is.EqualTo (new string ('A', 1024)), "Initial chunk");
+					}
+					await test (handler, response, stream, serverStream, token).ConfigureAwait (false);
+				} finally {
+					listener.Stop ();
+				}
+			}, out var exception);
+			Assert.That (done, Is.True, "Streaming test timed out");
+			Assert.That (exception, Is.Null, "Streaming test exception");
+		}
 
 		// https://github.com/dotnet/macios/issues/23958
 		[Test]
