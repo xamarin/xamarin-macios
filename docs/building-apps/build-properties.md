@@ -1906,7 +1906,16 @@ Mac Catalyst projects.
 
 Whether the native http handler should be the default http handler or not.
 
-Default: true for all platforms except macOS.
+Default: `true` for iOS, tvOS and Mac Catalyst.
+
+This property has no effect on macOS. Setting it to `true` emits a build warning.
+On macOS, `HttpClient` uses `SocketsHttpHandler` by default. To use the native HTTP
+handler, pass a `Foundation.NSUrlSessionHandler` instance directly to the
+`HttpClient` constructor:
+
+```csharp
+using var client = new System.Net.Http.HttpClient (new Foundation.NSUrlSessionHandler ());
+```
 
 ## ValidateEntitlements
 

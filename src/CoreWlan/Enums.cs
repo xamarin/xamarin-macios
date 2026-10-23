@@ -8,6 +8,7 @@ namespace CoreWlan {
 
 	/// <summary>Indicates the result of a Core WLAN operation.</summary>
 	[NoMacCatalyst]
+	[NativeName ("CWErr")]
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {

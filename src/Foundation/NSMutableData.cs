@@ -22,13 +22,43 @@ namespace Foundation {
 			}
 		}
 
-		/// <param name="bytes">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Appends a copy of the bytes in a managed array.</summary>
+		/// <param name="bytes">The bytes to append.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="bytes" /> is <see langword="null" />.</exception>
 		public void AppendBytes (byte [] bytes)
 		{
 			if (bytes is null)
 				throw new ArgumentNullException (nameof (bytes));
+
+			AppendBytes (new ReadOnlySpan<byte> (bytes));
+		}
+
+		/// <summary>Appends a copy of a range of bytes from a managed array.</summary>
+		/// <param name="bytes">The array containing the bytes to append.</param>
+		/// <param name="start">The zero-based index of the first byte to append.</param>
+		/// <param name="len">The number of bytes to append.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="bytes" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException"><paramref name="start" /> or <paramref name="len" /> is negative, or the range is outside <paramref name="bytes" />.</exception>
+		public void AppendBytes (byte [] bytes, nint start, nint len)
+		{
+			if (bytes is null)
+				throw new ArgumentNullException (nameof (bytes));
+
+			if (start < 0 || start > bytes.Length)
+				throw new ArgumentException (nameof (start));
+			if (len < 0 || len > bytes.Length - start)
+				throw new ArgumentException (nameof (len));
+
+			AppendBytes (new ReadOnlySpan<byte> (bytes, (int) start, (int) len));
+		}
+
+		/// <summary>Appends a copy of the bytes in a span.</summary>
+		/// <param name="bytes">The bytes to append.</param>
+		/// <remarks>The bytes are copied during this call; the span is not retained.</remarks>
+		public void AppendBytes (ReadOnlySpan<byte> bytes)
+		{
+			if (bytes.IsEmpty)
+				return;
 
 			unsafe {
 				fixed (byte* p = bytes) {
@@ -37,24 +67,20 @@ namespace Foundation {
 			}
 		}
 
-		/// <param name="bytes">To be added.</param>
-		/// <param name="start">To be added.</param>
-		/// <param name="len">To be added.</param>
-		/// <summary>To be added.</summary>
-		/// <remarks>To be added.</remarks>
-		public void AppendBytes (byte [] bytes, nint start, nint len)
+		/// <summary>Replaces a range of the data with a copy of the bytes in a span.</summary>
+		/// <param name="range">The range of existing bytes to replace. A zero-length range inserts bytes at its location.</param>
+		/// <param name="buffer">The replacement bytes. An empty span removes the requested range.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="range" /> is outside the data.</exception>
+		/// <remarks>The data length changes by the difference between the span length and the range length. The bytes are copied during this call; the span is not retained. Do not modify the data concurrently with this call.</remarks>
+		public void ReplaceBytes (NSRange range, ReadOnlySpan<byte> buffer)
 		{
-			if (bytes is null)
-				throw new ArgumentNullException (nameof (bytes));
-
-			if (start < 0 || start > bytes.Length)
-				throw new ArgumentException (nameof (start));
-			if (start + len > bytes.Length)
-				throw new ArgumentException (nameof (len));
+			var length = Length;
+			if (range.Location < 0 || range.Length < 0 || (nuint) range.Location > length || (nuint) range.Length > length - (nuint) range.Location)
+				throw new ArgumentOutOfRangeException (nameof (range));
 
 			unsafe {
-				fixed (byte* p = &bytes [start]) {
-					AppendBytes ((IntPtr) p, (nuint) len);
+				fixed (byte* p = buffer) {
+					ReplaceBytes (range, (IntPtr) p, (nuint) buffer.Length);
 				}
 			}
 		}
