@@ -3345,6 +3345,7 @@ namespace Xamarin.Tests {
 			[Values (ApplePlatform.iOS, ApplePlatform.TVOS)] ApplePlatform platform,
 			[Values (true, false)] bool simulator,
 			[Values ("Debug", "Release", "Custom")] string configuration,
+			[Values (null, "true", "false")] string? bundlerDebug,
 			[Values (null, "true", "false")] string? noSymbolStrip)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -3352,11 +3353,14 @@ namespace Xamarin.Tests {
 			var projectPath = GetProjectPath ("MySimpleApp", platform: platform);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			properties ["Configuration"] = configuration;
+			if (bundlerDebug is not null)
+				properties ["_BundlerDebug"] = bundlerDebug;
 			if (noSymbolStrip is not null)
 				properties ["NoSymbolStrip"] = noSymbolStrip;
 
 			var actual = DotNet.GetProperty (projectPath, "NoSymbolStrip", properties);
-			var expected = noSymbolStrip ?? (simulator && configuration != "Release" ? "true" : "false");
+			var debug = bundlerDebug is not null ? bundlerDebug == "true" : configuration == "Debug";
+			var expected = noSymbolStrip ?? (simulator && debug ? "true" : "false");
 			Assert.That (actual, Is.EqualTo (expected), "NoSymbolStrip");
 		}
 

@@ -1331,7 +1331,7 @@ A boolean property that specifies whether debug symbols are removed from the app
 The default behavior is to keep debug symbols for:
 
 * `Debug` builds for desktop platforms.
-* Simulator builds for mobile platforms, unless `Configuration` is `Release`.
+* Simulator builds for mobile platforms with debugging enabled (`_BundlerDebug=true`, normally `Debug` builds).
 
 Example to keep debug symbols:
 

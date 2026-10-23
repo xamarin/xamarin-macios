@@ -128,8 +128,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- default to 'false' -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</NoSymbolStrip>
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(SdkIsDesktop)' == 'true' And '$(_UseNativeAot)' != 'true'">true</NoSymbolStrip>
-		<!-- Disable stripping for non-Release simulator builds by default -->
-		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(SdkIsSimulator)' == 'true' And '$(Configuration)' != 'Release'">true</NoSymbolStrip>
+		<!-- Disable stripping for simulator builds with debugging enabled by default -->
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(SdkIsSimulator)' == 'true' And '$(_BundlerDebug)' != 'false'">true</NoSymbolStrip>
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == ''">false</NoSymbolStrip>
 
 		<!-- StripMergeableLibraries: remove static linking metadata (LC_ATOM_INFO) from mergeable libraries to reduce app size -->
