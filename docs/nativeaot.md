@@ -62,6 +62,11 @@ because it's not possible to use `dotnet publish` when running from the IDE.
 
 ## Compatibility and limitations
 
+Native libraries embedded in binding assemblies are extracted for native linking,
+then removed from the trimmed assemblies before the NativeAOT compiler runs.
+This avoids embedding the native archives a second time in the executable.
+Ordinary managed resources are preserved.
+
 There are no known issues specific to our platforms with NativeAOT; but the
 [limitations][2] are exactly the same as for other supported platforms.
 

@@ -398,6 +398,44 @@ namespace Xamarin.Tests {
 			Assert.That (actualResources2, Is.EqualTo (expectedResources.OrderBy (v => v).ToArray ()), "embedded resources for bindings-test2.dll");
 		}
 
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false, false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true, false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", false, false)]
+		public void NativeAotEmbeddedNativeResources (ApplePlatform platform, string runtimeIdentifiers, bool prepareAssemblies, bool postProcessAssemblies)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			var project = "EmbeddedFrameworkInBindingProjectApp";
+			var projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: "Release");
+			Clean (projectPath);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = "Release";
+			properties ["PublishAot"] = "true";
+			properties ["_IsPublishing"] = "true";
+			properties ["PrepareAssemblies"] = prepareAssemblies.ToString ();
+			properties ["PostProcessAssemblies"] = postProcessAssemblies.ToString ();
+			if (platform == ApplePlatform.iOS)
+				properties ["NativeLibName"] = "ios";
+			DotNet.AssertBuild (projectPath, properties);
+
+			var bindingProjectPath = GetProjectPath ("BindingWithEmbeddedFramework", platform: platform);
+			var bindingPath = Path.Combine (GetBinDir (bindingProjectPath, platform, "", "Release"), "BindingWithEmbeddedFramework.dll");
+			using var binding = AssemblyDefinition.ReadAssembly (bindingPath);
+			var resource = binding.MainModule.Resources.OfType<EmbeddedResource> ().Single (v => v.Name == "XTest.framework");
+			var embeddedFramework = resource.GetResourceData ();
+			Assert.That (embeddedFramework.Length, Is.GreaterThan (0), "The binding must contain the embedded framework");
+			var executable = File.ReadAllBytes (GetNativeExecutable (platform, appPath));
+			Assert.That (executable.AsSpan ().IndexOf (embeddedFramework), Is.EqualTo (-1), "The executable must not embed the native framework archive");
+
+			var linkedBindingPath = Path.Combine (GetObjDir (projectPath, platform, runtimeIdentifiers, "Release"), "linked", "BindingWithEmbeddedFramework.dll");
+			using var linkedBinding = AssemblyDefinition.ReadAssembly (linkedBindingPath);
+			Assert.That (linkedBinding.MainModule.Resources.Select (v => v.Name), Does.Not.Contain ("XTest.framework"), "Native framework archive must be removed before ILC");
+			var managedResource = binding.MainModule.Resources.OfType<EmbeddedResource> ().Single (v => v.Name == "ManagedResource").GetResourceData ();
+			Assert.That (managedResource.Length, Is.GreaterThan (0), "The binding must contain the managed resource");
+			Assert.That (linkedBinding.MainModule.Resources.OfType<EmbeddedResource> ().Single (v => v.Name == "ManagedResource").GetResourceData (), Is.EqualTo (managedResource), "Ordinary managed resources must survive trimming");
+			Assert.That (executable.AsSpan ().IndexOf (managedResource), Is.GreaterThanOrEqualTo (0), "The executable must preserve ordinary managed resources");
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64;tvossimulator-arm64")]

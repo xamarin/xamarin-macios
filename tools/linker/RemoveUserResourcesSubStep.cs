@@ -90,12 +90,6 @@ namespace Xamarin.Linker {
 		bool ModifyAssembly (AssemblyDefinition assembly)
 #endif
 		{
-			// When building for NativeAOT, the managed assemblies are compiled to native code
-			// and not shipped in the app bundle, so removing these resources from the assemblies
-			// has no size or runtime benefit.
-			if (App.XamarinRuntime == XamarinRuntime.NativeAOT)
-				return false;
-
 #if ASSEMBLY_PREPARER
 			// In Hot Reload compatible builds, don't strip resources from reloadable (non-linked) assemblies,
 			// because modifying them re-serializes (saves) the assembly, breaking Hot Reload. Linked assemblies

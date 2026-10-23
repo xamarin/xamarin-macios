@@ -10,6 +10,7 @@
 	<ItemGroup>
 		<ObjcBindingApiDefinition Include="../ApiDefinition.cs" />
 		<ObjcBindingCoreSource Include="../StructsAndEnums.cs" />
+		<EmbeddedResource Include="../StructsAndEnums.cs" LogicalName="ManagedResource" />
 		<NativeReference Include="../../../test-libraries/.libs/$(NativeLibName)/XTest.framework" Kind="Framework" />
 	</ItemGroup>
 </Project>
