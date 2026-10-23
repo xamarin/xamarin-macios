@@ -2923,6 +2923,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7198" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Codesign failed because '{0}' contains files with extended attributes such as 'com.apple.FinderInfo' or 'com.apple.ResourceFork' that are not allowed when signing. Run 'xattr -lr "{0}"' to locate the affected files. Remove the unwanted attributes from the original source files (for example, with 'xattr -cr "path/to/source/files"'), then clean and rebuild. See https://developer.apple.com/library/archive/qa/qa1940/_index.html for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}'에 서명할 때 허용되지 않는 'com.apple.FinderInfo' 또는 'com.apple.ResourceFork'와 같은 확장 특성이 있는 파일이 포함되어 있어 코드 서명에 실패했습니다. 영향을 받는 파일을 찾으려면 'xattr -lr "{0}"'을(를) 실행하세요. 원본 소스 파일에서 불필요한 특성을 제거하세요. 예를 들어 'xattr -cr "path/to/source/files"'를 실행하면 됩니다. 그런 다음 정리하고 다시 빌드하세요. 자세한 내용은 https://developer.apple.com/library/archive/qa/qa1940/_index.html을 참조하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -3261,6 +3270,15 @@
           <Val><![CDATA[Adjusted path from '{0}' to '{1}']D;]A;        ]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA['{0}'에서 '{1}'로 경로가 조정됨]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0170" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Simulator does not support arm64.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[시뮬레이터가 arm64를 지원하지 않습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
