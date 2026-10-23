@@ -208,9 +208,15 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe static extern byte sec_protocol_metadata_access_ocsp_response (IntPtr handle, BlockLiteral* callback);
 
-		/// <param name="callback">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Invokes a callback with the peer's available Online Certificate Status Protocol (OCSP) response data.</summary>
+		/// <param name="callback">The callback to invoke for each OCSP response. Dispose each received <see cref="DispatchData" /> when it is no longer needed.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="callback" /> is <see langword="null" />.</exception>
+		/// <exception cref="ObjectDisposedException">This metadata instance has been disposed.</exception>
+		/// <exception cref="InvalidOperationException">The peer's OCSP response data is not accessible.</exception>
+		/// <remarks>
+		///   <para>The callback is invoked synchronously during this call and is not registered for future responses.</para>
+		///   <para>Response availability depends on the TLS handshake. The received data can be retained after the callback returns.</para>
+		/// </remarks>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
 		{
@@ -221,7 +227,7 @@ namespace Security {
 				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineOcspReposeForPeer;
 				using var block = new BlockLiteral (trampoline, callback, typeof (SecProtocolMetadata), nameof (TrampolineOcspReposeForPeer));
 				if (sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), &block) == 0)
-					throw new InvalidOperationException ("The OSCP response is not accessible.");
+					throw new InvalidOperationException ("The OCSP response is not accessible.");
 			}
 		}
 
@@ -230,8 +236,8 @@ namespace Security {
 		{
 			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
 			if (del is not null) {
-				var secCertificate = new SecCertificate (certificate, owns: false);
-				del (secCertificate);
+				using var secCertificate = new SecCertificate2 (certificate, owns: false);
+				del (secCertificate.Certificate);
 			}
 		}
 
@@ -267,9 +273,15 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe static extern byte sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, BlockLiteral* callback);
 
-		/// <param name="callback">To be added.</param>
-		///         <summary>To be added.</summary>
-		///         <remarks>To be added.</remarks>
+		/// <summary>Invokes a callback for each signature algorithm supported by the peer.</summary>
+		/// <param name="callback">The callback to invoke with each TLS signature algorithm identifier.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="callback" /> is <see langword="null" />.</exception>
+		/// <exception cref="ObjectDisposedException">This metadata instance has been disposed.</exception>
+		/// <exception cref="InvalidOperationException">The peer's supported signature algorithm list is not accessible.</exception>
+		/// <remarks>
+		///   <para>The callback is invoked synchronously during this call and is not registered for future updates.</para>
+		///   <para>Availability depends on the TLS handshake. Clients can use this method when responding to a TLS challenge.</para>
+		/// </remarks>
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
 		{
@@ -279,7 +291,7 @@ namespace Security {
 			unsafe {
 				delegate* unmanaged<IntPtr, ushort, void> trampoline = &TrampolineSignatureAlgorithmsForPeer;
 				using var block = new BlockLiteral (trampoline, callback, typeof (SecProtocolMetadata), nameof (TrampolineSignatureAlgorithmsForPeer));
-				if (sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), &block) != 0)
+				if (sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), &block) == 0)
 					throw new InvalidOperationException ("The supported signature list is not accessible.");
 			}
 		}
@@ -364,9 +376,9 @@ namespace Security {
 		[UnmanagedCallersOnly]
 		static void TrampolineAccessPreSharedKeys (IntPtr block, IntPtr psk, IntPtr psk_identity)
 		{
-			var del = BlockLiteral.GetTarget<Action<DispatchData?, DispatchData?>> (block);
+			var del = BlockLiteral.GetTarget<SecAccessPreSharedKeysHandler> (block);
 			if (del is not null)
-				del (CreateDispatchData (psk), CreateDispatchData (psk_identity));
+				del (new DispatchData (psk, owns: false), new DispatchData (psk_identity, owns: false));
 		}
 
 		[SupportedOSPlatform ("tvos")]
