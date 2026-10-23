@@ -410,6 +410,19 @@ namespace Xamarin.Bundler {
 			App.Log (3, "    WeakFrameworks: {0}", metadata.WeakFrameworks);
 		}
 
+		public static HashSet<string> GetNativeLibraryResourceNames (AssemblyDefinition assembly)
+		{
+			var libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
+			foreach (var attribute in assembly.CustomAttributes) {
+				if (!attribute.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
+					continue;
+				var linkWith = GetLinkWithAttribute (attribute);
+				if (linkWith.LibraryName is not null)
+					libraries.Add (linkWith.LibraryName);
+			}
+			return libraries;
+		}
+
 		public static LinkWithAttribute GetLinkWithAttribute (CustomAttribute attr)
 		{
 			LinkWithAttribute linkWith;

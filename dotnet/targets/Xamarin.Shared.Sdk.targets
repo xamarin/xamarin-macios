@@ -860,6 +860,7 @@
 			<!-- The files the assembly-preparer writes its MSBuild output properties to (one per pass; read back in _SetDynamicRegistrationSupportedFeature and added to FileWrites). -->
 			<_AssemblyPreparerMSBuildOutputFile Condition="'$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)assembly-preparer-msbuild-output.txt</_AssemblyPreparerMSBuildOutputFile>
 			<_AssemblyPostProcessorMSBuildOutputFile Condition="'$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)assembly-postprocessor-msbuild-output.txt</_AssemblyPostProcessorMSBuildOutputFile>
+			<_NativeAOTResourceSubstitutions Condition="'$(_UseNativeAot)' == 'true' And '$(PrepareAssemblies)' == 'true'">$(DeviceSpecificIntermediateOutputPath)nativeaot-resource-substitutions.xml</_NativeAOTResourceSubstitutions>
 
 			<!-- The directory where the linker puts *.items files that will be loaded in the _LoadLinkerOutput target -->
 			<_LinkerItemsDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-items'))</_LinkerItemsDirectory>
@@ -2135,6 +2136,11 @@
 			<IlcCompileInput Include="@(ManagedBinary)" />
 			<IlcReference Include="@(ManagedAssemblyToLink)" Exclude="@(ManagedBinary)" />
 			<IlcReference Include="@(_ManagedAssemblyToLinkFromLinker)" />
+		</ItemGroup>
+
+		<!-- Assembly preparation keeps native resources available for extraction, but excludes them from ILC's output. -->
+		<ItemGroup>
+			<IlcArg Include="--substitution:$(_NativeAOTResourceSubstitutions)" Condition="'$(_NativeAOTResourceSubstitutions)' != ''" />
 		</ItemGroup>
 
 		<ItemGroup>
