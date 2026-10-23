@@ -3,13 +3,11 @@
 
 ## unsorted
 
-!missing-enum! AudioBytePacketTranslationFlags not bound
-!missing-enum! AudioComponentFlags not bound
-!missing-enum! AudioFilePermissions not bound
+## AudioFilePermission has a 32-bit backing type for binary compatibility; fixed in XAMCORE_5_0.
+!wrong-enum-size! AudioFilePermissions managed 4 vs native 1
+
 !missing-enum! AudioFileStreamParseFlags not bound
-!missing-enum! AudioFileStreamPropertyFlags not bound
 !missing-enum! AudioFileStreamSeekFlags not bound
-!missing-enum! AudioPanningMode not bound
 !missing-enum! CAFFormatFlags not bound
 !missing-enum! CAFRegionFlags not bound
 !missing-pinvoke! AudioComponentCount is not bound

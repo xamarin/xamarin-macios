@@ -300,6 +300,7 @@ namespace Extrospection {
 					}
 				}
 			} else {
+				string? nativeName = null;
 				foreach (var ca in self.CustomAttributes) {
 					if (ca.Constructor.DeclaringType.Name == "RegisterAttribute") {
 						if (ca.HasConstructorArguments)
@@ -320,10 +321,12 @@ namespace Extrospection {
 						return (string) ca.ConstructorArguments [0].Value;
 					} else if (ca.Constructor.DeclaringType.Name == "NativeAttribute") {
 						if (ca.HasConstructorArguments)
-							return ca.ConstructorArguments [0].Value as string;
-						return self.Name;
+							nativeName = ca.ConstructorArguments [0].Value as string;
+						else
+							nativeName = self.Name;
 					}
 				}
+				return nativeName;
 			}
 			return null;
 		}
