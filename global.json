@@ -1,6 +1,6 @@
 {
   "sdk": {
-    "version": "11.0.100-rtm.26522.109",
+    "version": "11.0.100-rtm.26523.128",
     "paths": [
       "builds/downloads/dotnet",
       "$host$"
@@ -8,7 +8,7 @@
     "errorMessage": "The .NET SDK could not be found, please run 'make dotnet -C builds'."
   },
   "tools": {
-    "dotnet": "11.0.100-rtm.26522.109"
+    "dotnet": "11.0.100-rtm.26523.128"
   },
   "msbuild-sdks": {
     "Microsoft.DotNet.Arcade.Sdk": "11.0.0-beta.26523.128"
